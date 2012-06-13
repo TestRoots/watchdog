@@ -1,12 +1,13 @@
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPropertyListener;
-import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.texteditor.*;
+
 
 
 public class Startup implements IStartup {
@@ -39,19 +40,21 @@ public class Startup implements IStartup {
 		    {
 		        for (IWorkbenchPage page : window.getPages()) {
 		            if(page.getActivePart() != null) System.out.println("derp");
-		            IWorkbenchPart a = page.getActivePart();
-		            System.out.println(ISaveablePart.PROP_DIRTY); //prop dirty = not saved doc
-		            if(a != null) System.out.println("herp");
-		            if(a instanceof IEditorPart) System.out.println("editor activated");
-		            ((IEditorPart) a).addPropertyListener(new IPropertyListener() {
-						
-						@Override
-						public void propertyChanged(Object source, int propId) {
-							System.out.println(propId);
-							System.out.println(ISaveablePart.PROP_DIRTY);
-							
-						}
-					});
+		            IWorkbenchPart part = page.getActivePart();
+		            //System.out.println(ISaveablePart.PROP_DIRTY); //prop dirty = not saved doc
+		            if(part != null) System.out.println("herp");
+		            if(part instanceof IEditorPart) System.out.println("editor activated");
+		            
+		            
+		            
+		            //TextEditor editor = (TextEditor)part;
+		            
+		            ITextEditor editor = (ITextEditor)part;
+		            IDocumentProvider dp = editor.getDocumentProvider();
+		            IDocument doc = dp.getDocument(editor.getEditorInput());
+		            String s = doc.get();
+		            
+		            System.out.println(s);
 		        	page.addPartListener(new PartListener());
 		        }
 		        window.addPageListener(new PageListener());
