@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
@@ -8,12 +11,13 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 
 public class PartListener implements IPartListener{
+	private static List<IWorkbenchPart> editors = new LinkedList<IWorkbenchPart>();
 
 	@Override
 	public void partOpened(IWorkbenchPart part) {
 		if(part instanceof ITextEditor){		
 			System.out.println("partOpened");
-			getEditorContent(part);
+			addDocumentListener(part);
 		}
 	}
 	
@@ -35,7 +39,6 @@ public class PartListener implements IPartListener{
 	public void partBroughtToTop(IWorkbenchPart part) {
 		if(part instanceof ITextEditor){
 			System.out.println("partBroughtToTop");
-			getEditorContent(part);
 		}
 	}
 	
@@ -43,33 +46,35 @@ public class PartListener implements IPartListener{
 	public void partActivated(IWorkbenchPart part) {
 		if(part instanceof ITextEditor){
 			System.out.println("partActivated");
-			getEditorContent(part);
+			addDocumentListener(part);
 		}
 		
 	}
-
-	private String getEditorContent(IWorkbenchPart part){
-		if(part instanceof ITextEditor){		
+	
+	public static void addDocumentListener(IWorkbenchPart part){
+		assert part instanceof ITextEditor;
+		
+		if(!editors.contains(part)){
 			ITextEditor editor = (ITextEditor)part;
 	        IDocumentProvider dp = editor.getDocumentProvider();
-	        IDocument doc = dp.getDocument(editor.getEditorInput());
+	        final IDocument doc = dp.getDocument(editor.getEditorInput());
 	        doc.addDocumentListener(new IDocumentListener() {
 				
 				@Override
 				public void documentChanged(DocumentEvent event) {
 					System.out.println("documentChanged");
+					String s = doc.get();
+			        System.out.println(s);
 				}
 				
 				@Override
 				public void documentAboutToBeChanged(DocumentEvent event) {
-					System.out.println("documentAboutToBeChanged");
+					//System.out.println("documentAboutToBeChanged");
 				}
 			});
-	        String s = doc.get();
-	        System.out.println(s);
-	        return s;
+	        editors.add(part);
+	        System.out.println("listener added");			
 		}
-		throw new IllegalArgumentException(part.toString() + " is not an TextEditor part");
 	}
 	
 }
