@@ -1,7 +1,5 @@
 import org.eclipse.ui.IPageListener;
-import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
 
 
 public class PageListener implements IPageListener {
