@@ -1,4 +1,4 @@
-package timedistributionplugin;
+package timeDistributionPlugin;
 
 import org.eclipse.ui.IStartup;
 
@@ -9,7 +9,7 @@ public class StartUpManager implements IStartup {
 
 	@Override
 	public void earlyStartup() {
-		System.out.println("startup ready");
+		MyLogger.logInfo("Plugin startup");
 		new UIListener().attachListeners();
 	}
 

@@ -10,15 +10,19 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+import timeDistributionPlugin.MyLogger;
+
 
 public class PartListener implements IPartListener{
 	private static List<ITextEditor> listeningEditors = new LinkedList<ITextEditor>();
 
 	@Override
 	public void partOpened(IWorkbenchPart part) {
-		if(part instanceof ITextEditor){		
-			System.out.println("partOpened");
-			addDocumentListener(part);
+		System.out.println("partOpened");
+		try{
+			addDocumentListener(part);		
+		}catch(IllegalArgumentException ex){
+			MyLogger.logInfo("Ignored part "+part.getTitle()+", was not an editor");			
 		}
 	}
 	
