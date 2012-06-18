@@ -10,7 +10,7 @@
    <extension
          point="org.eclipse.ui.startup">
       <startup
-            class="timedistributionplugin.StartUpManager"></startup>
+            class="timeDistributionPlugin.StartUpManager"></startup>
    </extension>
 
 </plugin>
