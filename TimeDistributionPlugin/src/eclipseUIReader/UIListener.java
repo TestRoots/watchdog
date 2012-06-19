@@ -15,7 +15,7 @@ public class UIListener {
 		for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows())
 	    {
 			//for existing windows
-			WindowListener.addPageListener(window);	        
-	    }     
+			WindowListener.addPageListener(window);       
+	    }
 	}
 }
