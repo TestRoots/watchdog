@@ -6,26 +6,22 @@ import org.eclipse.ui.IWorkbenchPage;
 import timeDistributionPlugin.MyLogger;
 
 
+
 public class PageListener implements IPageListener {
 	
 	@Override
 	public void pageOpened(IWorkbenchPage page) {
-		System.out.println("pageOpened");		
 		addPartListener(page);
 	}
 	
 	@Override
-	public void pageClosed(IWorkbenchPage page) {
-		System.out.println("pageClosed");
-	}
+	public void pageClosed(IWorkbenchPage page) {}
 	
 	@Override
-	public void pageActivated(IWorkbenchPage page) {
-		System.out.println("pageActivated");
-	}
+	public void pageActivated(IWorkbenchPage page) {}
 	
 	@SuppressWarnings("deprecation")
-	public static void addPartListener(IWorkbenchPage page){
+	static void addPartListener(IWorkbenchPage page){
 		//for new added parts
 		page.addPartListener(new PartListener());
 		

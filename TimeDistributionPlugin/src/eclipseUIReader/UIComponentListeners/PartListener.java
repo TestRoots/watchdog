@@ -11,56 +11,43 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import timeDistributionPlugin.MyLogger;
+import eclipseUIReader.Events.DocumentAttentionEvent;
+import eclipseUIReader.Events.DocumentNotifier;
 
 
-public class PartListener implements IPartListener{
+
+public class PartListener extends DocumentNotifier implements IPartListener{
 	private static List<ITextEditor> listeningEditors = new LinkedList<ITextEditor>();
 
 	@Override
 	public void partOpened(IWorkbenchPart part) {
-		System.out.println("partOpened");
-		try{
+		if(part instanceof ITextEditor)
+		{
+			ITextEditor editor = (ITextEditor)part;
+			fireMyEvent(new DocumentAttentionEvent(editor));
 			addDocumentListener(part);		
-		}catch(IllegalArgumentException ex){
+		}else{
 			MyLogger.logInfo("Ignored part "+part.getTitle()+", was not an editor");			
 		}
 	}
 	
 	@Override
-	public void partDeactivated(IWorkbenchPart part) {
-		if(part instanceof ITextEditor){
-			System.out.println("partDeactivated");
-		}
-	}
+	public void partDeactivated(IWorkbenchPart part) {}
 	
 	@Override
-	public void partClosed(IWorkbenchPart part) {
-		if(part instanceof ITextEditor){
-			System.out.println("partClosed");
-		}
-	}
+	public void partClosed(IWorkbenchPart part) {}
 	
 	@Override
-	public void partBroughtToTop(IWorkbenchPart part) {
-		if(part instanceof ITextEditor){
-			System.out.println("partBroughtToTop");
-		}
-	}
+	public void partBroughtToTop(IWorkbenchPart part) {}
 	
 	@Override
-	public void partActivated(IWorkbenchPart part) {
-		if(part instanceof ITextEditor){
-			System.out.println("partActivated");
-			addDocumentListener(part);
-		}
-		
-	}
+	public void partActivated(IWorkbenchPart part) {}
 	
-	public static void addDocumentListener(IWorkbenchPart part){
+	static void addDocumentListener(IWorkbenchPart part){
 		if(!(part instanceof ITextEditor))
 			throw new IllegalArgumentException("Opened part was not an instance of ITextEditor, but of: "+part.toString());
 		
-		ITextEditor editor = (ITextEditor)part;        
+		final ITextEditor editor = (ITextEditor)part;        
 		if(!listeningEditors.contains(editor)){
 			IDocumentProvider dp = editor.getDocumentProvider();
 	        final IDocument doc = dp.getDocument(editor.getEditorInput());
@@ -68,17 +55,15 @@ public class PartListener implements IPartListener{
 				
 				@Override
 				public void documentChanged(DocumentEvent event) {
-					String s = doc.get();
-			        System.out.println(s);
+					DocumentNotifier.fireMyEvent(new DocumentAttentionEvent(editor));					
 				}
 				
 				@Override
-				public void documentAboutToBeChanged(DocumentEvent event) {
-					//System.out.println("documentAboutToBeChanged");
-				}
+				public void documentAboutToBeChanged(DocumentEvent event) {}
 			});
 	        listeningEditors.add(editor);			
-		}
+		}		
 	}
+	
 	
 }
