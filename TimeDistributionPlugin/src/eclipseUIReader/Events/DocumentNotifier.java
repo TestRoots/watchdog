@@ -15,13 +15,23 @@ public class DocumentNotifier {
         listenerList.remove(IDocumentAttentionListener.class, listener);
     }
 
-    protected static void fireMyEvent(DocumentAttentionEvent evt) {
+    protected static void fireDocumentActivatedEvent(DocumentAttentionEvent evt) {
         Object[] listeners = listenerList.getListenerList();
         // Each listener occupies two elements - the first is the listener class
         // and the second is the listener instance
         for (int i=0; i<listeners.length; i+=2) {
             if (listeners[i]==IDocumentAttentionListener.class) {
-                ((IDocumentAttentionListener)listeners[i+1]).onDocumentAlert(evt);
+                ((IDocumentAttentionListener)listeners[i+1]).onDocumentActivated(evt);
+            }
+        }
+    }
+    protected static void fireDocumentDeactivatedEvent(DocumentAttentionEvent evt) {
+        Object[] listeners = listenerList.getListenerList();
+        // Each listener occupies two elements - the first is the listener class
+        // and the second is the listener instance
+        for (int i=0; i<listeners.length; i+=2) {
+            if (listeners[i]==IDocumentAttentionListener.class) {
+                ((IDocumentAttentionListener)listeners[i+1]).onDocumentDeactivated(evt);
             }
         }
     }
