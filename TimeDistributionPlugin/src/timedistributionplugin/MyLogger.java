@@ -14,6 +14,9 @@ public class MyLogger {
 	public static void logInfo(String message){
 		log.log(Level.INFO, message);
 	}
+	public static void logSevere(String message){
+		log.log(Level.SEVERE, message);
+	}
 	
 	public static void log(Level level, String message){
 		log.log(level, message);

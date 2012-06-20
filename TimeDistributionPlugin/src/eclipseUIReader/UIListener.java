@@ -11,7 +11,7 @@ import eclipseUIReader.Events.DocumentNotifier;
 import eclipseUIReader.UIComponentListeners.WindowListener;
 
 
-public class UIListener extends DocumentNotifier {
+public class UIListener {
 	public void attachListeners(){		
 		
 		//for new windows
