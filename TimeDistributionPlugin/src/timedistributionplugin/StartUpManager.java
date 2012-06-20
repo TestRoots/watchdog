@@ -1,14 +1,10 @@
 package timeDistributionPlugin;
 
-import interval.ActiveInterval;
+import interval.IntervalManager;
 
 import org.eclipse.ui.IStartup;
 
-
 import eclipseUIReader.UIListener;
-import eclipseUIReader.Events.DocumentAttentionEvent;
-import eclipseUIReader.Events.DocumentNotifier;
-import eclipseUIReader.Events.IDocumentAttentionListener;
 
 
 public class StartUpManager implements IStartup {
@@ -17,22 +13,9 @@ public class StartUpManager implements IStartup {
 	public void earlyStartup() {
 		MyLogger.logInfo("Plugin startup");
 		
-		DocumentNotifier.addMyEventListener(new IDocumentAttentionListener() {
-			
-			@Override
-			public void onDocumentActivated(DocumentAttentionEvent evt) {
-				System.out.println(evt.getChangedEditor().getTitle() + " is activated");
-				
-				ActiveInterval activeInterval = new ActiveInterval(evt.getChangedEditor(), 3000);
-			}
-
-			@Override
-			public void onDocumentDeactivated(DocumentAttentionEvent evt) {
-				System.out.println(evt.getChangedEditor().getTitle() + " is DEactivated");
-			}
-		});
 		
-		new UIListener().attachListeners();
+		
+		IntervalManager manager = new IntervalManager();
 		
 	}
 

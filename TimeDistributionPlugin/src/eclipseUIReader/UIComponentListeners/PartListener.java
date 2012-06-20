@@ -9,13 +9,13 @@ import eclipseUIReader.Events.DocumentNotifier;
 
 
 
-public class PartListener extends DocumentNotifier implements IPartListener{
+public class PartListener implements IPartListener{
 	@Override
 	public void partOpened(IWorkbenchPart part) {
 		if(part instanceof ITextEditor)
 		{
 			ITextEditor editor = (ITextEditor)part;
-			fireDocumentActivatedEvent(new DocumentAttentionEvent(editor));
+			DocumentNotifier.fireDocumentActivatedEvent(new DocumentAttentionEvent(editor));
 		}else{
 			MyLogger.logInfo("Ignored part "+part.getTitle()+", was not an editor");			
 		}
@@ -26,7 +26,7 @@ public class PartListener extends DocumentNotifier implements IPartListener{
 		if(part instanceof ITextEditor)
 		{
 			ITextEditor editor = (ITextEditor)part;
-			fireDocumentDeactivatedEvent(new DocumentAttentionEvent(editor));
+			DocumentNotifier.fireDocumentDeactivatedEvent(new DocumentAttentionEvent(editor));
 		}
 	}
 	
@@ -41,7 +41,7 @@ public class PartListener extends DocumentNotifier implements IPartListener{
 		if(part instanceof ITextEditor)
 		{
 			ITextEditor editor = (ITextEditor)part;
-			fireDocumentActivatedEvent(new DocumentAttentionEvent(editor));
+			DocumentNotifier.fireDocumentActivatedEvent(new DocumentAttentionEvent(editor));
 		}
 	}
 	
