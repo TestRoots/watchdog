@@ -1,6 +1,9 @@
 package timeDistributionPlugin;
 
+import interval.ActiveInterval;
+
 import org.eclipse.ui.IStartup;
+
 
 import eclipseUIReader.UIListener;
 import eclipseUIReader.Events.DocumentAttentionEvent;
@@ -19,6 +22,8 @@ public class StartUpManager implements IStartup {
 			@Override
 			public void onDocumentActivated(DocumentAttentionEvent evt) {
 				System.out.println(evt.getChangedEditor().getTitle() + " is activated");
+				
+				ActiveInterval activeInterval = new ActiveInterval(evt.getChangedEditor(), 3000);
 			}
 
 			@Override

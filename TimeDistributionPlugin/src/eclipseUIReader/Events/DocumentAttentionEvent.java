@@ -2,9 +2,9 @@ package eclipseUIReader.Events;
 
 import java.util.EventObject;
 
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
+
+import util.TextEditorContentReader;
 
 @SuppressWarnings("serial")
 public class DocumentAttentionEvent extends EventObject {
@@ -17,9 +17,7 @@ public class DocumentAttentionEvent extends EventObject {
 		return editor;
 	}
 	
-	public String getText(){		
-		IDocumentProvider dp = editor.getDocumentProvider();
-        final IDocument doc = dp.getDocument(editor.getEditorInput());
-        return doc.get();
+	public String getContents(){		
+		return TextEditorContentReader.getEditorContent(editor);
 	}
 }
