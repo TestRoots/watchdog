@@ -1,4 +1,4 @@
-package UITester;
+package UITests;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,14 +18,10 @@ import eclipseUIReader.Events.DocumentAttentionEvent;
 import eclipseUIReader.Events.DocumentNotifier;
 import eclipseUIReader.Events.IDocumentAttentionListener;
 
-public class CreateProjectAndClass2 extends UITestCaseSWT {
-/*
+public class CreateProjectAndClass extends UITestCaseSWT {
+
 	private boolean eventFired = false;
-	
-	public synchronized boolean getBool(){
-		return eventFired;
-	}
-	
+		
 	/* @see junit.framework.TestCase#setUp()
 	 */
 	protected void setUp() throws Exception {
@@ -40,25 +36,30 @@ public class CreateProjectAndClass2 extends UITestCaseSWT {
 	 * Main test method.
 	 */
 	@Test
-	public void testCreateProjectAndClass2() throws Exception {
+	public void testCreateProjectAndClass() throws Exception {
 		
 		IDocumentAttentionListener lst = new IDocumentAttentionListener() {
 			
 			@Override
-			public void onDocumentAlert(DocumentAttentionEvent evt) {
-				//eventFired = true;
+			public void onDocumentActivated(DocumentAttentionEvent evt) {
+				eventFired = true;
 				System.out.println("Event got fired!");
+			}
+
+			@Override
+			public void onDocumentDeactivated(DocumentAttentionEvent evt) {
+				// TODO Auto-generated method stub
+				
 			}
 		};
 		
-		DocumentNotifier.addMyEventListener(lst);
-		
-		
+		DocumentNotifier.addMyEventListener(lst);		
 		
 		IUIContext ui = getUI();
 		ui.click(new MenuItemLocator("File/New/Project..."));
 		ui.wait(new ShellShowingCondition("New Project"));
-		ui.click(2, new FilteredTreeItemLocator("Java Project"));
+		ui.click(new FilteredTreeItemLocator("General"));
+		ui.click(2, new FilteredTreeItemLocator("Java/Java Project"));
 		ui.enterText("TestProject");
 		ui.click(new ButtonLocator("&Finish"));
 		ui.wait(new ShellShowingCondition("Open Associated Perspective?"));
@@ -71,13 +72,9 @@ public class CreateProjectAndClass2 extends UITestCaseSWT {
 		ui.wait(new ShellShowingCondition("New Java Class"));
 		ui.enterText("TestClass");
 		ui.click(new ButtonLocator("&Finish"));
-		ui.wait(new ShellDisposedCondition("New Java Class"));
-		
-		boolean blaat = false;
-		
-		Assert.assertEquals(true, blaat);
-		
-		//DocumentNotifier.removeMyEventListener(lst);
+		ui.wait(new ShellDisposedCondition("New Java Class"));		
+				
+		Assert.assertTrue(eventFired);
 	}
 
 }
