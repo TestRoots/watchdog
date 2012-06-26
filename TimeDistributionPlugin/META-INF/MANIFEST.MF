@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface,
  com.instantiations.common.core,
  com.instantiations.eclipse.util,
- org.eclipse.swt
+ org.eclipse.swt,
+ org.eclipse.ui.console;bundle-version="3.5.100"
 Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: TimeDistributionPlugin;singleton:=true
 Import-Package: org.eclipse.jface.text,org.eclipse.ui.texteditor
