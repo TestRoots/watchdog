@@ -1,4 +1,4 @@
-package interval;
+package interval.activityCheckers;
 
 import java.util.TimerTask;
 
@@ -20,7 +20,7 @@ public class ChangerCheckerTask extends TimerTask {
 		public abstract void onInactive();		
 	}
 	
-	private UpdateChecker checker;
+	private IUpdateChecker checker;
 	private RunCallBack callback;
 	private ITextEditor editor;
 	public ChangerCheckerTask(ITextEditor editor, RunCallBack callback){

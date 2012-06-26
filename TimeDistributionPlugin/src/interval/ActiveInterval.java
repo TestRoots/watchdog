@@ -1,21 +1,15 @@
 package interval;
 
-import interval.ChangerCheckerTask.RunCallBack;
+import interval.activityCheckers.ChangerCheckerTask;
+import interval.activityCheckers.ChangerCheckerTask.RunCallBack;
 
 import java.util.Timer;
 
-import org.eclipse.jface.text.DocumentEvent;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentListener;
-import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import eclipseUIReader.Events.DocumentAttentionEvent;
-import eclipseUIReader.Events.DocumentNotifier;
-
-public class ActiveInterval {
+class ActiveInterval extends Interval {
 	private Timer checkForChangeTimer;
-	private ITextEditor editor;
+	
 	/**
 	 * 
 	 * @param editor
@@ -24,7 +18,7 @@ public class ActiveInterval {
 	 * 		in millisecond
 	 */
 	public ActiveInterval(ITextEditor editor){
-		this.editor = editor;
+		super(editor);
 		checkForChangeTimer = new Timer();
 	}
 	
@@ -32,9 +26,6 @@ public class ActiveInterval {
 		checkForChangeTimer.schedule(new ChangerCheckerTask(editor, callbackWhenFinished), timeout, timeout);
 	}
 	
-	public ITextEditor getEditor(){
-		return editor;
-	}
 	public Timer getTimer(){
 		return checkForChangeTimer;
 	}

@@ -7,12 +7,12 @@ public class IntervalNotifier {
         new javax.swing.event.EventListenerList();
 
     // This methods allows classes to register for MyEvents
-    public static void addMyEventListener(IIntervalListener listener) {
+    protected static void addMyEventListener(IIntervalListener listener) {
         listenerList.add(IIntervalListener.class, listener);
     }
 
     // This methods allows classes to unregister for MyEvents
-    public static void removeMyEventListener(IIntervalListener listener) {
+    protected static void removeMyEventListener(IIntervalListener listener) {
         listenerList.remove(IIntervalListener.class, listener);
     }
 

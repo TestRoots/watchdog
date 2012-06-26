@@ -1,13 +1,11 @@
-package interval;
+package interval.activityCheckers;
 
 import org.eclipse.ui.texteditor.ITextEditor;
 
+import util.TextEditorContentReader;
 import exceptions.EditorClosedPrematurelyException;
 
-import timeDistributionPlugin.MyLogger;
-import util.TextEditorContentReader;
-
-public class UpdateChecker{
+public class UpdateChecker implements IUpdateChecker{
 
 	private ITextEditor editor;
 	private String previousContent;
@@ -18,6 +16,7 @@ public class UpdateChecker{
 		this.previousContent = TextEditorContentReader.getEditorContent(editor);
 	}
 	
+	@Override
 	public boolean hasChanged() throws EditorClosedPrematurelyException {
 		try{
 			lastCheckedContent = TextEditorContentReader.getEditorContent(editor);

@@ -4,6 +4,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import timeDistributionPlugin.MyLogger;
+import eclipseUIReader.DocChangeListenerAttacher;
 import eclipseUIReader.Events.DocumentAttentionEvent;
 import eclipseUIReader.Events.DocumentNotifier;
 
@@ -12,17 +13,20 @@ import eclipseUIReader.Events.DocumentNotifier;
 public class PartListener implements IPartListener{
 	@Override
 	public void partOpened(IWorkbenchPart part) {
-		if(part instanceof ITextEditor)
-		{
-			ITextEditor editor = (ITextEditor)part;
-			DocumentNotifier.fireDocumentActivatedEvent(new DocumentAttentionEvent(editor));
-		}else{
-			MyLogger.logInfo("Ignored part "+part.getTitle()+", was not an editor");			
+		try{
+			DocChangeListenerAttacher.listenToDocChanges(part);
+		}catch(IllegalArgumentException ex){
+			MyLogger.logInfo("Ignored part "+part.getTitle()+", was not an editor");
 		}
 	}
 	
 	@Override
 	public void partDeactivated(IWorkbenchPart part) {
+		
+	}
+	
+	@Override
+	public void partClosed(IWorkbenchPart part) {
 		if(part instanceof ITextEditor)
 		{
 			ITextEditor editor = (ITextEditor)part;
@@ -31,18 +35,17 @@ public class PartListener implements IPartListener{
 	}
 	
 	@Override
-	public void partClosed(IWorkbenchPart part) {}
-	
-	@Override
 	public void partBroughtToTop(IWorkbenchPart part) {}
 	
 	@Override
 	public void partActivated(IWorkbenchPart part) {
-		if(part instanceof ITextEditor)
-		{
-			ITextEditor editor = (ITextEditor)part;
-			DocumentNotifier.fireDocumentActivatedEvent(new DocumentAttentionEvent(editor));
+		try{
+			DocChangeListenerAttacher.listenToDocChanges(part);
+		}catch(IllegalArgumentException ex){
+			MyLogger.logInfo("Ignored part "+part.getTitle()+", was not an editor");
 		}
 	}
+
+	
 	
 }

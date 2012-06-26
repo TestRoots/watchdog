@@ -4,14 +4,14 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.texteditor.ITextEditor;
 
-import eclipseUIReader.Events.DocumentAttentionEvent;
-import eclipseUIReader.Events.DocumentNotifier;
 import eclipseUIReader.UIComponentListeners.WindowListener;
 
-
-public class UIListener {
+/**
+ * class that sets up the listeners for eclipse UI events
+ */
+public class UIListener implements IUIListener {
+	@Override
 	public void attachListeners(){		
 		
 		//for new windows
@@ -28,9 +28,7 @@ public class UIListener {
 			IWorkbenchPage activePage = window.getActivePage();
 			if(activePage != null){
 				IWorkbenchPart activePart = activePage.getActivePart();
-				if(activePart instanceof ITextEditor){				
-					DocumentNotifier.fireDocumentActivatedEvent(new DocumentAttentionEvent((ITextEditor) activePart));
-				}
+				DocChangeListenerAttacher.listenToDocChanges(activePart);			
 			}
 		}
 				
