@@ -7,12 +7,23 @@ import interval.events.IIntervalListener;
 import interval.events.NewIntervalEvent;
 
 import org.eclipse.ui.IStartup;
+import org.eclipse.ui.console.ConsolePlugin;
+import org.eclipse.ui.console.IConsole;
+import org.eclipse.ui.console.MessageConsole;
+import org.eclipse.ui.console.MessageConsoleStream;
 
 
 public class StartUpManager implements IStartup {
 
 	@Override
-	public void earlyStartup() {
+	public void earlyStartup() {	
+		
+		MessageConsole console = new MessageConsole("My Console", null);
+		console.activate();
+		ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[]{ console });
+		MessageConsoleStream stream = console.newMessageStream();
+		stream.println("Hello, world!");
+		
 		MyLogger.logInfo("Plugin startup");
 		
 		IIntervalKeeper intervalKeeper = new IntervalKeeper();
