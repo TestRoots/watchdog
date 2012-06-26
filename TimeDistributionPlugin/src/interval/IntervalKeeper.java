@@ -1,9 +1,18 @@
 package interval;
 
 
-import interval.activityCheckers.ChangerCheckerTask.RunCallBack;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
+import document.Document;
+import document.DocumentType;
+import document.IDocument;
+
+import interval.activityCheckers.RunCallBack;
+import interval.events.ClosingIntervalEvent;
 import interval.events.IIntervalListener;
-import interval.events.IntervalEvent;
+import interval.events.NewIntervalEvent;
 import interval.events.IntervalNotifier;
 import eclipseUIReader.IUIListener;
 import eclipseUIReader.UIListener;
@@ -15,7 +24,10 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	private ActiveInterval currentInterval;
 	private IUIListener UIListener;
 	
+	private List<IInterval> recordedIntervals;
+	
 	public IntervalKeeper(){
+		recordedIntervals= new LinkedList<IInterval>();
 		
 		DocumentNotifier.addMyEventListener(new IDocumentAttentionListener() {			
 			
@@ -44,10 +56,13 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 		UIListener.attachListeners();		
 	}
 	
-	private void closeCurrentInterval() {				
+	private void closeCurrentInterval() {	
+		IDocument doc = new Document(currentInterval.getEditor().getTitle(), DocumentType.PRODUCTION);
+		RecordedInterval recordedInterval = new RecordedInterval(doc, currentInterval.getTimeOfCreation(), new Date());
+		recordedIntervals.add(recordedInterval);
 		currentInterval.getTimer().cancel(); //stop the timer that checks for changes in a doc
 		currentInterval = null;
-		//IntervalNotifier.fireOnClosingInterval(new IntervalEvent(new Interval(null)));
+		IntervalNotifier.fireOnClosingInterval(new ClosingIntervalEvent(recordedInterval));
 	}
 	
 	private void createNewInterval(final DocumentAttentionEvent evt) {				
@@ -59,13 +74,21 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 				closeCurrentInterval();
 			}
 		});
-		IntervalNotifier.fireOnNewInterval(new IntervalEvent(activeInterval));
+		IntervalNotifier.fireOnNewInterval(new NewIntervalEvent(activeInterval));
 	}
 	
+	@Override
 	public void addIntervalListener(IIntervalListener listener){
 		IntervalNotifier.addMyEventListener(listener);
 	}
+	
+	@Override
 	public void removeIntervalListener(IIntervalListener listener){
 		IntervalNotifier.removeMyEventListener(listener);
+	}
+	
+	@Override
+	public List<IInterval> getRecordedIntervals(){
+		return recordedIntervals;
 	}
 }

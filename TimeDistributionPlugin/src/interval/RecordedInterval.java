@@ -1,12 +1,31 @@
 package interval;
 
-import org.eclipse.ui.texteditor.ITextEditor;
+import java.util.Date;
+
+import document.IDocument;
 
 public class RecordedInterval extends Interval {
 
-	public RecordedInterval(ITextEditor editor) {
-		super(editor);
-		// TODO Auto-generated constructor stub
+	private IDocument document;
+	private Date start;
+	private Date end;
+	
+	public RecordedInterval(IDocument document, Date start, Date end) {
+		this.document = document;
+		this.start = start;
+		this.end = end;
+	}
+
+	public IDocument getDocument() {
+		return document;
+	}
+	
+	public Date getStart(){
+		return start;
+	}
+	
+	public Date getEnd(){
+		return end;
 	}
 
 }

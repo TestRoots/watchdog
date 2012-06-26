@@ -12,6 +12,7 @@ public class TextEditorContentReader {
 			throw new IllegalArgumentException("doc provider is null");
 		IDocumentProvider dp = editor.getDocumentProvider();
         IDocument doc = dp.getDocument(editor.getEditorInput());
+        
         return doc.get();
 	}
 }

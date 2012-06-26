@@ -15,10 +15,6 @@ import eclipseUIReader.Events.DocumentNotifier;
 import exceptions.EditorClosedPrematurelyException;
 
 public class ChangerCheckerTask extends TimerTask {
-
-	public interface RunCallBack{
-		public abstract void onInactive();		
-	}
 	
 	private IUpdateChecker checker;
 	private RunCallBack callback;

@@ -16,7 +16,7 @@ public class IntervalNotifier {
         listenerList.remove(IIntervalListener.class, listener);
     }
 
-    protected static void fireOnNewInterval(IntervalEvent evt) {
+    protected static void fireOnNewInterval(NewIntervalEvent evt) {
         Object[] listeners = listenerList.getListenerList();
         // Each listener occupies two elements - the first is the listener class
         // and the second is the listener instance
@@ -26,7 +26,7 @@ public class IntervalNotifier {
             }
         }
     }
-    protected static void fireOnClosingInterval(IntervalEvent evt) {
+    protected static void fireOnClosingInterval(ClosingIntervalEvent evt) {
         Object[] listeners = listenerList.getListenerList();
         // Each listener occupies two elements - the first is the listener class
         // and the second is the listener instance
