@@ -2,8 +2,9 @@ package timeDistributionPlugin;
 
 import interval.IIntervalKeeper;
 import interval.IntervalKeeper;
+import interval.events.ClosingIntervalEvent;
 import interval.events.IIntervalListener;
-import interval.events.IntervalEvent;
+import interval.events.NewIntervalEvent;
 
 import org.eclipse.ui.IStartup;
 
@@ -18,13 +19,13 @@ public class StartUpManager implements IStartup {
 		intervalKeeper.addIntervalListener(new IIntervalListener() {
 			
 			@Override
-			public void onNewInterval(IntervalEvent evt) {				
-				MyLogger.logInfo("New interval: "+ evt.getInterval().getEditor().getTitle());
+			public void onNewInterval(NewIntervalEvent evt) {				
+				MyLogger.logInfo("New interval: "+ evt.getInterval().getEditor().getTitle());				
 			}
 			
 			@Override
-			public void onClosingInterval(IntervalEvent evt) {
-				MyLogger.logInfo("Closing interval"+ evt.getInterval().getEditor().getTitle());
+			public void onClosingInterval(ClosingIntervalEvent evt) {
+				MyLogger.logInfo("Closing interval "+ evt.getInterval().getDocument().getFileName() + " \n " + evt.getInterval().getStart() + " - " + evt.getInterval().getEnd() );
 			}
 		});
 		

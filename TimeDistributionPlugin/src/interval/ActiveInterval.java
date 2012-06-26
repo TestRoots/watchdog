@@ -1,14 +1,19 @@
 package interval;
 
 import interval.activityCheckers.ChangerCheckerTask;
-import interval.activityCheckers.ChangerCheckerTask.RunCallBack;
+import interval.activityCheckers.RunCallBack;
 
+import java.util.Date;
 import java.util.Timer;
 
 import org.eclipse.ui.texteditor.ITextEditor;
 
-class ActiveInterval extends Interval {
+public class ActiveInterval extends Interval {
 	private Timer checkForChangeTimer;
+	private Date timeOfCreation;
+	
+	protected ITextEditor editor;
+	
 	
 	/**
 	 * 
@@ -18,7 +23,8 @@ class ActiveInterval extends Interval {
 	 * 		in millisecond
 	 */
 	public ActiveInterval(ITextEditor editor){
-		super(editor);
+		this.editor = editor;
+		this.timeOfCreation = new Date();
 		checkForChangeTimer = new Timer();
 	}
 	
@@ -28,5 +34,13 @@ class ActiveInterval extends Interval {
 	
 	public Timer getTimer(){
 		return checkForChangeTimer;
+	}	
+	
+	public ITextEditor getEditor(){
+		return editor;
+	}
+	
+	public Date getTimeOfCreation(){
+		return timeOfCreation;
 	}
 }
