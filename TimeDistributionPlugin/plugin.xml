@@ -38,6 +38,7 @@
                label="Hello">
             <command
                   commandId="timeDistributionPlugin.commands.Hello"
+                  icon="resources/images/rsz_dog_icon.png"
                   label="Say hello"
                   style="push">
             </command>

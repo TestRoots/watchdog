@@ -3,6 +3,8 @@ package timeDistributionPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import timeDistributionPlugin.logging.MyLogger;
+
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -34,6 +36,7 @@ public class Activator extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
+		MyLogger.logInfo("Shutting down...");
 		plugin = null;
 		super.stop(context);
 	}

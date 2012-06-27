@@ -6,25 +6,25 @@ import interval.events.ClosingIntervalEvent;
 import interval.events.IIntervalListener;
 import interval.events.NewIntervalEvent;
 
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.StreamHandler;
+
 import org.eclipse.ui.IStartup;
-import org.eclipse.ui.console.ConsolePlugin;
-import org.eclipse.ui.console.IConsole;
-import org.eclipse.ui.console.MessageConsole;
-import org.eclipse.ui.console.MessageConsoleStream;
+
+import timeDistributionPlugin.logging.MessageConsoleManager;
+import timeDistributionPlugin.logging.MyLogger;
 
 
 public class StartUpManager implements IStartup {
 
 	@Override
-	public void earlyStartup() {	
+	public void earlyStartup() {
+		setUpLogger();
 		
-		MessageConsole console = new MessageConsole("My Console", null);
-		console.activate();
-		ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[]{ console });
-		MessageConsoleStream stream = console.newMessageStream();
-		stream.println("Hello, world!");
-		
-		MyLogger.logInfo("Plugin startup");
+		MyLogger.logSevere("Plugin startup");
 		
 		IIntervalKeeper intervalKeeper = new IntervalKeeper();
 		intervalKeeper.addIntervalListener(new IIntervalListener() {
@@ -38,8 +38,22 @@ public class StartUpManager implements IStartup {
 			public void onClosingInterval(ClosingIntervalEvent evt) {
 				MyLogger.logInfo("Closing interval "+ evt.getInterval().getDocument().getFileName() + " \n " + evt.getInterval().getStart() + " - " + evt.getInterval().getEnd() );
 			}
-		});
-		
+		});		
 	}
 
+	private void setUpLogger(){
+		SimpleFormatter fmt = new SimpleFormatter();
+		StreamHandler sh = new StreamHandler(MessageConsoleManager.getConsoleStream(), fmt);		
+		MyLogger.addHandler(sh, Level.SEVERE);
+		
+		try {
+			MyLogger.addHandler(new FileHandler("watchdog.log", true), Level.ALL);
+		} catch (SecurityException e) {
+			MyLogger.logSevere(e.getMessage());
+		} catch (IOException e) {
+			MyLogger.logSevere(e.getMessage());
+		}
+		
+		
+	}
 }

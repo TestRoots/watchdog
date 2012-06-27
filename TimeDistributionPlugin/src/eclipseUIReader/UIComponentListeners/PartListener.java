@@ -3,7 +3,7 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import timeDistributionPlugin.MyLogger;
+import timeDistributionPlugin.logging.MyLogger;
 import eclipseUIReader.DocChangeListenerAttacher;
 import eclipseUIReader.Events.DocumentAttentionEvent;
 import eclipseUIReader.Events.DocumentNotifier;
