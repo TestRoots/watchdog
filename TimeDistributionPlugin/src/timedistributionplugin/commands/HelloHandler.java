@@ -1,5 +1,9 @@
 package timeDistributionPlugin.commands;
 
+import java.io.FileNotFoundException;
+
+import javax.xml.bind.JAXBException;
+
 import interval.IInterval;
 import interval.IIntervalKeeper;
 import interval.IntervalKeeper;
@@ -10,6 +14,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.console.MessageConsoleStream;
 
 import timeDistributionPlugin.logging.MessageConsoleManager;
+import timingOutput.IntervalsToXMLWriter;
 
 public class HelloHandler extends AbstractHandler{
 
@@ -23,6 +28,16 @@ public class HelloHandler extends AbstractHandler{
 		for(IInterval interval : intervalKeeper.getRecordedIntervals()){
 			 stream.println(interval.getDocument().getFileName() +"\t\t" + interval.getDurationString()+ "\t\t" + interval.getStart()+" - "+interval.getEnd());
 			 
+		}
+		
+		try {
+			new IntervalsToXMLWriter().intervalToXML();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		return null;
