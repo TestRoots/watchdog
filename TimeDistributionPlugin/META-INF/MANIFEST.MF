@@ -21,3 +21,6 @@ Import-Package: org.eclipse.jface.text,
  org.joda.time
 Bundle-ActivationPolicy: lazy
 Bundle-Name: TimeDistributionPlugin
+Bundle-ClassPath: libs/joda-time-2.1.jar,
+ .
+Export-Package: org.joda.time

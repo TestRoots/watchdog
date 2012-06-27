@@ -17,5 +17,7 @@ public interface IInterval {
 
 	Duration getDuration();
 
+	String getDurationString();
+
 	
 }
