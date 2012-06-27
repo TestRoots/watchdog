@@ -21,7 +21,8 @@ public class HelloHandler extends AbstractHandler{
 		
 		IIntervalKeeper intervalKeeper = IntervalKeeper.getInstance();
 		for(IInterval interval : intervalKeeper.getRecordedIntervals()){
-			 stream.println(interval.getDocument().getFileName() +"\t\t" + interval.getDuration()+ "\t\t" + interval.getStart()+" - "+interval.getEnd());
+			 stream.println(interval.getDocument().getFileName() +"\t\t" + interval.getDurationString()+ "\t\t" + interval.getStart()+" - "+interval.getEnd());
+			 
 		}
 		
 		return null;
