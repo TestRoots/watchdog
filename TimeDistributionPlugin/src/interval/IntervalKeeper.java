@@ -26,7 +26,15 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	
 	private List<IInterval> recordedIntervals;
 	
-	public IntervalKeeper(){
+	private static IntervalKeeper instance = null;
+	
+	public static IntervalKeeper getInstance(){
+		if(instance == null)
+			instance = new IntervalKeeper();
+		return instance;
+	}
+	
+	private IntervalKeeper(){
 		recordedIntervals= new LinkedList<IInterval>();
 		
 		DocumentNotifier.addMyEventListener(new IDocumentAttentionListener() {			

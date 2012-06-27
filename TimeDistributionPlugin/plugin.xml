@@ -4,11 +4,6 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="timeDistributionPlugin.commands.RetrievedRecordedIntervalsHandler"
-            id="timeDistributionPlugin.commands.RetrieveRecordedIntervals"
-            name="RetrievedRecordedIntervals">
-      </command>
-      <command
             defaultHandler="timeDistributionPlugin.commands.HelloHandler"
             id="timeDistributionPlugin.commands.Hello"
             name="Hello">
@@ -16,20 +11,6 @@
    </extension>
    <extension
          point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:org.eclipse.ui.main.menu">
-         <menu
-               id="fileMenu"
-               label="TDP">
-            <command
-                  commandId="timeDistributionPlugin.commands.RetrieveRecordedIntervals"
-                  label="Retrieve meeeee"
-                  style="push"
-                  tooltip="Retrieve the stuff je weet">
-            </command>
-         </menu>
-      </menuContribution>
       <menuContribution
             allPopups="false"
             locationURI="toolbar:org.eclipse.ui.main.toolbar">

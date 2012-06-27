@@ -5,6 +5,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="lib" path="libs/org.eclipse.ui_extension.jar"/>
+	<classpathentry kind="lib" path="libs/joda-time-2.1.jar"/>
 	<classpathentry kind="lib" path="libs/mockito-all-1.9.5-rc1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

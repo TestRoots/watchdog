@@ -8,7 +8,7 @@ import java.util.Timer;
 
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class ActiveInterval extends Interval {
+public class ActiveInterval {
 	private Timer checkForChangeTimer;
 	private Date timeOfCreation;
 	

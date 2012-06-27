@@ -26,7 +26,7 @@ public class StartUpManager implements IStartup {
 		
 		MyLogger.logSevere("Plugin startup");
 		
-		IIntervalKeeper intervalKeeper = new IntervalKeeper();
+		IIntervalKeeper intervalKeeper = IntervalKeeper.getInstance();
 		intervalKeeper.addIntervalListener(new IIntervalListener() {
 			
 			@Override
