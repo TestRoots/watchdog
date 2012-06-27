@@ -8,7 +8,7 @@ import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import timeDistributionPlugin.MyLogger;
+import timeDistributionPlugin.logging.MyLogger;
 
 import eclipseUIReader.Events.DocumentAttentionEvent;
 import eclipseUIReader.Events.DocumentNotifier;
