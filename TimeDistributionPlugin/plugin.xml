@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="timeDistributionPlugin.commands.HelloHandler"
+            defaultHandler="nl.tudelft.watchdog.timeDistributionPlugin.commands.HelloHandler"
             id="timeDistributionPlugin.commands.Hello"
             name="Hello">
       </command>
@@ -29,7 +29,7 @@
    <extension
          point="org.eclipse.ui.startup">
       <startup
-            class="timeDistributionPlugin.StartUpManager"></startup>
+            class="nl.tudelft.watchdog.timeDistributionPlugin.StartUpManager"></startup>
    </extension>
 
 </plugin>

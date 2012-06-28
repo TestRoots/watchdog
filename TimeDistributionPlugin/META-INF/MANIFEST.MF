@@ -1,7 +1,7 @@
 Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Manifest-Version: 1.0
-Bundle-Activator: timeDistributionPlugin.Activator
+Bundle-Activator: nl.tudelft.watchdog.timeDistributionPlugin.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.junit,
