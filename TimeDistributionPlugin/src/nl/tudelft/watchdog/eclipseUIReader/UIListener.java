@@ -18,6 +18,7 @@ public class UIListener implements IUIListener {
 		
 		//for new windows
 		PlatformUI.getWorkbench().addWindowListener(new WindowListener());
+		
 		for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows())
 	    {
 			//for existing windows
