@@ -1,5 +1,7 @@
 package nl.tudelft.watchdog.timeDistributionPlugin;
 
+import java.lang.Thread.UncaughtExceptionHandler;
+
 import nl.tudelft.watchdog.timeDistributionPlugin.logging.MessageConsoleManager;
 import nl.tudelft.watchdog.timeDistributionPlugin.logging.MyLogger;
 
@@ -33,6 +35,13 @@ public class Activator extends AbstractUIPlugin {
 		plugin = this;
 		
 		MessageConsoleManager.getConsoleStream().println("watchdog starting");
+		
+		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+			public void uncaughtException(Thread t, Throwable e) {
+				MyLogger.logSevere(e);
+			}
+		});
+		
 	}
 
 	/*

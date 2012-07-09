@@ -25,7 +25,7 @@ public class IntervalsToXMLWriterTest {
 		intervals.add(new RecordedInterval(new Document("filename", DocumentType.TEST), new Date(12345678912L), new Date(13345355121L)));
 		
 		ByteArrayOutputStream os = new ByteArrayOutputStream(); 
-		new IntervalsToXMLWriter().intervalsToXML(intervals, os);
+		new IntervalsToXMLWriter().exportIntervals(intervals, os);
 		
 		try {
 			String out = new String(os.toByteArray(), "UTF-8");
@@ -33,8 +33,6 @@ public class IntervalsToXMLWriterTest {
 					"<?xml version=\"1.0\" encoding=\"UTF-8\"?><Intervals><Interval><Document><fileName>filename</fileName><documentType>TEST</documentType></Document><Start>12345678912</Start><End>13345355121</End><duration>277 hours, 41 minutes, 16 seconds and 209 milliseconds</duration></Interval></Intervals>"	
 					, out);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			Assert.fail();
 		}
 		

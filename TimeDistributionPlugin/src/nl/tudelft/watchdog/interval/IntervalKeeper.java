@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import nl.tudelft.watchdog.document.Document;
+import nl.tudelft.watchdog.document.DocumentFactory;
 import nl.tudelft.watchdog.document.DocumentType;
 import nl.tudelft.watchdog.document.IDocument;
 import nl.tudelft.watchdog.eclipseUIReader.IUIListener;
@@ -69,7 +70,7 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	}
 	
 	private void closeCurrentInterval() {	
-		IDocument doc = new Document(currentInterval.getEditor().getTitle(), DocumentType.PRODUCTION);
+		IDocument doc = DocumentFactory.createDocument(currentInterval.getEditor());
 		RecordedInterval recordedInterval = new RecordedInterval(doc, currentInterval.getTimeOfCreation(), new Date());
 		recordedIntervals.add(recordedInterval);
 		currentInterval.getTimer().cancel(); //stop the timer that checks for changes in a doc

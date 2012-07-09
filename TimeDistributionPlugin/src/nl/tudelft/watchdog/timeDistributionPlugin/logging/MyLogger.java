@@ -28,6 +28,11 @@ public class MyLogger {
 		flushAllHandlers();
 	}
 	
+	public static void logSevere(Throwable e){		
+		log.log(Level.SEVERE, e.getMessage(), e);
+		flushAllHandlers();
+	}
+	
 	public static void log(Level level, String message){
 		log.log(level, message);
 		flushAllHandlers();

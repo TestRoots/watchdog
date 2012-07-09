@@ -1,7 +1,6 @@
 package nl.tudelft.watchdog.timingOutput;
 
 
-import java.io.File;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -22,35 +21,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 
-public class IntervalsToXMLWriter {
-	/**
-	 * Prints intervals in XML format to a file
-	 * @param intervals
-	 * @param file
+public class IntervalsToXMLWriter implements IIntervalWriter {
+	
+	/* (non-Javadoc)
+	 * @see nl.tudelft.watchdog.timingOutput.IIntervalWriter#intervalsToXML(java.util.List, java.io.OutputStream)
 	 */
-	public void intervalsToXML(List<IInterval> intervals, File file) {		
-		try {
-			DOMSource source = transformIntervalsToXML(intervals);
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			StreamResult result = new StreamResult(file);			
-			 
-			transformer.transform(source, result); //print to stream
-			
-		} catch (TransformerConfigurationException e) {
-			MyLogger.logSevere(e.getMessage());
-		} catch (ParserConfigurationException e) {
-			MyLogger.logSevere(e.getMessage());
-		} catch (TransformerException e) {
-			MyLogger.logSevere(e.getMessage());
-		}
-	}
-	/**
-	 * Prints intervals in XML format to an output stream
-	 * @param intervals
-	 * @param file
-	 */
-	public void intervalsToXML(List<IInterval> intervals, OutputStream stream) {		
+	@Override
+	public void exportIntervals(List<IInterval> intervals, OutputStream stream) {		
 		try {
 			
 			DOMSource source = transformIntervalsToXML(intervals);

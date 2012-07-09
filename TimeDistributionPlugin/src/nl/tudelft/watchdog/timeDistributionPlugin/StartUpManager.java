@@ -18,7 +18,6 @@ import nl.tudelft.watchdog.timeDistributionPlugin.logging.MyLogger;
 import org.eclipse.ui.IStartup;
 
 
-
 public class StartUpManager implements IStartup {
 
 	@Override
@@ -48,13 +47,11 @@ public class StartUpManager implements IStartup {
 		MyLogger.addHandler(sh, Level.SEVERE);
 		
 		try {
-			MyLogger.addHandler(new FileHandler("watchdog.log", true), Level.ALL);
+			MyLogger.addHandler(new FileHandler("watchdoglog.xml", true), Level.ALL);
 		} catch (SecurityException e) {
 			MyLogger.logSevere(e.getMessage());
 		} catch (IOException e) {
 			MyLogger.logSevere(e.getMessage());
-		}
-		
-		
+		}		
 	}
 }

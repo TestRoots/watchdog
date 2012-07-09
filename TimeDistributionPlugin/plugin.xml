@@ -4,9 +4,9 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="nl.tudelft.watchdog.timeDistributionPlugin.commands.HelloHandler"
-            id="timeDistributionPlugin.commands.Hello"
-            name="Hello">
+            defaultHandler="nl.tudelft.watchdog.timeDistributionPlugin.commands.ExportHandler"
+            id="timeDistributionPlugin.commands.Export"
+            name="Export">
       </command>
    </extension>
    <extension
@@ -15,12 +15,12 @@
             allPopups="false"
             locationURI="toolbar:org.eclipse.ui.main.toolbar">
          <toolbar
-               id="timeDistributionPlugin.toolbar.Hello"
-               label="Hello">
+               id="timeDistributionPlugin.toolbar.Export"
+               label="Export time distribution">
             <command
-                  commandId="timeDistributionPlugin.commands.Hello"
+                  commandId="timeDistributionPlugin.commands.Export"
                   icon="resources/images/rsz_dog_icon.png"
-                  label="Say hello"
+                  label="Export time distribution"
                   style="push">
             </command>
          </toolbar>
