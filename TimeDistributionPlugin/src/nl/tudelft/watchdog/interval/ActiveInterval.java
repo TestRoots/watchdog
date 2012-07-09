@@ -1,6 +1,5 @@
 package nl.tudelft.watchdog.interval;
 
-
 import java.util.Date;
 import java.util.Timer;
 

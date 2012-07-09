@@ -1,6 +1,8 @@
 package nl.tudelft.watchdog.document;
 
-public interface IDocument {
+import java.io.Serializable;
+
+public interface IDocument extends Serializable {
 
 	DocumentType getDocumentType();
 

@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.timingOutput;
 
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -36,13 +37,16 @@ public class IntervalsToXMLWriter implements IIntervalWriter {
 			
 			StreamResult result = new StreamResult(stream);
 			transformer.transform(source, result); //print to stream
+			stream.close();
 			
 		} catch (TransformerConfigurationException e) {
-			MyLogger.logSevere(e.getMessage());
+			MyLogger.logSevere(e);
 		} catch (ParserConfigurationException e) {
-			MyLogger.logSevere(e.getMessage());
+			MyLogger.logSevere(e);
 		} catch (TransformerException e) {
-			MyLogger.logSevere(e.getMessage());
+			MyLogger.logSevere(e);
+		} catch (IOException e) {
+			MyLogger.logSevere(e);
 		}
 	}
 	
