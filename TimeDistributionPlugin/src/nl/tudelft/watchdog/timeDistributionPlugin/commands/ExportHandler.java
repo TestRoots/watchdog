@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
-
 import nl.tudelft.watchdog.interval.IInterval;
 import nl.tudelft.watchdog.interval.IIntervalKeeper;
 import nl.tudelft.watchdog.interval.IntervalKeeper;
@@ -33,13 +32,15 @@ public class ExportHandler extends AbstractHandler{
 	public Object execute(ExecutionEvent event) throws ExecutionException {		
 		stream.println("Wroof!");
 		
+		
 		IIntervalKeeper intervalKeeper = IntervalKeeper.getInstance();
 		for(IInterval interval : intervalKeeper.getRecordedIntervals()){
 			 stream.println(interval.getDocument().getFileName() +"\t\t" + interval.getDurationString()+ "\t\t" + interval.getStart()+" - "+interval.getEnd());			 
 		}
-		
-		try {
-			FileOutputStream fos = new FileOutputStream(new File("intervals.xml"));
+		try{
+			File f = new File("watchdog/intervals.xml");
+			f.mkdirs();
+			FileOutputStream fos = new FileOutputStream(f);
 			intervalWriter.exportIntervals(IntervalKeeper.getInstance().getRecordedIntervals(), fos);
 		} catch (FileNotFoundException e) {
 			MyLogger.logSevere(e);

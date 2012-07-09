@@ -12,5 +12,6 @@ public interface IIntervalKeeper {
 	void addIntervalListener(IIntervalListener listener);
 	void removeIntervalListener(IIntervalListener listener);
 	List<IInterval> getRecordedIntervals();
+	void setRecordedIntervals(List<IInterval> intervals);
 	
 }

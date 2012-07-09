@@ -5,9 +5,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import nl.tudelft.watchdog.document.Document;
 import nl.tudelft.watchdog.document.DocumentFactory;
-import nl.tudelft.watchdog.document.DocumentType;
 import nl.tudelft.watchdog.document.IDocument;
 import nl.tudelft.watchdog.eclipseUIReader.IUIListener;
 import nl.tudelft.watchdog.eclipseUIReader.UIListener;
@@ -103,5 +101,10 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	@Override
 	public List<IInterval> getRecordedIntervals(){
 		return recordedIntervals;
+	}
+	
+	@Override
+	public void setRecordedIntervals(List<IInterval> intervals){
+		recordedIntervals = intervals;
 	}
 }

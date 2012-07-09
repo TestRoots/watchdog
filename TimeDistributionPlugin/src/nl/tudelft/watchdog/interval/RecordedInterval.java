@@ -11,6 +11,7 @@ import org.joda.time.format.PeriodFormat;
 
 public class RecordedInterval implements IInterval {
 
+	private static final long serialVersionUID = 1L;
 	private IDocument document;
 	private Date start;
 	private Date end;
