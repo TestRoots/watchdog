@@ -20,9 +20,5 @@ public class PageListener implements IPageListener {
 	static void addPartListener(IWorkbenchPage page){
 		//for new added parts
 		page.addPartListener(new PartListener());
-		
-		//page.getEditorReferences()
 	}
 }
-
-

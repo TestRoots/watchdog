@@ -29,7 +29,7 @@
    <extension
          point="org.eclipse.ui.startup">
       <startup
-            class="nl.tudelft.watchdog.timeDistributionPlugin.StartUpManager"></startup>
+            class="nl.tudelft.watchdog.timeDistributionPlugin.commands.StartUpManager"></startup>
    </extension>
 
 </plugin>
