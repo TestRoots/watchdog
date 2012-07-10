@@ -14,7 +14,6 @@ public class ActiveInterval {
 	
 	protected ITextEditor editor;
 	
-	
 	/**
 	 * 
 	 * @param editor

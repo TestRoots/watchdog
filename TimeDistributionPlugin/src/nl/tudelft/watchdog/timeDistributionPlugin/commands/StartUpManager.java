@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.timeDistributionPlugin;
+package nl.tudelft.watchdog.timeDistributionPlugin.commands;
 
 
 import java.io.IOException;

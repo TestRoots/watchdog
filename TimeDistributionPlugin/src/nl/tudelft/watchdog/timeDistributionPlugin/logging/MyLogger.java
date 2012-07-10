@@ -8,7 +8,7 @@ public class MyLogger {
 	private static Logger log;
 	
 	static{
-		log = Logger.getLogger("TDPlogger");
+		log = Logger.getLogger("Watchdoglogger");
 		log.setUseParentHandlers(false);
 	}	
 	
@@ -45,7 +45,6 @@ public class MyLogger {
 	
 	public static void closeAllHandlers(){
 		for(Handler h : log.getHandlers()){			
-			h.flush();
 			h.close();
 		}
 	}
