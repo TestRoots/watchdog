@@ -8,6 +8,11 @@
             id="timeDistributionPlugin.commands.Export"
             name="Export">
       </command>
+      <command
+            defaultHandler="nl.tudelft.watchdog.timeDistributionPlugin.commands.ResetHandler"
+            id="timeDistributionPlugin.commands.Reset"
+            name="Reset">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -24,12 +29,22 @@
                   style="push">
             </command>
          </toolbar>
+         <toolbar
+               id="timeDistributionPlugin.toolbar.Reset"
+               label="Reset">
+            <command
+                  commandId="timeDistributionPlugin.commands.Reset"
+                  icon="resources/images/rsz_dog_icon_del.png"
+                  label="Reset recordings"
+                  style="push">
+            </command>
+         </toolbar>
       </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.startup">
       <startup
-            class="nl.tudelft.watchdog.timeDistributionPlugin.commands.StartUpManager"></startup>
+            class="nl.tudelft.watchdog.timeDistributionPlugin.commands.StartUpHandler"></startup>
    </extension>
 
 </plugin>

@@ -19,7 +19,7 @@ import nl.tudelft.watchdog.timeDistributionPlugin.logging.MyLogger;
 import org.eclipse.ui.IStartup;
 
 
-public class StartUpManager implements IStartup {
+public class StartUpHandler implements IStartup {
 
 	@Override
 	public void earlyStartup() {
