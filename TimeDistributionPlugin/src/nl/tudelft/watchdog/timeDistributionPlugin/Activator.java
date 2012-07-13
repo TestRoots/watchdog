@@ -41,7 +41,6 @@ public class Activator extends AbstractUIPlugin {
 				MyLogger.logSevere(e);
 			}
 		});
-		
 	}
 
 	/*

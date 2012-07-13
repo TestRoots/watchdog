@@ -53,7 +53,7 @@ public class ChangerCheckerTask extends TimerTask {
 			@Override
 			public void documentChanged(DocumentEvent event) {
 				//listen to this event just once, notify that the document is activated, then remove this listener
-				DocumentNotifier.fireDocumentActivatedEvent(new DocumentAttentionEvent(editor));
+				DocumentNotifier.fireDocumentStartEditingEvent(new DocumentAttentionEvent(editor));
 				doc.removeDocumentListener(this);
 			}
 			
