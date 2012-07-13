@@ -1,5 +1,7 @@
 package nl.tudelft.watchdog.eclipseUIReader;
 
+import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentAttentionEvent;
+import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentNotifier;
 import nl.tudelft.watchdog.eclipseUIReader.UIComponentListeners.WindowListener;
 import nl.tudelft.watchdog.interval.RecordedIntervalSerializationManager;
 
@@ -18,37 +20,41 @@ import org.eclipse.ui.texteditor.ITextEditor;
 public class UIListener implements IUIListener {
 	@Override
 	public void attachListeners(){
+		addShutdownListeners();
 		
+		PlatformUI.getWorkbench().addWindowListener(new WindowListener());
+		
+		addListenersToAlreadyOpenWindows();				
+	}
+
+	private void addShutdownListeners() {
 		PlatformUI.getWorkbench().addWorkbenchListener(new IWorkbenchListener() {
 			
 			@Override
-			public boolean preShutdown(IWorkbench workbench, boolean forced) {
+			public boolean preShutdown(final IWorkbench workbench, final boolean forced) {
 				RecordedIntervalSerializationManager.saveRecordedIntervals();
 				return true;
 			}
 			
 			@Override
-			public void postShutdown(IWorkbench workbench) {}
+			public void postShutdown(final IWorkbench workbench) {}
 		});
-		
-		//for new windows
-		PlatformUI.getWorkbench().addWindowListener(new WindowListener());
-		
-		for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows())
+	}
+
+	private void addListenersToAlreadyOpenWindows() {
+		for (final IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows())
 	    {
-			//for existing windows
-			WindowListener.addPageListener(window); 
-	    }
-		
-		for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows())
-	    {
+			WindowListener.addPageListener(window);
 			IWorkbenchPage activePage = window.getActivePage();
+			
 			if(activePage != null){
-				IWorkbenchPart activePart = activePage.getActivePart();
-				if(activePart instanceof ITextEditor)
-					DocChangeListenerAttacher.listenToDocChanges(activePart);		
+				final IWorkbenchPart activePart = activePage.getActivePart();
+				if(activePart instanceof ITextEditor)	
+				{
+					DocumentNotifier.fireDocumentStartFocusEvent(new DocumentAttentionEvent((ITextEditor)activePart));
+					DocChangeListenerAttacher.listenToDocChanges(activePart);
+				}
 			} 
 		}
-				
 	}   
 }  

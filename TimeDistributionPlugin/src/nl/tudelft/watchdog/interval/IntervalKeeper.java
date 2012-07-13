@@ -17,6 +17,7 @@ import nl.tudelft.watchdog.interval.events.ClosingIntervalEvent;
 import nl.tudelft.watchdog.interval.events.IIntervalListener;
 import nl.tudelft.watchdog.interval.events.IntervalNotifier;
 import nl.tudelft.watchdog.interval.events.NewIntervalEvent;
+import nl.tudelft.watchdog.timeDistributionPlugin.logging.MessageConsoleManager;
 
 
 public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper  {
@@ -43,7 +44,7 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 		DocumentNotifier.addMyEventListener(new IDocumentAttentionListener() {			
 			
 			@Override
-			public void onDocumentActivated(final DocumentAttentionEvent evt) {
+			public void onDocumentStartEditing(final DocumentAttentionEvent evt) {
 				if(currentInterval != null && currentInterval.getEditor() != evt.getChangedEditor()){
 					closeCurrentInterval();					
 				}
@@ -56,10 +57,22 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 						
 			
 			@Override
-			public void onDocumentDeactivated(DocumentAttentionEvent evt) {
+			public void onDocumentStopEditing(DocumentAttentionEvent evt) {
 				if(currentInterval != null && evt.getChangedEditor() == currentInterval.getEditor()){										
 					closeCurrentInterval();
 				}				
+			}
+
+
+			@Override
+			public void onDocumentStartFocus(DocumentAttentionEvent evt) {
+				MessageConsoleManager.getConsoleStream().println("onDocumentStartFocus" + evt.getChangedEditor().getTitle());
+			}
+
+
+			@Override
+			public void onDocumentEndFocus(DocumentAttentionEvent evt) {
+				MessageConsoleManager.getConsoleStream().println("onDocumentEndFocus" + evt.getChangedEditor().getTitle());
 			}
 			
 		});

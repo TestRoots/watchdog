@@ -2,28 +2,25 @@ package nl.tudelft.watchdog.eclipseUIReader.UIComponentListeners;
 import nl.tudelft.watchdog.eclipseUIReader.DocChangeListenerAttacher;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentAttentionEvent;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentNotifier;
-import nl.tudelft.watchdog.timeDistributionPlugin.logging.MyLogger;
 
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 
-
-
 public class PartListener implements IPartListener{
 	@Override
 	public void partOpened(IWorkbenchPart part) {
-		try{
-			DocChangeListenerAttacher.listenToDocChanges(part);
-		}catch(IllegalArgumentException ex){
-			MyLogger.logInfo("Ignored part "+part.getTitle()+", was not an editor");
-		}
+		
 	}
 	
 	@Override
 	public void partDeactivated(IWorkbenchPart part) {
-		
+		if(part instanceof ITextEditor)
+		{
+			ITextEditor editor = (ITextEditor)part;
+			DocumentNotifier.fireDocumentEndFocusEvent(new DocumentAttentionEvent(editor));
+		}
 	}
 	
 	@Override
@@ -31,7 +28,7 @@ public class PartListener implements IPartListener{
 		if(part instanceof ITextEditor)
 		{
 			ITextEditor editor = (ITextEditor)part;
-			DocumentNotifier.fireDocumentDeactivatedEvent(new DocumentAttentionEvent(editor));
+			DocumentNotifier.fireDocumentStopEditingEvent(new DocumentAttentionEvent(editor));
 		}
 	}
 	
@@ -40,10 +37,11 @@ public class PartListener implements IPartListener{
 	
 	@Override
 	public void partActivated(IWorkbenchPart part) {
-		try{
+		if(part instanceof ITextEditor)
+		{
+			ITextEditor editor = (ITextEditor)part;
+			DocumentNotifier.fireDocumentStartFocusEvent(new DocumentAttentionEvent(editor));
 			DocChangeListenerAttacher.listenToDocChanges(part);
-		}catch(IllegalArgumentException ex){
-			MyLogger.logInfo("Ignored part "+part.getTitle()+", was not an editor");
 		}
 	}
 

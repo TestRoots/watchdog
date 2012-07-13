@@ -42,13 +42,24 @@ public class CreateProjectAndClass extends UITestCaseSWT {
 		IDocumentAttentionListener lst = new IDocumentAttentionListener() {
 			
 			@Override
-			public void onDocumentActivated(DocumentAttentionEvent evt) {
+			public void onDocumentStartEditing(DocumentAttentionEvent evt) {
 				eventFired = true;
-				System.out.println("Event got fired!");
 			}
 
 			@Override
-			public void onDocumentDeactivated(DocumentAttentionEvent evt) {
+			public void onDocumentStopEditing(DocumentAttentionEvent evt) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onDocumentStartFocus(DocumentAttentionEvent evt) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onDocumentEndFocus(DocumentAttentionEvent evt) {
 				// TODO Auto-generated method stub
 				
 			}

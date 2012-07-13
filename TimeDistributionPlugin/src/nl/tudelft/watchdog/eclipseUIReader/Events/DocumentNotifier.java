@@ -15,23 +15,43 @@ public class DocumentNotifier {
         listenerList.remove(IDocumentAttentionListener.class, listener);
     }
 
-    public static void fireDocumentActivatedEvent(DocumentAttentionEvent evt) {
+    public static void fireDocumentStartEditingEvent(DocumentAttentionEvent evt) {
         Object[] listeners = listenerList.getListenerList();
         // Each listener occupies two elements - the first is the listener class
         // and the second is the listener instance
         for (int i=0; i<listeners.length; i+=2) {
             if (listeners[i]==IDocumentAttentionListener.class) {
-                ((IDocumentAttentionListener)listeners[i+1]).onDocumentActivated(evt);
+                ((IDocumentAttentionListener)listeners[i+1]).onDocumentStartEditing(evt);
             }
         }
     }
-    public static void fireDocumentDeactivatedEvent(DocumentAttentionEvent evt) {
+    public static void fireDocumentStopEditingEvent(DocumentAttentionEvent evt) {
         Object[] listeners = listenerList.getListenerList();
         // Each listener occupies two elements - the first is the listener class
         // and the second is the listener instance
         for (int i=0; i<listeners.length; i+=2) {
             if (listeners[i]==IDocumentAttentionListener.class) {
-                ((IDocumentAttentionListener)listeners[i+1]).onDocumentDeactivated(evt);
+                ((IDocumentAttentionListener)listeners[i+1]).onDocumentStopEditing(evt);
+            }
+        }
+    }
+    public static void fireDocumentStartFocusEvent(DocumentAttentionEvent evt) {
+        Object[] listeners = listenerList.getListenerList();
+        // Each listener occupies two elements - the first is the listener class
+        // and the second is the listener instance
+        for (int i=0; i<listeners.length; i+=2) {
+            if (listeners[i]==IDocumentAttentionListener.class) {
+                ((IDocumentAttentionListener)listeners[i+1]).onDocumentStartFocus(evt);
+            }
+        }
+    }
+    public static void fireDocumentEndFocusEvent(DocumentAttentionEvent evt) {
+        Object[] listeners = listenerList.getListenerList();
+        // Each listener occupies two elements - the first is the listener class
+        // and the second is the listener instance
+        for (int i=0; i<listeners.length; i+=2) {
+            if (listeners[i]==IDocumentAttentionListener.class) {
+                ((IDocumentAttentionListener)listeners[i+1]).onDocumentEndFocus(evt);
             }
         }
     }
