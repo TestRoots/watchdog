@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.interval.events;
 
 import java.util.EventObject;
 
-import nl.tudelft.watchdog.interval.RecordedInterval;
+import nl.tudelft.watchdog.interval.recorded.RecordedInterval;
 
 @SuppressWarnings("serial")
 public class ClosingIntervalEvent extends EventObject {

@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.interval;
+package nl.tudelft.watchdog.interval.recorded;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,7 +10,9 @@ import org.joda.time.Duration;
 
 
 public interface IInterval extends Serializable {
-
+	
+	ActivityType getActivityType();
+	
 	IDocument getDocument();
 
 	Date getStart();

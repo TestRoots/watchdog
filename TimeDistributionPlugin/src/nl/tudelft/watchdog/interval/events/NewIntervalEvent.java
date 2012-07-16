@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.interval.events;
 
 import java.util.EventObject;
 
-import nl.tudelft.watchdog.interval.ActiveInterval;
+import nl.tudelft.watchdog.interval.active.ActiveInterval;
 
 @SuppressWarnings("serial")
 public class NewIntervalEvent extends EventObject {

@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.interval;
+package nl.tudelft.watchdog.interval.recorded;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
+import nl.tudelft.watchdog.interval.IntervalKeeper;
 import nl.tudelft.watchdog.timeDistributionPlugin.logging.MessageConsoleManager;
 import nl.tudelft.watchdog.timeDistributionPlugin.logging.MyLogger;
 

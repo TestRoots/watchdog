@@ -2,49 +2,33 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.ui.commands">
-      <command
-            defaultHandler="nl.tudelft.watchdog.timeDistributionPlugin.commands.ExportHandler"
-            id="timeDistributionPlugin.commands.Export"
-            name="Export">
-      </command>
-      <command
-            defaultHandler="nl.tudelft.watchdog.timeDistributionPlugin.commands.ResetHandler"
-            id="timeDistributionPlugin.commands.Reset"
-            name="Reset">
-      </command>
-   </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="toolbar:org.eclipse.ui.main.toolbar">
-         <toolbar
-               id="timeDistributionPlugin.toolbar.Export"
-               label="Export time distribution">
-            <command
-                  commandId="timeDistributionPlugin.commands.Export"
-                  icon="resources/images/rsz_dog_icon.png"
-                  label="Export time distribution"
-                  style="push">
-            </command>
-         </toolbar>
-         <toolbar
-               id="timeDistributionPlugin.toolbar.Reset"
-               label="Reset">
-            <command
-                  commandId="timeDistributionPlugin.commands.Reset"
-                  icon="resources/images/rsz_dog_icon_del.png"
-                  label="Reset recordings"
-                  style="push">
-            </command>
-         </toolbar>
-      </menuContribution>
-   </extension>
-   <extension
          point="org.eclipse.ui.startup">
       <startup
             class="nl.tudelft.watchdog.timeDistributionPlugin.commands.StartUpHandler"></startup>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="TimeDistributionPlugin.actionSet"
+            label="Sample Action Set"
+            visible="true">
+         <action
+               class="nl.tudelft.watchdog.timeDistributionPlugin.commands.ExportHandler"
+               icon="resources/images/rsz_dog_icon.png"
+               id="timeDistributionPlugin.toolbar.Export"
+               label="Export"
+               toolbarPath="wd"
+               tooltip="Export">
+         </action>
+         <action
+               class="nl.tudelft.watchdog.timeDistributionPlugin.commands.ResetHandler"
+               icon="resources/images/rsz_dog_icon_del.png"
+               id="timeDistributionPlugin.commands.Reset"
+               label="Reset"
+               toolbarPath="wd"
+               tooltip="Reset">
+         </action>
+      </actionSet>
    </extension>
 
 </plugin>

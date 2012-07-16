@@ -2,17 +2,27 @@ package nl.tudelft.watchdog.timeDistributionPlugin.commands;
 
 import nl.tudelft.watchdog.interval.IntervalKeeper;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 
-public class ResetHandler extends AbstractHandler {
+public class ResetHandler implements IWorkbenchWindowActionDelegate {
+
 
 	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public void run(IAction action) {
 		IntervalKeeper.getInstance().getRecordedIntervals().clear();
-		return null;
 	}
+
+	@Override
+	public void selectionChanged(IAction action, ISelection selection) {}
+
+	@Override
+	public void dispose() {}
+
+	@Override
+	public void init(IWorkbenchWindow window) {}
 
 }
