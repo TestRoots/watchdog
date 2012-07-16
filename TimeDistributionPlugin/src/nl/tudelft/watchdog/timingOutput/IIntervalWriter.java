@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.timingOutput;
 import java.io.OutputStream;
 import java.util.List;
 
-import nl.tudelft.watchdog.interval.IInterval;
+import nl.tudelft.watchdog.interval.recorded.IInterval;
 
 public interface IIntervalWriter {
 

@@ -15,7 +15,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import nl.tudelft.watchdog.interval.IInterval;
+import nl.tudelft.watchdog.interval.recorded.IInterval;
 import nl.tudelft.watchdog.timeDistributionPlugin.logging.MyLogger;
 
 import org.w3c.dom.Document;
@@ -57,46 +57,33 @@ public class IntervalsToXMLWriter implements IIntervalWriter {
 
 		// root elements
 		Document doc = docBuilder.newDocument();		
-		Element rootElement = doc.createElement("Intervals");
+		Element rootElement = doc.createElement("intervals");
 		doc.appendChild(rootElement);
  
 		for(IInterval interval : intervals){
-			// interval elements
-			Element intervalElement = doc.createElement("Interval");
+			Element intervalElement = doc.createElement("interval");
 			rootElement.appendChild(intervalElement); 
 			
-			// Document element
-			Element documentElement = doc.createElement("Document");
+			Element documentElement = doc.createElement("document");
 			intervalElement.appendChild(documentElement);
-			
-				//filename element
-				Element fileNameElement = doc.createElement("fileName");
-				fileNameElement.appendChild(doc.createTextNode(interval.getDocument().getFileName()));
-				documentElement.appendChild(fileNameElement);
 				
-				//documenttype element
-				Element documentTypeElement = doc.createElement("documentType");
-				documentTypeElement.appendChild(doc.createTextNode(interval.getDocument().getDocumentType().toString()));
-				documentElement.appendChild(documentTypeElement);
+				addElementWithValue(doc, documentElement, "fileName", interval.getDocument().getFileName());
+				addElementWithValue(doc, documentElement, "documentType", interval.getDocument().getDocumentType().toString());
 				
-			// Start element
-			Element startElement = doc.createElement("Start");
-			startElement.appendChild(doc.createTextNode(Long.toString(interval.getStart().getTime())));
-			intervalElement.appendChild(startElement);	
-			
-			// end element
-			Element endElement = doc.createElement("End");
-			endElement.appendChild(doc.createTextNode(Long.toString(interval.getEnd().getTime())));
-			intervalElement.appendChild(endElement);
-			
-			// end element
-			Element durationElement = doc.createElement("duration");
-			durationElement.appendChild(doc.createTextNode(interval.getDurationString()));
-			intervalElement.appendChild(durationElement);
+			addElementWithValue(doc, intervalElement, "start", Long.toString(interval.getStart().getTime()));
+			addElementWithValue(doc, intervalElement, "end", Long.toString(interval.getEnd().getTime()));
+			addElementWithValue(doc, intervalElement, "duration", interval.getDurationString());
+			addElementWithValue(doc, intervalElement, "activityType", interval.getActivityType().toString());
 		}		
 		
 		DOMSource source = new DOMSource(doc);
 		
 		return source;		
+	}
+	
+	private void addElementWithValue(Document doc, Element parent, String key, String value){
+		Element element = doc.createElement(key);
+		element.appendChild(doc.createTextNode(value));
+		parent.appendChild(element);
 	}
 }

@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.interval;
 import java.util.List;
 
 import nl.tudelft.watchdog.interval.events.IIntervalListener;
+import nl.tudelft.watchdog.interval.recorded.IInterval;
 
 
 /**

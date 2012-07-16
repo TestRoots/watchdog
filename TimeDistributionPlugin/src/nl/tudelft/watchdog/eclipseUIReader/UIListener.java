@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.eclipseUIReader;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentAttentionEvent;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentNotifier;
 import nl.tudelft.watchdog.eclipseUIReader.UIComponentListeners.WindowListener;
-import nl.tudelft.watchdog.interval.RecordedIntervalSerializationManager;
+import nl.tudelft.watchdog.interval.recorded.RecordedIntervalSerializationManager;
 
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;

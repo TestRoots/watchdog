@@ -4,7 +4,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import nl.tudelft.watchdog.interval.ActiveInterval;
+import nl.tudelft.watchdog.interval.active.ActiveEditingInterval;
 import nl.tudelft.watchdog.interval.activityCheckers.RunCallBack;
 
 import org.eclipse.jface.text.IDocument;
@@ -42,8 +42,8 @@ public class ActiveIntervalTest {
 	public void testInActivityAfter200ms() throws InterruptedException {
 		when(mockedDocument.get()).thenReturn("read when initialized").thenReturn("read after 100ms");
 		
-		ActiveInterval interval = new ActiveInterval(mockedITextEditor);
-		interval.start(100, new RunCallBack() {
+		ActiveEditingInterval interval = new ActiveEditingInterval(mockedITextEditor);
+		interval.addTimeoutListener(100, new RunCallBack() {
 			
 			@Override
 			public void onInactive() {
@@ -61,8 +61,8 @@ public class ActiveIntervalTest {
 	public void testActivityAfter200ms() throws InterruptedException {		
 		when(mockedDocument.get()).thenReturn("read when initialized").thenReturn("read after 100ms").thenReturn("read after 200ms");
 		
-		ActiveInterval interval = new ActiveInterval(mockedITextEditor);
-		interval.start(100, new RunCallBack() {
+		ActiveEditingInterval interval = new ActiveEditingInterval(mockedITextEditor);
+		interval.addTimeoutListener(100, new RunCallBack() {
 			
 			@Override
 			public void onInactive() {

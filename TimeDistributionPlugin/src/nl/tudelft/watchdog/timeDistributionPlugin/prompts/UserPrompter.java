@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.util.List;
 
 import nl.tudelft.watchdog.exceptions.FileSavingFailedException;
-import nl.tudelft.watchdog.interval.IInterval;
+import nl.tudelft.watchdog.interval.recorded.IInterval;
 import nl.tudelft.watchdog.timeDistributionPlugin.logging.MyLogger;
 import nl.tudelft.watchdog.timingOutput.IIntervalWriter;
 
