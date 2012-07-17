@@ -20,7 +20,6 @@ import nl.tudelft.watchdog.interval.events.ClosingIntervalEvent;
 import nl.tudelft.watchdog.interval.events.IIntervalListener;
 import nl.tudelft.watchdog.interval.events.IntervalNotifier;
 import nl.tudelft.watchdog.interval.events.NewIntervalEvent;
-import nl.tudelft.watchdog.interval.recorded.ActivityType;
 import nl.tudelft.watchdog.interval.recorded.IInterval;
 import nl.tudelft.watchdog.interval.recorded.RecordedInterval;
 import nl.tudelft.watchdog.timeDistributionPlugin.logging.MessageConsoleManager;
@@ -103,7 +102,7 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	
 	private void closeCurrentInterval(ActiveInterval interval) {	
 		IDocument doc = DocumentFactory.createDocument(interval.getEditor());
-		RecordedInterval recordedInterval = new RecordedInterval(doc, interval.getTimeOfCreation(), new Date(), intervalToActivityType(interval));
+		RecordedInterval recordedInterval = new RecordedInterval(doc, interval.getTimeOfCreation(), new Date(), interval.getActivityType());
 		recordedIntervals.add(recordedInterval);
 		interval.closeInterval();
 		IntervalNotifier.fireOnClosingInterval(new ClosingIntervalEvent(recordedInterval));
@@ -132,18 +131,6 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 		});
 		IntervalNotifier.fireOnNewInterval(new NewIntervalEvent(activeInterval));
 		
-	}
-	
-	//TODO: niet tevreden met deze oplossing. alex vragen?
-	private ActivityType intervalToActivityType(ActiveInterval interval){
-		if(interval instanceof ActiveEditingInterval){
-			return ActivityType.Editing;
-		}
-		else if(interval instanceof ActiveReadingInterval){
-			return ActivityType.Reading;
-		}
-		else
-			return ActivityType.Unknown;
 	}
 	
 	@Override

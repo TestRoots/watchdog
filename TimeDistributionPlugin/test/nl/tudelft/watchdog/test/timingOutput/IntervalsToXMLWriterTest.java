@@ -9,7 +9,7 @@ import java.util.List;
 
 import nl.tudelft.watchdog.document.Document;
 import nl.tudelft.watchdog.document.DocumentType;
-import nl.tudelft.watchdog.interval.recorded.ActivityType;
+import nl.tudelft.watchdog.interval.ActivityType;
 import nl.tudelft.watchdog.interval.recorded.IInterval;
 import nl.tudelft.watchdog.interval.recorded.RecordedInterval;
 import nl.tudelft.watchdog.timingOutput.IntervalsToXMLWriter;
