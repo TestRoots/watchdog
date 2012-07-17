@@ -47,22 +47,13 @@ public class CreateProjectAndClass extends UITestCaseSWT {
 			}
 
 			@Override
-			public void onDocumentStopEditing(DocumentAttentionEvent evt) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void onDocumentStopEditing(DocumentAttentionEvent evt) {}
 
 			@Override
-			public void onDocumentStartFocus(DocumentAttentionEvent evt) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void onDocumentStartFocus(DocumentAttentionEvent evt) {}
 
 			@Override
-			public void onDocumentEndFocus(DocumentAttentionEvent evt) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void onDocumentEndFocus(DocumentAttentionEvent evt) {}
 		};
 		
 		DocumentNotifier.addMyEventListener(lst);		

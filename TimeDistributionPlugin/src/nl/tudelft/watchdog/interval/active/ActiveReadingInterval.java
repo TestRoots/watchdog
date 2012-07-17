@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.interval.active;
 
+import nl.tudelft.watchdog.interval.ActivityType;
 import nl.tudelft.watchdog.interval.activityCheckers.RunCallBack;
 
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -20,5 +21,10 @@ public class ActiveReadingInterval extends ActiveInterval {
 			RunCallBack callbackWhenFinished) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public ActivityType getActivityType() {
+		return ActivityType.Reading;
 	}
 }

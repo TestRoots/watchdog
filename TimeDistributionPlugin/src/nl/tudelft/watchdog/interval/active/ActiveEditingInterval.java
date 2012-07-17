@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.interval.active;
 
 import java.util.Timer;
 
+import nl.tudelft.watchdog.interval.ActivityType;
 import nl.tudelft.watchdog.interval.activityCheckers.ChangerCheckerTask;
 import nl.tudelft.watchdog.interval.activityCheckers.RunCallBack;
 
@@ -33,6 +34,11 @@ public class ActiveEditingInterval extends ActiveInterval {
 	public void closeInterval() {
 		this.isClosed = true;
 		checkForChangeTimer.cancel();
+	}
+
+	@Override
+	public ActivityType getActivityType() {
+		return ActivityType.Editing;
 	}
 	
 }

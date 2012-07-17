@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.interval.recorded;
 import java.util.Date;
 
 import nl.tudelft.watchdog.document.IDocument;
+import nl.tudelft.watchdog.interval.ActivityType;
 
 import org.joda.time.Duration;
 import org.joda.time.Period;
