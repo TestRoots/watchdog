@@ -83,7 +83,7 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 					createNewReadingInterval(evt);
 				}
 				else if(currentReadingInterval.getEditor() != evt.getChangedEditor()){
-					closeCurrentInterval(currentEditingInterval);
+					closeCurrentInterval(currentReadingInterval);
 					createNewReadingInterval(evt);
 				}
 			}
@@ -101,36 +101,34 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	}
 	
 	private void closeCurrentInterval(ActiveInterval interval) {	
-		IDocument doc = DocumentFactory.createDocument(interval.getEditor());
-		RecordedInterval recordedInterval = new RecordedInterval(doc, interval.getTimeOfCreation(), new Date(), interval.getActivityType());
-		recordedIntervals.add(recordedInterval);
-		interval.closeInterval();
-		IntervalNotifier.fireOnClosingInterval(new ClosingIntervalEvent(recordedInterval));
+		if(!interval.isClosed()){
+			IDocument doc = DocumentFactory.createDocument(interval.getEditor());
+			RecordedInterval recordedInterval = new RecordedInterval(doc, interval.getTimeOfCreation(), new Date(), interval.getActivityType());
+			recordedIntervals.add(recordedInterval);
+			interval.closeInterval();
+			IntervalNotifier.fireOnClosingInterval(new ClosingIntervalEvent(recordedInterval));
+		}
 	}
 	
 	private void createNewEditingInterval(final DocumentAttentionEvent evt) {				
 		ActiveEditingInterval activeInterval = new ActiveEditingInterval(evt.getChangedEditor());
 		currentEditingInterval = activeInterval;
-		activeInterval.addTimeoutListener(TIMEOUT, new RunCallBack() {					
-			@Override
-			public void onInactive() {
-				closeCurrentInterval(currentEditingInterval);
-			}
-		});
-		IntervalNotifier.fireOnNewInterval(new NewIntervalEvent(activeInterval));
+		addNewIntervalHandlers(activeInterval);
 	}
 	private void createNewReadingInterval(final DocumentAttentionEvent evt) {				
 		ActiveReadingInterval activeInterval = new ActiveReadingInterval(evt.getChangedEditor());
 		currentReadingInterval = activeInterval;
-		
-		activeInterval.addTimeoutListener(TIMEOUT, new RunCallBack() {					
+		addNewIntervalHandlers(activeInterval);
+	}
+	
+	private void addNewIntervalHandlers(final ActiveInterval interval){
+		interval.addTimeoutListener(TIMEOUT, new RunCallBack() {					
 			@Override
 			public void onInactive() {
-				closeCurrentInterval(currentEditingInterval);
+				closeCurrentInterval(interval);
 			}
 		});
-		IntervalNotifier.fireOnNewInterval(new NewIntervalEvent(activeInterval));
-		
+		IntervalNotifier.fireOnNewInterval(new NewIntervalEvent(interval));
 	}
 	
 	@Override
