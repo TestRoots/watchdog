@@ -8,8 +8,8 @@ import nl.tudelft.watchdog.interval.activityCheckers.RunCallBack;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 public abstract class ActiveInterval {
-	private Date timeOfCreation;
-	private ITextEditor editor;
+	protected Date timeOfCreation;
+	protected ITextEditor editor;
 	protected boolean isClosed;
 	
 	public ActiveInterval(ITextEditor editor) {
