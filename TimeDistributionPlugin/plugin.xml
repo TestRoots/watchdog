@@ -30,5 +30,13 @@
          </action>
       </actionSet>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="nl.tudelft.watchdog.timeDistributionPlugin.PrefPage"
+            id="TimeDistributionPlugin.PreferencePage"
+            name="WatchDog">
+      </page>
+   </extension>
 
 </plugin>

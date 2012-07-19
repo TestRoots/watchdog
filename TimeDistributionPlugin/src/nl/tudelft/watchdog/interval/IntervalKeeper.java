@@ -22,12 +22,11 @@ import nl.tudelft.watchdog.interval.events.IntervalNotifier;
 import nl.tudelft.watchdog.interval.events.NewIntervalEvent;
 import nl.tudelft.watchdog.interval.recorded.IInterval;
 import nl.tudelft.watchdog.interval.recorded.RecordedInterval;
+import nl.tudelft.watchdog.timeDistributionPlugin.PrefPage;
 import nl.tudelft.watchdog.timeDistributionPlugin.logging.MessageConsoleManager;
 
 
 public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper  {
-	//TODO: in settings file?
-	private final long TIMEOUT;
 	
 	private ActiveReadingInterval currentReadingInterval;
 	private ActiveEditingInterval currentEditingInterval;
@@ -44,7 +43,6 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	}
 	
 	private IntervalKeeper(){
-		TIMEOUT = 3000;		
 		recordedIntervals= new LinkedList<IInterval>();
 		
 		listenToDocumentChanges();
@@ -113,16 +111,16 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	private void createNewEditingInterval(final DocumentAttentionEvent evt) {				
 		ActiveEditingInterval activeInterval = new ActiveEditingInterval(evt.getChangedEditor());
 		currentEditingInterval = activeInterval;
-		addNewIntervalHandlers(activeInterval);
+		addNewIntervalHandlers(activeInterval, PrefPage.getTimeOutEditing());
 	}
 	private void createNewReadingInterval(final DocumentAttentionEvent evt) {				
 		ActiveReadingInterval activeInterval = new ActiveReadingInterval(evt.getChangedEditor());
 		currentReadingInterval = activeInterval;
-		addNewIntervalHandlers(activeInterval);
+		addNewIntervalHandlers(activeInterval, PrefPage.getTimeOutReading());
 	}
 	
-	private void addNewIntervalHandlers(final ActiveInterval interval){
-		interval.addTimeoutListener(TIMEOUT, new RunCallBack() {					
+	private void addNewIntervalHandlers(final ActiveInterval interval, int timeout){
+		interval.addTimeoutListener(timeout, new RunCallBack() {					
 			@Override
 			public void onInactive() {
 				closeCurrentInterval(interval);
@@ -150,4 +148,5 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	public void setRecordedIntervals(List<IInterval> intervals){
 		recordedIntervals = intervals;
 	}
+	
 }
