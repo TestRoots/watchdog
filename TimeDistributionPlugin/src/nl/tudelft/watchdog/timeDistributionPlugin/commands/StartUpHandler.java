@@ -12,7 +12,6 @@ import nl.tudelft.watchdog.interval.IntervalKeeper;
 import nl.tudelft.watchdog.interval.events.ClosingIntervalEvent;
 import nl.tudelft.watchdog.interval.events.IIntervalListener;
 import nl.tudelft.watchdog.interval.events.NewIntervalEvent;
-import nl.tudelft.watchdog.interval.recorded.RecordedIntervalSerializationManager;
 import nl.tudelft.watchdog.timeDistributionPlugin.logging.MessageConsoleManager;
 import nl.tudelft.watchdog.timeDistributionPlugin.logging.MyLogger;
 
@@ -23,7 +22,7 @@ public class StartUpHandler implements IStartup {
 
 	@Override
 	public void earlyStartup() {
-		RecordedIntervalSerializationManager.retrieveRecordedIntervals();
+		//RecordedIntervalSerializationManager.retrieveRecordedIntervals();
 		setUpLogger();
 		
 		MyLogger.logInfo("Plugin recording..."); 

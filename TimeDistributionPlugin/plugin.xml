@@ -26,7 +26,7 @@
                id="timeDistributionPlugin.commands.Reset"
                label="Reset"
                toolbarPath="wd"
-               tooltip="Reset">
+               tooltip="Reset current recording session">
          </action>
       </actionSet>
    </extension>
