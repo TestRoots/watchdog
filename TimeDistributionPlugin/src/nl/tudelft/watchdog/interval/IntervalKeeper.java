@@ -1,8 +1,8 @@
 package nl.tudelft.watchdog.interval;
 
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import nl.tudelft.watchdog.document.DocumentFactory;
@@ -43,7 +43,7 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	}
 	
 	private IntervalKeeper(){
-		recordedIntervals= new LinkedList<IInterval>();
+		recordedIntervals= new ArrayList<IInterval>();
 		
 		listenToDocumentChanges();
 		UIListener = new UIListener();
