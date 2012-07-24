@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="lib" path="D:/Wouter/git/time-distribution-thesis/TimeDistributionPlugin/libs/mockito-all-1.9.5-rc1.jar"/>
+	<classpathentry kind="lib" path="libs/mockito-all-1.9.5-rc1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TimeDistributionPlugin"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
