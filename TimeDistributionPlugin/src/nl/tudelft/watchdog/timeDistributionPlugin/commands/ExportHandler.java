@@ -38,7 +38,7 @@ public class ExportHandler implements IWorkbenchWindowActionDelegate{
 		}
 		
 		try {
-			UserPrompter.saveIntervalsToFile(new IntervalsToXMLWriter(), IntervalKeeper.getInstance().getRecordedIntervals());
+			UserPrompter.saveIntervalsToFile(new IntervalsToXMLWriter(), completeList);
 		} catch (FileSavingFailedException e) {
 			MyLogger.logSevere(e);
 			UserPrompter.showMessageBox("Watchdog", "File could not be saved, please try again.");

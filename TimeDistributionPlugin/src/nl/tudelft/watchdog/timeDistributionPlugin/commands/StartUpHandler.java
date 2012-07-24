@@ -22,7 +22,6 @@ public class StartUpHandler implements IStartup {
 
 	@Override
 	public void earlyStartup() {
-		//RecordedIntervalSerializationManager.retrieveRecordedIntervals();
 		setUpLogger();
 		
 		MyLogger.logInfo("Plugin recording..."); 
@@ -32,12 +31,12 @@ public class StartUpHandler implements IStartup {
 			
 			@Override
 			public void onNewInterval(NewIntervalEvent evt) {				
-				MyLogger.logSevere("New interval: "+ evt.getInterval().getEditor().getTitle());				
+				MyLogger.logInfo("New interval: "+ evt.getInterval().getEditor().getTitle());				
 			}
 			
 			@Override
 			public void onClosingInterval(ClosingIntervalEvent evt) {
-				MyLogger.logSevere("Closing interval "+ evt.getInterval().getDocument().getFileName() + " \n " + evt.getInterval().getStart() + " - " + evt.getInterval().getEnd() );
+				MyLogger.logInfo("Closing interval "+ evt.getInterval().getDocument().getFileName() + " \n " + evt.getInterval().getStart() + " - " + evt.getInterval().getEnd() );
 			}
 		});
 	}
