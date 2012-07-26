@@ -32,7 +32,10 @@ public abstract class ActiveInterval {
 	
 	public void closeInterval(){
 		isClosed = true;
+		listenForReactivation();
 	}
+	
+	public abstract void listenForReactivation();
 	
 	public abstract ActivityType getActivityType();
 

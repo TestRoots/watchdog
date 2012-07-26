@@ -15,12 +15,12 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 
 
-public class ChangerCheckerTask extends TimerTask {
+public class EditingCheckerTask extends TimerTask {
 	
 	private IUpdateChecker checker;
 	private RunCallBack callback;
 	private ITextEditor editor;
-	public ChangerCheckerTask(ITextEditor editor, RunCallBack callback){
+	public EditingCheckerTask(ITextEditor editor, RunCallBack callback){
 		checker = new UpdateChecker(editor);
 		this.editor = editor;
 		this.callback = callback;
@@ -35,7 +35,7 @@ public class ChangerCheckerTask extends TimerTask {
 			}else{
 				//not active anymore
 				this.cancel();//stop timer
-				listenForChanges();//listen to changes in open, inactive documents
+				listenForReactivation();//listen to changes in open, inactive documents
 				callback.onInactive();//callback function			
 			}
 		} catch (EditorClosedPrematurelyException e) {
@@ -44,7 +44,7 @@ public class ChangerCheckerTask extends TimerTask {
 			
 	}
 	
-	private void listenForChanges(){
+	public void listenForReactivation(){
 		IDocumentProvider dp = editor.getDocumentProvider();
         final IDocument doc = dp.getDocument(editor.getEditorInput());
         

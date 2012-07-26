@@ -41,22 +41,23 @@ public class RecordedIntervalSerializationManager {
 		try
 		{
 			File parent = new File("watchdog/");
-			
-			for(String fileName : parent.list()){
-				File f = new File(parent, fileName);
-				
-				if(f.exists() && f.isFile()){			
-					FileInputStream fileIn = new FileInputStream(f);
+			if(parent.list() != null){
+				for(String fileName : parent.list()){
+					File f = new File(parent, fileName);
 					
-					ObjectInputStream in = new ObjectInputStream(fileIn);
-					List<IInterval> list = (List<IInterval>) in.readObject();
-					in.close();
-					fileIn.close();
-					completeList.addAll(list);
-				}
-				else
-				{
-					MyLogger.logInfo("no saved recorded intervals");
+					if(f.exists() && f.isFile()){			
+						FileInputStream fileIn = new FileInputStream(f);
+						
+						ObjectInputStream in = new ObjectInputStream(fileIn);
+						List<IInterval> list = (List<IInterval>) in.readObject();
+						in.close();
+						fileIn.close();
+						completeList.addAll(list);
+					}
+					else
+					{
+						MyLogger.logInfo("no saved recorded intervals");
+					}
 				}
 			}
 			return completeList;

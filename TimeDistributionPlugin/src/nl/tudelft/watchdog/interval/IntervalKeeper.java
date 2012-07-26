@@ -23,7 +23,6 @@ import nl.tudelft.watchdog.interval.events.NewIntervalEvent;
 import nl.tudelft.watchdog.interval.recorded.IInterval;
 import nl.tudelft.watchdog.interval.recorded.RecordedInterval;
 import nl.tudelft.watchdog.timeDistributionPlugin.PrefPage;
-import nl.tudelft.watchdog.timeDistributionPlugin.logging.MessageConsoleManager;
 
 
 public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper  {
@@ -147,6 +146,14 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	@Override
 	public void setRecordedIntervals(List<IInterval> intervals){
 		recordedIntervals = intervals;
+	}
+	
+	@Override
+	public void closeAllCurrentIntervals(){
+		if(currentEditingInterval != null)
+			closeCurrentInterval(currentEditingInterval);
+		if(currentReadingInterval != null)
+			closeCurrentInterval(currentReadingInterval);
 	}
 	
 }
