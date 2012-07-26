@@ -4,11 +4,14 @@ Manifest-Version: 1.0
 Bundle-Activator: nl.tudelft.watchdog.timeDistributionPlugin.Activator
 Bundle-Version: 1.0.2.Alpha
 Bundle-SymbolicName: WatchDogPlugin;singleton:=true
-Import-Package: org.eclipse.jface.preference,
+Import-Package: org.eclipse.core.resources,
+ org.eclipse.core.runtime.jobs,
+ org.eclipse.jface.preference,
  org.eclipse.jface.text,
  org.eclipse.swt.custom,
  org.eclipse.swt.events,
  org.eclipse.swt.widgets,
+ org.eclipse.ui,
  org.eclipse.ui.console,
  org.eclipse.ui.texteditor,
  org.joda.time
