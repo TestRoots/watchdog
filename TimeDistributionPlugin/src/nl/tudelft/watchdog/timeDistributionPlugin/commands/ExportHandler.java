@@ -32,6 +32,8 @@ public class ExportHandler implements IWorkbenchWindowActionDelegate{
 	public void run(IAction action) {
 		stream.println("Wroof!");		
 		
+		IntervalKeeper.getInstance().closeAllCurrentIntervals();
+		
 		List<IInterval> completeList = getAllRecordedIntervals();
 		for(IInterval interval : completeList){
 			 stream.println(interval.getDocument().getFileName() +"\t\t" + interval.getDurationString()+ "\t\t" + interval.getStart()+" - "+interval.getEnd());			 
