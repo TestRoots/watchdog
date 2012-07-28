@@ -8,4 +8,6 @@ public interface IDocument extends Serializable {
 
 	String getFileName();
 
+	String getProjectName();
+
 }

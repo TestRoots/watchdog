@@ -4,13 +4,20 @@ package nl.tudelft.watchdog.document;
 
 public class Document implements IDocument{
 	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	private String fileName;
+	private String projectName;
 	private DocumentType docType;	
 	
-	public Document(String fileName, DocumentType docType){
+	public Document(String projectName, String fileName, DocumentType docType){
+		this.projectName = projectName;
 		this.fileName = fileName;
 		this.docType = docType;
+	}
+	
+	@Override
+	public String getProjectName(){
+		return projectName;
 	}
 	
 	@Override

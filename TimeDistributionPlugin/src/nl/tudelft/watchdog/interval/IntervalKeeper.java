@@ -100,7 +100,7 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	
 	private void closeCurrentInterval(ActiveInterval interval) {	
 		if(!interval.isClosed()){
-			IDocument doc = DocumentFactory.createDocument(interval.getEditor());
+			IDocument doc = DocumentFactory.createDocument(interval.getPart());
 			RecordedInterval recordedInterval = new RecordedInterval(doc, interval.getTimeOfCreation(), new Date(), interval.getActivityType());
 			recordedIntervals.add(recordedInterval);
 			interval.closeInterval();
@@ -114,7 +114,7 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 		addNewIntervalHandlers(activeInterval, PrefPage.getTimeOutEditing());
 	}
 	private void createNewReadingInterval(final DocumentActivateEvent evt) {				
-		ActiveReadingInterval activeInterval = new ActiveReadingInterval(evt.getChangedEditor());
+		ActiveReadingInterval activeInterval = new ActiveReadingInterval(evt.getPart());
 		currentReadingInterval = activeInterval;
 		addNewIntervalHandlers(activeInterval, PrefPage.getTimeOutReading());
 	}
