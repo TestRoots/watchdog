@@ -6,6 +6,7 @@ import java.util.Timer;
 import nl.tudelft.watchdog.interval.ActivityType;
 import nl.tudelft.watchdog.interval.activityCheckers.RunCallBack;
 
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 public abstract class ActiveInterval {
@@ -13,11 +14,17 @@ public abstract class ActiveInterval {
 	protected Date timeOfCreation;
 	protected ITextEditor editor;
 	protected boolean isClosed;
+	protected IWorkbenchPart part;
 	
-	public ActiveInterval(ITextEditor editor) {
-		this.editor = editor;
+	public ActiveInterval(IWorkbenchPart part) {
+		this.part = part;
+		this.editor = (ITextEditor)part;
 		this.timeOfCreation = new Date();
 		this.isClosed = false;
+	}
+	
+	public IWorkbenchPart getPart(){
+		return part;
 	}
 	
 	public ITextEditor getEditor(){

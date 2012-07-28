@@ -6,7 +6,7 @@ import nl.tudelft.watchdog.interval.ActivityType;
 import nl.tudelft.watchdog.interval.activityCheckers.ReadingCheckerTask;
 import nl.tudelft.watchdog.interval.activityCheckers.RunCallBack;
 
-import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.IWorkbenchPart;
 
 public class ActiveReadingInterval extends ActiveInterval {
 	
@@ -16,8 +16,8 @@ public class ActiveReadingInterval extends ActiveInterval {
 	 * @param editor
 	 * 		the editor in this interval
 	 */
-	public ActiveReadingInterval(ITextEditor editor){
-		super(editor);
+	public ActiveReadingInterval(IWorkbenchPart part){
+		super(part);
 		checkForChangeTimer = new Timer();
 	}
 

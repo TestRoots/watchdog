@@ -10,6 +10,7 @@ import nl.tudelft.watchdog.timeDistributionPlugin.logging.MyLogger;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
@@ -20,9 +21,11 @@ public class EditingCheckerTask extends TimerTask {
 	private IUpdateChecker checker;
 	private RunCallBack callback;
 	private ITextEditor editor;
-	public EditingCheckerTask(ITextEditor editor, RunCallBack callback){
-		checker = new UpdateChecker(editor);
-		this.editor = editor;
+	private IWorkbenchPart part;
+	public EditingCheckerTask(IWorkbenchPart part, RunCallBack callback){
+		this.editor = (ITextEditor)part;
+		this.part = part;
+		checker = new UpdateChecker(editor);		
 		this.callback = callback;
 	}
 	
@@ -53,7 +56,7 @@ public class EditingCheckerTask extends TimerTask {
 			@Override
 			public void documentChanged(DocumentEvent event) {
 				//listen to this event just once, notify that the document is activated, then remove this listener
-				DocumentNotifier.fireDocumentStartEditingEvent(new DocumentActivateEvent(editor));
+				DocumentNotifier.fireDocumentStartEditingEvent(new DocumentActivateEvent(part));
 				doc.removeDocumentListener(this);
 			}
 			

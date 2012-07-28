@@ -12,6 +12,7 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 public class ReadingCheckerTask extends TimerTask {
@@ -22,11 +23,13 @@ public class ReadingCheckerTask extends TimerTask {
 	private PaintListener paintListener;
 	private RunCallBack callback;
 	private ITextEditor editor;
+	private IWorkbenchPart part;
 	
-	public ReadingCheckerTask(ITextEditor editor, RunCallBack callback) {
+	public ReadingCheckerTask(IWorkbenchPart part, RunCallBack callback) {
 		stillActive = true;		
 		this.callback = callback;
-		this.editor = editor;
+		this.part = part;
+		this.editor = (ITextEditor)part;
 		styledText = (StyledText) editor.getAdapter(Control.class);
 		
 		createListeners();
@@ -96,7 +99,7 @@ public class ReadingCheckerTask extends TimerTask {
 					styledText.addCaretListener(new CaretListener() { //cursor place changes		
 						@Override
 						public void caretMoved(CaretEvent event) {
-							DocumentNotifier.fireDocumentStartFocusEvent(new DocumentActivateEvent(editor));
+							DocumentNotifier.fireDocumentStartFocusEvent(new DocumentActivateEvent(part));
 							styledText.removeCaretListener(this); //listen just once to not get millions of events fired
 						}
 					});
@@ -104,7 +107,7 @@ public class ReadingCheckerTask extends TimerTask {
 					styledText.addPaintListener(new PaintListener() { //for redraws of the view, e.g. when scrolled		
 						@Override
 						public void paintControl(PaintEvent e) {
-							DocumentNotifier.fireDocumentStartFocusEvent(new DocumentActivateEvent(editor));
+							DocumentNotifier.fireDocumentStartFocusEvent(new DocumentActivateEvent(part));
 							styledText.removePaintListener(this); //listen just once to not get millions of events fired
 						}
 					});

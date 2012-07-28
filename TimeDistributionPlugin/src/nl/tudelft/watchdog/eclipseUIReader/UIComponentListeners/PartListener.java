@@ -19,8 +19,7 @@ public class PartListener implements IPartListener{
 	public void partDeactivated(IWorkbenchPart part) {
 		if(part instanceof ITextEditor)
 		{
-			ITextEditor editor = (ITextEditor)part;
-			DocumentNotifier.fireDocumentEndFocusEvent(new DocumentDeActivateEvent(editor));
+			DocumentNotifier.fireDocumentEndFocusEvent(new DocumentDeActivateEvent(part));
 		}
 	}
 	
@@ -28,8 +27,7 @@ public class PartListener implements IPartListener{
 	public void partClosed(IWorkbenchPart part) {
 		if(part instanceof ITextEditor)
 		{
-			ITextEditor editor = (ITextEditor)part;
-			DocumentNotifier.fireDocumentStopEditingEvent(new DocumentDeActivateEvent(editor));
+			DocumentNotifier.fireDocumentStopEditingEvent(new DocumentDeActivateEvent(part));
 		}
 	}
 	
@@ -40,8 +38,7 @@ public class PartListener implements IPartListener{
 	public void partActivated(IWorkbenchPart part) {
 		if(part instanceof ITextEditor)
 		{
-			ITextEditor editor = (ITextEditor)part;
-			DocumentNotifier.fireDocumentStartFocusEvent(new DocumentActivateEvent(editor));
+			DocumentNotifier.fireDocumentStartFocusEvent(new DocumentActivateEvent(part));
 			DocChangeListenerAttacher.listenToDocChanges(part);
 		}
 	}

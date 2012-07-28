@@ -29,7 +29,7 @@ public class DocChangeListenerAttacher {
 					
 					@Override
 					public void documentChanged(DocumentEvent event) {
-						DocumentNotifier.fireDocumentStartEditingEvent(new DocumentActivateEvent(editor));
+						DocumentNotifier.fireDocumentStartEditingEvent(new DocumentActivateEvent(part));
 						doc.removeDocumentListener(this); //just listen 1 time for this event to prevent overflow of events
 						handlers.remove(part);
 					}

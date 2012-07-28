@@ -67,6 +67,7 @@ public class IntervalsToXMLWriter implements IIntervalWriter {
 			Element documentElement = doc.createElement("document");
 			intervalElement.appendChild(documentElement);
 				
+				addElementWithValue(doc, documentElement, "projectName", interval.getDocument().getProjectName());
 				addElementWithValue(doc, documentElement, "fileName", interval.getDocument().getFileName());
 				addElementWithValue(doc, documentElement, "documentType", interval.getDocument().getDocumentType().toString());
 				
