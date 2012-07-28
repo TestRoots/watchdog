@@ -15,7 +15,7 @@ public class DocumentNotifier {
         listenerList.remove(IDocumentAttentionListener.class, listener);
     }
 
-    public static void fireDocumentStartEditingEvent(DocumentAttentionEvent evt) {
+    public static void fireDocumentStartEditingEvent(DocumentActivateEvent evt) {
         Object[] listeners = listenerList.getListenerList();
         // Each listener occupies two elements - the first is the listener class
         // and the second is the listener instance
@@ -25,7 +25,7 @@ public class DocumentNotifier {
             }
         }
     }
-    public static void fireDocumentStopEditingEvent(DocumentAttentionEvent evt) {
+    public static void fireDocumentStopEditingEvent(DocumentDeActivateEvent evt) {
         Object[] listeners = listenerList.getListenerList();
         // Each listener occupies two elements - the first is the listener class
         // and the second is the listener instance
@@ -35,7 +35,7 @@ public class DocumentNotifier {
             }
         }
     }
-    public static void fireDocumentStartFocusEvent(DocumentAttentionEvent evt) {
+    public static void fireDocumentStartFocusEvent(DocumentActivateEvent evt) {
         Object[] listeners = listenerList.getListenerList();
         // Each listener occupies two elements - the first is the listener class
         // and the second is the listener instance
@@ -45,7 +45,7 @@ public class DocumentNotifier {
             }
         }
     }
-    public static void fireDocumentEndFocusEvent(DocumentAttentionEvent evt) {
+    public static void fireDocumentEndFocusEvent(DocumentDeActivateEvent evt) {
         Object[] listeners = listenerList.getListenerList();
         // Each listener occupies two elements - the first is the listener class
         // and the second is the listener instance

@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.interval.activityCheckers;
 
 import java.util.TimerTask;
 
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentAttentionEvent;
+import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentActivateEvent;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentNotifier;
 
 import org.eclipse.swt.custom.CaretEvent;
@@ -89,26 +89,28 @@ public class ReadingCheckerTask extends TimerTask {
 	}
 	
 	public void listenForReactivation(){
-		Display.getDefault().asyncExec(new Runnable() {			
-			@Override
-			public void run() {
-				styledText.addCaretListener(new CaretListener() { //cursor place changes		
-					@Override
-					public void caretMoved(CaretEvent event) {
-						DocumentNotifier.fireDocumentStartFocusEvent(new DocumentAttentionEvent(editor));
-						styledText.removeCaretListener(this); //listen just once to not get millions of events fired
-					}
-				});
-				
-				styledText.addPaintListener(new PaintListener() { //for redraws of the view, e.g. when scrolled		
-					@Override
-					public void paintControl(PaintEvent e) {
-						DocumentNotifier.fireDocumentStartFocusEvent(new DocumentAttentionEvent(editor));
-						styledText.removePaintListener(this); //listen just once to not get millions of events fired
-					}
-				});
-			}
-		});
+		if(styledText.isDisposed()){		
+			Display.getDefault().asyncExec(new Runnable() {			
+				@Override
+				public void run() {
+					styledText.addCaretListener(new CaretListener() { //cursor place changes		
+						@Override
+						public void caretMoved(CaretEvent event) {
+							DocumentNotifier.fireDocumentStartFocusEvent(new DocumentActivateEvent(editor));
+							styledText.removeCaretListener(this); //listen just once to not get millions of events fired
+						}
+					});
+					
+					styledText.addPaintListener(new PaintListener() { //for redraws of the view, e.g. when scrolled		
+						@Override
+						public void paintControl(PaintEvent e) {
+							DocumentNotifier.fireDocumentStartFocusEvent(new DocumentActivateEvent(editor));
+							styledText.removePaintListener(this); //listen just once to not get millions of events fired
+						}
+					});
+				}
+			});
+		}
 	}
 
 }
