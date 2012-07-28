@@ -9,7 +9,8 @@ import nl.tudelft.watchdog.document.DocumentFactory;
 import nl.tudelft.watchdog.document.IDocument;
 import nl.tudelft.watchdog.eclipseUIReader.IUIListener;
 import nl.tudelft.watchdog.eclipseUIReader.UIListener;
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentAttentionEvent;
+import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentActivateEvent;
+import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentDeActivateEvent;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentNotifier;
 import nl.tudelft.watchdog.eclipseUIReader.Events.IDocumentAttentionListener;
 import nl.tudelft.watchdog.interval.active.ActiveEditingInterval;
@@ -53,7 +54,7 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 		DocumentNotifier.addMyEventListener(new IDocumentAttentionListener() {			
 			
 			@Override
-			public void onDocumentStartEditing(final DocumentAttentionEvent evt) {
+			public void onDocumentStartEditing(final DocumentActivateEvent evt) {
 				//create a new active interval when doc is new
 				if(currentEditingInterval == null || currentEditingInterval.isClosed()){
 					createNewEditingInterval(evt);	
@@ -65,7 +66,7 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 			}		
 			
 			@Override
-			public void onDocumentStopEditing(DocumentAttentionEvent evt) {
+			public void onDocumentStopEditing(DocumentDeActivateEvent evt) {
 				if(currentEditingInterval != null && evt.getChangedEditor() == currentEditingInterval.getEditor()){										
 					closeCurrentInterval(currentEditingInterval);
 				}				
@@ -73,7 +74,7 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 
 
 			@Override
-			public void onDocumentStartFocus(DocumentAttentionEvent evt) {
+			public void onDocumentStartFocus(DocumentActivateEvent evt) {
 				//MessageConsoleManager.getConsoleStream().println("onDocumentStartFocus" + evt.getChangedEditor().getTitle());
 				//create a new active interval when doc is new
 				if(currentReadingInterval == null || currentReadingInterval.isClosed()){
@@ -87,7 +88,7 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 
 
 			@Override
-			public void onDocumentEndFocus(DocumentAttentionEvent evt) {
+			public void onDocumentEndFocus(DocumentDeActivateEvent evt) {
 				//MessageConsoleManager.getConsoleStream().println("onDocumentEndFocus" + evt.getChangedEditor().getTitle());
 				if(currentReadingInterval != null && evt.getChangedEditor() == currentReadingInterval.getEditor()){										
 					closeCurrentInterval(currentReadingInterval);
@@ -107,12 +108,12 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 		}
 	}
 	
-	private void createNewEditingInterval(final DocumentAttentionEvent evt) {				
+	private void createNewEditingInterval(final DocumentActivateEvent evt) {				
 		ActiveEditingInterval activeInterval = new ActiveEditingInterval(evt.getChangedEditor());
 		currentEditingInterval = activeInterval;
 		addNewIntervalHandlers(activeInterval, PrefPage.getTimeOutEditing());
 	}
-	private void createNewReadingInterval(final DocumentAttentionEvent evt) {				
+	private void createNewReadingInterval(final DocumentActivateEvent evt) {				
 		ActiveReadingInterval activeInterval = new ActiveReadingInterval(evt.getChangedEditor());
 		currentReadingInterval = activeInterval;
 		addNewIntervalHandlers(activeInterval, PrefPage.getTimeOutReading());

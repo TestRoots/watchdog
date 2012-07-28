@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.interval.activityCheckers;
 
 import java.util.TimerTask;
 
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentAttentionEvent;
+import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentActivateEvent;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentNotifier;
 import nl.tudelft.watchdog.exceptions.EditorClosedPrematurelyException;
 import nl.tudelft.watchdog.timeDistributionPlugin.logging.MyLogger;
@@ -44,7 +44,7 @@ public class EditingCheckerTask extends TimerTask {
 			
 	}
 	
-	public void listenForReactivation(){
+	public void listenForReactivation(){		
 		IDocumentProvider dp = editor.getDocumentProvider();
         final IDocument doc = dp.getDocument(editor.getEditorInput());
         
@@ -53,7 +53,7 @@ public class EditingCheckerTask extends TimerTask {
 			@Override
 			public void documentChanged(DocumentEvent event) {
 				//listen to this event just once, notify that the document is activated, then remove this listener
-				DocumentNotifier.fireDocumentStartEditingEvent(new DocumentAttentionEvent(editor));
+				DocumentNotifier.fireDocumentStartEditingEvent(new DocumentActivateEvent(editor));
 				doc.removeDocumentListener(this);
 			}
 			

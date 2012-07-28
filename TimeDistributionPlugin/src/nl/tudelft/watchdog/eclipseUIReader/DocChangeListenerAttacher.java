@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.eclipseUIReader;
 import java.util.LinkedList;
 import java.util.List;
 
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentAttentionEvent;
+import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentActivateEvent;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentNotifier;
 
 import org.eclipse.jface.text.DocumentEvent;
@@ -29,7 +29,7 @@ public class DocChangeListenerAttacher {
 					
 					@Override
 					public void documentChanged(DocumentEvent event) {
-						DocumentNotifier.fireDocumentStartEditingEvent(new DocumentAttentionEvent(editor));
+						DocumentNotifier.fireDocumentStartEditingEvent(new DocumentActivateEvent(editor));
 						doc.removeDocumentListener(this); //just listen 1 time for this event to prevent overflow of events
 						handlers.remove(part);
 					}

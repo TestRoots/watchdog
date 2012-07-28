@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.test.UITests;
 
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentAttentionEvent;
+import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentActivateEvent;
+import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentDeActivateEvent;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentNotifier;
 import nl.tudelft.watchdog.eclipseUIReader.Events.IDocumentAttentionListener;
 
@@ -42,18 +43,18 @@ public class CreateProjectAndClass extends UITestCaseSWT {
 		IDocumentAttentionListener lst = new IDocumentAttentionListener() {
 			
 			@Override
-			public void onDocumentStartEditing(DocumentAttentionEvent evt) {
+			public void onDocumentStartEditing(DocumentActivateEvent evt) {
 				eventFired = true;
 			}
 
 			@Override
-			public void onDocumentStopEditing(DocumentAttentionEvent evt) {}
+			public void onDocumentStopEditing(DocumentDeActivateEvent evt) {}
 
 			@Override
-			public void onDocumentStartFocus(DocumentAttentionEvent evt) {}
+			public void onDocumentStartFocus(DocumentActivateEvent evt) {}
 
 			@Override
-			public void onDocumentEndFocus(DocumentAttentionEvent evt) {}
+			public void onDocumentEndFocus(DocumentDeActivateEvent evt) {}
 		};
 		
 		DocumentNotifier.addMyEventListener(lst);		

@@ -10,7 +10,6 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 public class ActiveReadingInterval extends ActiveInterval {
 	
-	private Timer timer;
 	private ReadingCheckerTask task;
 	
 	/**
@@ -19,13 +18,13 @@ public class ActiveReadingInterval extends ActiveInterval {
 	 */
 	public ActiveReadingInterval(ITextEditor editor){
 		super(editor);
-		timer = new Timer();
+		checkForChangeTimer = new Timer();
 	}
 
 	@Override
 	public void addTimeoutListener(long timeout, final RunCallBack callbackWhenFinished) {
 		task = new ReadingCheckerTask(this.getEditor(), callbackWhenFinished);
-		timer.schedule(new ReadingCheckerTask(this.getEditor(), callbackWhenFinished), 0, timeout);
+		checkForChangeTimer.schedule(new ReadingCheckerTask(this.getEditor(), callbackWhenFinished), 0, timeout);
 	}
 
 	@Override

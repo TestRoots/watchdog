@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.eclipseUIReader;
 
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentAttentionEvent;
+import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentActivateEvent;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentNotifier;
 import nl.tudelft.watchdog.eclipseUIReader.UIComponentListeners.WindowListener;
 import nl.tudelft.watchdog.interval.recorded.RecordedIntervalSerializationManager;
@@ -51,7 +51,7 @@ public class UIListener implements IUIListener {
 				final IWorkbenchPart activePart = activePage.getActivePart();
 				if(activePart instanceof ITextEditor)	
 				{
-					DocumentNotifier.fireDocumentStartFocusEvent(new DocumentAttentionEvent((ITextEditor)activePart));
+					DocumentNotifier.fireDocumentStartFocusEvent(new DocumentActivateEvent((ITextEditor)activePart));
 					DocChangeListenerAttacher.listenToDocChanges(activePart);
 				}
 			} 
