@@ -16,12 +16,17 @@ public class DocumentFactory {
 			
 			if(part instanceof IEditorPart){
 				IEditorPart  editorPart = (IEditorPart) part;
-			    IFileEditorInput input = (IFileEditorInput)editorPart.getEditorInput() ;
-			    IFile file = input.getFile();
-			    IProject activeProject = file.getProject();
-			    String activeProjectName = activeProject.getName();
+				String activeProjectName;
+				if(editorPart.getEditorInput() instanceof IFileEditorInput){
+					IFileEditorInput input = (IFileEditorInput)editorPart.getEditorInput() ;
+				    IFile file = input.getFile();
+				    IProject activeProject = file.getProject();
+				    activeProjectName = activeProject.getName();
+			    }else{
+			    	activeProjectName = "";
+			    }
 			    return new Document(activeProjectName, editor.getTitle(), DocumentClassifier.classifyDocument(editor.getTitle(), TextEditorContentReader.getEditorContent(editor)));
-			}else{
+		    }else{
 				throw new IllegalArgumentException("Part not an IEditorPart");
 			}
 		}else{
