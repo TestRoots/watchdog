@@ -7,7 +7,6 @@ import nl.tudelft.watchdog.interval.activityCheckers.EditingCheckerTask;
 import nl.tudelft.watchdog.interval.activityCheckers.RunCallBack;
 
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.texteditor.ITextEditor;
 
 public class ActiveEditingInterval extends ActiveInterval {
 	
@@ -29,15 +28,6 @@ public class ActiveEditingInterval extends ActiveInterval {
 		checkForChangeTimer.schedule(new EditingCheckerTask(this.getEditor(), callbackWhenFinished), timeout, timeout);
 	}
 	
-	
-	/*
-	@Override
-	public void closeInterval() {
-		this.isClosed = true;
-		checkForChangeTimer.cancel();
-		listenForReactivation();
-	}
-*/
 	@Override
 	public ActivityType getActivityType() {
 		return ActivityType.Editing;
