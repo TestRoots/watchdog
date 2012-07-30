@@ -23,6 +23,7 @@ public class DocumentClassifierTest {
 	@Test
 	public void testTestDocumentClassification() {
 		String contents = 
+				"import org.junit.assert" +
 				"public class TestClass{" +
 				"	@Test" +
 				"	public testSomething{" +
@@ -31,6 +32,19 @@ public class DocumentClassifierTest {
 				"}";
 		DocumentType type = DocumentClassifier.classifyDocument("TestClass.java", contents);
 		Assert.assertEquals(DocumentType.TEST, type);
+	}
+	
+	@Test
+	public void testTestDocumentClassificationWithoutJUnitImports() {
+		String contents = 
+				"public class TestClass{" +
+				"	@Test" +
+				"	public testSomething{" +
+				"		//do something" +
+				"	}" +
+				"}";
+		DocumentType type = DocumentClassifier.classifyDocument("TestClass.java", contents);
+		Assert.assertEquals(DocumentType.PRODUCTION, type);
 	}
 	
 	@Test

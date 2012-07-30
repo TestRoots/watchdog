@@ -35,13 +35,13 @@ public class Activator extends AbstractUIPlugin {
 		plugin = this;
 		
 		MessageConsoleManager.getConsoleStream().println("watchdog starting");
-		/*
+		
 		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 			public void uncaughtException(Thread t, Throwable e) {
 				MyLogger.logSevere(e);
 			}
 		});
-		*/
+		
 	}
 
 	/*
