@@ -92,7 +92,7 @@ public class ReadingCheckerTask extends TimerTask {
 	}
 	
 	public void listenForReactivation(){
-		if(styledText.isDisposed()){		
+		if(!styledText.isDisposed()){		
 			Display.getDefault().asyncExec(new Runnable() {			
 				@Override
 				public void run() {

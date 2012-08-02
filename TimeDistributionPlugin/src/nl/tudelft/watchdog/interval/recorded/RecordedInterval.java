@@ -12,17 +12,19 @@ import org.joda.time.format.PeriodFormat;
 
 public class RecordedInterval implements IInterval {
 
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
 	private IDocument document;
 	private Date start;
 	private Date end;
 	private ActivityType activityType;
+	private boolean isDebugMode;
 	
-	public RecordedInterval(IDocument document, Date start, Date end, ActivityType activityType) {
+	public RecordedInterval(IDocument document, Date start, Date end, ActivityType activityType, boolean debugMode) {
 		this.document = document;
 		this.start = start;
 		this.end = end;
 		this.activityType = activityType;
+		this.isDebugMode = debugMode;
 	}
 
 	@Override
@@ -54,6 +56,11 @@ public class RecordedInterval implements IInterval {
 	@Override
 	public ActivityType getActivityType() {
 		return activityType;
+	}
+	
+	@Override
+	public boolean isDebugMode(){
+		return isDebugMode;
 	}
 
 }

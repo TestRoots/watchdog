@@ -2,7 +2,7 @@ Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Manifest-Version: 1.0
 Bundle-Activator: nl.tudelft.watchdog.timeDistributionPlugin.Activator
-Bundle-Version: 1.1.0.Alpha
+Bundle-Version: 1.2.0.Alpha
 Bundle-SymbolicName: WatchDogPlugin;singleton:=true
 Import-Package: org.eclipse.core.resources,
  org.eclipse.core.runtime.jobs,

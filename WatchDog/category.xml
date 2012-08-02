@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/WatchDogFeature_1.1.0.qualifier.jar" id="WatchDogFeature" version="1.1.0.qualifier">
+   <feature url="features/WatchDogFeature_1.2.0.qualifier.jar" id="WatchDogFeature" version="1.2.0.qualifier">
       <category name="WatchDog"/>
    </feature>
    <category-def name="WatchDog" label="WatchDog"/>

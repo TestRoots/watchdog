@@ -24,6 +24,7 @@ import nl.tudelft.watchdog.interval.events.NewIntervalEvent;
 import nl.tudelft.watchdog.interval.recorded.IInterval;
 import nl.tudelft.watchdog.interval.recorded.RecordedInterval;
 import nl.tudelft.watchdog.timeDistributionPlugin.PrefPage;
+import nl.tudelft.watchdog.util.WatchDogUtil;
 
 
 public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper  {
@@ -101,7 +102,7 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	private void closeCurrentInterval(ActiveInterval interval) {	
 		if(!interval.isClosed()){
 			IDocument doc = DocumentFactory.createDocument(interval.getPart());
-			RecordedInterval recordedInterval = new RecordedInterval(doc, interval.getTimeOfCreation(), new Date(), interval.getActivityType());
+			RecordedInterval recordedInterval = new RecordedInterval(doc, interval.getTimeOfCreation(), new Date(), interval.getActivityType(), WatchDogUtil.isInDebugMode());
 			recordedIntervals.add(recordedInterval);
 			interval.closeInterval();
 			IntervalNotifier.fireOnClosingInterval(new ClosingIntervalEvent(recordedInterval));

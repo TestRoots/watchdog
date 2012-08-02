@@ -14,15 +14,10 @@ import nl.tudelft.watchdog.timeDistributionPlugin.logging.MyLogger;
 import nl.tudelft.watchdog.timeDistributionPlugin.prompts.UserPrompter;
 import nl.tudelft.watchdog.timingOutput.IntervalsToXMLWriter;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.MessageConsoleStream;
 
 public class ExportHandler implements IWorkbenchWindowActionDelegate{
@@ -35,18 +30,6 @@ public class ExportHandler implements IWorkbenchWindowActionDelegate{
 
 	@Override
 	public void run(IAction action) {
-		IEditorPart  editorPart =
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-
-				if(editorPart  != null)
-				{
-				    IFileEditorInput input = (IFileEditorInput)editorPart.getEditorInput() ;
-				    IFile file = input.getFile();
-				    IProject activeProject = file.getProject();
-				    String activeProjectName = activeProject.getName();
-				    stream.println(activeProjectName);
-				}
-		
 		stream.println("Wroof!");		
 		
 		IntervalKeeper.getInstance().closeAllCurrentIntervals();
