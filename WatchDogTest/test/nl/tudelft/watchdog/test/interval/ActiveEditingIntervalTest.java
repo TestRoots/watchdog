@@ -22,11 +22,14 @@ public class ActiveEditingIntervalTest {
 	
 	private Boolean isActive;	
 	
+	public ActiveEditingIntervalTest() {
+		setUpMocks();
+	}
 	
 	@Before
 	public void setUp(){
 		isActive = true;
-		setUpMocks();
+		//setUpMocks();
 	}
 	
 	private void setUpMocks() {
