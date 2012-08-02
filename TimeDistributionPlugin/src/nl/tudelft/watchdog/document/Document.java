@@ -7,7 +7,7 @@ public class Document implements IDocument{
 	private static final long serialVersionUID = 2L;
 	private String fileName;
 	private String projectName;
-	private DocumentType docType;	
+	private DocumentType docType;
 	
 	public Document(String projectName, String fileName, DocumentType docType){
 		this.projectName = projectName;

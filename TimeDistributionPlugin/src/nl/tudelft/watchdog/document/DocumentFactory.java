@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.document;
 
-import nl.tudelft.watchdog.util.TextEditorContentReader;
+import nl.tudelft.watchdog.util.WatchDogUtil;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -25,7 +25,9 @@ public class DocumentFactory {
 			    }else{
 			    	activeProjectName = "";
 			    }
-			    return new Document(activeProjectName, editor.getTitle(), DocumentClassifier.classifyDocument(editor.getTitle(), TextEditorContentReader.getEditorContent(editor)));
+				
+				
+				return new Document(activeProjectName, editor.getTitle(), DocumentClassifier.classifyDocument(editor.getTitle(), WatchDogUtil.getEditorContent(editor)));
 		    }else{
 				throw new IllegalArgumentException("Part not an IEditorPart");
 			}

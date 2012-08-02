@@ -24,5 +24,7 @@ public interface IInterval extends Serializable {
 
 	String getDurationString();
 
+	boolean isDebugMode();
+
 	
 }

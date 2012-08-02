@@ -75,6 +75,7 @@ public class IntervalsToXMLWriter implements IIntervalWriter {
 			addElementWithValue(doc, intervalElement, "end", Long.toString(interval.getEnd().getTime()));
 			addElementWithValue(doc, intervalElement, "duration", interval.getDurationString());
 			addElementWithValue(doc, intervalElement, "activityType", interval.getActivityType().toString());
+			addElementWithValue(doc, intervalElement, "debugMode", interval.isDebugMode()? "1":"0");
 		}		
 		
 		DOMSource source = new DOMSource(doc);
