@@ -5,7 +5,7 @@ import java.util.TimerTask;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentActivateEvent;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentNotifier;
 import nl.tudelft.watchdog.exceptions.EditorClosedPrematurelyException;
-import nl.tudelft.watchdog.timeDistributionPlugin.logging.MyLogger;
+import nl.tudelft.watchdog.plugin.logging.MyLogger;
 
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;

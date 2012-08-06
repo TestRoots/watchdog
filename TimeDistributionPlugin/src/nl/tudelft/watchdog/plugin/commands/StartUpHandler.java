@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.timeDistributionPlugin.commands;
+package nl.tudelft.watchdog.plugin.commands;
 
 
 import java.io.IOException;
@@ -12,8 +12,8 @@ import nl.tudelft.watchdog.interval.IntervalKeeper;
 import nl.tudelft.watchdog.interval.events.ClosingIntervalEvent;
 import nl.tudelft.watchdog.interval.events.IIntervalListener;
 import nl.tudelft.watchdog.interval.events.NewIntervalEvent;
-import nl.tudelft.watchdog.timeDistributionPlugin.logging.MessageConsoleManager;
-import nl.tudelft.watchdog.timeDistributionPlugin.logging.MyLogger;
+import nl.tudelft.watchdog.plugin.logging.MessageConsoleManager;
+import nl.tudelft.watchdog.plugin.logging.MyLogger;
 
 import org.eclipse.ui.IStartup;
 

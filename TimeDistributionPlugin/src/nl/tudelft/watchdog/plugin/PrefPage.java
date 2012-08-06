@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.timeDistributionPlugin;
+package nl.tudelft.watchdog.plugin;
 
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;

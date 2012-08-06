@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.timeDistributionPlugin.prompts;
+package nl.tudelft.watchdog.plugin.prompts;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,7 +7,7 @@ import java.util.List;
 
 import nl.tudelft.watchdog.exceptions.FileSavingFailedException;
 import nl.tudelft.watchdog.interval.recorded.IInterval;
-import nl.tudelft.watchdog.timeDistributionPlugin.logging.MyLogger;
+import nl.tudelft.watchdog.plugin.logging.MyLogger;
 import nl.tudelft.watchdog.timingOutput.IIntervalWriter;
 
 import org.eclipse.swt.SWT;

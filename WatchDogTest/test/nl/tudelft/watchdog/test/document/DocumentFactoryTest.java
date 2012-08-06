@@ -27,7 +27,7 @@ public class DocumentFactoryTest {
 		
 		when(mockedEditor.getTitle()).thenReturn("A.java");
 		
-		Document doc = DocumentFactory.createDocument(mockedEditor);
+		Document doc = new DocumentFactory().createDocument(mockedEditor);
 		
 		Assert.assertEquals("A.java", doc.getFileName());
 	}

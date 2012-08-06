@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.timeDistributionPlugin.commands;
+package nl.tudelft.watchdog.plugin.commands;
 
 import nl.tudelft.watchdog.interval.IntervalKeeper;
 
