@@ -16,7 +16,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import nl.tudelft.watchdog.interval.recorded.IInterval;
-import nl.tudelft.watchdog.timeDistributionPlugin.logging.MyLogger;
+import nl.tudelft.watchdog.plugin.logging.MyLogger;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

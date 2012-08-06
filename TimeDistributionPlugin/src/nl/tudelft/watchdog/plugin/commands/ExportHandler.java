@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.timeDistributionPlugin.commands;
+package nl.tudelft.watchdog.plugin.commands;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,10 +8,11 @@ import nl.tudelft.watchdog.exceptions.FileSavingFailedException;
 import nl.tudelft.watchdog.interval.IIntervalKeeper;
 import nl.tudelft.watchdog.interval.IntervalKeeper;
 import nl.tudelft.watchdog.interval.recorded.IInterval;
+import nl.tudelft.watchdog.interval.recorded.IRecordedIntervalSerializationManager;
 import nl.tudelft.watchdog.interval.recorded.RecordedIntervalSerializationManager;
-import nl.tudelft.watchdog.timeDistributionPlugin.logging.MessageConsoleManager;
-import nl.tudelft.watchdog.timeDistributionPlugin.logging.MyLogger;
-import nl.tudelft.watchdog.timeDistributionPlugin.prompts.UserPrompter;
+import nl.tudelft.watchdog.plugin.logging.MessageConsoleManager;
+import nl.tudelft.watchdog.plugin.logging.MyLogger;
+import nl.tudelft.watchdog.plugin.prompts.UserPrompter;
 import nl.tudelft.watchdog.timingOutput.IntervalsToXMLWriter;
 
 import org.eclipse.jface.action.IAction;
@@ -23,9 +24,12 @@ import org.eclipse.ui.console.MessageConsoleStream;
 public class ExportHandler implements IWorkbenchWindowActionDelegate{
 
 	private MessageConsoleStream stream;
+	private IRecordedIntervalSerializationManager serializationManager;
+	
 	
 	public ExportHandler() {
 		stream = MessageConsoleManager.getConsoleStream();
+		serializationManager = new RecordedIntervalSerializationManager();
 	}	
 
 	@Override
@@ -51,7 +55,7 @@ public class ExportHandler implements IWorkbenchWindowActionDelegate{
 		IIntervalKeeper intervalKeeper = IntervalKeeper.getInstance();
 		List<IInterval> completeList = new ArrayList<IInterval>();
 		try {
-			completeList.addAll(RecordedIntervalSerializationManager.retrieveRecordedIntervals());
+			completeList.addAll(serializationManager.retrieveRecordedIntervals());
 		} catch (IOException e1) {
 			MyLogger.logSevere(e1);
 		} catch (ClassNotFoundException e1) {

@@ -9,8 +9,9 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class DocumentFactory {
-	public static Document createDocument(IWorkbenchPart part){	
+public class DocumentFactory implements IDocumentFactory {
+	@Override
+	public Document createDocument(IWorkbenchPart part){	
 		if(part instanceof ITextEditor){
 			ITextEditor editor = (ITextEditor) part;
 			

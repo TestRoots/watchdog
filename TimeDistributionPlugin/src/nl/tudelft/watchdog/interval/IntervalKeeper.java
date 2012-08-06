@@ -7,6 +7,7 @@ import java.util.List;
 
 import nl.tudelft.watchdog.document.DocumentFactory;
 import nl.tudelft.watchdog.document.IDocument;
+import nl.tudelft.watchdog.document.IDocumentFactory;
 import nl.tudelft.watchdog.eclipseUIReader.IUIListener;
 import nl.tudelft.watchdog.eclipseUIReader.UIListener;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentActivateEvent;
@@ -23,7 +24,7 @@ import nl.tudelft.watchdog.interval.events.IntervalNotifier;
 import nl.tudelft.watchdog.interval.events.NewIntervalEvent;
 import nl.tudelft.watchdog.interval.recorded.IInterval;
 import nl.tudelft.watchdog.interval.recorded.RecordedInterval;
-import nl.tudelft.watchdog.timeDistributionPlugin.PrefPage;
+import nl.tudelft.watchdog.plugin.PrefPage;
 import nl.tudelft.watchdog.util.WatchDogUtil;
 
 
@@ -32,6 +33,7 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	private ActiveReadingInterval currentReadingInterval;
 	private ActiveEditingInterval currentEditingInterval;
 	private IUIListener UIListener;
+	private IDocumentFactory documentFactory;
 	
 	private List<IInterval> recordedIntervals;
 	
@@ -48,7 +50,8 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 		
 		listenToDocumentChanges();
 		UIListener = new UIListener();
-		UIListener.attachListeners();		
+		UIListener.attachListeners();
+		documentFactory = new DocumentFactory();
 	}
 
 	private void listenToDocumentChanges() {
@@ -101,7 +104,7 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	
 	private void closeCurrentInterval(ActiveInterval interval) {	
 		if(!interval.isClosed()){
-			IDocument doc = DocumentFactory.createDocument(interval.getPart());
+			IDocument doc = documentFactory.createDocument(interval.getPart());
 			RecordedInterval recordedInterval = new RecordedInterval(doc, interval.getTimeOfCreation(), new Date(), interval.getActivityType(), WatchDogUtil.isInDebugMode());
 			recordedIntervals.add(recordedInterval);
 			interval.closeInterval();

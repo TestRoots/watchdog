@@ -11,11 +11,12 @@ import java.util.Date;
 import java.util.List;
 
 import nl.tudelft.watchdog.interval.IntervalKeeper;
-import nl.tudelft.watchdog.timeDistributionPlugin.logging.MyLogger;
+import nl.tudelft.watchdog.plugin.logging.MyLogger;
 
-public class RecordedIntervalSerializationManager {
+public class RecordedIntervalSerializationManager implements IRecordedIntervalSerializationManager {
 	
-	public static void saveRecordedIntervals(){
+	@Override
+	public void saveRecordedIntervals(){
 		if(!IntervalKeeper.getInstance().getRecordedIntervals().isEmpty()){
 			try
 			{
@@ -36,7 +37,8 @@ public class RecordedIntervalSerializationManager {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<IInterval> retrieveRecordedIntervals() throws IOException, ClassNotFoundException{
+	@Override
+	public List<IInterval> retrieveRecordedIntervals() throws IOException, ClassNotFoundException{
 		List<IInterval> completeList = new ArrayList<IInterval>();
 		try
 		{

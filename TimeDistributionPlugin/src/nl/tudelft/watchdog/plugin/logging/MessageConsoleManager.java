@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.timeDistributionPlugin.logging;
+package nl.tudelft.watchdog.plugin.logging;
 
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;

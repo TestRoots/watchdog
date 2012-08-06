@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.ui.startup">
       <startup
-            class="nl.tudelft.watchdog.timeDistributionPlugin.commands.StartUpHandler"></startup>
+            class="nl.tudelft.watchdog.plugin.commands.StartUpHandler"></startup>
    </extension>
    <extension
          point="org.eclipse.ui.actionSets">
@@ -13,7 +13,7 @@
             label="Sample Action Set"
             visible="true">
          <action
-               class="nl.tudelft.watchdog.timeDistributionPlugin.commands.ExportHandler"
+               class="nl.tudelft.watchdog.plugin.commands.ExportHandler"
                icon="resources/images/rsz_dog_icon.png"
                id="timeDistributionPlugin.toolbar.Export"
                label="Export"
@@ -21,7 +21,7 @@
                tooltip="Export">
          </action>
          <action
-               class="nl.tudelft.watchdog.timeDistributionPlugin.commands.ResetHandler"
+               class="nl.tudelft.watchdog.plugin.commands.ResetHandler"
                icon="resources/images/rsz_dog_icon_del.png"
                id="timeDistributionPlugin.commands.Reset"
                label="Reset"
@@ -33,7 +33,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="nl.tudelft.watchdog.timeDistributionPlugin.PrefPage"
+            class="nl.tudelft.watchdog.plugin.PrefPage"
             id="TimeDistributionPlugin.PreferencePage"
             name="WatchDog">
       </page>

@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.timeDistributionPlugin.logging;
+package nl.tudelft.watchdog.plugin.logging;
 
 import java.util.logging.Handler;
 import java.util.logging.Level;

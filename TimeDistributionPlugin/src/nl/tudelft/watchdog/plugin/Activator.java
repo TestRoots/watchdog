@@ -1,9 +1,9 @@
-package nl.tudelft.watchdog.timeDistributionPlugin;
+package nl.tudelft.watchdog.plugin;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import nl.tudelft.watchdog.timeDistributionPlugin.logging.MessageConsoleManager;
-import nl.tudelft.watchdog.timeDistributionPlugin.logging.MyLogger;
+import nl.tudelft.watchdog.plugin.logging.MessageConsoleManager;
+import nl.tudelft.watchdog.plugin.logging.MyLogger;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;

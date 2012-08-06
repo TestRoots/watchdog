@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.interval.recorded;
 
+import java.io.ObjectInputStream;
 import java.util.Date;
 
 import nl.tudelft.watchdog.document.IDocument;
@@ -18,7 +19,7 @@ public class RecordedInterval implements IInterval {
 	private Date end;
 	private ActivityType activityType;
 	private boolean isDebugMode;
-	
+		
 	public RecordedInterval(IDocument document, Date start, Date end, ActivityType activityType, boolean debugMode) {
 		this.document = document;
 		this.start = start;
@@ -61,6 +62,21 @@ public class RecordedInterval implements IInterval {
 	@Override
 	public boolean isDebugMode(){
 		return isDebugMode;
+	}
+	
+	//Used to also support deserialization of older versions
+	private void readObject(ObjectInputStream ois) {
+		try {
+			ois.defaultReadObject();
+			setDefaultValues();
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void setDefaultValues(){
+		
 	}
 
 }
