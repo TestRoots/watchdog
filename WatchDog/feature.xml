@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="WatchDogFeature"
-      label="WatchDogFeature"
-      version="1.2.0.qualifier"
+      id="WatchDog"
+      label="WatchDog"
+      version="1.3.0.qualifier"
       provider-name="Wouter Willems">
 
    <description>

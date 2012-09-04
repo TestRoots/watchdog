@@ -1,7 +1,5 @@
 package nl.tudelft.watchdog.document;
 
-
-
 public class Document implements IDocument{
 	
 	private static final long serialVersionUID = 2L;
