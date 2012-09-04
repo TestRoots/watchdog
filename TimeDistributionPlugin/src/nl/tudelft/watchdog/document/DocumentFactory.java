@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.document;
 
+import nl.tudelft.watchdog.plugin.logging.MyLogger;
 import nl.tudelft.watchdog.util.WatchDogUtil;
 
 import org.eclipse.core.resources.IFile;
@@ -27,8 +28,14 @@ public class DocumentFactory implements IDocumentFactory {
 			    	activeProjectName = "";
 			    }
 				
-				
-				return new Document(activeProjectName, editor.getTitle(), DocumentClassifier.classifyDocument(editor.getTitle(), WatchDogUtil.getEditorContent(editor)));
+				String content;
+				try{
+					content = WatchDogUtil.getEditorContent(editor);					
+				}catch(IllegalArgumentException e){
+					MyLogger.logSevere(e);
+					content = "error because of exception:"+e.getMessage();
+				}
+				return new Document(activeProjectName, editor.getTitle(), DocumentClassifier.classifyDocument(editor.getTitle(), content));
 		    }else{
 				throw new IllegalArgumentException("Part not an IEditorPart");
 			}

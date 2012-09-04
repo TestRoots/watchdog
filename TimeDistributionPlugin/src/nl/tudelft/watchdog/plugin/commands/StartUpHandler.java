@@ -47,7 +47,9 @@ public class StartUpHandler implements IStartup {
 		MyLogger.addHandler(sh, Level.SEVERE);
 		
 		try {
-			MyLogger.addHandler(new FileHandler("watchdoglog.xml", true), Level.ALL);
+			FileHandler fileHandler = new FileHandler("watchdoglog.log", true);
+			fileHandler.setFormatter(fmt);
+			MyLogger.addHandler(fileHandler, Level.ALL);
 		} catch (SecurityException e) {
 			MyLogger.logSevere(e.getMessage());
 		} catch (IOException e) {
