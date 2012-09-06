@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import nl.tudelft.watchdog.interval.IntervalKeeper;
-import nl.tudelft.watchdog.plugin.logging.MyLogger;
+import nl.tudelft.watchdog.plugin.logging.WDLogger;
 
 public class RecordedIntervalSerializationManager implements IRecordedIntervalSerializationManager {
 	
@@ -31,7 +31,7 @@ public class RecordedIntervalSerializationManager implements IRecordedIntervalSe
 			}
 			catch(IOException e)
 			{
-	          MyLogger.logSevere(e);
+	          WDLogger.logSevere(e);
 			}
 		}
 	}
@@ -58,7 +58,7 @@ public class RecordedIntervalSerializationManager implements IRecordedIntervalSe
 					}
 					else
 					{
-						MyLogger.logInfo("no saved recorded intervals");
+						WDLogger.logInfo("no saved recorded intervals");
 					}
 				}
 			}
@@ -66,11 +66,11 @@ public class RecordedIntervalSerializationManager implements IRecordedIntervalSe
 		}
 		catch(IOException e)
 		{
-			MyLogger.logSevere(e);
+			WDLogger.logSevere(e);
 			throw e;
 		} 
 		catch (ClassNotFoundException e) {
-			MyLogger.logSevere(e);
+			WDLogger.logSevere(e);
 			throw e;
 		}
 	}

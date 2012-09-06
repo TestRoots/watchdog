@@ -1,6 +1,8 @@
 package nl.tudelft.watchdog.interval.activityCheckers;
 
 import nl.tudelft.watchdog.exceptions.EditorClosedPrematurelyException;
+import nl.tudelft.watchdog.exceptions.ContentReaderException;
+import nl.tudelft.watchdog.plugin.logging.WDLogger;
 import nl.tudelft.watchdog.util.WatchDogUtil;
 
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -14,11 +16,19 @@ public class UpdateChecker implements IUpdateChecker{
 	
 	public UpdateChecker(ITextEditor editor){
 		this.editor = editor;
-		this.previousContent = WatchDogUtil.getEditorContent(editor);
+		try {
+			this.previousContent = WatchDogUtil.getEditorContent(editor);
+		} catch (IllegalArgumentException e) {
+			this.previousContent = "";
+			WDLogger.logSevere(e);
+		} catch (ContentReaderException e) {
+			this.previousContent = "";
+			WDLogger.logSevere(e);
+		}
 	}
 	
 	@Override
-	public boolean hasChanged() throws EditorClosedPrematurelyException {
+	public boolean hasChanged() throws EditorClosedPrematurelyException, ContentReaderException {
 		try{
 			lastCheckedContent = WatchDogUtil.getEditorContent(editor);
 		}catch(IllegalArgumentException ex){
@@ -28,5 +38,5 @@ public class UpdateChecker implements IUpdateChecker{
 		previousContent = lastCheckedContent;
 		return isChanged;
 	}
-
+	
 }

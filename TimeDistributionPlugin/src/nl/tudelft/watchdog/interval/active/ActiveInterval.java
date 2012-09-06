@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.Timer;
 
 import nl.tudelft.watchdog.interval.ActivityType;
-import nl.tudelft.watchdog.interval.activityCheckers.RunCallBack;
+import nl.tudelft.watchdog.interval.activityCheckers.OnInactiveCallBack;
 
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -54,5 +54,5 @@ public abstract class ActiveInterval {
 	public abstract ActivityType getActivityType();
 
 	public abstract void addTimeoutListener(long timeout,
-			RunCallBack callbackWhenFinished);
+			OnInactiveCallBack callbackWhenFinished);
 }

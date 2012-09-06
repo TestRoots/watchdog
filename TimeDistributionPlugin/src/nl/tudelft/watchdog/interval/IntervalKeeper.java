@@ -17,7 +17,7 @@ import nl.tudelft.watchdog.eclipseUIReader.Events.IDocumentAttentionListener;
 import nl.tudelft.watchdog.interval.active.ActiveEditingInterval;
 import nl.tudelft.watchdog.interval.active.ActiveInterval;
 import nl.tudelft.watchdog.interval.active.ActiveReadingInterval;
-import nl.tudelft.watchdog.interval.activityCheckers.RunCallBack;
+import nl.tudelft.watchdog.interval.activityCheckers.OnInactiveCallBack;
 import nl.tudelft.watchdog.interval.events.ClosingIntervalEvent;
 import nl.tudelft.watchdog.interval.events.IIntervalListener;
 import nl.tudelft.watchdog.interval.events.IntervalNotifier;
@@ -104,6 +104,7 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	
 	private void closeCurrentInterval(ActiveInterval interval) {	
 		if(!interval.isClosed()){
+			
 			IDocument doc = documentFactory.createDocument(interval.getPart());
 			RecordedInterval recordedInterval = new RecordedInterval(doc, interval.getTimeOfCreation(), new Date(), interval.getActivityType(), WatchDogUtil.isInDebugMode());
 			recordedIntervals.add(recordedInterval);
@@ -124,7 +125,7 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	}
 	
 	private void addNewIntervalHandlers(final ActiveInterval interval, int timeout){
-		interval.addTimeoutListener(timeout, new RunCallBack() {					
+		interval.addTimeoutListener(timeout, new OnInactiveCallBack() {					
 			@Override
 			public void onInactive() {
 				closeCurrentInterval(interval);

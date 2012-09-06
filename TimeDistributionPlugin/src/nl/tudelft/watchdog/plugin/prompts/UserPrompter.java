@@ -7,7 +7,7 @@ import java.util.List;
 
 import nl.tudelft.watchdog.exceptions.FileSavingFailedException;
 import nl.tudelft.watchdog.interval.recorded.IInterval;
-import nl.tudelft.watchdog.plugin.logging.MyLogger;
+import nl.tudelft.watchdog.plugin.logging.WDLogger;
 import nl.tudelft.watchdog.timingOutput.IIntervalWriter;
 
 import org.eclipse.swt.SWT;
@@ -42,11 +42,11 @@ public class UserPrompter {
 				FileOutputStream fos = new FileOutputStream(f);
 				writer.exportIntervals(intervals, fos);
 			} catch (FileNotFoundException e) {
-				MyLogger.logSevere(e);
+				WDLogger.logSevere(e);
 				throw new FileSavingFailedException(e);				
 			}
 	    }else{
-	    	MyLogger.logInfo("File saving canceled");
+	    	WDLogger.logInfo("File saving canceled");
 	    }
 	}
 

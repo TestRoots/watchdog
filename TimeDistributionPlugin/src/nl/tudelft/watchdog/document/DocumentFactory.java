@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.document;
 
-import nl.tudelft.watchdog.plugin.logging.MyLogger;
+import nl.tudelft.watchdog.exceptions.ContentReaderException;
+import nl.tudelft.watchdog.plugin.logging.WDLogger;
 import nl.tudelft.watchdog.util.WatchDogUtil;
 
 import org.eclipse.core.resources.IFile;
@@ -14,9 +15,10 @@ public class DocumentFactory implements IDocumentFactory {
 	@Override
 	public Document createDocument(IWorkbenchPart part){	
 		if(part instanceof ITextEditor){
-			ITextEditor editor = (ITextEditor) part;
+			final ITextEditor editor = (ITextEditor) part;
 			
 			if(part instanceof IEditorPart){
+				
 				IEditorPart  editorPart = (IEditorPart) part;
 				String activeProjectName;
 				if(editorPart.getEditorInput() instanceof IFileEditorInput){
@@ -26,16 +28,23 @@ public class DocumentFactory implements IDocumentFactory {
 				    activeProjectName = activeProject.getName();
 			    }else{
 			    	activeProjectName = "";
-			    }
+			    }				
 				
-				String content;
+				DocumentType docType = DocumentType.UNDEFINED;
 				try{
-					content = WatchDogUtil.getEditorContent(editor);					
+					docType = DocumentClassifier.classifyDocument(activeProjectName, WatchDogUtil.getEditorContent(editor));
 				}catch(IllegalArgumentException e){
-					MyLogger.logSevere(e);
-					content = "error because of exception:"+e.getMessage();
+					WDLogger.logSevere(e);
+				} catch (ContentReaderException e) {
+					WDLogger.logInfo("Document provider was null, trying to read resource file contents");
+					try{
+						docType = DocumentClassifier.classifyDocument(activeProjectName, WatchDogUtil.getFileContentsFromEditor(editor));
+					}catch(IllegalArgumentException ex){
+						WDLogger.logInfo("File does not exist anymore: " + editor.getTitle());
+					}
 				}
-				return new Document(activeProjectName, editor.getTitle(), DocumentClassifier.classifyDocument(editor.getTitle(), content));
+				
+				return new Document(activeProjectName, editor.getTitle(), docType);
 		    }else{
 				throw new IllegalArgumentException("Part not an IEditorPart");
 			}
