@@ -2,9 +2,10 @@ Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Manifest-Version: 1.0
 Bundle-Activator: nl.tudelft.watchdog.plugin.Activator
-Bundle-Version: 1.3.0.Alpha
+Bundle-Version: 1.4.0.Alpha
 Bundle-SymbolicName: WatchDogPlugin;singleton:=true
 Import-Package: org.eclipse.core.resources,
+ org.eclipse.core.runtime;version="3.4.0",
  org.eclipse.core.runtime.jobs,
  org.eclipse.jface.preference,
  org.eclipse.jface.text,
@@ -13,6 +14,7 @@ Import-Package: org.eclipse.core.resources,
  org.eclipse.swt.widgets,
  org.eclipse.ui,
  org.eclipse.ui.console,
+ org.eclipse.ui.part,
  org.eclipse.ui.texteditor,
  org.joda.time
 Bundle-ActivationPolicy: lazy

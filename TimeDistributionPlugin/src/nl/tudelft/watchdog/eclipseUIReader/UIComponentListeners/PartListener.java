@@ -39,7 +39,7 @@ public class PartListener implements IPartListener{
 		if(part instanceof ITextEditor)
 		{
 			DocumentNotifier.fireDocumentStartFocusEvent(new DocumentActivateEvent(part));
-			DocChangeListenerAttacher.listenToDocChanges(part);
+			DocChangeListenerAttacher.listenToDocChanges(part);			
 		}
 	}
 

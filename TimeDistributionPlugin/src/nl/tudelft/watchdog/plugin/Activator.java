@@ -2,8 +2,7 @@ package nl.tudelft.watchdog.plugin;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import nl.tudelft.watchdog.plugin.logging.MessageConsoleManager;
-import nl.tudelft.watchdog.plugin.logging.MyLogger;
+import nl.tudelft.watchdog.plugin.logging.WDLogger;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -34,14 +33,11 @@ public class Activator extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		
-		MessageConsoleManager.getConsoleStream().println("watchdog starting");
-		
 		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 			public void uncaughtException(Thread t, Throwable e) {
-				MyLogger.logSevere(e);
+				WDLogger.logSevere(e);
 			}
 		});
-		
 	}
 
 	/*
@@ -49,7 +45,7 @@ public class Activator extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
-		MyLogger.logInfo("Shutting down...");
+		WDLogger.logInfo("Shutting down...");
 		
 		plugin = null;
 		super.stop(context);

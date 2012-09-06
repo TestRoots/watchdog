@@ -4,7 +4,7 @@ import java.util.Timer;
 
 import nl.tudelft.watchdog.interval.ActivityType;
 import nl.tudelft.watchdog.interval.activityCheckers.EditingCheckerTask;
-import nl.tudelft.watchdog.interval.activityCheckers.RunCallBack;
+import nl.tudelft.watchdog.interval.activityCheckers.OnInactiveCallBack;
 
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -23,7 +23,7 @@ public class ActiveEditingInterval extends ActiveInterval {
 	}
 	
 	@Override
-	public void addTimeoutListener(long timeout, RunCallBack callbackWhenFinished){
+	public void addTimeoutListener(long timeout, OnInactiveCallBack callbackWhenFinished){
 		task = new EditingCheckerTask(this.getPart(), callbackWhenFinished);
 		checkForChangeTimer.schedule(new EditingCheckerTask(this.getEditor(), callbackWhenFinished), timeout, timeout);
 	}

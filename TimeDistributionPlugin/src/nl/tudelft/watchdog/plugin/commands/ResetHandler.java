@@ -13,7 +13,7 @@ public class ResetHandler implements IWorkbenchWindowActionDelegate {
 
 	@Override
 	public void run(IAction action) {
-		IntervalKeeper.getInstance().getRecordedIntervals().clear();
+		IntervalKeeper.getInstance().getRecordedIntervals().clear();		
 	}
 
 	@Override

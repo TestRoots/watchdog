@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.document;
 
+
 public class Document implements IDocument{
 	
 	private static final long serialVersionUID = 2L;
@@ -7,7 +8,7 @@ public class Document implements IDocument{
 	private String projectName;
 	private DocumentType docType;
 	
-	public Document(String projectName, String fileName, DocumentType docType){
+	public Document(String projectName, String fileName, DocumentType docType){		
 		this.projectName = projectName;
 		this.fileName = fileName;
 		this.docType = docType;
@@ -25,5 +26,9 @@ public class Document implements IDocument{
 	@Override
 	public DocumentType getDocumentType(){
 		return docType;
+	}
+	@Override
+	public void setDocumentType(DocumentType type){
+		this.docType = type;
 	}
 }

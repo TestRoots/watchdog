@@ -10,4 +10,6 @@ public interface IDocument extends Serializable {
 
 	String getProjectName();
 
+	void setDocumentType(DocumentType type);
+
 }

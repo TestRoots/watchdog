@@ -16,7 +16,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import nl.tudelft.watchdog.interval.recorded.IInterval;
-import nl.tudelft.watchdog.plugin.logging.MyLogger;
+import nl.tudelft.watchdog.plugin.logging.WDLogger;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -40,13 +40,13 @@ public class IntervalsToXMLWriter implements IIntervalWriter {
 			stream.close();
 			
 		} catch (TransformerConfigurationException e) {
-			MyLogger.logSevere(e);
+			WDLogger.logSevere(e);
 		} catch (ParserConfigurationException e) {
-			MyLogger.logSevere(e);
+			WDLogger.logSevere(e);
 		} catch (TransformerException e) {
-			MyLogger.logSevere(e);
+			WDLogger.logSevere(e);
 		} catch (IOException e) {
-			MyLogger.logSevere(e);
+			WDLogger.logSevere(e);
 		}
 	}
 	

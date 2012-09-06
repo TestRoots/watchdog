@@ -7,11 +7,11 @@ import java.util.logging.Logger;
 
 
 
-public class MyLogger {
+public class WDLogger {
 	private static Logger log;
 	
 	static{
-		log = Logger.getLogger("Watchdoglogger");
+		log = Logger.getLogger(WDLogger.class.getName());
 	}	
 	
 	public static void addHandler(Handler handler, Level l){			

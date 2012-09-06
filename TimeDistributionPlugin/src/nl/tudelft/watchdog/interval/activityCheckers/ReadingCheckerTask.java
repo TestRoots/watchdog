@@ -21,11 +21,11 @@ public class ReadingCheckerTask extends TimerTask {
 	private boolean stillActive;
 	private CaretListener caretListener;
 	private PaintListener paintListener;
-	private RunCallBack callback;
+	private OnInactiveCallBack callback;
 	private ITextEditor editor;
 	private IWorkbenchPart part;
 	
-	public ReadingCheckerTask(IWorkbenchPart part, RunCallBack callback) {
+	public ReadingCheckerTask(IWorkbenchPart part, OnInactiveCallBack callback) {
 		stillActive = true;		
 		this.callback = callback;
 		this.part = part;
@@ -96,21 +96,23 @@ public class ReadingCheckerTask extends TimerTask {
 			Display.getDefault().asyncExec(new Runnable() {			
 				@Override
 				public void run() {
-					styledText.addCaretListener(new CaretListener() { //cursor place changes		
-						@Override
-						public void caretMoved(CaretEvent event) {
-							DocumentNotifier.fireDocumentStartFocusEvent(new DocumentActivateEvent(part));
-							styledText.removeCaretListener(this); //listen just once to not get millions of events fired
-						}
-					});
-					
-					styledText.addPaintListener(new PaintListener() { //for redraws of the view, e.g. when scrolled		
-						@Override
-						public void paintControl(PaintEvent e) {
-							DocumentNotifier.fireDocumentStartFocusEvent(new DocumentActivateEvent(part));
-							styledText.removePaintListener(this); //listen just once to not get millions of events fired
-						}
-					});
+					if(!styledText.isDisposed()){
+						styledText.addCaretListener(new CaretListener() { //cursor place changes		
+							@Override
+							public void caretMoved(CaretEvent event) {
+								DocumentNotifier.fireDocumentStartFocusEvent(new DocumentActivateEvent(part));
+								styledText.removeCaretListener(this); //listen just once to not get millions of events fired
+							}
+						});
+						
+						styledText.addPaintListener(new PaintListener() { //for redraws of the view, e.g. when scrolled		
+							@Override
+							public void paintControl(PaintEvent e) {
+								DocumentNotifier.fireDocumentStartFocusEvent(new DocumentActivateEvent(part));
+								styledText.removePaintListener(this); //listen just once to not get millions of events fired
+							}
+						});
+					}
 				}
 			});
 		}

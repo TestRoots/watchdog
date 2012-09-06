@@ -5,7 +5,8 @@ import java.util.TimerTask;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentActivateEvent;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentNotifier;
 import nl.tudelft.watchdog.exceptions.EditorClosedPrematurelyException;
-import nl.tudelft.watchdog.plugin.logging.MyLogger;
+import nl.tudelft.watchdog.exceptions.ContentReaderException;
+import nl.tudelft.watchdog.plugin.logging.WDLogger;
 
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -19,16 +20,15 @@ import org.eclipse.ui.texteditor.ITextEditor;
 public class EditingCheckerTask extends TimerTask {
 	
 	private IUpdateChecker checker;
-	private RunCallBack callback;
+	private OnInactiveCallBack callback;
 	private ITextEditor editor;
 	private IWorkbenchPart part;
-	public EditingCheckerTask(IWorkbenchPart part, RunCallBack callback){
+	public EditingCheckerTask(IWorkbenchPart part, OnInactiveCallBack callback){
 		this.editor = (ITextEditor)part;
 		this.part = part;
 		checker = new UpdateChecker(editor);		
 		this.callback = callback;
 	}
-	
 	
 	@Override
 	public void run() {
@@ -42,9 +42,10 @@ public class EditingCheckerTask extends TimerTask {
 				callback.onInactive();//callback function			
 			}
 		} catch (EditorClosedPrematurelyException e) {
-			MyLogger.logInfo("Editor closed prematurely"); //this can happen when eclipse is closed while the document is still active
+			WDLogger.logInfo("Editor closed prematurely"); //this can happen when eclipse is closed while the document is still active
+		} catch (ContentReaderException e) {
+			WDLogger.logInfo("Unavailable doc provider"); //this can happen when a file is moved inside the workspace
 		}
-			
 	}
 	
 	public void listenForReactivation(){		
