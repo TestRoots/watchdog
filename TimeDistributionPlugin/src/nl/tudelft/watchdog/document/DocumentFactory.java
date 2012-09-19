@@ -32,13 +32,13 @@ public class DocumentFactory implements IDocumentFactory {
 				
 				DocumentType docType = DocumentType.UNDEFINED;
 				try{
-					docType = DocumentClassifier.classifyDocument(activeProjectName, WatchDogUtil.getEditorContent(editor));
+					docType = DocumentClassifier.classifyDocument(editorPart.getTitle(), WatchDogUtil.getEditorContent(editor));
 				}catch(IllegalArgumentException e){
 					WDLogger.logSevere(e);
 				} catch (ContentReaderException e) {
 					WDLogger.logInfo("Document provider was null, trying to read resource file contents");
 					try{
-						docType = DocumentClassifier.classifyDocument(activeProjectName, WatchDogUtil.getFileContentsFromEditor(editor));
+						docType = DocumentClassifier.classifyDocument(editorPart.getTitle(), WatchDogUtil.getFileContentsFromEditor(editor));
 					}catch(IllegalArgumentException ex){
 						WDLogger.logInfo("File does not exist anymore: " + editor.getTitle());
 					}
