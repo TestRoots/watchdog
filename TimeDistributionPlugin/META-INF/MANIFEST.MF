@@ -23,4 +23,6 @@ Bundle-ClassPath: libs/joda-time-2.1.jar,
  .
 Export-Package: org.joda.time
 Bundle-Vendor: Wouter Willems
-Require-Bundle: org.eclipse.ui;bundle-version="3.6.1"
+Require-Bundle: org.eclipse.ui;bundle-version="3.6.1",
+ org.eclipse.osgi;bundle-version="3.8.1",
+ org.eclipse.ui.console;bundle-version="3.5.100"

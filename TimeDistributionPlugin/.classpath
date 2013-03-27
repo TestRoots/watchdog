@@ -6,7 +6,5 @@
 	<classpathentry kind="lib" path="libs/org.eclipse.ui_extension.jar"/>
 	<classpathentry kind="lib" path="libs/joda-time-2.1.jar"/>
 	<classpathentry kind="lib" path="libs/transformers/xalan.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/eclipse/plugins/org.eclipse.osgi_3.7.2.v20120110-1415.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/eclipse/plugins/org.eclipse.ui.console_3.5.100.v20111007_r372.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
