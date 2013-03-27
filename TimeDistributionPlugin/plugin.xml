@@ -20,14 +20,6 @@
                toolbarPath="wd"
                tooltip="Export">
          </action>
-         <action
-               class="nl.tudelft.watchdog.plugin.commands.ResetHandler"
-               icon="resources/images/rsz_dog_icon_del.png"
-               id="timeDistributionPlugin.commands.Reset"
-               label="Reset"
-               toolbarPath="wd"
-               tooltip="Reset current recording session">
-         </action>
       </actionSet>
    </extension>
    <extension
