@@ -1,0 +1,5 @@
+package com.wouterwillems.watchdog.tools.models;
+
+public class ActivityType {
+
+}

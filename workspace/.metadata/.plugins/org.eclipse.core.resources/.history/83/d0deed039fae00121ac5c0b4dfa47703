@@ -1,0 +1,105 @@
+package com.wouterwillems.watchdog.tools.readers;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import com.wouterwillems.watchdog.tools.models.ActivityType;
+import com.wouterwillems.watchdog.tools.models.DayActivity;
+
+public class WatchDogXmlReader {
+
+	@SuppressWarnings("deprecation")
+	public void parse(String path) throws SAXException, IOException,
+			ParserConfigurationException {
+		File fXmlFile = new File(path);
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(fXmlFile);
+
+		doc.getDocumentElement().normalize();
+
+		NodeList intervals = doc.getElementsByTagName("interval");
+
+		Map<Long, DayActivity> actitivies = new HashMap<Long, DayActivity>();
+
+		for (int i = 0; i < intervals.getLength(); i++) {
+			Node n = intervals.item(i);
+
+			if (n.getNodeType() == Node.ELEMENT_NODE) {
+
+				Element eElement = (Element) n;
+
+				String type = getValue(eElement, "documentType");
+				String start = getValue(eElement, "start");
+				String end = getValue(eElement, "end");
+
+				ActivityType acType = null;
+				if (type.equals("TEST")) {
+					acType = ActivityType.TEST;
+				} else if (type.equals("PRODUCTION")) {
+					acType = ActivityType.PRODUCTION;
+				}
+
+				if (acType != null) {
+					Long duration = Long.parseLong(end) - Long.parseLong(start);
+
+					Date date = new Date(Long.parseLong(start));
+					Date date2 = new Date(date.getYear(), date.getMonth(),
+							date.getDate());
+
+					if (!actitivies.containsKey(date2.getTime())) {
+						DayActivity dayActivity = new DayActivity();
+						dayActivity.setDurationMilliseconds(duration);
+						dayActivity.setDate(date2);
+						dayActivity.setType(acType);
+
+						actitivies.put(date2.getTime(), dayActivity);
+					}else{
+						DayActivity dayActivity = actitivies.get(date2.getTime());
+						dayActivity.setDurationMilliseconds(dayActivity.getDurationMilliseconds()+duration);
+					}
+				}
+			}
+
+			SortedSet<Long> keys = new TreeSet<Long>(actitivies.keySet());
+			for (Long key : keys) { 
+			   DayActivity dayActivity = actitivies.get(key);
+			   
+			   System.out.println(dayActivity.getDate().toLocaleString());
+				System.out.println(dayActivity.getType().toString());
+				System.out.println(dayActivity.getDurationMilliseconds()/1000 + " seconds");
+				System.out.println("-");
+
+			}
+			
+		}
+	}
+
+	private String getValue(Element eElement, String name) {
+		NodeList startNodeList = eElement.getElementsByTagName(name);
+		Node startNode = startNodeList.item(0);
+		String start = startNode.getTextContent();
+		return start;
+	}
+
+	public static void main(String args[]) throws SAXException, IOException,
+			ParserConfigurationException {
+		WatchDogXmlReader r = new WatchDogXmlReader();
+		r.parse(args[0]);
+	}
+}

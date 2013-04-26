@@ -1,0 +1,6 @@
+package com.wouterwillems.watchdog.tools.models;
+
+public class DayActivity {
+
+	private ActivityType type;
+}

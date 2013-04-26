@@ -1,0 +1,23 @@
+package com.wouterwillems.watchdog.tools.models;
+
+import java.util.Date;
+
+public class DayActivity {
+
+	private ActivityType type;
+	private Date date;
+	public ActivityType getType() {
+		return type;
+	}
+	public void setType(ActivityType type) {
+		this.type = type;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	
+	
+}
