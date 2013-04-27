@@ -63,7 +63,7 @@ public class WatchDogXmlReader {
 
 					Date date = new Date(Long.parseLong(start));
 					Date date2 = new Date(date.getYear(), date.getMonth(),
-							date.getDate());
+							date.getDate(), date.getHours(), 0);
 
 					if (acType == ActivityType.TEST) {
 						if (!actitiviesTest.containsKey(date2.getTime())) {
@@ -144,7 +144,7 @@ public class WatchDogXmlReader {
 				writer.print(current.toString()+",0,");
 			}
 			writer.println("");
-			current = current.plusDays(1);
+			current = current.plusHours(1);
 		}
 
 	}
