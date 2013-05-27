@@ -21,7 +21,8 @@ public class RecordedIntervalSerializationManager implements IRecordedIntervalSe
 			try
 			{
 				String filename = (new Date()).getTime() + ".ser";
-				File parent = new File("watchdog/");
+				String userHome = System.getProperty("user.home");
+				File parent = new File(userHome+"/watchdog/");
 				parent.mkdirs();
 				FileOutputStream fileOut = new FileOutputStream(new File(parent, filename));
 				ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -42,7 +43,8 @@ public class RecordedIntervalSerializationManager implements IRecordedIntervalSe
 		List<IInterval> completeList = new ArrayList<IInterval>();
 		try
 		{
-			File parent = new File("watchdog/");
+			String userHome = System.getProperty("user.home");
+			File parent = new File(userHome+"/watchdog/");
 			if(parent.list() != null){
 				for(String fileName : parent.list()){
 					File f = new File(parent, fileName);
