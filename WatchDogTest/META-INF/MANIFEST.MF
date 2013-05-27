@@ -9,13 +9,7 @@ Require-Bundle: org.eclipse.ui,
  org.junit
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: com.windowtester.runtime,
- com.windowtester.runtime.common,
- com.windowtester.runtime.swt,
- com.windowtester.runtime.swt.condition.shell,
- com.windowtester.runtime.swt.locator,
- com.windowtester.runtime.swt.locator.eclipse,
- junit.framework;version="4.8.2",
+Import-Package: junit.framework;version="4.8.2",
  org.eclipse.jface.text,
  org.eclipse.ui.texteditor,
  org.junit,
