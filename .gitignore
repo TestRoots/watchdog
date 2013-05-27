@@ -5,3 +5,7 @@
 /TimeDistributionPlugin/bin
 /WatchDogTest/bin
 /TimeDistributionPlugin/OSGI-INF
+/WatchDogTest/bin
+
+/WatchDogTools/bin
+/WatchDogTest/bin
