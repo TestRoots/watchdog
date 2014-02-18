@@ -19,8 +19,8 @@ Import-Package: org.eclipse.core.resources,
  org.joda.time
 Bundle-ActivationPolicy: lazy
 Bundle-Name: WatchdogPlugin
-Bundle-ClassPath: libs/joda-time-2.1.jar,
- .
+Bundle-ClassPath: .,
+ libs/joda-time-2.3.jar
 Export-Package: org.joda.time
 Bundle-Vendor: Wouter Willems
 Require-Bundle: org.eclipse.ui;bundle-version="3.6.1",
