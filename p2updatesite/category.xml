@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/WatchDogFeature_1.0.0.qualifier.jar" id="WatchDogFeature" version="1.0.0.qualifier">
+      <category name="Development Tracking Tools"/>
+   </feature>
+   <category-def name="Development Tracking Tools" label="Development Tracking Tools"/>
+</site>
