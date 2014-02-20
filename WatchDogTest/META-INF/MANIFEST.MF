@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: WatchDogTest
-Bundle-SymbolicName: WatchDogTest
+Bundle-SymbolicName: WatchDogTests
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: watchdogtest.Activator
 Require-Bundle: org.eclipse.ui,
