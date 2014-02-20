@@ -5,7 +5,7 @@
    </feature>
    <category-def name="WatchDog" label="WatchDog">
       <description>
-         Trala
+         Feature containing the WatchDog plugin.
       </description>
    </category-def>
 </site>
