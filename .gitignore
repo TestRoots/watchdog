@@ -12,3 +12,4 @@
 
 /joda-time-2.2
 **/target
+**/bin

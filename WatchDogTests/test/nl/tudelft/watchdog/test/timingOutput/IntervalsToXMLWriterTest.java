@@ -31,7 +31,7 @@ public class IntervalsToXMLWriterTest {
 		try {
 			String out = new String(os.toByteArray(), "UTF-8");
 			Assert.assertEquals(
-					"<?xml version=\"1.0\" encoding=\"UTF-8\"?><intervals><interval><document><projectName>projname</projectName><fileName>filename</fileName><documentType>TEST</documentType></document><start>12345678912</start><end>13345355121</end><duration>277 hours, 41 minutes, 16 seconds and 209 milliseconds</duration><activityType>Editing</activityType><debugMode>1</debugMode></interval></intervals>"	
+					"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><intervals><interval><document><projectName>projname</projectName><fileName>filename</fileName><documentType>TEST</documentType></document><start>12345678912</start><end>13345355121</end><duration>277 hours, 41 minutes, 16 seconds and 209 milliseconds</duration><activityType>Editing</activityType><debugMode>1</debugMode></interval></intervals>"	
 					, out);
 		} catch (UnsupportedEncodingException e) {
 			Assert.fail();
