@@ -11,3 +11,4 @@
 /WatchDogTest/bin
 
 /joda-time-2.2
+**/target
