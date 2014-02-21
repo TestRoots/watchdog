@@ -6,10 +6,10 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
-    <module>../WatchDog</module>
-    <module>../WatchDogFeature</module>
-    <module>../p2updatesite</module>
-    <module>../WatchDogTests</module>
+    <module>WatchDog</module>
+    <module>WatchDogFeature</module>
+    <module>p2updatesite</module>
+    <module>WatchDogTests</module>
   </modules>
 
   <properties>
