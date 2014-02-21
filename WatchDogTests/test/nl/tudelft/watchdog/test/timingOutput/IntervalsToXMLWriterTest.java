@@ -16,8 +16,14 @@ import nl.tudelft.watchdog.timingOutput.IntervalsToXMLWriter;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Tests the output of the {@link IntervalsToXMLWriter}.
+ */
 public class IntervalsToXMLWriterTest {
 
+    /**
+     * A Test for writing one single, simple interval in an XML.
+     */
     @Test
     public void intervalToXMLTest() {
 	List<IInterval> intervals = new LinkedList<IInterval>();

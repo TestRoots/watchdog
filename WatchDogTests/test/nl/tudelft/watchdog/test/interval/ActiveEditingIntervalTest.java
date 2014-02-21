@@ -14,6 +14,9 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Mock tests for the editing interval.
+ */
 public class ActiveEditingIntervalTest {
 
     private ITextEditor mockedITextEditor;
@@ -22,10 +25,9 @@ public class ActiveEditingIntervalTest {
 
     private Boolean isActive;
 
-    public ActiveEditingIntervalTest() {
-	setUpMocks();
-    }
-
+    /**
+     * Setup method run before every testcase execution.
+     */
     @Before
     public void setUp() {
 	isActive = true;
@@ -43,8 +45,11 @@ public class ActiveEditingIntervalTest {
 		mockedDocument);
     }
 
+    /**
+     * Tests for an active editing interval of 100ms, whether it really is
+     * inactive after 250ms.
+     */
     @Test
-    /** Tests for an active editing interval of 100ms, whether it really is inactive after 250ms. */
     public void testInActivityAfter250ms() throws InterruptedException {
 	when(mockedDocument.get()).thenReturn("read when initialized")
 		.thenReturn("read after 100ms");
@@ -63,8 +68,11 @@ public class ActiveEditingIntervalTest {
 	assertFalse(isActive);
     }
 
+    /**
+     * Tests for an active editing interval of 100ms, whether it really is still
+     * active after 80ms, and inactive after 250ms.
+     */
     @Test
-    /** Tests for an active editing interval of 100ms, whether it really is still active after 80ms, and inactive after 250ms. */
     public void testActivityAfter100ms() throws InterruptedException {
 	when(mockedDocument.get()).thenReturn("read when initialized")
 		.thenReturn("read after 100ms").thenReturn("read after 200ms");
