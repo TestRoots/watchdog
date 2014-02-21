@@ -1,18 +1,27 @@
 package nl.tudelft.watchdog.test.document;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import junit.framework.Assert;
 import nl.tudelft.watchdog.document.Document;
 import nl.tudelft.watchdog.document.DocumentFactory;
+import nl.tudelft.watchdog.document.DocumentType;
 
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.junit.Test;
 import org.mockito.Matchers;
 
+/**
+ * Mock tests for {@link DocumentFactory}.
+ */
 public class DocumentFactoryTest {
 
+    /**
+     * Tests whether the creation of a Java production class via the
+     * {@link DocumentFactory} actually returns said class, and that the
+     * document classification returns the correct type.
+     */
     @Test
     public void testCreateDocument() {
 	String contents = "public class A {}";
@@ -25,12 +34,12 @@ public class DocumentFactoryTest {
 	when(mockedProvider.getDocument(Matchers.anyObject())).thenReturn(
 		mockedDocument);
 	when(mockedDocument.get()).thenReturn(contents);
-
 	when(mockedEditor.getTitle()).thenReturn("A.java");
 
 	Document doc = new DocumentFactory().createDocument(mockedEditor);
 
-	Assert.assertEquals("A.java", doc.getFileName());
+	assertEquals("A.java", doc.getFileName());
+	assertEquals(DocumentType.PRODUCTION, doc.getDocumentType());
     }
 
 }
