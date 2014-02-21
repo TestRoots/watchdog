@@ -10,7 +10,7 @@ public class DocumentClassifier {
 	 */
 	public static DocumentType classifyDocument(String fileName,
 			String fileContents) {
-		// remove unnecessary spaces
+		// Collapse multiple spaces in a row to one
 		String preparedContents = fileContents.replaceAll("\\s+", " ");
 
 		if (isJavaFile(fileName)) {
@@ -25,16 +25,16 @@ public class DocumentClassifier {
 		}
 	}
 
-	private static boolean isJavaFile(String title) {
-		if (title.endsWith(".java")) {
+	private static boolean isJavaFile(String fileName) {
+		if (fileName.endsWith(".java")) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	private static boolean containsJUnitImports(String contents) {
-		if (contents.contains("import org.junit")) {
+	private static boolean containsJUnitImports(String fileContents) {
+		if (fileContents.contains("import org.junit")) {
 			return true;
 		} else {
 			return false;
