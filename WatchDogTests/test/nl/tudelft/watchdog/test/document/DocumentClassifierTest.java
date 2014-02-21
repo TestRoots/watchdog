@@ -26,7 +26,8 @@ public class DocumentClassifierTest {
     }
 
     /**
-     * The recognition of a Java file that just contains the text "
+     * Tests the recognition of a normal JUnit test file as
+     * {@link DocumentType#TEST}..
      */
     @Test
     public void testRealJunitTestDocumentClassification() {
@@ -40,7 +41,7 @@ public class DocumentClassifierTest {
 
     /**
      * Tests recognition of a fake junit test class, that should actually be
-     * production.
+     * {@link DocumentType#PRODUCTION}.
      */
     @Test
     @Ignore
@@ -55,7 +56,7 @@ public class DocumentClassifierTest {
 
     /**
      * A class called "TestClass.java", which is not importing Junit, is
-     * considered production code.
+     * considered {@link DocumentType#PRODUCTION}.
      */
     @Test
     public void testTestDocumentClassificationWithoutJUnitImports() {
@@ -67,7 +68,8 @@ public class DocumentClassifierTest {
     }
 
     /**
-     * Tests whether a txt file is considered as undefined.
+     * Tests whether an ordinary txt file is considered as
+     * {@link DocumentType#UNDEFINED}.
      */
     @Test
     public void testUndefinedDocumentClassification() {
@@ -78,8 +80,9 @@ public class DocumentClassifierTest {
     }
 
     /**
-     * A class called "TestClass.txt", which is not importing Junit, is
-     * considered undefined (because of wrong file extension).
+     * Tests whether a class called "TestClass.txt", which is not importing
+     * Junit, is considered {@link DocumentType#UNDEFINED} (because of wrong
+     * file extension).
      */
     @Test
     public void testJavaInTxtFile() {
