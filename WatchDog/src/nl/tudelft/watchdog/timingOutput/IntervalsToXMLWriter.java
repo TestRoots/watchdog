@@ -1,6 +1,5 @@
 package nl.tudelft.watchdog.timingOutput;
 
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -21,24 +20,28 @@ import nl.tudelft.watchdog.plugin.logging.WDLogger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
 public class IntervalsToXMLWriter implements IIntervalWriter {
-	
-	/* (non-Javadoc)
-	 * @see nl.tudelft.watchdog.timingOutput.IIntervalWriter#intervalsToXML(java.util.List, java.io.OutputStream)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * nl.tudelft.watchdog.timingOutput.IIntervalWriter#intervalsToXML(java.
+	 * util.List, java.io.OutputStream)
 	 */
 	@Override
-	public void exportIntervals(List<IInterval> intervals, OutputStream stream) {		
+	public void exportIntervals(List<IInterval> intervals, OutputStream stream) {
 		try {
-			
+
 			DOMSource source = transformIntervalsToXML(intervals);
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			TransformerFactory transformerFactory = TransformerFactory
+					.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
-			
+
 			StreamResult result = new StreamResult(stream);
-			transformer.transform(source, result); //print to stream
+			transformer.transform(source, result); // print to stream
 			stream.close();
-			
+
 		} catch (TransformerConfigurationException e) {
 			WDLogger.logSevere(e);
 		} catch (ParserConfigurationException e) {
@@ -49,41 +52,52 @@ public class IntervalsToXMLWriter implements IIntervalWriter {
 			WDLogger.logSevere(e);
 		}
 	}
-	
-	private DOMSource transformIntervalsToXML(List<IInterval> intervals) throws ParserConfigurationException{
-		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder;	
-		docBuilder = docFactory.newDocumentBuilder();	
+
+	private DOMSource transformIntervalsToXML(List<IInterval> intervals)
+			throws ParserConfigurationException {
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory
+				.newInstance();
+		DocumentBuilder docBuilder;
+		docBuilder = docFactory.newDocumentBuilder();
 
 		// root elements
-		Document doc = docBuilder.newDocument();		
+		Document doc = docBuilder.newDocument();
 		Element rootElement = doc.createElement("intervals");
 		doc.appendChild(rootElement);
- 
-		for(IInterval interval : intervals){
+
+		for (IInterval interval : intervals) {
 			Element intervalElement = doc.createElement("interval");
-			rootElement.appendChild(intervalElement); 
-			
+			rootElement.appendChild(intervalElement);
+
 			Element documentElement = doc.createElement("document");
 			intervalElement.appendChild(documentElement);
-				
-				addElementWithValue(doc, documentElement, "projectName", interval.getDocument().getProjectName());
-				addElementWithValue(doc, documentElement, "fileName", interval.getDocument().getFileName());
-				addElementWithValue(doc, documentElement, "documentType", interval.getDocument().getDocumentType().toString());
-				
-			addElementWithValue(doc, intervalElement, "start", Long.toString(interval.getStart().getTime()));
-			addElementWithValue(doc, intervalElement, "end", Long.toString(interval.getEnd().getTime()));
-			addElementWithValue(doc, intervalElement, "duration", interval.getDurationString());
-			addElementWithValue(doc, intervalElement, "activityType", interval.getActivityType().toString());
-			addElementWithValue(doc, intervalElement, "debugMode", interval.isDebugMode()? "1":"0");
-		}		
-		
+
+			addElementWithValue(doc, documentElement, "projectName", interval
+					.getDocument().getProjectName());
+			addElementWithValue(doc, documentElement, "fileName", interval
+					.getDocument().getFileName());
+			addElementWithValue(doc, documentElement, "documentType", interval
+					.getDocument().getDocumentType().toString());
+
+			addElementWithValue(doc, intervalElement, "start",
+					Long.toString(interval.getStart().getTime()));
+			addElementWithValue(doc, intervalElement, "end",
+					Long.toString(interval.getEnd().getTime()));
+			addElementWithValue(doc, intervalElement, "duration",
+					interval.getDurationString());
+			addElementWithValue(doc, intervalElement, "activityType", interval
+					.getActivityType().toString());
+			addElementWithValue(doc, intervalElement, "debugMode",
+					interval.isDebugMode() ? "1" : "0");
+		}
+
 		DOMSource source = new DOMSource(doc);
-		
-		return source;		
+
+		return source;
 	}
-	
-	private void addElementWithValue(Document doc, Element parent, String key, String value){
+
+	private void addElementWithValue(Document doc, Element parent, String key,
+			String value) {
 		Element element = doc.createElement(key);
 		element.appendChild(doc.createTextNode(value));
 		parent.appendChild(element);

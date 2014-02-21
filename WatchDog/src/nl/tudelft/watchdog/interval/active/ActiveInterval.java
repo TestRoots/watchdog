@@ -15,42 +15,42 @@ public abstract class ActiveInterval {
 	protected ITextEditor editor;
 	protected boolean isClosed;
 	protected IWorkbenchPart part;
-	
+
 	public ActiveInterval(IWorkbenchPart part) {
 		this.part = part;
-		this.editor = (ITextEditor)part;
+		this.editor = (ITextEditor) part;
 		this.timeOfCreation = new Date();
 		this.isClosed = false;
 	}
-	
-	public IWorkbenchPart getPart(){
+
+	public IWorkbenchPart getPart() {
 		return part;
 	}
-	
-	public ITextEditor getEditor(){
+
+	public ITextEditor getEditor() {
 		return editor;
 	}
-	
-	public Date getTimeOfCreation(){
+
+	public Date getTimeOfCreation() {
 		return timeOfCreation;
-	} 
-	
-	public boolean isClosed(){
+	}
+
+	public boolean isClosed() {
 		return isClosed;
 	}
-	
-	public Timer getTimer(){
+
+	public Timer getTimer() {
 		return checkForChangeTimer;
 	}
-	
-	public void closeInterval(){
+
+	public void closeInterval() {
 		isClosed = true;
 		checkForChangeTimer.cancel();
 		listenForReactivation();
 	}
-	
+
 	public abstract void listenForReactivation();
-	
+
 	public abstract ActivityType getActivityType();
 
 	public abstract void addTimeoutListener(long timeout,

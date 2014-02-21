@@ -3,13 +3,15 @@ package nl.tudelft.watchdog.exceptions;
 @SuppressWarnings("serial")
 public class FileSavingFailedException extends Exception {
 
-	public FileSavingFailedException(){
+	public FileSavingFailedException() {
 		super();
 	}
-	public FileSavingFailedException(String message){
+
+	public FileSavingFailedException(String message) {
 		super(message);
 	}
-	public FileSavingFailedException(Throwable e){
+
+	public FileSavingFailedException(Throwable e) {
 		super(e);
 	}
 }

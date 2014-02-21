@@ -1,39 +1,50 @@
 package nl.tudelft.watchdog.document;
 
+/**
+ * Estimates the nature of a document into one of {@link DocumentType}.
+ */
 public class DocumentClassifier {
-	public static DocumentType classifyDocument(String title, String contents){
-		String preparedContents = contents.replaceAll("\\s+", " "); //remove unnecessary spaces
-		
-		if(isJavaFile(title)){
-			if(containsJUnitImports(preparedContents) && containsTestAnnotation(preparedContents)){
+	/**
+	 * Classifies the document type of the given document, by analyzing its
+	 * filename and its contents.
+	 */
+	public static DocumentType classifyDocument(String fileName,
+			String fileContents) {
+		// remove unnecessary spaces
+		String preparedContents = fileContents.replaceAll("\\s+", " ");
+
+		if (isJavaFile(fileName)) {
+			if (containsJUnitImports(preparedContents)
+					&& containsTestAnnotation(preparedContents)) {
 				return DocumentType.TEST;
-			}
-			else
+			} else {
 				return DocumentType.PRODUCTION;
-		}else
+			}
+		} else {
 			return DocumentType.UNDEFINED;
+		}
 	}
 
 	private static boolean isJavaFile(String title) {
-		if(title.endsWith(".java")){
+		if (title.endsWith(".java")) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
 
 	private static boolean containsJUnitImports(String contents) {
-		if(contents.contains("import org.junit")){
+		if (contents.contains("import org.junit")) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	
-	private static boolean containsTestAnnotation(String contents){
-		if(contents.contains("@Test")){
+
+	private static boolean containsTestAnnotation(String contents) {
+		if (contents.contains("@Test")) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}

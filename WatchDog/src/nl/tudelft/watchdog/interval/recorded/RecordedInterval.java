@@ -10,7 +10,6 @@ import org.joda.time.Duration;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormat;
 
-
 public class RecordedInterval implements IInterval {
 
 	private static final long serialVersionUID = 3L;
@@ -19,8 +18,9 @@ public class RecordedInterval implements IInterval {
 	private Date end;
 	private ActivityType activityType;
 	private boolean isDebugMode;
-		
-	public RecordedInterval(IDocument document, Date start, Date end, ActivityType activityType, boolean debugMode) {
+
+	public RecordedInterval(IDocument document, Date start, Date end,
+			ActivityType activityType, boolean debugMode) {
 		this.document = document;
 		this.start = start;
 		this.end = end;
@@ -32,23 +32,24 @@ public class RecordedInterval implements IInterval {
 	public IDocument getDocument() {
 		return document;
 	}
-	
+
 	@Override
-	public Date getStart(){
+	public Date getStart() {
 		return start;
 	}
-	
+
 	@Override
-	public Date getEnd(){
+	public Date getEnd() {
 		return end;
 	}
-	
-	@Override 
-	public Duration getDuration(){
+
+	@Override
+	public Duration getDuration() {
 		return new Duration(start.getTime(), end.getTime());
 	}
-	@Override 
-	public String getDurationString(){
+
+	@Override
+	public String getDurationString() {
 		Duration d = new Duration(start.getTime(), end.getTime());
 		Period period = d.toPeriod();
 		return PeriodFormat.getDefault().print(period);
@@ -58,25 +59,24 @@ public class RecordedInterval implements IInterval {
 	public ActivityType getActivityType() {
 		return activityType;
 	}
-	
+
 	@Override
-	public boolean isDebugMode(){
+	public boolean isDebugMode() {
 		return isDebugMode;
 	}
-	
-	//Used to also support deserialization of older versions
+
+	// Used to also support deserialization of older versions
 	private void readObject(ObjectInputStream ois) {
 		try {
 			ois.defaultReadObject();
 			setDefaultValues();
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	private void setDefaultValues(){
-		
+
+	private void setDefaultValues() {
+
 	}
 
 }

@@ -1,6 +1,5 @@
 package nl.tudelft.watchdog.interval;
 
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,27 +26,27 @@ import nl.tudelft.watchdog.interval.recorded.RecordedInterval;
 import nl.tudelft.watchdog.plugin.PrefPage;
 import nl.tudelft.watchdog.util.WatchDogUtil;
 
+public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper {
 
-public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper  {
-	
 	private ActiveReadingInterval currentReadingInterval;
 	private ActiveEditingInterval currentEditingInterval;
 	private IUIListener UIListener;
 	private IDocumentFactory documentFactory;
-	
+
 	private List<IInterval> recordedIntervals;
-	
+
 	private static IntervalKeeper instance = null;
-	
-	public static IntervalKeeper getInstance(){
-		if(instance == null)
+
+	public static IntervalKeeper getInstance() {
+		if (instance == null) {
 			instance = new IntervalKeeper();
+		}
 		return instance;
 	}
-	
-	private IntervalKeeper(){
-		recordedIntervals= new ArrayList<IInterval>();
-		
+
+	private IntervalKeeper() {
+		recordedIntervals = new ArrayList<IInterval>();
+
 		listenToDocumentChanges();
 		UIListener = new UIListener();
 		UIListener.attachListeners();
@@ -55,77 +54,90 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	}
 
 	private void listenToDocumentChanges() {
-		DocumentNotifier.addMyEventListener(new IDocumentAttentionListener() {			
-			
+		DocumentNotifier.addMyEventListener(new IDocumentAttentionListener() {
+
 			@Override
 			public void onDocumentStartEditing(final DocumentActivateEvent evt) {
-				//create a new active interval when doc is new
-				if(currentEditingInterval == null || currentEditingInterval.isClosed()){
-					createNewEditingInterval(evt);	
-				}
-				else if(currentEditingInterval.getEditor() != evt.getChangedEditor()){
+				// create a new active interval when doc is new
+				if (currentEditingInterval == null
+						|| currentEditingInterval.isClosed()) {
+					createNewEditingInterval(evt);
+				} else if (currentEditingInterval.getEditor() != evt
+						.getChangedEditor()) {
 					closeCurrentInterval(currentEditingInterval);
 					createNewEditingInterval(evt);
 				}
-			}		
-			
-			@Override
-			public void onDocumentStopEditing(DocumentDeActivateEvent evt) {
-				if(currentEditingInterval != null && evt.getChangedEditor() == currentEditingInterval.getEditor()){										
-					closeCurrentInterval(currentEditingInterval);
-				}				
 			}
 
+			@Override
+			public void onDocumentStopEditing(DocumentDeActivateEvent evt) {
+				if (currentEditingInterval != null
+						&& evt.getChangedEditor() == currentEditingInterval
+								.getEditor()) {
+					closeCurrentInterval(currentEditingInterval);
+				}
+			}
 
 			@Override
 			public void onDocumentStartFocus(DocumentActivateEvent evt) {
-				//MessageConsoleManager.getConsoleStream().println("onDocumentStartFocus" + evt.getChangedEditor().getTitle());
-				//create a new active interval when doc is new
-				if(currentReadingInterval == null || currentReadingInterval.isClosed()){
+				// MessageConsoleManager.getConsoleStream().println("onDocumentStartFocus"
+				// + evt.getChangedEditor().getTitle());
+				// create a new active interval when doc is new
+				if (currentReadingInterval == null
+						|| currentReadingInterval.isClosed()) {
 					createNewReadingInterval(evt);
-				}
-				else if(currentReadingInterval.getEditor() != evt.getChangedEditor()){
+				} else if (currentReadingInterval.getEditor() != evt
+						.getChangedEditor()) {
 					closeCurrentInterval(currentReadingInterval);
 					createNewReadingInterval(evt);
 				}
 			}
-
 
 			@Override
 			public void onDocumentEndFocus(DocumentDeActivateEvent evt) {
-				//MessageConsoleManager.getConsoleStream().println("onDocumentEndFocus" + evt.getChangedEditor().getTitle());
-				if(currentReadingInterval != null && evt.getChangedEditor() == currentReadingInterval.getEditor()){										
+				// MessageConsoleManager.getConsoleStream().println("onDocumentEndFocus"
+				// + evt.getChangedEditor().getTitle());
+				if (currentReadingInterval != null
+						&& evt.getChangedEditor() == currentReadingInterval
+								.getEditor()) {
 					closeCurrentInterval(currentReadingInterval);
 				}
 			}
-			
+
 		});
 	}
-	
-	private void closeCurrentInterval(ActiveInterval interval) {	
-		if(!interval.isClosed()){
-			
+
+	private void closeCurrentInterval(ActiveInterval interval) {
+		if (!interval.isClosed()) {
+
 			IDocument doc = documentFactory.createDocument(interval.getPart());
-			RecordedInterval recordedInterval = new RecordedInterval(doc, interval.getTimeOfCreation(), new Date(), interval.getActivityType(), WatchDogUtil.isInDebugMode());
+			RecordedInterval recordedInterval = new RecordedInterval(doc,
+					interval.getTimeOfCreation(), new Date(),
+					interval.getActivityType(), WatchDogUtil.isInDebugMode());
 			recordedIntervals.add(recordedInterval);
 			interval.closeInterval();
-			IntervalNotifier.fireOnClosingInterval(new ClosingIntervalEvent(recordedInterval));
+			IntervalNotifier.fireOnClosingInterval(new ClosingIntervalEvent(
+					recordedInterval));
 		}
 	}
-	
-	private void createNewEditingInterval(final DocumentActivateEvent evt) {				
-		ActiveEditingInterval activeInterval = new ActiveEditingInterval(evt.getChangedEditor());
+
+	private void createNewEditingInterval(final DocumentActivateEvent evt) {
+		ActiveEditingInterval activeInterval = new ActiveEditingInterval(
+				evt.getChangedEditor());
 		currentEditingInterval = activeInterval;
 		addNewIntervalHandlers(activeInterval, PrefPage.getTimeOutEditing());
 	}
-	private void createNewReadingInterval(final DocumentActivateEvent evt) {				
-		ActiveReadingInterval activeInterval = new ActiveReadingInterval(evt.getPart());
+
+	private void createNewReadingInterval(final DocumentActivateEvent evt) {
+		ActiveReadingInterval activeInterval = new ActiveReadingInterval(
+				evt.getPart());
 		currentReadingInterval = activeInterval;
 		addNewIntervalHandlers(activeInterval, PrefPage.getTimeOutReading());
 	}
-	
-	private void addNewIntervalHandlers(final ActiveInterval interval, int timeout){
-		interval.addTimeoutListener(timeout, new OnInactiveCallBack() {					
+
+	private void addNewIntervalHandlers(final ActiveInterval interval,
+			int timeout) {
+		interval.addTimeoutListener(timeout, new OnInactiveCallBack() {
 			@Override
 			public void onInactive() {
 				closeCurrentInterval(interval);
@@ -133,33 +145,35 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 		});
 		IntervalNotifier.fireOnNewInterval(new NewIntervalEvent(interval));
 	}
-	
+
 	@Override
-	public void addIntervalListener(IIntervalListener listener){
+	public void addIntervalListener(IIntervalListener listener) {
 		IntervalNotifier.addMyEventListener(listener);
 	}
-	
+
 	@Override
-	public void removeIntervalListener(IIntervalListener listener){
+	public void removeIntervalListener(IIntervalListener listener) {
 		IntervalNotifier.removeMyEventListener(listener);
 	}
-	
+
 	@Override
-	public List<IInterval> getRecordedIntervals(){
+	public List<IInterval> getRecordedIntervals() {
 		return recordedIntervals;
 	}
-	
+
 	@Override
-	public void setRecordedIntervals(List<IInterval> intervals){
+	public void setRecordedIntervals(List<IInterval> intervals) {
 		recordedIntervals = intervals;
 	}
-	
+
 	@Override
-	public void closeAllCurrentIntervals(){
-		if(currentEditingInterval != null)
+	public void closeAllCurrentIntervals() {
+		if (currentEditingInterval != null) {
 			closeCurrentInterval(currentEditingInterval);
-		if(currentReadingInterval != null)
+		}
+		if (currentReadingInterval != null) {
 			closeCurrentInterval(currentReadingInterval);
+		}
 	}
-	
+
 }
