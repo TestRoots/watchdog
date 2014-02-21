@@ -1,5 +1,5 @@
 package nl.tudelft.watchdog.interval.activityCheckers;
 
-public interface OnInactiveCallBack{
-	public abstract void onInactive();		
+public interface OnInactiveCallBack {
+	public abstract void onInactive();
 }

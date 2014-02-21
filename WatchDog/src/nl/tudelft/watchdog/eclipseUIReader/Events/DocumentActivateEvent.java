@@ -9,19 +9,19 @@ import org.eclipse.ui.texteditor.ITextEditor;
 public class DocumentActivateEvent extends EventObject {
 	ITextEditor editor;
 	IWorkbenchPart part;
-	
+
 	public DocumentActivateEvent(IWorkbenchPart part) {
 		super(part);
 		this.part = part;
 		this.editor = (ITextEditor) part;
 	}
-	
-	public IWorkbenchPart getPart(){
+
+	public IWorkbenchPart getPart() {
 		return part;
 	}
 
-	public ITextEditor getChangedEditor(){
+	public ITextEditor getChangedEditor() {
 		return editor;
 	}
-	
+
 }

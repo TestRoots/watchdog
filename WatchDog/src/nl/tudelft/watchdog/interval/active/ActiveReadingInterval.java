@@ -3,28 +3,30 @@ package nl.tudelft.watchdog.interval.active;
 import java.util.Timer;
 
 import nl.tudelft.watchdog.interval.ActivityType;
-import nl.tudelft.watchdog.interval.activityCheckers.ReadingCheckerTask;
 import nl.tudelft.watchdog.interval.activityCheckers.OnInactiveCallBack;
+import nl.tudelft.watchdog.interval.activityCheckers.ReadingCheckerTask;
 
 import org.eclipse.ui.IWorkbenchPart;
 
 public class ActiveReadingInterval extends ActiveInterval {
-	
+
 	private ReadingCheckerTask task;
-	
+
 	/**
 	 * @param editor
-	 * 		the editor in this interval
+	 *            the editor in this interval
 	 */
-	public ActiveReadingInterval(IWorkbenchPart part){
+	public ActiveReadingInterval(IWorkbenchPart part) {
 		super(part);
 		checkForChangeTimer = new Timer();
 	}
 
 	@Override
-	public void addTimeoutListener(long timeout, final OnInactiveCallBack callbackWhenFinished) {
+	public void addTimeoutListener(long timeout,
+			final OnInactiveCallBack callbackWhenFinished) {
 		task = new ReadingCheckerTask(this.getEditor(), callbackWhenFinished);
-		checkForChangeTimer.schedule(new ReadingCheckerTask(this.getEditor(), callbackWhenFinished), 0, timeout);
+		checkForChangeTimer.schedule(new ReadingCheckerTask(this.getEditor(),
+				callbackWhenFinished), 0, timeout);
 	}
 
 	@Override
@@ -34,7 +36,7 @@ public class ActiveReadingInterval extends ActiveInterval {
 
 	@Override
 	public void listenForReactivation() {
-		assert(task != null);
+		assert (task != null);
 		task.listenForReactivation();
 	}
 }

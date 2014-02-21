@@ -24,65 +24,74 @@ public class ReadingCheckerTask extends TimerTask {
 	private OnInactiveCallBack callback;
 	private ITextEditor editor;
 	private IWorkbenchPart part;
-	
+
 	public ReadingCheckerTask(IWorkbenchPart part, OnInactiveCallBack callback) {
-		stillActive = true;		
+		stillActive = true;
 		this.callback = callback;
 		this.part = part;
-		this.editor = (ITextEditor)part;
+		this.editor = (ITextEditor) part;
 		styledText = (StyledText) editor.getAdapter(Control.class);
-		
+
 		createListeners();
 	}
-	
 
-	private void createListeners() {	
+	private void createListeners() {
 		Display.getDefault().asyncExec(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				caretListener = new CaretListener() { //cursor place changes		
+				caretListener = new CaretListener() { // cursor place changes
 					@Override
 					public void caretMoved(CaretEvent event) {
 						stillActive = true;
-						styledText.removeCaretListener(this); //listen just once to not get millions of events fired
+						styledText.removeCaretListener(this); // listen just
+																// once to not
+																// get millions
+																// of events
+																// fired
 					}
 				};
-				
-				paintListener = new PaintListener() { //for redraws of the view, e.g. when scrolled		
+
+				paintListener = new PaintListener() { // for redraws of the
+														// view, e.g. when
+														// scrolled
 					@Override
 					public void paintControl(PaintEvent e) {
 						stillActive = true;
-						styledText.removePaintListener(this); //listen just once to not get millions of events fired
+						styledText.removePaintListener(this); // listen just
+																// once to not
+																// get millions
+																// of events
+																// fired
 					}
 				};
 			}
 		});
 	}
-	
+
 	@Override
 	public void run() {
-		if(stillActive){
+		if (stillActive) {
 			stillActive = false;
-			
-			Display.getDefault().asyncExec(new Runnable() {						
+
+			Display.getDefault().asyncExec(new Runnable() {
 				@Override
 				public void run() {
 					styledText.addCaretListener(caretListener);
 					styledText.addPaintListener(paintListener);
 				}
 			});
-			
-		}else{
+
+		} else {
 			this.cancel();
 			removeListeners();
 			listenForReactivation();
 			callback.onInactive();
 		}
 	}
-	
-	private void removeListeners() {		
-		Display.getDefault().asyncExec(new Runnable() {			
+
+	private void removeListeners() {
+		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				styledText.removeCaretListener(caretListener);
@@ -90,28 +99,59 @@ public class ReadingCheckerTask extends TimerTask {
 			}
 		});
 	}
-	
-	public void listenForReactivation(){
-		if(!styledText.isDisposed()){		
-			Display.getDefault().asyncExec(new Runnable() {			
+
+	public void listenForReactivation() {
+		if (!styledText.isDisposed()) {
+			Display.getDefault().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					if(!styledText.isDisposed()){
-						styledText.addCaretListener(new CaretListener() { //cursor place changes		
-							@Override
-							public void caretMoved(CaretEvent event) {
-								DocumentNotifier.fireDocumentStartFocusEvent(new DocumentActivateEvent(part));
-								styledText.removeCaretListener(this); //listen just once to not get millions of events fired
-							}
-						});
-						
-						styledText.addPaintListener(new PaintListener() { //for redraws of the view, e.g. when scrolled		
-							@Override
-							public void paintControl(PaintEvent e) {
-								DocumentNotifier.fireDocumentStartFocusEvent(new DocumentActivateEvent(part));
-								styledText.removePaintListener(this); //listen just once to not get millions of events fired
-							}
-						});
+					if (!styledText.isDisposed()) {
+						styledText.addCaretListener(new CaretListener() { // cursor
+																			// place
+																			// changes
+									@Override
+									public void caretMoved(CaretEvent event) {
+										DocumentNotifier
+												.fireDocumentStartFocusEvent(new DocumentActivateEvent(
+														part));
+										styledText.removeCaretListener(this); // listen
+																				// just
+																				// once
+																				// to
+																				// not
+																				// get
+																				// millions
+																				// of
+																				// events
+																				// fired
+									}
+								});
+
+						styledText.addPaintListener(new PaintListener() { // for
+																			// redraws
+																			// of
+																			// the
+																			// view,
+																			// e.g.
+																			// when
+																			// scrolled
+									@Override
+									public void paintControl(PaintEvent e) {
+										DocumentNotifier
+												.fireDocumentStartFocusEvent(new DocumentActivateEvent(
+														part));
+										styledText.removePaintListener(this); // listen
+																				// just
+																				// once
+																				// to
+																				// not
+																				// get
+																				// millions
+																				// of
+																				// events
+																				// fired
+									}
+								});
 					}
 				}
 			});

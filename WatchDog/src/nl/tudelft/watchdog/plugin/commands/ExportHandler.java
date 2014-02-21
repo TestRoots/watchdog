@@ -19,29 +19,30 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-public class ExportHandler implements IWorkbenchWindowActionDelegate{
+public class ExportHandler implements IWorkbenchWindowActionDelegate {
 
 	private IRecordedIntervalSerializationManager serializationManager;
-	
-	
+
 	public ExportHandler() {
 		serializationManager = new RecordedIntervalSerializationManager();
-	}	
+	}
 
 	@Override
 	public void run(IAction action) {
 		WDLogger.logInfo("exporting all intervals...");
-		
+
 		IntervalKeeper.getInstance().closeAllCurrentIntervals();
-		
-		List<IInterval> completeList = getAllRecordedIntervals();		
-		
+
+		List<IInterval> completeList = getAllRecordedIntervals();
+
 		try {
-			UserPrompter.saveIntervalsToFile(new IntervalsToXMLWriter(), completeList);
+			UserPrompter.saveIntervalsToFile(new IntervalsToXMLWriter(),
+					completeList);
 			WDLogger.logInfo("exporting done.");
 		} catch (FileSavingFailedException e) {
 			WDLogger.logSevere(e);
-			UserPrompter.showMessageBox("Watchdog", "File could not be saved, please try again.");
+			UserPrompter.showMessageBox("Watchdog",
+					"File could not be saved, please try again.");
 		}
 	}
 
@@ -49,7 +50,8 @@ public class ExportHandler implements IWorkbenchWindowActionDelegate{
 		IIntervalKeeper intervalKeeper = IntervalKeeper.getInstance();
 		List<IInterval> completeList = new ArrayList<IInterval>();
 		try {
-			completeList.addAll(serializationManager.retrieveRecordedIntervals());
+			completeList.addAll(serializationManager
+					.retrieveRecordedIntervals());
 		} catch (IOException e1) {
 			WDLogger.logSevere(e1);
 		} catch (ClassNotFoundException e1) {
@@ -60,12 +62,15 @@ public class ExportHandler implements IWorkbenchWindowActionDelegate{
 	}
 
 	@Override
-	public void selectionChanged(IAction action, ISelection selection) {}
+	public void selectionChanged(IAction action, ISelection selection) {
+	}
 
 	@Override
-	public void dispose() {}
+	public void dispose() {
+	}
 
 	@Override
-	public void init(IWorkbenchWindow window) {}
-	
-}   
+	public void init(IWorkbenchWindow window) {
+	}
+
+}

@@ -13,65 +13,61 @@ import java.util.List;
 import nl.tudelft.watchdog.interval.IntervalKeeper;
 import nl.tudelft.watchdog.plugin.logging.WDLogger;
 
-public class RecordedIntervalSerializationManager implements IRecordedIntervalSerializationManager {
-	
+public class RecordedIntervalSerializationManager implements
+		IRecordedIntervalSerializationManager {
+
 	@Override
-	public void saveRecordedIntervals(){
-		if(!IntervalKeeper.getInstance().getRecordedIntervals().isEmpty()){
-			try
-			{
+	public void saveRecordedIntervals() {
+		if (!IntervalKeeper.getInstance().getRecordedIntervals().isEmpty()) {
+			try {
 				String filename = (new Date()).getTime() + ".ser";
 				String userHome = System.getProperty("user.home");
-				File parent = new File(userHome+"/watchdog/");
+				File parent = new File(userHome + "/watchdog/");
 				parent.mkdirs();
-				FileOutputStream fileOut = new FileOutputStream(new File(parent, filename));
+				FileOutputStream fileOut = new FileOutputStream(new File(
+						parent, filename));
 				ObjectOutputStream out = new ObjectOutputStream(fileOut);
-				out.writeObject(IntervalKeeper.getInstance().getRecordedIntervals());
+				out.writeObject(IntervalKeeper.getInstance()
+						.getRecordedIntervals());
 				out.close();
 				fileOut.close();
-			}
-			catch(IOException e)
-			{
-	          WDLogger.logSevere(e);
+			} catch (IOException e) {
+				WDLogger.logSevere(e);
 			}
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<IInterval> retrieveRecordedIntervals() throws IOException, ClassNotFoundException{
+	public List<IInterval> retrieveRecordedIntervals() throws IOException,
+			ClassNotFoundException {
 		List<IInterval> completeList = new ArrayList<IInterval>();
-		try
-		{
+		try {
 			String userHome = System.getProperty("user.home");
-			File parent = new File(userHome+"/watchdog/");
-			if(parent.list() != null){
-				for(String fileName : parent.list()){
+			File parent = new File(userHome + "/watchdog/");
+			if (parent.list() != null) {
+				for (String fileName : parent.list()) {
 					File f = new File(parent, fileName);
-					
-					if(f.exists() && f.isFile()){			
+
+					if (f.exists() && f.isFile()) {
 						FileInputStream fileIn = new FileInputStream(f);
-						
+
 						ObjectInputStream in = new ObjectInputStream(fileIn);
-						List<IInterval> list = (List<IInterval>) in.readObject();
+						List<IInterval> list = (List<IInterval>) in
+								.readObject();
 						in.close();
 						fileIn.close();
 						completeList.addAll(list);
-					}
-					else
-					{
+					} else {
 						WDLogger.logInfo("no saved recorded intervals");
 					}
 				}
 			}
 			return completeList;
-		}
-		catch(IOException e)
-		{
+		} catch (IOException e) {
 			WDLogger.logSevere(e);
 			throw e;
-		} 
-		catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {
 			WDLogger.logSevere(e);
 			throw e;
 		}

@@ -3,10 +3,11 @@ package nl.tudelft.watchdog.exceptions;
 @SuppressWarnings("serial")
 public class EditorClosedPrematurelyException extends Exception {
 
-	public EditorClosedPrematurelyException(){
+	public EditorClosedPrematurelyException() {
 		super();
 	}
-	public EditorClosedPrematurelyException(String message){
+
+	public EditorClosedPrematurelyException(String message) {
 		super(message);
 	}
 }

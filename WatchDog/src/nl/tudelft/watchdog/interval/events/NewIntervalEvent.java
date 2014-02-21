@@ -1,6 +1,5 @@
 package nl.tudelft.watchdog.interval.events;
 
-
 import java.util.EventObject;
 
 import nl.tudelft.watchdog.interval.active.ActiveInterval;
@@ -9,13 +8,13 @@ import nl.tudelft.watchdog.interval.active.ActiveInterval;
 public class NewIntervalEvent extends EventObject {
 
 	private ActiveInterval interval;
-	
+
 	public NewIntervalEvent(ActiveInterval source) {
-		super(source);	
+		super(source);
 		this.interval = source;
 	}
-	
-	public ActiveInterval getInterval(){
+
+	public ActiveInterval getInterval() {
 		return interval;
 	}
 

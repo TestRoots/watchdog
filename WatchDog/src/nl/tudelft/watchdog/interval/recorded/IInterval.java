@@ -8,12 +8,10 @@ import nl.tudelft.watchdog.interval.ActivityType;
 
 import org.joda.time.Duration;
 
-
-
 public interface IInterval extends Serializable {
-	
+
 	ActivityType getActivityType();
-	
+
 	IDocument getDocument();
 
 	Date getStart();
@@ -26,5 +24,4 @@ public interface IInterval extends Serializable {
 
 	boolean isDebugMode();
 
-	
 }

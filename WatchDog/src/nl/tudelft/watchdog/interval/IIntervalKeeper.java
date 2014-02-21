@@ -5,15 +5,19 @@ import java.util.List;
 import nl.tudelft.watchdog.interval.events.IIntervalListener;
 import nl.tudelft.watchdog.interval.recorded.IInterval;
 
-
 /**
- * Keeps track of all intervals. Users of this interface can listen to events regarding intervals
+ * Keeps track of all intervals. Users of this interface can listen to events
+ * regarding intervals
  */
 public interface IIntervalKeeper {
 	void addIntervalListener(IIntervalListener listener);
+
 	void removeIntervalListener(IIntervalListener listener);
+
 	List<IInterval> getRecordedIntervals();
+
 	void setRecordedIntervals(List<IInterval> intervals);
+
 	void closeAllCurrentIntervals();
-	
+
 }
