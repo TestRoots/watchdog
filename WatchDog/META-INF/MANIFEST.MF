@@ -1,5 +1,5 @@
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Manifest-Version: 1.0
 Bundle-Activator: nl.tudelft.watchdog.plugin.Activator
 Bundle-Version: 1.0.0.qualifier
