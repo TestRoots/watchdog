@@ -7,28 +7,33 @@
             class="nl.tudelft.watchdog.plugin.commands.StartUpHandler"></startup>
    </extension>
    <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            id="TimeDistributionPlugin.actionSet"
-            label="Sample Action Set"
-            visible="true">
-         <action
-               class="nl.tudelft.watchdog.plugin.commands.ExportHandler"
-               icon="resources/images/rsz_dog_icon.png"
-               id="timeDistributionPlugin.toolbar.Export"
-               label="Export"
-               toolbarPath="wd"
-               tooltip="Export">
-         </action>
-      </actionSet>
-   </extension>
-   <extension
          point="org.eclipse.ui.preferencePages">
       <page
             class="nl.tudelft.watchdog.plugin.PrefPage"
             id="TimeDistributionPlugin.PreferencePage"
             name="WatchDog">
       </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="nl.tudelft.watchdog.commands.exportData"
+            defaultHandler="nl.tudelft.watchdog.plugin.commands.ExportHandler"
+            description="Exports the data from the WatchDog plugin"
+            name="Export WatchDog Data">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <command
+               commandId="nl.tudelft.watchdog.commands.exportData"
+               label="Export WatchDog Data"
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
 
 </plugin>
