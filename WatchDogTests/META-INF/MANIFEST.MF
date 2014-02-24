@@ -13,7 +13,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.editors;bundle-version="3.8.100",
  org.eclipse.ui.source;bundle-version="3.105.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: junit.framework;version="4.8.2",
  org.eclipse.jface.text,
  org.eclipse.ui.texteditor,
@@ -22,3 +21,4 @@ Import-Package: junit.framework;version="4.8.2",
  org.osgi.framework;version="1.6.0"
 Bundle-ClassPath: .,
  libs/mockito-all-1.9.5-rc1.jar
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
