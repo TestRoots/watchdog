@@ -33,7 +33,7 @@
 				<artifactId>maven-antrun-plugin</artifactId>
 				<configuration>
 					<tasks>
-						<copy file="target/WatchDogLib-1.0.0-SNAPSHOT.jar" tofile="../WatchDog/WatchDogLib-1.0.0-SNAPSHOT.jar" />
+						<copy file="target/WatchDogLib-1.0.0-SNAPSHOT.jar" tofile="../WatchDog/bundledLibs.jar" />
 					</tasks>
 				</configuration>
 				<executions>
