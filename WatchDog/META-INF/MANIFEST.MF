@@ -16,7 +16,7 @@ Import-Package: org.eclipse.core.resources,
 Bundle-ActivationPolicy: lazy
 Bundle-Name: WatchDog
 Bundle-ClassPath: .,
- WatchDogLib-1.0.0-SNAPSHOT.jar
+ bundledLibs.jar
 Require-Bundle: org.eclipse.ui.console;bundle-version="3.5.100",
  org.eclipse.ui;bundle-version="3.105.0",
  org.eclipse.ui.workbench.texteditor;bundle-version="3.8.101",
