@@ -5,5 +5,4 @@ Bundle-SymbolicName: WatchDogUnitTests
 Bundle-Version: 1.0.0.qualifier
 Fragment-Host: WatchDog;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Bundle-ClassPath: libs/mockito-all-1.9.5-rc1.jar,
- .
+Bundle-ClassPath: libs/mockito-all-1.9.5-rc1.jar
