@@ -27,19 +27,3 @@ Bundle-ActivationPolicy: lazy
 Bundle-Name: WatchDog
 Bundle-ClassPath: .,
  libs/joda-time-2.3.jar
-Export-Package: nl.tudelft.watchdog.document,
- nl.tudelft.watchdog.eclipseUIReader,
- nl.tudelft.watchdog.eclipseUIReader.Events,
- nl.tudelft.watchdog.eclipseUIReader.UIComponentListeners,
- nl.tudelft.watchdog.exceptions,
- nl.tudelft.watchdog.interval,
- nl.tudelft.watchdog.interval.active,
- nl.tudelft.watchdog.interval.activityCheckers,
- nl.tudelft.watchdog.interval.events,
- nl.tudelft.watchdog.interval.recorded,
- nl.tudelft.watchdog.plugin,
- nl.tudelft.watchdog.plugin.commands,
- nl.tudelft.watchdog.plugin.logging,
- nl.tudelft.watchdog.plugin.prompts,
- nl.tudelft.watchdog.timingOutput,
- nl.tudelft.watchdog.util
