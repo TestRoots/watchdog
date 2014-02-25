@@ -10,6 +10,6 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>WatchDogTests</artifactId>
-  <packaging>eclipse-test-plugin</packaging>
+  <artifactId>WatchDogUnitTests</artifactId>
+  <packaging>eclipse-plugin</packaging>
 </project> 
