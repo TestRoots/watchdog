@@ -13,9 +13,9 @@ public class WDLogger {
 	/**
 	 * Adds the given log handler and sets the given Level on it.
 	 */
-	public static void addHandlerAndSetLevel(Handler handler, Level l) {
+	public static void addHandlerAndSetLevel(Handler handler, Level level) {
 		log.addHandler(handler);
-		handler.setLevel(l);
+		handler.setLevel(level);
 	}
 
 	/**
@@ -44,8 +44,8 @@ public class WDLogger {
 	/**
 	 * Logs the {@link Throwable} at warning level SEVERE.
 	 */
-	public static void logSevere(Throwable e) {
-		log.log(Level.SEVERE, e.getMessage(), e);
+	public static void logSevere(Throwable throwable) {
+		log.log(Level.SEVERE, throwable.getMessage(), throwable);
 	}
 
 	/**
