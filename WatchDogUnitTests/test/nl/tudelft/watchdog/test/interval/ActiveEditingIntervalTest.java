@@ -19,78 +19,93 @@ import org.junit.Test;
  */
 public class ActiveEditingIntervalTest {
 
-    private ITextEditor mockedITextEditor;
-    private IDocumentProvider mockedDocProvider;
-    private IDocument mockedDocument;
+	/**
+	 * The mocked text editor.
+	 */
+	private ITextEditor mockedITextEditor;
+	/**
+	 * The mocked document Provider.
+	 */
+	private IDocumentProvider mockedDocProvider;
+	/**
+	 * The mocked document.
+	 */
+	private IDocument mockedDocument;
 
-    private Boolean isActive;
+	/**
+	 * Flag that simulates whether the editor is active.
+	 */
+	private Boolean isActive;
 
-    /**
-     * Setup method run before every testcase execution.
-     */
-    @Before
-    public void setUp() {
-	isActive = true;
-	setUpMocks();
-    }
+	/**
+	 * Setup method run before every testcase execution.
+	 */
+	@Before
+	public void setUp() {
+		isActive = true;
+		setUpMocks();
+	}
 
-    private void setUpMocks() {
-	mockedITextEditor = mock(ITextEditor.class);
-	mockedDocProvider = mock(IDocumentProvider.class);
-	mockedDocument = mock(IDocument.class);
+	/**
+	 * Sets up the mocks.
+	 */
+	private void setUpMocks() {
+		mockedITextEditor = mock(ITextEditor.class);
+		mockedDocProvider = mock(IDocumentProvider.class);
+		mockedDocument = mock(IDocument.class);
 
-	when(mockedITextEditor.getDocumentProvider()).thenReturn(
-		mockedDocProvider);
-	when(mockedDocProvider.getDocument(anyObject())).thenReturn(
-		mockedDocument);
-    }
+		when(mockedITextEditor.getDocumentProvider()).thenReturn(
+				mockedDocProvider);
+		when(mockedDocProvider.getDocument(anyObject())).thenReturn(
+				mockedDocument);
+	}
 
-    /**
-     * Tests for an active editing interval of 100ms, whether it really is
-     * inactive after 250ms.
-     */
-    @Test
-    public void testInActivityAfter250ms() throws InterruptedException {
-	when(mockedDocument.get()).thenReturn("read when initialized")
-		.thenReturn("read after 100ms");
+	/**
+	 * Tests for an active editing interval of 100ms, whether it really is
+	 * inactive after 250ms.
+	 */
+	@Test
+	public void testInActivityAfter250ms() throws InterruptedException {
+		when(mockedDocument.get()).thenReturn("read when initialized")
+				.thenReturn("read after 100ms");
 
-	ActiveEditingInterval interval = new ActiveEditingInterval(
-		mockedITextEditor);
-	interval.addTimeoutListener(100, new OnInactiveCallBack() {
+		ActiveEditingInterval interval = new ActiveEditingInterval(
+				mockedITextEditor);
+		interval.addTimeoutListener(100, new OnInactiveCallBack() {
 
-	    @Override
-	    public void onInactive() {
-		isActive = false;
-	    }
-	});
+			@Override
+			public void onInactive() {
+				isActive = false;
+			}
+		});
 
-	Thread.sleep(250);
-	assertFalse(isActive);
-    }
+		Thread.sleep(250);
+		assertFalse(isActive);
+	}
 
-    /**
-     * Tests for an active editing interval of 100ms, whether it really is still
-     * active after 80ms, and inactive after 250ms.
-     */
-    @Test
-    public void testActivityAfter100ms() throws InterruptedException {
-	when(mockedDocument.get()).thenReturn("read when initialized")
-		.thenReturn("read after 100ms").thenReturn("read after 200ms");
+	/**
+	 * Tests for an active editing interval of 100ms, whether it really is still
+	 * active after 80ms, and inactive after 250ms.
+	 */
+	@Test
+	public void testActivityAfter100ms() throws InterruptedException {
+		when(mockedDocument.get()).thenReturn("read when initialized")
+				.thenReturn("read after 100ms").thenReturn("read after 200ms");
 
-	ActiveEditingInterval interval = new ActiveEditingInterval(
-		mockedITextEditor);
-	interval.addTimeoutListener(100, new OnInactiveCallBack() {
+		ActiveEditingInterval interval = new ActiveEditingInterval(
+				mockedITextEditor);
+		interval.addTimeoutListener(100, new OnInactiveCallBack() {
 
-	    @Override
-	    public void onInactive() {
-		isActive = false;
-	    }
-	});
+			@Override
+			public void onInactive() {
+				isActive = false;
+			}
+		});
 
-	Thread.sleep(80);
-	assertTrue(isActive);
-	Thread.sleep(200);
-	assertFalse(isActive);
-    }
+		Thread.sleep(80);
+		assertTrue(isActive);
+		Thread.sleep(200);
+		assertFalse(isActive);
+	}
 
 }
