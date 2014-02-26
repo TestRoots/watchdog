@@ -15,14 +15,14 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class EditingCheckerTask extends TimerTask {
+public class TypingCheckerTask extends TimerTask {
 
 	private IUpdateChecker checker;
 	private OnInactiveCallBack callback;
 	private ITextEditor editor;
 	private IWorkbenchPart part;
 
-	public EditingCheckerTask(IWorkbenchPart part, OnInactiveCallBack callback) {
+	public TypingCheckerTask(IWorkbenchPart part, OnInactiveCallBack callback) {
 		this.editor = (ITextEditor) part;
 		this.part = part;
 		checker = new UpdateChecker(editor);

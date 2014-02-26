@@ -6,8 +6,8 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.SimpleFormatter;
 
-import nl.tudelft.watchdog.interval.IIntervalKeeper;
-import nl.tudelft.watchdog.interval.IntervalKeeper;
+import nl.tudelft.watchdog.interval.IIntervalManager;
+import nl.tudelft.watchdog.interval.IntervalManager;
 import nl.tudelft.watchdog.interval.events.ClosingIntervalEvent;
 import nl.tudelft.watchdog.interval.events.IIntervalListener;
 import nl.tudelft.watchdog.interval.events.NewIntervalEvent;
@@ -15,14 +15,18 @@ import nl.tudelft.watchdog.plugin.logging.WDLogger;
 
 import org.eclipse.ui.IStartup;
 
+/**
+ * Handler called when an Eclipse instance with the WatchDog plugin installed
+ * gets opened and activated.
+ */
 public class StartUpHandler implements IStartup {
 
 	@Override
 	public void earlyStartup() {
 		setUpLogger();
 		WDLogger.logInfo("Starting up...");
-		IIntervalKeeper intervalKeeper = IntervalKeeper.getInstance();
-		intervalKeeper.addIntervalListener(new IIntervalListener() {
+		IIntervalManager intervalManager = IntervalManager.getInstance();
+		intervalManager.addIntervalListener(new IIntervalListener() {
 
 			@Override
 			public void onNewInterval(NewIntervalEvent evt) {
@@ -32,7 +36,7 @@ public class StartUpHandler implements IStartup {
 
 			@Override
 			public void onClosingInterval(ClosingIntervalEvent evt) {
-				WDLogger.logInfo("Closing interval_ "
+				WDLogger.logInfo("Closing interval: "
 						+ evt.getInterval().getDocument().getFileName()
 						+ " \n " + evt.getInterval().getStart() + " - "
 						+ evt.getInterval().getEnd());
@@ -41,16 +45,17 @@ public class StartUpHandler implements IStartup {
 	}
 
 	private void setUpLogger() {
-		SimpleFormatter fmt = new SimpleFormatter();
+		SimpleFormatter formatter = new SimpleFormatter();
 
 		try {
+			// TODO (MMB) Stores logs to a path in the Eclipse installation
 			File parent = new File("watchdog/logs/");
 			parent.mkdirs();
 
 			FileHandler fileHandler = new FileHandler(
 					"watchdog/logs/watchdoglog.log", true);
-			fileHandler.setFormatter(fmt);
-			WDLogger.addHandler(fileHandler, Level.ALL);
+			fileHandler.setFormatter(formatter);
+			WDLogger.addHandlerAndSetLevel(fileHandler, Level.ALL);
 		} catch (SecurityException e) {
 			WDLogger.logSevere(e.getMessage());
 		} catch (IOException e) {

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import nl.tudelft.watchdog.interval.IntervalKeeper;
+import nl.tudelft.watchdog.interval.IntervalManager;
 import nl.tudelft.watchdog.plugin.logging.WDLogger;
 
 public class RecordedIntervalSerializationManager implements
@@ -18,16 +18,19 @@ public class RecordedIntervalSerializationManager implements
 
 	@Override
 	public void saveRecordedIntervals() {
-		if (!IntervalKeeper.getInstance().getRecordedIntervals().isEmpty()) {
+		if (!IntervalManager.getInstance().getRecordedIntervals().isEmpty()) {
 			try {
 				String filename = (new Date()).getTime() + ".ser";
+				// TODO (MMB) This stores serialized files in user's home.
+				// Change to a more appropriate location or, better yet, use
+				// Eclipse's internal mechanism for storing such data?
 				String userHome = System.getProperty("user.home");
 				File parent = new File(userHome + "/watchdog/");
 				parent.mkdirs();
 				FileOutputStream fileOut = new FileOutputStream(new File(
 						parent, filename));
 				ObjectOutputStream out = new ObjectOutputStream(fileOut);
-				out.writeObject(IntervalKeeper.getInstance()
+				out.writeObject(IntervalManager.getInstance()
 						.getRecordedIntervals());
 				out.close();
 				fileOut.close();

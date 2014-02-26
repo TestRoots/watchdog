@@ -4,41 +4,60 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Our wrapper class for providing logging capability.
+ */
 public class WDLogger {
-	private static Logger log;
+	private static Logger log = Logger.getLogger(WDLogger.class.getName());
 
-	static {
-		log = Logger.getLogger(WDLogger.class.getName());
-	}
-
-	public static void addHandler(Handler handler, Level l) {
+	/**
+	 * Adds the given log handler and sets the given Level on it.
+	 */
+	public static void addHandlerAndSetLevel(Handler handler, Level l) {
 		log.addHandler(handler);
 		handler.setLevel(l);
 	}
 
-	public static void logInfo(String message) {
-		log.log(Level.INFO, message);
-	}
-
-	public static void logSevere(String message) {
-		log.log(Level.SEVERE, message);
-	}
-
-	public static void logSevere(Throwable e) {
-		log.log(Level.SEVERE, e.getMessage(), e);
-	}
-
-	public static void log(Level level, String message) {
-		log.log(level, message);
-	}
-
-	public static void log(Level level, String message, Throwable throwable) {
-		log.log(level, message, throwable);
-	}
-
+	/**
+	 * Closes all log handlers.
+	 */
 	public static void closeAllHandlers() {
 		for (Handler h : log.getHandlers()) {
 			h.close();
 		}
 	}
+
+	/**
+	 * Logs message at warning level INFO.
+	 */
+	public static void logInfo(String message) {
+		log.log(Level.INFO, message);
+	}
+
+	/**
+	 * Logs message at warning level SEVERE.
+	 */
+	public static void logSevere(String message) {
+		log.log(Level.SEVERE, message);
+	}
+
+	/**
+	 * Logs the {@link Throwable} at warning level SEVERE.
+	 */
+	public static void logSevere(Throwable e) {
+		log.log(Level.SEVERE, e.getMessage(), e);
+	}
+
+	/**
+	 * Logs the message at the given warning level.
+	 */
+	public static void log(Level level, String message) {
+		log.log(level, message);
+	}
+
+	/** Logs the message and the {@link Throwable} at the given warning level. */
+	public static void log(Level level, String message, Throwable throwable) {
+		log.log(level, message, throwable);
+	}
+
 }
