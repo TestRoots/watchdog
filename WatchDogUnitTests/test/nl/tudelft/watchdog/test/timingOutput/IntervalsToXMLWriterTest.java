@@ -29,7 +29,7 @@ public class IntervalsToXMLWriterTest {
 	List<IInterval> intervals = new LinkedList<IInterval>();
 	intervals.add(new RecordedInterval(new Document("projname", "filename",
 		DocumentType.TEST), new Date(12345678912L), new Date(
-		13345355121L), ActivityType.Editing, true));
+		13345355121L), ActivityType.Typing, true));
 
 	ByteArrayOutputStream os = new ByteArrayOutputStream();
 	new IntervalsToXMLWriter().exportIntervals(intervals, os);
