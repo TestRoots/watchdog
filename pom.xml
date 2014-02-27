@@ -7,9 +7,8 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
-    <module>WatchDogLib</module>
     <module>WatchDog</module>
-    <module>WatchDogTests</module>
+    <module>WatchDogUnitTests</module>
     <module>WatchDogFeature</module>
     <module>p2updatesite</module>
   </modules>
