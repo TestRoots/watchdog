@@ -38,7 +38,7 @@ public class ActiveTypingInterval extends ActiveInterval {
 
 	@Override
 	public void listenForReactivation() {
-		// TODO (MMB) this would happen if addTimeoutListener had not been
+		// TODO (MMB) task would be null if addTimeoutListener had not been
 		// called before listenForReactivation ?
 		assert (task != null);
 		task.listenForReactivation();
