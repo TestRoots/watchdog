@@ -24,7 +24,7 @@ import nl.tudelft.watchdog.interval.events.NewIntervalEvent;
 import nl.tudelft.watchdog.interval.recorded.IInterval;
 import nl.tudelft.watchdog.interval.recorded.RecordedInterval;
 import nl.tudelft.watchdog.preferences.WatchdogPreferences;
-import nl.tudelft.watchdog.util.WatchDogUtil;
+import nl.tudelft.watchdog.util.WatchDogUtils;
 
 /**
  * Implementation of an {@link IIntervalManager}. Is a singleton.
@@ -37,6 +37,7 @@ public class IntervalManager extends IntervalNotifier implements
 	private IUIListener UIListener;
 	private IDocumentFactory documentFactory;
 
+	/* The recorded intervals of this session */
 	private List<IInterval> recordedIntervals;
 
 	private static IntervalManager instance = null;
@@ -119,7 +120,7 @@ public class IntervalManager extends IntervalNotifier implements
 			IDocument doc = documentFactory.createDocument(interval.getPart());
 			RecordedInterval recordedInterval = new RecordedInterval(doc,
 					interval.getTimeOfCreation(), new Date(),
-					interval.getActivityType(), WatchDogUtil.isInDebugMode());
+					interval.getActivityType(), WatchDogUtils.isInDebugMode());
 			recordedIntervals.add(recordedInterval);
 			interval.closeInterval();
 			IntervalNotifier.fireOnClosingInterval(new ClosingIntervalEvent(
