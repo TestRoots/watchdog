@@ -12,7 +12,7 @@ import nl.tudelft.watchdog.interval.events.ClosingIntervalEvent;
 import nl.tudelft.watchdog.interval.events.IIntervalListener;
 import nl.tudelft.watchdog.interval.events.NewIntervalEvent;
 import nl.tudelft.watchdog.plugin.logging.WDLogger;
-import nl.tudelft.watchdog.preferences.PreferenceUtils;
+import nl.tudelft.watchdog.preferences.WatchdogPreferences;
 
 import org.eclipse.ui.IStartup;
 
@@ -57,7 +57,7 @@ public class StartUpHandler implements IStartup {
 					"watchdog/logs/watchdoglog.log", true);
 			fileHandler.setFormatter(formatter);
 			Level level = Level.OFF;
-			if (PreferenceUtils.isDebuggingEnabled()) {
+			if (WatchdogPreferences.getInstance().isDebuggingEnabled()) {
 				level = Level.ALL;
 			}
 			WDLogger.addHandlerAndSetLevel(fileHandler, level);
