@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.document;
 
 import nl.tudelft.watchdog.exceptions.ContentReaderException;
 import nl.tudelft.watchdog.plugin.logging.WDLogger;
-import nl.tudelft.watchdog.util.WatchDogUtil;
+import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -35,7 +35,7 @@ public class DocumentFactory implements IDocumentFactory {
 				try {
 					docType = DocumentClassifier.classifyDocument(
 							editorPart.getTitle(),
-							WatchDogUtil.getEditorContent(editor));
+							WatchDogUtils.getEditorContent(editor));
 				} catch (IllegalArgumentException e) {
 					WDLogger.logSevere(e);
 				} catch (ContentReaderException e) {
@@ -43,7 +43,7 @@ public class DocumentFactory implements IDocumentFactory {
 					try {
 						docType = DocumentClassifier.classifyDocument(
 								editorPart.getTitle(),
-								WatchDogUtil.getFileContentsFromEditor(editor));
+								WatchDogUtils.getFileContentsFromEditor(editor));
 					} catch (IllegalArgumentException ex) {
 						WDLogger.logInfo("File does not exist anymore: "
 								+ editor.getTitle());

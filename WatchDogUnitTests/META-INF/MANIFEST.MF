@@ -6,3 +6,4 @@ Bundle-Version: 1.0.0.qualifier
 Fragment-Host: nl.tudelft.WatchDog;bundle-version="1.0.0.qualifier"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: libs/mockito-all-1.9.5-rc1.jar
+Import-Package: org.joda.time
