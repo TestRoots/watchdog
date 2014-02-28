@@ -13,6 +13,7 @@ import nl.tudelft.watchdog.interval.events.IIntervalListener;
 import nl.tudelft.watchdog.interval.events.NewIntervalEvent;
 import nl.tudelft.watchdog.plugin.logging.WDLogger;
 import nl.tudelft.watchdog.preferences.WatchdogPreferences;
+import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.ui.IStartup;
 
@@ -24,6 +25,8 @@ public class StartUpHandler implements IStartup {
 
 	@Override
 	public void earlyStartup() {
+		WatchDogGlobals.isActive = true;
+
 		setUpLogger();
 		WDLogger.logInfo("Starting up...");
 		IIntervalManager intervalManager = IntervalManager.getInstance();

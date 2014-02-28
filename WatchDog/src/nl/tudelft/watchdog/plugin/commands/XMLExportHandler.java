@@ -36,10 +36,10 @@ public class XMLExportHandler extends AbstractHandler {
 		try {
 			completeList.addAll(serializationManager
 					.retrieveRecordedIntervals());
-		} catch (IOException e1) {
-			WDLogger.logSevere(e1);
-		} catch (ClassNotFoundException e1) {
-			WDLogger.logSevere(e1);
+		} catch (IOException exception) {
+			WDLogger.logSevere(exception);
+		} catch (ClassNotFoundException exception) {
+			WDLogger.logSevere(exception);
 		}
 		completeList.addAll(intervalKeeper.getRecordedIntervals());
 		return completeList;
@@ -64,5 +64,4 @@ public class XMLExportHandler extends AbstractHandler {
 		}
 		return null;
 	}
-
 }
