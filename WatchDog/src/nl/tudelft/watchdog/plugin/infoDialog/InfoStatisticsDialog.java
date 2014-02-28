@@ -71,16 +71,16 @@ public class InfoStatisticsDialog extends Dialog {
 		createTotalIntervalSummary(container);
 	}
 
-	/** Creates a summary with all the intervals in WatchDog added up. */
-	private void createTotalIntervalSummary(Composite container) {
-		createIntervalSummary("All Recording Sessions: ", container,
-				WatchDogUtils.getAllRecordedIntervals());
-	}
-
 	/** Creates a summary from the current Eclipse session in WatchDog. */
 	private void createCurrentIntervalSummary(Composite container) {
 		createIntervalSummary("Current Eclipse Session: ", container,
 				IntervalManager.getInstance().getRecordedIntervals());
+	}
+
+	/** Creates a summary with all the intervals in WatchDog added up. */
+	private void createTotalIntervalSummary(Composite container) {
+		createIntervalSummary("All Other Recording Sessions: ", container,
+				WatchDogUtils.getAllRecordedIntervals());
 	}
 
 	/**
