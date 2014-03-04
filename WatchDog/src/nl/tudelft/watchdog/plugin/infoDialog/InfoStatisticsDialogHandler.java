@@ -12,7 +12,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.menus.UIElement;
 
 /**
- * Handler for displaying a {@link InfoStatisticsDialog}.
+ * Handler for displaying an {@link InfoStatisticsDialog}.
  */
 public class InfoStatisticsDialogHandler extends AbstractHandler implements
 		IElementUpdater {
