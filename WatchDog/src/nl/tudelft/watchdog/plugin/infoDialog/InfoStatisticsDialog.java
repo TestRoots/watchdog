@@ -113,7 +113,7 @@ public class InfoStatisticsDialog extends Dialog {
 						.getMillis() / intervalStatistics
 						.getTotalTimeOverAllActivities().getMillis()) * 100);
 
-				labelText += " (" + percentageOfActivity + "%)";
+				labelText = percentageOfActivity + "%" + " (" + labelText + ")";
 			}
 
 			createLabel(labelText, container);
