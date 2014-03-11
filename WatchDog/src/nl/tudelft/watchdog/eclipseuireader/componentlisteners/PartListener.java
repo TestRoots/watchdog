@@ -1,9 +1,9 @@
-package nl.tudelft.watchdog.eclipseUIReader.UIComponentListeners;
+package nl.tudelft.watchdog.eclipseuireader.componentlisteners;
 
-import nl.tudelft.watchdog.eclipseUIReader.DocChangeListenerAttacher;
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentActivateEvent;
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentDeActivateEvent;
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentNotifier;
+import nl.tudelft.watchdog.eclipseuireader.DocChangeListenerAttacher;
+import nl.tudelft.watchdog.eclipseuireader.events.DocumentActivateEvent;
+import nl.tudelft.watchdog.eclipseuireader.events.DocumentDeActivateEvent;
+import nl.tudelft.watchdog.eclipseuireader.events.DocumentNotifier;
 
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;

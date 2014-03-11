@@ -1,10 +1,10 @@
-package nl.tudelft.watchdog.eclipseUIReader;
+package nl.tudelft.watchdog.eclipseuireader;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentActivateEvent;
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentNotifier;
+import nl.tudelft.watchdog.eclipseuireader.events.DocumentActivateEvent;
+import nl.tudelft.watchdog.eclipseuireader.events.DocumentNotifier;
 
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;

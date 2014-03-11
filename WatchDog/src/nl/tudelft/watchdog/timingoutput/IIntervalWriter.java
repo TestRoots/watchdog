@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.timingOutput;
+package nl.tudelft.watchdog.timingoutput;
 
 import java.io.OutputStream;
 import java.util.List;

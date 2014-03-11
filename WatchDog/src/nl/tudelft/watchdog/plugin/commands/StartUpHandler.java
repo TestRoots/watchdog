@@ -6,13 +6,13 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.SimpleFormatter;
 
+import nl.tudelft.watchdog.gui.preferences.WatchdogPreferences;
 import nl.tudelft.watchdog.interval.IIntervalManager;
 import nl.tudelft.watchdog.interval.IntervalManager;
 import nl.tudelft.watchdog.interval.events.ClosingIntervalEvent;
 import nl.tudelft.watchdog.interval.events.IIntervalListener;
 import nl.tudelft.watchdog.interval.events.NewIntervalEvent;
 import nl.tudelft.watchdog.plugin.logging.WDLogger;
-import nl.tudelft.watchdog.preferences.WatchdogPreferences;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.ui.IStartup;
@@ -48,6 +48,7 @@ public class StartUpHandler implements IStartup {
 		});
 	}
 
+	/** Sets up the logger. */
 	private void setUpLogger() {
 		SimpleFormatter formatter = new SimpleFormatter();
 

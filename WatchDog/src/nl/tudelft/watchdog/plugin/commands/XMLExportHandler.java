@@ -7,7 +7,7 @@ import nl.tudelft.watchdog.interval.IntervalManager;
 import nl.tudelft.watchdog.interval.recorded.IInterval;
 import nl.tudelft.watchdog.plugin.logging.WDLogger;
 import nl.tudelft.watchdog.plugin.prompts.UserPrompter;
-import nl.tudelft.watchdog.timingOutput.IntervalsToXMLWriter;
+import nl.tudelft.watchdog.timingoutput.IntervalsToXMLWriter;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.core.commands.AbstractHandler;

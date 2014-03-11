@@ -6,11 +6,12 @@ import java.util.List;
 
 import nl.tudelft.watchdog.document.Document;
 import nl.tudelft.watchdog.document.DocumentFactory;
-import nl.tudelft.watchdog.eclipseUIReader.UIListener;
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentActivateEvent;
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentDeActivateEvent;
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentNotifier;
-import nl.tudelft.watchdog.eclipseUIReader.Events.IDocumentAttentionListener;
+import nl.tudelft.watchdog.eclipseuireader.UIListener;
+import nl.tudelft.watchdog.eclipseuireader.events.DocumentActivateEvent;
+import nl.tudelft.watchdog.eclipseuireader.events.DocumentDeActivateEvent;
+import nl.tudelft.watchdog.eclipseuireader.events.DocumentNotifier;
+import nl.tudelft.watchdog.eclipseuireader.events.IDocumentAttentionListener;
+import nl.tudelft.watchdog.gui.preferences.WatchdogPreferences;
 import nl.tudelft.watchdog.interval.active.ActiveInterval;
 import nl.tudelft.watchdog.interval.active.ActiveReadingInterval;
 import nl.tudelft.watchdog.interval.active.ActiveTypingInterval;
@@ -21,7 +22,6 @@ import nl.tudelft.watchdog.interval.events.IntervalNotifier;
 import nl.tudelft.watchdog.interval.events.NewIntervalEvent;
 import nl.tudelft.watchdog.interval.recorded.IInterval;
 import nl.tudelft.watchdog.interval.recorded.RecordedInterval;
-import nl.tudelft.watchdog.preferences.WatchdogPreferences;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 /**

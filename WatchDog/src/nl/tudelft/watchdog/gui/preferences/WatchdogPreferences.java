@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.preferences;
+package nl.tudelft.watchdog.gui.preferences;
 
 import nl.tudelft.watchdog.plugin.Activator;
 

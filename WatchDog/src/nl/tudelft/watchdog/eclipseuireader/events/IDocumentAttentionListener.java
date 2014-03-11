@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.eclipseUIReader.Events;
+package nl.tudelft.watchdog.eclipseuireader.events;
 
 import java.util.EventListener;
 
