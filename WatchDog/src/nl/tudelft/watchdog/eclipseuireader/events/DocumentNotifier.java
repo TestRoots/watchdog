@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.eclipseUIReader.Events;
+package nl.tudelft.watchdog.eclipseuireader.events;
 
 public class DocumentNotifier {
 	// Create the listener list

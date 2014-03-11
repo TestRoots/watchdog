@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.eclipseUIReader.Events;
+package nl.tudelft.watchdog.eclipseuireader.events;
 
 import java.util.EventObject;
 
@@ -6,11 +6,11 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 @SuppressWarnings("serial")
-public class DocumentActivateEvent extends EventObject {
+public class DocumentDeActivateEvent extends EventObject {
 	ITextEditor editor;
 	IWorkbenchPart part;
 
-	public DocumentActivateEvent(IWorkbenchPart part) {
+	public DocumentDeActivateEvent(IWorkbenchPart part) {
 		super(part);
 		this.part = part;
 		this.editor = (ITextEditor) part;
@@ -23,5 +23,4 @@ public class DocumentActivateEvent extends EventObject {
 	public ITextEditor getChangedEditor() {
 		return editor;
 	}
-
 }

@@ -11,7 +11,7 @@ import nl.tudelft.watchdog.document.DocumentType;
 import nl.tudelft.watchdog.interval.ActivityType;
 import nl.tudelft.watchdog.interval.recorded.IInterval;
 import nl.tudelft.watchdog.interval.recorded.RecordedInterval;
-import nl.tudelft.watchdog.timingOutput.IntervalsToXMLWriter;
+import nl.tudelft.watchdog.timingoutput.IntervalsToXMLWriter;
 
 import org.junit.Assert;
 import org.junit.Test;

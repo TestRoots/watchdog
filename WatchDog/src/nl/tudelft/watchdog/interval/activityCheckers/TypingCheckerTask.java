@@ -2,8 +2,8 @@ package nl.tudelft.watchdog.interval.activityCheckers;
 
 import java.util.TimerTask;
 
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentActivateEvent;
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentNotifier;
+import nl.tudelft.watchdog.eclipseuireader.events.DocumentActivateEvent;
+import nl.tudelft.watchdog.eclipseuireader.events.DocumentNotifier;
 import nl.tudelft.watchdog.exceptions.ContentReaderException;
 import nl.tudelft.watchdog.exceptions.EditorClosedPrematurelyException;
 import nl.tudelft.watchdog.plugin.logging.WDLogger;

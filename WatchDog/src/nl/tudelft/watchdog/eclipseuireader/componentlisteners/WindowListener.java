@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.eclipseUIReader.UIComponentListeners;
+package nl.tudelft.watchdog.eclipseuireader.componentlisteners;
 
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchPage;

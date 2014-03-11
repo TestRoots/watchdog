@@ -1,8 +1,8 @@
-package nl.tudelft.watchdog.eclipseUIReader;
+package nl.tudelft.watchdog.eclipseuireader;
 
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentActivateEvent;
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentNotifier;
-import nl.tudelft.watchdog.eclipseUIReader.UIComponentListeners.WindowListener;
+import nl.tudelft.watchdog.eclipseuireader.componentlisteners.WindowListener;
+import nl.tudelft.watchdog.eclipseuireader.events.DocumentActivateEvent;
+import nl.tudelft.watchdog.eclipseuireader.events.DocumentNotifier;
 import nl.tudelft.watchdog.interval.recorded.IRecordedIntervalSerializationManager;
 import nl.tudelft.watchdog.interval.recorded.RecordedIntervalSerializationManager;
 
