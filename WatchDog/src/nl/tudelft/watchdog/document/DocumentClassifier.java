@@ -25,6 +25,9 @@ public class DocumentClassifier {
 		}
 	}
 
+	/**
+	 * @return <code>true</code> if fileName ends in .java
+	 */
 	private static boolean isJavaFile(String fileName) {
 		if (fileName.endsWith(".java")) {
 			return true;
@@ -33,6 +36,9 @@ public class DocumentClassifier {
 		}
 	}
 
+	/**
+	 * @return <code>true</code> if there's an import for org.junit
+	 */
 	private static boolean containsJUnitImports(String fileContents) {
 		if (fileContents.contains("import org.junit")) {
 			return true;
@@ -41,6 +47,10 @@ public class DocumentClassifier {
 		}
 	}
 
+	/**
+	 * @return <code>true</code> if the editor contains (at least one) @Test
+	 *         annotation.
+	 */
 	private static boolean containsTestAnnotation(String contents) {
 		if (contents.contains("@Test")) {
 			return true;
