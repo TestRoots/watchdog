@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import nl.tudelft.watchdog.document.Document;
 import nl.tudelft.watchdog.document.DocumentFactory;
-import nl.tudelft.watchdog.document.IDocument;
-import nl.tudelft.watchdog.document.IDocumentFactory;
-import nl.tudelft.watchdog.eclipseUIReader.IUIListener;
 import nl.tudelft.watchdog.eclipseUIReader.UIListener;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentActivateEvent;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentDeActivateEvent;
@@ -34,8 +32,8 @@ public class IntervalManager extends IntervalNotifier implements
 
 	private ActiveReadingInterval currentReadingInterval;
 	private ActiveTypingInterval currentEditingInterval;
-	private IUIListener UIListener;
-	private IDocumentFactory documentFactory;
+	private UIListener uiListener;
+	private DocumentFactory documentFactory;
 
 	/* The recorded intervals of this session */
 	private List<IInterval> recordedIntervals;
@@ -57,8 +55,8 @@ public class IntervalManager extends IntervalNotifier implements
 		recordedIntervals = new ArrayList<IInterval>();
 
 		listenToDocumentChanges();
-		UIListener = new UIListener();
-		UIListener.attachListeners();
+		uiListener = new UIListener();
+		uiListener.attachListeners();
 		documentFactory = new DocumentFactory();
 	}
 
@@ -117,7 +115,7 @@ public class IntervalManager extends IntervalNotifier implements
 	private void closeCurrentInterval(ActiveInterval interval) {
 		if (!interval.isClosed()) {
 
-			IDocument doc = documentFactory.createDocument(interval.getPart());
+			Document doc = documentFactory.createDocument(interval.getPart());
 			RecordedInterval recordedInterval = new RecordedInterval(doc,
 					interval.getTimeOfCreation(), new Date(),
 					interval.getActivityType(), WatchDogUtils.isInDebugMode());

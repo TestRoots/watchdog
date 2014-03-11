@@ -17,19 +17,16 @@ import org.eclipse.ui.texteditor.ITextEditor;
 /**
  * class that sets up the listeners for eclipse UI events
  */
-public class UIListener implements IUIListener {
+public class UIListener {
 	private IRecordedIntervalSerializationManager serializationManager;
 
 	public UIListener() {
 		serializationManager = new RecordedIntervalSerializationManager();
 	}
 
-	@Override
 	public void attachListeners() {
 		addShutdownListeners();
-
 		PlatformUI.getWorkbench().addWindowListener(new WindowListener());
-
 		addListenersToAlreadyOpenWindows();
 	}
 

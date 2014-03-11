@@ -11,8 +11,15 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class DocumentFactory implements IDocumentFactory {
-	@Override
+/**
+ * A DocumentFactory for creating {@link Document}s.
+ */
+public class DocumentFactory {
+	/**
+	 * Creates and returns a {@link Document} from a given
+	 * {@link IWorkbenchPart}. For this to succeed, it is necessary that the the
+	 * part is an IEditorPart.
+	 */
 	public Document createDocument(IWorkbenchPart part) {
 		if (part instanceof ITextEditor) {
 			final ITextEditor editor = (ITextEditor) part;
@@ -41,9 +48,11 @@ public class DocumentFactory implements IDocumentFactory {
 				} catch (ContentReaderException e) {
 					WDLogger.logInfo("Document provider was null, trying to read resource file contents");
 					try {
-						docType = DocumentClassifier.classifyDocument(
-								editorPart.getTitle(),
-								WatchDogUtils.getFileContentsFromEditor(editor));
+						docType = DocumentClassifier
+								.classifyDocument(
+										editorPart.getTitle(),
+										WatchDogUtils
+												.getFileContentsFromEditor(editor));
 					} catch (IllegalArgumentException ex) {
 						WDLogger.logInfo("File does not exist anymore: "
 								+ editor.getTitle());
