@@ -33,6 +33,7 @@ public class UserPrompter {
 		dialog.setFilterExtensions(new String[] { "*.xml", "*.*" }); // Windows
 																		// wild
 																		// cards
+		// TODO (MMB) Ouch!!
 		dialog.setFilterPath("c:/"); // Windows path
 		dialog.setFileName("WatchDogIntervals.xml");
 		dialog.setOverwrite(true);

@@ -22,6 +22,11 @@
             description="Exports the data from the WatchDog plugin"
             name="Export WatchDog Data">
       </command>
+      <command
+            defaultHandler="nl.tudelft.watchdog.plugin.infoDialog.InfoStatisticsDialogHandler"
+            id="nl.tudelft.watchdog.commands.showWatchDogInfo"
+            name="Display WatchDogInfo">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -31,12 +36,12 @@
          <toolbar
                id="WatchDog.toolbar">
             <command
-                  commandId="nl.tudelft.watchdog.commands.exportData"
+                  commandId="nl.tudelft.watchdog.commands.showWatchDogInfo"
                   disabledIcon="resources/images/rsz_dog_icon_del.png"
                   icon="resources/images/rsz_dog_icon.png"
-                  label="Export WatchDog Data"
+                  label="Show WatchDog Info"
                   style="push"
-                  tooltip="Export Watch Dog">
+                  tooltip="WatchDog is inactive">
             </command>
          </toolbar>
       </menuContribution>
@@ -47,9 +52,12 @@
                label="WatchDog">
             <command
                   commandId="nl.tudelft.watchdog.commands.exportData"
-                  disabledIcon="resources/images/rsz_dog_icon_del.png"
-                  icon="resources/images/rsz_dog_icon.png"
                   label="Export WatchDog Data"
+                  style="push">
+            </command>
+            <command
+                  commandId="nl.tudelft.watchdog.commands.showWatchDogInfo"
+                  label="WatchDog Statistics"
                   style="push">
             </command>
          </menu>
