@@ -10,7 +10,7 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>WatchDog</artifactId>
+  <artifactId>nl.tudelft.WatchDog</artifactId>
   <packaging>eclipse-plugin</packaging>
 </project> 
 <plugin>

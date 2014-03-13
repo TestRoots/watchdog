@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.plugin.commands;
 
-import nl.tudelft.watchdog.interval.IntervalKeeper;
+import nl.tudelft.watchdog.interval.IntervalManager;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -11,7 +11,7 @@ public class ResetHandler implements IWorkbenchWindowActionDelegate {
 
 	@Override
 	public void run(IAction action) {
-		IntervalKeeper.getInstance().getRecordedIntervals().clear();
+		IntervalManager.getInstance().getRecordedIntervals().clear();
 	}
 
 	@Override
