@@ -41,8 +41,8 @@ public class IntervalManager extends IntervalNotifier implements
 	private static IntervalManager instance = null;
 
 	/**
-	 * Returns the exisiting or creates and returns a new
-	 * {@link IntervalManager} instance.
+	 * Returns the existing or creates and returns a new {@link IntervalManager}
+	 * instance.
 	 */
 	public static IntervalManager getInstance() {
 		if (instance == null) {
