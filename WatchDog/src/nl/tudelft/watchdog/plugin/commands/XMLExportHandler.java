@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.watchdog.exceptions.FileSavingFailedException;
-import nl.tudelft.watchdog.interval.IIntervalKeeper;
-import nl.tudelft.watchdog.interval.IntervalKeeper;
+import nl.tudelft.watchdog.interval.IIntervalManager;
+import nl.tudelft.watchdog.interval.IntervalManager;
 import nl.tudelft.watchdog.interval.recorded.IInterval;
 import nl.tudelft.watchdog.interval.recorded.IRecordedIntervalSerializationManager;
 import nl.tudelft.watchdog.interval.recorded.RecordedIntervalSerializationManager;
@@ -14,40 +14,24 @@ import nl.tudelft.watchdog.plugin.logging.WDLogger;
 import nl.tudelft.watchdog.plugin.prompts.UserPrompter;
 import nl.tudelft.watchdog.timingOutput.IntervalsToXMLWriter;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 
-public class ExportHandler implements IWorkbenchWindowActionDelegate {
+/**
+ * An export handler for exporting to XML
+ */
+public class XMLExportHandler extends AbstractHandler {
 
 	private IRecordedIntervalSerializationManager serializationManager;
 
-	public ExportHandler() {
+	/** Constructor. */
+	public XMLExportHandler() {
 		serializationManager = new RecordedIntervalSerializationManager();
 	}
 
-	@Override
-	public void run(IAction action) {
-		WDLogger.logInfo("exporting all intervals...");
-
-		IntervalKeeper.getInstance().closeAllCurrentIntervals();
-
-		List<IInterval> completeList = getAllRecordedIntervals();
-
-		try {
-			UserPrompter.saveIntervalsToFile(new IntervalsToXMLWriter(),
-					completeList);
-			WDLogger.logInfo("exporting done.");
-		} catch (FileSavingFailedException e) {
-			WDLogger.logSevere(e);
-			UserPrompter.showMessageBox("Watchdog",
-					"File could not be saved, please try again.");
-		}
-	}
-
 	private List<IInterval> getAllRecordedIntervals() {
-		IIntervalKeeper intervalKeeper = IntervalKeeper.getInstance();
+		IIntervalManager intervalKeeper = IntervalManager.getInstance();
 		List<IInterval> completeList = new ArrayList<IInterval>();
 		try {
 			completeList.addAll(serializationManager
@@ -62,15 +46,23 @@ public class ExportHandler implements IWorkbenchWindowActionDelegate {
 	}
 
 	@Override
-	public void selectionChanged(IAction action, ISelection selection) {
-	}
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		WDLogger.logInfo("exporting all intervals...");
 
-	@Override
-	public void dispose() {
-	}
+		IntervalManager.getInstance().closeAllCurrentIntervals();
 
-	@Override
-	public void init(IWorkbenchWindow window) {
+		List<IInterval> completeList = getAllRecordedIntervals();
+
+		try {
+			UserPrompter.saveIntervalsToFile(new IntervalsToXMLWriter(),
+					completeList);
+			WDLogger.logInfo("exporting done.");
+		} catch (FileSavingFailedException e) {
+			WDLogger.logSevere(e);
+			UserPrompter.showMessageBox("Watchdog",
+					"File could not be saved, please try again.");
+		}
+		return null;
 	}
 
 }

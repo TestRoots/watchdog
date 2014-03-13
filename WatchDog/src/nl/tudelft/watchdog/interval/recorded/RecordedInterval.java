@@ -67,6 +67,8 @@ public class RecordedInterval implements IInterval {
 
 	// Used to also support deserialization of older versions
 	private void readObject(ObjectInputStream ois) {
+		// TODO (MMB) this fails in case of a bigger change in the class
+		// structure!
 		try {
 			ois.defaultReadObject();
 			setDefaultValues();

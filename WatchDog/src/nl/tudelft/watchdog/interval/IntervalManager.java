@@ -13,9 +13,9 @@ import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentActivateEvent;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentDeActivateEvent;
 import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentNotifier;
 import nl.tudelft.watchdog.eclipseUIReader.Events.IDocumentAttentionListener;
-import nl.tudelft.watchdog.interval.active.ActiveEditingInterval;
 import nl.tudelft.watchdog.interval.active.ActiveInterval;
 import nl.tudelft.watchdog.interval.active.ActiveReadingInterval;
+import nl.tudelft.watchdog.interval.active.ActiveTypingInterval;
 import nl.tudelft.watchdog.interval.activityCheckers.OnInactiveCallBack;
 import nl.tudelft.watchdog.interval.events.ClosingIntervalEvent;
 import nl.tudelft.watchdog.interval.events.IIntervalListener;
@@ -23,28 +23,36 @@ import nl.tudelft.watchdog.interval.events.IntervalNotifier;
 import nl.tudelft.watchdog.interval.events.NewIntervalEvent;
 import nl.tudelft.watchdog.interval.recorded.IInterval;
 import nl.tudelft.watchdog.interval.recorded.RecordedInterval;
-import nl.tudelft.watchdog.plugin.PrefPage;
+import nl.tudelft.watchdog.preferences.WatchdogPreferences;
 import nl.tudelft.watchdog.util.WatchDogUtil;
 
-public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper {
+/**
+ * Implementation of an {@link IIntervalManager}. Is a singleton.
+ */
+public class IntervalManager extends IntervalNotifier implements
+		IIntervalManager {
 
 	private ActiveReadingInterval currentReadingInterval;
-	private ActiveEditingInterval currentEditingInterval;
+	private ActiveTypingInterval currentEditingInterval;
 	private IUIListener UIListener;
 	private IDocumentFactory documentFactory;
 
 	private List<IInterval> recordedIntervals;
 
-	private static IntervalKeeper instance = null;
+	private static IntervalManager instance = null;
 
-	public static IntervalKeeper getInstance() {
+	/**
+	 * Returns the exisiting or creates and returns a new
+	 * {@link IntervalManager} instance.
+	 */
+	public static IntervalManager getInstance() {
 		if (instance == null) {
-			instance = new IntervalKeeper();
+			instance = new IntervalManager();
 		}
 		return instance;
 	}
 
-	private IntervalKeeper() {
+	private IntervalManager() {
 		recordedIntervals = new ArrayList<IInterval>();
 
 		listenToDocumentChanges();
@@ -80,8 +88,6 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 
 			@Override
 			public void onDocumentStartFocus(DocumentActivateEvent evt) {
-				// MessageConsoleManager.getConsoleStream().println("onDocumentStartFocus"
-				// + evt.getChangedEditor().getTitle());
 				// create a new active interval when doc is new
 				if (currentReadingInterval == null
 						|| currentReadingInterval.isClosed()) {
@@ -122,17 +128,19 @@ public class IntervalKeeper extends IntervalNotifier implements IIntervalKeeper 
 	}
 
 	private void createNewEditingInterval(final DocumentActivateEvent evt) {
-		ActiveEditingInterval activeInterval = new ActiveEditingInterval(
+		ActiveTypingInterval activeInterval = new ActiveTypingInterval(
 				evt.getChangedEditor());
 		currentEditingInterval = activeInterval;
-		addNewIntervalHandlers(activeInterval, PrefPage.getTimeOutEditing());
+		addNewIntervalHandlers(activeInterval, WatchdogPreferences
+				.getInstance().getTypingTimeout());
 	}
 
 	private void createNewReadingInterval(final DocumentActivateEvent evt) {
 		ActiveReadingInterval activeInterval = new ActiveReadingInterval(
 				evt.getPart());
 		currentReadingInterval = activeInterval;
-		addNewIntervalHandlers(activeInterval, PrefPage.getTimeOutReading());
+		addNewIntervalHandlers(activeInterval, WatchdogPreferences
+				.getInstance().getTimeOutReading());
 	}
 
 	private void addNewIntervalHandlers(final ActiveInterval interval,

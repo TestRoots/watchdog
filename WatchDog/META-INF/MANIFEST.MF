@@ -3,8 +3,9 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Manifest-Version: 1.0
 Bundle-Activator: nl.tudelft.watchdog.plugin.Activator
 Bundle-Version: 1.0.0.qualifier
-Bundle-SymbolicName: WatchDog;singleton:=true
-Import-Package: org.eclipse.core.resources,
+Bundle-SymbolicName: nl.tudelft.WatchDog;singleton:=true
+Import-Package: org.eclipse.core.commands,
+ org.eclipse.core.resources,
  org.eclipse.core.runtime;version="3.4.0",
  org.eclipse.jface.action,
  org.eclipse.jface.dialogs,
@@ -16,6 +17,7 @@ Import-Package: org.eclipse.core.resources,
  org.eclipse.swt.events,
  org.eclipse.swt.widgets,
  org.eclipse.ui,
+ org.eclipse.ui.commands,
  org.eclipse.ui.console,
  org.eclipse.ui.editors.text,
  org.eclipse.ui.part,
@@ -27,3 +29,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-Name: WatchDog
 Bundle-ClassPath: .,
  libs/joda-time-2.3.jar
+Export-Package: nl.tudelft.watchdog.interval.active

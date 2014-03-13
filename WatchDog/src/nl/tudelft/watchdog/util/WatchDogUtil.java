@@ -13,7 +13,13 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+/**
+ * Utilities for watchDog.
+ */
 public class WatchDogUtil {
+	/**
+	 * Returns whether Eclipse's Debug Perspective is activated.
+	 */
 	public static boolean isInDebugMode() {
 		boolean isDebugMode = false;
 		for (IWorkbenchWindow window : PlatformUI.getWorkbench()
@@ -28,10 +34,11 @@ public class WatchDogUtil {
 	}
 
 	/**
+	 * Returns the contents of the supplied {@link ITextEditor}.
 	 * 
 	 * @param editor
-	 *            what you want the contents of
-	 * @return the content of the editor
+	 *            the editor you want the contents of
+	 * @return The content of the editor
 	 * @throws ContentReaderException
 	 *             Can throw this exception when a file is moved. When moving a
 	 *             file within the workspace, the document provider pointer is
@@ -58,6 +65,9 @@ public class WatchDogUtil {
 		return doc.get();
 	}
 
+	/**
+	 * Reads and returns the contents of a file from the supplied editor.
+	 */
 	public static String getFileContentsFromEditor(ITextEditor editor) {
 		if (editor.getEditorInput() instanceof FileEditorInput) {
 			IFileEditorInput editorInput = (IFileEditorInput) editor
