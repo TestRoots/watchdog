@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <relativePath>../build/pom.xml</relativePath>
+    <relativePath>../pom.xml</relativePath>
     <groupId>nl.tudelft</groupId>
     <artifactId>parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>WatchDogFeature</artifactId>
+  <artifactId>WatchDog</artifactId>
   <packaging>eclipse-feature</packaging>
 
 </project> 

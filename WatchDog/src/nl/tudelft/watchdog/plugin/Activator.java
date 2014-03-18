@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.plugin;
 import java.lang.Thread.UncaughtExceptionHandler;
 
 import nl.tudelft.watchdog.plugin.logging.WDLogger;
+import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -12,17 +13,11 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends AbstractUIPlugin {
 
-	// The plug-in ID
+	/** The plug-in ID */
 	public static final String PLUGIN_ID = "TimeDistributionPlugin"; //$NON-NLS-1$
 
 	// The shared instance
 	private static Activator plugin;
-
-	/**
-	 * The constructor
-	 */
-	public Activator() {
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -56,6 +51,7 @@ public class Activator extends AbstractUIPlugin {
 		WDLogger.logInfo("Shutting down...");
 
 		plugin = null;
+		WatchDogGlobals.isActive = false;
 		super.stop(context);
 	}
 
