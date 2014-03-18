@@ -6,12 +6,12 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.tudelft.watchdog.exceptions.ContentReaderException;
-import nl.tudelft.watchdog.interval.IIntervalManager;
-import nl.tudelft.watchdog.interval.IntervalManager;
-import nl.tudelft.watchdog.interval.recorded.IInterval;
-import nl.tudelft.watchdog.interval.recorded.RecordedIntervalSerializationManager;
-import nl.tudelft.watchdog.plugin.logging.WDLogger;
+import nl.tudelft.watchdog.logic.exceptions.ContentReaderException;
+import nl.tudelft.watchdog.logic.interval.IIntervalManager;
+import nl.tudelft.watchdog.logic.interval.IntervalManager;
+import nl.tudelft.watchdog.logic.interval.recorded.IInterval;
+import nl.tudelft.watchdog.logic.interval.recorded.RecordedIntervalSerializationManager;
+import nl.tudelft.watchdog.logic.logging.WDLogger;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;

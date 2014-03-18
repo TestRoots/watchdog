@@ -5,10 +5,12 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.Date;
 
-import nl.tudelft.watchdog.document.Document;
-import nl.tudelft.watchdog.document.DocumentType;
-import nl.tudelft.watchdog.interval.recorded.IInterval;
-import nl.tudelft.watchdog.interval.recorded.RecordedInterval;
+import nl.tudelft.watchdog.logic.document.Document;
+import nl.tudelft.watchdog.logic.document.DocumentType;
+import nl.tudelft.watchdog.logic.interval.ActivityType;
+import nl.tudelft.watchdog.logic.interval.IntervalTransferer;
+import nl.tudelft.watchdog.logic.interval.recorded.IInterval;
+import nl.tudelft.watchdog.logic.interval.recorded.RecordedInterval;
 
 import org.junit.Test;
 
