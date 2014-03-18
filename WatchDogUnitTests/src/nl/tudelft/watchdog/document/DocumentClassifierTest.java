@@ -1,8 +1,8 @@
 package nl.tudelft.watchdog.document;
 
 import static org.junit.Assert.assertEquals;
-import nl.tudelft.watchdog.document.DocumentClassifier;
-import nl.tudelft.watchdog.document.DocumentType;
+import nl.tudelft.watchdog.logic.document.DocumentClassifier;
+import nl.tudelft.watchdog.logic.document.DocumentType;
 
 import org.junit.Ignore;
 import org.junit.Test;
