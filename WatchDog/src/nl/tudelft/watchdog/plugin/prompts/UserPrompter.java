@@ -8,7 +8,7 @@ import java.util.List;
 import nl.tudelft.watchdog.exceptions.FileSavingFailedException;
 import nl.tudelft.watchdog.interval.recorded.IInterval;
 import nl.tudelft.watchdog.plugin.logging.WDLogger;
-import nl.tudelft.watchdog.timingOutput.IIntervalWriter;
+import nl.tudelft.watchdog.timingoutput.IIntervalWriter;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;

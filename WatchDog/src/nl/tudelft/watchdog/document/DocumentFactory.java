@@ -11,14 +11,22 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class DocumentFactory implements IDocumentFactory {
-	@Override
+/**
+ * A DocumentFactory for creating {@link Document}s.
+ */
+public class DocumentFactory {
+	/**
+	 * Creates and returns a {@link Document} from a given
+	 * {@link IWorkbenchPart}. For this to succeed, it is necessary that the the
+	 * part is an IEditorPart.
+	 */
+	// TODO (MMB) This might return a document which is not alive any more (and
+	// thus has an unknown file type)
 	public Document createDocument(IWorkbenchPart part) {
 		if (part instanceof ITextEditor) {
-			final ITextEditor editor = (ITextEditor) part;
+			ITextEditor editor = (ITextEditor) part;
 
 			if (part instanceof IEditorPart) {
-
 				IEditorPart editorPart = (IEditorPart) part;
 				String activeProjectName;
 				if (editorPart.getEditorInput() instanceof IFileEditorInput) {
@@ -31,24 +39,7 @@ public class DocumentFactory implements IDocumentFactory {
 					activeProjectName = "";
 				}
 
-				DocumentType docType = DocumentType.UNDEFINED;
-				try {
-					docType = DocumentClassifier.classifyDocument(
-							editorPart.getTitle(),
-							WatchDogUtils.getEditorContent(editor));
-				} catch (IllegalArgumentException e) {
-					WDLogger.logSevere(e);
-				} catch (ContentReaderException e) {
-					WDLogger.logInfo("Document provider was null, trying to read resource file contents");
-					try {
-						docType = DocumentClassifier.classifyDocument(
-								editorPart.getTitle(),
-								WatchDogUtils.getFileContentsFromEditor(editor));
-					} catch (IllegalArgumentException ex) {
-						WDLogger.logInfo("File does not exist anymore: "
-								+ editor.getTitle());
-					}
-				}
+				DocumentType docType = determineDocumentType(editor, editorPart);
 
 				return new Document(activeProjectName, editor.getTitle(),
 						docType);
@@ -58,5 +49,35 @@ public class DocumentFactory implements IDocumentFactory {
 		} else {
 			throw new IllegalArgumentException("Part not an ITextEditor");
 		}
+	}
+
+	/**
+	 * @return The document type for the given editor and editorPart. If an
+	 *         error occurred, {value DocumentType#UNDEFINED} is returned.
+	 */
+	private DocumentType determineDocumentType(ITextEditor editor,
+			IEditorPart editorPart) {
+		String editorContent = "";
+		try {
+			editorContent = WatchDogUtils.getEditorContent(editor);
+		} catch (IllegalArgumentException exception) {
+			// Editor was null, there is nothing we can do to get the file
+			// contents.
+			// TODO (MMB) Try read-in via IFile?
+			WDLogger.logSevere(exception);
+		} catch (ContentReaderException exception) {
+			WDLogger.logInfo("Document (provider) was null, trying to read resource file contents.");
+			try {
+				editorContent = WatchDogUtils
+						.getContentForEditorFromDisk(editor);
+			} catch (IllegalArgumentException ex) {
+				WDLogger.logInfo("File does not exist anymore: "
+						+ editor.getTitle());
+				// TODO (MMB) hm, in that case, wouldn't it be better to stop
+				// the recording interval?
+			}
+		}
+		return DocumentClassifier.classifyDocument(editorPart.getTitle(),
+				editorContent);
 	}
 }

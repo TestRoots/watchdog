@@ -3,23 +3,45 @@ package nl.tudelft.watchdog.interval.recorded;
 import java.io.ObjectInputStream;
 import java.util.Date;
 
-import nl.tudelft.watchdog.document.IDocument;
+import nl.tudelft.watchdog.document.Document;
 import nl.tudelft.watchdog.interval.ActivityType;
 
 import org.joda.time.Duration;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormat;
 
+import com.google.gson.annotations.SerializedName;
+
+/** A recording interval, associated with a {@link Document}. */
 public class RecordedInterval implements IInterval {
 
+	/**
+	 * The serialization id.
+	 */
 	private static final long serialVersionUID = 3L;
-	private IDocument document;
+
+	/** The document associated with this {@link RecordedInterval}. */
+	@SerializedName("doc")
+	private Document document;
+
+	/** The timestamp start */
+	@SerializedName("ts")
 	private Date start;
+
+	/** The timestamp end */
+	@SerializedName("te")
 	private Date end;
+
+	/** The Activity type. */
+	@SerializedName("at")
 	private ActivityType activityType;
+
+	/** Legacy debug flag. */
+	@SerializedName("LEGACY_DEBUGMODE")
 	private boolean isDebugMode;
 
-	public RecordedInterval(IDocument document, Date start, Date end,
+	/** Constructor. */
+	public RecordedInterval(Document document, Date start, Date end,
 			ActivityType activityType, boolean debugMode) {
 		this.document = document;
 		this.start = start;
@@ -29,7 +51,7 @@ public class RecordedInterval implements IInterval {
 	}
 
 	@Override
-	public IDocument getDocument() {
+	public Document getDocument() {
 		return document;
 	}
 

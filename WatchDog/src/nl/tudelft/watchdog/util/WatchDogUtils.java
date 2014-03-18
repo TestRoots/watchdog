@@ -39,10 +39,13 @@ public class WatchDogUtils {
 			.appendSeparator(" and ").appendSeconds()
 			.appendSuffix(" second", " seconds").toFormatter();
 
-	/**
-	 * Returns <code>true</code> when Eclipse's Debug Perspective is activated.
-	 */
+	/** Returns <code>true</code> when Eclipse's Debug Perspective is activated. */
 	public static boolean isInDebugMode() {
+		// TODO (MMB) it appears to me, recognition of debug mode might be
+		// buggy. As it stands, as long as the active page of any window
+		// (regardless of the window being active or not) is in debug, the debug
+		// flag is set. However, if ANY window is in debug perspective, this
+		// does not mean we the user is currently debugging at all.
 		boolean isDebugMode = false;
 		for (IWorkbenchWindow window : PlatformUI.getWorkbench()
 				.getWorkbenchWindows()) {
@@ -73,42 +76,44 @@ public class WatchDogUtils {
 	public static String getEditorContent(final ITextEditor editor)
 			throws ContentReaderException, IllegalArgumentException {
 		if (editor == null) {
-			throw new IllegalArgumentException("editor is null");
+			throw new IllegalArgumentException("Editor is null");
 		}
-		if (editor.getDocumentProvider() == null) {
-			throw new ContentReaderException("doc provider is null");
-		}
-		IDocumentProvider dp = editor.getDocumentProvider();
-		if (dp.getDocument(editor.getEditorInput()) == null) {
-			throw new IllegalArgumentException("doc is null");
-		}
-		IDocument doc = dp.getDocument(editor.getEditorInput());
 
-		return doc.get();
+		IDocumentProvider documentProvider = editor.getDocumentProvider();
+		if (documentProvider == null) {
+			throw new ContentReaderException(
+					"Editor closed: Document provider is null");
+		}
+
+		IDocument document = documentProvider.getDocument(editor
+				.getEditorInput());
+		if (document == null) {
+			throw new ContentReaderException("Document is null");
+		}
+
+		return document.get();
 	}
 
 	/**
-	 * Reads and returns the contents of a file from the supplied editor.
+	 * Reads and returns the contents of a file from the supplied editor, by
+	 * trying to access the file from the disk.
 	 */
-	public static String getFileContentsFromEditor(ITextEditor editor) {
+	public static String getContentForEditorFromDisk(ITextEditor editor) {
 		if (editor.getEditorInput() instanceof FileEditorInput) {
-			IFileEditorInput editorInput = (IFileEditorInput) editor
+			IFileEditorInput fileEditorInput = (IFileEditorInput) editor
 					.getEditorInput();
 
-			BufferedReader br;
+			BufferedReader reader;
 			try {
-				br = new BufferedReader(new InputStreamReader(editorInput
-						.getFile().getContents()));
+				reader = new BufferedReader(new InputStreamReader(
+						fileEditorInput.getFile().getContents()));
 				StringBuilder sb = new StringBuilder();
 				String line;
-				while ((line = br.readLine()) != null) {
+				while ((line = reader.readLine()) != null) {
 					sb.append(line);
 				}
-				br.close();
-				String res = sb.toString();
-				System.out.println(res);
-				return res;
-
+				reader.close();
+				return sb.toString();
 			} catch (Exception e) {
 				throw new IllegalArgumentException("can't read resource file");
 			}
@@ -138,7 +143,7 @@ public class WatchDogUtils {
 	}
 
 	/**
-	 * @return the converted Joda Duration in a human-readable String,
+	 * @return the converted {@link Duration} in a human-readable String,
 	 *         discarding milliseconds.
 	 */
 	public static String makeDurationHumanReadable(Duration duration) {

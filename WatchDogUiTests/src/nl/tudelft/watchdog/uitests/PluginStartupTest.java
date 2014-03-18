@@ -9,7 +9,7 @@ import org.junit.Test;
  * Tests for whether the plugin starts up and initializes the workbench with the
  * correct icons and menus.
  */
-public class PluginStartupTest extends EclipseWorkbenchInitializer {
+public class PluginStartupTest extends WatchDogTestBase {
 
 	/** Tests whether the command menu contribution from WatchDog active. */
 	@Test
