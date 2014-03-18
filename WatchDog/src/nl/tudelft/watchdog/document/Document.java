@@ -2,6 +2,8 @@ package nl.tudelft.watchdog.document;
 
 import java.io.Serializable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Data container which stores information about a document, including its
  * fileName, projectName and the {@link DocumentType}.
@@ -11,13 +13,16 @@ public class Document implements Serializable {
 	/** Serialization UID. */
 	private static final long serialVersionUID = 2L;
 
-	/** The file's name. */
-	private String fileName;
-
 	/** The project name. */
+	@SerializedName("pn")
 	private String projectName;
 
+	/** The file's name. */
+	@SerializedName("fn")
+	private String fileName;
+
 	/** The type of document. */
+	@SerializedName("dt")
 	private DocumentType docType;
 
 	/** Constructor. */

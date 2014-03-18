@@ -61,7 +61,7 @@ public class StartUpHandler implements IStartup {
 					"watchdog/logs/watchdoglog.log", true);
 			fileHandler.setFormatter(formatter);
 			Level level = Level.OFF;
-			if (WatchdogPreferences.getInstance().isDebuggingEnabled()) {
+			if (WatchdogPreferences.getInstance().isLoggingEnabled()) {
 				level = Level.ALL;
 			}
 			WDLogger.addHandlerAndSetLevel(fileHandler, level);
