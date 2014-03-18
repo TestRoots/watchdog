@@ -3,6 +3,8 @@ package nl.tudelft.watchdog.gui.preferences;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -26,8 +28,29 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				"Editing time out (ms)", getFieldEditorParent()));
 		addField(new IntegerFieldEditor(WatchdogPreferences.TIMEOUT_READING,
 				"Reading time out (ms)", getFieldEditorParent()));
-		addField(new BooleanFieldEditor(WatchdogPreferences.DEBUGGING_ENABLED,
-				"Enable debugging", getFieldEditorParent()));
+		addField(new UserIDFieldEditor());
+		addField(new BooleanFieldEditor(WatchdogPreferences.LOGGING_ENABLED,
+				"Enable Logs ", getFieldEditorParent()));
+	}
+
+	/** A specific field editor allowing input of valid user IDs only. */
+	class UserIDFieldEditor extends StringFieldEditor {
+		/** Constructor, delegating call to parent's constructor. */
+		public UserIDFieldEditor() {
+			super(WatchdogPreferences.USERID, "User Id", getFieldEditorParent());
+		}
+
+		@Override
+		protected void createControl(Composite parent) {
+			super.createControl(parent);
+			setTextLimit(40);
+		}
+
+		@Override
+		protected boolean doCheckState() {
+			// TODO (MMB) query server with ID
+			return super.doCheckState();
+		}
 	}
 
 }

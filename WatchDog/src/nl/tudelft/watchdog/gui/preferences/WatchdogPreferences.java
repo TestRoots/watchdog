@@ -10,13 +10,19 @@ import org.eclipse.jface.preference.IPreferenceStore;
 public class WatchdogPreferences {
 	public final static String TIMEOUT_TYPING = "TIMEOUT_EDITING";
 	public final static String TIMEOUT_READING = "TIMEOUT_READING";
-	/**
-	 * Flag denoting whether WatchDog plugin should debug or not.
-	 */
-	public final static String DEBUGGING_ENABLED = "ENABLE_DEBUGGING";
 
+	/** The user's id on the WatchDog server. */
+	public final static String USERID = "USERID";
+
+	/** Flag denoting whether WatchDog plugin should do logging or not. */
+	public final static String LOGGING_ENABLED = "ENABLE_LOGGING";
+
+	/** The preference store. */
 	private IPreferenceStore store;
 
+	/**
+	 * The WatchDog preference instance
+	 */
 	private static WatchdogPreferences singletonInstance;
 
 	/**
@@ -27,7 +33,8 @@ public class WatchdogPreferences {
 		store = Activator.getDefault().getPreferenceStore();
 		store.setDefault(TIMEOUT_TYPING, 3000);
 		store.setDefault(TIMEOUT_READING, 5000);
-		store.setDefault(DEBUGGING_ENABLED, false);
+		store.setDefault(LOGGING_ENABLED, false);
+		store.setDefault(USERID, "");
 	}
 
 	/** Returns the singleton instance from WatchdogPreferences. */
@@ -62,16 +69,17 @@ public class WatchdogPreferences {
 		return timeout;
 	}
 
-	/**
-	 * Returns whether debugging is enabled (true) or not (false).
-	 */
-	public boolean isDebuggingEnabled() {
-		return store.getBoolean(DEBUGGING_ENABLED);
+	/** Returns whether logging is enabled (true) or not (false). */
+	public boolean isLoggingEnabled() {
+		return store.getBoolean(LOGGING_ENABLED);
 	}
 
-	/**
-	 * @return The {@link IPreferenceStore} for WatchDog.
-	 */
+	/** @return The userid. */
+	public static String getUserid() {
+		return USERID;
+	}
+
+	/** @return The {@link IPreferenceStore} for WatchDog. */
 	public IPreferenceStore getStore() {
 		return store;
 	}
