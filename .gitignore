@@ -1,2 +1,6 @@
 **/target
 **/bin
+.idea
+Gemfile.lock
+config.yaml
+*~
