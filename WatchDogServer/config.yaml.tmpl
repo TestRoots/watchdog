@@ -1,0 +1,8 @@
+development: &common_settings
+  mongo_host: 'localhost'
+  mongo_uname: 'watchdog'
+  mongo_passwd: 'watchdog'
+  mongo_db: 'watchdog'
+
+production:
+  <<: *common_settings
