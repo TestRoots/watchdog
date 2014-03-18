@@ -1,0 +1,7 @@
+gem 'mongo'
+gem 'sinatra'
+gem 'sinatra-contrib'
+
+group :test do
+  gem 'rspec'
+end
