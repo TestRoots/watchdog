@@ -2,8 +2,8 @@ package nl.tudelft.watchdog.interval.activityCheckers;
 
 import java.util.TimerTask;
 
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentActivateEvent;
-import nl.tudelft.watchdog.eclipseUIReader.Events.DocumentNotifier;
+import nl.tudelft.watchdog.eclipseuireader.events.DocumentActivateEvent;
+import nl.tudelft.watchdog.eclipseuireader.events.DocumentNotifier;
 
 import org.eclipse.swt.custom.CaretEvent;
 import org.eclipse.swt.custom.CaretListener;

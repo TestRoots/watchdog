@@ -34,6 +34,7 @@ Import-Package: org.eclipse.core.commands,
 Bundle-ActivationPolicy: lazy
 Bundle-Name: WatchDog
 Bundle-ClassPath: .,
- libs/joda-time-2.3.jar
-Export-Package: nl.tudelft.watchdog.interval.active,
- org.joda.time
+ libs/joda-time-2.3.jar,
+ libs/gson-2.2.4.jar,
+ libs/httpclient-4.3.3.jar,
+ libs/httpcore-4.3.2.jar
