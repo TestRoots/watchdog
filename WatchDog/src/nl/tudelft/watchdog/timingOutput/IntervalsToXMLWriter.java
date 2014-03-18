@@ -20,6 +20,9 @@ import nl.tudelft.watchdog.plugin.logging.WDLogger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+/**
+ * Writer for intervals to XML files.
+ */
 public class IntervalsToXMLWriter implements IIntervalWriter {
 
 	/*

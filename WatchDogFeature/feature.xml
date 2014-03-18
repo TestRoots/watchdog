@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="WatchDogFeature"
-      label="WatchDogFeature"
-      version="1.0.0.qualifier">
+      id="WatchDog"
+      label="WatchDog"
+      version="1.0.0.qualifier"
+      provider-name="Software Engineering Research Group (TU Delft)">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -17,7 +18,7 @@
    </license>
 
    <plugin
-         id="WatchDog"
+         id="nl.tudelft.WatchDog"
          download-size="0"
          install-size="0"
          version="0.0.0"

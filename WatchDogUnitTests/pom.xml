@@ -10,6 +10,6 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>nl.tudelft.watchdog.p2updatesite</artifactId>
-  <packaging>eclipse-repository</packaging>
+  <artifactId>WatchDogUnitTests</artifactId>
+  <packaging>eclipse-plugin</packaging>
 </project> 
