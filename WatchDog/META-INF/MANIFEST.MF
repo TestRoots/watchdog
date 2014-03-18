@@ -38,5 +38,3 @@ Bundle-ClassPath: .,
  libs/gson-2.2.4.jar,
  libs/httpclient-4.3.3.jar,
  libs/httpcore-4.3.2.jar
-Export-Package: nl.tudelft.watchdog.interval.active,
- org.joda.time

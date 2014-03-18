@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.test.document;
+package nl.tudelft.watchdog.document;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
