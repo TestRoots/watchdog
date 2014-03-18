@@ -1,5 +1,7 @@
 package nl.tudelft.watchdog.interval;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -26,6 +28,9 @@ public class IntervalToJsonConverterTest {
 				new Date(2), ActivityType.Reading, false));
 
 		IntervalTransferer intervalTransferer = new IntervalTransferer();
+		assertEquals(
+				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"at\":\"re\",\"LEGACY_DEBUGMODE\":false}]",
+				intervalTransferer.prepareIntervals(intervals));
 		System.out.println(intervalTransferer.prepareIntervals(intervals));
 
 	}

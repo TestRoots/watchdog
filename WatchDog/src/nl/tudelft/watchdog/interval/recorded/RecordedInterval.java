@@ -15,7 +15,11 @@ import com.google.gson.annotations.SerializedName;
 /** A recording interval, associated with a {@link Document}. */
 public class RecordedInterval implements IInterval {
 
+	/**
+	 * The serialization id.
+	 */
 	private static final long serialVersionUID = 3L;
+
 	/** The document associated with this {@link RecordedInterval}. */
 	@SerializedName("doc")
 	private Document document;

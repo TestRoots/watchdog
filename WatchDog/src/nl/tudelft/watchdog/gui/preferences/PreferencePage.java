@@ -30,7 +30,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				"Reading time out (ms)", getFieldEditorParent()));
 		addField(new UserIDFieldEditor());
 		addField(new BooleanFieldEditor(WatchdogPreferences.LOGGING_ENABLED,
-				"Enable Logs ", getFieldEditorParent()));
+				"Enable Logs", getFieldEditorParent()));
 	}
 
 	/** A specific field editor allowing input of valid user IDs only. */

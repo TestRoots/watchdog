@@ -10,8 +10,8 @@ public class PreferencesTest extends WatchDogTestBase {
 	public void testBasicPreferences() {
 		bot.menu("Window").menu("Preferences").click();
 		bot.tree().getTreeItem("WatchDog").select();
-		bot.checkBox("Enable debugging").click();
-		bot.checkBox("Enable debugging").click();
+		bot.checkBox("Enable Logs").click();
+		bot.checkBox("Enable Logs").click();
 		bot.button("Restore Defaults").click();
 		bot.button("Cancel").click();
 	}
