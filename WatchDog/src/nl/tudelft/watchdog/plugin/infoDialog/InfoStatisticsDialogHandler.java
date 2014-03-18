@@ -21,6 +21,7 @@ public class InfoStatisticsDialogHandler extends AbstractHandler implements
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		InfoStatisticsDialog infoDialog = new InfoStatisticsDialog(
 				HandlerUtil.getActiveShell(event));
+		infoDialog.setBlockOnOpen(false);
 		infoDialog.open();
 		return null;
 	}
