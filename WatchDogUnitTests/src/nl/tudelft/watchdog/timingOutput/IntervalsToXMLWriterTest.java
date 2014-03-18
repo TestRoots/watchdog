@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.test.timingOutput;
+package nl.tudelft.watchdog.timingOutput;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;

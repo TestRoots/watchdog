@@ -31,8 +31,5 @@ public class IntervalToJsonConverterTest {
 		assertEquals(
 				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"at\":\"re\",\"LEGACY_DEBUGMODE\":false}]",
 				intervalTransferer.prepareIntervals(intervals));
-		System.out.println(intervalTransferer.prepareIntervals(intervals));
-
 	}
-
 }
