@@ -5,9 +5,5 @@ Bundle-SymbolicName: WatchDogUnitTests
 Bundle-Version: 1.0.0.qualifier
 Fragment-Host: nl.tudelft.WatchDog
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Bundle-ClassPath: libs/mockito-all-1.9.5.jar,
- libs/powermock-mockito-1.5.4-full.jar,
- libs/cglib-nodep-2.2.2.jar,
- libs/javassist-3.18.1-GA.jar,
- libs/objenesis-2.1.jar
 Import-Package: org.joda.time
+Bundle-ClassPath: libs/mockito-all-1.9.5.jar
