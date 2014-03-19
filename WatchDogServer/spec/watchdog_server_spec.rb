@@ -27,11 +27,9 @@ end
 describe 'The WatchDog Server' do
 
   before(:each) do
-    WatchDogServer.new.helpers.mongo.drop_database('watchdog')
-  end
-
-  after(:each) do
-    WatchDogServer.new.helpers.mongo.drop_database('watchdog')
+    mongo = WatchDogServer.new.helpers.mongo
+    mongo.drop_database('watchdog')
+    mongo.close
   end
 
   it 'should woof' do
