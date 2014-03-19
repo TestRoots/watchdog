@@ -15,16 +15,17 @@ class WatchDogServer < Sinatra::Base
   set :static, false
 
   def mongo
-    MongoClient.new("localhost", 27017).db('watchdog')
+    MongoClient.new("localhost", 27017)
   end
 
   ## The API
-  before '/user/*' do
-    Thread.current[:db] ||= mongo
+  before  do
+    @db ||= mongo.db('watchdog')
   end
 
-  after '/user' do
-    #Thread.current[:db].close
+  after do
+    @db.connection.close
+    @db = nil
   end
 
   get '/' do
@@ -109,11 +110,11 @@ class WatchDogServer < Sinatra::Base
   end
 
   def users
-    Thread.current[:db].collection('users')
+    @db.collection('users')
   end
 
   def intervals
-    Thread.current[:db].collection('intervals')
+    @db.collection('intervals')
   end
 
   def get_user_by_id(id)
