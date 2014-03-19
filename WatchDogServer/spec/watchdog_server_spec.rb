@@ -6,7 +6,7 @@ def app
   WatchDogServer
 end
 
-def test_user(unq)
+def test_user(unq = nil)
   user = Hash.new
   user['email']       = 'foo@bar.gr'
   user['name']        = 'Foo Bar'
@@ -26,9 +26,13 @@ end
 
 describe 'The WatchDog Server' do
 
-  #before(:each) do
-  #  WatchDogServer.mongo.dele
-  #end
+  before(:each) do
+    WatchDogServer.new.helpers.mongo.drop_database('watchdog')
+  end
+
+  after(:each) do
+    WatchDogServer.new.helpers.mongo.drop_database('watchdog')
+  end
 
   it 'should woof' do
     get '/'
@@ -75,19 +79,20 @@ describe 'The WatchDog Server' do
     last_response.status.should eql(400)
   end
 
-  it 'should return 400 when posting intervals for non-existing user' do
+  it 'should return 404 when posting intervals for non-existing user' do
     intervals = (1..10).map{|x| test_interval(x, x + 1)}
 
     post '/user/foobar/intervals', intervals.to_json
-    last_response.status.should eql(400)
+    last_response.status.should eql(404)
   end
 
   it 'should return then number of stored intervals on successful insert' do
     intervals = (1..10).map{|x| test_interval(x, x + 1)}
     user = test_user('foobar')
     post '/user', user.to_json
+    user_id = last_response.body
 
-    post '/user/foobar/intervals', intervals.to_json
+    post "/user/#{user_id}/intervals", intervals.to_json
     last_response.status.should eql(201)
     expect(last_response.body).to eq('10')
 
