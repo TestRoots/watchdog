@@ -59,7 +59,7 @@ class WatchDogServer < Sinatra::Base
       stored_user = get_user_by_id(sha)
     end
 
-    stored_user['sha']
+    stored_user['id']
   end
 
   # Delete a user
@@ -105,7 +105,7 @@ class WatchDogServer < Sinatra::Base
       intervals.save(i)
     end
 
-    [201, {}, ivals.size]
+    [201, {}, ivals.size.to_s]
   end
 
   def users
