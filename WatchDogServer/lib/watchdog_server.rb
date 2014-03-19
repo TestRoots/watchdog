@@ -24,8 +24,8 @@ class WatchDogServer < Sinatra::Base
   end
 
   after do
-    @db.connection.close
-    @db = nil
+    #@db.connection.close
+    #@db = nil
   end
 
   get '/' do
@@ -42,11 +42,11 @@ class WatchDogServer < Sinatra::Base
     begin
       user = JSON.parse(request.body.read)
     rescue
-      return [400, {}, "Wrong JSON object #{request.body.read}"]
+      halt 400, "Wrong JSON object #{request.body.read}"
     end
 
     if user['unq'].nil?
-      return [400, {}, 'Missing field: unq from request']
+      halt 400, 'Missing field: unq from request'
     end
 
     stored_user = get_user_by_unq(user['unq'])
@@ -60,7 +60,8 @@ class WatchDogServer < Sinatra::Base
       stored_user = get_user_by_id(sha)
     end
 
-    stored_user['id']
+    status 201
+    body stored_user['id']
   end
 
   # Delete a user
@@ -78,35 +79,36 @@ class WatchDogServer < Sinatra::Base
     begin
       ivals = JSON.parse(request.body.read)
     rescue
-      return [400, {}, "Wrong JSON object #{request.body.read}"]
+      halt 400, "Wrong JSON object #{request.body.read}"
     end
 
     unless ivals.kind_of?(Array)
-      return [400, {}, 'Wrong request, body is not a JSON array']
+      halt 400, 'Wrong request, body is not a JSON array'
     end
 
     if ivals.size > 1000
-      return [400, {}, 'Request too long (> 1000 intervals)']
+      halt 400, 'Request too long (> 1000 intervals)'
     end
 
     negative_intervals = ivals.find{|x| (x['te'].to_i - x['ts'].to_i) < 0}
 
     unless negative_intervals.nil?
-      return [400, {}, 'Request contains negative intervals']
+      halt 400, 'Request contains negative intervals'
     end
 
     user_id = params[:id]
     user = get_user_by_id(user_id)
 
     if user.nil?
-      return [404, {}, "User does not exist"]
+      halt 404, "User does not exist"
     end
 
     ivals.each do |i|
       intervals.save(i)
     end
 
-    [201, {}, ivals.size.to_s]
+    status 201
+    body ivals.size.to_s
   end
 
   def users

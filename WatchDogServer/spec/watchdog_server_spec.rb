@@ -41,7 +41,8 @@ describe 'The WatchDog Server' do
   it 'should create users when the details are correct' do
     post '/user', test_user.to_json
 
-    expect(last_response).to be_ok
+    last_response.status.should eql(201)
+    expect(last_response.body).to match(/^[0-9a-z]{40}$/)
   end
 
   it 'should return 400 on bad JSON request to /users' do
