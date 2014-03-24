@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.logic.eclipseuireader.componentlisteners;
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IWorkbenchPage;
 
+/** Adds parts listeners for pages. */
 public class PageListener implements IPageListener {
 
 	@Override
@@ -18,8 +19,8 @@ public class PageListener implements IPageListener {
 	public void pageActivated(IWorkbenchPage page) {
 	}
 
+	/** Adds a part listener for newly added parts */
 	static void addPartListener(IWorkbenchPage page) {
-		// for new added parts
 		page.addPartListener(new PartListener());
 	}
 }

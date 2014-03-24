@@ -28,24 +28,26 @@ public class StartUpHandler implements IStartup {
 		WatchDogGlobals.isActive = true;
 
 		setUpLogger();
-		WDLogger.logInfo("Starting up...");
 		IIntervalManager intervalManager = IntervalManager.getInstance();
-		intervalManager.addIntervalListener(new IIntervalListener() {
+		if (WatchdogPreferences.getInstance().isLoggingEnabled()) {
+			WDLogger.logInfo("Starting up...");
+			intervalManager.addIntervalListener(new IIntervalListener() {
 
-			@Override
-			public void onNewInterval(NewIntervalEvent evt) {
-				WDLogger.logInfo("New interval: "
-						+ evt.getInterval().getEditor().getTitle());
-			}
+				@Override
+				public void onNewInterval(NewIntervalEvent evt) {
+					WDLogger.logInfo("New interval: "
+							+ evt.getInterval().getEditor().getTitle());
+				}
 
-			@Override
-			public void onClosingInterval(ClosingIntervalEvent evt) {
-				WDLogger.logInfo("Closing interval: "
-						+ evt.getInterval().getDocument().getFileName()
-						+ " \n " + evt.getInterval().getStart() + " - "
-						+ evt.getInterval().getEnd());
-			}
-		});
+				@Override
+				public void onClosingInterval(ClosingIntervalEvent evt) {
+					WDLogger.logInfo("Closing interval: "
+							+ evt.getInterval().getDocument().getFileName()
+							+ " \n " + evt.getInterval().getStart() + " - "
+							+ evt.getInterval().getEnd());
+				}
+			});
+		}
 	}
 
 	/** Sets up the logger. */

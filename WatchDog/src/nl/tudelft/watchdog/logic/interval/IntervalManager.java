@@ -175,9 +175,11 @@ public class IntervalManager extends IntervalNotifier implements
 
 	@Override
 	public void closeAllCurrentIntervals() {
+		// close editing interval
 		if (currentEditingInterval != null) {
 			closeCurrentInterval(currentEditingInterval);
 		}
+		// close reading interval
 		if (currentReadingInterval != null) {
 			closeCurrentInterval(currentReadingInterval);
 		}

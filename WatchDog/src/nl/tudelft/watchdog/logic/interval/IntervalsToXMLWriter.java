@@ -23,16 +23,11 @@ import org.w3c.dom.Element;
 /**
  * Writer for intervals to XML files.
  */
-public class IntervalsToXMLWriter implements IIntervalWriter {
+public class IntervalsToXMLWriter {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * nl.tudelft.watchdog.timingOutput.IIntervalWriter#intervalsToXML(java.
-	 * util.List, java.io.OutputStream)
+	/**
+	 * Exports the given intervals to the supplied {@link OutputStream}.
 	 */
-	@Override
 	public void exportIntervals(List<IInterval> intervals, OutputStream stream) {
 		try {
 
@@ -56,6 +51,11 @@ public class IntervalsToXMLWriter implements IIntervalWriter {
 		}
 	}
 
+	/**
+	 * Transforms the given interval list to XML.
+	 * 
+	 * @return {@link DOMSource} of the XML.
+	 */
 	private DOMSource transformIntervalsToXML(List<IInterval> intervals)
 			throws ParserConfigurationException {
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory
@@ -75,22 +75,22 @@ public class IntervalsToXMLWriter implements IIntervalWriter {
 			Element documentElement = doc.createElement("document");
 			intervalElement.appendChild(documentElement);
 
-			addElementWithValue(doc, documentElement, "projectName", interval
-					.getDocument().getProjectName());
-			addElementWithValue(doc, documentElement, "fileName", interval
-					.getDocument().getFileName());
-			addElementWithValue(doc, documentElement, "documentType", interval
-					.getDocument().getDocumentType().toString());
+			createAndAddElementWithValue(doc, documentElement, "projectName",
+					interval.getDocument().getProjectName());
+			createAndAddElementWithValue(doc, documentElement, "fileName",
+					interval.getDocument().getFileName());
+			createAndAddElementWithValue(doc, documentElement, "documentType",
+					interval.getDocument().getDocumentType().toString());
 
-			addElementWithValue(doc, intervalElement, "start",
+			createAndAddElementWithValue(doc, intervalElement, "start",
 					Long.toString(interval.getStart().getTime()));
-			addElementWithValue(doc, intervalElement, "end",
+			createAndAddElementWithValue(doc, intervalElement, "end",
 					Long.toString(interval.getEnd().getTime()));
-			addElementWithValue(doc, intervalElement, "duration",
+			createAndAddElementWithValue(doc, intervalElement, "duration",
 					interval.getDurationString());
-			addElementWithValue(doc, intervalElement, "activityType", interval
-					.getActivityType().toString());
-			addElementWithValue(doc, intervalElement, "debugMode",
+			createAndAddElementWithValue(doc, intervalElement, "activityType",
+					interval.getActivityType().toString());
+			createAndAddElementWithValue(doc, intervalElement, "debugMode",
 					interval.isDebugMode() ? "1" : "0");
 		}
 
@@ -99,8 +99,12 @@ public class IntervalsToXMLWriter implements IIntervalWriter {
 		return source;
 	}
 
-	private void addElementWithValue(Document doc, Element parent, String key,
-			String value) {
+	/**
+	 * Creates an {@link Element} from the given key-vlaue pair and appends it
+	 * to the parent in the {@link Document} doc.
+	 */
+	private void createAndAddElementWithValue(Document doc, Element parent,
+			String key, String value) {
 		Element element = doc.createElement(key);
 		element.appendChild(doc.createTextNode(value));
 		parent.appendChild(element);

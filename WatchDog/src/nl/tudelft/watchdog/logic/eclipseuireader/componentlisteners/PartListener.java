@@ -9,6 +9,9 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+/**
+ *
+ */
 public class PartListener implements IPartListener {
 	@Override
 	public void partOpened(IWorkbenchPart part) {
