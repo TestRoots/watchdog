@@ -9,7 +9,7 @@ import nl.tudelft.watchdog.logic.interval.recorded.IInterval;
 import org.joda.time.Duration;
 
 /**
- * Performing statistical computations on intervals.
+ * Statistical computations on intervals.
  */
 public class IntervalStatistics {
 

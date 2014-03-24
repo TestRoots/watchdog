@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.util.List;
 
 import nl.tudelft.watchdog.logic.exceptions.FileSavingFailedException;
-import nl.tudelft.watchdog.logic.interval.IIntervalWriter;
+import nl.tudelft.watchdog.logic.interval.IntervalsToXMLWriter;
 import nl.tudelft.watchdog.logic.interval.recorded.IInterval;
 import nl.tudelft.watchdog.logic.logging.WDLogger;
 
@@ -26,7 +26,7 @@ public class UserPrompter {
 		shell = new Shell(display);
 	}
 
-	public static void saveIntervalsToFile(IIntervalWriter writer,
+	public static void saveIntervalsToFile(IntervalsToXMLWriter writer,
 			List<IInterval> intervals) throws FileSavingFailedException {
 		FileDialog dialog = new FileDialog(shell, SWT.SAVE);
 		dialog.setFilterNames(new String[] { "XML files", "All Files (*.*)" });

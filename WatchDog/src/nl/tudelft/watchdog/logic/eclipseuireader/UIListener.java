@@ -18,18 +18,25 @@ import org.eclipse.ui.texteditor.ITextEditor;
  * class that sets up the listeners for eclipse UI events
  */
 public class UIListener {
+	/** The serilization manager. */
 	private IRecordedIntervalSerializationManager serializationManager;
 
+	/** Constructor. */
 	public UIListener() {
 		serializationManager = new RecordedIntervalSerializationManager();
 	}
 
+	/**
+	 * Adds listeners to Workbench including already opened windows and
+	 * registers shutdown listeners.
+	 */
 	public void attachListeners() {
 		addShutdownListeners();
 		PlatformUI.getWorkbench().addWindowListener(new WindowListener());
 		addListenersToAlreadyOpenWindows();
 	}
 
+	/** The shutdown listeners, executed when Eclipse is shutdown. */
 	private void addShutdownListeners() {
 		PlatformUI.getWorkbench().addWorkbenchListener(
 				new IWorkbenchListener() {
@@ -47,14 +54,19 @@ public class UIListener {
 				});
 	}
 
+	/**
+	 * If windows are already open when the listener registration from WatchDog
+	 * starts (e.g. due to saved Eclispe workspace state), add these listeners
+	 * to already opened windows.
+	 */
 	private void addListenersToAlreadyOpenWindows() {
-		for (final IWorkbenchWindow window : PlatformUI.getWorkbench()
+		for (IWorkbenchWindow window : PlatformUI.getWorkbench()
 				.getWorkbenchWindows()) {
 			WindowListener.addPageListener(window);
 			IWorkbenchPage activePage = window.getActivePage();
 
 			if (activePage != null) {
-				final IWorkbenchPart activePart = activePage.getActivePart();
+				IWorkbenchPart activePart = activePage.getActivePart();
 				if (activePart instanceof ITextEditor) {
 					DocumentNotifier
 							.fireDocumentStartFocusEvent(new DocumentActivateEvent(
