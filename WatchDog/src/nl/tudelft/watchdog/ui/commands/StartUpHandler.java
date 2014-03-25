@@ -6,7 +6,6 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.SimpleFormatter;
 
-import nl.tudelft.watchdog.logic.interval.IIntervalManager;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.events.ClosingIntervalEvent;
 import nl.tudelft.watchdog.logic.interval.events.IIntervalListener;
@@ -28,7 +27,7 @@ public class StartUpHandler implements IStartup {
 		WatchDogGlobals.isActive = true;
 
 		setUpLogger();
-		IIntervalManager intervalManager = IntervalManager.getInstance();
+		IntervalManager intervalManager = IntervalManager.getInstance();
 		if (WatchdogPreferences.getInstance().isLoggingEnabled()) {
 			WDLogger.logInfo("Starting up...");
 			intervalManager.addIntervalListener(new IIntervalListener() {

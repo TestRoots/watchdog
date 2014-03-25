@@ -10,7 +10,7 @@
          point="org.eclipse.ui.preferencePages">
       <page
             class="nl.tudelft.watchdog.ui.preferences.PreferencePage"
-            id="TimeDistributionPlugin.PreferencePage"
+            id="WatchDog.PreferencePage"
             name="WatchDog">
       </page>
    </extension>

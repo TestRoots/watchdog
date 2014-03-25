@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.watchdog.logic.exceptions.ContentReaderException;
-import nl.tudelft.watchdog.logic.interval.IIntervalManager;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.recorded.IInterval;
 import nl.tudelft.watchdog.logic.interval.recorded.RecordedIntervalSerializationManager;
@@ -128,7 +127,7 @@ public class WatchDogUtils {
 	public static List<IInterval> getAllRecordedIntervals() {
 		RecordedIntervalSerializationManager serializationManager = new RecordedIntervalSerializationManager();
 
-		IIntervalManager intervalKeeper = IntervalManager.getInstance();
+		IntervalManager intervalKeeper = IntervalManager.getInstance();
 		List<IInterval> completeList = new ArrayList<IInterval>();
 		try {
 			completeList.addAll(serializationManager
