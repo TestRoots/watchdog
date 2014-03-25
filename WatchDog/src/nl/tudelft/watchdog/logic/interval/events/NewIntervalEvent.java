@@ -2,19 +2,19 @@ package nl.tudelft.watchdog.logic.interval.events;
 
 import java.util.EventObject;
 
-import nl.tudelft.watchdog.logic.interval.active.ActiveInterval;
+import nl.tudelft.watchdog.logic.interval.active.ActiveIntervalBase;
 
 @SuppressWarnings("serial")
 public class NewIntervalEvent extends EventObject {
 
-	private ActiveInterval interval;
+	private ActiveIntervalBase interval;
 
-	public NewIntervalEvent(ActiveInterval source) {
+	public NewIntervalEvent(ActiveIntervalBase source) {
 		super(source);
 		this.interval = source;
 	}
 
-	public ActiveInterval getInterval() {
+	public ActiveIntervalBase getInterval() {
 		return interval;
 	}
 

@@ -11,7 +11,7 @@ import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentDeActivateEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.IDocumentAttentionListener;
-import nl.tudelft.watchdog.logic.interval.active.ActiveInterval;
+import nl.tudelft.watchdog.logic.interval.active.ActiveIntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.ActiveReadingInterval;
 import nl.tudelft.watchdog.logic.interval.active.ActiveTypingInterval;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallBack;
@@ -112,7 +112,7 @@ public class IntervalManager extends IntervalNotifier implements
 		});
 	}
 
-	private void closeCurrentInterval(ActiveInterval interval) {
+	private void closeCurrentInterval(ActiveIntervalBase interval) {
 		if (!interval.isClosed()) {
 
 			Document doc = documentFactory.createDocument(interval.getPart());
@@ -142,7 +142,7 @@ public class IntervalManager extends IntervalNotifier implements
 				.getInstance().getTimeOutReading());
 	}
 
-	private void addNewIntervalHandlers(final ActiveInterval interval,
+	private void addNewIntervalHandlers(final ActiveIntervalBase interval,
 			int timeout) {
 		interval.addTimeoutListener(timeout, new OnInactiveCallBack() {
 			@Override

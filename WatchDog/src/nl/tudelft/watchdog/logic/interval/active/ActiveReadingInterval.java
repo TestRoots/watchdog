@@ -8,7 +8,7 @@ import nl.tudelft.watchdog.logic.interval.activityCheckers.ReadingCheckerTask;
 
 import org.eclipse.ui.IWorkbenchPart;
 
-public class ActiveReadingInterval extends ActiveInterval {
+public class ActiveReadingInterval extends ActiveIntervalBase {
 
 	private ReadingCheckerTask task;
 
@@ -37,6 +37,6 @@ public class ActiveReadingInterval extends ActiveInterval {
 	@Override
 	public void listenForReactivation() {
 		assert (task != null);
-		task.listenForReactivation();
+		task.createListenerForReactivation();
 	}
 }

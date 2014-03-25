@@ -12,8 +12,9 @@ import org.eclipse.ui.IWorkbenchPart;
  * An interval for when the user is currently typing, connected to the
  * {@link ActivityType#Typing} activity.
  */
-public class ActiveTypingInterval extends ActiveInterval {
+public class ActiveTypingInterval extends ActiveIntervalBase {
 
+	/** The typing task. */
 	private TypingCheckerTask task;
 
 	/** Constructor. */
@@ -41,7 +42,7 @@ public class ActiveTypingInterval extends ActiveInterval {
 		// TODO (MMB) task would be null if addTimeoutListener had not been
 		// called before listenForReactivation ?
 		assert (task != null);
-		task.listenForReactivation();
+		task.createListenerForReactivation();
 	}
 
 }
