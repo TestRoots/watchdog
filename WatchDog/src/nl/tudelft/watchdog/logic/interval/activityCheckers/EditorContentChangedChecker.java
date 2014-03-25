@@ -7,13 +7,23 @@ import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class UpdateChecker implements IUpdateChecker {
+/**
+ * An {@link IUpdateChecker} that compares the previous editor content to the
+ * current content to see if it changed.
+ */
+public class EditorContentChangedChecker implements IUpdateChecker {
 
+	/** The {@link ITextEditor} we are receiving the file contents from. */
 	private ITextEditor editor;
-	private String previousContent;
-	private String lastCheckedContent;
 
-	public UpdateChecker(ITextEditor editor) {
+	/** Previous Editor content. */
+	private String previousContent;
+
+	/** Current Editor content. */
+	private String currentContent;
+
+	/** Constructor. */
+	public EditorContentChangedChecker(ITextEditor editor) {
 		this.editor = editor;
 		try {
 			this.previousContent = WatchDogUtils.getEditorContent(editor);
@@ -30,13 +40,13 @@ public class UpdateChecker implements IUpdateChecker {
 	public boolean hasChanged() throws EditorClosedPrematurelyException,
 			ContentReaderException {
 		try {
-			lastCheckedContent = WatchDogUtils.getEditorContent(editor);
+			currentContent = WatchDogUtils.getEditorContent(editor);
 		} catch (IllegalArgumentException ex) {
 			throw new EditorClosedPrematurelyException();
 		}
-		boolean isChanged = !previousContent.equals(lastCheckedContent);
-		previousContent = lastCheckedContent;
-		return isChanged;
+		boolean contentChanged = !previousContent.equals(currentContent);
+		previousContent = currentContent;
+		return contentChanged;
 	}
 
 }

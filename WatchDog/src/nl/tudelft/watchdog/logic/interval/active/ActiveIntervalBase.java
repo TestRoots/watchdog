@@ -9,14 +9,15 @@ import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallBack;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public abstract class ActiveInterval {
+public abstract class ActiveIntervalBase {
 	protected Timer checkForChangeTimer;
 	protected Date timeOfCreation;
 	protected ITextEditor editor;
 	protected boolean isClosed;
 	protected IWorkbenchPart part;
 
-	public ActiveInterval(IWorkbenchPart part) {
+	/** Constructor. */
+	public ActiveIntervalBase(IWorkbenchPart part) {
 		this.part = part;
 		this.editor = (ITextEditor) part;
 		this.timeOfCreation = new Date();

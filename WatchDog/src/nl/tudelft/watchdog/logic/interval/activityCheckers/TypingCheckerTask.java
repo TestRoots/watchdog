@@ -15,49 +15,56 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+/** A task for checking whether the user is typing. */
 public class TypingCheckerTask extends TimerTask {
 
+	/** An update checker. */
 	private IUpdateChecker checker;
-	private OnInactiveCallBack callback;
-	private ITextEditor editor;
-	private IWorkbenchPart part;
 
+	/** Callback. */
+	private OnInactiveCallBack callback;
+
+	/** The editor. */
+	private ITextEditor editor;
+
+	/** The workbenchPart this editor belongs to. */
+	private IWorkbenchPart workbenchPart;
+
+	/** Constructor. */
 	public TypingCheckerTask(IWorkbenchPart part, OnInactiveCallBack callback) {
 		this.editor = (ITextEditor) part;
-		this.part = part;
-		checker = new UpdateChecker(editor);
+		this.workbenchPart = part;
+		this.checker = new EditorContentChangedChecker(editor);
 		this.callback = callback;
 	}
 
 	@Override
 	public void run() {
 		try {
-			if (checker.hasChanged()) {
-				// still an active document
-			} else {
-				// not active anymore
-				this.cancel();// stop timer
-				listenForReactivation();// listen to changes in open, inactive
-										// documents
-				callback.onInactive();// callback function
+			if (!checker.hasChanged()) {
+				// not an active document any longer, as no changes had been
+				// made.
+				// (1) stop the timer
+				cancel();
+				// (2) listen to changes in open, inactive documents
+				createListenerForReactivation();
+				callback.onInactive();
 			}
 		} catch (EditorClosedPrematurelyException e) {
-			WDLogger.logInfo("Editor closed prematurely"); // this can happen
-															// when eclipse is
-															// closed while the
-															// document is still
-															// active
+			// this can happen when eclipse is closed while the document is
+			// still active
+			WDLogger.logInfo("Editor closed prematurely");
 		} catch (ContentReaderException e) {
-			WDLogger.logInfo("Unavailable doc provider"); // this can happen
-															// when a file is
-															// moved inside the
-															// workspace
+			// this can happen when a file is moved inside the workspace
+			WDLogger.logInfo("Unavailable doc provider");
 		}
 	}
 
-	public void listenForReactivation() {
-		IDocumentProvider dp = editor.getDocumentProvider();
-		final IDocument doc = dp.getDocument(editor.getEditorInput());
+	/** Adds listeners to document such that it is ready to be called again. */
+	public void createListenerForReactivation() {
+		IDocumentProvider documentProvider = editor.getDocumentProvider();
+		final IDocument document = documentProvider.getDocument(editor
+				.getEditorInput());
 
 		final IDocumentListener docListener = new IDocumentListener() {
 
@@ -67,8 +74,8 @@ public class TypingCheckerTask extends TimerTask {
 				// activated, then remove this listener
 				DocumentNotifier
 						.fireDocumentStartEditingEvent(new DocumentActivateEvent(
-								part));
-				doc.removeDocumentListener(this);
+								workbenchPart));
+				document.removeDocumentListener(this);
 			}
 
 			@Override
@@ -76,6 +83,6 @@ public class TypingCheckerTask extends TimerTask {
 			}
 		};
 
-		doc.addDocumentListener(docListener);
+		document.addDocumentListener(docListener);
 	}
 }
