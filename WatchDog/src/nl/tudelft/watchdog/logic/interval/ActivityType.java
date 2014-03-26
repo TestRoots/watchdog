@@ -15,6 +15,10 @@ public enum ActivityType {
 	@SerializedName("re")
 	Reading,
 
+	/** EclipseOpen. */
+	@SerializedName("eo")
+	EclipseOpen,
+
 	/** Neither typing nor reading. */
 	@SerializedName("un")
 	Unknown
