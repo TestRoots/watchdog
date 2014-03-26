@@ -2,8 +2,8 @@ package nl.tudelft.watchdog.logic.interval.activityCheckers;
 
 import java.util.TimerTask;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.events.EditorEvent;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
+import nl.tudelft.watchdog.logic.interval.IntervalManager;
 
 import org.eclipse.swt.custom.CaretEvent;
 import org.eclipse.swt.custom.CaretListener;
@@ -129,9 +129,12 @@ public class ReadingCheckerTask extends TimerTask {
 						@Override
 						public void caretMoved(CaretEvent event) {
 							// cursor place changed
-							DocumentNotifier
-									.fireDocumentStartFocusEvent(new EditorEvent(
-											workbenchPart));
+							IntervalManager
+									.getInstance()
+									.getEditorObserveable()
+									.notifyObservers(
+											new FocusStartEditorEvent(
+													workbenchPart));
 							// listen just once to not get millions
 							// of events fired
 							styledText.removeCaretListener(this);
@@ -148,9 +151,12 @@ public class ReadingCheckerTask extends TimerTask {
 								// scrolled
 								@Override
 								public void paintControl(PaintEvent e) {
-									DocumentNotifier
-											.fireDocumentStartFocusEvent(new EditorEvent(
-													workbenchPart));
+									IntervalManager
+											.getInstance()
+											.getEditorObserveable()
+											.notifyObservers(
+													new FocusStartEditorEvent(
+															workbenchPart));
 									// listen just once to not get millions
 									// of events fired
 									styledText.removePaintListener(this);

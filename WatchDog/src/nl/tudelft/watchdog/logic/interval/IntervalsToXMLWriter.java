@@ -14,8 +14,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import nl.tudelft.watchdog.logic.interval.recorded.IInterval;
-import nl.tudelft.watchdog.logic.logging.WDLogger;
+import nl.tudelft.watchdog.logic.interval.recorded.RecordedInterval;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -28,7 +28,7 @@ public class IntervalsToXMLWriter {
 	/**
 	 * Exports the given intervals to the supplied {@link OutputStream}.
 	 */
-	public void exportIntervals(List<IInterval> intervals, OutputStream stream) {
+	public void exportIntervals(List<RecordedInterval> intervals, OutputStream stream) {
 		try {
 
 			DOMSource source = transformIntervalsToXML(intervals);
@@ -41,13 +41,13 @@ public class IntervalsToXMLWriter {
 			stream.close();
 
 		} catch (TransformerConfigurationException e) {
-			WDLogger.logSevere(e);
+			WatchDogLogger.logSevere(e);
 		} catch (ParserConfigurationException e) {
-			WDLogger.logSevere(e);
+			WatchDogLogger.logSevere(e);
 		} catch (TransformerException e) {
-			WDLogger.logSevere(e);
+			WatchDogLogger.logSevere(e);
 		} catch (IOException e) {
-			WDLogger.logSevere(e);
+			WatchDogLogger.logSevere(e);
 		}
 	}
 
@@ -56,7 +56,7 @@ public class IntervalsToXMLWriter {
 	 * 
 	 * @return {@link DOMSource} of the XML.
 	 */
-	private DOMSource transformIntervalsToXML(List<IInterval> intervals)
+	private DOMSource transformIntervalsToXML(List<RecordedInterval> intervals)
 			throws ParserConfigurationException {
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory
 				.newInstance();
@@ -68,7 +68,7 @@ public class IntervalsToXMLWriter {
 		Element rootElement = doc.createElement("intervals");
 		doc.appendChild(rootElement);
 
-		for (IInterval interval : intervals) {
+		for (RecordedInterval interval : intervals) {
 			Element intervalElement = doc.createElement("interval");
 			rootElement.appendChild(intervalElement);
 

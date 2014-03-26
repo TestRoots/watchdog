@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import nl.tudelft.watchdog.logic.interval.recorded.IInterval;
+import nl.tudelft.watchdog.logic.interval.recorded.RecordedInterval;
 import nl.tudelft.watchdog.ui.preferences.WatchdogPreferences;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
@@ -31,15 +31,15 @@ public class IntervalTransferer {
 
 	/** Sends the recorded intervals to the server. */
 	public void sendIntervals() {
-		List<IInterval> recordedIntervals = IntervalManager.getInstance()
-				.getRecordedIntervals();
+		List<RecordedInterval> recordedIntervals = IntervalManager
+				.getInstance().getRecordedIntervals();
 		String userid = WatchdogPreferences.getUserid();
 		String json = prepareIntervals(recordedIntervals);
 		transferData(userid, json);
 	}
 
 	/** Converts the intervals to Json. */
-	public String prepareIntervals(List<IInterval> recordedIntervals) {
+	public String prepareIntervals(List<RecordedInterval> recordedIntervals) {
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(Date.class, new DateSerializer());
 		Gson gson = gsonBuilder.create();

@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.eclipseuireader.events;
+package nl.tudelft.watchdog.logic.eclipseuireader.events.editor;
 
 import java.util.EventObject;
 

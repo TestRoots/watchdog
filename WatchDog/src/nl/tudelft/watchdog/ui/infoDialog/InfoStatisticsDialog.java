@@ -5,7 +5,7 @@ import java.util.List;
 import nl.tudelft.watchdog.logic.interval.ActivityType;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics;
-import nl.tudelft.watchdog.logic.interval.recorded.IInterval;
+import nl.tudelft.watchdog.logic.interval.recorded.RecordedInterval;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
@@ -88,7 +88,7 @@ public class InfoStatisticsDialog extends Dialog {
 	 * listing the times per activity.
 	 */
 	private void createIntervalSummary(String text, Composite container,
-			List<IInterval> intervals) {
+			List<RecordedInterval> intervals) {
 		IntervalStatistics intervalStatistics = new IntervalStatistics(
 				intervals);
 		intervalStatistics.calculateDurations();
