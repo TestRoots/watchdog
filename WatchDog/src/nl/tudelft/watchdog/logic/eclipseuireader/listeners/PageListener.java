@@ -1,9 +1,9 @@
-package nl.tudelft.watchdog.logic.eclipseuireader.componentlisteners;
+package nl.tudelft.watchdog.logic.eclipseuireader.listeners;
 
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IWorkbenchPage;
 
-/** Adds parts listeners for pages. */
+/** A listener on Pages. */
 public class PageListener implements IPageListener {
 
 	@Override

@@ -1,6 +1,6 @@
-package nl.tudelft.watchdog.logic.eclipseuireader;
+package nl.tudelft.watchdog.logic.eclipseuireader.listeners;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.componentlisteners.WindowListener;
+import nl.tudelft.watchdog.logic.eclipseuireader.DocChangeListenerAttacher;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateOrDeactivateEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
 import nl.tudelft.watchdog.logic.interval.recorded.IRecordedIntervalSerializationManager;
@@ -15,7 +15,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
- * class that sets up the listeners for eclipse UI events
+ * Sets up the listeners for eclipse UI events and registers the shutdown
+ * listeners.
  */
 public class UIListener {
 	/** The serilization manager. */
@@ -44,6 +45,8 @@ public class UIListener {
 					@Override
 					public boolean preShutdown(final IWorkbench workbench,
 							final boolean forced) {
+						// TODO (MMB) we need to hook in here to transfer all
+						// data from this Eclipse session.
 						serializationManager.saveRecordedIntervals();
 						return true;
 					}
