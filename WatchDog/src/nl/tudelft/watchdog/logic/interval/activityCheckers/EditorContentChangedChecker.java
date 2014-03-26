@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.logic.interval.activityCheckers;
 
 import nl.tudelft.watchdog.logic.exceptions.ContentReaderException;
 import nl.tudelft.watchdog.logic.exceptions.EditorClosedPrematurelyException;
-import nl.tudelft.watchdog.logic.logging.WDLogger;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -29,10 +29,10 @@ public class EditorContentChangedChecker implements IUpdateChecker {
 			this.previousContent = WatchDogUtils.getEditorContent(editor);
 		} catch (IllegalArgumentException e) {
 			this.previousContent = "";
-			WDLogger.logSevere(e);
+			WatchDogLogger.logSevere(e);
 		} catch (ContentReaderException e) {
 			this.previousContent = "";
-			WDLogger.logSevere(e);
+			WatchDogLogger.logSevere(e);
 		}
 	}
 

@@ -8,9 +8,9 @@ import java.util.List;
 
 import nl.tudelft.watchdog.logic.exceptions.ContentReaderException;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.logic.interval.recorded.IInterval;
+import nl.tudelft.watchdog.logic.interval.recorded.RecordedInterval;
 import nl.tudelft.watchdog.logic.interval.recorded.RecordedIntervalSerializationManager;
-import nl.tudelft.watchdog.logic.logging.WDLogger;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;
@@ -124,18 +124,18 @@ public class WatchDogUtils {
 	/**
 	 * @return A list of all stored recorded intervals.
 	 */
-	public static List<IInterval> getAllRecordedIntervals() {
+	public static List<RecordedInterval> getAllRecordedIntervals() {
 		RecordedIntervalSerializationManager serializationManager = new RecordedIntervalSerializationManager();
 
 		IntervalManager intervalKeeper = IntervalManager.getInstance();
-		List<IInterval> completeList = new ArrayList<IInterval>();
+		List<RecordedInterval> completeList = new ArrayList<RecordedInterval>();
 		try {
 			completeList.addAll(serializationManager
 					.retrieveRecordedIntervals());
 		} catch (IOException exception) {
-			WDLogger.logSevere(exception);
+			WatchDogLogger.logSevere(exception);
 		} catch (ClassNotFoundException exception) {
-			WDLogger.logSevere(exception);
+			WatchDogLogger.logSevere(exception);
 		}
 		completeList.addAll(intervalKeeper.getRecordedIntervals());
 		return completeList;

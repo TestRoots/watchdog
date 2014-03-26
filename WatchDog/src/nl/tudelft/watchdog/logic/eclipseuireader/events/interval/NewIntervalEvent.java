@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.interval.events;
+package nl.tudelft.watchdog.logic.eclipseuireader.events.interval;
 
 import java.util.EventObject;
 

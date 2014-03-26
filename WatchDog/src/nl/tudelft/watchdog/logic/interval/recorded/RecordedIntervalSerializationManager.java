@@ -11,12 +11,10 @@ import java.util.Date;
 import java.util.List;
 
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.logic.logging.WDLogger;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 
-public class RecordedIntervalSerializationManager implements
-		IRecordedIntervalSerializationManager {
+public class RecordedIntervalSerializationManager {
 
-	@Override
 	public void saveRecordedIntervals() {
 		if (!IntervalManager.getInstance().getRecordedIntervals().isEmpty()) {
 			try {
@@ -35,16 +33,15 @@ public class RecordedIntervalSerializationManager implements
 				out.close();
 				fileOut.close();
 			} catch (IOException e) {
-				WDLogger.logSevere(e);
+				WatchDogLogger.logSevere(e);
 			}
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
-	public List<IInterval> retrieveRecordedIntervals() throws IOException,
+	public List<RecordedInterval> retrieveRecordedIntervals() throws IOException,
 			ClassNotFoundException {
-		List<IInterval> completeList = new ArrayList<IInterval>();
+		List<RecordedInterval> completeList = new ArrayList<RecordedInterval>();
 		try {
 			String userHome = System.getProperty("user.home");
 			File parent = new File(userHome + "/watchdog/");
@@ -56,22 +53,22 @@ public class RecordedIntervalSerializationManager implements
 						FileInputStream fileIn = new FileInputStream(f);
 
 						ObjectInputStream in = new ObjectInputStream(fileIn);
-						List<IInterval> list = (List<IInterval>) in
+						List<RecordedInterval> list = (List<RecordedInterval>) in
 								.readObject();
 						in.close();
 						fileIn.close();
 						completeList.addAll(list);
 					} else {
-						WDLogger.logInfo("no saved recorded intervals");
+						WatchDogLogger.logInfo("no saved recorded intervals");
 					}
 				}
 			}
 			return completeList;
 		} catch (IOException e) {
-			WDLogger.logSevere(e);
+			WatchDogLogger.logSevere(e);
 			throw e;
 		} catch (ClassNotFoundException e) {
-			WDLogger.logSevere(e);
+			WatchDogLogger.logSevere(e);
 			throw e;
 		}
 	}

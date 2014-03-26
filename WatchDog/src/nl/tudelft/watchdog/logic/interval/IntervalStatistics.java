@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import nl.tudelft.watchdog.logic.interval.recorded.IInterval;
+import nl.tudelft.watchdog.logic.interval.recorded.RecordedInterval;
 
 import org.joda.time.Duration;
 
@@ -14,7 +14,7 @@ import org.joda.time.Duration;
 public class IntervalStatistics {
 
 	/** The intervals */
-	private List<IInterval> intervals;
+	private List<RecordedInterval> intervals;
 
 	/** The total time recorded in activities. */
 	private Duration totalTimeOverAllActivities;
@@ -26,7 +26,7 @@ public class IntervalStatistics {
 	private Map<ActivityType, Duration> activityTypeToDuration = new HashMap<>();
 
 	/** Constructor. */
-	public IntervalStatistics(List<IInterval> intervals) {
+	public IntervalStatistics(List<RecordedInterval> intervals) {
 		this.intervals = intervals;
 	}
 
@@ -50,7 +50,7 @@ public class IntervalStatistics {
 	 */
 	private Duration calculateTime(ActivityType activity) {
 		Duration totalTime = new Duration(0);
-		for (IInterval interval : intervals) {
+		for (RecordedInterval interval : intervals) {
 			if (interval.getActivityType() == activity) {
 				totalTime = totalTime.plus(interval.getDuration());
 			}

@@ -3,8 +3,8 @@ package nl.tudelft.watchdog.logic.eclipseuireader;
 import java.util.LinkedList;
 import java.util.List;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.events.EditorEvent;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.StartEditingEditorEvent;
+import nl.tudelft.watchdog.logic.interval.IntervalManager;
 
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -31,9 +31,11 @@ public class DocumentChangeListenerAttacher {
 
 					@Override
 					public void documentChanged(DocumentEvent event) {
-						DocumentNotifier
-								.fireDocumentStartEditingEvent(new EditorEvent(
-										part));
+						IntervalManager
+								.getInstance()
+								.getEditorObserveable()
+								.notifyObservers(
+										new StartEditingEditorEvent(part));
 						// just listen 1 time for this event to prevent overflow
 						// of events
 						document.removeDocumentListener(this);

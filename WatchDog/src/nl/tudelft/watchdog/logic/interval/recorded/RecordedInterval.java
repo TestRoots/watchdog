@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.logic.interval.recorded;
 
 import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.Date;
 
 import nl.tudelft.watchdog.logic.document.Document;
@@ -13,7 +14,7 @@ import org.joda.time.format.PeriodFormat;
 import com.google.gson.annotations.SerializedName;
 
 /** A recording interval, associated with a {@link Document}. */
-public class RecordedInterval implements IInterval {
+public class RecordedInterval implements Serializable {
 
 	/**
 	 * The serialization id.
@@ -50,39 +51,32 @@ public class RecordedInterval implements IInterval {
 		this.isDebugMode = debugMode;
 	}
 
-	@Override
 	public Document getDocument() {
 		return document;
 	}
 
-	@Override
 	public Date getStart() {
 		return start;
 	}
 
-	@Override
 	public Date getEnd() {
 		return end;
 	}
 
-	@Override
 	public Duration getDuration() {
 		return new Duration(start.getTime(), end.getTime());
 	}
 
-	@Override
 	public String getDurationString() {
 		Duration d = new Duration(start.getTime(), end.getTime());
 		Period period = d.toPeriod();
 		return PeriodFormat.getDefault().print(period);
 	}
 
-	@Override
 	public ActivityType getActivityType() {
 		return activityType;
 	}
 
-	@Override
 	public boolean isDebugMode() {
 		return isDebugMode;
 	}

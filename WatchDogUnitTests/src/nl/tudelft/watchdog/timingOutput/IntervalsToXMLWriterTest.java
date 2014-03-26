@@ -10,7 +10,6 @@ import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentType;
 import nl.tudelft.watchdog.logic.interval.ActivityType;
 import nl.tudelft.watchdog.logic.interval.IntervalsToXMLWriter;
-import nl.tudelft.watchdog.logic.interval.recorded.IInterval;
 import nl.tudelft.watchdog.logic.interval.recorded.RecordedInterval;
 
 import org.junit.Assert;
@@ -26,7 +25,7 @@ public class IntervalsToXMLWriterTest {
 	 */
 	@Test
 	public void intervalToXMLTest() {
-		List<IInterval> intervals = new LinkedList<IInterval>();
+		List<RecordedInterval> intervals = new LinkedList<RecordedInterval>();
 		intervals.add(new RecordedInterval(new Document("projname", "filename",
 				DocumentType.TEST), new Date(12345678912L), new Date(
 				13345355121L), ActivityType.Typing, true));

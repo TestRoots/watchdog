@@ -9,7 +9,6 @@ import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentType;
 import nl.tudelft.watchdog.logic.interval.ActivityType;
 import nl.tudelft.watchdog.logic.interval.IntervalTransferer;
-import nl.tudelft.watchdog.logic.interval.recorded.IInterval;
 import nl.tudelft.watchdog.logic.interval.recorded.RecordedInterval;
 
 import org.junit.Test;
@@ -24,7 +23,7 @@ public class IntervalToJsonConverterTest {
 	 */
 	@Test
 	public void testJsonRepresentation() {
-		ArrayList<IInterval> intervals = new ArrayList<IInterval>();
+		ArrayList<RecordedInterval> intervals = new ArrayList<RecordedInterval>();
 		intervals.add(new RecordedInterval(new Document("Project",
 				"Production.java", DocumentType.PRODUCTION), new Date(1),
 				new Date(2), ActivityType.Reading, false));

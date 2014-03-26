@@ -5,8 +5,8 @@ import java.util.List;
 import nl.tudelft.watchdog.logic.exceptions.FileSavingFailedException;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.IntervalsToXMLWriter;
-import nl.tudelft.watchdog.logic.interval.recorded.IInterval;
-import nl.tudelft.watchdog.logic.logging.WDLogger;
+import nl.tudelft.watchdog.logic.interval.recorded.RecordedInterval;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.ui.UserPrompter;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
@@ -21,18 +21,18 @@ public class XMLExportHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		WDLogger.logInfo("exporting all intervals...");
+		WatchDogLogger.logInfo("exporting all intervals...");
 
 		IntervalManager.getInstance().closeAllCurrentIntervals();
 
-		List<IInterval> completeList = WatchDogUtils.getAllRecordedIntervals();
+		List<RecordedInterval> completeList = WatchDogUtils.getAllRecordedIntervals();
 
 		try {
 			UserPrompter.saveIntervalsToFile(new IntervalsToXMLWriter(),
 					completeList);
-			WDLogger.logInfo("exporting done.");
+			WatchDogLogger.logInfo("exporting done.");
 		} catch (FileSavingFailedException e) {
-			WDLogger.logSevere(e);
+			WatchDogLogger.logSevere(e);
 			UserPrompter.showMessageBox("Watchdog",
 					"File could not be saved, please try again.");
 		}

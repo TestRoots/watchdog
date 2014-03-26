@@ -1,9 +1,9 @@
 package nl.tudelft.watchdog.logic.eclipseuireader.listeners;
 
 import nl.tudelft.watchdog.logic.eclipseuireader.DocumentChangeListenerAttacher;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.EditorEvent;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
-import nl.tudelft.watchdog.logic.interval.recorded.IRecordedIntervalSerializationManager;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.EventObservable;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
+import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.recorded.RecordedIntervalSerializationManager;
 
 import org.eclipse.ui.IWorkbench;
@@ -20,7 +20,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class UIListener {
 	/** The serialization manager. */
-	private IRecordedIntervalSerializationManager serializationManager;
+	private RecordedIntervalSerializationManager serializationManager;
 
 	/** Constructor. */
 	public UIListener() {
@@ -71,9 +71,10 @@ public class UIListener {
 			if (activePage != null) {
 				IWorkbenchPart activePart = activePage.getActivePart();
 				if (activePart instanceof ITextEditor) {
-					DocumentNotifier
-							.fireDocumentStartFocusEvent(new EditorEvent(
-									activePart));
+					EventObservable editorObservable = IntervalManager
+							.getInstance().getEditorObserveable();
+					editorObservable.notifyObservers(new FocusStartEditorEvent(
+							activePart));
 					DocumentChangeListenerAttacher
 							.listenToDocumentChanges(activePart);
 				}

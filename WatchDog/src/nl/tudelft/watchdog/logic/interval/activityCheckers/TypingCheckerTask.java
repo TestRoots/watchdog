@@ -2,11 +2,11 @@ package nl.tudelft.watchdog.logic.interval.activityCheckers;
 
 import java.util.TimerTask;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.events.EditorEvent;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
 import nl.tudelft.watchdog.logic.exceptions.ContentReaderException;
 import nl.tudelft.watchdog.logic.exceptions.EditorClosedPrematurelyException;
-import nl.tudelft.watchdog.logic.logging.WDLogger;
+import nl.tudelft.watchdog.logic.interval.IntervalManager;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -53,10 +53,10 @@ public class TypingCheckerTask extends TimerTask {
 		} catch (EditorClosedPrematurelyException e) {
 			// this can happen when eclipse is closed while the document is
 			// still active
-			WDLogger.logInfo("Editor closed prematurely");
+			WatchDogLogger.logInfo("Editor closed prematurely");
 		} catch (ContentReaderException e) {
 			// this can happen when a file is moved inside the workspace
-			WDLogger.logInfo("Unavailable doc provider");
+			WatchDogLogger.logInfo("Unavailable doc provider");
 		}
 	}
 
@@ -72,9 +72,11 @@ public class TypingCheckerTask extends TimerTask {
 			public void documentChanged(DocumentEvent event) {
 				// listen to this event just once, notify that the document is
 				// activated, then remove this listener
-				DocumentNotifier
-						.fireDocumentStartEditingEvent(new EditorEvent(
-								workbenchPart));
+				IntervalManager
+						.getInstance()
+						.getEditorObserveable()
+						.notifyObservers(
+								new FocusStartEditorEvent(workbenchPart));
 				document.removeDocumentListener(this);
 			}
 

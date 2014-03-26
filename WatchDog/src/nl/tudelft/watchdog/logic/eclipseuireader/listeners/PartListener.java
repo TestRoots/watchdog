@@ -1,8 +1,11 @@
 package nl.tudelft.watchdog.logic.eclipseuireader.listeners;
 
 import nl.tudelft.watchdog.logic.eclipseuireader.DocumentChangeListenerAttacher;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.EditorEvent;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.EventObservable;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusEndEditorEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.StopEditingEditorEvent;
+import nl.tudelft.watchdog.logic.interval.IntervalManager;
 
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -10,26 +13,31 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 /** A listener on parts. */
 public class PartListener implements IPartListener {
+
+	/** Constructor. */
+	public PartListener() {
+		editorObservable = IntervalManager.getInstance().getEditorObserveable();
+	}
+
+	/** The eventObservable. */
+	private EventObservable editorObservable;
+
 	@Override
 	public void partOpened(IWorkbenchPart part) {
-
 	}
 
 	@Override
 	public void partDeactivated(IWorkbenchPart part) {
 		if (part instanceof ITextEditor) {
-			DocumentNotifier
-					.fireDocumentEndFocusEvent(new EditorEvent(
-							part));
+
+			editorObservable.notifyObservers(new FocusEndEditorEvent(part));
 		}
 	}
 
 	@Override
 	public void partClosed(IWorkbenchPart part) {
 		if (part instanceof ITextEditor) {
-			DocumentNotifier
-					.fireDocumentStopEditingEvent(new EditorEvent(
-							part));
+			editorObservable.notifyObservers(new StopEditingEditorEvent(part));
 		}
 	}
 
@@ -40,9 +48,7 @@ public class PartListener implements IPartListener {
 	@Override
 	public void partActivated(IWorkbenchPart part) {
 		if (part instanceof ITextEditor) {
-			DocumentNotifier
-					.fireDocumentStartFocusEvent(new EditorEvent(
-							part));
+			editorObservable.notifyObservers(new FocusStartEditorEvent(part));
 			DocumentChangeListenerAttacher.listenToDocumentChanges(part);
 		}
 	}
