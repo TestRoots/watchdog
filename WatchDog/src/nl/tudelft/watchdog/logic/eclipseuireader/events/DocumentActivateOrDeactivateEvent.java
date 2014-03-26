@@ -6,11 +6,11 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 @SuppressWarnings("serial")
-public class DocumentActivateEvent extends EventObject {
+public class DocumentActivateOrDeactivateEvent extends EventObject {
 	ITextEditor editor;
 	IWorkbenchPart part;
 
-	public DocumentActivateEvent(IWorkbenchPart part) {
+	public DocumentActivateOrDeactivateEvent(IWorkbenchPart part) {
 		super(part);
 		this.part = part;
 		this.editor = (ITextEditor) part;

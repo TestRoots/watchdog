@@ -7,8 +7,7 @@ import java.util.List;
 import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentFactory;
 import nl.tudelft.watchdog.logic.eclipseuireader.UIListener;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateEvent;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentDeActivateEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateOrDeactivateEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.IDocumentAttentionListener;
 import nl.tudelft.watchdog.logic.interval.active.ActiveIntervalBase;
@@ -38,7 +37,7 @@ public class IntervalManager extends IntervalNotifier {
 	/** The currently open {@link ActiveTypingInterval}. */
 	private ActiveTypingInterval typingInterval;
 
-	/** The ui listener */
+	/** The UI listener */
 	private UIListener uiListener;
 
 	/** The document factory. */
@@ -77,7 +76,8 @@ public class IntervalManager extends IntervalNotifier {
 		DocumentNotifier.addMyEventListener(new IDocumentAttentionListener() {
 
 			@Override
-			public void onDocumentStartEditing(final DocumentActivateEvent evt) {
+			public void onDocumentStartEditing(
+					final DocumentActivateOrDeactivateEvent evt) {
 				// create a new active interval when doc is new
 				if (typingInterval == null || typingInterval.isClosed()) {
 					createNewEditingInterval(evt);
@@ -88,7 +88,8 @@ public class IntervalManager extends IntervalNotifier {
 			}
 
 			@Override
-			public void onDocumentStopEditing(DocumentDeActivateEvent evt) {
+			public void onDocumentStopEditing(
+					DocumentActivateOrDeactivateEvent evt) {
 				if (typingInterval != null
 						&& evt.getChangedEditor() == typingInterval.getEditor()) {
 					closeCurrentInterval(typingInterval);
@@ -96,7 +97,8 @@ public class IntervalManager extends IntervalNotifier {
 			}
 
 			@Override
-			public void onDocumentStartFocus(DocumentActivateEvent evt) {
+			public void onDocumentStartFocus(
+					DocumentActivateOrDeactivateEvent evt) {
 				// create a new active interval when doc is new
 				if (readingInterval == null || readingInterval.isClosed()) {
 					createNewReadingInterval(evt);
@@ -108,7 +110,7 @@ public class IntervalManager extends IntervalNotifier {
 			}
 
 			@Override
-			public void onDocumentEndFocus(DocumentDeActivateEvent evt) {
+			public void onDocumentEndFocus(DocumentActivateOrDeactivateEvent evt) {
 				if (readingInterval != null
 						&& evt.getChangedEditor() == readingInterval
 								.getEditor()) {
@@ -134,13 +136,15 @@ public class IntervalManager extends IntervalNotifier {
 	}
 
 	/** Creates a new editing interval. */
-	private void createNewEditingInterval(final DocumentActivateEvent evt) {
+	private void createNewEditingInterval(
+			final DocumentActivateOrDeactivateEvent evt) {
 		typingInterval = new ActiveTypingInterval(evt.getChangedEditor());
 		addNewIntervalHandler(typingInterval, WatchDogGlobals.TYPING_TIMEOUT);
 	}
 
 	/** Creates a new reading interval. */
-	private void createNewReadingInterval(final DocumentActivateEvent evt) {
+	private void createNewReadingInterval(
+			final DocumentActivateOrDeactivateEvent evt) {
 		readingInterval = new ActiveReadingInterval(evt.getPart());
 		addNewIntervalHandler(readingInterval, WatchDogGlobals.READING_TIMEOUT);
 	}
