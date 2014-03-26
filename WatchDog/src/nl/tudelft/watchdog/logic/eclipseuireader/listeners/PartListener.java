@@ -1,7 +1,7 @@
 package nl.tudelft.watchdog.logic.eclipseuireader.listeners;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.DocChangeListenerAttacher;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateOrDeactivateEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.DocumentChangeListenerAttacher;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.EditorEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
 
 import org.eclipse.ui.IPartListener;
@@ -19,7 +19,7 @@ public class PartListener implements IPartListener {
 	public void partDeactivated(IWorkbenchPart part) {
 		if (part instanceof ITextEditor) {
 			DocumentNotifier
-					.fireDocumentEndFocusEvent(new DocumentActivateOrDeactivateEvent(
+					.fireDocumentEndFocusEvent(new EditorEvent(
 							part));
 		}
 	}
@@ -28,7 +28,7 @@ public class PartListener implements IPartListener {
 	public void partClosed(IWorkbenchPart part) {
 		if (part instanceof ITextEditor) {
 			DocumentNotifier
-					.fireDocumentStopEditingEvent(new DocumentActivateOrDeactivateEvent(
+					.fireDocumentStopEditingEvent(new EditorEvent(
 							part));
 		}
 	}
@@ -41,9 +41,9 @@ public class PartListener implements IPartListener {
 	public void partActivated(IWorkbenchPart part) {
 		if (part instanceof ITextEditor) {
 			DocumentNotifier
-					.fireDocumentStartFocusEvent(new DocumentActivateOrDeactivateEvent(
+					.fireDocumentStartFocusEvent(new EditorEvent(
 							part));
-			DocChangeListenerAttacher.listenToDocChanges(part);
+			DocumentChangeListenerAttacher.listenToDocumentChanges(part);
 		}
 	}
 

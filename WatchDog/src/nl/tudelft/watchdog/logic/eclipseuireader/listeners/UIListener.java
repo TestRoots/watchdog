@@ -1,7 +1,7 @@
 package nl.tudelft.watchdog.logic.eclipseuireader.listeners;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.DocChangeListenerAttacher;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateOrDeactivateEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.DocumentChangeListenerAttacher;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.EditorEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
 import nl.tudelft.watchdog.logic.interval.recorded.IRecordedIntervalSerializationManager;
 import nl.tudelft.watchdog.logic.interval.recorded.RecordedIntervalSerializationManager;
@@ -19,7 +19,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
  * listeners.
  */
 public class UIListener {
-	/** The serilization manager. */
+	/** The serialization manager. */
 	private IRecordedIntervalSerializationManager serializationManager;
 
 	/** Constructor. */
@@ -72,9 +72,10 @@ public class UIListener {
 				IWorkbenchPart activePart = activePage.getActivePart();
 				if (activePart instanceof ITextEditor) {
 					DocumentNotifier
-							.fireDocumentStartFocusEvent(new DocumentActivateOrDeactivateEvent(
+							.fireDocumentStartFocusEvent(new EditorEvent(
 									activePart));
-					DocChangeListenerAttacher.listenToDocChanges(activePart);
+					DocumentChangeListenerAttacher
+							.listenToDocumentChanges(activePart);
 				}
 			}
 		}

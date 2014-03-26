@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.logic.eclipseuireader;
 import java.util.LinkedList;
 import java.util.List;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateOrDeactivateEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.EditorEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
 
 import org.eclipse.jface.text.DocumentEvent;
@@ -13,29 +13,31 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class DocChangeListenerAttacher {
-	private static List<IWorkbenchPart> handlers = new LinkedList<IWorkbenchPart>();
+public class DocumentChangeListenerAttacher {
+	private static List<IWorkbenchPart> editorsWithChangeListeners = new LinkedList<IWorkbenchPart>();
 
-	public static void listenToDocChanges(final IWorkbenchPart part)
+	public static void listenToDocumentChanges(final IWorkbenchPart part)
 			throws IllegalArgumentException {
-		if (!handlers.contains(part)) {
+		if (!editorsWithChangeListeners.contains(part)) {
 			if (part instanceof ITextEditor) {
-				handlers.add(part);
-				final ITextEditor editor = (ITextEditor) part;
+				editorsWithChangeListeners.add(part);
+				ITextEditor editor = (ITextEditor) part;
 
-				IDocumentProvider documentProvider = editor.getDocumentProvider();
-				final IDocument document = documentProvider.getDocument(editor.getEditorInput());
+				IDocumentProvider documentProvider = editor
+						.getDocumentProvider();
+				final IDocument document = documentProvider.getDocument(editor
+						.getEditorInput());
 				document.addDocumentListener(new IDocumentListener() {
 
 					@Override
 					public void documentChanged(DocumentEvent event) {
 						DocumentNotifier
-								.fireDocumentStartEditingEvent(new DocumentActivateOrDeactivateEvent(
+								.fireDocumentStartEditingEvent(new EditorEvent(
 										part));
 						// just listen 1 time for this event to prevent overflow
 						// of events
 						document.removeDocumentListener(this);
-						handlers.remove(part);
+						editorsWithChangeListeners.remove(part);
 					}
 
 					@Override
@@ -44,7 +46,7 @@ public class DocChangeListenerAttacher {
 				});
 			} else {
 				throw new IllegalArgumentException(
-						"part was not instance of ITextEditor");
+						"Part was not instance of ITextEditor");
 			}
 		}
 
