@@ -21,7 +21,7 @@ import nl.tudelft.watchdog.logic.interval.events.IntervalNotifier;
 import nl.tudelft.watchdog.logic.interval.events.NewIntervalEvent;
 import nl.tudelft.watchdog.logic.interval.recorded.IInterval;
 import nl.tudelft.watchdog.logic.interval.recorded.RecordedInterval;
-import nl.tudelft.watchdog.ui.preferences.WatchdogPreferences;
+import nl.tudelft.watchdog.util.WatchDogGlobals;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 /**
@@ -135,20 +135,14 @@ public class IntervalManager extends IntervalNotifier {
 
 	/** Creates a new editing interval. */
 	private void createNewEditingInterval(final DocumentActivateEvent evt) {
-		ActiveTypingInterval activeInterval = new ActiveTypingInterval(
-				evt.getChangedEditor());
-		typingInterval = activeInterval;
-		addNewIntervalHandler(activeInterval, WatchdogPreferences.getInstance()
-				.getTypingTimeout());
+		typingInterval = new ActiveTypingInterval(evt.getChangedEditor());
+		addNewIntervalHandler(typingInterval, WatchDogGlobals.TYPING_TIMEOUT);
 	}
 
 	/** Creates a new reading interval. */
 	private void createNewReadingInterval(final DocumentActivateEvent evt) {
-		ActiveReadingInterval activeInterval = new ActiveReadingInterval(
-				evt.getPart());
-		readingInterval = activeInterval;
-		addNewIntervalHandler(activeInterval, WatchdogPreferences.getInstance()
-				.getTimeOutReading());
+		readingInterval = new ActiveReadingInterval(evt.getPart());
+		addNewIntervalHandler(readingInterval, WatchDogGlobals.READING_TIMEOUT);
 	}
 
 	/**

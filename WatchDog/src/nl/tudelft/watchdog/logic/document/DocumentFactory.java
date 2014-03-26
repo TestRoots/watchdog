@@ -4,7 +4,6 @@ import nl.tudelft.watchdog.logic.exceptions.ContentReaderException;
 import nl.tudelft.watchdog.logic.logging.WDLogger;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
@@ -16,9 +15,9 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class DocumentFactory {
 	/**
-	 * Creates and returns a {@link Document} from a given
+	 * Factory method that creates and returns a {@link Document} from a given
 	 * {@link IWorkbenchPart}. For this to succeed, it is necessary that the the
-	 * part is an IEditorPart.
+	 * supplied part is an IEditorPart.
 	 */
 	// TODO (MMB) This might return a document which is not alive any more (and
 	// thus has an unknown file type)
@@ -32,17 +31,17 @@ public class DocumentFactory {
 				if (editorPart.getEditorInput() instanceof IFileEditorInput) {
 					IFileEditorInput input = (IFileEditorInput) editorPart
 							.getEditorInput();
-					IFile file = input.getFile();
-					IProject activeProject = file.getProject();
+					IProject activeProject = input.getFile().getProject();
 					activeProjectName = activeProject.getName();
 				} else {
 					activeProjectName = "";
 				}
 
-				DocumentType docType = determineDocumentType(editor, editorPart);
+				DocumentType documentType = determineDocumentType(editor,
+						editorPart);
 
 				return new Document(activeProjectName, editor.getTitle(),
-						docType);
+						documentType);
 			} else {
 				throw new IllegalArgumentException("Part not an IEditorPart");
 			}

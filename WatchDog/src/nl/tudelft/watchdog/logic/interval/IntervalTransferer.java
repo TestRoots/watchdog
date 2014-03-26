@@ -40,7 +40,6 @@ public class IntervalTransferer {
 
 	/** Converts the intervals to Json. */
 	public String prepareIntervals(List<IInterval> recordedIntervals) {
-		// TODO Auto-generated method stub
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(Date.class, new DateSerializer());
 		Gson gson = gsonBuilder.create();
