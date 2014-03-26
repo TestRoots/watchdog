@@ -15,7 +15,7 @@ public class DocumentNotifier {
 	}
 
 	public static void fireDocumentStartEditingEvent(
-			DocumentActivateOrDeactivateEvent evt) {
+			EditorEvent evt) {
 		Object[] listeners = listenerList.getListenerList();
 		// Each listener occupies two elements - the first is the listener class
 		// and the second is the listener instance
@@ -28,7 +28,7 @@ public class DocumentNotifier {
 	}
 
 	public static void fireDocumentStopEditingEvent(
-			DocumentActivateOrDeactivateEvent evt) {
+			EditorEvent evt) {
 		Object[] listeners = listenerList.getListenerList();
 		// Each listener occupies two elements - the first is the listener class
 		// and the second is the listener instance
@@ -41,7 +41,7 @@ public class DocumentNotifier {
 	}
 
 	public static void fireDocumentStartFocusEvent(
-			DocumentActivateOrDeactivateEvent evt) {
+			EditorEvent evt) {
 		Object[] listeners = listenerList.getListenerList();
 		// Each listener occupies two elements - the first is the listener class
 		// and the second is the listener instance
@@ -54,7 +54,7 @@ public class DocumentNotifier {
 	}
 
 	public static void fireDocumentEndFocusEvent(
-			DocumentActivateOrDeactivateEvent evt) {
+			EditorEvent evt) {
 		Object[] listeners = listenerList.getListenerList();
 		// Each listener occupies two elements - the first is the listener class
 		// and the second is the listener instance
