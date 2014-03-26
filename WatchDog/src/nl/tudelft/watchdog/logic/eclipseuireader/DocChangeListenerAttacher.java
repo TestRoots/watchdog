@@ -23,9 +23,9 @@ public class DocChangeListenerAttacher {
 				handlers.add(part);
 				final ITextEditor editor = (ITextEditor) part;
 
-				IDocumentProvider dp = editor.getDocumentProvider();
-				final IDocument doc = dp.getDocument(editor.getEditorInput());
-				doc.addDocumentListener(new IDocumentListener() {
+				IDocumentProvider documentProvider = editor.getDocumentProvider();
+				final IDocument document = documentProvider.getDocument(editor.getEditorInput());
+				document.addDocumentListener(new IDocumentListener() {
 
 					@Override
 					public void documentChanged(DocumentEvent event) {
@@ -34,7 +34,7 @@ public class DocChangeListenerAttacher {
 										part));
 						// just listen 1 time for this event to prevent overflow
 						// of events
-						doc.removeDocumentListener(this);
+						document.removeDocumentListener(this);
 						handlers.remove(part);
 					}
 

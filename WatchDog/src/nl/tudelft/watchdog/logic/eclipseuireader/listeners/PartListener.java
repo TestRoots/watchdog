@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.eclipseuireader.componentlisteners;
+package nl.tudelft.watchdog.logic.eclipseuireader.listeners;
 
 import nl.tudelft.watchdog.logic.eclipseuireader.DocChangeListenerAttacher;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateOrDeactivateEvent;
@@ -8,9 +8,7 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-/**
- *
- */
+/** A listener on parts. */
 public class PartListener implements IPartListener {
 	@Override
 	public void partOpened(IWorkbenchPart part) {

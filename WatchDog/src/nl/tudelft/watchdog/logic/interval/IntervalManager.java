@@ -6,10 +6,10 @@ import java.util.List;
 
 import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentFactory;
-import nl.tudelft.watchdog.logic.eclipseuireader.UIListener;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateOrDeactivateEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.IDocumentAttentionListener;
+import nl.tudelft.watchdog.logic.eclipseuireader.listeners.UIListener;
 import nl.tudelft.watchdog.logic.interval.active.ActiveIntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.ActiveReadingInterval;
 import nl.tudelft.watchdog.logic.interval.active.ActiveTypingInterval;
