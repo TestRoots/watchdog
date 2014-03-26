@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.logic.interval.activityCheckers;
 
 import java.util.TimerTask;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateOrDeactivateEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
 
 import org.eclipse.swt.custom.CaretEvent;
@@ -130,7 +130,7 @@ public class ReadingCheckerTask extends TimerTask {
 						public void caretMoved(CaretEvent event) {
 							// cursor place changed
 							DocumentNotifier
-									.fireDocumentStartFocusEvent(new DocumentActivateEvent(
+									.fireDocumentStartFocusEvent(new DocumentActivateOrDeactivateEvent(
 											workbenchPart));
 							// listen just once to not get millions
 							// of events fired
@@ -149,7 +149,7 @@ public class ReadingCheckerTask extends TimerTask {
 								@Override
 								public void paintControl(PaintEvent e) {
 									DocumentNotifier
-											.fireDocumentStartFocusEvent(new DocumentActivateEvent(
+											.fireDocumentStartFocusEvent(new DocumentActivateOrDeactivateEvent(
 													workbenchPart));
 									// listen just once to not get millions
 									// of events fired

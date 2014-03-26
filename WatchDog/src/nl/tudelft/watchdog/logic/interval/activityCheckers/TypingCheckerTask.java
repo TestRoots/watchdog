@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.logic.interval.activityCheckers;
 
 import java.util.TimerTask;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateOrDeactivateEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
 import nl.tudelft.watchdog.logic.exceptions.ContentReaderException;
 import nl.tudelft.watchdog.logic.exceptions.EditorClosedPrematurelyException;
@@ -73,7 +73,7 @@ public class TypingCheckerTask extends TimerTask {
 				// listen to this event just once, notify that the document is
 				// activated, then remove this listener
 				DocumentNotifier
-						.fireDocumentStartEditingEvent(new DocumentActivateEvent(
+						.fireDocumentStartEditingEvent(new DocumentActivateOrDeactivateEvent(
 								workbenchPart));
 				document.removeDocumentListener(this);
 			}

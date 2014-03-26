@@ -1,7 +1,7 @@
 package nl.tudelft.watchdog.logic.eclipseuireader;
 
 import nl.tudelft.watchdog.logic.eclipseuireader.componentlisteners.WindowListener;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateOrDeactivateEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
 import nl.tudelft.watchdog.logic.interval.recorded.IRecordedIntervalSerializationManager;
 import nl.tudelft.watchdog.logic.interval.recorded.RecordedIntervalSerializationManager;
@@ -69,7 +69,7 @@ public class UIListener {
 				IWorkbenchPart activePart = activePage.getActivePart();
 				if (activePart instanceof ITextEditor) {
 					DocumentNotifier
-							.fireDocumentStartFocusEvent(new DocumentActivateEvent(
+							.fireDocumentStartFocusEvent(new DocumentActivateOrDeactivateEvent(
 									activePart));
 					DocChangeListenerAttacher.listenToDocChanges(activePart);
 				}

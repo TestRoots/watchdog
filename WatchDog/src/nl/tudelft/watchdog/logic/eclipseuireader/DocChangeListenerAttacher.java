@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.logic.eclipseuireader;
 import java.util.LinkedList;
 import java.util.List;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateOrDeactivateEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
 
 import org.eclipse.jface.text.DocumentEvent;
@@ -30,7 +30,7 @@ public class DocChangeListenerAttacher {
 					@Override
 					public void documentChanged(DocumentEvent event) {
 						DocumentNotifier
-								.fireDocumentStartEditingEvent(new DocumentActivateEvent(
+								.fireDocumentStartEditingEvent(new DocumentActivateOrDeactivateEvent(
 										part));
 						// just listen 1 time for this event to prevent overflow
 						// of events
