@@ -1,8 +1,9 @@
-package nl.tudelft.watchdog.logic.eclipseuireader.listeners;
+package nl.tudelft.watchdog.logic.eclipseuireader.events.listeners;
 
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IWorkbenchPage;
 
+// TODO (MMB) Causes an exception when run with existing editors in the IDE (unhandled event loop)
 /** A listener on Pages. */
 public class PageListener implements IPageListener {
 

@@ -15,7 +15,6 @@ public class StartUpHandler implements IStartup {
 	@Override
 	public void earlyStartup() {
 		WatchDogGlobals.isActive = true;
-
 		IntervalManager.getInstance();
 		WatchDogLogger.setUpLogger();
 	}

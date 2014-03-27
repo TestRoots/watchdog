@@ -1,7 +1,5 @@
 package nl.tudelft.watchdog.logic.interval.activityCheckers;
 
-import java.util.TimerTask;
-
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
 import nl.tudelft.watchdog.logic.exceptions.ContentReaderException;
 import nl.tudelft.watchdog.logic.exceptions.EditorClosedPrematurelyException;
@@ -16,7 +14,7 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /** A task for checking whether the user is typing. */
-public class TypingCheckerTask extends TimerTask {
+public class TypingCheckerTask extends CheckerTimerTask {
 
 	/** An update checker. */
 	private IUpdateChecker checker;

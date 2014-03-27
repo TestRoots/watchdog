@@ -8,7 +8,7 @@ import java.util.Observer;
 
 import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentFactory;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.EventObservable;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObservable;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.EditorEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusEndEditorEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
@@ -16,10 +16,11 @@ import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.StartEditingEdito
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.StopEditingEditorEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.interval.ClosingIntervalEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.interval.NewIntervalEvent;
-import nl.tudelft.watchdog.logic.eclipseuireader.listeners.UIListener;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.listeners.UIListener;
 import nl.tudelft.watchdog.logic.interval.active.ActiveIntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.ActiveReadingInterval;
 import nl.tudelft.watchdog.logic.interval.active.ActiveTypingInterval;
+import nl.tudelft.watchdog.logic.interval.active.ActiveUserActivityIntervalBase;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallBack;
 import nl.tudelft.watchdog.logic.interval.recorded.RecordedInterval;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
@@ -33,17 +34,14 @@ import nl.tudelft.watchdog.util.WatchDogUtils;
  */
 public class IntervalManager {
 
+	/** A list of currently opened intervals. */
+	private List<ActiveIntervalBase> intervals = new ArrayList<ActiveIntervalBase>();
+
 	/** Notifies subscribers of editorEvents. */
-	private EventObservable editorEventObservable;
+	private ImmediateNotifyingObservable editorEventObservable;
 
 	/** Notifies subscribers of intervalEvents. */
-	private EventObservable intervalEventObservable;
-
-	/** The currently open {@link ActiveReadingInterval}. */
-	private ActiveReadingInterval readingInterval;
-
-	/** The currently open {@link ActiveTypingInterval}. */
-	private ActiveTypingInterval typingInterval;
+	private ImmediateNotifyingObservable intervalEventObservable;
 
 	/** The UI listener */
 	private UIListener uiListener;
@@ -61,8 +59,8 @@ public class IntervalManager {
 	private IntervalManager() {
 		recordedIntervals = new ArrayList<RecordedInterval>();
 		documentFactory = new DocumentFactory();
-		editorEventObservable = new EventObservable();
-		intervalEventObservable = new EventObservable();
+		editorEventObservable = new ImmediateNotifyingObservable();
+		intervalEventObservable = new ImmediateNotifyingObservable();
 		uiListener = new UIListener();
 		addEditorObserversAndUIListeners();
 	}
@@ -78,9 +76,7 @@ public class IntervalManager {
 		return instance;
 	}
 
-	/**
-	 * Creates change listeners for different document events.
-	 */
+	/** Creates change listeners for different document events. */
 	private void addEditorObserversAndUIListeners() {
 		editorEventObservable.addObserver(new editorEventObserver());
 		uiListener.attachListeners();
@@ -102,15 +98,10 @@ public class IntervalManager {
 	}
 
 	/** Creates a new editing interval. */
-	private void createNewEditingInterval(final EditorEvent evt) {
-		typingInterval = new ActiveTypingInterval(evt.getTextEditor());
-		addNewIntervalHandler(typingInterval, WatchDogGlobals.TYPING_TIMEOUT);
-	}
-
-	/** Creates a new reading interval. */
-	private void createNewReadingInterval(final EditorEvent evt) {
-		readingInterval = new ActiveReadingInterval(evt.getPart());
-		addNewIntervalHandler(readingInterval, WatchDogGlobals.READING_TIMEOUT);
+	private void createNewInterval(ActiveIntervalBase interval, int timeout) {
+		// TODO (MMB) shouldn't this handler be added to the interval itself?
+		intervals.add(interval);
+		addNewIntervalHandler(interval, timeout);
 	}
 
 	/**
@@ -150,21 +141,30 @@ public class IntervalManager {
 
 	/** Closes all currently open intervals. */
 	public void closeAllCurrentIntervals() {
-		// close editing interval
-		if (typingInterval != null) {
-			closeInterval(typingInterval);
-		}
-		// close reading interval
-		if (readingInterval != null) {
-			closeInterval(readingInterval);
+		for (ActiveIntervalBase interval : intervals) {
+			closeInterval(interval);
 		}
 	}
 
 	/**
 	 * @return editorEventObservable
 	 */
-	public EventObservable getEditorObserveable() {
+	public ImmediateNotifyingObservable getEditorObserveable() {
 		return editorEventObservable;
+	}
+
+	/**
+	 * @return the single ActivityInterval that is actually a
+	 *         UserActivityInterval. There can only be one such interval at any
+	 *         given time. If there is none, <code>null</code>.
+	 */
+	private ActiveIntervalBase getUserActivityIntervalIfAny() {
+		for (ActiveIntervalBase interval : intervals) {
+			if (interval instanceof ActiveUserActivityIntervalBase) {
+				return interval;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -173,42 +173,57 @@ public class IntervalManager {
 	 */
 	private final class editorEventObserver implements Observer {
 		@Override
-		public void update(Observable o, Object event) {
+		public void update(Observable observable, Object event) {
 			if (!(event instanceof EditorEvent)) {
 				return;
 			}
 			EditorEvent editorEvent = (EditorEvent) event;
+			ActiveIntervalBase userActivityInterval = getUserActivityIntervalIfAny();
 			if (event instanceof StartEditingEditorEvent) {
-				// create a new active interval when doc is new
-				if (typingInterval == null || typingInterval.isClosed()) {
-					createNewEditingInterval(editorEvent);
-				} else if (typingInterval.getEditor() != editorEvent
+				// create a new active interval when document is new
+				if (userActivityInterval == null
+						|| userActivityInterval.isClosed()) {
+					createNewActiveTypingInterval(editorEvent);
+				} else if (userActivityInterval.getEditor() != editorEvent
 						.getTextEditor()) {
-					closeInterval(typingInterval);
-					createNewEditingInterval(editorEvent);
+					closeInterval(userActivityInterval);
+					createNewActiveTypingInterval(editorEvent);
 				}
-			} else if (event instanceof StopEditingEditorEvent) {
-				if (typingInterval != null
-						&& editorEvent.getTextEditor() == typingInterval
+			} else if (editorEvent instanceof StopEditingEditorEvent) {
+				if (userActivityInterval != null
+						&& editorEvent.getTextEditor() == userActivityInterval
 								.getEditor()) {
-					closeInterval(typingInterval);
+					closeInterval(userActivityInterval);
 				}
-			} else if (event instanceof FocusStartEditorEvent) {
-				// create a new active interval when doc is new
-				if (readingInterval == null || readingInterval.isClosed()) {
-					createNewReadingInterval(editorEvent);
-				} else if (readingInterval.getEditor() != editorEvent
+			} else if (editorEvent instanceof FocusStartEditorEvent) {
+				// create a new active interval when document is new
+				if (userActivityInterval == null
+						|| userActivityInterval.isClosed()) {
+					createNewActiveReadingInterval(editorEvent);
+				} else if (userActivityInterval.getEditor() != editorEvent
 						.getTextEditor()) {
-					closeInterval(readingInterval);
-					createNewReadingInterval(editorEvent);
+					closeInterval(userActivityInterval);
+					createNewActiveReadingInterval(editorEvent);
 				}
-			} else if (event instanceof FocusEndEditorEvent) {
-				if (readingInterval != null
-						&& editorEvent.getTextEditor() == readingInterval
+			} else if (editorEvent instanceof FocusEndEditorEvent) {
+				if (userActivityInterval != null
+						&& editorEvent.getTextEditor() == userActivityInterval
 								.getEditor()) {
-					closeInterval(readingInterval);
+					closeInterval(userActivityInterval);
 				}
 			}
+		}
+
+		/** Creates a new active typing interval from the supplied event. */
+		private void createNewActiveTypingInterval(EditorEvent event) {
+			createNewInterval(new ActiveTypingInterval(event.getPart()),
+					WatchDogGlobals.TYPING_TIMEOUT);
+		}
+
+		/** Creates a new active reading interval from the supplied event. */
+		private void createNewActiveReadingInterval(EditorEvent event) {
+			createNewInterval(new ActiveReadingInterval(event.getPart()),
+					WatchDogGlobals.READING_TIMEOUT);
 		}
 	}
 }
