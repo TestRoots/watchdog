@@ -1,16 +1,15 @@
-package nl.tudelft.watchdog.logic.interval;
+package nl.tudelft.watchdog.ui.infoDialog;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import nl.tudelft.watchdog.logic.interval.ActivityType;
 import nl.tudelft.watchdog.logic.interval.recorded.RecordedInterval;
 
 import org.joda.time.Duration;
 
-/**
- * Statistical computations on intervals.
- */
+/** Statistical computations on intervals. */
 public class IntervalStatistics {
 
 	/** The intervals */

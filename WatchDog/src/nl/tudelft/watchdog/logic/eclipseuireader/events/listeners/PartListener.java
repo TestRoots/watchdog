@@ -1,7 +1,7 @@
-package nl.tudelft.watchdog.logic.eclipseuireader.listeners;
+package nl.tudelft.watchdog.logic.eclipseuireader.events.listeners;
 
 import nl.tudelft.watchdog.logic.eclipseuireader.DocumentChangeListenerAttacher;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.EventObservable;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObservable;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusEndEditorEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.StopEditingEditorEvent;
@@ -20,7 +20,7 @@ public class PartListener implements IPartListener {
 	}
 
 	/** The eventObservable. */
-	private EventObservable editorObservable;
+	private ImmediateNotifyingObservable editorObservable;
 
 	@Override
 	public void partOpened(IWorkbenchPart part) {

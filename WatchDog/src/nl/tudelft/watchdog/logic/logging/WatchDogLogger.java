@@ -11,39 +11,28 @@ import java.util.logging.SimpleFormatter;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.ui.preferences.WatchdogPreferences;
 
-/**
- * Wrapper class for providing logging capability.
- */
+/** Wrapper class for providing logging capability. */
 public class WatchDogLogger {
-
-	/** The singleton instance. */
-	WatchDogLogger instance = null;
-
-	/** Private Constructor. */
-	private WatchDogLogger() {
-	}
-
-	/**
-	 * Returns and, if not already existent, creates the single WatchDogLogger
-	 * instance.
-	 */
-	public WatchDogLogger getInstance() {
-		if (instance == null) {
-			instance = new WatchDogLogger();
-		}
-		return instance;
-	}
 
 	/** The logger instance. */
 	private static Logger logger = Logger.getLogger(WatchDogLogger.class
 			.getName());
 
+	/** Is the logger already setup? */
+	private static boolean isLoggerSetup = false;
+
+	/** Private Constructor. */
+	private WatchDogLogger() {
+	}
+
 	/** Sets up the logger, if logging is enabled in the WatchDog Preferences. */
 	public static void setUpLogger() {
-		if (!WatchdogPreferences.getInstance().isLoggingEnabled()) {
+		if (!WatchdogPreferences.getInstance().isLoggingEnabled()
+				|| isLoggerSetup) {
 			return;
 		}
 
+		isLoggerSetup = true;
 		logInfo("Starting up...");
 		IntervalManager.getInstance().addIntervalListener(
 				new IntervalLoggerObserver());

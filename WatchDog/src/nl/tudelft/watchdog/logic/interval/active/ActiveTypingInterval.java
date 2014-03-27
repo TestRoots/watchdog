@@ -12,10 +12,7 @@ import org.eclipse.ui.IWorkbenchPart;
  * An interval for when the user is currently typing, connected to the
  * {@link ActivityType#Typing} activity.
  */
-public class ActiveTypingInterval extends ActiveIntervalBase {
-
-	/** The typing task. */
-	private TypingCheckerTask task;
+public class ActiveTypingInterval extends ActiveUserActivityIntervalBase {
 
 	/** Constructor. */
 	public ActiveTypingInterval(IWorkbenchPart part) {
@@ -35,14 +32,6 @@ public class ActiveTypingInterval extends ActiveIntervalBase {
 	@Override
 	public ActivityType getActivityType() {
 		return ActivityType.Typing;
-	}
-
-	@Override
-	public void listenForReactivation() {
-		// TODO (MMB) task would be null if addTimeoutListener had not been
-		// called before listenForReactivation ?
-		assert (task != null);
-		task.createListenerForReactivation();
 	}
 
 }

@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.eclipseuireader.listeners;
+package nl.tudelft.watchdog.logic.eclipseuireader.events.listeners;
 
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchPage;

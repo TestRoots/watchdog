@@ -1,7 +1,5 @@
 package nl.tudelft.watchdog.logic.interval.activityCheckers;
 
-import java.util.TimerTask;
-
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 
@@ -16,10 +14,10 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /** A task for when the user is reading. */
-public class ReadingCheckerTask extends TimerTask {
+public class ReadingCheckerTask extends CheckerTimerTask {
 
 	/** The text. */
-	private final StyledText styledText;
+	final StyledText styledText;
 
 	/** Whether the user is still actively reading. */
 	private boolean isActive;
@@ -37,7 +35,7 @@ public class ReadingCheckerTask extends TimerTask {
 	private ITextEditor editor;
 
 	/** Workbench part. */
-	private IWorkbenchPart workbenchPart;
+	IWorkbenchPart workbenchPart;
 
 	/** Constructor. */
 	public ReadingCheckerTask(IWorkbenchPart part, OnInactiveCallBack callback) {

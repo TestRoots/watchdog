@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.logic.interval.active;
 import java.util.Timer;
 
 import nl.tudelft.watchdog.logic.interval.ActivityType;
+import nl.tudelft.watchdog.logic.interval.activityCheckers.CheckerTimerTask;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallBack;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.ReadingCheckerTask;
 
@@ -10,7 +11,7 @@ import org.eclipse.ui.IWorkbenchPart;
 
 public class ActiveReadingInterval extends ActiveIntervalBase {
 
-	private ReadingCheckerTask task;
+	private CheckerTimerTask task;
 
 	/**
 	 * @param editor
