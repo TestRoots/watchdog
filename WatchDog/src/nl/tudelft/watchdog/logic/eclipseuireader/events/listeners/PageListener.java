@@ -1,11 +1,20 @@
 package nl.tudelft.watchdog.logic.eclipseuireader.events.listeners;
 
+import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObservable;
+
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IWorkbenchPage;
 
-// TODO (MMB) Causes an exception when run with existing editors in the IDE (unhandled event loop)
 /** A listener on Pages. */
 public class PageListener implements IPageListener {
+
+	/** The editorObservable. */
+	private ImmediateNotifyingObservable editorObservable;
+
+	/** Constructor. */
+	public PageListener(ImmediateNotifyingObservable editorObservable) {
+		this.editorObservable = editorObservable;
+	}
 
 	@Override
 	public void pageOpened(IWorkbenchPage page) {
@@ -21,7 +30,7 @@ public class PageListener implements IPageListener {
 	}
 
 	/** Adds a part listener for newly added parts */
-	static void addPartListener(IWorkbenchPage page) {
-		page.addPartListener(new PartListener());
+	public void addPartListener(IWorkbenchPage page) {
+		page.addPartListener(new PartListener(editorObservable));
 	}
 }

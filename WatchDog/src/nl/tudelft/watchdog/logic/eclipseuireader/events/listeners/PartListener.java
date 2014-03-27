@@ -5,7 +5,6 @@ import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObserv
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusEndEditorEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.StopEditingEditorEvent;
-import nl.tudelft.watchdog.logic.interval.IntervalManager;
 
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -15,8 +14,8 @@ import org.eclipse.ui.texteditor.ITextEditor;
 public class PartListener implements IPartListener {
 
 	/** Constructor. */
-	public PartListener() {
-		editorObservable = IntervalManager.getInstance().getEditorObserveable();
+	public PartListener(ImmediateNotifyingObservable editorObservable) {
+		this.editorObservable = editorObservable;
 	}
 
 	/** The eventObservable. */

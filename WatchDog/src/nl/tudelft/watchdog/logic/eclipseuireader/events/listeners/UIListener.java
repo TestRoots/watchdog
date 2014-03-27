@@ -3,7 +3,6 @@ package nl.tudelft.watchdog.logic.eclipseuireader.events.listeners;
 import nl.tudelft.watchdog.logic.eclipseuireader.DocumentChangeListenerAttacher;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObservable;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
-import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.recorded.RecordedIntervalSerializationManager;
 
 import org.eclipse.ui.IWorkbench;
@@ -22,8 +21,16 @@ public class UIListener {
 	/** The serialization manager. */
 	private RecordedIntervalSerializationManager serializationManager;
 
+	/** The editorObservable. */
+	private ImmediateNotifyingObservable editorObservable;
+
+	/** The window listener bound to this UI listener. */
+	private WindowListener windowListener;
+
 	/** Constructor. */
-	public UIListener() {
+	public UIListener(ImmediateNotifyingObservable editorObservable) {
+		this.editorObservable = editorObservable;
+		windowListener = new WindowListener(editorObservable);
 		serializationManager = new RecordedIntervalSerializationManager();
 	}
 
@@ -33,7 +40,7 @@ public class UIListener {
 	 */
 	public void attachListeners() {
 		addShutdownListeners();
-		PlatformUI.getWorkbench().addWindowListener(new WindowListener());
+		PlatformUI.getWorkbench().addWindowListener(windowListener);
 		addListenersToAlreadyOpenWindows();
 	}
 
@@ -65,14 +72,12 @@ public class UIListener {
 	private void addListenersToAlreadyOpenWindows() {
 		for (IWorkbenchWindow window : PlatformUI.getWorkbench()
 				.getWorkbenchWindows()) {
-			WindowListener.addPageListener(window);
+			windowListener.addPageListener(window);
 			IWorkbenchPage activePage = window.getActivePage();
 
 			if (activePage != null) {
 				IWorkbenchPart activePart = activePage.getActivePart();
 				if (activePart instanceof ITextEditor) {
-					ImmediateNotifyingObservable editorObservable = IntervalManager
-							.getInstance().getEditorObserveable();
 					editorObservable.notifyObservers(new FocusStartEditorEvent(
 							activePart));
 					DocumentChangeListenerAttacher
