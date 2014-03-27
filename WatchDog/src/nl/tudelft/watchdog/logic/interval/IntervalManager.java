@@ -61,7 +61,7 @@ public class IntervalManager {
 		documentFactory = new DocumentFactory();
 		editorEventObservable = new ImmediateNotifyingObservable();
 		intervalEventObservable = new ImmediateNotifyingObservable();
-		uiListener = new UIListener();
+		uiListener = new UIListener(editorEventObservable);
 		addEditorObserversAndUIListeners();
 	}
 
@@ -150,6 +150,7 @@ public class IntervalManager {
 	 * @return editorEventObservable
 	 */
 	public ImmediateNotifyingObservable getEditorObserveable() {
+		// TODO (MMB) herein lies the problem - is actually called twice.
 		return editorEventObservable;
 	}
 
