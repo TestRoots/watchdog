@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'mongo'
 gem 'sinatra'
 gem 'sinatra-contrib'
+gem 'bson_ext'
 
 group :test do
   gem 'rspec'
