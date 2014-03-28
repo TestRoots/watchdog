@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.interval;
+package nl.tudelft.watchdog.logic.interval.active;
 
 import com.google.gson.annotations.SerializedName;
 

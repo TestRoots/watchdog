@@ -3,7 +3,6 @@ package nl.tudelft.watchdog.logic.interval.active;
 import java.util.Date;
 import java.util.Timer;
 
-import nl.tudelft.watchdog.logic.interval.ActivityType;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallBack;
 
 import org.eclipse.ui.IWorkbenchPart;
