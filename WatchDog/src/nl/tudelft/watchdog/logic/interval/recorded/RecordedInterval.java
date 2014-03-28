@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import nl.tudelft.watchdog.logic.document.Document;
-import nl.tudelft.watchdog.logic.interval.ActivityType;
+import nl.tudelft.watchdog.logic.interval.active.ActivityType;
 
 import org.joda.time.Duration;
 import org.joda.time.Period;

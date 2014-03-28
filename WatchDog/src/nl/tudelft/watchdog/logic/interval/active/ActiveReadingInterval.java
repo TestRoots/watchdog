@@ -2,7 +2,6 @@ package nl.tudelft.watchdog.logic.interval.active;
 
 import java.util.Timer;
 
-import nl.tudelft.watchdog.logic.interval.ActivityType;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.CheckerTimerTask;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallBack;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.ReadingCheckerTask;

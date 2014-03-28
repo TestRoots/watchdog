@@ -8,8 +8,8 @@ import java.util.List;
 
 import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentType;
-import nl.tudelft.watchdog.logic.interval.ActivityType;
 import nl.tudelft.watchdog.logic.interval.IntervalsToXMLWriter;
+import nl.tudelft.watchdog.logic.interval.active.ActivityType;
 import nl.tudelft.watchdog.logic.interval.recorded.RecordedInterval;
 
 import org.junit.Assert;

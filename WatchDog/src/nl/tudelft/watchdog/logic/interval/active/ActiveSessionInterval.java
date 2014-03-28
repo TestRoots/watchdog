@@ -1,6 +1,5 @@
 package nl.tudelft.watchdog.logic.interval.active;
 
-import nl.tudelft.watchdog.logic.interval.ActivityType;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallBack;
 
 /** Interval for the active session. */
