@@ -1,11 +1,12 @@
-package nl.tudelft.watchdog.logic.interval.recorded;
+package nl.tudelft.watchdog.logic.interval.active;
 
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Timer;
 
 import nl.tudelft.watchdog.logic.document.Document;
-import nl.tudelft.watchdog.logic.interval.active.ActivityType;
+import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallBack;
 
 import org.joda.time.Duration;
 import org.joda.time.Period;
@@ -13,12 +14,43 @@ import org.joda.time.format.PeriodFormat;
 
 import com.google.gson.annotations.SerializedName;
 
-/** A recording interval, associated with a {@link Document}. */
-public class RecordedInterval implements Serializable {
+public abstract class IntervalBase implements Serializable {
+	protected Timer checkForChangeTimer;
+	protected Date timeOfCreation;
+	protected boolean isClosed;
 
-	/**
-	 * The serialization id.
-	 */
+	/** Constructor. */
+	public IntervalBase() {
+		this.timeOfCreation = new Date();
+		this.isClosed = false;
+	}
+
+	public Date getTimeOfCreation() {
+		return timeOfCreation;
+	}
+
+	public boolean isClosed() {
+		return isClosed;
+	}
+
+	public Timer getTimer() {
+		return checkForChangeTimer;
+	}
+
+	public void closeInterval() {
+		isClosed = true;
+		checkForChangeTimer.cancel();
+		listenForReactivation();
+	}
+
+	public abstract void listenForReactivation();
+
+	public abstract ActivityType getActivityType();
+
+	public abstract void addTimeoutListener(long timeout,
+			OnInactiveCallBack callbackWhenFinished);
+
+	/** The serialization id. */
 	private static final long serialVersionUID = 3L;
 
 	/** The document associated with this {@link RecordedInterval}. */
@@ -39,17 +71,7 @@ public class RecordedInterval implements Serializable {
 
 	/** Legacy debug flag. */
 	@SerializedName("LEGACY_DEBUGMODE")
-	private boolean isDebugMode;
-
-	/** Constructor. */
-	public RecordedInterval(Document document, Date start, Date end,
-			ActivityType activityType, boolean debugMode) {
-		this.document = document;
-		this.start = start;
-		this.end = end;
-		this.activityType = activityType;
-		this.isDebugMode = debugMode;
-	}
+	private boolean isInDebugMode;
 
 	public Document getDocument() {
 		return document;
@@ -73,12 +95,8 @@ public class RecordedInterval implements Serializable {
 		return PeriodFormat.getDefault().print(period);
 	}
 
-	public ActivityType getActivityType() {
-		return activityType;
-	}
-
 	public boolean isDebugMode() {
-		return isDebugMode;
+		return isInDebugMode;
 	}
 
 	// Used to also support deserialization of older versions
@@ -87,14 +105,21 @@ public class RecordedInterval implements Serializable {
 		// structure!
 		try {
 			ois.defaultReadObject();
-			setDefaultValues();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void setDefaultValues() {
+	public void setDocument(Document document) {
+		this.document = document;
+	}
 
+	public void setEndTime(Date date) {
+		this.end = date;
+	}
+
+	public void setIsInDebugMode(boolean isInDebugMode) {
+		this.isInDebugMode = isInDebugMode;
 	}
 
 }

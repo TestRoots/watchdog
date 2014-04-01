@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.logic.eclipseuireader.events.listeners;
 import nl.tudelft.watchdog.logic.eclipseuireader.DocumentChangeListenerAttacher;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObservable;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
-import nl.tudelft.watchdog.logic.interval.recorded.RecordedIntervalSerializationManager;
+import nl.tudelft.watchdog.logic.interval.active.IntervalSerializationManager;
 
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
@@ -19,7 +19,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class UIListener {
 	/** The serialization manager. */
-	private RecordedIntervalSerializationManager serializationManager;
+	private IntervalSerializationManager serializationManager;
 
 	/** The editorObservable. */
 	private ImmediateNotifyingObservable editorObservable;
@@ -31,7 +31,7 @@ public class UIListener {
 	public UIListener(ImmediateNotifyingObservable editorObservable) {
 		this.editorObservable = editorObservable;
 		windowListener = new WindowListener(editorObservable);
-		serializationManager = new RecordedIntervalSerializationManager();
+		serializationManager = new IntervalSerializationManager();
 	}
 
 	/**

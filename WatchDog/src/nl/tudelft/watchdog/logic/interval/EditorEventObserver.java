@@ -8,9 +8,9 @@ import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusEndEditorEve
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.StartEditingEditorEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.StopEditingEditorEvent;
-import nl.tudelft.watchdog.logic.interval.active.ActiveIntervalBase;
-import nl.tudelft.watchdog.logic.interval.active.ActiveReadingInterval;
-import nl.tudelft.watchdog.logic.interval.active.ActiveTypingInterval;
+import nl.tudelft.watchdog.logic.interval.active.ReadingInterval;
+import nl.tudelft.watchdog.logic.interval.active.TypingInterval;
+import nl.tudelft.watchdog.logic.interval.active.UserActivityIntervalBase;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 /**
@@ -32,7 +32,7 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
 			return;
 		}
 		EditorEvent editorEvent = (EditorEvent) event;
-		ActiveIntervalBase userActivityInterval = this.intervalManager
+		UserActivityIntervalBase userActivityInterval = intervalManager
 				.getUserActivityIntervalIfAny();
 		if (event instanceof StartEditingEditorEvent) {
 			// create a new active interval when document is new
@@ -40,14 +40,14 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
 				createNewActiveTypingInterval(editorEvent);
 			} else if (userActivityInterval.getEditor() != editorEvent
 					.getTextEditor()) {
-				this.intervalManager.closeInterval(userActivityInterval);
+				intervalManager.closeInterval(userActivityInterval);
 				createNewActiveTypingInterval(editorEvent);
 			}
 		} else if (editorEvent instanceof StopEditingEditorEvent) {
 			if (userActivityInterval != null
 					&& editorEvent.getTextEditor() == userActivityInterval
 							.getEditor()) {
-				this.intervalManager.closeInterval(userActivityInterval);
+				intervalManager.closeInterval(userActivityInterval);
 			}
 		} else if (editorEvent instanceof FocusStartEditorEvent) {
 			// create a new active interval when document is new
@@ -55,29 +55,29 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
 				createNewActiveReadingInterval(editorEvent);
 			} else if (userActivityInterval.getEditor() != editorEvent
 					.getTextEditor()) {
-				this.intervalManager.closeInterval(userActivityInterval);
+				intervalManager.closeInterval(userActivityInterval);
 				createNewActiveReadingInterval(editorEvent);
 			}
 		} else if (editorEvent instanceof FocusEndEditorEvent) {
 			if (userActivityInterval != null
 					&& editorEvent.getTextEditor() == userActivityInterval
 							.getEditor()) {
-				this.intervalManager.closeInterval(userActivityInterval);
+				intervalManager.closeInterval(userActivityInterval);
 			}
 		}
 	}
 
 	/** Creates a new active typing interval from the supplied event. */
 	private void createNewActiveTypingInterval(EditorEvent event) {
-		this.intervalManager.createNewInterval(
-				new ActiveTypingInterval(event.getPart()),
+		intervalManager.createNewInterval(
+				new TypingInterval(event.getPart()),
 				WatchDogGlobals.TYPING_TIMEOUT);
 	}
 
 	/** Creates a new active reading interval from the supplied event. */
 	private void createNewActiveReadingInterval(EditorEvent event) {
-		this.intervalManager.createNewInterval(
-				new ActiveReadingInterval(event.getPart()),
+		intervalManager.createNewInterval(
+				new ReadingInterval(event.getPart()),
 				WatchDogGlobals.READING_TIMEOUT);
 	}
 }

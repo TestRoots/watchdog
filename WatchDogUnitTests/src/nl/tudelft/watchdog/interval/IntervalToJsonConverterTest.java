@@ -8,8 +8,9 @@ import java.util.Date;
 import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentType;
 import nl.tudelft.watchdog.logic.interval.IntervalTransferer;
-import nl.tudelft.watchdog.logic.interval.active.ActivityType;
-import nl.tudelft.watchdog.logic.interval.recorded.RecordedInterval;
+import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
+import nl.tudelft.watchdog.logic.interval.active.ReadingInterval;
+import nl.tudelft.watchdog.logic.interval.active.UserActivityIntervalBase;
 
 import org.junit.Test;
 
@@ -18,15 +19,16 @@ import org.junit.Test;
  */
 public class IntervalToJsonConverterTest {
 
-	/**
-	 * Tests the format of the returned Json representation.
-	 */
+	/** Tests the format of the returned Json representation. */
 	@Test
 	public void testJsonRepresentation() {
-		ArrayList<RecordedInterval> intervals = new ArrayList<RecordedInterval>();
-		intervals.add(new RecordedInterval(new Document("Project",
-				"Production.java", DocumentType.PRODUCTION), new Date(1),
-				new Date(2), ActivityType.Reading, false));
+		ArrayList<IntervalBase> intervals = new ArrayList<IntervalBase>();
+
+		UserActivityIntervalBase ac = new ReadingInterval(null);
+		ac.setDocument(new Document("Project", "Production.java",
+				DocumentType.PRODUCTION));
+		ac.setEndTime(new Date(2));
+		ac.setIsInDebugMode(false);
 
 		IntervalTransferer intervalTransferer = new IntervalTransferer();
 		assertEquals(

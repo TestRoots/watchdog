@@ -3,12 +3,7 @@ package nl.tudelft.watchdog.logic.interval.active;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallBack;
 
 /** Interval for the active session. */
-public class ActiveSessionInterval extends ActiveIntervalBase {
-
-	/** Constructor. */
-	public ActiveSessionInterval() {
-		super(null);
-	}
+public class SessionInterval extends IntervalBase {
 
 	@Override
 	public void listenForReactivation() {

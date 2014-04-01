@@ -11,10 +11,10 @@ import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObserv
 import nl.tudelft.watchdog.logic.eclipseuireader.events.interval.ClosingIntervalEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.interval.NewIntervalEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.listeners.UIListener;
-import nl.tudelft.watchdog.logic.interval.active.ActiveIntervalBase;
-import nl.tudelft.watchdog.logic.interval.active.ActiveUserActivityIntervalBase;
+import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
+import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
+import nl.tudelft.watchdog.logic.interval.active.UserActivityIntervalBase;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallBack;
-import nl.tudelft.watchdog.logic.interval.recorded.RecordedInterval;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 /**
@@ -26,7 +26,7 @@ import nl.tudelft.watchdog.util.WatchDogUtils;
 public class IntervalManager {
 
 	/** A list of currently opened intervals. */
-	private List<ActiveIntervalBase> intervals = new ArrayList<ActiveIntervalBase>();
+	private List<IntervalBase> intervals = new ArrayList<IntervalBase>();
 
 	/** Notifies subscribers of editorEvents. */
 	private ImmediateNotifyingObservable editorEventObservable;
@@ -41,14 +41,14 @@ public class IntervalManager {
 	private DocumentFactory documentFactory;
 
 	/** The recorded intervals of this session */
-	private List<RecordedInterval> recordedIntervals;
+	private List<IntervalBase> recordedIntervals;
 
 	/** The singleton instance of the interval manager. */
 	private static IntervalManager instance = null;
 
 	/** Private constructor. */
 	private IntervalManager() {
-		recordedIntervals = new ArrayList<RecordedInterval>();
+		recordedIntervals = new ArrayList<IntervalBase>();
 		documentFactory = new DocumentFactory();
 		editorEventObservable = new ImmediateNotifyingObservable();
 		intervalEventObservable = new ImmediateNotifyingObservable();
@@ -74,22 +74,26 @@ public class IntervalManager {
 	}
 
 	/** Closes the current interval (if it is not already closed). */
-	/* package */void closeInterval(ActiveIntervalBase interval) {
+	/* package */void closeInterval(IntervalBase interval) {
 		if (!interval.isClosed()) {
-			Document document = documentFactory.createDocument(interval
-					.getPart());
-			RecordedInterval recordedInterval = new RecordedInterval(document,
-					interval.getTimeOfCreation(), new Date(),
-					interval.getActivityType(), WatchDogUtils.isInDebugMode());
-			recordedIntervals.add(recordedInterval);
+			Document document = null;
+			if (interval instanceof UserActivityIntervalBase) {
+				UserActivityIntervalBase activeInterval = (UserActivityIntervalBase) interval;
+				document = documentFactory.createDocument(activeInterval
+						.getPart());
+			}
+			interval.setDocument(document);
+			interval.setEndTime(new Date());
+			interval.setIsInDebugMode(WatchDogUtils.isInDebugMode());
 			interval.closeInterval();
+			recordedIntervals.add(interval);
 			intervalEventObservable.notifyObservers(new ClosingIntervalEvent(
-					recordedInterval));
+					interval));
 		}
 	}
 
 	/** Creates a new editing interval. */
-	/* package */void createNewInterval(ActiveIntervalBase interval, int timeout) {
+	/* package */void createNewInterval(IntervalBase interval, int timeout) {
 		// TODO (MMB) shouldn't this handler be added to the interval itself?
 		intervals.add(interval);
 		addNewIntervalHandler(interval, timeout);
@@ -99,11 +103,14 @@ public class IntervalManager {
 	 * Adds a new interval handler base, and defines its timeout, i.e. when the
 	 * interval is closed.
 	 */
-	private void addNewIntervalHandler(final ActiveIntervalBase interval,
-			int timeout) {
+	private void addNewIntervalHandler(final IntervalBase interval,
+			final int timeout) {
 		interval.addTimeoutListener(timeout, new OnInactiveCallBack() {
 			@Override
 			public void onInactive() {
+				if (timeout == 0) {
+					return;
+				}
 				closeInterval(interval);
 			}
 		});
@@ -111,7 +118,7 @@ public class IntervalManager {
 	}
 
 	/** Sets a list of recorded intervals. */
-	/* package */void setRecordedIntervals(List<RecordedInterval> intervals) {
+	/* package */void setRecordedIntervals(List<IntervalBase> intervals) {
 		recordedIntervals = intervals;
 	}
 
@@ -120,10 +127,10 @@ public class IntervalManager {
 	 *         UserActivityInterval. There can only be one such interval at any
 	 *         given time. If there is none, <code>null</code>.
 	 */
-	/* package */ActiveIntervalBase getUserActivityIntervalIfAny() {
-		for (ActiveIntervalBase interval : intervals) {
-			if (interval instanceof ActiveUserActivityIntervalBase) {
-				return interval;
+	/* package */UserActivityIntervalBase getUserActivityIntervalIfAny() {
+		for (IntervalBase interval : intervals) {
+			if (interval instanceof UserActivityIntervalBase) {
+				return (UserActivityIntervalBase) interval;
 			}
 		}
 		return null;
@@ -131,13 +138,13 @@ public class IntervalManager {
 
 	/** Closes all currently open intervals. */
 	public void closeAllCurrentIntervals() {
-		for (ActiveIntervalBase interval : intervals) {
+		for (IntervalBase interval : intervals) {
 			closeInterval(interval);
 		}
 	}
 
 	/** Returns a list of recorded intervals. */
-	public List<RecordedInterval> getRecordedIntervals() {
+	public List<IntervalBase> getRecordedIntervals() {
 		return recordedIntervals;
 	}
 
@@ -156,5 +163,11 @@ public class IntervalManager {
 	/** Removes an existing interval listener. */
 	public void removeIntervalListener(Observer listener) {
 		intervalEventObservable.deleteObserver(listener);
+	}
+
+	/** Starts and registers a new session interval. */
+	public void startNewSessionInterval() {
+		SessionInterval activeSessionInterval = new SessionInterval();
+		addNewIntervalHandler(activeSessionInterval, 0);
 	}
 }
