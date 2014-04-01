@@ -8,21 +8,18 @@ import org.eclipse.ui.texteditor.ITextEditor;
 /** A base class for */
 public abstract class UserActivityIntervalBase extends IntervalBase {
 
-	/** The serialization version ID. */
-	private static final long serialVersionUID = 1L;
-
 	/** The typing task. */
-	protected CheckerTimerTask task;
+	protected transient CheckerTimerTask task;
 
 	/** The {@link ITextEditor} associated with this interval. */
-	protected ITextEditor editor;
+	protected transient ITextEditor editor;
 
 	/*** The {@link IWorkbenchPart} associated with this interval. */
-	protected IWorkbenchPart part;
+	protected transient IWorkbenchPart part;
 
 	/** Constructor. */
-	public UserActivityIntervalBase(IWorkbenchPart part) {
-		super();
+	public UserActivityIntervalBase(IWorkbenchPart part, ActivityType activity) {
+		super(activity);
 		this.part = part;
 		this.editor = (ITextEditor) part;
 	}

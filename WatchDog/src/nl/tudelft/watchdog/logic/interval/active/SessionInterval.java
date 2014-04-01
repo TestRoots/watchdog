@@ -1,9 +1,14 @@
 package nl.tudelft.watchdog.logic.interval.active;
 
-import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallBack;
+import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallback;
 
 /** Interval for the active session. */
 public class SessionInterval extends IntervalBase {
+
+	/** Constructor. */
+	public SessionInterval() {
+		super(ActivityType.EclipseOpen);
+	}
 
 	@Override
 	public void listenForReactivation() {
@@ -16,7 +21,7 @@ public class SessionInterval extends IntervalBase {
 
 	@Override
 	public void addTimeoutListener(long timeout,
-			OnInactiveCallBack callbackWhenFinished) {
+			OnInactiveCallback callbackWhenFinished) {
 	}
 
 }

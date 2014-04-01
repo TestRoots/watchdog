@@ -29,7 +29,7 @@ public class ReadingCheckerTask extends CheckerTimerTask {
 	private PaintListener paintListener;
 
 	/** Callback. */
-	private OnInactiveCallBack callback;
+	private OnInactiveCallback callback;
 
 	/** The editor. */
 	private ITextEditor editor;
@@ -38,7 +38,7 @@ public class ReadingCheckerTask extends CheckerTimerTask {
 	IWorkbenchPart workbenchPart;
 
 	/** Constructor. */
-	public ReadingCheckerTask(IWorkbenchPart part, OnInactiveCallBack callback) {
+	public ReadingCheckerTask(IWorkbenchPart part, OnInactiveCallback callback) {
 		isActive = true;
 		this.callback = callback;
 		this.workbenchPart = part;
