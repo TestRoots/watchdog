@@ -16,7 +16,7 @@ import nl.tudelft.watchdog.logic.eclipseuireader.events.interval.NewIntervalEven
 		if (event instanceof NewIntervalEvent) {
 			NewIntervalEvent intervalEvent = (NewIntervalEvent) event;
 			WatchDogLogger.logInfo("New interval: "
-					+ intervalEvent.getInterval().getEditor().getTitle());
+					+ intervalEvent.getInterval());
 
 		} else if (event instanceof ClosingIntervalEvent) {
 			ClosingIntervalEvent intervalEvent = (ClosingIntervalEvent) event;

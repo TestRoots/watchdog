@@ -6,8 +6,7 @@ import java.io.FileOutputStream;
 import java.util.List;
 
 import nl.tudelft.watchdog.logic.exceptions.FileSavingFailedException;
-import nl.tudelft.watchdog.logic.interval.IntervalsToXMLWriter;
-import nl.tudelft.watchdog.logic.interval.recorded.RecordedInterval;
+import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 
 import org.eclipse.swt.SWT;
@@ -26,8 +25,8 @@ public class UserPrompter {
 		shell = new Shell(display);
 	}
 
-	public static void saveIntervalsToFile(IntervalsToXMLWriter writer,
-			List<RecordedInterval> intervals) throws FileSavingFailedException {
+	public static void saveIntervalsToFile(List<IntervalBase> intervals)
+			throws FileSavingFailedException {
 		FileDialog dialog = new FileDialog(shell, SWT.SAVE);
 		dialog.setFilterNames(new String[] { "XML files", "All Files (*.*)" });
 		dialog.setFilterExtensions(new String[] { "*.xml", "*.*" }); // Windows
@@ -44,7 +43,7 @@ public class UserPrompter {
 			File f = new File(path);
 			try {
 				FileOutputStream fos = new FileOutputStream(f);
-				writer.exportIntervals(intervals, fos);
+				// TODO (MMB) ouch
 			} catch (FileNotFoundException e) {
 				WatchDogLogger.logSevere(e);
 				throw new FileSavingFailedException(e);

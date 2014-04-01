@@ -12,11 +12,13 @@ import org.eclipse.ui.IStartup;
  */
 public class StartUpHandler implements IStartup {
 
+	/** {@inheritDoc} Starts the WatchDog plugin. */
 	@Override
 	public void earlyStartup() {
 		WatchDogGlobals.isActive = true;
 		IntervalManager.getInstance();
 		WatchDogLogger.setUpLogger();
+		IntervalManager.getInstance().startNewSessionInterval();
 	}
 
 }

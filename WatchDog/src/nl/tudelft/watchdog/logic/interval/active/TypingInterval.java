@@ -11,10 +11,10 @@ import org.eclipse.ui.IWorkbenchPart;
  * An interval for when the user is currently typing, connected to the
  * {@link ActivityType#Typing} activity.
  */
-public class ActiveTypingInterval extends ActiveUserActivityIntervalBase {
+public class TypingInterval extends UserActivityIntervalBase {
 
 	/** Constructor. */
-	public ActiveTypingInterval(IWorkbenchPart part) {
+	public TypingInterval(IWorkbenchPart part) {
 		super(part);
 
 		checkForChangeTimer = new Timer();

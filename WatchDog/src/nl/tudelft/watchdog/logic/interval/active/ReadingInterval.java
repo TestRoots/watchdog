@@ -7,8 +7,9 @@ import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallBack;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.ReadingCheckerTask;
 
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.texteditor.ITextEditor;
 
-public class ActiveReadingInterval extends ActiveIntervalBase {
+public class ReadingInterval extends UserActivityIntervalBase {
 
 	private CheckerTimerTask task;
 
@@ -16,7 +17,7 @@ public class ActiveReadingInterval extends ActiveIntervalBase {
 	 * @param editor
 	 *            the editor in this interval
 	 */
-	public ActiveReadingInterval(IWorkbenchPart part) {
+	public ReadingInterval(IWorkbenchPart part) {
 		super(part);
 		checkForChangeTimer = new Timer();
 	}
@@ -38,5 +39,13 @@ public class ActiveReadingInterval extends ActiveIntervalBase {
 	public void listenForReactivation() {
 		assert (task != null);
 		task.createListenerForReactivation();
+	}
+
+	public IWorkbenchPart getPart() {
+		return part;
+	}
+
+	public ITextEditor getEditor() {
+		return editor;
 	}
 }

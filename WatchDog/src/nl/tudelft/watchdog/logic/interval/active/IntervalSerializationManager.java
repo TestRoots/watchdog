@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.interval.recorded;
+package nl.tudelft.watchdog.logic.interval.active;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,7 +13,7 @@ import java.util.List;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 
-public class RecordedIntervalSerializationManager {
+public class IntervalSerializationManager {
 
 	public void saveRecordedIntervals() {
 		if (!IntervalManager.getInstance().getRecordedIntervals().isEmpty()) {
@@ -39,23 +39,24 @@ public class RecordedIntervalSerializationManager {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<RecordedInterval> retrieveRecordedIntervals() throws IOException,
-			ClassNotFoundException {
-		List<RecordedInterval> completeList = new ArrayList<RecordedInterval>();
+	public List<IntervalBase> retrieveRecordedIntervals()
+			throws IOException, ClassNotFoundException {
+		List<IntervalBase> completeList = new ArrayList<IntervalBase>();
 		try {
 			String userHome = System.getProperty("user.home");
 			File parent = new File(userHome + "/watchdog/");
 			if (parent.list() != null) {
 				for (String fileName : parent.list()) {
-					File f = new File(parent, fileName);
+					File file = new File(parent, fileName);
 
-					if (f.exists() && f.isFile()) {
-						FileInputStream fileIn = new FileInputStream(f);
+					if (file.exists() && file.isFile()) {
+						FileInputStream fileIn = new FileInputStream(file);
 
-						ObjectInputStream in = new ObjectInputStream(fileIn);
-						List<RecordedInterval> list = (List<RecordedInterval>) in
+						ObjectInputStream inputStream = new ObjectInputStream(
+								fileIn);
+						List<IntervalBase> list = (List<IntervalBase>) inputStream
 								.readObject();
-						in.close();
+						inputStream.close();
 						fileIn.close();
 						completeList.addAll(list);
 					} else {
