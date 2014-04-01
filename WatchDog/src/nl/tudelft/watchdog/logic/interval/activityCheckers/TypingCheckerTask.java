@@ -16,11 +16,8 @@ import org.eclipse.ui.texteditor.ITextEditor;
 /** A task for checking whether the user is typing. */
 public class TypingCheckerTask extends CheckerTimerTask {
 
-	/** An update checker. */
-	private IUpdateChecker checker;
-
 	/** Callback. */
-	private OnInactiveCallBack callback;
+	private OnInactiveCallback callback;
 
 	/** The editor. */
 	private ITextEditor editor;
@@ -29,7 +26,7 @@ public class TypingCheckerTask extends CheckerTimerTask {
 	private IWorkbenchPart workbenchPart;
 
 	/** Constructor. */
-	public TypingCheckerTask(IWorkbenchPart part, OnInactiveCallBack callback) {
+	public TypingCheckerTask(IWorkbenchPart part, OnInactiveCallback callback) {
 		this.editor = (ITextEditor) part;
 		this.workbenchPart = part;
 		this.checker = new EditorContentChangedChecker(editor);

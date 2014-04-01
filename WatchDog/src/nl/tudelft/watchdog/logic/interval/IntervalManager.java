@@ -14,7 +14,7 @@ import nl.tudelft.watchdog.logic.eclipseuireader.events.listeners.UIListener;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
 import nl.tudelft.watchdog.logic.interval.active.UserActivityIntervalBase;
-import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallBack;
+import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallback;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 /**
@@ -105,7 +105,7 @@ public class IntervalManager {
 	 */
 	private void addNewIntervalHandler(final IntervalBase interval,
 			final int timeout) {
-		interval.addTimeoutListener(timeout, new OnInactiveCallBack() {
+		interval.addTimeoutListener(timeout, new OnInactiveCallback() {
 			@Override
 			public void onInactive() {
 				if (timeout == 0) {
