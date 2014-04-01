@@ -24,7 +24,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	protected void createFieldEditors() {
 		addField(new UserIDFieldEditor());
-		addField(new BooleanFieldEditor(WatchdogPreferences.LOGGING_ENABLED,
+		addField(new BooleanFieldEditor(WatchdogPreferences.LOGGING_ENABLED_KEY,
 				"Enable Logs", getFieldEditorParent()));
 	}
 
@@ -32,7 +32,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 	class UserIDFieldEditor extends StringFieldEditor {
 		/** Constructor, delegating call to parent's constructor. */
 		public UserIDFieldEditor() {
-			super(WatchdogPreferences.USERID, "User Id", getFieldEditorParent());
+			super(WatchdogPreferences.USERID_KEY, "User Id", getFieldEditorParent());
 		}
 
 		@Override
