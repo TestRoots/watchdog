@@ -29,10 +29,22 @@ import com.google.gson.JsonSerializer;
  */
 public class IntervalTransferer {
 
+	/** The {@link GsonBuilder} for building the intervals. */
+	private GsonBuilder gsonBuilder = new GsonBuilder();
+
+	/** The Gson object for object serialization to Json. */
+	private Gson gson;
+
+	/** Constructor. */
+	public IntervalTransferer() {
+		gsonBuilder.registerTypeAdapter(Date.class, new DateSerializer());
+		gson = gsonBuilder.create();
+	}
+
 	/** Sends the recorded intervals to the server. */
 	public void sendIntervals() {
-		List<IntervalBase> recordedIntervals = IntervalManager
-				.getInstance().getRecordedIntervals();
+		List<IntervalBase> recordedIntervals = IntervalManager.getInstance()
+				.getRecordedIntervals();
 		String userid = WatchdogPreferences.getUserid();
 		String json = prepareIntervals(recordedIntervals);
 		transferData(userid, json);
@@ -40,9 +52,6 @@ public class IntervalTransferer {
 
 	/** Converts the intervals to Json. */
 	public String prepareIntervals(List<IntervalBase> recordedIntervals) {
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(Date.class, new DateSerializer());
-		Gson gson = gsonBuilder.create();
 		return gson.toJson(recordedIntervals);
 	}
 
