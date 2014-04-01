@@ -9,23 +9,58 @@ class WatchDogServer < Sinatra::Base
 
   # Configuration file support
   register Sinatra::ConfigFile
-  config_file 'config.yaml'
+  config_file '../config.yaml'
 
-  # Do not support static files
-  set :static, false
+  # Application-wide configuration
+  configure :development, :production do
+
+    # Make sure our MongoDB has the appropriate collections/indexes
+    COLLECTIONS = %w(users intervals)
+
+    IDXS = {
+        :users      => %w(unq),
+        :intervals  => %w(ts te)
+    }
+
+    db = MongoClient.new(settings.mongo_host, settings.mongo_port).db(settings.mongo_db)
+
+    # Trigger creation of collections
+    COLLECTIONS.each{|c| db.collection(c)}
+
+    # Ensure that the necessary indexes exist
+    IDXS.each do |k,v|
+
+      col = db.collection(k.to_s)
+      idx_name = v.join('_1_') + '_1'
+      idx_exists =  col.index_information.find {|k,v| k == idx_name}
+
+      if idx_exists.nil?
+        idx_fields = v.reduce({}){|acc, x| acc.merge({x => 1})}
+
+        col.create_index(idx_fields, :background => true)
+        STDERR.puts "Creating index on #{col}(#{v})"
+      end
+    end
+
+    # Do not support static files
+    set :static, false
+
+    # Enable request logging
+    enable :logging
+  end
 
   def mongo
-    MongoClient.new("localhost", 27017)
+    MongoClient.new(settings.mongo_host, settings.mongo_port)
   end
 
   ## The API
   before  do
-    @db ||= mongo.db('watchdog')
+    @db ||= mongo.db(settings.mongo_db)
   end
 
   after do
-    #@db.connection.close
-    #@db = nil
+    @db.connection.close
+    @db = nil
   end
 
   get '/' do
