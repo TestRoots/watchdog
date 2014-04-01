@@ -1,5 +1,7 @@
 package nl.tudelft.watchdog.logic.interval.active;
 
+import static nl.tudelft.watchdog.util.GSONUtil.gson;
+
 import java.util.Date;
 import java.util.Timer;
 
@@ -148,4 +150,7 @@ public abstract class IntervalBase {
 	public abstract void addTimeoutListener(long timeout,
 			OnInactiveCallback callbackWhenFinished);
 
+	public String toJSON() {
+		return gson().toJson(this);
+	}
 }
