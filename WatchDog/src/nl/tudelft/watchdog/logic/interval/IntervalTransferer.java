@@ -1,9 +1,9 @@
 package nl.tudelft.watchdog.logic.interval;
 
+import static nl.tudelft.watchdog.util.GSONUtil.gson;
+
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
@@ -17,29 +17,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-
 /**
  * Transmits the currently recorded intervals to the WatchDog server.
  */
 public class IntervalTransferer {
-
-	/** The {@link GsonBuilder} for building the intervals. */
-	private GsonBuilder gsonBuilder = new GsonBuilder();
-
-	/** The Gson object for object serialization to Json. */
-	private Gson gson;
-
-	/** Constructor. */
-	public IntervalTransferer() {
-		gsonBuilder.registerTypeAdapter(Date.class, new DateSerializer());
-		gson = gsonBuilder.create();
-	}
 
 	/** Sends the recorded intervals to the server. */
 	public void sendIntervals() {
@@ -52,7 +33,7 @@ public class IntervalTransferer {
 
 	/** Converts the intervals to Json. */
 	public String prepareIntervals(List<IntervalBase> recordedIntervals) {
-		return gson.toJson(recordedIntervals);
+		return gson().toJson(recordedIntervals);
 	}
 
 	/**
@@ -72,16 +53,6 @@ public class IntervalTransferer {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-	}
-
-	/** A JSon serializer for Date. */
-	private class DateSerializer implements JsonSerializer<Date> {
-
-		@Override
-		public JsonElement serialize(Date date, Type type,
-				JsonSerializationContext context) {
-			return new JsonPrimitive(date.getTime());
 		}
 	}
 }
