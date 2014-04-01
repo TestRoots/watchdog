@@ -2,7 +2,6 @@ package nl.tudelft.watchdog.logic.interval;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,12 +9,12 @@ import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.ui.preferences.WatchdogPreferences;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
-import org.apache.http.NameValuePair;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -45,7 +44,7 @@ public class IntervalTransferer {
 	public void sendIntervals() {
 		List<IntervalBase> recordedIntervals = IntervalManager.getInstance()
 				.getRecordedIntervals();
-		String userid = WatchdogPreferences.getUserid();
+		String userid = WatchdogPreferences.getInstance().getUserid();
 		String json = prepareIntervals(recordedIntervals);
 		transferData(userid, json);
 	}
@@ -59,23 +58,35 @@ public class IntervalTransferer {
 	 * Opens an HTTP connection to the server, and transmits the recorded
 	 * intervals with the given user id.
 	 */
-	public void transferData(String userid, String json) {
+	public void transferData(String userid, String jsonData) {
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpPost post = new HttpPost(WatchDogGlobals.watchDogServer
-				+ "intervals/");
+		HttpPost post = new HttpPost(buildURL(userid));
 		try {
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-			nameValuePairs.add(new BasicNameValuePair("json", json));
-			post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			StringEntity input = new StringEntity(jsonData);
+			input.setContentType("application/json");
+			post.setEntity(input);
 
-			client.execute(post);
-
+			HttpResponse response = client.execute(post);
+			System.out.println(response.getStatusLine().getStatusCode());
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				// TODO (MMB) set head pointer in database to new head
+				// successful response -- reset
+			} else {
+				System.out.println(buildURL(userid));
+				// transmission to server not successful
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	/** A JSon serializer for Date. */
+	/** @return the URL to post new intervals to the server to for this user. */
+	private String buildURL(String userid) {
+		return WatchDogGlobals.watchDogServerURI + "user/" + userid
+				+ "/intervals";
+	}
+
+	/** A JSon Serializer for Date. */
 	private class DateSerializer implements JsonSerializer<Date> {
 
 		@Override

@@ -10,10 +10,10 @@ import org.eclipse.jface.preference.IPreferenceStore;
 public class WatchdogPreferences {
 
 	/** The user's id on the WatchDog server. */
-	public final static String USERID = "USERID";
+	public final static String USERID_KEY = "USERID";
 
 	/** Flag denoting whether WatchDog plugin should do logging or not. */
-	public final static String LOGGING_ENABLED = "ENABLE_LOGGING";
+	public final static String LOGGING_ENABLED_KEY = "ENABLE_LOGGING";
 
 	/** The preference store. */
 	private IPreferenceStore store;
@@ -29,8 +29,8 @@ public class WatchdogPreferences {
 	 */
 	private WatchdogPreferences() {
 		store = Activator.getDefault().getPreferenceStore();
-		store.setDefault(LOGGING_ENABLED, false);
-		store.setDefault(USERID, "");
+		store.setDefault(LOGGING_ENABLED_KEY, false);
+		store.setDefault(USERID_KEY, "");
 	}
 
 	/** Returns the singleton instance from WatchdogPreferences. */
@@ -43,12 +43,12 @@ public class WatchdogPreferences {
 
 	/** Returns whether logging is enabled (true) or not (false). */
 	public boolean isLoggingEnabled() {
-		return store.getBoolean(LOGGING_ENABLED);
+		return store.getBoolean(LOGGING_ENABLED_KEY);
 	}
 
 	/** @return The userid. */
-	public static String getUserid() {
-		return USERID;
+	public String getUserid() {
+		return store.getString(USERID_KEY);
 	}
 
 	/** @return The {@link IPreferenceStore} for WatchDog. */
