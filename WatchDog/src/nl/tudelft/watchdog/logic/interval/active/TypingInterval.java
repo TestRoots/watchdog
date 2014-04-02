@@ -9,13 +9,13 @@ import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * An interval for when the user is currently typing, connected to the
- * {@link ActivityType#Typing} activity.
+ * {@link IntervalType#Typing} activity.
  */
 public class TypingInterval extends UserActivityIntervalBase {
 
 	/** Constructor. */
 	public TypingInterval(IWorkbenchPart part) {
-		super(part, ActivityType.Typing);
+		super(part, IntervalType.Typing);
 		checkForChangeTimer = new Timer();
 	}
 
@@ -28,8 +28,7 @@ public class TypingInterval extends UserActivityIntervalBase {
 	}
 
 	@Override
-	public ActivityType getActivityType() {
-		return ActivityType.Typing;
+	public IntervalType getActivityType() {
+		return IntervalType.Typing;
 	}
-
 }

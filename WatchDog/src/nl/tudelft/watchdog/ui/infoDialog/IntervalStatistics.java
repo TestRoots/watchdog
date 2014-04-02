@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
-import nl.tudelft.watchdog.logic.interval.active.ActivityType;
+import nl.tudelft.watchdog.logic.interval.active.IntervalType;
 
 import org.joda.time.Duration;
 
@@ -19,10 +19,10 @@ public class IntervalStatistics {
 	private Duration totalTimeOverAllActivities;
 
 	/**
-	 * A map from the {@link ActivityType} to the time the activity was
+	 * A map from the {@link IntervalType} to the time the activity was
 	 * performed.
 	 */
-	private Map<ActivityType, Duration> activityTypeToDuration = new HashMap<>();
+	private Map<IntervalType, Duration> activityTypeToDuration = new HashMap<>();
 
 	/** Constructor. */
 	public IntervalStatistics(List<IntervalBase> intervals) {
@@ -35,7 +35,7 @@ public class IntervalStatistics {
 	 */
 	public void calculateDurations() {
 		totalTimeOverAllActivities = new Duration(0);
-		for (ActivityType activity : ActivityType.values()) {
+		for (IntervalType activity : IntervalType.values()) {
 			Duration activityTime = calculateTime(activity);
 			activityTypeToDuration.put(activity, activityTime);
 			totalTimeOverAllActivities = totalTimeOverAllActivities
@@ -47,7 +47,7 @@ public class IntervalStatistics {
 	 * Calculates and returns the total time for a certain activity in all the
 	 * intervals.
 	 */
-	private Duration calculateTime(ActivityType activity) {
+	private Duration calculateTime(IntervalType activity) {
 		Duration totalTime = new Duration(0);
 		for (IntervalBase interval : intervals) {
 			if (interval.getActivityType() == activity) {
@@ -60,7 +60,7 @@ public class IntervalStatistics {
 	/**
 	 * @return The duration of the given activity.
 	 */
-	public Duration getDurationOfAcitivity(ActivityType activity) {
+	public Duration getDurationOfAcitivity(IntervalType activity) {
 		return activityTypeToDuration.get(activity);
 	}
 
