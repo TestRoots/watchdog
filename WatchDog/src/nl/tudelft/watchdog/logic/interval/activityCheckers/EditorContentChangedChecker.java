@@ -29,10 +29,10 @@ public class EditorContentChangedChecker implements IUpdateChecker {
 			this.previousContent = WatchDogUtils.getEditorContent(editor);
 		} catch (IllegalArgumentException e) {
 			this.previousContent = "";
-			WatchDogLogger.logSevere(e);
+			WatchDogLogger.getInstance().logSevere(e);
 		} catch (ContentReaderException e) {
 			this.previousContent = "";
-			WatchDogLogger.logSevere(e);
+			WatchDogLogger.getInstance().logSevere(e);
 		}
 	}
 

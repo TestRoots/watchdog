@@ -48,10 +48,10 @@ public class TypingCheckerTask extends CheckerTimerTask {
 		} catch (EditorClosedPrematurelyException e) {
 			// this can happen when eclipse is closed while the document is
 			// still active
-			WatchDogLogger.logInfo("Editor closed prematurely");
+			WatchDogLogger.getInstance().logInfo("Editor closed prematurely");
 		} catch (ContentReaderException e) {
 			// this can happen when a file is moved inside the workspace
-			WatchDogLogger.logInfo("Unavailable doc provider");
+			WatchDogLogger.getInstance().logInfo("Unavailable doc provider");
 		}
 	}
 

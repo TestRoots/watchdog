@@ -33,14 +33,14 @@ public class IntervalSerializationManager {
 				out.close();
 				fileOut.close();
 			} catch (IOException e) {
-				WatchDogLogger.logSevere(e);
+				WatchDogLogger.getInstance().logSevere(e);
 			}
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<IntervalBase> retrieveRecordedIntervals()
-			throws IOException, ClassNotFoundException {
+	public List<IntervalBase> retrieveRecordedIntervals() throws IOException,
+			ClassNotFoundException {
 		List<IntervalBase> completeList = new ArrayList<IntervalBase>();
 		try {
 			String userHome = System.getProperty("user.home");
@@ -60,16 +60,17 @@ public class IntervalSerializationManager {
 						fileIn.close();
 						completeList.addAll(list);
 					} else {
-						WatchDogLogger.logInfo("no saved recorded intervals");
+						WatchDogLogger.getInstance().logInfo(
+								"no saved recorded intervals");
 					}
 				}
 			}
 			return completeList;
 		} catch (IOException e) {
-			WatchDogLogger.logSevere(e);
+			WatchDogLogger.getInstance().logSevere(e);
 			throw e;
 		} catch (ClassNotFoundException e) {
-			WatchDogLogger.logSevere(e);
+			WatchDogLogger.getInstance().logSevere(e);
 			throw e;
 		}
 	}

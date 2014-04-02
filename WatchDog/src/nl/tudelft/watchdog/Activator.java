@@ -32,7 +32,7 @@ public class Activator extends AbstractUIPlugin {
 		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 			@Override
 			public void uncaughtException(Thread t, Throwable e) {
-				WatchDogLogger.logSevere(e);
+				WatchDogLogger.getInstance().logSevere(e);
 			}
 		});
 	}
@@ -46,7 +46,7 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		WatchDogLogger.logInfo("Shutting down...");
+		WatchDogLogger.getInstance().logInfo("Shutting down...");
 
 		plugin = null;
 		WatchDogGlobals.isActive = false;

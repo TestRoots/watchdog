@@ -54,6 +54,9 @@ public class IntervalManager {
 		intervalEventObservable = new ImmediateNotifyingObservable();
 		uiListener = new UIListener(editorEventObservable);
 		addEditorObserversAndUIListeners();
+
+		IntervalManager.getInstance().addIntervalListener(
+				new IntervalLoggerObserver());
 	}
 
 	/** Creates change listeners for different document events. */
