@@ -3,12 +3,15 @@ package nl.tudelft.watchdog.interval;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import nl.tudelft.watchdog.logic.interval.LevelDBPersister;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,22 +21,24 @@ public class LevelDBPersisterTest {
 
 	@Before
 	public void before() {
-		String s = Paths.get("").toAbsolutePath().toString() + 
-				File.pathSeparator + path;
-		File toDel = new File(s);
-		delete(toDel);
+		cleanup();
+	}
+
+	@After
+	public void after() {
+		cleanup();
 	}
 
 	@Test
 	public void testWriteToDB() {
 		LevelDBPersister persister = new LevelDBPersister(path);
-
-		List<IntervalBase> intervals = new ArrayList<IntervalBase>();
-		for (int i = 0; i < 10; i++) {
-			intervals.add(rndInterval());
-		}
-
+		List<IntervalBase> intervals = genIntervalList(10);
 		persister.saveIntervals(intervals);
+
+		List<IntervalBase> loaded = persister.readIntevals(0, Long.MAX_VALUE);
+		for (int i = 0; i < 10; i++) {
+			assert (loaded.get(i).equals(intervals.get(i)));
+		}
 	}
 
 	@Test
@@ -67,12 +72,29 @@ public class LevelDBPersisterTest {
 		assert (LevelDBPersister.byteArraytoLong(bytes) == 268);
 	}
 
-	private IntervalBase rndInterval() {
-		return new SessionInterval();
+	private List<IntervalBase> genIntervalList(int n) {
+
+		List<IntervalBase> intervals = new ArrayList<IntervalBase>();
+		for (int i = 0; i < n; i++) {
+			intervals.add(rndInterval());
+		}
+		return intervals;
 	}
 
-	void delete(File f) {
-		System.err.println("Deleting " + f.getAbsolutePath());
+	private IntervalBase rndInterval() {
+		SessionInterval i = new SessionInterval();
+		i.setEndTime(new Date(i.getStart().getTime()
+				+ (new Random()).nextInt(10000)));
+		return i;
+	}
+
+	private void cleanup() {
+		String s = Paths.get("").toAbsolutePath().toString();
+		File toDel = new File(s, path);
+		delete(toDel);
+	}
+
+	private void delete(File f) {
 		if (f.isDirectory()) {
 			for (File c : f.listFiles())
 				delete(c);
