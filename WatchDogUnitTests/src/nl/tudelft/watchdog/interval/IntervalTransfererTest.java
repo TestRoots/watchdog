@@ -9,7 +9,7 @@ public class IntervalTransfererTest {
 	@Test
 	public void testTransfer() {
 		IntervalTransferer it = new IntervalTransferer();
-		it.transferData("blubb", "blah");
+		it.transferData("cca45363247b1a6dc91ecdc4a3a15e1fc85d1c53", "blah");
 	}
 
 }
