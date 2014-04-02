@@ -7,7 +7,7 @@ public class SessionInterval extends IntervalBase {
 
 	/** Constructor. */
 	public SessionInterval() {
-		super(ActivityType.EclipseOpen);
+		super(IntervalType.Session);
 	}
 
 	@Override
@@ -15,8 +15,8 @@ public class SessionInterval extends IntervalBase {
 	}
 
 	@Override
-	public ActivityType getActivityType() {
-		return ActivityType.EclipseOpen;
+	public IntervalType getActivityType() {
+		return IntervalType.Session;
 	}
 
 	@Override

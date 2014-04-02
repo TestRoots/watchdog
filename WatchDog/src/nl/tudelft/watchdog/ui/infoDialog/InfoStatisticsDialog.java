@@ -4,7 +4,7 @@ import java.util.List;
 
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
-import nl.tudelft.watchdog.logic.interval.active.ActivityType;
+import nl.tudelft.watchdog.logic.interval.active.IntervalType;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
@@ -99,7 +99,7 @@ public class InfoStatisticsDialog extends Dialog {
 		createLabel(WatchDogUtils.makeDurationHumanReadable(intervalStatistics
 				.getTotalTimeOverAllActivities()), container);
 
-		for (ActivityType activity : ActivityType.values()) {
+		for (IntervalType activity : IntervalType.values()) {
 			Duration duration = intervalStatistics
 					.getDurationOfAcitivity(activity);
 			createLabel(activity.toString(), container);

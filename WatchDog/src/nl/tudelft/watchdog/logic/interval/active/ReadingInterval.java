@@ -17,7 +17,7 @@ public class ReadingInterval extends UserActivityIntervalBase {
 	 *            the editor in this interval
 	 */
 	public ReadingInterval(IWorkbenchPart part) {
-		super(part, ActivityType.Reading);
+		super(part, IntervalType.Reading);
 		checkForChangeTimer = new Timer();
 	}
 
