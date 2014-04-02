@@ -18,9 +18,7 @@ public class WatchdogPreferences {
 	/** The preference store. */
 	private IPreferenceStore store;
 
-	/**
-	 * The WatchDog preference instance
-	 */
+	/** The WatchDog preference instance. */
 	private static WatchdogPreferences singletonInstance;
 
 	/**

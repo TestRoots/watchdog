@@ -63,15 +63,18 @@ public class DocumentFactory {
 			// Editor was null, there is nothing we can do to get the file
 			// contents.
 			// TODO (MMB) Try read-in via IFile?
-			WatchDogLogger.logSevere(exception);
+			WatchDogLogger.getInstance().logSevere(exception);
 		} catch (ContentReaderException exception) {
-			WatchDogLogger.logInfo("Document (provider) was null, trying to read resource file contents.");
+			WatchDogLogger
+					.getInstance()
+					.logInfo(
+							"Document (provider) was null, trying to read resource file contents.");
 			try {
 				editorContent = WatchDogUtils
 						.getContentForEditorFromDisk(editor);
 			} catch (IllegalArgumentException ex) {
-				WatchDogLogger.logInfo("File does not exist anymore: "
-						+ editor.getTitle());
+				WatchDogLogger.getInstance().logInfo(
+						"File does not exist anymore: " + editor.getTitle());
 				// TODO (MMB) hm, in that case, wouldn't it be better to stop
 				// the recording interval?
 			}

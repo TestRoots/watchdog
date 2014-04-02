@@ -133,9 +133,9 @@ public class WatchDogUtils {
 			completeList.addAll(serializationManager
 					.retrieveRecordedIntervals());
 		} catch (IOException exception) {
-			WatchDogLogger.logSevere(exception);
+			WatchDogLogger.getInstance().logSevere(exception);
 		} catch (ClassNotFoundException exception) {
-			WatchDogLogger.logSevere(exception);
+			WatchDogLogger.getInstance().logSevere(exception);
 		}
 		completeList.addAll(intervalKeeper.getRecordedIntervals());
 		return completeList;

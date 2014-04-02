@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.ui.preferences.WatchdogPreferences;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
@@ -15,6 +16,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -45,12 +47,12 @@ public class IntervalTransferer {
 		List<IntervalBase> recordedIntervals = IntervalManager.getInstance()
 				.getRecordedIntervals();
 		String userid = WatchdogPreferences.getInstance().getUserid();
-		String json = prepareIntervals(recordedIntervals);
+		String json = toJson(recordedIntervals);
 		transferData(userid, json);
 	}
 
 	/** Converts the intervals to Json. */
-	public String prepareIntervals(List<IntervalBase> recordedIntervals) {
+	public String toJson(List<IntervalBase> recordedIntervals) {
 		return gson.toJson(recordedIntervals);
 	}
 
@@ -71,9 +73,13 @@ public class IntervalTransferer {
 				// TODO (MMB) set head pointer in database to new head
 				// successful response -- reset
 			} else {
-				System.out.println(response.getStatusLine().getStatusCode());
-				System.out.println(buildURL(userid));
 				// transmission to server not successful
+				WatchDogLogger.getInstance().logInfo(
+						"Failed to post intervals to server. Status code: "
+								+ response.getStatusLine().getStatusCode()
+								+ " Message: "
+								+ EntityUtils.toString(response.getEntity()));
+
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
