@@ -1,5 +1,7 @@
 package nl.tudelft.watchdog.logic.interval.active;
 
+import static nl.tudelft.watchdog.util.GSONUtil.gson;
+
 import java.util.Date;
 import java.util.Timer;
 
@@ -29,7 +31,7 @@ public abstract class IntervalBase {
 
 	/** The Activity type. */
 	@SerializedName("at")
-	protected ActivityType activityType;
+	protected IntervalType activityType;
 
 	/** Legacy debug flag. */
 	@SerializedName("LEGACY_DEBUGMODE")
@@ -42,7 +44,7 @@ public abstract class IntervalBase {
 	protected transient boolean isClosed;
 
 	/** Constructor. */
-	public IntervalBase(ActivityType activity) {
+	public IntervalBase(IntervalType activity) {
 		this.start = new Date();
 		this.isClosed = false;
 		this.activityType = activity;
@@ -134,8 +136,8 @@ public abstract class IntervalBase {
 		this.end = date;
 	}
 
-	/** @return the {@link ActivityType}. */
-	public ActivityType getActivityType() {
+	/** @return the {@link IntervalType}. */
+	public IntervalType getActivityType() {
 		return activityType;
 	}
 
@@ -148,4 +150,7 @@ public abstract class IntervalBase {
 	public abstract void addTimeoutListener(long timeout,
 			OnInactiveCallback callbackWhenFinished);
 
+	public String toJSON() {
+		return gson().toJson(this);
+	}
 }

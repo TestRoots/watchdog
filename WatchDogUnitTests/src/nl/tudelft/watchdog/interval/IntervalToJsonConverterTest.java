@@ -53,7 +53,7 @@ public class IntervalToJsonConverterTest {
 
 		IntervalTransferer intervalTransferer = new IntervalTransferer();
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"at\":\"eo\",\"LEGACY_DEBUGMODE\":false}]",
+				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"at\":\"se\",\"LEGACY_DEBUGMODE\":false}]",
 				intervalTransferer.prepareIntervals(intervals));
 	}
 
