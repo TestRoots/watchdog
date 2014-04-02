@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
+import nl.tudelft.watchdog.logic.interval.active.IntervalFactory;
 
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.DBIterator;
@@ -71,11 +72,14 @@ public class LevelDBPersister {
 			// byte[] start = db.get(longToByteArray(from), ro);
 			// byte[] end = db.get(longToByteArray(to), ro);
 
+			List<IntervalBase> result = new ArrayList<IntervalBase>();
 			iterator = db.iterator();
 			for (iterator.seekToFirst(); iterator.hasNext(); iterator.next()) {
 				long key = byteArraytoLong(iterator.peekNext().getKey());
 				String value = asString(iterator.peekNext().getValue());
 				System.out.println(key + " = " + value);
+				IntervalBase val = IntervalFactory.fromJSON(value);
+				result.add(val);
 			}
 
 		} catch (IOException exception) {
