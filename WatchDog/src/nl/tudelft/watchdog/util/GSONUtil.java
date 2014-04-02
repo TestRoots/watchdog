@@ -5,7 +5,10 @@ import java.util.Date;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
@@ -20,8 +23,9 @@ public class GSONUtil {
 	private static GsonBuilder gsonBuilder;
 
 	static {
-		gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(Date.class, new DateSerializer());
+		gsonBuilder = new GsonBuilder().registerTypeAdapter(Date.class,
+				new DateSerializer()).registerTypeAdapter(Date.class,
+				new DateDeserializer());
 	}
 
 	/**
@@ -42,4 +46,13 @@ public class GSONUtil {
 			return new JsonPrimitive(date.getTime());
 		}
 	}
+
+	/** A JSon de-serializer for Date. */
+	private static class DateDeserializer implements JsonDeserializer<Date> {
+		@Override
+		public Date deserialize(JsonElement json, Type typeOfT,
+				JsonDeserializationContext context) throws JsonParseException {
+			return json == null ? null : new Date(json.getAsLong());
+		}
+	};
 }
