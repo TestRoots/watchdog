@@ -67,11 +67,11 @@ public class IntervalTransferer {
 			post.setEntity(input);
 
 			HttpResponse response = client.execute(post);
-			System.out.println(response.getStatusLine().getStatusCode());
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				// TODO (MMB) set head pointer in database to new head
 				// successful response -- reset
 			} else {
+				System.out.println(response.getStatusLine().getStatusCode());
 				System.out.println(buildURL(userid));
 				// transmission to server not successful
 			}
