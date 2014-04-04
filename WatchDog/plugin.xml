@@ -2,11 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.ui.startup">
-      <startup
-            class="nl.tudelft.watchdog.ui.commands.StartUpHandler"></startup>
-   </extension>
-   <extension
          point="org.eclipse.ui.preferencePages">
       <page
             class="nl.tudelft.watchdog.ui.preferences.PreferencePage"
@@ -18,7 +13,7 @@
          point="org.eclipse.ui.commands">
       <command
             id="nl.tudelft.watchdog.commands.exportData"
-            defaultHandler="nl.tudelft.watchdog.ui.commands.XMLExportHandler"
+            defaultHandler="nl.tudelft.watchdog.ui.XMLExportHandler"
             description="Exports the data from the WatchDog plugin"
             name="Export WatchDog Data">
       </command>

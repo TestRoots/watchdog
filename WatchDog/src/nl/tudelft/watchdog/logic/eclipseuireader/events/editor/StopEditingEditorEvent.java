@@ -6,12 +6,6 @@ public class StopEditingEditorEvent extends EditorEvent {
 
 	public StopEditingEditorEvent(IWorkbenchPart part) {
 		super(part);
-		// TODO Auto-generated constructor stub
 	}
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 }
