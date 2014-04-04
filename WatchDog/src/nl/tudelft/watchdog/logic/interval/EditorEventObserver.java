@@ -38,7 +38,8 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
 				.getUserActivityIntervalIfAny();
 
 		if (userActivityInterval != null) {
-			if (userActivityInterval.getEditor() == editorEvent.getTextEditor()) {
+			if (userActivityInterval.getEditor().equals(
+					editorEvent.getTextEditor())) {
 				previousIntervalHasSameEditor = true;
 			}
 		}
@@ -55,7 +56,7 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
 			intervalManager.closeInterval(userActivityInterval);
 		} else if (editorEvent instanceof FocusStartEditorEvent) {
 			if (previousIntervalHasSameEditor
-					&& userActivityInterval instanceof TypingInterval) {
+					&& userActivityInterval instanceof ReadingInterval) {
 				// in case we already have a reading interval do nothing
 				return;
 			}

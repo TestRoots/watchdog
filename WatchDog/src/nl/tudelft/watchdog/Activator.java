@@ -2,7 +2,6 @@ package nl.tudelft.watchdog;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
@@ -33,8 +32,8 @@ public class Activator extends AbstractUIPlugin {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		// IntervalManager.getInstance().closeAllCurrentIntervals();
 		WatchDogLogger.getInstance().logInfo("Shutting down...");
-		IntervalManager.getInstance().closeAllCurrentIntervals();
 
 		plugin = null;
 		WatchDogGlobals.isActive = false;

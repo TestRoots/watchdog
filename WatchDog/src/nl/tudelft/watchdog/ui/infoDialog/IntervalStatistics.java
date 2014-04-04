@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.ActivityType;
+import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 
 import org.joda.time.Duration;
 
@@ -38,8 +38,10 @@ public class IntervalStatistics {
 		for (ActivityType activity : ActivityType.values()) {
 			Duration activityTime = calculateTime(activity);
 			activityTypeToDuration.put(activity, activityTime);
-			totalTimeOverAllActivities = totalTimeOverAllActivities
-					.plus(activityTime);
+			if (activity != ActivityType.EclipseOpen) {
+				totalTimeOverAllActivities = totalTimeOverAllActivities
+						.plus(activityTime);
+			}
 		}
 	}
 
@@ -50,7 +52,7 @@ public class IntervalStatistics {
 	private Duration calculateTime(ActivityType activity) {
 		Duration totalTime = new Duration(0);
 		for (IntervalBase interval : intervals) {
-			if (interval.getActivityType() == activity) {
+			if (interval.getActivityType().equals(activity)) {
 				totalTime = totalTime.plus(interval.getDuration());
 			}
 		}
