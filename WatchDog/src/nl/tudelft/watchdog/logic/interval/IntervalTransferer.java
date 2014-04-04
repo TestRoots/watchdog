@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.ui.preferences.WatchdogPreferences;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
@@ -15,6 +16,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,9 +25,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-/**
- * Transmits the currently recorded intervals to the WatchDog server.
- */
+/** Transmits the currently recorded intervals to the WatchDog server. */
 public class IntervalTransferer {
 
 	/** The {@link GsonBuilder} for building the intervals. */
@@ -45,35 +45,39 @@ public class IntervalTransferer {
 		List<IntervalBase> recordedIntervals = IntervalManager.getInstance()
 				.getRecordedIntervals();
 		String userid = WatchdogPreferences.getInstance().getUserid();
-		String json = prepareIntervals(recordedIntervals);
-		transferData(userid, json);
+		String json = toJson(recordedIntervals);
+		transferJson(buildURL(userid), json);
 	}
 
 	/** Converts the intervals to Json. */
-	public String prepareIntervals(List<IntervalBase> recordedIntervals) {
+	public String toJson(List<IntervalBase> recordedIntervals) {
 		return gson.toJson(recordedIntervals);
 	}
 
 	/**
-	 * Opens an HTTP connection to the server, and transmits the recorded
-	 * intervals with the given user id.
+	 * Opens an HTTP connection to the server, and transmits the supplied json
+	 * data to the server. In case of error, the exact problem is logged.
 	 */
-	public void transferData(String userid, String jsonData) {
+	public void transferJson(String url, String jsonData) {
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpPost post = new HttpPost(buildURL(userid));
+		HttpPost post = new HttpPost(url);
 		try {
 			StringEntity input = new StringEntity(jsonData);
 			input.setContentType("application/json");
 			post.setEntity(input);
 
 			HttpResponse response = client.execute(post);
-			System.out.println(response.getStatusLine().getStatusCode());
-			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED) {
 				// TODO (MMB) set head pointer in database to new head
 				// successful response -- reset
 			} else {
-				System.out.println(buildURL(userid));
 				// transmission to server not successful
+				WatchDogLogger.getInstance().logInfo(
+						"Failed to post intervals to server. Status code: "
+								+ response.getStatusLine().getStatusCode()
+								+ " Message: "
+								+ EntityUtils.toString(response.getEntity()));
+
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

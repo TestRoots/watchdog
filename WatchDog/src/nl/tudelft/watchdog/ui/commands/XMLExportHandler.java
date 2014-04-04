@@ -20,7 +20,7 @@ public class XMLExportHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		WatchDogLogger.logInfo("exporting all intervals...");
+		WatchDogLogger.getInstance().logInfo("exporting all intervals...");
 
 		IntervalManager.getInstance().closeAllCurrentIntervals();
 
@@ -29,9 +29,9 @@ public class XMLExportHandler extends AbstractHandler {
 
 		try {
 			UserPrompter.saveIntervalsToFile(completeList);
-			WatchDogLogger.logInfo("exporting done.");
+			WatchDogLogger.getInstance().logInfo("exporting done.");
 		} catch (FileSavingFailedException e) {
-			WatchDogLogger.logSevere(e);
+			WatchDogLogger.getInstance().logSevere(e);
 			UserPrompter.showMessageBox("Watchdog",
 					"File could not be saved, please try again.");
 		}

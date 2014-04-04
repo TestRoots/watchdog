@@ -17,7 +17,7 @@ public class StartUpHandler implements IStartup {
 	public void earlyStartup() {
 		WatchDogGlobals.isActive = true;
 		IntervalManager.getInstance();
-		WatchDogLogger.setUpLogger();
+		WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
 		IntervalManager.getInstance().startNewSessionInterval();
 	}
 
