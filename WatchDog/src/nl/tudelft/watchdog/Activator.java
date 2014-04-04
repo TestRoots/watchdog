@@ -29,10 +29,6 @@ public class Activator extends AbstractUIPlugin {
 				WatchDogLogger.getInstance().logSevere(e);
 			}
 		});
-
-		WatchDogGlobals.isActive = true;
-		WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
-		IntervalManager.getInstance().startNewSessionInterval();
 	}
 
 	@Override
