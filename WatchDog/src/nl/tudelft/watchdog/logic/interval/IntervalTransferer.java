@@ -43,7 +43,7 @@ public class IntervalTransferer {
 	/** Sends the recorded intervals to the server. */
 	public void sendIntervals() {
 		List<IntervalBase> recordedIntervals = IntervalManager.getInstance()
-				.getRecordedIntervals();
+				.getClosedIntervals();
 		String userid = WatchdogPreferences.getInstance().getUserid();
 		String json = toJson(recordedIntervals);
 		transferJson(buildURL(userid), json);

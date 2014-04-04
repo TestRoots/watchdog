@@ -1,10 +1,11 @@
 package nl.tudelft.watchdog.ui.infoDialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.ActivityType;
+import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
@@ -45,7 +46,6 @@ public class InfoStatisticsDialog extends Dialog {
 	/** Creates a grid layout for the given {@link Composite}. */
 	private void createGridLayout(Composite container) {
 		final int layoutMargin = 10;
-
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginTop = layoutMargin;
 		layout.marginLeft = layoutMargin;
@@ -72,14 +72,18 @@ public class InfoStatisticsDialog extends Dialog {
 
 	/** Creates a summary from the current Eclipse session in WatchDog. */
 	private void createCurrentIntervalSummary(Composite container) {
-		createIntervalSummary("Current Eclipse Session:", container,
-				IntervalManager.getInstance().getRecordedIntervals());
+		List<IntervalBase> intervals = new ArrayList<IntervalBase>();
+		intervals.addAll(IntervalManager.getInstance().getClosedIntervals());
+		intervals.addAll(IntervalManager.getInstance().getOpenIntervals());
+		createIntervalSummary("Current Eclipse Session:", container, intervals);
 	}
 
 	/** Creates a summary with all the intervals in WatchDog added up. */
 	private void createTotalIntervalSummary(Composite container) {
-		createIntervalSummary("All Other Recording Sessions: ", container,
-				WatchDogUtils.getAllRecordedIntervals());
+		// TODO (MMB) commented out for as long as we do not have levelDB
+		// storage to actually produce this.
+		// createIntervalSummary("All Other Recording Sessions: ", container,
+		// WatchDogUtils.getAllRecordedIntervals());
 	}
 
 	/**
@@ -97,9 +101,12 @@ public class InfoStatisticsDialog extends Dialog {
 		createLabel("\n", container);
 		createLabel(text, container);
 		createLabel(WatchDogUtils.makeDurationHumanReadable(intervalStatistics
-				.getTotalTimeOverAllActivities()), container);
+				.getDurationOfAcitivity(ActivityType.EclipseOpen)), container);
 
 		for (ActivityType activity : ActivityType.values()) {
+			if (activity == ActivityType.EclipseOpen) {
+				return;
+			}
 			Duration duration = intervalStatistics
 					.getDurationOfAcitivity(activity);
 			createLabel(activity.toString(), container);

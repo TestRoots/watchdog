@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.logic.interval;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Observer;
@@ -28,6 +29,9 @@ public class IntervalManager {
 	/** A list of currently opened intervals. */
 	private List<IntervalBase> intervals = new ArrayList<IntervalBase>();
 
+	/** The recorded intervals of this session */
+	private List<IntervalBase> recordedIntervals = new ArrayList<IntervalBase>();
+
 	/** Notifies subscribers of editorEvents. */
 	private ImmediateNotifyingObservable editorEventObservable;
 
@@ -40,21 +44,20 @@ public class IntervalManager {
 	/** The document factory. */
 	private DocumentFactory documentFactory;
 
-	/** The recorded intervals of this session */
-	private List<IntervalBase> recordedIntervals;
-
 	/** The singleton instance of the interval manager. */
 	private static IntervalManager instance = null;
 
 	/** Private constructor. */
 	private IntervalManager() {
-		this.recordedIntervals = new ArrayList<IntervalBase>();
+		// setup logging
+		this.intervalEventObservable = new ImmediateNotifyingObservable();
+		addIntervalListener(new IntervalLoggerObserver());
+
+		addNewSessionInterval();
 		this.documentFactory = new DocumentFactory();
 		this.editorEventObservable = new ImmediateNotifyingObservable();
-		this.intervalEventObservable = new ImmediateNotifyingObservable();
 		this.uiListener = new UIListener(editorEventObservable);
 		addEditorObserversAndUIListeners();
-		addIntervalListener(new IntervalLoggerObserver());
 	}
 
 	/** Creates change listeners for different document events. */
@@ -148,9 +151,14 @@ public class IntervalManager {
 		}
 	}
 
-	/** Returns a list of recorded intervals. */
-	public List<IntervalBase> getRecordedIntervals() {
-		return recordedIntervals;
+	/** Returns an immutable list of recorded intervals. */
+	public List<IntervalBase> getClosedIntervals() {
+		return Collections.unmodifiableList(recordedIntervals);
+	}
+
+	/** Returns an immutable list of recorded intervals. */
+	public List<IntervalBase> getOpenIntervals() {
+		return Collections.unmodifiableList(intervals);
 	}
 
 	/**
@@ -171,8 +179,9 @@ public class IntervalManager {
 	}
 
 	/** Starts and registers a new session interval. */
-	public void startNewSessionInterval() {
+	public void addNewSessionInterval() {
 		SessionInterval activeSessionInterval = new SessionInterval();
+		intervals.add(activeSessionInterval);
 		addNewIntervalHandler(activeSessionInterval, 0);
 	}
 }

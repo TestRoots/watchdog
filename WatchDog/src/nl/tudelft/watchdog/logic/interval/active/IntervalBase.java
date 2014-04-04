@@ -92,17 +92,21 @@ public abstract class IntervalBase {
 	}
 
 	/**
-	 * @return the duration.
+	 * @return the duration of this interval. If the interval is not yet closed,
+	 *         return the duration until now.
 	 */
 	public Duration getDuration() {
-		return new Duration(start.getTime(), end.getTime());
+		if (isClosed) {
+			return new Duration(start.getTime(), end.getTime());
+		}
+		return new Duration(start.getTime(), new Date().getTime());
 	}
 
 	/**
 	 * @return A human-readable duration.
 	 */
 	public String getDurationString() {
-		Duration duration = new Duration(start.getTime(), end.getTime());
+		Duration duration = getDuration();
 		Period period = duration.toPeriod();
 		return PeriodFormat.getDefault().print(period);
 	}
