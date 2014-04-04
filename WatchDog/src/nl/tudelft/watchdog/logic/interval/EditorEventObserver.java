@@ -31,39 +31,38 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
 		if (!(event instanceof EditorEvent)) {
 			return;
 		}
+		boolean previousIntervalHasSameEditor = false;
 		EditorEvent editorEvent = (EditorEvent) event;
+
 		UserActivityIntervalBase userActivityInterval = intervalManager
 				.getUserActivityIntervalIfAny();
+
+		if (userActivityInterval != null) {
+			if (userActivityInterval.getEditor() == editorEvent.getTextEditor()) {
+				previousIntervalHasSameEditor = true;
+			}
+		}
+
 		if (event instanceof StartEditingEditorEvent) {
-			// create a new active interval when document is new
-			if (userActivityInterval == null || userActivityInterval.isClosed()) {
-				createNewActiveTypingInterval(editorEvent);
-			} else if (userActivityInterval.getEditor() != editorEvent
-					.getTextEditor()) {
-				intervalManager.closeInterval(userActivityInterval);
-				createNewActiveTypingInterval(editorEvent);
+			if (previousIntervalHasSameEditor
+					&& userActivityInterval instanceof TypingInterval) {
+				// in case we already have a typing interval do nothing
+				return;
 			}
+			intervalManager.closeInterval(userActivityInterval);
+			createNewActiveTypingInterval(editorEvent);
 		} else if (editorEvent instanceof StopEditingEditorEvent) {
-			if (userActivityInterval != null
-					&& editorEvent.getTextEditor() == userActivityInterval
-							.getEditor()) {
-				intervalManager.closeInterval(userActivityInterval);
-			}
+			intervalManager.closeInterval(userActivityInterval);
 		} else if (editorEvent instanceof FocusStartEditorEvent) {
-			// create a new active interval when document is new
-			if (userActivityInterval == null || userActivityInterval.isClosed()) {
-				createNewActiveReadingInterval(editorEvent);
-			} else if (userActivityInterval.getEditor() != editorEvent
-					.getTextEditor()) {
-				intervalManager.closeInterval(userActivityInterval);
-				createNewActiveReadingInterval(editorEvent);
+			if (previousIntervalHasSameEditor
+					&& userActivityInterval instanceof TypingInterval) {
+				// in case we already have a reading interval do nothing
+				return;
 			}
+			intervalManager.closeInterval(userActivityInterval);
+			createNewActiveReadingInterval(editorEvent);
 		} else if (editorEvent instanceof FocusEndEditorEvent) {
-			if (userActivityInterval != null
-					&& editorEvent.getTextEditor() == userActivityInterval
-							.getEditor()) {
-				intervalManager.closeInterval(userActivityInterval);
-			}
+			intervalManager.closeInterval(userActivityInterval);
 		}
 	}
 

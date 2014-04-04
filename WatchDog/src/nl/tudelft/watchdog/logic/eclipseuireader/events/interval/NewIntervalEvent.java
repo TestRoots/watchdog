@@ -4,7 +4,6 @@ import java.util.EventObject;
 
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 
-@SuppressWarnings("serial")
 public class NewIntervalEvent extends EventObject {
 
 	private IntervalBase interval;
