@@ -6,9 +6,8 @@ import java.io.FileOutputStream;
 import java.util.List;
 
 import nl.tudelft.watchdog.logic.exceptions.FileSavingFailedException;
-import nl.tudelft.watchdog.logic.interval.IntervalsToXMLWriter;
-import nl.tudelft.watchdog.logic.interval.recorded.IInterval;
-import nl.tudelft.watchdog.logic.logging.WDLogger;
+import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -26,8 +25,8 @@ public class UserPrompter {
 		shell = new Shell(display);
 	}
 
-	public static void saveIntervalsToFile(IntervalsToXMLWriter writer,
-			List<IInterval> intervals) throws FileSavingFailedException {
+	public static void saveIntervalsToFile(List<IntervalBase> intervals)
+			throws FileSavingFailedException {
 		FileDialog dialog = new FileDialog(shell, SWT.SAVE);
 		dialog.setFilterNames(new String[] { "XML files", "All Files (*.*)" });
 		dialog.setFilterExtensions(new String[] { "*.xml", "*.*" }); // Windows
@@ -44,13 +43,13 @@ public class UserPrompter {
 			File f = new File(path);
 			try {
 				FileOutputStream fos = new FileOutputStream(f);
-				writer.exportIntervals(intervals, fos);
+				// TODO (MMB) ouch
 			} catch (FileNotFoundException e) {
-				WDLogger.logSevere(e);
+				WatchDogLogger.logSevere(e);
 				throw new FileSavingFailedException(e);
 			}
 		} else {
-			WDLogger.logInfo("File saving canceled");
+			WatchDogLogger.logInfo("File saving canceled");
 		}
 	}
 

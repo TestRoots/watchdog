@@ -3,39 +3,36 @@ package nl.tudelft.watchdog.logic.interval;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Observer;
 
 import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentFactory;
-import nl.tudelft.watchdog.logic.eclipseuireader.UIListener;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateOrDeactivateEvent;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.IDocumentAttentionListener;
-import nl.tudelft.watchdog.logic.interval.active.ActiveIntervalBase;
-import nl.tudelft.watchdog.logic.interval.active.ActiveReadingInterval;
-import nl.tudelft.watchdog.logic.interval.active.ActiveTypingInterval;
-import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallBack;
-import nl.tudelft.watchdog.logic.interval.events.ClosingIntervalEvent;
-import nl.tudelft.watchdog.logic.interval.events.IIntervalListener;
-import nl.tudelft.watchdog.logic.interval.events.IntervalNotifier;
-import nl.tudelft.watchdog.logic.interval.events.NewIntervalEvent;
-import nl.tudelft.watchdog.logic.interval.recorded.IInterval;
-import nl.tudelft.watchdog.logic.interval.recorded.RecordedInterval;
-import nl.tudelft.watchdog.util.WatchDogGlobals;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObservable;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.interval.ClosingIntervalEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.interval.NewIntervalEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.listeners.UIListener;
+import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
+import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
+import nl.tudelft.watchdog.logic.interval.active.UserActivityIntervalBase;
+import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallback;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 /**
  * Manages interval listeners and keeps track of all intervals. Implements the
  * observer pattern, i.e. listeners can subscribe to interval events and will be
- * notified by an implementation of the {@link IIntervalManager}. Is a
+ * notified by an implementation of the {@link RecordedIntervalManager}. Is a
  * singleton.
  */
-public class IntervalManager extends IntervalNotifier {
+public class IntervalManager {
 
-	/** The currently open {@link ActiveReadingInterval}. */
-	private ActiveReadingInterval readingInterval;
+	/** A list of currently opened intervals. */
+	private List<IntervalBase> intervals = new ArrayList<IntervalBase>();
 
-	/** The currently open {@link ActiveTypingInterval}. */
-	private ActiveTypingInterval typingInterval;
+	/** Notifies subscribers of editorEvents. */
+	private ImmediateNotifyingObservable editorEventObservable;
+
+	/** Notifies subscribers of intervalEvents. */
+	private ImmediateNotifyingObservable intervalEventObservable;
 
 	/** The UI listener */
 	private UIListener uiListener;
@@ -44,17 +41,24 @@ public class IntervalManager extends IntervalNotifier {
 	private DocumentFactory documentFactory;
 
 	/** The recorded intervals of this session */
-	private List<IInterval> recordedIntervals;
+	private List<IntervalBase> recordedIntervals;
 
 	/** The singleton instance of the interval manager. */
 	private static IntervalManager instance = null;
 
 	/** Private constructor. */
 	private IntervalManager() {
-		recordedIntervals = new ArrayList<IInterval>();
+		recordedIntervals = new ArrayList<IntervalBase>();
 		documentFactory = new DocumentFactory();
-		registerAndCreateDocumentChangeListeners();
-		uiListener = new UIListener();
+		editorEventObservable = new ImmediateNotifyingObservable();
+		intervalEventObservable = new ImmediateNotifyingObservable();
+		uiListener = new UIListener(editorEventObservable);
+		addEditorObserversAndUIListeners();
+	}
+
+	/** Creates change listeners for different document events. */
+	private void addEditorObserversAndUIListeners() {
+		editorEventObservable.addObserver(new EditorEventObserver(this));
 		uiListener.attachListeners();
 	}
 
@@ -69,131 +73,101 @@ public class IntervalManager extends IntervalNotifier {
 		return instance;
 	}
 
-	/**
-	 * Creates change listeners for different document events.
-	 */
-	private void registerAndCreateDocumentChangeListeners() {
-		DocumentNotifier.addMyEventListener(new IDocumentAttentionListener() {
-
-			@Override
-			public void onDocumentStartEditing(
-					final DocumentActivateOrDeactivateEvent evt) {
-				// create a new active interval when doc is new
-				if (typingInterval == null || typingInterval.isClosed()) {
-					createNewEditingInterval(evt);
-				} else if (typingInterval.getEditor() != evt.getChangedEditor()) {
-					closeCurrentInterval(typingInterval);
-					createNewEditingInterval(evt);
-				}
-			}
-
-			@Override
-			public void onDocumentStopEditing(
-					DocumentActivateOrDeactivateEvent evt) {
-				if (typingInterval != null
-						&& evt.getChangedEditor() == typingInterval.getEditor()) {
-					closeCurrentInterval(typingInterval);
-				}
-			}
-
-			@Override
-			public void onDocumentStartFocus(
-					DocumentActivateOrDeactivateEvent evt) {
-				// create a new active interval when doc is new
-				if (readingInterval == null || readingInterval.isClosed()) {
-					createNewReadingInterval(evt);
-				} else if (readingInterval.getEditor() != evt
-						.getChangedEditor()) {
-					closeCurrentInterval(readingInterval);
-					createNewReadingInterval(evt);
-				}
-			}
-
-			@Override
-			public void onDocumentEndFocus(DocumentActivateOrDeactivateEvent evt) {
-				if (readingInterval != null
-						&& evt.getChangedEditor() == readingInterval
-								.getEditor()) {
-					closeCurrentInterval(readingInterval);
-				}
-			}
-
-		});
-	}
-
 	/** Closes the current interval (if it is not already closed). */
-	private void closeCurrentInterval(ActiveIntervalBase interval) {
+	/* package */void closeInterval(IntervalBase interval) {
 		if (!interval.isClosed()) {
-			Document doc = documentFactory.createDocument(interval.getPart());
-			RecordedInterval recordedInterval = new RecordedInterval(doc,
-					interval.getTimeOfCreation(), new Date(),
-					interval.getActivityType(), WatchDogUtils.isInDebugMode());
-			recordedIntervals.add(recordedInterval);
+			Document document = null;
+			if (interval instanceof UserActivityIntervalBase) {
+				UserActivityIntervalBase activeInterval = (UserActivityIntervalBase) interval;
+				document = documentFactory.createDocument(activeInterval
+						.getPart());
+			}
+			interval.setDocument(document);
+			interval.setEndTime(new Date());
+			interval.setIsInDebugMode(WatchDogUtils.isInDebugMode());
 			interval.closeInterval();
-			IntervalNotifier.fireOnClosingInterval(new ClosingIntervalEvent(
-					recordedInterval));
+			recordedIntervals.add(interval);
+			intervalEventObservable.notifyObservers(new ClosingIntervalEvent(
+					interval));
 		}
 	}
 
 	/** Creates a new editing interval. */
-	private void createNewEditingInterval(
-			final DocumentActivateOrDeactivateEvent evt) {
-		typingInterval = new ActiveTypingInterval(evt.getChangedEditor());
-		addNewIntervalHandler(typingInterval, WatchDogGlobals.TYPING_TIMEOUT);
-	}
-
-	/** Creates a new reading interval. */
-	private void createNewReadingInterval(
-			final DocumentActivateOrDeactivateEvent evt) {
-		readingInterval = new ActiveReadingInterval(evt.getPart());
-		addNewIntervalHandler(readingInterval, WatchDogGlobals.READING_TIMEOUT);
+	/* package */void createNewInterval(IntervalBase interval, int timeout) {
+		// TODO (MMB) shouldn't this handler be added to the interval itself?
+		intervals.add(interval);
+		addNewIntervalHandler(interval, timeout);
 	}
 
 	/**
 	 * Adds a new interval handler base, and defines its timeout, i.e. when the
 	 * interval is closed.
 	 */
-	private void addNewIntervalHandler(final ActiveIntervalBase interval,
-			int timeout) {
-		interval.addTimeoutListener(timeout, new OnInactiveCallBack() {
+	private void addNewIntervalHandler(final IntervalBase interval,
+			final int timeout) {
+		interval.addTimeoutListener(timeout, new OnInactiveCallback() {
 			@Override
 			public void onInactive() {
-				closeCurrentInterval(interval);
+				if (timeout == 0) {
+					return;
+				}
+				closeInterval(interval);
 			}
 		});
-		IntervalNotifier.fireOnNewInterval(new NewIntervalEvent(interval));
-	}
-
-	/** Registers a new interval listener. */
-	public void addIntervalListener(IIntervalListener listener) {
-		IntervalNotifier.addMyEventListener(listener);
-	}
-
-	/** Removes an existing interval listener. */
-	public void removeIntervalListener(IIntervalListener listener) {
-		IntervalNotifier.removeMyEventListener(listener);
-	}
-
-	/** Returns a list of recorded intervals. */
-	public List<IInterval> getRecordedIntervals() {
-		return recordedIntervals;
+		intervalEventObservable.notifyObservers(new NewIntervalEvent(interval));
 	}
 
 	/** Sets a list of recorded intervals. */
-	public void setRecordedIntervals(List<IInterval> intervals) {
+	/* package */void setRecordedIntervals(List<IntervalBase> intervals) {
 		recordedIntervals = intervals;
+	}
+
+	/**
+	 * @return the single ActivityInterval that is actually a
+	 *         UserActivityInterval. There can only be one such interval at any
+	 *         given time. If there is none, <code>null</code>.
+	 */
+	/* package */UserActivityIntervalBase getUserActivityIntervalIfAny() {
+		for (IntervalBase interval : intervals) {
+			if (interval instanceof UserActivityIntervalBase) {
+				return (UserActivityIntervalBase) interval;
+			}
+		}
+		return null;
 	}
 
 	/** Closes all currently open intervals. */
 	public void closeAllCurrentIntervals() {
-		// close editing interval
-		if (typingInterval != null) {
-			closeCurrentInterval(typingInterval);
-		}
-		// close reading interval
-		if (readingInterval != null) {
-			closeCurrentInterval(readingInterval);
+		for (IntervalBase interval : intervals) {
+			closeInterval(interval);
 		}
 	}
 
+	/** Returns a list of recorded intervals. */
+	public List<IntervalBase> getRecordedIntervals() {
+		return recordedIntervals;
+	}
+
+	/**
+	 * @return editorEventObservable
+	 */
+	public ImmediateNotifyingObservable getEditorObserveable() {
+		return editorEventObservable;
+	}
+
+	/** Registers a new interval listener. */
+	public void addIntervalListener(Observer listener) {
+		intervalEventObservable.addObserver(listener);
+	}
+
+	/** Removes an existing interval listener. */
+	public void removeIntervalListener(Observer listener) {
+		intervalEventObservable.deleteObserver(listener);
+	}
+
+	/** Starts and registers a new session interval. */
+	public void startNewSessionInterval() {
+		SessionInterval activeSessionInterval = new SessionInterval();
+		addNewIntervalHandler(activeSessionInterval, 0);
+	}
 }

@@ -2,15 +2,13 @@ package nl.tudelft.watchdog;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import nl.tudelft.watchdog.logic.logging.WDLogger;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-/**
- * The activator class controls the plug-in life cycle
- */
+/** The activator class controls the plug-in life cycle */
 public class Activator extends AbstractUIPlugin {
 
 	/** The plug-in ID */
@@ -34,7 +32,7 @@ public class Activator extends AbstractUIPlugin {
 		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 			@Override
 			public void uncaughtException(Thread t, Throwable e) {
-				WDLogger.logSevere(e);
+				WatchDogLogger.logSevere(e);
 			}
 		});
 	}
@@ -48,7 +46,7 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		WDLogger.logInfo("Shutting down...");
+		WatchDogLogger.logInfo("Shutting down...");
 
 		plugin = null;
 		WatchDogGlobals.isActive = false;
