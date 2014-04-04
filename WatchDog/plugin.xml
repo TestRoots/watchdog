@@ -58,5 +58,11 @@
          </menu>
       </menuContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="nl.tudelft.watchdog.ui.StartUpHandler">
+      </startup>
+   </extension>
 
 </plugin>
