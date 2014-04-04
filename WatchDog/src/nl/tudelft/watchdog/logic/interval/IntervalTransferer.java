@@ -25,9 +25,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-/**
- * Transmits the currently recorded intervals to the WatchDog server.
- */
+/** Transmits the currently recorded intervals to the WatchDog server. */
 public class IntervalTransferer {
 
 	/** The {@link GsonBuilder} for building the intervals. */
@@ -48,7 +46,7 @@ public class IntervalTransferer {
 				.getRecordedIntervals();
 		String userid = WatchdogPreferences.getInstance().getUserid();
 		String json = toJson(recordedIntervals);
-		transferData(userid, json);
+		transferJson(buildURL(userid), json);
 	}
 
 	/** Converts the intervals to Json. */
@@ -57,19 +55,19 @@ public class IntervalTransferer {
 	}
 
 	/**
-	 * Opens an HTTP connection to the server, and transmits the recorded
-	 * intervals with the given user id.
+	 * Opens an HTTP connection to the server, and transmits the supplied json
+	 * data to the server. In case of error, the exact problem is logged.
 	 */
-	public void transferData(String userid, String jsonData) {
+	public void transferJson(String url, String jsonData) {
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpPost post = new HttpPost(buildURL(userid));
+		HttpPost post = new HttpPost(url);
 		try {
 			StringEntity input = new StringEntity(jsonData);
 			input.setContentType("application/json");
 			post.setEntity(input);
 
 			HttpResponse response = client.execute(post);
-			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED) {
 				// TODO (MMB) set head pointer in database to new head
 				// successful response -- reset
 			} else {
