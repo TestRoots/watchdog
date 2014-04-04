@@ -48,15 +48,13 @@ public class IntervalManager {
 
 	/** Private constructor. */
 	private IntervalManager() {
-		recordedIntervals = new ArrayList<IntervalBase>();
-		documentFactory = new DocumentFactory();
-		editorEventObservable = new ImmediateNotifyingObservable();
-		intervalEventObservable = new ImmediateNotifyingObservable();
-		uiListener = new UIListener(editorEventObservable);
+		this.recordedIntervals = new ArrayList<IntervalBase>();
+		this.documentFactory = new DocumentFactory();
+		this.editorEventObservable = new ImmediateNotifyingObservable();
+		this.intervalEventObservable = new ImmediateNotifyingObservable();
+		this.uiListener = new UIListener(editorEventObservable);
 		addEditorObserversAndUIListeners();
-
-		IntervalManager.getInstance().addIntervalListener(
-				new IntervalLoggerObserver());
+		addIntervalListener(new IntervalLoggerObserver());
 	}
 
 	/** Creates change listeners for different document events. */

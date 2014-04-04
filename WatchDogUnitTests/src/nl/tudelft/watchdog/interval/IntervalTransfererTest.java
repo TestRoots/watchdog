@@ -20,7 +20,7 @@ public class IntervalTransfererTest {
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 		String json = it.toJson(intervals);
 		
-		it.transferData("cca45363247b1a6dc91ecdc4a3a15e1fc85d1c53", json);
+		it.transferJson("cca45363247b1a6dc91ecdc4a3a15e1fc85d1c53", json);
 	}
 	
 	private ArrayList<IntervalBase> createSampleIntervals(IntervalBase interval) {
