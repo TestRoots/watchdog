@@ -5,8 +5,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import nl.tudelft.watchdog.logic.interval.active.ActiveTypingInterval;
-import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallBack;
+import nl.tudelft.watchdog.logic.interval.active.TypingInterval;
+import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallback;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.texteditor.IDocumentProvider;
@@ -69,9 +69,9 @@ public class ActiveEditingIntervalTest {
 		when(mockedDocument.get()).thenReturn("read when initialized")
 				.thenReturn("read after 100ms");
 
-		ActiveTypingInterval interval = new ActiveTypingInterval(
+		TypingInterval interval = new TypingInterval(
 				mockedITextEditor);
-		interval.addTimeoutListener(100, new OnInactiveCallBack() {
+		interval.addTimeoutListener(100, new OnInactiveCallback() {
 
 			@Override
 			public void onInactive() {
@@ -92,9 +92,9 @@ public class ActiveEditingIntervalTest {
 		when(mockedDocument.get()).thenReturn("read when initialized")
 				.thenReturn("read after 100ms").thenReturn("read after 200ms");
 
-		ActiveTypingInterval interval = new ActiveTypingInterval(
+		TypingInterval interval = new TypingInterval(
 				mockedITextEditor);
-		interval.addTimeoutListener(100, new OnInactiveCallBack() {
+		interval.addTimeoutListener(100, new OnInactiveCallback() {
 
 			@Override
 			public void onInactive() {

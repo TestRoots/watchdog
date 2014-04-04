@@ -1,12 +1,10 @@
 package nl.tudelft.watchdog.logic.interval.activityCheckers;
 
-import java.util.TimerTask;
-
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateOrDeactivateEvent;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
 import nl.tudelft.watchdog.logic.exceptions.ContentReaderException;
 import nl.tudelft.watchdog.logic.exceptions.EditorClosedPrematurelyException;
-import nl.tudelft.watchdog.logic.logging.WDLogger;
+import nl.tudelft.watchdog.logic.interval.IntervalManager;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -16,13 +14,10 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /** A task for checking whether the user is typing. */
-public class TypingCheckerTask extends TimerTask {
-
-	/** An update checker. */
-	private IUpdateChecker checker;
+public class TypingCheckerTask extends CheckerTimerTask {
 
 	/** Callback. */
-	private OnInactiveCallBack callback;
+	private OnInactiveCallback callback;
 
 	/** The editor. */
 	private ITextEditor editor;
@@ -31,7 +26,7 @@ public class TypingCheckerTask extends TimerTask {
 	private IWorkbenchPart workbenchPart;
 
 	/** Constructor. */
-	public TypingCheckerTask(IWorkbenchPart part, OnInactiveCallBack callback) {
+	public TypingCheckerTask(IWorkbenchPart part, OnInactiveCallback callback) {
 		this.editor = (ITextEditor) part;
 		this.workbenchPart = part;
 		this.checker = new EditorContentChangedChecker(editor);
@@ -53,10 +48,10 @@ public class TypingCheckerTask extends TimerTask {
 		} catch (EditorClosedPrematurelyException e) {
 			// this can happen when eclipse is closed while the document is
 			// still active
-			WDLogger.logInfo("Editor closed prematurely");
+			WatchDogLogger.logInfo("Editor closed prematurely");
 		} catch (ContentReaderException e) {
 			// this can happen when a file is moved inside the workspace
-			WDLogger.logInfo("Unavailable doc provider");
+			WatchDogLogger.logInfo("Unavailable doc provider");
 		}
 	}
 
@@ -72,9 +67,11 @@ public class TypingCheckerTask extends TimerTask {
 			public void documentChanged(DocumentEvent event) {
 				// listen to this event just once, notify that the document is
 				// activated, then remove this listener
-				DocumentNotifier
-						.fireDocumentStartEditingEvent(new DocumentActivateOrDeactivateEvent(
-								workbenchPart));
+				IntervalManager
+						.getInstance()
+						.getEditorObserveable()
+						.notifyObservers(
+								new FocusStartEditorEvent(workbenchPart));
 				document.removeDocumentListener(this);
 			}
 

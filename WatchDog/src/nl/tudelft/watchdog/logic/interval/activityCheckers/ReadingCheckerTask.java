@@ -1,9 +1,7 @@
 package nl.tudelft.watchdog.logic.interval.activityCheckers;
 
-import java.util.TimerTask;
-
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentActivateOrDeactivateEvent;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.DocumentNotifier;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
+import nl.tudelft.watchdog.logic.interval.IntervalManager;
 
 import org.eclipse.swt.custom.CaretEvent;
 import org.eclipse.swt.custom.CaretListener;
@@ -16,10 +14,10 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /** A task for when the user is reading. */
-public class ReadingCheckerTask extends TimerTask {
+public class ReadingCheckerTask extends CheckerTimerTask {
 
 	/** The text. */
-	private final StyledText styledText;
+	final StyledText styledText;
 
 	/** Whether the user is still actively reading. */
 	private boolean isActive;
@@ -31,16 +29,16 @@ public class ReadingCheckerTask extends TimerTask {
 	private PaintListener paintListener;
 
 	/** Callback. */
-	private OnInactiveCallBack callback;
+	private OnInactiveCallback callback;
 
 	/** The editor. */
 	private ITextEditor editor;
 
 	/** Workbench part. */
-	private IWorkbenchPart workbenchPart;
+	IWorkbenchPart workbenchPart;
 
 	/** Constructor. */
-	public ReadingCheckerTask(IWorkbenchPart part, OnInactiveCallBack callback) {
+	public ReadingCheckerTask(IWorkbenchPart part, OnInactiveCallback callback) {
 		isActive = true;
 		this.callback = callback;
 		this.workbenchPart = part;
@@ -129,9 +127,12 @@ public class ReadingCheckerTask extends TimerTask {
 						@Override
 						public void caretMoved(CaretEvent event) {
 							// cursor place changed
-							DocumentNotifier
-									.fireDocumentStartFocusEvent(new DocumentActivateOrDeactivateEvent(
-											workbenchPart));
+							IntervalManager
+									.getInstance()
+									.getEditorObserveable()
+									.notifyObservers(
+											new FocusStartEditorEvent(
+													workbenchPart));
 							// listen just once to not get millions
 							// of events fired
 							styledText.removeCaretListener(this);
@@ -148,9 +149,12 @@ public class ReadingCheckerTask extends TimerTask {
 								// scrolled
 								@Override
 								public void paintControl(PaintEvent e) {
-									DocumentNotifier
-											.fireDocumentStartFocusEvent(new DocumentActivateOrDeactivateEvent(
-													workbenchPart));
+									IntervalManager
+											.getInstance()
+											.getEditorObserveable()
+											.notifyObservers(
+													new FocusStartEditorEvent(
+															workbenchPart));
 									// listen just once to not get millions
 									// of events fired
 									styledText.removePaintListener(this);
