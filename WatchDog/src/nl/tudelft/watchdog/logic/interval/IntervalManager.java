@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Observer;
 
-import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentFactory;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObservable;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.interval.ClosingIntervalEvent;
@@ -15,6 +14,7 @@ import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
 import nl.tudelft.watchdog.logic.interval.active.UserActivityIntervalBase;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallback;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 /**
@@ -74,25 +74,6 @@ public class IntervalManager {
 		return instance;
 	}
 
-	/** Closes the current interval (if it is not already closed). */
-	/* package */void closeInterval(IntervalBase interval) {
-		if (!interval.isClosed()) {
-			Document document = null;
-			if (interval instanceof UserActivityIntervalBase) {
-				UserActivityIntervalBase activeInterval = (UserActivityIntervalBase) interval;
-				document = documentFactory.createDocument(activeInterval
-						.getPart());
-			}
-			interval.setDocument(document);
-			interval.setEndTime(new Date());
-			interval.setIsInDebugMode(WatchDogUtils.isInDebugMode());
-			interval.closeInterval();
-			recordedIntervals.add(interval);
-			intervalEventObservable.notifyObservers(new ClosingIntervalEvent(
-					interval));
-		}
-	}
-
 	/** Creates a new editing interval. */
 	/* package */void createNewInterval(IntervalBase interval, int timeout) {
 		// TODO (MMB) shouldn't this handler be added to the interval itself?
@@ -116,6 +97,29 @@ public class IntervalManager {
 			}
 		});
 		intervalEventObservable.notifyObservers(new NewIntervalEvent(interval));
+	}
+
+	/**
+	 * Closes the current interval (if it is not already closed). Handles
+	 * <code>null</code> gracefully.
+	 */
+	/* package */void closeInterval(IntervalBase interval) {
+		if (interval != null && !interval.isClosed()) {
+			WatchDogLogger.getInstance()
+					.logInfo("Closing interval " + interval);
+			if (interval instanceof UserActivityIntervalBase) {
+				UserActivityIntervalBase activeInterval = (UserActivityIntervalBase) interval;
+				interval.setDocument(documentFactory
+						.createDocument(activeInterval.getPart()));
+			}
+			interval.setEndTime(new Date());
+			interval.setIsInDebugMode(WatchDogUtils.isInDebugMode());
+			interval.closeInterval();
+			intervals.remove(interval);
+			recordedIntervals.add(interval);
+			intervalEventObservable.notifyObservers(new ClosingIntervalEvent(
+					interval));
+		}
 	}
 
 	/** Sets a list of recorded intervals. */

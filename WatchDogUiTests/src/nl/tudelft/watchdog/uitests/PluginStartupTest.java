@@ -15,7 +15,9 @@ public class PluginStartupTest extends WatchDogTestBase {
 	@Test
 	public void testCommandMenuContribution() {
 		SWTBotMenu fileMenu = bot.menu("WatchDog");
+		fileMenu.click();
 		Assert.assertNotNull(fileMenu);
+		fileMenu.click();
 	}
 
 	/** Tests whether the toolbar menu contribution from WatchDog active. */

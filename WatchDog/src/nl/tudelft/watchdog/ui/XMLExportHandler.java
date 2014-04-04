@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.ui.commands;
+package nl.tudelft.watchdog.ui;
 
 import java.util.List;
 
@@ -6,7 +6,6 @@ import nl.tudelft.watchdog.logic.exceptions.FileSavingFailedException;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
-import nl.tudelft.watchdog.ui.UserPrompter;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.core.commands.AbstractHandler;
