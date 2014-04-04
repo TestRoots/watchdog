@@ -45,11 +45,11 @@ public class UserPrompter {
 				FileOutputStream fos = new FileOutputStream(f);
 				// TODO (MMB) ouch
 			} catch (FileNotFoundException e) {
-				WatchDogLogger.logSevere(e);
+				WatchDogLogger.getInstance().logSevere(e);
 				throw new FileSavingFailedException(e);
 			}
 		} else {
-			WatchDogLogger.logInfo("File saving canceled");
+			WatchDogLogger.getInstance().logInfo("File saving canceled");
 		}
 	}
 
