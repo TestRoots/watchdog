@@ -18,7 +18,7 @@ public class WatchDogGlobals {
 	public static boolean isActive = false;
 
 	/** The reading timeout in milliseconds. */
-	public static int READING_TIMEOUT = 5000;
+	public static int READING_TIMEOUT = 10000;
 
 	/** The typing timeout in milliseconds. */
 	public static int TYPING_TIMEOUT = 3000;

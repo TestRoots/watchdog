@@ -5,6 +5,7 @@ import java.util.Observer;
 
 import nl.tudelft.watchdog.logic.eclipseuireader.events.interval.ClosingIntervalEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.interval.NewIntervalEvent;
+import nl.tudelft.watchdog.logic.interval.active.UserActivityIntervalBase;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 
 /**
@@ -21,12 +22,14 @@ import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 
 		} else if (event instanceof ClosingIntervalEvent) {
 			ClosingIntervalEvent intervalEvent = (ClosingIntervalEvent) event;
-			WatchDogLogger.getInstance().logInfo(
-					"Closing interval: "
-							+ intervalEvent.getInterval().getDocument()
-									.getFileName() + " \n "
-							+ intervalEvent.getInterval().getStart() + " - "
-							+ intervalEvent.getInterval().getEnd());
+			if (intervalEvent.getInterval() instanceof UserActivityIntervalBase) {
+				WatchDogLogger.getInstance().logInfo(
+						"Closing interval: "
+								+ intervalEvent.getInterval().getDocument()
+										.getFileName() + " \n "
+								+ intervalEvent.getInterval().getStart()
+								+ " - " + intervalEvent.getInterval().getEnd());
+			}
 		}
 	}
 }
