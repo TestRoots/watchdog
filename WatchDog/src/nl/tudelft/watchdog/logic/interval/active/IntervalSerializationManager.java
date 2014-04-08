@@ -26,8 +26,9 @@ public class IntervalSerializationManager {
 				FileOutputStream fileOut = new FileOutputStream(new File(
 						parent, filename));
 				ObjectOutputStream out = new ObjectOutputStream(fileOut);
-				out.writeObject(IntervalManager.getInstance()
-						.getClosedIntervals());
+
+				// out.writeObject(IntervalManager.getInstance()
+				// .getClosedIntervals());
 				out.close();
 				fileOut.close();
 			} catch (IOException e) {
@@ -42,6 +43,5 @@ public class IntervalSerializationManager {
 		// TODO (MMB) change to where level db is located
 		List<IntervalBase> completeList = new ArrayList<IntervalBase>();
 		return completeList;
-
 	}
 }

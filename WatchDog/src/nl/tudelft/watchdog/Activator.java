@@ -32,9 +32,7 @@ public class Activator extends AbstractUIPlugin {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		// IntervalManager.getInstance().closeAllCurrentIntervals();
-		WatchDogLogger.getInstance().logInfo("Shutting down...");
-
+		WatchDogLogger.getInstance().logInfo("Shutting down Plugin...");
 		plugin = null;
 		WatchDogGlobals.isActive = false;
 		super.stop(context);
