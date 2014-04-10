@@ -14,7 +14,7 @@ class RegistrationPage extends WizardPage {
 	protected RegistrationPage() {
 		super("Registration Page");
 		setTitle("Register with WatchDog!");
-		setDescription("Our promise: We keep your data private. From everybody. At all times. If you fill out this page, you help us a lot with our research. If you win one of our amazing prices, we write you an email.");
+		setDescription("Our promise: We keep your data private. From everybody. Always. By filling out this form, you help us a lot with our research. We send you an email, if you win one of our amazing prices.");
 	}
 
 	@Override
@@ -40,7 +40,7 @@ class RegistrationPage extends WizardPage {
 		UIUtils.createTextInput(composite);
 		UIUtils.createLabel("Your Project:", composite);
 		UIUtils.createTextInput(composite);
-		UIUtils.createLabel("Your Role in the Project:", composite);
+		UIUtils.createLabel("Your Role:", composite);
 		UIUtils.createTextInput(composite);
 
 		UIUtils.createLabel("Does your project use JUnit?", composite);

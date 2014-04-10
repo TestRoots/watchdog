@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Slider;
  */
 public class TimeAllocationPage extends WizardPage {
 
+	/** Constructor. */
 	protected TimeAllocationPage() {
 		super("Time Distribution");
 	}
@@ -48,10 +49,10 @@ public class TimeAllocationPage extends WizardPage {
 		final Slider slider = new Slider(row, SWT.NONE);
 		slider.setLayoutData(UIUtils.fullGirdUsageData);
 		slider.setValues(50, 0, 105, 5, 5, 5);
-		UIUtils.createLabel("  100% Developing", row);
+		UIUtils.createLabel("  100% Production", row);
 		UIUtils.createLabel("", row);
 		final Label sliderValueText = UIUtils.createLabel(
-				"50% Testing, 50% Developing", row);
+				"50% Testing, 50% Production", row);
 		sliderValueText.setLayoutData(UIUtils.fullGirdUsageData);
 		sliderValueText.setAlignment(SWT.CENTER);
 
@@ -64,6 +65,7 @@ public class TimeAllocationPage extends WizardPage {
 				sliderValueText.setText(testingTimeValue + "% Testing, "
 						+ developmentTimeValue + "% Production");
 				sliderValueText.update();
+				setErrorMessage(null);
 				setPageComplete(true);
 			}
 
@@ -71,7 +73,7 @@ public class TimeAllocationPage extends WizardPage {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
+		setErrorMessage("Move slider to how you estimate your personal time distribution.");
 		return composite;
 	}
-
 }
