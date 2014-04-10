@@ -146,7 +146,10 @@ public class IntervalManager {
 
 	/** Closes all currently open intervals. */
 	public void closeAllCurrentIntervals() {
-		for (IntervalBase interval : intervals) {
+		// We need the duplication of the list to avoid concurrent modification
+		// of the list as we are for-eaching through it.
+		ArrayList<IntervalBase> allOpenIntervals = new ArrayList<>(intervals);
+		for (IntervalBase interval : allOpenIntervals) {
 			closeInterval(interval);
 		}
 	}

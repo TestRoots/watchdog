@@ -22,6 +22,11 @@
             id="nl.tudelft.watchdog.commands.showWatchDogInfo"
             name="Display WatchDogInfo">
       </command>
+      <command
+            defaultHandler="nl.tudelft.watchdog.ui.newUserWizard.UserWizardDialogHandler"
+            id="nl.tudelft.watchdog.commands.UserWizardDialog"
+            name="Start User Wizard">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -53,6 +58,11 @@
             <command
                   commandId="nl.tudelft.watchdog.commands.showWatchDogInfo"
                   label="WatchDog Statistics"
+                  style="push">
+            </command>
+            <command
+                  commandId="nl.tudelft.watchdog.commands.UserWizardDialog"
+                  label="Start User Wizard Dialog"
                   style="push">
             </command>
          </menu>

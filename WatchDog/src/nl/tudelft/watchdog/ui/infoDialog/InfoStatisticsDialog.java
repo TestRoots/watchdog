@@ -6,12 +6,12 @@ import java.util.List;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.active.ActivityType;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
+import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
@@ -58,7 +58,7 @@ public class InfoStatisticsDialog extends Dialog {
 	private void createStatusText(Composite container) {
 		Color colorRed = new Color(getShell().getDisplay(), 255, 0, 0);
 		Color colorGreen = new Color(getShell().getDisplay(), 0, 150, 0);
-		createLabel("WatchDog Status: ", container);
+		UIUtils.createLabel("WatchDog Status: ", container);
 		if (WatchDogGlobals.isActive) {
 			createLabel(WatchDogGlobals.activeWatchDogUIText, container,
 					colorGreen);
@@ -97,11 +97,13 @@ public class InfoStatisticsDialog extends Dialog {
 		intervalStatistics.calculateDurations();
 
 		// create some space before each listing
-		createLabel("\n", container);
-		createLabel("\n", container);
-		createLabel(text, container);
-		createLabel(WatchDogUtils.makeDurationHumanReadable(intervalStatistics
-				.getDurationOfAcitivity(ActivityType.EclipseOpen)), container);
+		UIUtils.createLabel("\n", container);
+		UIUtils.createLabel("\n", container);
+		UIUtils.createLabel(text, container);
+		UIUtils.createLabel(WatchDogUtils
+				.makeDurationHumanReadable(intervalStatistics
+						.getDurationOfAcitivity(ActivityType.EclipseOpen)),
+				container);
 
 		for (ActivityType activity : ActivityType.values()) {
 			if (activity == ActivityType.EclipseOpen) {
@@ -109,7 +111,7 @@ public class InfoStatisticsDialog extends Dialog {
 			}
 			Duration duration = intervalStatistics
 					.getDurationOfAcitivity(activity);
-			createLabel(activity.toString(), container);
+			UIUtils.createLabel(activity.toString(), container);
 
 			String labelText = WatchDogUtils
 					.makeDurationHumanReadable(duration);
@@ -122,21 +124,14 @@ public class InfoStatisticsDialog extends Dialog {
 				labelText = percentageOfActivity + "%" + " (" + labelText + ")";
 			}
 
-			createLabel(labelText, container);
+			UIUtils.createLabel(labelText, container);
 		}
 	}
 
 	/** Creates and returns a label with the given text and color. */
 	private Label createLabel(String text, Composite parent, Color color) {
-		Label label = createLabel(text, parent);
+		Label label = UIUtils.createLabel(text, parent);
 		label.setForeground(color);
-		return label;
-	}
-
-	/** Creates and returns a label with the given text. */
-	private Label createLabel(String text, Composite parent) {
-		Label label = new Label(parent, SWT.NONE);
-		label.setText(text);
 		return label;
 	}
 
