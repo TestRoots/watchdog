@@ -23,7 +23,7 @@
             name="Display WatchDogInfo">
       </command>
       <command
-            defaultHandler="nl.tudelft.watchdog.ui.newUserWizard.UserWizardDialogHandler"
+            defaultHandler="nl.tudelft.watchdog.ui.handlers.UserWizardDialogHandler"
             id="nl.tudelft.watchdog.commands.UserWizardDialog"
             name="Start User Wizard">
       </command>
