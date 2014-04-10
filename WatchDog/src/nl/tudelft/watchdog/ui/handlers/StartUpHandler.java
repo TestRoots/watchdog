@@ -24,12 +24,9 @@ public class StartUpHandler implements IStartup {
 		IntervalManager.getInstance();
 
 		Display.getDefault().asyncExec(new Runnable() {
-
 			@Override
 			public void run() {
 				if (WatchdogPreferences.getInstance().getUserid().isEmpty()) {
-					// if the UserID is empty, show WatchDog registration
-					// dialog.
 					UserWizardDialogHandler newUserWizardHandler = new UserWizardDialogHandler();
 					try {
 						newUserWizardHandler.execute(new ExecutionEvent());
@@ -44,5 +41,6 @@ public class StartUpHandler implements IStartup {
 				}
 			}
 		});
+
 	}
 }

@@ -4,6 +4,8 @@ import nl.tudelft.watchdog.ui.UIUtils;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
@@ -18,6 +20,9 @@ import org.eclipse.swt.widgets.Text;
  */
 class FirstPage extends WizardPage {
 
+	/** The length (in characters) of the WatchDog userid. */
+	private static final int useridLength = 40;
+
 	/**
 	 * The Composite which holds the text field for the existing user login.
 	 */
@@ -27,6 +32,11 @@ class FirstPage extends WizardPage {
 	 * The Composite which holds the text field for the new user welcome.
 	 */
 	private Composite welcomeUser;
+
+	/**
+	 * The userid as entered by the user (note: at this point, still unchecked).
+	 */
+	private Text userid;
 
 	/** Constructor. */
 	FirstPage() {
@@ -105,9 +115,24 @@ class FirstPage extends WizardPage {
 
 		UIUtils.createLabel("Your WatchDog Id:", composite);
 
-		Text text = UIUtils.createTextInput(composite);
-		text.setTextLimit(40);
-		text.setToolTipText("The SHA-1 hash that was returned upon your last WatchDog registration. You may (and should!) reuse your registration when you install a new Eclipse version for the same purpose.");
+		userid = UIUtils.createTextInput(composite);
+		userid.setTextLimit(useridLength);
+		userid.setToolTipText("The User id we sent you upon your last WatchDog registration. You may (and should!) reuse your WatchDog Id when you install a new Eclipse version for the same purpose.");
+		userid.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent e) {
+				if (userid.getText().length() == useridLength) {
+					setErrorMessage(null);
+					setPageComplete(true);
+					getWizard().getContainer().updateButtons();
+				} else {
+					setErrorMessage("Not a valid user id.");
+					setPageComplete(false);
+					getWizard().getContainer().updateButtons();
+				}
+			}
+		});
 
 		return composite;
 	}
@@ -121,6 +146,21 @@ class FirstPage extends WizardPage {
 		UIUtils.createLabel("Welcome, you new User!", composite);
 
 		return composite;
+	}
+
+	/**
+	 * @return Whether a possibly valid user id has been entered.
+	 */
+	public boolean hasValidUserId() {
+		return existingUserLogin.isVisible() && getErrorMessage() == null
+				&& isPageComplete();
+	}
+
+	/**
+	 * @return The userid entered by the user.
+	 */
+	/* package */String getUserId() {
+		return userid.getText();
 	}
 
 }
