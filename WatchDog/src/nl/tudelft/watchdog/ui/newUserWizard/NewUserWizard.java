@@ -8,6 +8,8 @@ public class NewUserWizard extends Wizard {
 	@Override
 	public void addPages() {
 		addPage(new FirstPage());
+		addPage(new RegistrationPage());
+		addPage(new TimeAllocationPage());
 	}
 
 	@Override
