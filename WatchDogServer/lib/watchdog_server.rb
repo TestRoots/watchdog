@@ -11,57 +11,27 @@ class WatchDogServer < Sinatra::Base
   register Sinatra::ConfigFile
   config_file '../config.yaml'
 
-  # Application-wide configuration
-  configure :development, :production do
+  def mongo
+    MongoClient.new("localhost", 27017)
+  end
 
-    # Make sure our MongoDB has the appropriate collections/indexes
-    COLLECTIONS = %w(users intervals)
+  ## The API
+  before  do
+    @db ||= mongo.db('watchdog')
+  end
 
-    IDXS = {
-        :users      => %w(unq),
-        :intervals  => %w(ts te)
-    }
+  after do
+    #@db.connection.close
+    #@db = nil
+  end
 
-    db = MongoClient.new(settings.mongo_host, settings.mongo_port).db(settings.mongo_db)
-
-    # Trigger creation of collections
-    COLLECTIONS.each{|c| db.collection(c)}
-
-    # Ensure that the necessary indexes exist
-    IDXS.each do |k,v|
-
-      col = db.collection(k.to_s)
-      idx_name = v.join('_1_') + '_1'
-      idx_exists =  col.index_information.find {|k,v| k == idx_name}
-
-      if idx_exists.nil?
-        idx_fields = v.reduce({}){|acc, x| acc.merge({x => 1})}
-
-        col.create_index(idx_fields, :background => true)
-        STDERR.puts "Creating index on #{col}(#{v})"
-      end
-    end
 
     # Do not support static files
     set :static, false
 
     # Enable request logging
     enable :logging
-  end
 
-  def mongo
-    MongoClient.new(settings.mongo_host, settings.mongo_port)
-  end
-
-  ## The API
-  before  do
-    @db ||= mongo.db(settings.mongo_db)
-  end
-
-  after do
-    @db.connection.close
-    @db = nil
-  end
 
   get '/' do
     'Woof Woof'
@@ -69,7 +39,15 @@ class WatchDogServer < Sinatra::Base
 
   # Get info about stored user
   get '/user/:id' do
+    # TODO (MMB) check userid
+    stored_user = get_user_by_id(params[:'id'])
 
+    if stored_user.nil?
+      halt 404, "User does not exist"
+    else
+      status 200
+      body stored_user.to_json
+    end
   end
 
   # Create a new user and return unique SHA1
@@ -99,11 +77,6 @@ class WatchDogServer < Sinatra::Base
     body stored_user['id']
   end
 
-  # Delete a user
-  delete '/user/:id' do
-
-  end
-
   # Get user intervals
   get '/user/:id/intervals' do
 
@@ -131,6 +104,7 @@ class WatchDogServer < Sinatra::Base
       halt 400, 'Request contains negative intervals'
     end
 
+    # TODO (MMB) check userid
     user_id = params[:id]
     user = get_user_by_id(user_id)
 

@@ -78,6 +78,17 @@ describe 'The WatchDog Server' do
     last_response.status.should eql(400)
   end
 
+  it 'should return 404 for non-existing user' do
+    get '/user/noexistingfoobar'
+    last_response.status.should eql(404)
+  end
+
+  it 'should return 200 for existing user' do
+    post '/user', test_user.to_json
+    get '/user/' + last_response.body
+    last_response.status.should eql(200)
+  end
+
   it 'should return 404 when posting intervals for non-existing user' do
     intervals = (1..10).map{|x| test_interval(x, x + 1)}
 
