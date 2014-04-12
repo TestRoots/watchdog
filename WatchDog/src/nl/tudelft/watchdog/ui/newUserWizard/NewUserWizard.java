@@ -1,6 +1,5 @@
 package nl.tudelft.watchdog.ui.newUserWizard;
 
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 
 /**
@@ -12,6 +11,7 @@ public class NewUserWizard extends Wizard {
 	/** The first page in the wizard. */
 	FirstPage firstPage;
 
+	/** When a user already exists ... */
 	ExistingUserEndingPage existingUserEndingPage;
 
 	/** Allows a shortcut to the finish button. */
@@ -21,32 +21,9 @@ public class NewUserWizard extends Wizard {
 	public void addPages() {
 		firstPage = new FirstPage();
 		addPage(firstPage);
-		addPage(new RegistrationPage());
-		addPage(new TimeAllocationPage());
-		existingUserEndingPage = new ExistingUserEndingPage();
-		addPage(existingUserEndingPage);
-	}
-
-	@Override
-	public IWizardPage getNextPage(IWizardPage page) {
-		if (page == firstPage) {
-			if (firstPage.hasValidUserId()) {
-				return existingUserEndingPage;
-			}
-		}
-		return super.getNextPage(page);
-	}
-
-	/**
-	 * {@inheritDoc} Since we updated {@link #getNextPage(IWizardPage)}, the
-	 * order from getPreviousPage must be updated, too.
-	 */
-	@Override
-	public IWizardPage getPreviousPage(IWizardPage page) {
-		if (page == existingUserEndingPage) {
-			return firstPage;
-		}
-		return super.getPreviousPage(page);
+		// addPage(new UserRegistrationPage());
+		// existingUserEndingPage = new ExistingUserEndingPage();
+		// addPage(existingUserEndingPage);
 	}
 
 	@Override

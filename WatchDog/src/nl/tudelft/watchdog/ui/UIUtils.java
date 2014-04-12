@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.ui;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -16,7 +17,12 @@ public class UIUtils {
 
 	/** Creates and returns a label with the given text. */
 	public static Label createLabel(String text, Composite parent) {
-		Label label = new Label(parent, SWT.NONE);
+		return createLabel(text, SWT.NONE, parent);
+	}
+
+	/** Creates and returns a label with a given style and text. */
+	public static Label createLabel(String text, int style, Composite parent) {
+		Label label = new Label(parent, style);
 		label.setText(text);
 		return label;
 	}
@@ -26,6 +32,13 @@ public class UIUtils {
 		Text text = new Text(parent, SWT.SINGLE | SWT.BORDER);
 		text.setLayoutData(fullGirdUsageData);
 		return text;
+	}
+
+	/** Creates and returns a radio button with the given text. */
+	public static Button createRadioButton(Composite parent, String text) {
+		Button button = new Button(parent, SWT.RADIO);
+		button.setText(text);
+		return button;
 	}
 
 	/**

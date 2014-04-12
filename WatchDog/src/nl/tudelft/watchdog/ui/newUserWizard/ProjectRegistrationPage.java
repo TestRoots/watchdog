@@ -6,6 +6,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Slider;
@@ -15,10 +16,10 @@ import org.eclipse.swt.widgets.Slider;
  * production code.
  *
  */
-public class TimeAllocationPage extends WizardPage {
+class ProjectRegistrationPage extends WizardPage {
 
 	/** Constructor. */
-	protected TimeAllocationPage() {
+	protected ProjectRegistrationPage() {
 		super("Time Distribution");
 	}
 
@@ -38,9 +39,24 @@ public class TimeAllocationPage extends WizardPage {
 	 * @return
 	 */
 	private Composite createTimeSlider(Composite parent) {
-		Composite composite = UIUtils.createGridedComposite(parent, 1);
+		Composite composite = UIUtils.createGridedComposite(parent, 2);
+
+		UIUtils.createLabel("Your Project:", composite);
+		UIUtils.createTextInput(composite);
+
+		UIUtils.createLabel("Your Role:", composite);
+		UIUtils.createTextInput(composite);
+
+		createSimpleYesNoQuestion("Does your project use JUnit?", composite);
+		createSimpleYesNoQuestion(
+				"Does your project use JUnit for unit testing?", composite);
+		createSimpleYesNoQuestion(
+				"Does your project use other testing frameworks/strategies than JUnit?",
+				composite);
+
 		composite.setLayoutData(UIUtils.fullGirdUsageData);
-		UIUtils.createLabel("Estimate how you spend your time in Eclipse.",
+		UIUtils.createLabel(
+				"Please provide an estimate of how you spend your time in Eclipse.",
 				composite);
 
 		Composite row = UIUtils.createGridedComposite(composite, 3);
@@ -75,5 +91,16 @@ public class TimeAllocationPage extends WizardPage {
 		});
 		setErrorMessage("Move slider to how you estimate your personal time distribution.");
 		return composite;
+	}
+
+	/**
+	 * Creates a simple question with according yes/no radio buttons.
+	 */
+	private void createSimpleYesNoQuestion(String question, Composite parent) {
+		UIUtils.createLabel("Does your project use JUnit?", parent);
+		Composite composite = UIUtils.createGridedComposite(parent, 1);
+		composite.setLayout(new FillLayout());
+		UIUtils.createRadioButton(composite, "Yes");
+		UIUtils.createRadioButton(composite, "No");
 	}
 }
