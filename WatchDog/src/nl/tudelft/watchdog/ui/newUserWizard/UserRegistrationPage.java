@@ -8,13 +8,13 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * The Page on which new users can register themselves.
  */
-class RegistrationPage extends WizardPage {
+class UserRegistrationPage extends WizardPage {
 
 	/** Constructor. */
-	protected RegistrationPage() {
+	protected UserRegistrationPage() {
 		super("Registration Page");
 		setTitle("Register with WatchDog!");
-		setDescription("Our promise: We keep your data private. From everybody. Always. By filling out this form, you help us a lot with our research. We send you an email, if you win one of our amazing prices.");
+		setDescription("Our promise: We keep your user data private. From everybody. Always. By filling out this form, you help us a lot with our research. We send you an email, if you win one of our amazing prices.");
 	}
 
 	@Override
@@ -23,7 +23,6 @@ class RegistrationPage extends WizardPage {
 
 		// Required to avoid an error in the system
 		setControl(topComposite);
-		// TODO (MMB) Need to change this dynamically!
 		setPageComplete(true);
 	}
 
@@ -32,18 +31,11 @@ class RegistrationPage extends WizardPage {
 		Composite composite = UIUtils.createGridedComposite(parent, 2);
 		composite.setLayoutData(UIUtils.fullGirdUsageData);
 
-		UIUtils.createLabel("Your Name:", composite);
-		UIUtils.createTextInput(composite);
 		UIUtils.createLabel("Your eMail:", composite);
 		UIUtils.createTextInput(composite);
 		UIUtils.createLabel("Your Organization/Company:", composite);
 		UIUtils.createTextInput(composite);
-		UIUtils.createLabel("Your Project:", composite);
-		UIUtils.createTextInput(composite);
-		UIUtils.createLabel("Your Role:", composite);
-		UIUtils.createTextInput(composite);
-
-		UIUtils.createLabel("Does your project use JUnit?", composite);
+		UIUtils.createLabel("Your Group:", composite);
 		UIUtils.createTextInput(composite);
 
 		return composite;

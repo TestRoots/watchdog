@@ -10,16 +10,21 @@ import org.eclipse.swt.widgets.Composite;
  * Possible finishing page in the wizard. If the user exists on the server, or
  * the server is not reachable, the user can exit here.
  */
-public class ExistingUserEndingPage extends WizardPage {
+class ExistingUserEndingPage extends WizardPage {
 
+	/** Flag denoting whether the wizard may be finished. */
 	boolean canFinish = false;
 	private Composite successComposite;
 	private Composite failureComposite;
 
+	/** Constructor. */
 	protected ExistingUserEndingPage() {
 		super("Existing user page");
 	}
 
+	/**
+	 * 
+	 */
 	private void connectToServer() {
 		FirstPage page = (FirstPage) getPreviousPage();
 		String url = NetworkUtils.buildUserURL(page.getUserId());
