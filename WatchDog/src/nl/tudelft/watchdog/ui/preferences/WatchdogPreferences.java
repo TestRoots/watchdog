@@ -41,6 +41,7 @@ public class WatchdogPreferences {
 		store.setDefault(LOGGING_ENABLED_KEY, false);
 		store.setDefault(USERID_KEY, "");
 		store.setDefault(WORKSPACES_KEY, "");
+		store.setValue(WORKSPACES_KEY, "");
 
 		String serializedWorksapceMap = store.getString(WORKSPACES_KEY);
 		if (serializedWorksapceMap == null || serializedWorksapceMap.isEmpty()) {

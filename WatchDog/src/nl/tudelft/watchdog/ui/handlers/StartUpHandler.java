@@ -8,6 +8,7 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
 
@@ -20,13 +21,38 @@ public class StartUpHandler implements IStartup {
 	/** {@inheritDoc} Starts the WatchDog plugin. */
 	@Override
 	public void earlyStartup() {
-		WatchDogGlobals.isActive = true;
-		WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
-		IntervalManager.getInstance();
 
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
+				checkUserRegistration();
+				checkWorkspaceRegistration();
+			}
+
+			private void checkWorkspaceRegistration() {
+				String workspace = ResourcesPlugin.getWorkspace().getRoot()
+						.getLocation().toFile().toString();
+				if (!WatchdogPreferences.getInstance().isWorkspaceRegistered(
+						workspace)) {
+					MessageDialog dialog = new MessageDialog(null, "WatchDog",
+							null, "Should WatchDog monitor this workspace?",
+							MessageDialog.QUESTION,
+							new String[] { "Yes", "No" }, 0);
+					boolean useWatchDogInThisWorkspace = (dialog.open() == 0) ? true
+							: false;
+					WatchDogLogger.getInstance().logInfo(
+							"Registering workspace...");
+					WatchdogPreferences.getInstance().registerWorkspace(
+							workspace, useWatchDogInThisWorkspace);
+				}
+
+				if (WatchdogPreferences.getInstance().shouldWatchDogBeActive(
+						workspace)) {
+					startWatchDog();
+				}
+			}
+
+			private void checkUserRegistration() {
 				if (WatchdogPreferences.getInstance().getUserid().isEmpty()) {
 					UserWizardDialogHandler newUserWizardHandler = new UserWizardDialogHandler();
 					try {
@@ -40,17 +66,15 @@ public class StartUpHandler implements IStartup {
 										"Failed to display register dialog on startup!");
 					}
 				}
-				String workspace = ResourcesPlugin.getWorkspace().getRoot()
-						.getLocation().toFile().toString();
-				if (!WatchdogPreferences.getInstance().isWorkspaceRegistered(
-						workspace)) {
-					WatchDogLogger.getInstance().logInfo(
-							"Registering workspace...");
-					WatchdogPreferences.getInstance().registerWorkspace(
-							workspace, true);
-				}
 			}
 		});
 
+	}
+
+	/** Starts WatchDog. */
+	void startWatchDog() {
+		WatchDogGlobals.isActive = true;
+		WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
+		IntervalManager.getInstance();
 	}
 }
