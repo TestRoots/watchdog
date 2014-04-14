@@ -21,7 +21,7 @@ public class NewUserWizard extends Wizard {
 	public void addPages() {
 		firstPage = new FirstPage();
 		addPage(firstPage);
-		// addPage(new UserRegistrationPage());
+		addPage(new UserRegistrationPage());
 		// existingUserEndingPage = new ExistingUserEndingPage();
 		// addPage(existingUserEndingPage);
 	}

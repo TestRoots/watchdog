@@ -90,7 +90,6 @@ class FirstPage extends WizardPage {
 				removeDynamicContent(parent);
 				dynamicContent = createLoginComposite(
 						"Your WatchDog Userid:",
-						useridInput,
 						"The User ID we sent you upon your first WatchDog registration.",
 						parent);
 				parent.layout();
@@ -122,6 +121,7 @@ class FirstPage extends WizardPage {
 		return composite;
 	}
 
+	/** Removes the dynamic content from the page, if it exists. */
 	private void removeDynamicContent(final Composite parent) {
 		if (dynamicContent != null) {
 			dynamicContent.dispose();
@@ -134,17 +134,17 @@ class FirstPage extends WizardPage {
 	 * Creates and returns an input field, in which user can enter their
 	 * existing WatchDog ID.
 	 */
-	private Composite createLoginComposite(String label, Text input,
-			String inputToolTip, Composite parent) {
+	private Composite createLoginComposite(String label, String inputToolTip,
+			Composite parent) {
 		Composite composite = UIUtils.createGridedComposite(parent, 2);
 		composite.setLayoutData(UIUtils.fullGirdUsageData);
 
 		UIUtils.createLabel(label, composite);
 
-		input = UIUtils.createTextInput(composite);
-		input.setTextLimit(idLength);
-		input.setToolTipText(inputToolTip);
-		input.addModifyListener(new ModifyListener() {
+		useridInput = UIUtils.createTextInput(composite);
+		useridInput.setTextLimit(idLength);
+		useridInput.setToolTipText(inputToolTip);
+		useridInput.addModifyListener(new ModifyListener() {
 
 			@Override
 			public void modifyText(ModifyEvent e) {
@@ -174,7 +174,7 @@ class FirstPage extends WizardPage {
 
 		Link linkedText = new Link(composite, SWT.WRAP);
 		linkedText
-				.setText("WatchDog is a plugin that keeps track of how you develop and test your software. It is maintained by the Software Engineering Research Group at Delft University.\n\nYou can stay completely anonymous. But our research greatly improves, if you provide us with a bit of info about you. This way, you can also win one of our amazing prices.\n\nIf you want to know more about WatchDog (or the prices to win), visit our website <a href=\"http://watchdog.testroots.org\">watchdog.testroots.org</a>.");
+				.setText("WatchDog keeps track of how you develop and test your software. It is maintained by the TestRoots team at Delft University.\n\nYou can stay completely anonymous. But our research greatly improves, if you provide us with a bit of info about you. This way, you can also win one of our amazing prices.\n\nIf you want to know more about WatchDog (or the prices to win), visit our website <a href=\"http://watchdog.testroots.org\">watchdog.testroots.org</a>.");
 		GridData labelData = new GridData();
 		labelData.widthHint = parent.getMonitor().getClientArea().width / 5;
 		linkedText.setLayoutData(labelData);
@@ -186,7 +186,7 @@ class FirstPage extends WizardPage {
 					PlatformUI.getWorkbench().getBrowserSupport()
 							.getExternalBrowser().openURL(new URL(event.text));
 				} catch (PartInitException | MalformedURLException exception) {
-					// Browser could not be opened. Not too bad.
+					// Browser could not be opened. We do nothing about it.
 				}
 			}
 		});

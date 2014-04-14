@@ -7,6 +7,7 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
 
@@ -38,6 +39,15 @@ public class StartUpHandler implements IStartup {
 								.logInfo(
 										"Failed to display register dialog on startup!");
 					}
+				}
+				String workspace = ResourcesPlugin.getWorkspace().getRoot()
+						.getLocation().toFile().toString();
+				if (!WatchdogPreferences.getInstance().isWorkspaceRegistered(
+						workspace)) {
+					WatchDogLogger.getInstance().logInfo(
+							"Registering workspace...");
+					WatchdogPreferences.getInstance().registerWorkspace(
+							workspace, true);
 				}
 			}
 		});
