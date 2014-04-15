@@ -9,7 +9,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import com.google.gson.Gson;
 
 /**
- * Utils for accessing WatchDog's Eclipse preferences.
+ * Utilities for accessing WatchDog's Eclipse preferences.
  */
 public class WatchdogPreferences {
 
@@ -19,14 +19,26 @@ public class WatchdogPreferences {
 	/** Flag denoting whether WatchDog plugin should do logging or not. */
 	public final static String LOGGING_ENABLED_KEY = "ENABLE_LOGGING";
 
-	/** The workspaces in which WatchDog is enabled. */
-	public final static String WORKSPACES_KEY = "WORKSPACES";
+	/**
+	 * A Hashmap from the Workspace location to a boolean flag denoting whether
+	 * WatchDog is enabled for this workspace.
+	 */
+	public final static String ENABLED_WORKSPACES_KEY = "USE_WORKSPACES";
+
+	/**
+	 * A Hashmap from the Workspace location to the Project ID this workspaces
+	 * is connected with.
+	 */
+	public final static String PROJECT_WORKSPACES_KEY = "PROJECT_WORKSPACES";
 
 	/** The preference store. */
 	private IPreferenceStore store;
 
 	/** The map of registered workspaces. */
-	private HashMap<String, Boolean> registeredWorkspacesMap = new HashMap<String, Boolean>();
+	private HashMap<String, Boolean> workspaceToActivateWatchdog = new HashMap<String, Boolean>();
+
+	/** The map of workspaces to which project ID that workspace uses. */
+	private HashMap<String, String> workspaceToProjectID = new HashMap<String, String>();
 
 	/** The WatchDog preference instance. */
 	private static WatchdogPreferences singletonInstance;
@@ -40,16 +52,24 @@ public class WatchdogPreferences {
 		store = Activator.getDefault().getPreferenceStore();
 		store.setDefault(LOGGING_ENABLED_KEY, false);
 		store.setDefault(USERID_KEY, "");
-		store.setDefault(WORKSPACES_KEY, "");
-		store.setValue(WORKSPACES_KEY, "");
+		store.setDefault(ENABLED_WORKSPACES_KEY, "");
 
-		String serializedWorksapceMap = store.getString(WORKSPACES_KEY);
+		workspaceToActivateWatchdog = readSerializedHashMap(ENABLED_WORKSPACES_KEY);
+		workspaceToProjectID = readSerializedHashMap(PROJECT_WORKSPACES_KEY);
+	}
+
+	/**
+	 * Reads and constructs a HashMap object from a serialized String preference
+	 * key.
+	 */
+	@SuppressWarnings("rawtypes")
+	private HashMap readSerializedHashMap(String KEY) {
+		String serializedWorksapceMap = store.getString(KEY);
 		if (serializedWorksapceMap == null || serializedWorksapceMap.isEmpty()) {
-			return;
+			return new HashMap();
 		}
 		Gson gson = new Gson();
-		registeredWorkspacesMap = gson.fromJson(serializedWorksapceMap,
-				HashMap.class);
+		return gson.fromJson(serializedWorksapceMap, HashMap.class);
 	}
 
 	/** Returns the singleton instance from WatchdogPreferences. */
@@ -78,7 +98,8 @@ public class WatchdogPreferences {
 	 *         {@link #shouldWatchDogBeActive(String)}
 	 */
 	public boolean isWorkspaceRegistered(String workspace) {
-		return (registeredWorkspacesMap.get(workspace) == null) ? false : true;
+		return (workspaceToActivateWatchdog.get(workspace) == null) ? false
+				: true;
 	}
 
 	/**
@@ -86,18 +107,45 @@ public class WatchdogPreferences {
 	 *         the given workspace. <code>false</code> otherwise.
 	 */
 	public boolean shouldWatchDogBeActive(String workspace) {
-		return registeredWorkspacesMap.get(workspace);
+		return workspaceToActivateWatchdog.get(workspace);
 	}
 
 	/**
 	 * Registers the given workspace with WatchDog. If use is <code>true</code>,
 	 * WatchDog will be used.
 	 */
-	public void registerWorkspace(String workspace, boolean use) {
-		registeredWorkspacesMap.put(workspace, use);
+	public void registerWorkspaceUse(String workspace, boolean use) {
+		storeHashMapPreferenceValue(workspaceToActivateWatchdog,
+				ENABLED_WORKSPACES_KEY, workspace, use);
+	}
+
+	/** Registers the given projectId with the given workspace. */
+	public void registerWorkspaceProject(String workspace, String projectId) {
+		storeHashMapPreferenceValue(workspaceToProjectID,
+				PROJECT_WORKSPACES_KEY, workspace, projectId);
+	}
+
+	/**
+	 * Updates a serialized HashMap in the preference store with the supplied
+	 * values.
+	 * 
+	 * @param map
+	 *            The HashMap that is to be updated.
+	 * @param preferenceKey
+	 *            The Key in the preferences under which the Map is stored in a
+	 *            serialized manner.
+	 * @param hashmapKey
+	 *            The key to put into the map.
+	 * @param value
+	 *            The value to put into the map.
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void storeHashMapPreferenceValue(HashMap map, String preferenceKey,
+			String hashmapKey, Object value) {
+		map.put(hashmapKey, value);
 		Gson gson = new Gson();
-		String serializedObject = gson.toJson(registeredWorkspacesMap);
-		store.setValue(WORKSPACES_KEY, serializedObject);
+		String serializedObject = gson.toJson(map);
+		store.setValue(preferenceKey, serializedObject);
 	}
 
 	/** @return The {@link IPreferenceStore} for WatchDog. */

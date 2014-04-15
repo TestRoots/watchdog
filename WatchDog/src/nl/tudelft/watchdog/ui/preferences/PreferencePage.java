@@ -23,16 +23,18 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 
 	@Override
 	protected void createFieldEditors() {
-		addField(new UserIDFieldEditor());
-		addField(new BooleanFieldEditor(WatchdogPreferences.LOGGING_ENABLED_KEY,
-				"Enable Logs", getFieldEditorParent()));
+		addField(new WatchDogIDFieldEditor(WatchdogPreferences.USERID_KEY,
+				"User Id"));
+		addField(new BooleanFieldEditor(
+				WatchdogPreferences.LOGGING_ENABLED_KEY, "Enable Logs",
+				getFieldEditorParent()));
 	}
 
 	/** A specific field editor allowing input of valid user IDs only. */
-	class UserIDFieldEditor extends StringFieldEditor {
+	class WatchDogIDFieldEditor extends StringFieldEditor {
 		/** Constructor, delegating call to parent's constructor. */
-		public UserIDFieldEditor() {
-			super(WatchdogPreferences.USERID_KEY, "User Id", getFieldEditorParent());
+		public WatchDogIDFieldEditor(String key, String descipriton) {
+			super(key, descipriton, getFieldEditorParent());
 		}
 
 		@Override
@@ -43,7 +45,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 
 		@Override
 		protected boolean doCheckState() {
-			// TODO (MMB) query server with ID
 			return super.doCheckState();
 		}
 	}
