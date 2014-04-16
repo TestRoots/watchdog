@@ -30,7 +30,7 @@ public class UIUtils {
 	/** Creates and returns a user text input field. */
 	public static Text createTextInput(Composite parent) {
 		Text text = new Text(parent, SWT.SINGLE | SWT.BORDER);
-		text.setLayoutData(fullGirdUsageData);
+		text.setLayoutData(createFullGridUsageData());
 		return text;
 	}
 
@@ -49,5 +49,12 @@ public class UIUtils {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(columns, false));
 		return composite;
+	}
+
+	/** @return A fully horizontally greedy Grid. */
+	public static GridData createFullGridUsageData() {
+		// has to create new instances because the existing instance are altered
+		// once passed into an object.
+		return new GridData(SWT.FILL, SWT.NONE, true, false);
 	}
 }

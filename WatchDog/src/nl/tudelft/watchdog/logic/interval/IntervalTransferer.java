@@ -6,7 +6,7 @@ import java.util.List;
 
 import nl.tudelft.watchdog.logic.NetworkUtils;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
-import nl.tudelft.watchdog.ui.preferences.WatchdogPreferences;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,7 +34,7 @@ public class IntervalTransferer {
 	public void sendIntervals() {
 		List<IntervalBase> recordedIntervals = IntervalManager.getInstance()
 				.getClosedIntervals();
-		String userid = WatchdogPreferences.getInstance().getUserid();
+		String userid = Preferences.getInstance().getUserid();
 		String json = toJson(recordedIntervals);
 		NetworkUtils.transferJson(NetworkUtils.buildIntervalsPostURL(userid),
 				json);
