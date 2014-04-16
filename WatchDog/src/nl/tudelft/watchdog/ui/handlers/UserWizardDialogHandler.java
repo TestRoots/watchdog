@@ -14,7 +14,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.menus.UIElement;
 
 /**
- * Handler for displaying an {@link InfoStatisticsDialog}.
+ * Handler for displaying a blocking {@link InfoStatisticsDialog}.
  */
 public class UserWizardDialogHandler extends AbstractHandler implements
 		IElementUpdater {
@@ -23,9 +23,8 @@ public class UserWizardDialogHandler extends AbstractHandler implements
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		WizardDialog wizardDialog = new WizardDialog(
 				HandlerUtil.getActiveShell(event), new NewUserWizard());
-		wizardDialog.setBlockOnOpen(false);
-		wizardDialog.open();
-		return null;
+		wizardDialog.setBlockOnOpen(true);
+		return wizardDialog.open();
 	}
 
 	@SuppressWarnings("rawtypes")

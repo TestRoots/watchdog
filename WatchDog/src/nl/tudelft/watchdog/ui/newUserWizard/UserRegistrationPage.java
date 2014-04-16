@@ -40,5 +40,4 @@ class UserRegistrationPage extends WizardPage {
 
 		return composite;
 	}
-
 }
