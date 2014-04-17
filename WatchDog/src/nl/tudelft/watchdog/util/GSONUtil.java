@@ -17,7 +17,7 @@ import com.google.gson.JsonSerializer;
  * A class that initializes the GSON factory with our custom types and returns
  * instances of GSON objects.
  */
-public class GSONUtil {
+public final class GSONUtil {
 
 	/** The {@link GsonBuilder} for building the intervals. */
 	private static GsonBuilder gsonBuilder;
@@ -28,11 +28,7 @@ public class GSONUtil {
 				new DateDeserializer());
 	}
 
-	/**
-	 * Get an instance of a GSON parser.
-	 * 
-	 * @return An initialized GSON object.
-	 */
+	/** Get an instance of a GSON parser. */
 	public static Gson gson() {
 		return gsonBuilder.create();
 	}
@@ -52,7 +48,7 @@ public class GSONUtil {
 		@Override
 		public Date deserialize(JsonElement json, Type typeOfT,
 				JsonDeserializationContext context) throws JsonParseException {
-			return json == null ? null : new Date(json.getAsLong());
+			return (json == null) ? null : new Date(json.getAsLong());
 		}
 	};
 }
