@@ -8,7 +8,7 @@ import nl.tudelft.watchdog.util.GSONUtil;
 /**
  * Construct intervals from textual representations.
  */
-public class IntervalFactory {
+public final class IntervalFactory {
 
 	static Map<IntervalType, Class<? extends IntervalBase>> intervalTypes = new HashMap<>();
 
@@ -19,7 +19,7 @@ public class IntervalFactory {
 	}
 
 	/**
-	 * 
+	 * Construct an IntervalBase subtype using a JSON string as input.
 	 */
 	public static <T extends IntervalBase> T fromJSON(String json) {
 		Map<String, String> tmp = new HashMap<String, String>();
@@ -31,10 +31,9 @@ public class IntervalFactory {
 	}
 
 	/**
-	 * Construct an IntervalBase subtype using a JSON string as input.
+	 * Construct an IntervalBase subtype using a JSON string as input and
 	 */
 	public static <T extends IntervalBase> T fromJSON(String json, Class<T> type) {
-		T a = GSONUtil.gson().fromJson(json, type);
-		return a;
+		return GSONUtil.gson().fromJson(json, type);
 	}
 }
