@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.logic.interval.active;
 
 import static nl.tudelft.watchdog.util.GSONUtil.gson;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Timer;
 
@@ -15,7 +16,7 @@ import org.joda.time.format.PeriodFormat;
 import com.google.gson.annotations.SerializedName;
 
 /** The interval base. */
-public abstract class IntervalBase {
+public abstract class IntervalBase implements Serializable {
 
 	/** The document associated with this {@link RecordedInterval}. */
 	@SerializedName("doc")
@@ -150,6 +151,7 @@ public abstract class IntervalBase {
 	public abstract void addTimeoutListener(long timeout,
 			OnInactiveCallback callbackWhenFinished);
 
+	/** Convert this to a JSON string */
 	public String toJSON() {
 		return gson().toJson(this);
 	}
