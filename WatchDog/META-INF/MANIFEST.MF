@@ -40,6 +40,4 @@ Bundle-ClassPath: .,
  libs/gson-2.2.4.jar,
  libs/httpclient-4.3.3.jar,
  libs/httpcore-4.3.2.jar,
- libs/leveldb-0.7.jar,
- libs/leveldb-api-0.7.jar,
- libs/guava-16.0.1.jar
+ libs/mapdb-0.9.0.jar
