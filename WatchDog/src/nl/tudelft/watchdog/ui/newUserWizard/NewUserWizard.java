@@ -1,5 +1,7 @@
 package nl.tudelft.watchdog.ui.newUserWizard;
 
+import nl.tudelft.watchdog.ui.preferences.Preferences;
+
 import org.eclipse.jface.wizard.Wizard;
 
 /**
@@ -37,6 +39,8 @@ public class NewUserWizard extends Wizard {
 
 	@Override
 	public boolean performFinish() {
+		Preferences.getInstance().getStore()
+				.setValue(Preferences.USERID_KEY, firstPage.getUserId());
 		return true;
 	}
 

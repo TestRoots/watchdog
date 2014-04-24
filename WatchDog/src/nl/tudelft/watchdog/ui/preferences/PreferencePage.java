@@ -12,7 +12,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -23,8 +22,20 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 public class PreferencePage extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage {
 
-	private Text projectInput;
-	private Button monitorWatchdog;
+	/** The length of a WatchDog id. */
+	private static final int ID_LENGTH = 40;
+
+	/** The project ID input field for this workspace. */
+	private Text projectIDInput;
+
+	/** Whether WatchDog should be enabled in this workspace. */
+	private Button enableWatchdogInput;
+
+	/** WatchDog preferences. */
+	private Preferences preferences = Preferences.getInstance();
+
+	/** This workspace. */
+	private String workspace = UIUtils.getWorkspaceName();
 
 	@Override
 	public void init(IWorkbench workbench) {
@@ -47,12 +58,19 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 		Composite projectComposite = UIUtils.createGridedComposite(localGroup,
 				2);
 		projectComposite.setLayoutData(UIUtils.createFullGridUsageData());
-		Label projectIdLabel = UIUtils.createLabel("Project-ID ",
-				projectComposite);
-		projectInput = UIUtils.createTextInput(projectComposite);
+		UIUtils.createLabel("Project-ID ", projectComposite);
+		projectIDInput = UIUtils.createTextInput(projectComposite);
+		projectIDInput.setTextLimit(ID_LENGTH);
+		enableWatchdogInput = new Button(localGroup, SWT.CHECK);
+		enableWatchdogInput.setText("Monitor this workspace with WatchDog ");
 
-		monitorWatchdog = new Button(localGroup, SWT.CHECK);
-		monitorWatchdog.setText("Monitor this workspace with WatchDog ");
+		WorkspacePreferenceSetting workspaceSetting = preferences
+				.getWorkspaceSetting(workspace);
+		if (workspaceSetting != null) {
+			// display settings from previous workspace entry if there is any.
+			projectIDInput.setText(workspaceSetting.projectId);
+			enableWatchdogInput.setSelection(workspaceSetting.enableWatchdog);
+		}
 
 		UIUtils.createLabel("", parent);
 
@@ -67,7 +85,12 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 
 	@Override
 	public boolean performOk() {
-		return super.performOk();
+		boolean returnStatus = super.performOk();
+		preferences.registerWorkspaceProject(workspace,
+				projectIDInput.getText());
+		preferences.registerWorkspaceUse(workspace,
+				enableWatchdogInput.getSelection());
+		return returnStatus;
 	}
 
 	@Override

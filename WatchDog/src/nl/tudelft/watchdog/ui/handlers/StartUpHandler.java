@@ -2,12 +2,12 @@ package nl.tudelft.watchdog.ui.handlers;
 
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
+import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
@@ -49,7 +49,7 @@ public class StartUpHandler implements IStartup {
 			checkUserRegistration();
 			if (!Preferences.getInstance().getUserid().isEmpty()) {
 				// In case the user aborted the preference dialog with cancel,
-				// we don't want him to have to answer whether he wants watchdog
+				// we don't want him to have to answer whether he wants WatchDog
 				// to be active for this workspace -- it's obvious that he does
 				// not want to be bothered for the moment.
 				checkWorkspaceRegistration();
@@ -71,8 +71,6 @@ public class StartUpHandler implements IStartup {
 										"WatchDog only works when you register a (possibly anonymous) user.\n\nTakes less than one minute, requires no internet, and you can win prices. As a registered user, you decide on which workspaces WatchDog is active.");
 					}
 				} catch (ExecutionException exception) {
-					// TODO (MMB) Add a warning to the user here to manually
-					// execute registering?
 					WatchDogLogger.getInstance().logInfo(
 							"Failed to display register dialog on startup!");
 				}
@@ -84,10 +82,8 @@ public class StartUpHandler implements IStartup {
 		 * user whether Watchdog should be active.
 		 */
 		private void checkWorkspaceRegistration() {
-			String workspace = ResourcesPlugin.getWorkspace().getRoot()
-					.getLocation().toFile().toString();
+			String workspace = UIUtils.getWorkspaceName();
 			if (!Preferences.getInstance().isWorkspaceRegistered(workspace)) {
-
 				boolean useWatchDogInThisWorkspace = MessageDialog
 						.openQuestion(null, "WatchDog Workspace Registration",
 								"Should WatchDog be active in this workspace?");
@@ -101,5 +97,6 @@ public class StartUpHandler implements IStartup {
 				startWatchDog();
 			}
 		}
+
 	}
 }

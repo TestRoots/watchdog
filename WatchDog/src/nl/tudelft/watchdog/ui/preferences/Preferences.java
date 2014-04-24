@@ -22,10 +22,9 @@ public class Preferences {
 	public final static String LOGGING_ENABLED_KEY = "ENABLE_LOGGING";
 
 	/**
-	 * A Hashmap from the Workspace location to a boolean flag denoting whether
-	 * WatchDog is enabled for this workspace.
+	 * A serialized List of {@link WorkspacePreferenceSetting}s.
 	 */
-	public final static String WORKSPACES_KEY = "USE_WORKSPACES";
+	public final static String WORKSPACES_KEY = "WORKSPACE_SETTINGS";
 
 	/** The preference store. */
 	private IPreferenceStore store;
@@ -90,7 +89,7 @@ public class Preferences {
 	 * @return <code>true</code> if this workspace has already been registered
 	 *         with WatchDog, <code>false</code> otherwise. Note: This does not
 	 *         say whether WatchDog should be activated, which is returned by
-	 *         {@link #shouldWatchDogBeActive(String)}
+	 *         {@link #shouldWatchDogBeActive(String)}.
 	 */
 	public boolean isWorkspaceRegistered(String workspace) {
 		return (getWorkspaceSetting(workspace) == null) ? false : true;
@@ -108,7 +107,7 @@ public class Preferences {
 	 * @return The matching {@link WorkspacePreferenceSetting}, or
 	 *         <code>null</code> in case there was no match.
 	 */
-	private WorkspacePreferenceSetting getWorkspaceSetting(String workspace) {
+	public WorkspacePreferenceSetting getWorkspaceSetting(String workspace) {
 		for (WorkspacePreferenceSetting setting : workspaceSettings) {
 			if (setting.workspace.equals(workspace)) {
 				return setting;
@@ -118,19 +117,33 @@ public class Preferences {
 	}
 
 	/**
+	 * @return The matching {@link WorkspacePreferenceSetting}, or a completely
+	 *         new one in case there was no match.
+	 */
+	private WorkspacePreferenceSetting getOrCreateWorkspaceSetting(
+			String workspace) {
+		WorkspacePreferenceSetting setting = getWorkspaceSetting(workspace);
+		if (setting == null) {
+			setting = new WorkspacePreferenceSetting();
+			workspaceSettings.add(setting);
+			setting.workspace = workspace;
+		}
+		return setting;
+	}
+
+	/**
 	 * Registers the given workspace with WatchDog. If use is <code>true</code>,
 	 * WatchDog will be used.
 	 */
 	public void registerWorkspaceUse(String workspace, boolean use) {
-		WorkspacePreferenceSetting setting = getWorkspaceSetting(workspace);
+		WorkspacePreferenceSetting setting = getOrCreateWorkspaceSetting(workspace);
 		setting.enableWatchdog = use;
 		storeWorkspaceSettings();
-
 	}
 
 	/** Registers the given projectId with the given workspace. */
 	public void registerWorkspaceProject(String workspace, String projectId) {
-		WorkspacePreferenceSetting setting = getWorkspaceSetting(workspace);
+		WorkspacePreferenceSetting setting = getOrCreateWorkspaceSetting(workspace);
 		setting.projectId = projectId;
 		storeWorkspaceSettings();
 	}
@@ -146,6 +159,9 @@ public class Preferences {
 		return store;
 	}
 
+	/**
+	 * @return a list of workspace settings.
+	 */
 	public List<WorkspacePreferenceSetting> getWorkspaceSettings() {
 		return workspaceSettings;
 	}
