@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.ui;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -56,5 +57,13 @@ public class UIUtils {
 		// has to create new instances because the existing instance are altered
 		// once passed into an object.
 		return new GridData(SWT.FILL, SWT.NONE, true, false);
+	}
+
+	/**
+	 * @return The workspace name.
+	 */
+	public static String getWorkspaceName() {
+		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile()
+				.toString();
 	}
 }
