@@ -22,7 +22,7 @@ public class Activator extends AbstractUIPlugin {
 	private static Activator plugin;
 
 	/** Our preferenceStore. */
-	private IPreferenceStore preferenceStore;
+	private ScopedPreferenceStore preferenceStore;
 
 	@Override
 	public void start(BundleContext context) throws Exception {
