@@ -165,10 +165,10 @@ class FirstPage extends WizardPage {
 
 	/** Creates and returns a welcoming composite for new users. */
 	private Composite createWelcomeComposite(Composite parent) {
-		Composite composite = UIUtils.createGridedComposite(parent, 2);
+		Composite composite = UIUtils.createGridedComposite(parent, 1);
 		createSeparator(composite);
 		Label newUserLabel = UIUtils.createLabel(
-				"Welcome, you new WatchedDog!", SWT.BOLD, composite);
+				"Welcome, you new WatchedDog!!", SWT.BOLD, composite);
 		newUserLabel.setFont(JFaceResources.getFontRegistry().getBold(""));
 		UIUtils.createLabel("", composite);
 
@@ -176,7 +176,7 @@ class FirstPage extends WizardPage {
 		linkedText
 				.setText("WatchDog keeps track of how you develop and test your software. It is maintained by the TestRoots team at Delft University.\n\nYou can stay completely anonymous. But our research greatly improves, if you provide us with a bit of info about you. This way, you can also win one of our amazing prices.\n\nIf you want to know more about WatchDog (or the prices to win), visit our website <a href=\"http://watchdog.testroots.org\">watchdog.testroots.org</a>.");
 		GridData labelData = new GridData();
-		labelData.widthHint = parent.getMonitor().getClientArea().width / 5;
+		labelData.widthHint = parent.getClientArea().width - 30;
 		linkedText.setLayoutData(labelData);
 		linkedText.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -190,6 +190,8 @@ class FirstPage extends WizardPage {
 				}
 			}
 		});
+		linkedText.pack();
+		composite.pack();
 
 		return composite;
 	}
