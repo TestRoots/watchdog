@@ -1,5 +1,7 @@
 package nl.tudelft.watchdog.ui.handlers;
 
+import java.io.IOException;
+
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.ui.UIUtils;
@@ -12,6 +14,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 /**
  * Handler called when an Eclipse instance with the WatchDog plugin installed
@@ -53,6 +56,13 @@ public class StartUpHandler implements IStartup {
 				// to be active for this workspace -- it's obvious that he does
 				// not want to be bothered for the moment.
 				checkWorkspaceRegistration();
+			}
+			if (Preferences.getInstance().getStore().needsSaving()) {
+				try {
+					((ScopedPreferenceStore) Preferences.getInstance()
+							.getStore()).save();
+				} catch (IOException exception) {
+				}
 			}
 		}
 
