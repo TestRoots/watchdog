@@ -46,7 +46,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	protected Control createContents(Composite parent) {
 		UIUtils.createLabel(
-				"These are WatchDog's settings. They are for advanced users only.",
+				"WatchDog has local settings (different per workspace) and global settings (per Eclipse installation).",
 				parent);
 		UIUtils.createLabel("", parent);
 		Group localGroup = createGroup(parent, "Local Settings", 1);

@@ -1,7 +1,7 @@
 package nl.tudelft.watchdog.ui.preferences;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import nl.tudelft.watchdog.Activator;
@@ -9,6 +9,7 @@ import nl.tudelft.watchdog.Activator;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Utilities for accessing WatchDog's Eclipse preferences.
@@ -26,6 +27,12 @@ public class Preferences {
 	 */
 	public final static String WORKSPACES_KEY = "WORKSPACE_SETTINGS";
 
+	/**
+	 * The type of a list of {@link WorkspacePreferenceSetting}s for Gson.
+	 */
+	private Type typeWorkspaceSettings = new TypeToken<List<WorkspacePreferenceSetting>>() {
+	}.getType();
+
 	/** The preference store. */
 	private IPreferenceStore store;
 
@@ -37,7 +44,7 @@ public class Preferences {
 
 	/**
 	 * Constructor internally implements a singleton, not visible to class
-	 * users.
+	 * users. The preferences are stored on a per eclipse installation basis.
 	 */
 	private Preferences() {
 		store = Activator.getDefault().getPreferenceStore();
@@ -59,11 +66,10 @@ public class Preferences {
 				|| serializedWorksapceSettings.isEmpty()) {
 			return new ArrayList<WorkspacePreferenceSetting>();
 		}
+
 		Gson gson = new Gson();
-		WorkspacePreferenceSetting[] settings = gson
-				.fromJson(serializedWorksapceSettings,
-						WorkspacePreferenceSetting[].class);
-		return Arrays.asList(settings);
+		return gson
+				.fromJson(serializedWorksapceSettings, typeWorkspaceSettings);
 	}
 
 	/** Returns the singleton instance from WatchdogPreferences. */
@@ -125,8 +131,8 @@ public class Preferences {
 		WorkspacePreferenceSetting setting = getWorkspaceSetting(workspace);
 		if (setting == null) {
 			setting = new WorkspacePreferenceSetting();
-			workspaceSettings.add(setting);
 			setting.workspace = workspace;
+			workspaceSettings.add(setting);
 		}
 		return setting;
 	}
@@ -151,7 +157,8 @@ public class Preferences {
 	/** Updates the serialized workspace settings in the preference store. */
 	private void storeWorkspaceSettings() {
 		Gson gson = new Gson();
-		store.setValue(WORKSPACES_KEY, gson.toJson(workspaceSettings));
+		store.setValue(WORKSPACES_KEY,
+				gson.toJson(workspaceSettings, typeWorkspaceSettings));
 	}
 
 	/** @return The {@link IPreferenceStore} for WatchDog. */
