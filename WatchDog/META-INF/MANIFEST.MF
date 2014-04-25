@@ -4,8 +4,7 @@ Manifest-Version: 1.0
 Bundle-Activator: nl.tudelft.watchdog.Activator
 Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: nl.tudelft.WatchDog;singleton:=true
-Import-Package: junit.framework;version="4.11.0",
- org.eclipse.core.commands,
+Import-Package: org.eclipse.core.commands,
  org.eclipse.core.resources,
  org.eclipse.core.runtime;version="3.4.0",
  org.eclipse.jface.action,
@@ -23,18 +22,18 @@ Import-Package: junit.framework;version="4.11.0",
  org.eclipse.swt.layout,
  org.eclipse.swt.widgets,
  org.eclipse.ui,
- org.eclipse.ui.browser,
+ org.eclipse.ui.browser;resolution:=optional,
  org.eclipse.ui.commands,
  org.eclipse.ui.console,
  org.eclipse.ui.editors.text,
  org.eclipse.ui.handlers,
+ org.eclipse.ui.ide,
  org.eclipse.ui.internal,
  org.eclipse.ui.menus,
  org.eclipse.ui.part,
  org.eclipse.ui.plugin,
  org.eclipse.ui.services,
  org.eclipse.ui.texteditor,
- org.junit;version="4.11.0",
  org.osgi.framework,
  org.w3c.dom
 Bundle-ActivationPolicy: lazy

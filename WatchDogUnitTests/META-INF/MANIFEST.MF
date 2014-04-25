@@ -8,3 +8,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.junit
 Bundle-ClassPath: libs/mockito-all-1.9.5.jar,
  .
+Import-Package: org.eclipse.ui
