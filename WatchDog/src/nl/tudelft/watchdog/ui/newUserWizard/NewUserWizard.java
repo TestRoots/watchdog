@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.ui.newUserWizard;
 
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 
 /**
@@ -24,12 +25,17 @@ public class NewUserWizard extends Wizard {
 		firstPage = new FirstPage();
 		addPage(firstPage);
 		addPage(new UserRegistrationPage());
-		// existingUserEndingPage = new ExistingUserEndingPage();
-		// addPage(existingUserEndingPage);
 	}
 
 	@Override
 	public boolean canFinish() {
+		IWizardPage currentPage = getContainer().getCurrentPage();
+		if (currentPage == firstPage) {
+			if (firstPage.hasValidUserId()) {
+				return true;
+			}
+			return false;
+		}
 		if (getContainer().getCurrentPage() == existingUserEndingPage
 				&& existingUserEndingPage.canFinish()) {
 			return true;

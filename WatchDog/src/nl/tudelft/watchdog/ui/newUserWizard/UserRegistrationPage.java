@@ -4,17 +4,27 @@ import nl.tudelft.watchdog.ui.UIUtils;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * The Page on which new users can register themselves.
  */
 class UserRegistrationPage extends WizardPage {
 
+	private Text emailInput;
+	private Text organizationInput;
+	private Text groupInput;
+
+	private Composite introductionText;
+	private Composite innerParent;
+	private Label introLabel;
+
 	/** Constructor. */
 	protected UserRegistrationPage() {
 		super("Registration Page");
 		setTitle("Register with WatchDog!");
-		setDescription("Our promise: We keep your user data private. From everybody. Always. By filling out this form, you help us a lot with our research. We send you an email, if you win one of our amazing prices.");
+		setDescription("");
 	}
 
 	@Override
@@ -28,16 +38,37 @@ class UserRegistrationPage extends WizardPage {
 
 	/** Creates and returns the form of the registration. */
 	private Composite createRegistrationComposite(Composite parent) {
-		Composite composite = UIUtils.createGridedComposite(parent, 2);
-		composite.setLayoutData(UIUtils.fullGirdUsageData);
+		innerParent = UIUtils.createGridedComposite(parent, 1);
+		innerParent.setLayoutData(UIUtils.createFullGridUsageData());
 
-		UIUtils.createLabel("Your eMail:", composite);
-		UIUtils.createTextInput(composite);
-		UIUtils.createLabel("Your Organization/Company:", composite);
-		UIUtils.createTextInput(composite);
-		UIUtils.createLabel("Your Group:", composite);
-		UIUtils.createTextInput(composite);
+		introductionText = UIUtils.createGridedComposite(innerParent, 1);
+		introLabel = UIUtils.createBoldLabel(
+				"We keep your user data private. From everybody. Always.",
+				introductionText);
+		UIUtils.createLabel(
+				"By filling out this form, you help us a lot with our research. And you participate in our lottery.",
+				introductionText);
 
-		return composite;
+		Composite composite = UIUtils.createGridedComposite(innerParent, 2);
+		composite.setLayoutData(UIUtils.createFullGridUsageData());
+
+		emailInput = UIUtils
+				.createLinkedFieldInput(
+						"Your eMail: ",
+						"We send you an email to this address, if you win one of our amazing prices. Nothing else.",
+						composite);
+
+		organizationInput = UIUtils
+				.createLinkedFieldInput(
+						"Your Organization/Company: ",
+						"You can also include your organization's website, if you like.",
+						composite);
+
+		groupInput = UIUtils.createLinkedFieldInput("Your Group (if any): ",
+				"If you are not part of a group, please leave this empty.",
+				composite);
+
+		return innerParent;
 	}
+
 }

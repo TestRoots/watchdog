@@ -54,22 +54,22 @@ class ProjectRegistrationPage extends WizardPage {
 				"Does your project use other testing frameworks/strategies than JUnit?",
 				composite);
 
-		composite.setLayoutData(UIUtils.fullGirdUsageData);
+		composite.setLayoutData(UIUtils.createFullGridUsageData());
 		UIUtils.createLabel(
 				"Please provide an estimate of how you spend your time in Eclipse.",
 				composite);
 
 		Composite row = UIUtils.createGridedComposite(composite, 3);
-		row.setLayoutData(UIUtils.fullGirdUsageData);
+		row.setLayoutData(UIUtils.createFullGridUsageData());
 		UIUtils.createLabel("100% Testing  ", row);
 		final Slider slider = new Slider(row, SWT.NONE);
-		slider.setLayoutData(UIUtils.fullGirdUsageData);
+		slider.setLayoutData(UIUtils.createFullGridUsageData());
 		slider.setValues(50, 0, 105, 5, 5, 5);
 		UIUtils.createLabel("  100% Production", row);
 		UIUtils.createLabel("", row);
 		final Label sliderValueText = UIUtils.createLabel(
 				"50% Testing, 50% Production", row);
-		sliderValueText.setLayoutData(UIUtils.fullGirdUsageData);
+		sliderValueText.setLayoutData(UIUtils.createFullGridUsageData());
 		sliderValueText.setAlignment(SWT.CENTER);
 
 		slider.addSelectionListener(new SelectionListener() {

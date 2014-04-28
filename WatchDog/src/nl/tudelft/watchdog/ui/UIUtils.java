@@ -1,7 +1,10 @@
 package nl.tudelft.watchdog.ui;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -12,9 +15,26 @@ import org.eclipse.swt.widgets.Text;
 /** Utility methods for the UI. */
 public class UIUtils {
 
-	/** Constant for full horizontal usage of Grid data. */
-	public final static GridData fullGirdUsageData = new GridData(SWT.FILL,
-			SWT.NONE, true, false);
+	/**
+	 * Creates and returns a label whose text is wrapped inside the supplied
+	 * {@link Composite}. Be careful: The width calculation on the parent
+	 * composite only works when called after the parent has already been
+	 * created on the screen, i.e. its client area is known.
+	 */
+	public static Label createWrappingLabel(String text, Composite parent) {
+		Label label = createLabel(text, SWT.WRAP, parent);
+		GridData labelData = new GridData();
+		labelData.widthHint = parent.getClientArea().width - 30;
+		label.setLayoutData(labelData);
+		return label;
+	}
+
+	/** Creates and returns a bold texted label. */
+	public static Label createBoldLabel(String text, Composite parent) {
+		Label label = createLabel(text, parent);
+		label.setFont(JFaceResources.getFontRegistry().getBold(""));
+		return label;
+	}
 
 	/** Creates and returns a label with the given text. */
 	public static Label createLabel(String text, Composite parent) {
@@ -57,6 +77,60 @@ public class UIUtils {
 		// has to create new instances because the existing instance are altered
 		// once passed into an object.
 		return new GridData(SWT.FILL, SWT.NONE, true, false);
+	}
+
+	/**
+	 * Creates a pair of a linked Label and text input field.
+	 * 
+	 * @param labelText
+	 *            The text of the label associated with the input.
+	 * @param toolTip
+	 *            The tooltip displayed on both the label and the input.
+	 * @param composite
+	 *            The composite on which both should be put.
+	 * @return
+	 * 
+	 * @return input The linked input.
+	 */
+	public static Text createLinkedFieldInput(String labelText, String toolTip,
+			Composite composite) {
+		Label label = UIUtils.createLabel(labelText, composite);
+		label.setToolTipText(toolTip);
+		Text input = UIUtils.createTextInput(composite);
+		input.setToolTipText(toolTip);
+		UIUtils.attachListenerOnLabelClickFocusTextElement(label, input);
+		return input;
+	}
+
+	/**
+	 * Attaches a listener to the specified label that directs the focus to the
+	 * supplied text (resulting in an HTML form-like connection of the label and
+	 * its input field).
+	 */
+	private static void attachListenerOnLabelClickFocusTextElement(Label label,
+			final Text text) {
+		label.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseUp(MouseEvent e) {
+				// intentionally left empty
+			}
+
+			@Override
+			public void mouseDown(MouseEvent e) {
+				focusAccompanyingInput();
+			}
+
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				focusAccompanyingInput();
+			}
+
+			private void focusAccompanyingInput() {
+				text.forceFocus();
+			}
+		});
+
 	}
 
 	/**
