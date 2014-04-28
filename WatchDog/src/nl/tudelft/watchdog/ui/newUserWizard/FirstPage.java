@@ -5,7 +5,6 @@ import java.net.URL;
 
 import nl.tudelft.watchdog.ui.UIUtils;
 
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -76,7 +75,8 @@ class FirstPage extends WizardPage {
 	 */
 	private Composite createQuestionComposite(final Composite parent) {
 		Composite composite = UIUtils.createGridedComposite(parent, 2);
-		UIUtils.createLabel("Do you already have a WatchDog Userid?", composite);
+		UIUtils.createLabel("Do you already have a WatchDog Userid? ",
+				composite);
 
 		final Composite radioButtons = UIUtils.createGridedComposite(composite,
 				1);
@@ -89,9 +89,8 @@ class FirstPage extends WizardPage {
 			public void widgetSelected(SelectionEvent e) {
 				removeDynamicContent(parent);
 				dynamicContent = createLoginComposite(
-						"Your WatchDog Userid:",
-						"The User ID we sent you upon your first WatchDog registration.",
-						parent);
+
+				parent);
 				parent.layout();
 				setPageComplete(false);
 			}
@@ -134,16 +133,16 @@ class FirstPage extends WizardPage {
 	 * Creates and returns an input field, in which user can enter their
 	 * existing WatchDog ID.
 	 */
-	private Composite createLoginComposite(String label, String inputToolTip,
-			Composite parent) {
+	private Composite createLoginComposite(Composite parent) {
+		String labelText = "Your WatchDog Userid: ";
+		String inputToolTip = "The User ID we sent you upon your first WatchDog registration.";
+
 		Composite composite = UIUtils.createGridedComposite(parent, 2);
-		composite.setLayoutData(UIUtils.fullGirdUsageData);
+		composite.setLayoutData(UIUtils.createFullGridUsageData());
 
-		UIUtils.createLabel(label, composite);
-
-		useridInput = UIUtils.createTextInput(composite);
+		useridInput = UIUtils.createLinkedFieldInput(labelText, inputToolTip,
+				composite);
 		useridInput.setTextLimit(idLength);
-		useridInput.setToolTipText(inputToolTip);
 		useridInput.addModifyListener(new ModifyListener() {
 
 			@Override
@@ -167,14 +166,12 @@ class FirstPage extends WizardPage {
 	private Composite createWelcomeComposite(Composite parent) {
 		Composite composite = UIUtils.createGridedComposite(parent, 1);
 		createSeparator(composite);
-		Label newUserLabel = UIUtils.createLabel(
-				"Welcome, you new WatchedDog!!", SWT.BOLD, composite);
-		newUserLabel.setFont(JFaceResources.getFontRegistry().getBold(""));
+		UIUtils.createBoldLabel("Welcome, new WatchDog User!", composite);
 		UIUtils.createLabel("", composite);
 
 		Link linkedText = new Link(composite, SWT.WRAP);
 		linkedText
-				.setText("WatchDog keeps track of how you develop and test your software. It is maintained by the TestRoots team at Delft University.\n\nYou can stay completely anonymous. But our research greatly improves, if you provide us with a bit of info about you. This way, you can also win one of our amazing prices.\n\nIf you want to know more about WatchDog (or the prices to win), visit our website <a href=\"http://watchdog.testroots.org\">watchdog.testroots.org</a>.");
+				.setText("WatchDog keeps track of the way you develop and test your software. Your usage data is sent to and maintained by the TestRoots team at Delft University. We are never going to do anything bad with it.\n\nYou can stay completely anonymous. But our research greatly improves, if you provide us with a bit of info about you. This way, you can also win one of our amazing prices.\n\nIf you want to know more about WatchDog (or the prices to win), visit our website <a href=\"http://watchdog.testroots.org\">watchdog.testroots.org</a>.");
 		GridData labelData = new GridData();
 		labelData.widthHint = parent.getClientArea().width - 30;
 		linkedText.setLayoutData(labelData);
@@ -190,8 +187,7 @@ class FirstPage extends WizardPage {
 				}
 			}
 		});
-		linkedText.pack();
-		composite.pack();
+		setErrorMessage(null);
 
 		return composite;
 	}
@@ -200,7 +196,7 @@ class FirstPage extends WizardPage {
 	private void createSeparator(Composite parent) {
 		Label separator = UIUtils.createLabel("", SWT.SEPARATOR
 				| SWT.HORIZONTAL | SWT.FILL, parent);
-		GridData layoutData = UIUtils.fullGirdUsageData;
+		GridData layoutData = UIUtils.createFullGridUsageData();
 		layoutData.horizontalSpan = 2;
 		separator.setLayoutData(layoutData);
 	}
@@ -209,7 +205,8 @@ class FirstPage extends WizardPage {
 	 * @return Whether a possibly valid user id has been entered.
 	 */
 	public boolean hasValidUserId() {
-		return getErrorMessage() == null && isPageComplete();
+		return useridInput != null && !useridInput.isDisposed()
+				&& getErrorMessage() == null && isPageComplete();
 	}
 
 	/**
@@ -217,6 +214,14 @@ class FirstPage extends WizardPage {
 	 */
 	/* package */String getUserId() {
 		return useridInput.getText();
+	}
+
+	@Override
+	public boolean canFlipToNextPage() {
+		if (hasValidUserId()) {
+			return false;
+		}
+		return super.canFlipToNextPage();
 	}
 
 }
