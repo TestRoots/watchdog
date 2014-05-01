@@ -24,7 +24,12 @@ public class NetworkUtils {
 	 */
 	public static boolean urlExists(String url) {
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpGet get = new HttpGet(url);
+		HttpGet get;
+		try {
+			get = new HttpGet(url);
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
 		try {
 			HttpResponse response = client.execute(get);
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
@@ -32,7 +37,7 @@ public class NetworkUtils {
 			}
 			return false;
 		} catch (IOException exception) {
-			exception.printStackTrace();
+			// intentionally empty
 		}
 		// TODO (MMB) throw network access fail exception
 		// this return is present just to fulfill the method requirements.

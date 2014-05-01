@@ -2,9 +2,11 @@ package nl.tudelft.watchdog.ui.newUserWizard;
 
 import nl.tudelft.watchdog.ui.UIUtils;
 
+import org.apache.commons.validator.routines.EmailValidator;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -13,12 +15,10 @@ import org.eclipse.swt.widgets.Text;
 class UserRegistrationPage extends WizardPage {
 
 	private Text emailInput;
-	private Text organizationInput;
-	private Text groupInput;
 
-	private Composite introductionText;
-	private Composite innerParent;
-	private Label introLabel;
+	private Text organizationInput;
+
+	private Text groupInput;
 
 	/** Constructor. */
 	protected UserRegistrationPage() {
@@ -38,11 +38,12 @@ class UserRegistrationPage extends WizardPage {
 
 	/** Creates and returns the form of the registration. */
 	private Composite createRegistrationComposite(Composite parent) {
-		innerParent = UIUtils.createGridedComposite(parent, 1);
+		Composite innerParent = UIUtils.createGridedComposite(parent, 1);
 		innerParent.setLayoutData(UIUtils.createFullGridUsageData());
 
-		introductionText = UIUtils.createGridedComposite(innerParent, 1);
-		introLabel = UIUtils.createBoldLabel(
+		Composite introductionText = UIUtils.createGridedComposite(innerParent,
+				1);
+		UIUtils.createBoldLabel(
 				"We keep your user data private. From everybody. Always.",
 				introductionText);
 		UIUtils.createLabel(
@@ -55,20 +56,31 @@ class UserRegistrationPage extends WizardPage {
 		emailInput = UIUtils
 				.createLinkedFieldInput(
 						"Your eMail: ",
-						"We send you an email to this address, if you win one of our amazing prices. Nothing else.",
+						"We contact you via this address, if you win one of our amazing prices. So make sure it's correct.",
 						composite);
-
-		organizationInput = UIUtils
-				.createLinkedFieldInput(
-						"Your Organization/Company: ",
-						"You can also include your organization's website, if you like.",
-						composite);
-
+		organizationInput = UIUtils.createLinkedFieldInput(
+				"Your Organization/Company: ",
+				"You can include your organization's website here.", composite);
 		groupInput = UIUtils.createLinkedFieldInput("Your Group (if any): ",
 				"If you are not part of a group, please leave this empty.",
 				composite);
 
+		emailInput.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent e) {
+				if (!EmailValidator.getInstance(false).isValid(
+						emailInput.getText())) {
+					setErrorMessage("Your mail address is not valid!");
+				} else {
+					setErrorMessage(null);
+				}
+			}
+		});
+		UIUtils.createLabel(
+				"You can stay anonymous. But please consider registering (you can win prizes!).",
+				innerParent);
+
 		return innerParent;
 	}
-
 }

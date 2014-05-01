@@ -24,7 +24,7 @@ public class UIUtils {
 	public static Label createWrappingLabel(String text, Composite parent) {
 		Label label = createLabel(text, SWT.WRAP, parent);
 		GridData labelData = new GridData();
-		labelData.widthHint = parent.getClientArea().width - 30;
+		labelData.widthHint = parent.getParent().getClientArea().width - 30;
 		label.setLayoutData(labelData);
 		return label;
 	}

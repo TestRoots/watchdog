@@ -12,31 +12,30 @@ import org.eclipse.jface.wizard.Wizard;
  */
 public class NewUserWizard extends Wizard {
 	/** The first page in the wizard. */
-	FirstPage firstPage;
+	WelcomePage welcomePage;
 
 	/** When a user already exists ... */
-	ExistingUserEndingPage existingUserEndingPage;
+	UserIdEnteredEndingPage existingUserEndingPage;
 
 	/** Allows a shortcut to the finish button. */
 	boolean shortcutToCanFinish = false;
 
 	@Override
 	public void addPages() {
-		firstPage = new FirstPage();
-		addPage(firstPage);
+		welcomePage = new WelcomePage();
+		addPage(welcomePage);
 		addPage(new UserRegistrationPage());
+		existingUserEndingPage = new UserIdEnteredEndingPage();
+		addPage(existingUserEndingPage);
 	}
 
 	@Override
 	public boolean canFinish() {
 		IWizardPage currentPage = getContainer().getCurrentPage();
-		if (currentPage == firstPage) {
-			if (firstPage.hasValidUserId()) {
-				return true;
-			}
+		if (currentPage == welcomePage) {
 			return false;
 		}
-		if (getContainer().getCurrentPage() == existingUserEndingPage
+		if (currentPage == existingUserEndingPage
 				&& existingUserEndingPage.canFinish()) {
 			return true;
 		}
@@ -46,8 +45,26 @@ public class NewUserWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 		Preferences.getInstance().getStore()
-				.setValue(Preferences.USERID_KEY, firstPage.getUserId());
+				.setValue(Preferences.USERID_KEY, welcomePage.getUserId());
 		return true;
 	}
 
+	@Override
+	public IWizardPage getNextPage(IWizardPage page) {
+		IWizardPage currentPage = getContainer().getCurrentPage();
+		if (currentPage == welcomePage && !welcomePage.getRegisterNewUser()) {
+			return existingUserEndingPage;
+		}
+		return super.getNextPage(page);
+	}
+
+	@Override
+	public IWizardPage getPreviousPage(IWizardPage page) {
+		IWizardPage currentPage = getContainer().getCurrentPage();
+		if (currentPage == existingUserEndingPage
+				&& !welcomePage.getRegisterNewUser()) {
+			return welcomePage;
+		}
+		return super.getPreviousPage(page);
+	}
 }

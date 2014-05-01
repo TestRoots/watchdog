@@ -49,4 +49,5 @@ Bundle-ClassPath: .,
  libs/commons-logging-1.1.3.jar,
  libs/fluent-hc-4.3.3.jar,
  libs/httpclient-cache-4.3.3.jar,
- libs/httpmime-4.3.3.jar
+ libs/httpmime-4.3.3.jar,
+ libs/commons-validator-1.4.0.jar
