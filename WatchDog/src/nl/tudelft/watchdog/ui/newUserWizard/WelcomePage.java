@@ -27,7 +27,7 @@ import org.eclipse.ui.PlatformUI;
  * new WatchDog user, yes or no? Depending on the answer, it dynamically
  * displays the information we are interested in.
  */
-class FirstPage extends WizardPage {
+class WelcomePage extends WizardPage {
 
 	/** The length (in characters) of the WatchDog userid. */
 	private static final int idLength = 40;
@@ -39,12 +39,16 @@ class FirstPage extends WizardPage {
 	private Composite dynamicContent;
 
 	/**
-	 * The userid as entered by the user (note: at this point, still unchecked).
+	 * The userid as entered by the user (note: as delivered from this wizard
+	 * page, still unchecked).
 	 */
 	private Text useridInput;
 
+	/** The no button from the question. */
+	private Button radioButtonNo;
+
 	/** Constructor. */
-	FirstPage() {
+	WelcomePage() {
 		super("Welcome to WatchDog!");
 		setTitle("Welcome to WatchDog!");
 		setDescription("This wizard will guide you through the setup of a WatchDog User. May we ask for one minute of your time?");
@@ -60,14 +64,6 @@ class FirstPage extends WizardPage {
 		// Required to avoid an error in the wizard system
 		setControl(topContainer);
 		setPageComplete(false);
-	}
-
-	@Override
-	public void setVisible(boolean visible) {
-		super.setVisible(visible);
-		if (visible) {
-
-		}
 	}
 
 	/**
@@ -88,9 +84,7 @@ class FirstPage extends WizardPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				removeDynamicContent(parent);
-				dynamicContent = createLoginComposite(
-
-				parent);
+				dynamicContent = createLoginComposite(parent);
 				parent.layout();
 				setPageComplete(false);
 			}
@@ -100,8 +94,7 @@ class FirstPage extends WizardPage {
 			}
 		});
 
-		final Button radioButtonNo = UIUtils.createRadioButton(radioButtons,
-				"No");
+		radioButtonNo = UIUtils.createRadioButton(radioButtons, "No");
 		radioButtonNo.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -134,7 +127,7 @@ class FirstPage extends WizardPage {
 	 * existing WatchDog ID.
 	 */
 	private Composite createLoginComposite(Composite parent) {
-		String labelText = "Your WatchDog Userid: ";
+		String labelText = "Your WatchDog User ID: ";
 		String inputToolTip = "The User ID we sent you upon your first WatchDog registration.";
 
 		Composite composite = UIUtils.createGridedComposite(parent, 2);
@@ -150,12 +143,11 @@ class FirstPage extends WizardPage {
 				if (useridInput.getText().length() == idLength) {
 					setErrorMessage(null);
 					setPageComplete(true);
-					getWizard().getContainer().updateButtons();
 				} else {
 					setErrorMessage("Not a valid id.");
 					setPageComplete(false);
-					getWizard().getContainer().updateButtons();
 				}
+				getWizard().getContainer().updateButtons();
 			}
 		});
 
@@ -176,6 +168,7 @@ class FirstPage extends WizardPage {
 		labelData.widthHint = parent.getClientArea().width - 30;
 		linkedText.setLayoutData(labelData);
 		linkedText.addSelectionListener(new SelectionAdapter() {
+
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 				try {
@@ -201,27 +194,27 @@ class FirstPage extends WizardPage {
 		separator.setLayoutData(layoutData);
 	}
 
-	/**
-	 * @return Whether a possibly valid user id has been entered.
-	 */
+	/** @return Whether a possibly valid user id has been entered. */
 	public boolean hasValidUserId() {
 		return useridInput != null && !useridInput.isDisposed()
 				&& getErrorMessage() == null && isPageComplete();
 	}
 
-	/**
-	 * @return The userid entered by the user.
-	 */
+	/** @return The userid entered by the user. */
 	/* package */String getUserId() {
 		return useridInput.getText();
 	}
 
-	@Override
-	public boolean canFlipToNextPage() {
-		if (hasValidUserId()) {
-			return false;
-		}
-		return super.canFlipToNextPage();
+	/**
+	 * @return Whether the user wants to create a new user (<code>true</code> in
+	 *         that case, <code>false</code> otherwise).
+	 */
+	public boolean getRegisterNewUser() {
+		return radioButtonNo.getSelection();
 	}
 
+	@Override
+	public boolean canFlipToNextPage() {
+		return super.canFlipToNextPage();
+	}
 }

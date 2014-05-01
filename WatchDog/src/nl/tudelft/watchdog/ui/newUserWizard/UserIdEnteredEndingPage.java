@@ -10,15 +10,21 @@ import org.eclipse.swt.widgets.Composite;
  * Possible finishing page in the wizard. If the user exists on the server, or
  * the server is not reachable, the user can exit here.
  */
-class ExistingUserEndingPage extends WizardPage {
+class UserIdEnteredEndingPage extends WizardPage {
 
 	/** Flag denoting whether the wizard may be finished. */
 	boolean canFinish = false;
-	private Composite successComposite;
-	private Composite failureComposite;
+	private Composite topComposite;
+	private Composite dynamicComposite;
+
+	/**
+	 * The user id (either as retreived from the previous page or as freshly
+	 * accepted from the server).
+	 */
+	private String userid;
 
 	/** Constructor. */
-	protected ExistingUserEndingPage() {
+	protected UserIdEnteredEndingPage() {
 		super("Existing user page");
 	}
 
@@ -26,19 +32,17 @@ class ExistingUserEndingPage extends WizardPage {
 	 * 
 	 */
 	private void connectToServer() {
-		FirstPage page = (FirstPage) getPreviousPage();
-		String url = NetworkUtils.buildUserURL(page.getUserId());
+		userid = ((WelcomePage) getPreviousPage()).getUserId();
+		String url = NetworkUtils.buildUserURL(userid);
 		if (NetworkUtils.urlExists(url)) {
+			dynamicComposite = createSuccessComposite(topComposite);
 			setPageComplete(true);
 			canFinish = true;
-			successComposite.setVisible(true);
-			failureComposite.setVisible(false);
-
 		} else {
-			setErrorMessage("The user id does not exist on our server. Go back and correct it, or create a new user.");
+			dynamicComposite = createUserNotFoundComposite(topComposite);
+			setErrorMessage("This user id does not exist.");
+			setTitle("Wrong user id.");
 			canFinish = false;
-			failureComposite.setVisible(true);
-			successComposite.setVisible(false);
 		}
 		// TODO (MMB) add catch clause
 	}
@@ -47,47 +51,51 @@ class ExistingUserEndingPage extends WizardPage {
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible) {
+			if (dynamicComposite != null) {
+				dynamicComposite.dispose();
+			}
 			connectToServer();
+			dynamicComposite.layout(true);
+			topComposite.layout(true);
 		}
 	};
 
 	@Override
 	public void createControl(Composite parent) {
-		Composite topComposite = UIUtils.createGridedComposite(parent, 1);
-		successComposite = createSuccessComposite(topComposite);
-		failureComposite = createUserNotFoundComposite(topComposite);
+		topComposite = UIUtils.createGridedComposite(parent, 1);
+		UIUtils.createLabel("", topComposite);
 		setControl(topComposite);
 	}
 
 	/**
 	 * Creates and returns a composite in case of successful verification of
-	 * user existance.
+	 * user existence.
 	 */
 	private Composite createSuccessComposite(Composite parent) {
 		Composite composite = UIUtils.createGridedComposite(parent, 1);
-		// TODO (MMB) Add personal name here from Json?
-		UIUtils.createLabel("Welcome back!", composite);
-		UIUtils.createLabel(
-				"Everything worked perfectly. WatchDog will now silently run in the background. We will never both you again. Except if you win one of our prizes, of course.",
+		composite.setLayoutData(UIUtils.createFullGridUsageData());
+		setTitle("Welcome back!");
+		setDescription("Thanks for re-using your existing user!");
+		UIUtils.createBoldLabel("Everything worked perfectly.", composite);
+		UIUtils.createWrappingLabel(
+				"Your user id "
+						+ userid
+						+ " has been registered with this Eclipse installation. You can change the id and other WatchDog settings in the Eclipse preferences.",
 				composite);
-		composite.setVisible(false);
 		return composite;
 	}
 
 	/** Creates and returns a composite in case of not finding the user. */
 	private Composite createUserNotFoundComposite(Composite parent) {
 		Composite composite = UIUtils.createGridedComposite(parent, 1);
-		UIUtils.createLabel("User not found!", composite);
-		UIUtils.createLabel(
-				"Did you miss-type the userid? Or did something go wrong while copy-and-pasting your userid? You can go back and see if there's a problem with the id you posted. If not, you can contact us via email to info@testroots.org. If you can remember some of the details of your last registration (such as name, email address or similar) we will try to help find your existing userid.",
+		UIUtils.createBoldLabel("User not found!", composite);
+		UIUtils.createWrappingLabel(
+				"Did you miss-type the user id? Or did something go wrong while copy-and-pasting your user id? Please, go back to correct it or to create a new user.",
 				composite);
-		composite.setVisible(false);
 		return composite;
 	}
 
-	/**
-	 * Creates and returns a composite in case of unsuccessful
-	 */
+	/** Creates and returns a composite in case of unsuccessful input. */
 	private Composite createConnectionFailureComposite(Composite parent) {
 		Composite composite = UIUtils.createGridedComposite(parent, 1);
 		UIUtils.createLabel("No Connection made!", composite);
