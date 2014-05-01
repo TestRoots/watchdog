@@ -33,7 +33,8 @@ class UserIdEnteredEndingPage extends WizardPage {
 	}
 
 	/**
-	 * 
+	 * Connects to the server, querying for the user entered on the
+	 * {@link WelcomePage}, and displays an according wizard page as a reaction.
 	 */
 	private void connectToServer() {
 		userid = ((WelcomePage) getPreviousPage()).getUserId();
