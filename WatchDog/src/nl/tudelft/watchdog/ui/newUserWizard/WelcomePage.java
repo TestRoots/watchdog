@@ -5,7 +5,6 @@ import java.net.URL;
 
 import nl.tudelft.watchdog.ui.UIUtils;
 
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -23,11 +22,11 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * The first page of the {@link NewUserWizard}. It asks the question: Are you a
- * new WatchDog user, yes or no? Depending on the answer, it dynamically
- * displays the information we are interested in.
+ * The first page of the {@link UserRegistrationWizard}. It asks the question:
+ * Are you a new WatchDog user, yes or no? Depending on the answer, it
+ * dynamically displays the information we are interested in.
  */
-class WelcomePage extends WizardPage {
+class WelcomePage extends FinishableWizardPage {
 
 	/** The length (in characters) of the WatchDog userid. */
 	private static final int idLength = 40;
@@ -61,7 +60,6 @@ class WelcomePage extends WizardPage {
 		// Sets up the basis layout
 		createQuestionComposite(topContainer);
 
-		// Required to avoid an error in the wizard system
 		setControl(topContainer);
 		setPageComplete(false);
 	}
@@ -99,10 +97,10 @@ class WelcomePage extends WizardPage {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				setErrorMessageAndPageComplete(null);
 				removeDynamicContent(parent);
 				dynamicContent = createWelcomeComposite(parent);
 				parent.layout();
-				setPageComplete(true);
 			}
 
 			@Override
@@ -141,11 +139,9 @@ class WelcomePage extends WizardPage {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				if (useridInput.getText().length() == idLength) {
-					setErrorMessage(null);
-					setPageComplete(true);
+					setErrorMessageAndPageComplete(null);
 				} else {
-					setErrorMessage("Not a valid id.");
-					setPageComplete(false);
+					setErrorMessageAndPageComplete("Not a valid id.");
 				}
 				getWizard().getContainer().updateButtons();
 			}
@@ -180,7 +176,6 @@ class WelcomePage extends WizardPage {
 				}
 			}
 		});
-		setErrorMessage(null);
 
 		return composite;
 	}
@@ -214,7 +209,8 @@ class WelcomePage extends WizardPage {
 	}
 
 	@Override
-	public boolean canFlipToNextPage() {
-		return super.canFlipToNextPage();
+	boolean canFinish() {
+		return false;
 	}
+
 }

@@ -10,7 +10,7 @@ import org.eclipse.jface.wizard.Wizard;
  * some magic tricks to enable skipping of pages and recalculation of Finish
  * button.
  */
-public class NewUserWizard extends Wizard {
+public class UserRegistrationWizard extends Wizard {
 	/** The first page in the wizard. */
 	WelcomePage welcomePage;
 
@@ -31,15 +31,9 @@ public class NewUserWizard extends Wizard {
 
 	@Override
 	public boolean canFinish() {
-		IWizardPage currentPage = getContainer().getCurrentPage();
-		if (currentPage == welcomePage) {
-			return false;
-		}
-		if (currentPage == existingUserEndingPage
-				&& existingUserEndingPage.canFinish()) {
-			return true;
-		}
-		return super.canFinish();
+		FinishableWizardPage currentPage = (FinishableWizardPage) getContainer()
+				.getCurrentPage();
+		return currentPage.canFinish();
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.ui.handlers;
 import java.util.Map;
 
 import nl.tudelft.watchdog.ui.infoDialog.InfoStatisticsDialog;
-import nl.tudelft.watchdog.ui.newUserWizard.NewUserWizard;
+import nl.tudelft.watchdog.ui.newUserWizard.UserRegistrationWizard;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -22,7 +22,7 @@ public class UserWizardDialogHandler extends AbstractHandler implements
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		WizardDialog wizardDialog = new WizardDialog(
-				HandlerUtil.getActiveShell(event), new NewUserWizard());
+				HandlerUtil.getActiveShell(event), new UserRegistrationWizard());
 		wizardDialog.setBlockOnOpen(true);
 		return wizardDialog.open();
 	}
