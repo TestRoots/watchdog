@@ -14,11 +14,15 @@ class UserIdEnteredEndingPage extends WizardPage {
 
 	/** Flag denoting whether the wizard may be finished. */
 	boolean canFinish = false;
+
+	/** The top-level composite. */
 	private Composite topComposite;
+
+	/** The dynamic composite. */
 	private Composite dynamicComposite;
 
 	/**
-	 * The user id (either as retreived from the previous page or as freshly
+	 * The user id (either as retrieved from the previous page or as freshly
 	 * accepted from the server).
 	 */
 	private String userid;
@@ -34,17 +38,32 @@ class UserIdEnteredEndingPage extends WizardPage {
 	private void connectToServer() {
 		userid = ((WelcomePage) getPreviousPage()).getUserId();
 		String url = NetworkUtils.buildUserURL(userid);
-		if (NetworkUtils.urlExists(url)) {
-			dynamicComposite = createSuccessComposite(topComposite);
+		switch (NetworkUtils.urlExistsAndReturnsStatus200(url)) {
+		case SUCCESSFUL:
+			setTitle("Welcome back!");
+			setDescription("Thanks for re-using your existing user!");
 			setPageComplete(true);
 			canFinish = true;
-		} else {
-			dynamicComposite = createUserNotFoundComposite(topComposite);
+
+			dynamicComposite = createSuccessWizzard(topComposite);
+			break;
+		case UNSUCCESSFUL:
+			setTitle("Wrong user id");
 			setErrorMessage("This user id does not exist.");
-			setTitle("Wrong user id.");
+			setPageComplete(false);
 			canFinish = false;
+
+			dynamicComposite = createUserNotFoundComposite(topComposite);
+			break;
+		case NETWORK_ERROR:
+			setTitle("WatchDog Server not reachable");
+			setDescription("There was an error contacting our server.");
+			setPageComplete(true);
+			canFinish = true;
+
+			dynamicComposite = createConnectionFailureComposite(topComposite);
+			break;
 		}
-		// TODO (MMB) add catch clause
 	}
 
 	@Override
@@ -71,11 +90,9 @@ class UserIdEnteredEndingPage extends WizardPage {
 	 * Creates and returns a composite in case of successful verification of
 	 * user existence.
 	 */
-	private Composite createSuccessComposite(Composite parent) {
+	private Composite createSuccessWizzard(Composite parent) {
 		Composite composite = UIUtils.createGridedComposite(parent, 1);
 		composite.setLayoutData(UIUtils.createFullGridUsageData());
-		setTitle("Welcome back!");
-		setDescription("Thanks for re-using your existing user!");
 		UIUtils.createBoldLabel("Everything worked perfectly.", composite);
 		UIUtils.createWrappingLabel(
 				"Your user id "
@@ -88,9 +105,12 @@ class UserIdEnteredEndingPage extends WizardPage {
 	/** Creates and returns a composite in case of not finding the user. */
 	private Composite createUserNotFoundComposite(Composite parent) {
 		Composite composite = UIUtils.createGridedComposite(parent, 1);
+		composite.setLayoutData(UIUtils.createFullGridUsageData());
 		UIUtils.createBoldLabel("User not found!", composite);
 		UIUtils.createWrappingLabel(
-				"Did you miss-type the user id? Or did something go wrong while copy-and-pasting your user id? Please, go back to correct it or to create a new user.",
+				"We could not find the user id "
+						+ userid
+						+ " on our server. Did you miss-type the id? Or did something go wrong while copy-and-pasting your user id? Please, go back and correct it, or create a new user.",
 				composite);
 		return composite;
 	}
@@ -98,11 +118,11 @@ class UserIdEnteredEndingPage extends WizardPage {
 	/** Creates and returns a composite in case of unsuccessful input. */
 	private Composite createConnectionFailureComposite(Composite parent) {
 		Composite composite = UIUtils.createGridedComposite(parent, 1);
-		UIUtils.createLabel("No Connection made!", composite);
-		UIUtils.createLabel(
-				"You could not contact our server. Our server might be down temporarily. Or you might have a firewall? Or you might not have internet yourself. Hard to tell from here. Anyway, we stored the userid you entered and will try to work with it. If you never have internet, do not dispair: You can still use WatchDog. It will cache all data, and then you can export it and send it to us via email. In that case, please just make sure that you created the user via the dialog first.",
+		composite.setLayoutData(UIUtils.createFullGridUsageData());
+		UIUtils.createBoldLabel("WatchDog server not reached!", composite);
+		UIUtils.createWrappingLabel(
+				"We could not contact our server. Are you behind a firewall? Are you connected to the internet at all? If there is an issue with your connection that you can fix quickly, you can go back and try again.\n\nIf not: We've registered your user id with this Eclipse installation. Even if you never have (proper) Internet access, you can still use WatchDog. It will store all data on your computer, and you can export it and send it to us manually via email. In this case, please just make sure that you created the user via the new user dialog.",
 				composite);
-		composite.setVisible(false);
 		return composite;
 	}
 

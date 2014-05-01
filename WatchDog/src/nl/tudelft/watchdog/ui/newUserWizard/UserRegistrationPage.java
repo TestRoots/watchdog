@@ -30,6 +30,7 @@ class UserRegistrationPage extends WizardPage {
 	@Override
 	public void createControl(Composite parent) {
 		Composite topComposite = createRegistrationComposite(parent);
+		setDescription("By filling out this form, you help us a lot with our research. And you participate in our lottery.");
 
 		// Required to avoid an error in the system
 		setControl(topComposite);
@@ -45,9 +46,6 @@ class UserRegistrationPage extends WizardPage {
 				1);
 		UIUtils.createBoldLabel(
 				"We keep your user data private. From everybody. Always.",
-				introductionText);
-		UIUtils.createLabel(
-				"By filling out this form, you help us a lot with our research. And you participate in our lottery.",
 				introductionText);
 
 		Composite composite = UIUtils.createGridedComposite(innerParent, 2);

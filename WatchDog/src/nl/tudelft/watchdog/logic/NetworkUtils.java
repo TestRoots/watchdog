@@ -17,31 +17,37 @@ import org.apache.http.util.EntityUtils;
 /** Utility functions for accessing the network. */
 public class NetworkUtils {
 
+	public enum Connection {
+		SUCCESSFUL, UNSUCCESSFUL, NETWORK_ERROR
+	};
+
 	/**
 	 * Checks whether the given url is reachable and exists.
 	 * 
-	 * @return
+	 * @return if the url exists and returns a 200 status code.
+	 *         <code>false</code> if the url does not return 200. In case of
+	 *         NetworkFailure, throws an execpetion.
 	 */
-	public static boolean urlExists(String url) {
+	public static Connection urlExistsAndReturnsStatus200(String url) {
 		HttpClient client = HttpClientBuilder.create().build();
 		HttpGet get;
 		try {
 			get = new HttpGet(url);
 		} catch (IllegalArgumentException e) {
-			return false;
+			return Connection.UNSUCCESSFUL;
 		}
 		try {
 			HttpResponse response = client.execute(get);
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-				return true;
+				return Connection.SUCCESSFUL;
 			}
-			return false;
+			return Connection.UNSUCCESSFUL;
 		} catch (IOException exception) {
 			// intentionally empty
 		}
 		// TODO (MMB) throw network access fail exception
 		// this return is present just to fulfill the method requirements.
-		return false;
+		return Connection.NETWORK_ERROR;
 	}
 
 	/**
