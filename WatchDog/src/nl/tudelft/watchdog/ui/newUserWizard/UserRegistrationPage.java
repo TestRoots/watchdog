@@ -14,10 +14,13 @@ import org.eclipse.swt.widgets.Text;
  */
 class UserRegistrationPage extends WizardPage {
 
+	/** The email address entered by the user. */
 	private Text emailInput;
 
+	/** The organization entered by the user. */
 	private Text organizationInput;
 
+	/** The group entered by the user. */
 	private Text groupInput;
 
 	/** Constructor. */
@@ -30,9 +33,6 @@ class UserRegistrationPage extends WizardPage {
 	@Override
 	public void createControl(Composite parent) {
 		Composite topComposite = createRegistrationComposite(parent);
-		setDescription("By filling out this form, you help us a lot with our research. And you participate in our lottery.");
-
-		// Required to avoid an error in the system
 		setControl(topComposite);
 		setPageComplete(true);
 	}
@@ -46,6 +46,9 @@ class UserRegistrationPage extends WizardPage {
 				1);
 		UIUtils.createBoldLabel(
 				"We keep your user data private. From everybody. Always.",
+				introductionText);
+		UIUtils.createLabel(
+				"By filling out this form, you help us a lot with our research. And you participate in our lottery.",
 				introductionText);
 
 		Composite composite = UIUtils.createGridedComposite(innerParent, 2);
@@ -80,5 +83,20 @@ class UserRegistrationPage extends WizardPage {
 				innerParent);
 
 		return innerParent;
+	}
+
+	/** @return the email */
+	public Text getEmailInput() {
+		return emailInput;
+	}
+
+	/** @return the organization */
+	public Text getOrganizationInput() {
+		return organizationInput;
+	}
+
+	/** @return the group */
+	public Text getGroupInput() {
+		return groupInput;
 	}
 }

@@ -26,8 +26,6 @@ class ProjectRegistrationPage extends WizardPage {
 	@Override
 	public void createControl(Composite parent) {
 		Composite topComposite = createTimeSlider(parent);
-
-		// Required to avoid an error in the system
 		setControl(topComposite);
 		setPageComplete(false);
 	}
