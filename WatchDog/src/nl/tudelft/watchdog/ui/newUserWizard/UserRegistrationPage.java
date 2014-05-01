@@ -3,16 +3,35 @@ package nl.tudelft.watchdog.ui.newUserWizard;
 import nl.tudelft.watchdog.ui.UIUtils;
 
 import org.apache.commons.validator.routines.EmailValidator;
-import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-/**
- * The Page on which new users can register themselves.
- */
-class UserRegistrationPage extends WizardPage {
+/** The Page on which new users can register themselves. */
+class UserRegistrationPage extends FinishableWizardPage {
+
+	/** A universal listener that reacts on form modification events. */
+	private class FormEvaluationListener implements ModifyListener,
+			SelectionListener {
+		@Override
+		public void modifyText(ModifyEvent e) {
+			evaluateFormInputs();
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			evaluateFormInputs();
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+	}
 
 	/** The email address entered by the user. */
 	private Text emailInput;
@@ -23,11 +42,14 @@ class UserRegistrationPage extends WizardPage {
 	/** The group entered by the user. */
 	private Text groupInput;
 
+	/** User may be contacted. */
+	private Button mayContactButton;
+
 	/** Constructor. */
 	protected UserRegistrationPage() {
 		super("Registration Page");
 		setTitle("Register with WatchDog!");
-		setDescription("");
+		setDescription("Only he who participates, can win!");
 	}
 
 	@Override
@@ -66,23 +88,40 @@ class UserRegistrationPage extends WizardPage {
 				"If you are not part of a group, please leave this empty.",
 				composite);
 
-		emailInput.addModifyListener(new ModifyListener() {
+		emailInput.addModifyListener(new FormEvaluationListener());
 
-			@Override
-			public void modifyText(ModifyEvent e) {
-				if (!EmailValidator.getInstance(false).isValid(
-						emailInput.getText())) {
-					setErrorMessage("Your mail address is not valid!");
-				} else {
-					setErrorMessage(null);
-				}
-			}
-		});
+		mayContactButton = new Button(innerParent, SWT.CHECK);
+		mayContactButton
+				.setText("I want to win prizes! The lovely TestRoots team from TU Delft may contact me.");
+		mayContactButton.setOrientation(SWT.BOTTOM);
+		mayContactButton.setAlignment(SWT.BOTTOM);
+		mayContactButton.addSelectionListener(new FormEvaluationListener());
+		mayContactButton.setSelection(true);
+
+		UIUtils.createLabel("", innerParent);
 		UIUtils.createLabel(
-				"You can stay anonymous. But please consider registering (you can win prizes!).",
+				"You can stay anonymous (by leaving everything empty). But please consider registering, you can win prizes!",
 				innerParent);
 
 		return innerParent;
+	}
+
+	/** Evaluates whether the form has correct input methods. */
+	private void evaluateFormInputs() {
+		if (!emailInput.getText().isEmpty()) {
+			if (!EmailValidator.getInstance(false)
+					.isValid(emailInput.getText())) {
+				setErrorMessageAndPageComplete("Your mail address is not valid!");
+			} else {
+				setErrorMessageAndPageComplete(null);
+			}
+		} else if (emailInput.getText().isEmpty()
+				&& mayContactButton.getSelection()) {
+			setErrorMessageAndPageComplete("You can only participate in the lottery if you enter your email address.");
+		} else {
+			setErrorMessageAndPageComplete(null);
+		}
+		getWizard().getContainer().updateButtons();
 	}
 
 	/** @return the email */
@@ -98,5 +137,18 @@ class UserRegistrationPage extends WizardPage {
 	/** @return the group */
 	public Text getGroupInput() {
 		return groupInput;
+	}
+
+	@Override
+	boolean canFinish() {
+		return false;
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		if (visible) {
+			evaluateFormInputs();
+		}
 	}
 }

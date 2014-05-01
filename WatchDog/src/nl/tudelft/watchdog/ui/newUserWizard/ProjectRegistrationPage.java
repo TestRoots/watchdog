@@ -2,7 +2,6 @@ package nl.tudelft.watchdog.ui.newUserWizard;
 
 import nl.tudelft.watchdog.ui.UIUtils;
 
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -16,7 +15,7 @@ import org.eclipse.swt.widgets.Slider;
  * production code.
  *
  */
-class ProjectRegistrationPage extends WizardPage {
+class ProjectRegistrationPage extends FinishableWizardPage {
 
 	/** Constructor. */
 	protected ProjectRegistrationPage() {
@@ -79,8 +78,7 @@ class ProjectRegistrationPage extends WizardPage {
 				sliderValueText.setText(testingTimeValue + "% Testing, "
 						+ developmentTimeValue + "% Production");
 				sliderValueText.update();
-				setErrorMessage(null);
-				setPageComplete(true);
+				setErrorMessageAndPageComplete(null);
 			}
 
 			@Override
@@ -100,5 +98,13 @@ class ProjectRegistrationPage extends WizardPage {
 		composite.setLayout(new FillLayout());
 		UIUtils.createRadioButton(composite, "Yes");
 		UIUtils.createRadioButton(composite, "No");
+	}
+
+	@Override
+	boolean canFinish() {
+		if (getErrorMessage() == null) {
+			return true;
+		}
+		return false;
 	}
 }

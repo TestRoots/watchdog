@@ -3,17 +3,16 @@ package nl.tudelft.watchdog.ui.newUserWizard;
 import nl.tudelft.watchdog.logic.NetworkUtils;
 import nl.tudelft.watchdog.ui.UIUtils;
 
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * Possible finishing page in the wizard. If the user exists on the server, or
  * the server is not reachable, the user can exit here.
  */
-class UserIdEnteredEndingPage extends WizardPage {
+class UserIdEnteredEndingPage extends FinishableWizardPage {
 
-	/** Flag denoting whether the wizard may be finished. */
-	boolean canFinish = false;
+	/** An encouraging message for the end of a sentence. */
+	private static final String encouragingEndMessage = "\n\nHappy hours collecting and prize winning with WatchDog!";
 
 	/** The top-level composite. */
 	private Composite topComposite;
@@ -44,23 +43,18 @@ class UserIdEnteredEndingPage extends WizardPage {
 			setTitle("Welcome back!");
 			setDescription("Thanks for re-using your existing user!");
 			setPageComplete(true);
-			canFinish = true;
 
 			dynamicComposite = createSuccessWizzard(topComposite);
 			break;
 		case UNSUCCESSFUL:
 			setTitle("Wrong user id");
-			setErrorMessage("This user id does not exist.");
-			setPageComplete(false);
-			canFinish = false;
+			setErrorMessageAndPageComplete("This user id does not exist.");
 
 			dynamicComposite = createUserNotFoundComposite(topComposite);
 			break;
 		case NETWORK_ERROR:
 			setTitle("WatchDog Server not reachable");
 			setDescription("There was an error contacting our server.");
-			setPageComplete(true);
-			canFinish = true;
 
 			dynamicComposite = createConnectionFailureComposite(topComposite);
 			break;
@@ -98,8 +92,8 @@ class UserIdEnteredEndingPage extends WizardPage {
 		UIUtils.createWrappingLabel(
 				"Your user id "
 						+ userid
-						+ " has been registered with this Eclipse installation. You can change the id and other WatchDog settings in the Eclipse preferences.",
-				composite);
+						+ " has been registered with this Eclipse installation. You can change the id and other WatchDog settings in the Eclipse preferences."
+						+ encouragingEndMessage, composite);
 		return composite;
 	}
 
@@ -122,17 +116,14 @@ class UserIdEnteredEndingPage extends WizardPage {
 		composite.setLayoutData(UIUtils.createFullGridUsageData());
 		UIUtils.createBoldLabel("WatchDog server not reached!", composite);
 		UIUtils.createWrappingLabel(
-				"We could not contact our server. Are you behind a firewall? Are you connected to the internet at all? If there is an issue with your connection that you can fix quickly, you can go back and try again.\n\nIf not: We've registered your user id with this Eclipse installation. Even if you never have (proper) Internet access, you can still use WatchDog. It will store all data on your computer, and you can export it and send it to us manually via email. In this case, please just make sure that you created the user via the new user dialog.",
-				composite);
+				"We could not contact our server. Are you behind a firewall? Are you connected to the internet at all? If there is an issue with your connection that you can fix quickly, you can go back and try again.\n\nIf not: We've registered your user id with this Eclipse installation. Even if you never have (proper) Internet access, you can still use WatchDog. It will store all data on your computer, and you can export it and send it to us manually via email. In this case, please just make sure that you created the user via the new user dialog."
+						+ encouragingEndMessage, composite);
 		return composite;
 	}
 
-	/**
-	 * @return Whether the overall wizard is finish-able, based on the
-	 *         connection tries made from this page.
-	 */
-	/* package */boolean canFinish() {
-		return canFinish;
+	@Override
+	boolean canFinish() {
+		return isPageComplete();
 	}
 
 }
