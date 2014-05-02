@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.ui.newUserWizard;
+package nl.tudelft.watchdog.ui.wizards;
 
 import nl.tudelft.watchdog.ui.UIUtils;
 

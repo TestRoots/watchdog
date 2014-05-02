@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.ui.newUserWizard;
+package nl.tudelft.watchdog.ui.wizards;
 
 import nl.tudelft.watchdog.ui.UIUtils;
 
@@ -15,7 +15,10 @@ import org.eclipse.swt.widgets.Text;
 /** The Page on which new users can register themselves. */
 class UserRegistrationPage extends FinishableWizardPage {
 
-	/** A universal listener that reacts on form modification events. */
+	/**
+	 * A universal listener that reacts on form modification events by
+	 * reevaluating the user inputs.
+	 */
 	private class FormEvaluationListener implements ModifyListener,
 			SelectionListener {
 		@Override
@@ -93,8 +96,6 @@ class UserRegistrationPage extends FinishableWizardPage {
 		mayContactButton = new Button(innerParent, SWT.CHECK);
 		mayContactButton
 				.setText("I want to win prizes! The lovely TestRoots team from TU Delft may contact me.");
-		mayContactButton.setOrientation(SWT.BOTTOM);
-		mayContactButton.setAlignment(SWT.BOTTOM);
 		mayContactButton.addSelectionListener(new FormEvaluationListener());
 		mayContactButton.setSelection(true);
 
