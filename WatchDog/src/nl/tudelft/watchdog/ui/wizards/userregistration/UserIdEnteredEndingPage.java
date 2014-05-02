@@ -1,7 +1,8 @@
-package nl.tudelft.watchdog.ui.wizards;
+package nl.tudelft.watchdog.ui.wizards.userregistration;
 
 import nl.tudelft.watchdog.logic.NetworkUtils;
 import nl.tudelft.watchdog.ui.UIUtils;
+import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 
 import org.eclipse.swt.widgets.Composite;
 
@@ -33,10 +34,10 @@ class UserIdEnteredEndingPage extends FinishableWizardPage {
 
 	/**
 	 * Connects to the server, querying for the user entered on the
-	 * {@link WelcomePage}, and displays an according wizard page as a reaction.
+	 * {@link UserWelcomePage}, and displays an according wizard page as a reaction.
 	 */
 	private void connectToServer() {
-		userid = ((WelcomePage) getPreviousPage()).getUserId();
+		userid = ((UserWelcomePage) getPreviousPage()).getUserId();
 		String url = NetworkUtils.buildUserURL(userid);
 		switch (NetworkUtils.urlExistsAndReturnsStatus200(url)) {
 		case SUCCESSFUL:
@@ -122,7 +123,7 @@ class UserIdEnteredEndingPage extends FinishableWizardPage {
 	}
 
 	@Override
-	boolean canFinish() {
+	public boolean canFinish() {
 		return isPageComplete();
 	}
 

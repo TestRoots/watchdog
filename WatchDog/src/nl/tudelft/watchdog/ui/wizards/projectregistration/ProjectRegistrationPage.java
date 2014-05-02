@@ -1,6 +1,7 @@
-package nl.tudelft.watchdog.ui.wizards;
+package nl.tudelft.watchdog.ui.wizards.projectregistration;
 
 import nl.tudelft.watchdog.ui.UIUtils;
+import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -101,7 +102,7 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 	}
 
 	@Override
-	boolean canFinish() {
+	public boolean canFinish() {
 		if (getErrorMessage() == null) {
 			return true;
 		}

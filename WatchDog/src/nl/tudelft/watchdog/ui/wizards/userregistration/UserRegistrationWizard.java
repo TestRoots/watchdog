@@ -1,6 +1,7 @@
-package nl.tudelft.watchdog.ui.wizards;
+package nl.tudelft.watchdog.ui.wizards.userregistration;
 
 import nl.tudelft.watchdog.ui.preferences.Preferences;
+import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -12,7 +13,7 @@ import org.eclipse.jface.wizard.Wizard;
  */
 public class UserRegistrationWizard extends Wizard {
 	/** The first page in the wizard. */
-	WelcomePage welcomePage;
+	UserWelcomePage welcomePage;
 
 	/** When a user already exists ... */
 	UserIdEnteredEndingPage existingUserEndingPage;
@@ -22,7 +23,7 @@ public class UserRegistrationWizard extends Wizard {
 
 	@Override
 	public void addPages() {
-		welcomePage = new WelcomePage();
+		welcomePage = new UserWelcomePage();
 		addPage(welcomePage);
 		addPage(new UserRegistrationPage());
 		existingUserEndingPage = new UserIdEnteredEndingPage();

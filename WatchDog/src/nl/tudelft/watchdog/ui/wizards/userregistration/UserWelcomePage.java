@@ -1,9 +1,10 @@
-package nl.tudelft.watchdog.ui.wizards;
+package nl.tudelft.watchdog.ui.wizards.userregistration;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import nl.tudelft.watchdog.ui.UIUtils;
+import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -26,7 +27,7 @@ import org.eclipse.ui.PlatformUI;
  * Are you a new WatchDog user, yes or no? Depending on the answer, it
  * dynamically displays the information we are interested in.
  */
-class WelcomePage extends FinishableWizardPage {
+class UserWelcomePage extends FinishableWizardPage {
 
 	/** The length (in characters) of the WatchDog userid. */
 	private static final int idLength = 40;
@@ -47,7 +48,7 @@ class WelcomePage extends FinishableWizardPage {
 	private Button radioButtonNo;
 
 	/** Constructor. */
-	WelcomePage() {
+	UserWelcomePage() {
 		super("Welcome to WatchDog!");
 		setTitle("Welcome to WatchDog!");
 		setDescription("This wizard will guide you through the setup of a WatchDog User. May we ask for one minute of your time?");
@@ -209,7 +210,7 @@ class WelcomePage extends FinishableWizardPage {
 	}
 
 	@Override
-	boolean canFinish() {
+	public boolean canFinish() {
 		return false;
 	}
 

@@ -15,14 +15,14 @@ public abstract class FinishableWizardPage extends WizardPage {
 	}
 
 	/** @return whether this page can currently be finished. */
-	abstract boolean canFinish();
+	public abstract boolean canFinish();
 
 	/**
 	 * Calls {@link #setErrorMessage(String)} with the supplied errorMessage,
 	 * and {@link #setPageComplete(boolean)} true if the message is empty, and
 	 * false otherwise.
 	 */
-	void setErrorMessageAndPageComplete(String errorMessage) {
+	protected void setErrorMessageAndPageComplete(String errorMessage) {
 		setErrorMessage(errorMessage);
 		setPageComplete(errorMessage == null ? true : false);
 	}

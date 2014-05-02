@@ -1,6 +1,7 @@
-package nl.tudelft.watchdog.ui.wizards;
+package nl.tudelft.watchdog.ui.wizards.userregistration;
 
 import nl.tudelft.watchdog.ui.UIUtils;
+import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.eclipse.swt.SWT;
@@ -141,7 +142,7 @@ class UserRegistrationPage extends FinishableWizardPage {
 	}
 
 	@Override
-	boolean canFinish() {
+	public boolean canFinish() {
 		return false;
 	}
 
