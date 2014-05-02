@@ -69,7 +69,7 @@ public class StartUpHandler implements IStartup {
 		/** Checks whether there is a registered WatchDog user */
 		private void checkUserRegistration() {
 			if (Preferences.getInstance().getUserid().isEmpty()) {
-				UserWizardDialogHandler newUserWizardHandler = new UserWizardDialogHandler();
+				UserRegistrationWizardDialogHandler newUserWizardHandler = new UserRegistrationWizardDialogHandler();
 				try {
 					int statusCode = (int) newUserWizardHandler
 							.execute(new ExecutionEvent());
