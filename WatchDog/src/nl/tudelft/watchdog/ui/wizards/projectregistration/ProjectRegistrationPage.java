@@ -25,7 +25,7 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 
 	@Override
 	public void createControl(Composite parent) {
-		Composite topComposite = createTimeSlider(parent);
+		Composite topComposite = createComposite(parent);
 		setControl(topComposite);
 		setPageComplete(false);
 	}
@@ -36,14 +36,16 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 	 * 
 	 * @return
 	 */
-	private Composite createTimeSlider(Composite parent) {
+	private Composite createComposite(Composite parent) {
 		Composite composite = UIUtils.createGridedComposite(parent, 2);
 
-		UIUtils.createLabel("Your Project:", composite);
-		UIUtils.createTextInput(composite);
-
-		UIUtils.createLabel("Your Role:", composite);
-		UIUtils.createTextInput(composite);
+		UIUtils.createLinkedFieldInput(
+				"Your Project: ",
+				"The name of the project you work on in this workspace (can also be a URL)",
+				composite);
+		UIUtils.createLinkedFieldInput("Your Role: ",
+				"Try best describe what you do: Developer, Tester, ...",
+				composite);
 
 		createSimpleYesNoQuestion("Does your project use JUnit?", composite);
 		createSimpleYesNoQuestion(
