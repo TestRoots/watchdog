@@ -101,6 +101,9 @@ public class StartUpHandler implements IStartup {
 						.logInfo("Registering workspace...");
 				Preferences.getInstance().registerWorkspaceUse(workspace,
 						useWatchDogInThisWorkspace);
+				if (useWatchDogInThisWorkspace) {
+					// TODO (MMB) open project registartion wizard
+				}
 			}
 
 			if (Preferences.getInstance().shouldWatchDogBeActive(workspace)) {
