@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.ui.handlers;
 import java.util.Map;
 
 import nl.tudelft.watchdog.ui.infoDialog.InfoStatisticsDialog;
-import nl.tudelft.watchdog.ui.newUserWizard.UserRegistrationWizard;
+import nl.tudelft.watchdog.ui.wizards.UserRegistrationWizard;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
