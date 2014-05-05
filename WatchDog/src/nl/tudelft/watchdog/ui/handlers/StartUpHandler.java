@@ -55,7 +55,7 @@ public class StartUpHandler implements IStartup {
 			// (1) check user registration (2) wait until 1 is complete, or 1
 			// can be skipped (3) show workspace registration
 			checkUserRegistration();
-			if (!preferences.getUserid().isEmpty()) {
+			if (!UIUtils.isEmpty(preferences.getUserid())) {
 				// In case the user aborted the preference dialog with cancel,
 				// we don't want him to have to answer whether he wants WatchDog
 				// to be active for this workspace -- it's obvious that he does
@@ -72,7 +72,7 @@ public class StartUpHandler implements IStartup {
 
 		/** Checks whether there is a registered WatchDog user */
 		private void checkUserRegistration() {
-			if (preferences.getUserid().isEmpty()) {
+			if (UIUtils.isEmpty(preferences.getUserid())) {
 				UserRegistrationWizardDialogHandler newUserWizardHandler = new UserRegistrationWizardDialogHandler();
 				try {
 					int statusCode = (int) newUserWizardHandler
@@ -110,7 +110,7 @@ public class StartUpHandler implements IStartup {
 			WorkspacePreferenceSetting setting = preferences
 					.getWorkspaceSetting(workspace);
 			if (setting.enableWatchdog) {
-				if (setting.projectId.isEmpty()) {
+				if (UIUtils.isEmpty(setting.projectId)) {
 					ProjectRegistrationWizardDialogHandler newProjectWizardHandler = new ProjectRegistrationWizardDialogHandler();
 					try {
 						newProjectWizardHandler.execute(new ExecutionEvent());

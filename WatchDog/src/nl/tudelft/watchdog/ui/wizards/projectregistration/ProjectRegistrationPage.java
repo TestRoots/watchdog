@@ -3,13 +3,12 @@ package nl.tudelft.watchdog.ui.wizards.projectregistration;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Slider;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -19,8 +18,19 @@ import org.eclipse.swt.widgets.Text;
  */
 class ProjectRegistrationPage extends FinishableWizardPage {
 
-	private Text projectName;
-	private Text roleUser;
+	private Text projectNameInput;
+
+	private Text userRoleInput;
+
+	private Label multipelProjectLabel;
+
+	private Composite noSingleProjectComposite;
+
+	private Composite otherTestingStrategies;
+
+	private Composite junitForTestingOnly;
+
+	private Composite useJunit;
 
 	/** Constructor. */
 	protected ProjectRegistrationPage() {
@@ -30,6 +40,7 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 	@Override
 	public void createControl(Composite parent) {
 		setTitle("Register a new project");
+		setDescription("Create a new WatchDog Project for this workspace!");
 		Composite topComposite = createComposite(parent);
 		setControl(topComposite);
 		setPageComplete(false);
@@ -39,80 +50,112 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 	 * Creates a slider so users can choose how much time they think they spend
 	 * to testing vs. production code.
 	 */
-	private Composite createComposite(Composite parent) {
-		Composite topComposite = UIUtils.createGridedComposite(parent, 1);
-		topComposite.setLayoutData(UIUtils.createFullGridUsageData());
+	private Composite createComposite(final Composite parent) {
+		Composite topComposite = UIUtils.createFullGridedComposite(parent, 1);
 
 		UIUtils.createBoldLabel("Register a new project", topComposite);
-		UIUtils.createLabel(
-				"Please, describe your project as best as you can.",
-				topComposite);
 
 		Composite composite = UIUtils.createGridedComposite(topComposite, 2);
 		composite.setLayoutData(UIUtils.createFullGridUsageData());
-		projectName = UIUtils
-				.createLinkedFieldInput(
-						"Project Name: ",
-						"The name of the project you work on in this workspace (if you have a website, we'd love to see that!)",
-						composite);
-		roleUser = UIUtils.createLinkedFieldInput("Your Role: ",
-				"Try best describe what you do: Developer, Tester, ...",
+		noSingleProjectComposite = createSimpleYesNoQuestion(
+				"Do the Eclipse projects in the workspace mainly belong to a single software project or program? ",
 				composite);
-		UIUtils.createLabel("", composite);
-		UIUtils.createLabel("", composite);
+		final Button noSingleProjectButton = (Button) noSingleProjectComposite
+				.getChildren()[1];
+		noSingleProjectButton.addSelectionListener(new SelectionListener() {
 
-		createSimpleYesNoQuestion("Does your project use JUnit?", composite);
-		createSimpleYesNoQuestion(
-				"Does your project use JUnit for unit testing?", composite);
-		createSimpleYesNoQuestion("Are all your Junit tests unit tests?",
-				composite);
-		createSimpleYesNoQuestion(
-				"Does your project use testing frameworks\n or programs other than JUnit?",
-				composite);
-
-		// UIUtils.createLabel(
-		// "Please provide an estimate of how you spend your time in Eclipse.",
-		// composite);
-
-		Composite row = UIUtils.createGridedComposite(parent, 3);
-		row.setLayoutData(UIUtils.createFullGridUsageData());
-		UIUtils.createLabel("100% Testing  ", row);
-		final Slider slider = new Slider(row, SWT.NONE);
-		slider.setLayoutData(UIUtils.createFullGridUsageData());
-		slider.setValues(50, 0, 105, 5, 5, 5);
-		UIUtils.createLabel("  100% Production", row);
-		UIUtils.createLabel("", row);
-		final Label sliderValueText = UIUtils.createLabel(
-				"50% Testing, 50% Production", row);
-		sliderValueText.setLayoutData(UIUtils.createFullGridUsageData());
-		sliderValueText.setAlignment(SWT.CENTER);
-
-		slider.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				int developmentTimeValue = slider.getSelection();
-				int testingTimeValue = 100 - developmentTimeValue;
-				sliderValueText.setText(testingTimeValue + "% Testing, "
-						+ developmentTimeValue + "% Production");
-				sliderValueText.update();
-				setErrorMessageAndPageComplete(null);
+				if (noSingleProjectButton.getSelection()) {
+					performUIUpdate(
+							"Does at least one of your projects in the workspace ...",
+							false);
+				} else {
+					performUIUpdate("Does your project ...", true);
+				}
+			}
+
+			private void performUIUpdate(String label, boolean enableState) {
+				multipelProjectLabel.setText(label);
+				projectNameInput.setEnabled(enableState);
+				parent.pack();
+				parent.update();
+				validateFormInputs();
 			}
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
-		setErrorMessage("Move slider to estimate your personal time distribution.");
-		return composite;
+
+		Composite textInputComposite = UIUtils.createFullGridedComposite(
+				topComposite, 2);
+		projectNameInput = UIUtils
+				.createLinkedFieldInput(
+						"Project Name: ",
+						"The name of the project(s) you work on in this workspace (if you have a website, we'd love to see it here)",
+						textInputComposite);
+		userRoleInput = UIUtils.createLinkedFieldInput("Your Role: ",
+				"Try best describe what you do: Developer, Tester, ...",
+				textInputComposite);
+
+		Composite questionComposite = UIUtils.createFullGridedComposite(
+				topComposite, 2);
+
+		multipelProjectLabel = UIUtils.createLabel(
+				"Does your real-world project ...", questionComposite);
+		UIUtils.createLabel("", questionComposite);
+		useJunit = createSimpleYesNoDontKnowQuestion("  ... use JUnit? ",
+				questionComposite);
+		junitForTestingOnly = createSimpleYesNoDontKnowQuestion(
+				"  ... use JUnit for unit testing only \n (i.e. only one class tested per test case)? ",
+				questionComposite);
+		otherTestingStrategies = createSimpleYesNoDontKnowQuestion(
+				"  ... use other testing strategies, too \n (e.g. Mockito, Powermock, Selenium, or manual testing)? ",
+				questionComposite);
+
+		return topComposite;
 	}
 
-	/** Creates a simple question with according yes/no radio buttons. */
-	private void createSimpleYesNoQuestion(String question, Composite parent) {
+	/**
+	 * Creates a simple question with according yes/no radio buttons.
+	 * 
+	 * @return the composite where the buttons are put onto.
+	 */
+	private Composite createSimpleYesNoQuestion(String question,
+			Composite parent) {
 		UIUtils.createLabel(question, parent);
 		Composite composite = UIUtils.createGridedComposite(parent, 1);
 		composite.setLayout(new FillLayout());
 		UIUtils.createRadioButton(composite, "Yes");
 		UIUtils.createRadioButton(composite, "No");
+		return composite;
+	}
+
+	/**
+	 * Creates a simple question with according yes/no/don't know radio buttons.
+	 * 
+	 * @return the composite where the buttons are put onto.
+	 */
+	private Composite createSimpleYesNoDontKnowQuestion(String question,
+			Composite parent) {
+		Composite buttonComposite = createSimpleYesNoQuestion(question, parent);
+		UIUtils.createRadioButton(buttonComposite, "Don't know");
+		return buttonComposite;
+	}
+
+	@Override
+	public void validateFormInputs() {
+		if (UIUtils.isEmptyOrWhitespaces(projectNameInput.getText())
+				&& projectNameInput.getText().length() < 2
+				&& projectNameInput.getEnabled()) {
+			setErrorMessageAndPageComplete("You must enter a proper project's name.");
+		}
+		if (userRoleInput.getText().isEmpty()) {
+			setErrorMessageAndPageComplete("Please try to describe what you do in the project, e.g. developer or tester.");
+		}
+
+		getWizard().getContainer().updateButtons();
 	}
 
 	@Override
@@ -122,4 +165,5 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 		}
 		return false;
 	}
+
 }

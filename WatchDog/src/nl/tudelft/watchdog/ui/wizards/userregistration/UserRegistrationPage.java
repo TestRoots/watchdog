@@ -2,40 +2,16 @@ package nl.tudelft.watchdog.ui.wizards.userregistration;
 
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
+import nl.tudelft.watchdog.ui.wizards.FormValidationListener;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 /** The Page on which new users can register themselves. */
 class UserRegistrationPage extends FinishableWizardPage {
-
-	/**
-	 * A universal listener that reacts on form modification events by
-	 * reevaluating the user inputs.
-	 */
-	private class FormEvaluationListener implements ModifyListener,
-			SelectionListener {
-		@Override
-		public void modifyText(ModifyEvent e) {
-			evaluateFormInputs();
-		}
-
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-			evaluateFormInputs();
-		}
-
-		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
-		}
-	}
 
 	/** The email address entered by the user. */
 	private Text emailInput;
@@ -91,13 +67,13 @@ class UserRegistrationPage extends FinishableWizardPage {
 		groupInput = UIUtils.createLinkedFieldInput("Your Group (if any): ",
 				"If you are not part of a group, please leave this empty.",
 				composite);
-
-		emailInput.addModifyListener(new FormEvaluationListener());
+		FormValidationListener formValidator = new FormValidationListener(this);
+		emailInput.addModifyListener(formValidator);
 
 		mayContactButton = new Button(innerParent, SWT.CHECK);
 		mayContactButton
 				.setText("I want to win prizes! The lovely TestRoots team from TU Delft may contact me.");
-		mayContactButton.addSelectionListener(new FormEvaluationListener());
+		mayContactButton.addSelectionListener(formValidator);
 		mayContactButton.setSelection(true);
 
 		UIUtils.createLabel("", innerParent);
@@ -108,16 +84,16 @@ class UserRegistrationPage extends FinishableWizardPage {
 		return innerParent;
 	}
 
-	/** Evaluates whether the form has correct input methods. */
-	private void evaluateFormInputs() {
-		if (!emailInput.getText().isEmpty()) {
+	@Override
+	public void validateFormInputs() {
+		if (!UIUtils.isEmpty(emailInput.getText())) {
 			if (!EmailValidator.getInstance(false)
 					.isValid(emailInput.getText())) {
 				setErrorMessageAndPageComplete("Your mail address is not valid!");
 			} else {
 				setErrorMessageAndPageComplete(null);
 			}
-		} else if (emailInput.getText().isEmpty()
+		} else if (UIUtils.isEmpty(emailInput.getText())
 				&& mayContactButton.getSelection()) {
 			setErrorMessageAndPageComplete("You can only participate in the lottery if you enter your email address.");
 		} else {
@@ -150,7 +126,7 @@ class UserRegistrationPage extends FinishableWizardPage {
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible) {
-			evaluateFormInputs();
+			validateFormInputs();
 		}
 	}
 }

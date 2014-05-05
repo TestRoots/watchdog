@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.watchdog.Activator;
+import nl.tudelft.watchdog.ui.UIUtils;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -61,8 +62,7 @@ public class Preferences {
 	private List<WorkspacePreferenceSetting> readSerializedWorkspaceSettings(
 			String KEY) {
 		String serializedWorksapceSettings = store.getString(KEY);
-		if (serializedWorksapceSettings == null
-				|| serializedWorksapceSettings.isEmpty()) {
+		if (UIUtils.isEmpty(serializedWorksapceSettings)) {
 			return new ArrayList<WorkspacePreferenceSetting>();
 		}
 

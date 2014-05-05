@@ -26,4 +26,11 @@ public abstract class FinishableWizardPage extends WizardPage {
 		setErrorMessage(errorMessage);
 		setPageComplete(errorMessage == null ? true : false);
 	}
+
+	/**
+	 * Validates the form inputs, and sets the error message for the wizard if
+	 * there is any. Should be overriden by subclasses.
+	 */
+	public void validateFormInputs() {
+	}
 }

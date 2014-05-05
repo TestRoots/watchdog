@@ -63,6 +63,17 @@ public class UIUtils {
 	}
 
 	/**
+	 * Creates and returns a grided composite, that fills out its parent to the
+	 * fullest extent.
+	 */
+	public static Composite createFullGridedComposite(Composite parent,
+			int columns) {
+		Composite composite = UIUtils.createGridedComposite(parent, columns);
+		composite.setLayoutData(UIUtils.createFullGridUsageData());
+		return composite;
+	}
+
+	/**
 	 * @return A {@link GridLayout}ed composite with the given number of
 	 *         columns.
 	 */
@@ -139,5 +150,23 @@ public class UIUtils {
 	public static String getWorkspaceName() {
 		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile()
 				.toString();
+	}
+
+	/**
+	 * @return <code>true</code> when the given string is either
+	 *         <code>null</code> or empty. <code>false</code> otherwise.
+	 */
+	public static boolean isEmpty(String string) {
+		if (string == null || string.isEmpty()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @return Whether the string with whitespaces trimmed is empty.
+	 */
+	public static boolean isEmptyOrWhitespaces(String string) {
+		return isEmpty(string) ? true : string.trim().isEmpty();
 	}
 }
