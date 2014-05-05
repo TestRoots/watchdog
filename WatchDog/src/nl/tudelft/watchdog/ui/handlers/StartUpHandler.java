@@ -6,6 +6,7 @@ import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
+import nl.tudelft.watchdog.ui.preferences.WorkspacePreferenceSetting;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.core.commands.ExecutionEvent;
@@ -25,6 +26,9 @@ public class StartUpHandler implements IStartup {
 	/** The ui thread for WatchDog registration. */
 	private Runnable watchDogUiThread = new StartupUIThread();
 
+	/** The preferences. */
+	private Preferences preferences = Preferences.getInstance();
+
 	/** {@inheritDoc} Starts the WatchDog plugin. */
 	@Override
 	public void earlyStartup() {
@@ -36,6 +40,7 @@ public class StartUpHandler implements IStartup {
 	void startWatchDog() {
 		WatchDogGlobals.isActive = true;
 		WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
+		// initializes the interval manager, and thereby, watchdog.
 		IntervalManager.getInstance();
 	}
 
@@ -50,17 +55,16 @@ public class StartUpHandler implements IStartup {
 			// (1) check user registration (2) wait until 1 is complete, or 1
 			// can be skipped (3) show workspace registration
 			checkUserRegistration();
-			if (!Preferences.getInstance().getUserid().isEmpty()) {
+			if (!preferences.getUserid().isEmpty()) {
 				// In case the user aborted the preference dialog with cancel,
 				// we don't want him to have to answer whether he wants WatchDog
 				// to be active for this workspace -- it's obvious that he does
 				// not want to be bothered for the moment.
 				checkWorkspaceRegistration();
 			}
-			if (Preferences.getInstance().getStore().needsSaving()) {
+			if (preferences.getStore().needsSaving()) {
 				try {
-					((ScopedPreferenceStore) Preferences.getInstance()
-							.getStore()).save();
+					((ScopedPreferenceStore) preferences.getStore()).save();
 				} catch (IOException exception) {
 				}
 			}
@@ -68,7 +72,7 @@ public class StartUpHandler implements IStartup {
 
 		/** Checks whether there is a registered WatchDog user */
 		private void checkUserRegistration() {
-			if (Preferences.getInstance().getUserid().isEmpty()) {
+			if (preferences.getUserid().isEmpty()) {
 				UserRegistrationWizardDialogHandler newUserWizardHandler = new UserRegistrationWizardDialogHandler();
 				try {
 					int statusCode = (int) newUserWizardHandler
@@ -93,23 +97,29 @@ public class StartUpHandler implements IStartup {
 		 */
 		private void checkWorkspaceRegistration() {
 			String workspace = UIUtils.getWorkspaceName();
-			if (!Preferences.getInstance().isWorkspaceRegistered(workspace)) {
+			if (!preferences.isWorkspaceRegistered(workspace)) {
 				boolean useWatchDogInThisWorkspace = MessageDialog
 						.openQuestion(null, "WatchDog Workspace Registration",
 								"Should WatchDog be active in this workspace?");
 				WatchDogLogger.getInstance()
 						.logInfo("Registering workspace...");
-				Preferences.getInstance().registerWorkspaceUse(workspace,
+				preferences.registerWorkspaceUse(workspace,
 						useWatchDogInThisWorkspace);
-				if (useWatchDogInThisWorkspace) {
-					// TODO (MMB) open project registartion wizard
-				}
 			}
 
-			if (Preferences.getInstance().shouldWatchDogBeActive(workspace)) {
+			WorkspacePreferenceSetting setting = preferences
+					.getWorkspaceSetting(workspace);
+			if (setting.enableWatchdog) {
+				if (setting.projectId.isEmpty()) {
+					ProjectRegistrationWizardDialogHandler newProjectWizardHandler = new ProjectRegistrationWizardDialogHandler();
+					try {
+						newProjectWizardHandler.execute(new ExecutionEvent());
+					} catch (ExecutionException exception) {
+						exception.printStackTrace();
+					}
+				}
 				startWatchDog();
 			}
 		}
-
 	}
 }

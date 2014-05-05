@@ -40,14 +40,14 @@ public class UserRegistrationWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 		Preferences.getInstance().getStore()
-				.setValue(Preferences.USERID_KEY, welcomePage.getUserId());
+				.setValue(Preferences.USERID_KEY, welcomePage.getId());
 		return true;
 	}
 
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		IWizardPage currentPage = getContainer().getCurrentPage();
-		if (currentPage == welcomePage && !welcomePage.getRegisterNewUser()) {
+		if (currentPage == welcomePage && !welcomePage.getRegisterNewId()) {
 			return existingUserEndingPage;
 		}
 		return super.getNextPage(page);
@@ -57,7 +57,7 @@ public class UserRegistrationWizard extends Wizard {
 	public IWizardPage getPreviousPage(IWizardPage page) {
 		IWizardPage currentPage = getContainer().getCurrentPage();
 		if (currentPage == existingUserEndingPage
-				&& !welcomePage.getRegisterNewUser()) {
+				&& !welcomePage.getRegisterNewId()) {
 			return welcomePage;
 		}
 		return super.getPreviousPage(page);

@@ -22,16 +22,15 @@ public class Preferences {
 	/** Flag denoting whether WatchDog plugin should do logging or not. */
 	public final static String LOGGING_ENABLED_KEY = "ENABLE_LOGGING";
 
-	/**
-	 * A serialized List of {@link WorkspacePreferenceSetting}s.
-	 */
+	/** A serialized List of {@link WorkspacePreferenceSetting}s. */
 	public final static String WORKSPACES_KEY = "WORKSPACE_SETTINGS";
 
-	/**
-	 * The type of a list of {@link WorkspacePreferenceSetting}s for Gson.
-	 */
-	private Type typeWorkspaceSettings = new TypeToken<List<WorkspacePreferenceSetting>>() {
+	/** The type of a list of {@link WorkspacePreferenceSetting}s for Gson. */
+	private final static Type typeWorkspaceSettings = new TypeToken<List<WorkspacePreferenceSetting>>() {
 	}.getType();
+
+	/** The Gson object. */
+	private final static Gson gson = new Gson();
 
 	/** The preference store. */
 	private IPreferenceStore store;
@@ -67,7 +66,6 @@ public class Preferences {
 			return new ArrayList<WorkspacePreferenceSetting>();
 		}
 
-		Gson gson = new Gson();
 		return gson
 				.fromJson(serializedWorksapceSettings, typeWorkspaceSettings);
 	}
@@ -99,14 +97,6 @@ public class Preferences {
 	 */
 	public boolean isWorkspaceRegistered(String workspace) {
 		return (getWorkspaceSetting(workspace) == null) ? false : true;
-	}
-
-	/**
-	 * @return <code>true</code> if WatchDog should be actively recording for
-	 *         the given workspace. <code>false</code> otherwise.
-	 */
-	public boolean shouldWatchDogBeActive(String workspace) {
-		return getWorkspaceSetting(workspace).enableWatchdog;
 	}
 
 	/**
@@ -156,7 +146,6 @@ public class Preferences {
 
 	/** Updates the serialized workspace settings in the preference store. */
 	private void storeWorkspaceSettings() {
-		Gson gson = new Gson();
 		store.setValue(WORKSPACES_KEY,
 				gson.toJson(workspaceSettings, typeWorkspaceSettings));
 	}
@@ -166,9 +155,7 @@ public class Preferences {
 		return store;
 	}
 
-	/**
-	 * @return a list of workspace settings.
-	 */
+	/** @return a list of workspace settings. */
 	public List<WorkspacePreferenceSetting> getWorkspaceSettings() {
 		return workspaceSettings;
 	}

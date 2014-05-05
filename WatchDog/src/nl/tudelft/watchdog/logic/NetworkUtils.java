@@ -8,6 +8,7 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -17,19 +18,36 @@ import org.apache.http.util.EntityUtils;
 /** Utility functions for accessing the network. */
 public class NetworkUtils {
 
+	/**
+	 * An enum denoting the three possible different connection outcomes:
+	 * successful, unsuccessful, or a network error.
+	 */
 	public enum Connection {
-		SUCCESSFUL, UNSUCCESSFUL, NETWORK_ERROR
+		/** Server returned expected answer. */
+		SUCCESSFUL,
+		/** Server returned something, but not the expected answer. */
+		UNSUCCESSFUL,
+		/** Network error. */
+		NETWORK_ERROR
 	};
 
 	/**
-	 * Checks whether the given url is reachable and exists.
+	 * Checks whether the given url is reachable and exists. The connection
+	 * timeout is set to 5 seconds.
 	 * 
 	 * @return if the url exists and returns a 200 status code.
 	 *         <code>false</code> if the url does not return 200. In case of
 	 *         NetworkFailure, throws an execpetion.
 	 */
 	public static Connection urlExistsAndReturnsStatus200(String url) {
-		HttpClient client = HttpClientBuilder.create().build();
+		int connectionTimeout = 5000;
+		RequestConfig config = RequestConfig.custom()
+				.setConnectionRequestTimeout(connectionTimeout)
+				.setConnectTimeout(connectionTimeout)
+				.setSocketTimeout(connectionTimeout).build();
+		HttpClient client = HttpClientBuilder.create()
+				.setDefaultRequestConfig(config).build();
+
 		HttpGet get;
 		try {
 			get = new HttpGet(url);
