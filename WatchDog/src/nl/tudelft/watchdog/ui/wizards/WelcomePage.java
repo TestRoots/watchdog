@@ -4,7 +4,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import nl.tudelft.watchdog.ui.UIUtils;
-import nl.tudelft.watchdog.ui.wizards.userregistration.UserRegistrationWizard;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -23,33 +22,38 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * The first page of the {@link UserRegistrationWizard}. It asks the question:
- * Are you a new WatchDog user, yes or no? Depending on the answer, it
- * dynamically displays the information we are interested in.
+ * The first page of a Wizard. It asks an initial yes-or no question. Depending
+ * on the answer, it dynamically display an input field or an introduction page.
  */
-public class WelcomePage extends FinishableWizardPage {
+abstract public class WelcomePage extends FinishableWizardPage {
 
 	/** The welcome title. To be changed by subclasses. */
 	protected String welcomeTitle;
+
 	/** The text to welcome the user. To be changed by subclasses. */
 	protected String welcomeText;
+
 	/** The text on the label for the user input. To be changed by subclasses. */
 	protected String labelText;
+
 	/** The tooltip on the label and inputText. */
 	protected String inputToolTip;
+
+	/** The label question. To be changed by subclasses. */
+	protected String labelQuestion;
 
 	/** The length (in characters) of the WatchDog id. */
 	private static final int idLength = 40;
 
 	/**
 	 * The Composite which holds the text field for the new user welcome or
-	 * holds the text field for the existing user login..
+	 * holds the text field for the existing user login.
 	 */
 	private Composite dynamicContent;
 
 	/**
-	 * The userid as entered by the user (note: as delivered from this wizard
-	 * page, still unchecked).
+	 * The id as entered by the user (note: as delivered from this wizard page,
+	 * still unchecked).
 	 */
 	private Text userInput;
 
@@ -78,8 +82,7 @@ public class WelcomePage extends FinishableWizardPage {
 	 */
 	private Composite createQuestionComposite(final Composite parent) {
 		Composite composite = UIUtils.createGridedComposite(parent, 2);
-		UIUtils.createLabel("Do you already have a WatchDog Userid? ",
-				composite);
+		UIUtils.createLabel(labelQuestion, composite);
 
 		final Composite radioButtons = UIUtils.createGridedComposite(composite,
 				1);
