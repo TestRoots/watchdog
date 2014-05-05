@@ -2,12 +2,14 @@ package nl.tudelft.watchdog.ui.wizards.projectregistration;
 
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
+import nl.tudelft.watchdog.ui.wizards.FormValidationListener;
 
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
@@ -98,6 +100,10 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 		userRoleInput = UIUtils.createLinkedFieldInput("Your Role: ",
 				"Try best describe what you do: Developer, Tester, ...",
 				textInputComposite);
+		FormValidationListener formValidationListener = new FormValidationListener(
+				this);
+		projectNameInput.addModifyListener(formValidationListener);
+		userRoleInput.addModifyListener(formValidationListener);
 
 		Composite questionComposite = UIUtils.createFullGridedComposite(
 				topComposite, 2);
@@ -113,8 +119,21 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 		otherTestingStrategies = createSimpleYesNoDontKnowQuestion(
 				"  ... use other testing strategies, too \n (e.g. Mockito, Powermock, Selenium, or manual testing)? ",
 				questionComposite);
+		addValidationListenerToAllChildren(useJunit, formValidationListener);
+		addValidationListenerToAllChildren(junitForTestingOnly,
+				formValidationListener);
+		addValidationListenerToAllChildren(otherTestingStrategies,
+				formValidationListener);
 
 		return topComposite;
+	}
+
+	private void addValidationListenerToAllChildren(Composite composite,
+			FormValidationListener listener) {
+		for (Control child : composite.getChildren()) {
+			Button button = (Button) child;
+			button.addSelectionListener(listener);
+		}
 	}
 
 	/**
@@ -150,12 +169,26 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 				&& projectNameInput.getText().length() < 2
 				&& projectNameInput.getEnabled()) {
 			setErrorMessageAndPageComplete("You must enter a proper project's name.");
-		}
-		if (userRoleInput.getText().isEmpty()) {
+		} else if (userRoleInput.getText().isEmpty()) {
 			setErrorMessageAndPageComplete("Please try to describe what you do in the project, e.g. developer or tester.");
+		} else if (!hasOneSelection(noSingleProjectComposite)
+				|| !hasOneSelection(useJunit)
+				|| !hasOneSelection(junitForTestingOnly)
+				|| !hasOneSelection(otherTestingStrategies)) {
+			setErrorMessageAndPageComplete("Please answer all questions!");
+		} else {
+			setErrorMessageAndPageComplete(null);
 		}
-
 		getWizard().getContainer().updateButtons();
+	}
+
+	private boolean hasOneSelection(Composite composite) {
+		boolean oneSelected = false;
+		for (Control control : composite.getChildren()) {
+			Button button = (Button) control;
+			oneSelected = oneSelected ^ button.getSelection();
+		}
+		return oneSelected;
 	}
 
 	@Override
