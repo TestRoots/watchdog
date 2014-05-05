@@ -9,6 +9,7 @@ public class ProjectRegistrationWizard extends Wizard {
 	public void addPages() {
 		addPage(new ProjectWelcomePage());
 		addPage(new ProjectRegistrationPage());
+		addPage(new ProjectSliderPage());
 	}
 
 	@Override
