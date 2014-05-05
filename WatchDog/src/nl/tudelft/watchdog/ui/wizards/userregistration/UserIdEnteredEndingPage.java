@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 class UserIdEnteredEndingPage extends FinishableWizardPage {
 
 	/** An encouraging message for the end of a sentence. */
-	private static final String encouragingEndMessage = "\n\nHappy hours collecting and prize winning with WatchDog!";
+	private static final String encouragingEndMessage = "\n\nHappy hours-collecting and prize-winning with WatchDog!";
 
 	/** The top-level composite. */
 	private Composite topComposite;
@@ -34,10 +34,11 @@ class UserIdEnteredEndingPage extends FinishableWizardPage {
 
 	/**
 	 * Connects to the server, querying for the user entered on the
-	 * {@link UserWelcomePage}, and displays an according wizard page as a reaction.
+	 * {@link UserWelcomePage}, and displays an according wizard page as a
+	 * reaction.
 	 */
 	private void connectToServer() {
-		userid = ((UserWelcomePage) getPreviousPage()).getUserId();
+		userid = ((UserWelcomePage) getPreviousPage()).getId();
 		String url = NetworkUtils.buildUserURL(userid);
 		switch (NetworkUtils.urlExistsAndReturnsStatus200(url)) {
 		case SUCCESSFUL:

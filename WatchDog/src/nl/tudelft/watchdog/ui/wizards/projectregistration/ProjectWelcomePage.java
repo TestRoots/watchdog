@@ -1,16 +1,17 @@
-package nl.tudelft.watchdog.ui.wizards.userregistration;
+package nl.tudelft.watchdog.ui.wizards.projectregistration;
 
 import nl.tudelft.watchdog.ui.wizards.WelcomePage;
+import nl.tudelft.watchdog.ui.wizards.userregistration.UserRegistrationWizard;
 
 /**
  * The first page of the {@link UserRegistrationWizard}. It asks the question:
  * Are you a new WatchDog user, yes or no? Depending on the answer, it
  * dynamically displays the information we are interested in.
  */
-class UserWelcomePage extends WelcomePage {
+class ProjectWelcomePage extends WelcomePage {
 
 	/** Constructor. */
-	UserWelcomePage() {
+	ProjectWelcomePage() {
 		super("Welcome to WatchDog!");
 		setDescription("This wizard will guide you through the setup of a WatchDog User. May we ask for one minute of your time?");
 		welcomeTitle = "Welcome, new WatchDog User!";
