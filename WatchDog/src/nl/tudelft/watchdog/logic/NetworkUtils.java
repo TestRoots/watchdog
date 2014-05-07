@@ -105,8 +105,13 @@ public class NetworkUtils {
 	}
 
 	/** @return the base URL for user-based operations. */
-	public static String buildUserURL(String userid) {
-		return WatchDogGlobals.watchDogServerURI + "user/" + userid;
+	public static String buildUserURL(String id) {
+		return WatchDogGlobals.watchDogServerURI + "user/" + id;
+	}
+
+	/** @return the base URL for user-based operations. */
+	public static String buildProjectURL(String id) {
+		return WatchDogGlobals.watchDogServerURI + "project/" + id;
 	}
 
 	/** @return the URL to post new intervals to the server to for this user. */

@@ -17,15 +17,15 @@ public class UIUtilsTest {
 
 	@Test
 	public void testIsEmptySansWhitespace() {
-		assertEquals(true, UIUtils.isEmptyOrWhitespaces(""));
-		assertEquals(true, UIUtils.isEmptyOrWhitespaces(null));
+		assertEquals(true, UIUtils.isEmptyOrHasOnlyWhitespaces(""));
+		assertEquals(true, UIUtils.isEmptyOrHasOnlyWhitespaces(null));
 
-		assertEquals(true, UIUtils.isEmptyOrWhitespaces(" "));
-		assertEquals(true, UIUtils.isEmptyOrWhitespaces("  "));
-		assertEquals(true, UIUtils.isEmptyOrWhitespaces("   "));
-		assertEquals(true, UIUtils.isEmptyOrWhitespaces("  \n "));
+		assertEquals(true, UIUtils.isEmptyOrHasOnlyWhitespaces(" "));
+		assertEquals(true, UIUtils.isEmptyOrHasOnlyWhitespaces("  "));
+		assertEquals(true, UIUtils.isEmptyOrHasOnlyWhitespaces("   "));
+		assertEquals(true, UIUtils.isEmptyOrHasOnlyWhitespaces("  \n "));
 		
-		assertEquals(false, UIUtils.isEmptyOrWhitespaces("  f "));
+		assertEquals(false, UIUtils.isEmptyOrHasOnlyWhitespaces("  f "));
 	}
 
 }

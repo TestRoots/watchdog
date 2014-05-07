@@ -36,7 +36,7 @@ class UserRegistrationPage extends FinishableWizardPage {
 	public void createControl(Composite parent) {
 		Composite topComposite = createRegistrationComposite(parent);
 		setControl(topComposite);
-		setPageComplete(true);
+		setPageComplete(false);
 	}
 
 	/** Creates and returns the form of the registration. */
