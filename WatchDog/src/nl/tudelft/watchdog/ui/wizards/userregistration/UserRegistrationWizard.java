@@ -12,6 +12,7 @@ import org.eclipse.jface.wizard.Wizard;
  * button.
  */
 public class UserRegistrationWizard extends Wizard {
+
 	/** The first page in the wizard. */
 	UserWelcomePage welcomePage;
 
@@ -21,20 +22,20 @@ public class UserRegistrationWizard extends Wizard {
 	/** Allows a shortcut to the finish button. */
 	boolean shortcutToCanFinish = false;
 
+	private UserCreatedEndingPage userCreatedEndingPage;
+
+	private UserRegistrationPage userRegistrationPage;
+
 	@Override
 	public void addPages() {
 		welcomePage = new UserWelcomePage();
 		addPage(welcomePage);
-		addPage(new UserRegistrationPage());
+		userRegistrationPage = new UserRegistrationPage();
+		addPage(userRegistrationPage);
 		existingUserEndingPage = new UserIdEnteredEndingPage();
 		addPage(existingUserEndingPage);
-	}
-
-	@Override
-	public boolean canFinish() {
-		FinishableWizardPage currentPage = (FinishableWizardPage) getContainer()
-				.getCurrentPage();
-		return currentPage.canFinish();
+		userCreatedEndingPage = new UserCreatedEndingPage();
+		addPage(userCreatedEndingPage);
 	}
 
 	@Override
@@ -50,6 +51,12 @@ public class UserRegistrationWizard extends Wizard {
 		if (currentPage == welcomePage && !welcomePage.getRegisterNewId()) {
 			return existingUserEndingPage;
 		}
+		if (currentPage == existingUserEndingPage) {
+			return null;
+		}
+		if (currentPage == userRegistrationPage) {
+			return userCreatedEndingPage;
+		}
 		return super.getNextPage(page);
 	}
 
@@ -60,6 +67,17 @@ public class UserRegistrationWizard extends Wizard {
 				&& !welcomePage.getRegisterNewId()) {
 			return welcomePage;
 		}
+		if (currentPage == userCreatedEndingPage) {
+			return null;
+		}
 		return super.getPreviousPage(page);
 	}
+
+	@Override
+	public boolean canFinish() {
+		FinishableWizardPage currentPage = (FinishableWizardPage) getContainer()
+				.getCurrentPage();
+		return currentPage.canFinish();
+	}
+
 }

@@ -6,10 +6,8 @@ import nl.tudelft.watchdog.ui.wizards.FormValidationListener;
 
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
@@ -28,11 +26,9 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 
 	private Composite noSingleProjectComposite;
 
-	private Composite otherTestingStrategies;
-
-	private Composite junitForTestingOnly;
-
 	private Composite useJunit;
+
+	private Composite otherTestingStrategies;
 
 	/** Constructor. */
 	protected ProjectRegistrationPage() {
@@ -108,95 +104,66 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 		Composite questionComposite = UIUtils.createFullGridedComposite(
 				topComposite, 2);
 
+		UIUtils.createLabel("", questionComposite);
+		UIUtils.createLabel("", questionComposite);
 		multipelProjectLabel = UIUtils.createLabel(
 				"Does your real-world project ...", questionComposite);
 		UIUtils.createLabel("", questionComposite);
-		useJunit = createSimpleYesNoDontKnowQuestion("  ... use JUnit? ",
-				questionComposite);
-		junitForTestingOnly = createSimpleYesNoDontKnowQuestion(
-				"  ... use JUnit for unit testing only \n (i.e. only one class tested per test case)? ",
+		useJunit = createSimpleYesNoDontKnowQuestion("  ... use JUnit? \n",
 				questionComposite);
 		otherTestingStrategies = createSimpleYesNoDontKnowQuestion(
-				"  ... use other testing strategies, too \n (e.g. Mockito, Powermock, Selenium, or manual testing)? ",
+				"  ... use other testing 'frameworks' than JUnit, for example \n  Mockito, Powermock, Selenium, or manual testing? ",
 				questionComposite);
 		addValidationListenerToAllChildren(useJunit, formValidationListener);
-		addValidationListenerToAllChildren(junitForTestingOnly,
-				formValidationListener);
 		addValidationListenerToAllChildren(otherTestingStrategies,
 				formValidationListener);
 
 		return topComposite;
 	}
 
-	private void addValidationListenerToAllChildren(Composite composite,
-			FormValidationListener listener) {
-		for (Control child : composite.getChildren()) {
-			Button button = (Button) child;
-			button.addSelectionListener(listener);
-		}
-	}
-
-	/**
-	 * Creates a simple question with according yes/no radio buttons.
-	 * 
-	 * @return the composite where the buttons are put onto.
-	 */
-	private Composite createSimpleYesNoQuestion(String question,
-			Composite parent) {
-		UIUtils.createLabel(question, parent);
-		Composite composite = UIUtils.createGridedComposite(parent, 1);
-		composite.setLayout(new FillLayout());
-		UIUtils.createRadioButton(composite, "Yes");
-		UIUtils.createRadioButton(composite, "No");
-		return composite;
-	}
-
-	/**
-	 * Creates a simple question with according yes/no/don't know radio buttons.
-	 * 
-	 * @return the composite where the buttons are put onto.
-	 */
-	private Composite createSimpleYesNoDontKnowQuestion(String question,
-			Composite parent) {
-		Composite buttonComposite = createSimpleYesNoQuestion(question, parent);
-		UIUtils.createRadioButton(buttonComposite, "Don't know");
-		return buttonComposite;
-	}
-
 	@Override
 	public void validateFormInputs() {
-		if (UIUtils.isEmptyOrWhitespaces(projectNameInput.getText())
-				&& projectNameInput.getText().length() < 2
+		if (!hasOneSelection(noSingleProjectComposite)) {
+			setErrorMessageAndPageComplete("Please answer all yes/no questions!");
+		} else if (inputFieldDoesNotHaveMinimumSensibleInput(projectNameInput)
 				&& projectNameInput.getEnabled()) {
 			setErrorMessageAndPageComplete("You must enter a proper project's name.");
-		} else if (userRoleInput.getText().isEmpty()) {
+		} else if (inputFieldDoesNotHaveMinimumSensibleInput(userRoleInput)) {
 			setErrorMessageAndPageComplete("Please try to describe what you do in the project, e.g. developer or tester.");
-		} else if (!hasOneSelection(noSingleProjectComposite)
-				|| !hasOneSelection(useJunit)
-				|| !hasOneSelection(junitForTestingOnly)
+		} else if (!hasOneSelection(useJunit)
 				|| !hasOneSelection(otherTestingStrategies)) {
-			setErrorMessageAndPageComplete("Please answer all questions!");
+			setErrorMessageAndPageComplete("Please answer all yes/no/don't know questions!");
 		} else {
 			setErrorMessageAndPageComplete(null);
 		}
 		getWizard().getContainer().updateButtons();
 	}
 
-	private boolean hasOneSelection(Composite composite) {
-		boolean oneSelected = false;
-		for (Control control : composite.getChildren()) {
-			Button button = (Button) control;
-			oneSelected = oneSelected ^ button.getSelection();
-		}
-		return oneSelected;
+	private boolean inputFieldDoesNotHaveMinimumSensibleInput(Text input) {
+		return UIUtils.isEmptyOrHasOnlyWhitespaces(input.getText())
+				|| input.getText().length() < 3;
 	}
 
 	@Override
 	public boolean canFinish() {
-		if (getErrorMessage() == null) {
-			return true;
-		}
 		return false;
+	}
+
+	/**
+	 * @return <code>true</code> if this project uses Junit. <code>false</code>
+	 *         otherwise.
+	 */
+	boolean usesJunit() {
+		return ((Button) useJunit.getChildren()[0]).getSelection();
+	}
+
+	/**
+	 * @return <code>true</code> if this project uses other testing strategies
+	 *         than Junit. <code>false</code> otherwise.
+	 */
+	boolean usesOtherTestingStrategies() {
+		return ((Button) otherTestingStrategies.getChildren()[0])
+				.getSelection();
 	}
 
 }

@@ -29,10 +29,17 @@ public class UIUtils {
 		return label;
 	}
 
-	/** Creates and returns a bold texted label. */
+	/** Creates and returns a bold text label. */
 	public static Label createBoldLabel(String text, Composite parent) {
 		Label label = createLabel(text, parent);
 		label.setFont(JFaceResources.getFontRegistry().getBold(""));
+		return label;
+	}
+
+	/** Creates and returns an italic text label. */
+	public static Label createItalicLabel(String text, Composite parent) {
+		Label label = createLabel(text, parent);
+		label.setFont(JFaceResources.getFontRegistry().getItalic(""));
 		return label;
 	}
 
@@ -166,7 +173,7 @@ public class UIUtils {
 	/**
 	 * @return Whether the string with whitespaces trimmed is empty.
 	 */
-	public static boolean isEmptyOrWhitespaces(String string) {
+	public static boolean isEmptyOrHasOnlyWhitespaces(String string) {
 		return isEmpty(string) ? true : string.trim().isEmpty();
 	}
 }
