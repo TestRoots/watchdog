@@ -66,7 +66,9 @@ public abstract class IntervalBase {
 	/** Closes this interval. */
 	public void closeInterval() {
 		isClosed = true;
-		checkForChangeTimer.cancel();
+		if (checkForChangeTimer != null) {
+			checkForChangeTimer.cancel();
+		}
 		listenForReactivation();
 	}
 
