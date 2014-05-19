@@ -18,11 +18,15 @@ import org.eclipse.swt.widgets.Text;
  */
 class ProjectRegistrationPage extends FinishableWizardPage {
 
+	private static final String DOES_YOUR_PROJECT = "Does your project ...";
+
+	private static final String DOES_AT_LEAST_ONE_PROJECT_USE = "Does at least one of your projects in the workspace ...";
+
 	private Text projectNameInput;
 
 	private Text userRoleInput;
 
-	private Label multipelProjectLabel;
+	private Label multipleProjectLabel;
 
 	private Composite noSingleProjectComposite;
 
@@ -60,31 +64,15 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 				composite);
 		final Button noSingleProjectButton = (Button) noSingleProjectComposite
 				.getChildren()[1];
-		noSingleProjectButton.addSelectionListener(new SelectionListener() {
+		final Button yesSingleProjectButton = (Button) noSingleProjectComposite
+				.getChildren()[0];
 
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (noSingleProjectButton.getSelection()) {
-					performUIUpdate(
-							"Does at least one of your projects in the workspace ...",
-							false);
-				} else {
-					performUIUpdate("Does your project ...", true);
-				}
-			}
-
-			private void performUIUpdate(String label, boolean enableState) {
-				multipelProjectLabel.setText(label);
-				projectNameInput.setEnabled(enableState);
-				parent.pack();
-				parent.update();
-				validateFormInputs();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
+		noSingleProjectButton
+				.addSelectionListener(new singleProjectSelectionListener(
+						noSingleProjectButton, parent));
+		yesSingleProjectButton
+				.addSelectionListener(new singleProjectSelectionListener(
+						noSingleProjectButton, parent));
 
 		Composite textInputComposite = UIUtils.createFullGridedComposite(
 				topComposite, 2);
@@ -106,8 +94,8 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 
 		UIUtils.createLabel("", questionComposite);
 		UIUtils.createLabel("", questionComposite);
-		multipelProjectLabel = UIUtils.createLabel(
-				"Does your real-world project ...", questionComposite);
+		multipleProjectLabel = UIUtils.createLabel(DOES_YOUR_PROJECT,
+				questionComposite);
 		UIUtils.createLabel("", questionComposite);
 		useJunit = createSimpleYesNoDontKnowQuestion("  ... use JUnit? \n",
 				questionComposite);
@@ -164,6 +152,39 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 	boolean usesOtherTestingStrategies() {
 		return ((Button) otherTestingStrategies.getChildren()[0])
 				.getSelection();
+	}
+
+	private class singleProjectSelectionListener implements SelectionListener {
+		private final Button noSingleProjectButton;
+		private final Composite parent;
+
+		private singleProjectSelectionListener(Button noSingleProjectButton,
+				Composite parent) {
+			this.noSingleProjectButton = noSingleProjectButton;
+			this.parent = parent;
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			if (noSingleProjectButton.getSelection()) {
+				performUIUpdate(DOES_AT_LEAST_ONE_PROJECT_USE, false);
+			} else {
+				performUIUpdate(DOES_YOUR_PROJECT, true);
+			}
+		}
+
+		private void performUIUpdate(String label, boolean enableState) {
+			multipleProjectLabel.setText(label);
+			multipleProjectLabel.update();
+			multipleProjectLabel.pack();
+			projectNameInput.setEnabled(enableState);
+			parent.update();
+			validateFormInputs();
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
 	}
 
 }
