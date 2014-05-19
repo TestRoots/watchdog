@@ -46,19 +46,16 @@ class ProjectIdEnteredEndingPage extends FinishableWizardPage {
 			setTitle("Welcome back!");
 			setDescription("Thanks for re-using your existing project!");
 			setPageComplete(true);
-
 			dynamicComposite = createSuccessWizzard(topComposite);
 			break;
 		case UNSUCCESSFUL:
 			setTitle("Wrong project id");
 			setErrorMessageAndPageComplete("This id does not exist.");
-
 			dynamicComposite = createUserNotFoundComposite(topComposite);
 			break;
 		case NETWORK_ERROR:
 			setTitle("WatchDog Server not reachable");
 			setDescription("There was an error contacting our server.");
-
 			dynamicComposite = createConnectionFailureComposite(topComposite);
 			break;
 		}
