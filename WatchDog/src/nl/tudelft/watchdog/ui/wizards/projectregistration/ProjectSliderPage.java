@@ -47,8 +47,8 @@ public class ProjectSliderPage extends FinishableWizardPage {
 		testingLabel
 				.setToolTipText("To the testing activity, everything you do with Junit tests counts. Examples: writing, modifying, debugging, and executing Junit tests");
 		final Slider slider = new Slider(row, SWT.NONE);
-		slider.setLayoutData(UIUtils.createFullGridUsageData());
-		slider.setValues(50, 0, 105, 5, 5, 5);
+		// slider.setLayoutData(UIUtils.createFullGridUsageData());
+		// slider.setValues(50, 0, 105, 5, 5, 5);
 		Label productionLabel = UIUtils.createLabel("  100% Production", row);
 		productionLabel
 				.setToolTipText("To the production activity, every activity that has to do with regular, non-test production code counts.");
