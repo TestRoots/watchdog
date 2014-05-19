@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.logic.interval;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observer;
 
@@ -15,7 +16,6 @@ import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
 import nl.tudelft.watchdog.logic.interval.active.UserActivityIntervalBase;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallback;
-import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 /**
@@ -108,8 +108,9 @@ public class IntervalManager {
 	 */
 	/* package */void closeInterval(IntervalBase interval) {
 		if (interval != null && !interval.isClosed()) {
-			WatchDogLogger.getInstance()
-					.logInfo("Closing interval " + interval);
+			intervalEventObservable.notifyObservers(new ClosingIntervalEvent(
+					interval));
+
 			if (interval instanceof UserActivityIntervalBase) {
 				UserActivityIntervalBase activeInterval = (UserActivityIntervalBase) interval;
 				interval.setDocument(documentFactory
@@ -118,10 +119,9 @@ public class IntervalManager {
 			interval.setEndTime(new Date());
 			interval.setIsInDebugMode(WatchDogUtils.isInDebugMode());
 			interval.closeInterval();
+
 			intervals.remove(interval);
 			recordedIntervals.add(interval);
-			intervalEventObservable.notifyObservers(new ClosingIntervalEvent(
-					interval));
 		}
 	}
 
@@ -146,10 +146,12 @@ public class IntervalManager {
 
 	/** Closes all currently open intervals. */
 	public void closeAllCurrentIntervals() {
-		// We need the duplication of the list to avoid concurrent modification
-		// of the list as we are for-eaching through it.
-		ArrayList<IntervalBase> allOpenIntervals = new ArrayList<>(intervals);
-		for (IntervalBase interval : allOpenIntervals) {
+		Iterator<IntervalBase> iterator = intervals.listIterator();
+		while (iterator.hasNext()) {
+			// we need to remove the interval first from the list in order to
+			// avoid ConcurrentListModification Exceptions.
+			IntervalBase interval = iterator.next();
+			iterator.remove();
 			closeInterval(interval);
 		}
 	}

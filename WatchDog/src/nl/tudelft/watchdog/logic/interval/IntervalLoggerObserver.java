@@ -15,21 +15,22 @@ import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 /* package */class IntervalLoggerObserver implements Observer {
 	@Override
 	public void update(Observable o, Object event) {
+		String logString = null;
 		if (event instanceof NewIntervalEvent) {
 			NewIntervalEvent intervalEvent = (NewIntervalEvent) event;
-			WatchDogLogger.getInstance().logInfo(
-					"New interval: " + intervalEvent.getInterval());
+			logString = "New interval: " + intervalEvent.getInterval();
 
 		} else if (event instanceof ClosingIntervalEvent) {
 			ClosingIntervalEvent intervalEvent = (ClosingIntervalEvent) event;
+			logString = "Closing interval: "
+					+ intervalEvent.getInterval().getStart() + " - "
+					+ intervalEvent.getInterval().getEnd();
 			if (intervalEvent.getInterval() instanceof UserActivityIntervalBase) {
-				WatchDogLogger.getInstance().logInfo(
-						"Closing interval: "
-								+ intervalEvent.getInterval().getDocument()
-										.getFileName() + " \n "
-								+ intervalEvent.getInterval().getStart()
-								+ " - " + intervalEvent.getInterval().getEnd());
+				logString += intervalEvent.getInterval().getDocument()
+						.getFileName()
+						+ " \n";
 			}
 		}
+		WatchDogLogger.getInstance().logInfo(logString);
 	}
 }
