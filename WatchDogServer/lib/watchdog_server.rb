@@ -10,10 +10,7 @@ class WatchDogServer < Sinatra::Base
 
   # Configuration file support
   register Sinatra::ConfigFile
-  config_file 'config.yaml'
-
-  # Do not support static files
-  set :static, false
+  config_file '../config.yaml'
 
   def mongo
     MongoClient.new("localhost", 27017)
@@ -29,13 +26,29 @@ class WatchDogServer < Sinatra::Base
     @db = nil
   end
 
+
+    # Do not support static files
+    set :static, false
+
+    # Enable request logging
+    enable :logging
+
+
   get '/' do
     'Woof Woof'
   end
 
   # Get info about stored user
   get '/user/:id' do
+    # TODO (MMB) check userid
+    stored_user = get_user_by_id(params[:'id'])
 
+    if stored_user.nil?
+      halt 404, "User does not exist"
+    else
+      status 200
+      body stored_user.to_json
+    end
   end
 
   # Create a new user and return unique SHA1
@@ -66,11 +79,6 @@ class WatchDogServer < Sinatra::Base
     body stored_user['id']
   end
 
-  # Delete a user
-  delete '/user/:id' do
-
-  end
-
   # Get user intervals
   get '/user/:id/intervals' do
 
@@ -98,6 +106,7 @@ class WatchDogServer < Sinatra::Base
       halt 400, 'Request contains negative intervals'
     end
 
+    # TODO (MMB) check userid
     user_id = params[:id]
     user = get_user_by_id(user_id)
 
