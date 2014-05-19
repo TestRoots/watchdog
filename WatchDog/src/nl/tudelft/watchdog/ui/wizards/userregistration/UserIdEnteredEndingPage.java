@@ -45,19 +45,16 @@ class UserIdEnteredEndingPage extends FinishableWizardPage {
 			setTitle("Welcome back!");
 			setDescription("Thanks for re-using your existing user!");
 			setPageComplete(true);
-
 			dynamicComposite = createSuccessWizzard(topComposite);
 			break;
 		case UNSUCCESSFUL:
 			setTitle("Wrong user id");
 			setErrorMessageAndPageComplete("This user id does not exist.");
-
 			dynamicComposite = createUserNotFoundComposite(topComposite);
 			break;
 		case NETWORK_ERROR:
 			setTitle("WatchDog Server not reachable");
 			setDescription("There was an error contacting our server.");
-
 			dynamicComposite = createConnectionFailureComposite(topComposite);
 			break;
 		}

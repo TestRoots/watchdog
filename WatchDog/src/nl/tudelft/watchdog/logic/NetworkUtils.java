@@ -7,11 +7,15 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
@@ -45,8 +49,14 @@ public class NetworkUtils {
 				.setConnectionRequestTimeout(connectionTimeout)
 				.setConnectTimeout(connectionTimeout)
 				.setSocketTimeout(connectionTimeout).build();
+		CredentialsProvider provider = new BasicCredentialsProvider();
+		byte[] password = { 104, 110, 115, 112, 113, 115, 122, 110, 112, 113 };
+		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
+				"watchdogplugin", new String(password));
+		provider.setCredentials(AuthScope.ANY, credentials);
 		HttpClient client = HttpClientBuilder.create()
-				.setDefaultRequestConfig(config).build();
+				.setDefaultRequestConfig(config)
+				.setDefaultCredentialsProvider(provider).build();
 
 		HttpGet get;
 		try {
@@ -56,10 +66,13 @@ public class NetworkUtils {
 		}
 		try {
 			HttpResponse response = client.execute(get);
-			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode == HttpStatus.SC_OK) {
 				return Connection.SUCCESSFUL;
+			} else if (statusCode == HttpStatus.SC_NOT_FOUND) {
+				return Connection.UNSUCCESSFUL;
 			}
-			return Connection.UNSUCCESSFUL;
+			return Connection.NETWORK_ERROR;
 		} catch (IOException exception) {
 			// intentionally empty
 		}
