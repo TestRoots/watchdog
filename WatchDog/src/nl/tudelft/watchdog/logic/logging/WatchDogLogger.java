@@ -30,7 +30,7 @@ public class WatchDogLogger {
 				// up the logger
 				return;
 			}
-		} catch (NoClassDefFoundError error) {
+		} catch (NoClassDefFoundError | NullPointerException error) {
 			// We purposefully capture an error here.
 			// There was an error in creating the preferences instance, so
 			// Eclipse is not running. In this case, always set up the logger.
