@@ -9,3 +9,7 @@ group :test do
   gem 'rspec'
   gem 'nyan-cat-formatter'
 end
+
+group :production do
+  gem 'unicorn'
+end
