@@ -9,7 +9,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Slider;
+import org.eclipse.swt.widgets.Scale;
 
 /**
  * A Page displaying a slider so that the user can estimate how his or her time
@@ -46,9 +46,13 @@ public class ProjectSliderPage extends FinishableWizardPage {
 		Label testingLabel = UIUtils.createLabel("100% Testing  ", row);
 		testingLabel
 				.setToolTipText("To the testing activity, everything you do with Junit tests counts. Examples: writing, modifying, debugging, and executing Junit tests");
-		final Slider slider = new Slider(row, SWT.NONE);
-		// slider.setLayoutData(UIUtils.createFullGridUsageData());
-		// slider.setValues(50, 0, 105, 5, 5, 5);
+		final Scale slider = new Scale(row, SWT.HORIZONTAL);
+		slider.setLayoutData(UIUtils.createFullGridUsageData());
+		slider.setSelection(50);
+		slider.setIncrement(5);
+		slider.setPageIncrement(5);
+		slider.setMaximum(100);
+		slider.setMinimum(0);
 		Label productionLabel = UIUtils.createLabel("  100% Production", row);
 		productionLabel
 				.setToolTipText("To the production activity, every activity that has to do with regular, non-test production code counts.");
@@ -57,7 +61,6 @@ public class ProjectSliderPage extends FinishableWizardPage {
 				"50% Testing, 50% Production", row);
 		sliderValueText.setLayoutData(UIUtils.createFullGridUsageData());
 		sliderValueText.setAlignment(SWT.CENTER);
-
 		slider.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
