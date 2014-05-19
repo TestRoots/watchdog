@@ -3,6 +3,7 @@ require 'digest/sha1'
 require 'sinatra'
 require 'mongo'
 require 'sinatra/contrib'
+require 'json'
 
 class WatchDogServer < Sinatra::Base
   include Mongo
@@ -24,8 +25,8 @@ class WatchDogServer < Sinatra::Base
   end
 
   after do
-    #@db.connection.close
-    #@db = nil
+    @db.connection.close
+    @db = nil
   end
 
   get '/' do
@@ -40,8 +41,9 @@ class WatchDogServer < Sinatra::Base
   # Create a new user and return unique SHA1
   post '/user' do
     begin
-      user = JSON.parse(request.body.read)
-    rescue
+	user = JSON.parse(request.body.read)
+    rescue Exception => e
+      puts e
       halt 400, "Wrong JSON object #{request.body.read}"
     end
 
