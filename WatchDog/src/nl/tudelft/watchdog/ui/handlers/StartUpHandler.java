@@ -61,11 +61,11 @@ public class StartUpHandler implements IStartup {
 				// to be active for this workspace -- it's obvious that he does
 				// not want to be bothered for the moment.
 				checkWorkspaceRegistration();
-			}
-			if (preferences.getStore().needsSaving()) {
-				try {
-					((ScopedPreferenceStore) preferences.getStore()).save();
-				} catch (IOException exception) {
+				if (preferences.getStore().needsSaving()) {
+					try {
+						((ScopedPreferenceStore) preferences.getStore()).save();
+					} catch (IOException exception) {
+					}
 				}
 			}
 		}
