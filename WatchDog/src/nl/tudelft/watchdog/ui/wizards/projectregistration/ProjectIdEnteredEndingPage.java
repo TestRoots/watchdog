@@ -38,7 +38,8 @@ class ProjectIdEnteredEndingPage extends FinishableWizardPage {
 	 * reaction.
 	 */
 	private void connectToServer() {
-		projectid = ((ProjectWelcomePage) getPreviousPage()).getId();
+		projectid = ((ProjectWelcomePage) getWizard().getStartingPage())
+				.getId();
 		String url = NetworkUtils.buildProjectURL(projectid);
 		switch (NetworkUtils.urlExistsAndReturnsStatus200(url)) {
 		case SUCCESSFUL:

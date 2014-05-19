@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.ui.wizards;
 
 import nl.tudelft.watchdog.ui.UIUtils;
 
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
@@ -94,5 +95,13 @@ public abstract class FinishableWizardPage extends WizardPage {
 			oneSelected = oneSelected ^ button.getSelection();
 		}
 		return oneSelected;
+	}
+
+	@Override
+	public IWizardPage getPreviousPage() {
+		if (canFinish()) {
+			return null;
+		}
+		return super.getPreviousPage();
 	}
 }
