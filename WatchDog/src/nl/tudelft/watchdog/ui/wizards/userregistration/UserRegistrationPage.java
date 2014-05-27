@@ -121,7 +121,7 @@ class UserRegistrationPage extends FinishableWizardPage {
 	 * @return whether the user may be contacted. (If this is false, no lottery
 	 *         participation.)
 	 */
-	public boolean getMayContact() {
+	public boolean getMayContactUser() {
 		return mayContactButton.getSelection();
 	}
 

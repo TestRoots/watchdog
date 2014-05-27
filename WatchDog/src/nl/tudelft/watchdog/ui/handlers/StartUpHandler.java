@@ -118,7 +118,10 @@ public class StartUpHandler implements IStartup {
 						exception.printStackTrace();
 					}
 				}
-				startWatchDog();
+				setting = preferences.getWorkspaceSetting(workspace);
+				if (!UIUtils.isEmpty(setting.projectId)) {
+					startWatchDog();
+				}
 			}
 		}
 	}
