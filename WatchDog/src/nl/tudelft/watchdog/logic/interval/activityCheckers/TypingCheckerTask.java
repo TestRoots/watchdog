@@ -37,6 +37,7 @@ public class TypingCheckerTask extends CheckerTimerTask {
 	public void run() {
 		try {
 			if (!checker.hasChanged()) {
+				WatchDogLogger.getInstance().logInfo("Checker has changed!");
 				// not an active document any longer, as no changes had been
 				// made.
 				// (1) stop the timer

@@ -5,7 +5,11 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
+import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.framework.BundleContext;
 
 /** The activator class controls the plug-in life cycle */
@@ -16,6 +20,9 @@ public class Activator extends AbstractUIPlugin {
 
 	/** The shared instance */
 	private static Activator plugin;
+
+	/** Our preferenceStore. */
+	private ScopedPreferenceStore preferenceStore;
 
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -45,6 +52,21 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static Activator getDefault() {
 		return plugin;
+	}
+
+	/**
+	 * We are overriding the default-wise returned preference store which has an
+	 * {@link InstanceScope} only saving the workbench state to the
+	 * {@link ConfigurationScope}, which has an Eclipse-wide configuration
+	 * scope.
+	 */
+	@Override
+	public IPreferenceStore getPreferenceStore() {
+		if (preferenceStore == null) {
+			preferenceStore = new ScopedPreferenceStore(
+					ConfigurationScope.INSTANCE, getBundle().getSymbolicName());
+		}
+		return preferenceStore;
 	}
 
 }

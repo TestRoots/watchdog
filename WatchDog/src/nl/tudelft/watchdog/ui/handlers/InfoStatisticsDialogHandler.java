@@ -1,7 +1,8 @@
-package nl.tudelft.watchdog.ui.infoDialog;
+package nl.tudelft.watchdog.ui.handlers;
 
 import java.util.Map;
 
+import nl.tudelft.watchdog.ui.infoDialog.InfoStatisticsDialog;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -11,9 +12,7 @@ import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.menus.UIElement;
 
-/**
- * Handler for displaying an {@link InfoStatisticsDialog}.
- */
+/** Handler for displaying an {@link InfoStatisticsDialog}. */
 public class InfoStatisticsDialogHandler extends AbstractHandler implements
 		IElementUpdater {
 
