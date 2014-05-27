@@ -60,20 +60,12 @@ class WatchDogServer < Sinatra::Base
       halt 400, "Wrong JSON object #{request.body.read}"
     end
 
-    if user['unq'].nil?
-      halt 400, 'Missing field: unq from request'
-    end
+    rnd = (0...100).map { ('a'..'z').to_a[rand(26)] }.join
+    sha = Digest::SHA1.hexdigest rnd
 
-    stored_user = get_user_by_unq(user['unq'])
-
-    if stored_user.nil?
-      rnd = (0...100).map { ('a'..'z').to_a[rand(26)] }.join
-      sha = Digest::SHA1.hexdigest rnd
-
-      user['id'] = sha
-      users.save(user)
-      stored_user = get_user_by_id(sha)
-    end
+    user['id'] = sha
+    users.save(user)
+    stored_user = get_user_by_id(sha)
 
     status 201
     body stored_user['id']

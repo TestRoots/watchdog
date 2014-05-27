@@ -1,3 +1,3 @@
 #!/bin/sh
 
-rackup config.ru
+unicorn -c unicorn.rb -D
