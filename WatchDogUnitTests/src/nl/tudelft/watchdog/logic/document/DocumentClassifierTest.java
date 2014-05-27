@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.document;
+package nl.tudelft.watchdog.logic.document;
 
 import static org.junit.Assert.assertEquals;
 import nl.tudelft.watchdog.logic.document.DocumentClassifier;

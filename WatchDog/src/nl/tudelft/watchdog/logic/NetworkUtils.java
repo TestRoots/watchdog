@@ -5,8 +5,10 @@ import java.io.IOException;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.ParseException;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -44,21 +46,9 @@ public class NetworkUtils {
 	 *         NetworkFailure, throws an execpetion.
 	 */
 	public static Connection urlExistsAndReturnsStatus200(String url) {
-		int connectionTimeout = 5000;
-		RequestConfig config = RequestConfig.custom()
-				.setConnectionRequestTimeout(connectionTimeout)
-				.setConnectTimeout(connectionTimeout)
-				.setSocketTimeout(connectionTimeout).build();
-		CredentialsProvider provider = new BasicCredentialsProvider();
-		byte[] password = { 104, 110, 115, 112, 113, 115, 122, 110, 112, 113 };
-		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
-				"watchdogplugin", new String(password));
-		provider.setCredentials(AuthScope.ANY, credentials);
-		HttpClient client = HttpClientBuilder.create()
-				.setDefaultRequestConfig(config)
-				.setDefaultCredentialsProvider(provider).build();
-
+		HttpClient client = createAuthenticatedHttpClient();
 		HttpGet get;
+
 		try {
 			get = new HttpGet(url);
 		} catch (IllegalArgumentException e) {
@@ -81,14 +71,36 @@ public class NetworkUtils {
 		return Connection.NETWORK_ERROR;
 	}
 
+	private static HttpClient createAuthenticatedHttpClient() {
+		int connectionTimeout = 5000;
+		RequestConfig config = RequestConfig.custom()
+				.setConnectionRequestTimeout(connectionTimeout)
+				.setConnectTimeout(connectionTimeout)
+				.setSocketTimeout(connectionTimeout).build();
+		CredentialsProvider provider = new BasicCredentialsProvider();
+		byte[] password = { 104, 110, 115, 112, 113, 115, 122, 110, 112, 113 };
+		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
+				"watchdogplugin", new String(password));
+		provider.setCredentials(AuthScope.ANY, credentials);
+		HttpClient client = HttpClientBuilder.create()
+				.setDefaultRequestConfig(config)
+				.setDefaultCredentialsProvider(provider).build();
+		return client;
+	}
+
 	/**
 	 * Opens an HTTP connection to the server, and transmits the supplied json
 	 * data to the server. In case of error, the exact problem is logged.
+	 * 
+	 * @return The inputstream from the response.
+	 * @throws ServerCommunicationException
 	 */
-	public static void transferJson(String url, String jsonData) {
-		HttpClient client = HttpClientBuilder.create().build();
+	public static HttpEntity transferJson(String url, String jsonData)
+			throws ServerCommunicationException {
+		HttpClient client = createAuthenticatedHttpClient();
 		HttpPost post = new HttpPost(url);
-		boolean stored = false;
+		String errorMessage = "";
+
 		try {
 			StringEntity input = new StringEntity(jsonData);
 			input.setContentType("application/json");
@@ -96,29 +108,52 @@ public class NetworkUtils {
 
 			HttpResponse response = client.execute(post);
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED) {
-				// TODO (MMB) set head pointer in database to new head
-				// successful response -- reset
-				stored = true;
+				return response.getEntity();
 			} else {
-				// transmission to server not successful
-				WatchDogLogger.getInstance().logInfo(
-						"Failed to post intervals to server. Status code: "
-								+ response.getStatusLine().getStatusCode()
-								+ " Message: "
-								+ EntityUtils.toString(response.getEntity()));
+				// server returns not created
+				errorMessage = "Failed to execute Json request on server (status code: "
+						+ response.getStatusLine().getStatusCode()
+						+ "). "
+						+ readResponse(response.getEntity());
 
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			// server unreachable case
+			errorMessage = "Failed to commuincate with server. "
+					+ e.getMessage();
 		}
-		if (!stored) {
-			// TODO (MMB) throw storage failed exception, make function throw
-			// this exception and handle in calling function
-		}
+		WatchDogLogger.getInstance().logInfo(errorMessage);
+		throw new ServerCommunicationException(errorMessage);
 	}
 
-	/** @return the base URL for user-based operations. */
-	public static String buildUserURL(String id) {
+	// /** Takes an inputStream and returns its response in a serialized manner.
+	// */
+	// public static String readResponse(InputStream inputStream) {
+	// // BufferedReader bufferedReader = new BufferedReader(
+	// // new InputStreamReader(inputStream));
+	// //
+	// // StringBuffer result = new StringBuffer();
+	// // String line = "";
+	// // try {
+	// // while ((line = bufferedReader.readLine()) != null) {
+	// // result.append(line);
+	// // }
+	// // } catch (IOException exception) {
+	// // // TODO Auto-generated catch block
+	// // exception.printStackTrace();
+	// // }
+	//
+	// EntityUtils.toString(entity)
+	// return line;
+	// }
+
+	/** @return the base URL for new user registration. */
+	public static String buildNewUserURL() {
+		return WatchDogGlobals.watchDogServerURI + "user";
+	}
+
+	/** @return the base URL for (existing) user-based operations. */
+	public static String buildExistingUserURL(String id) {
 		return WatchDogGlobals.watchDogServerURI + "user/" + id;
 	}
 
@@ -129,6 +164,20 @@ public class NetworkUtils {
 
 	/** @return the URL to post new intervals to the server to for this user. */
 	public static String buildIntervalsPostURL(String userid) {
-		return buildUserURL(userid) + "/intervals";
+		return buildExistingUserURL(userid) + "/intervals";
+	}
+
+	/**
+	 * Wrapper function for Appache's {@link EntityUtils#toString()}, taking
+	 * care of the exceptions (which should never happen).
+	 */
+	public static String readResponse(HttpEntity entity) {
+		try {
+			return EntityUtils.toString(entity);
+		} catch (ParseException | IOException exception) {
+			// TODO Auto-generated catch block
+			exception.printStackTrace();
+		}
+		return "";
 	}
 }

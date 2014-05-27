@@ -13,18 +13,25 @@ import org.eclipse.jface.wizard.Wizard;
  */
 public class UserRegistrationWizard extends Wizard {
 
+	private UserCreatedEndingPage userCreatedEndingPage;
+
 	/** The first page in the wizard. */
-	UserWelcomePage welcomePage;
+	/* package */UserWelcomePage welcomePage;
 
 	/** When a user already exists ... */
-	UserIdEnteredEndingPage existingUserEndingPage;
+	/* package */UserIdEnteredEndingPage existingUserEndingPage;
+
+	/** The page with all the actual user info (name, email, etc.) on it. */
+	/* package */UserRegistrationPage userRegistrationPage;
+
+	/**
+	 * The userid, either entered on the previous wizard pages or as retrieved
+	 * by the server.
+	 */
+	/* package */String userid;
 
 	/** Allows a shortcut to the finish button. */
 	boolean shortcutToCanFinish = false;
-
-	private UserCreatedEndingPage userCreatedEndingPage;
-
-	private UserRegistrationPage userRegistrationPage;
 
 	@Override
 	public void addPages() {
@@ -40,8 +47,7 @@ public class UserRegistrationWizard extends Wizard {
 
 	@Override
 	public boolean performFinish() {
-		Preferences.getInstance().getStore()
-				.setValue(Preferences.USERID_KEY, welcomePage.getId());
+		Preferences.getInstance().setUserid(userid);
 		return true;
 	}
 

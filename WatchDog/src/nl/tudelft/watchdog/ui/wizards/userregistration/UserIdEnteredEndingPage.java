@@ -39,7 +39,7 @@ class UserIdEnteredEndingPage extends FinishableWizardPage {
 	 */
 	private void connectToServer() {
 		userid = ((UserWelcomePage) getWizard().getStartingPage()).getId();
-		String url = NetworkUtils.buildUserURL(userid);
+		String url = NetworkUtils.buildExistingUserURL(userid);
 		switch (NetworkUtils.urlExistsAndReturnsStatus200(url)) {
 		case SUCCESSFUL:
 			setTitle("Welcome back!");

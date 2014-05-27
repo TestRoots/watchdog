@@ -8,16 +8,26 @@ import java.util.Date;
  */
 public class User {
 
-	public String name;
+	/** Constructor. */
+	public User() {
+		registrationDate = new Date();
+	}
 
+	/** eMail. */
 	public String email;
 
+	/** Organization. */
 	public String organization;
 
-	public String project;
+	/** Group. */
+	public String group;
 
-	public Date registration;
+	/**
+	 * Whether the user participates in the lottery, and whether we may contact
+	 * him.
+	 */
+	public boolean mayBeContacted = false;
 
-	public String userId;
-
+	/** The registration date. */
+	public Date registrationDate;
 }

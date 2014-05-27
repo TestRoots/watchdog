@@ -27,7 +27,7 @@ public class Preferences {
 	public final static String WORKSPACES_KEY = "WORKSPACE_SETTINGS";
 
 	/** The type of a list of {@link WorkspacePreferenceSetting}s for Gson. */
-	private final static Type typeWorkspaceSettings = new TypeToken<List<WorkspacePreferenceSetting>>() {
+	private final static Type TYPE_WORKSPACE_SETTINGS = new TypeToken<List<WorkspacePreferenceSetting>>() {
 	}.getType();
 
 	/** The Gson object. */
@@ -66,8 +66,8 @@ public class Preferences {
 			return new ArrayList<WorkspacePreferenceSetting>();
 		}
 
-		return gson
-				.fromJson(serializedWorksapceSettings, typeWorkspaceSettings);
+		return gson.fromJson(serializedWorksapceSettings,
+				TYPE_WORKSPACE_SETTINGS);
 	}
 
 	/** Returns the singleton instance from WatchdogPreferences. */
@@ -87,6 +87,11 @@ public class Preferences {
 	/** @return The userid. */
 	public String getUserid() {
 		return store.getString(USERID_KEY);
+	}
+
+	/** Sets the userid for the store. */
+	public void setUserid(String userid) {
+		store.setValue(USERID_KEY, userid);
 	}
 
 	/**
@@ -147,7 +152,7 @@ public class Preferences {
 	/** Updates the serialized workspace settings in the preference store. */
 	private void storeWorkspaceSettings() {
 		store.setValue(WORKSPACES_KEY,
-				gson.toJson(workspaceSettings, typeWorkspaceSettings));
+				gson.toJson(workspaceSettings, TYPE_WORKSPACE_SETTINGS));
 	}
 
 	/** @return The {@link IPreferenceStore} for WatchDog. */
