@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.interval;
+package nl.tudelft.watchdog.logic.interval;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,7 +7,7 @@ import java.util.Date;
 
 import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentType;
-import nl.tudelft.watchdog.logic.interval.IntervalTransferer;
+import nl.tudelft.watchdog.logic.interval.JsonTransferer;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
@@ -26,7 +26,7 @@ public class IntervalToJsonConverterTest {
 		ReadingInterval interval = new ReadingInterval(null);
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
-		IntervalTransferer intervalTransferer = new IntervalTransferer();
+		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
 				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"at\":\"re\",\"LEGACY_DEBUGMODE\":false}]",
 				intervalTransferer.toJson(intervals));
@@ -38,7 +38,7 @@ public class IntervalToJsonConverterTest {
 		TypingInterval interval = new TypingInterval(null);
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
-		IntervalTransferer intervalTransferer = new IntervalTransferer();
+		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
 				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"at\":\"ty\",\"LEGACY_DEBUGMODE\":false}]",
 				intervalTransferer.toJson(intervals));
@@ -51,7 +51,7 @@ public class IntervalToJsonConverterTest {
 		SessionInterval interval = new SessionInterval();
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
-		IntervalTransferer intervalTransferer = new IntervalTransferer();
+		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
 				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"at\":\"eo\",\"LEGACY_DEBUGMODE\":false}]",
 				intervalTransferer.toJson(intervals));

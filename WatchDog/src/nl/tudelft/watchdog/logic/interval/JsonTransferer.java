@@ -5,8 +5,12 @@ import java.util.Date;
 import java.util.List;
 
 import nl.tudelft.watchdog.logic.NetworkUtils;
+import nl.tudelft.watchdog.logic.ServerCommunicationException;
+import nl.tudelft.watchdog.logic.User;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
+
+import org.apache.http.HttpEntity;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,8 +19,11 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-/** Transmits the currently recorded intervals to the WatchDog server. */
-public class IntervalTransferer {
+/**
+ * Transmits WatchDog data objects in a Json format to the WatchDog server, e.g.
+ * the currently recorded intervals.
+ */
+public class JsonTransferer {
 
 	/** The {@link GsonBuilder} for building the intervals. */
 	private GsonBuilder gsonBuilder = new GsonBuilder();
@@ -25,7 +32,7 @@ public class IntervalTransferer {
 	private Gson gson;
 
 	/** Constructor. */
-	public IntervalTransferer() {
+	public JsonTransferer() {
 		gsonBuilder.registerTypeAdapter(Date.class, new DateSerializer());
 		gson = gsonBuilder.create();
 	}
@@ -36,12 +43,30 @@ public class IntervalTransferer {
 				.getClosedIntervals();
 		String userid = Preferences.getInstance().getUserid();
 		String json = toJson(recordedIntervals);
-		NetworkUtils.transferJson(NetworkUtils.buildIntervalsPostURL(userid),
-				json);
+		try {
+			NetworkUtils.transferJson(
+					NetworkUtils.buildIntervalsPostURL(userid), json);
+		} catch (ServerCommunicationException exception) {
+			// TODO (MMB) do not set transfered intervals pointer.
+		}
+	}
+
+	/**
+	 * Sends the user registration data and returns the received User-ID.
+	 * 
+	 * @throws ServerCommunicationException
+	 */
+	public String sendUserRegistration(User user)
+			throws ServerCommunicationException {
+		String postURL = NetworkUtils.buildNewUserURL();
+		HttpEntity inputStream = NetworkUtils.transferJson(postURL,
+				gson.toJson(user));
+		String json = NetworkUtils.readResponse(inputStream);
+		return gson.fromJson(json, String.class);
 	}
 
 	/** Converts the intervals to Json. */
-	public String toJson(List<IntervalBase> recordedIntervals) {
+	/* package */String toJson(List<IntervalBase> recordedIntervals) {
 		return gson.toJson(recordedIntervals);
 	}
 

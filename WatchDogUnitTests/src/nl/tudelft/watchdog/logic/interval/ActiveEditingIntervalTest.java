@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.interval;
+package nl.tudelft.watchdog.logic.interval;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
