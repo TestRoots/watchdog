@@ -25,7 +25,7 @@ public class WizardDialogHandlerBase extends AbstractHandler implements
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		WizardDialog wizardDialog = new WizardDialog(
+		WizardDialog wizardDialog = new NoCancelOnFinishablePageWizardDialog(
 				HandlerUtil.getActiveShell(event), wizard);
 		wizardDialog.setBlockOnOpen(true);
 		return wizardDialog.open();

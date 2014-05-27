@@ -42,20 +42,17 @@ class UserIdEnteredEndingPage extends FinishableWizardPage {
 		String url = NetworkUtils.buildExistingUserURL(userid);
 		switch (NetworkUtils.urlExistsAndReturnsStatus200(url)) {
 		case SUCCESSFUL:
+			((UserRegistrationWizard) getWizard()).userid = userid;
 			setTitle("Welcome back!");
 			setDescription("Thanks for re-using your existing user!");
 			setPageComplete(true);
 			dynamicComposite = createSuccessWizzard(topComposite);
 			break;
 		case UNSUCCESSFUL:
+		case NETWORK_ERROR:
 			setTitle("Wrong user id");
 			setErrorMessageAndPageComplete("This user id does not exist.");
 			dynamicComposite = createUserNotFoundComposite(topComposite);
-			break;
-		case NETWORK_ERROR:
-			setTitle("WatchDog Server not reachable");
-			setDescription("There was an error contacting our server.");
-			dynamicComposite = createConnectionFailureComposite(topComposite);
 			break;
 		}
 	}
@@ -89,9 +86,9 @@ class UserIdEnteredEndingPage extends FinishableWizardPage {
 		composite.setLayoutData(UIUtils.createFullGridUsageData());
 		UIUtils.createBoldLabel("Everything worked perfectly.", composite);
 		UIUtils.createWrappingLabel(
-				"Your user id "
+				"Your user id  "
 						+ userid
-						+ " has been registered with this Eclipse installation. You can change the id and other WatchDog settings in the Eclipse preferences."
+						+ "  has been registered with this Eclipse installation. You can change the id and other WatchDog settings in the Eclipse preferences."
 						+ encouragingEndMessage, composite);
 		return composite;
 	}
@@ -102,15 +99,17 @@ class UserIdEnteredEndingPage extends FinishableWizardPage {
 		composite.setLayoutData(UIUtils.createFullGridUsageData());
 		UIUtils.createBoldLabel("User not found!", composite);
 		UIUtils.createWrappingLabel(
-				"We could not find the user id "
+				"We could not find the user id  "
 						+ userid
-						+ " on our server. Did you miss-type the id? Or did something go wrong while copy-and-pasting your user id? Please, go back and correct it, or create a new user.",
+						+ "  on our server. Did you miss-type the id? Or did something go wrong while copy-and-pasting your user id? Please, go back and correct it, or create a new user.",
 				composite);
 		return composite;
 	}
 
 	/** Creates and returns a composite in case of unsuccessful input. */
 	private Composite createConnectionFailureComposite(Composite parent) {
+		setTitle("WatchDog Server not reachable");
+		setDescription("There was an error contacting our server.");
 		Composite composite = UIUtils.createGridedComposite(parent, 1);
 		composite.setLayoutData(UIUtils.createFullGridUsageData());
 		UIUtils.createBoldLabel("WatchDog server not reached!", composite);

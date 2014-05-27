@@ -26,7 +26,7 @@ public class User {
 	 * Whether the user participates in the lottery, and whether we may contact
 	 * him.
 	 */
-	public boolean mayBeContacted = false;
+	public boolean mayContactUser = false;
 
 	/** The registration date. */
 	public Date registrationDate;
