@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import nl.tudelft.watchdog.ui.preferences.WatchdogPreferences;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
 
 /** Wrapper class for providing logging capability. */
 public class WatchDogLogger {
@@ -25,12 +25,12 @@ public class WatchDogLogger {
 	/** Private Constructor. */
 	private WatchDogLogger() {
 		try {
-			if (!WatchdogPreferences.getInstance().isLoggingEnabled()) {
+			if (!Preferences.getInstance().isLoggingEnabled()) {
 				// If logging is not enabled in the preferences: Abort setting
 				// up the logger
 				return;
 			}
-		} catch (NoClassDefFoundError error) {
+		} catch (NoClassDefFoundError | NullPointerException error) {
 			// We purposefully capture an error here.
 			// There was an error in creating the preferences instance, so
 			// Eclipse is not running. In this case, always set up the logger.

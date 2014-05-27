@@ -18,9 +18,19 @@
             name="Export WatchDog Data">
       </command>
       <command
-            defaultHandler="nl.tudelft.watchdog.ui.infoDialog.InfoStatisticsDialogHandler"
+            defaultHandler="nl.tudelft.watchdog.ui.handlers.InfoStatisticsDialogHandler"
             id="nl.tudelft.watchdog.commands.showWatchDogInfo"
             name="Display WatchDogInfo">
+      </command>
+      <command
+            defaultHandler="nl.tudelft.watchdog.ui.handlers.UserRegistrationWizardDialogHandler"
+            id="nl.tudelft.watchdog.commands.UserWizardDialog"
+            name="Start User Wizard">
+      </command>
+      <command
+            defaultHandler="nl.tudelft.watchdog.ui.handlers.ProjectRegistrationWizardDialogHandler"
+            id="nl.tudelft.watchdog.commands.ProjectWizardDialog"
+            name="Start Project Wizard">
       </command>
    </extension>
    <extension
@@ -53,6 +63,16 @@
             <command
                   commandId="nl.tudelft.watchdog.commands.showWatchDogInfo"
                   label="WatchDog Statistics"
+                  style="push">
+            </command>
+            <command
+                  commandId="nl.tudelft.watchdog.commands.UserWizardDialog"
+                  label="Start User Wizard Dialog"
+                  style="push">
+            </command>
+            <command
+                  commandId="nl.tudelft.watchdog.commands.ProjectWizardDialog"
+                  label="Start Project Wizard Dialog"
                   style="push">
             </command>
          </menu>

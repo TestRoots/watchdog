@@ -66,7 +66,9 @@ public abstract class IntervalBase {
 	/** Closes this interval. */
 	public void closeInterval() {
 		isClosed = true;
-		checkForChangeTimer.cancel();
+		if (checkForChangeTimer != null) {
+			checkForChangeTimer.cancel();
+		}
 		listenForReactivation();
 	}
 
@@ -145,7 +147,7 @@ public abstract class IntervalBase {
 
 	/** Listener for reactivation of this interval. */
 	// TODO (MMB) once redesign of classes is complete, not sure if we still
-	// need this
+	// need this?
 	public abstract void listenForReactivation();
 
 	/** Adds a timeout listener. */
