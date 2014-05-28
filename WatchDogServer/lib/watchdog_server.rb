@@ -4,13 +4,10 @@ require 'sinatra'
 require 'mongo'
 require 'sinatra/contrib'
 require 'json'
+require 'net/smtp'
 
 class WatchDogServer < Sinatra::Base
   include Mongo
-
-  # Configuration file support
-  register Sinatra::ConfigFile
-  config_file '../config.yaml'
 
   def mongo
     MongoClient.new("localhost", 27017)
@@ -27,12 +24,11 @@ class WatchDogServer < Sinatra::Base
   end
 
 
-    # Do not support static files
-    set :static, false
+  # Do not support static files
+  set :static, false
 
-    # Enable request logging
-    enable :logging
-
+  # Enable request logging
+  enable :logging
 
   get '/' do
     'Woof Woof'
@@ -54,7 +50,7 @@ class WatchDogServer < Sinatra::Base
   # Create a new user and return unique SHA1
   post '/user' do
     begin
-	user = JSON.parse(request.body.read)
+      user = JSON.parse(request.body.read)
     rescue Exception => e
       puts e
       halt 400, "Wrong JSON object #{request.body.read}"
@@ -66,6 +62,10 @@ class WatchDogServer < Sinatra::Base
     user['id'] = sha
     users.save(user)
     stored_user = get_user_by_id(sha)
+
+    unless user['email'].nil? or user['email'].empty?
+      send_registration_email(user['email'], sha)
+    end
 
     status 201
     body stored_user['id']
@@ -114,6 +114,8 @@ class WatchDogServer < Sinatra::Base
     body ivals.size.to_s
   end
 
+  private
+
   def users
     @db.collection('users')
   end
@@ -129,5 +131,34 @@ class WatchDogServer < Sinatra::Base
   def get_user_by_unq(unq)
     users.find_one({'unq' => unq})
   end
+
+  def send_registration_email(email, user_id)
+    text = sprintf(USER_REGISTERED, Time.now, user_id)
+
+    Net::SMTP.start('localhost', 25, 'testroots.org') do |smtp|
+      begin
+        smtp.send_message(text, 'info@testroots.org', email)
+      rescue Exception => e
+        logger.error "Failed to send email to #{email}: #{e.message}"
+        logger.error e.backtrace.join("\n")
+      end
+    end
+  end
+
+  USER_REGISTERED = <<-END_EMAIL
+Subject: Your Watchdog user id
+Date: %s
+
+Dear Watchdog user,
+
+You recently registered with the Watchdog server.
+
+Your user id is: %s
+
+You can use this user id to link another Watchdog installation to your account.
+
+Thank you for using Watchdog!
+The Watchdog team
+  END_EMAIL
 
 end
