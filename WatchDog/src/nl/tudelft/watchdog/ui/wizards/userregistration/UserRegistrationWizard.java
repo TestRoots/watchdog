@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.ui.wizards.userregistration;
 
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
+import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPage;
 
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -13,7 +14,7 @@ import org.eclipse.jface.wizard.Wizard;
  */
 public class UserRegistrationWizard extends Wizard {
 
-	private UserCreatedEndingPage userCreatedEndingPage;
+	private RegistrationEndingPage userCreatedEndingPage;
 
 	/** The first page in the wizard. */
 	/* package */UserWelcomePage welcomePage;
@@ -37,11 +38,12 @@ public class UserRegistrationWizard extends Wizard {
 	public void addPages() {
 		welcomePage = new UserWelcomePage();
 		addPage(welcomePage);
+		addPage(new WatchDogDescriptionPage());
 		userRegistrationPage = new UserRegistrationPage();
 		addPage(userRegistrationPage);
 		existingUserEndingPage = new UserIdEnteredEndingPage();
 		addPage(existingUserEndingPage);
-		userCreatedEndingPage = new UserCreatedEndingPage();
+		userCreatedEndingPage = new UserRegistrationEndingPage();
 		addPage(userCreatedEndingPage);
 	}
 

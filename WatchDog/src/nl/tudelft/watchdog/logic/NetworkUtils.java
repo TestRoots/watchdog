@@ -126,30 +126,14 @@ public class NetworkUtils {
 		throw new ServerCommunicationException(errorMessage);
 	}
 
-	// /** Takes an inputStream and returns its response in a serialized manner.
-	// */
-	// public static String readResponse(InputStream inputStream) {
-	// // BufferedReader bufferedReader = new BufferedReader(
-	// // new InputStreamReader(inputStream));
-	// //
-	// // StringBuffer result = new StringBuffer();
-	// // String line = "";
-	// // try {
-	// // while ((line = bufferedReader.readLine()) != null) {
-	// // result.append(line);
-	// // }
-	// // } catch (IOException exception) {
-	// // // TODO Auto-generated catch block
-	// // exception.printStackTrace();
-	// // }
-	//
-	// EntityUtils.toString(entity)
-	// return line;
-	// }
-
 	/** @return the base URL for new user registration. */
 	public static String buildNewUserURL() {
 		return WatchDogGlobals.watchDogServerURI + "user";
+	}
+
+	/** @return the base URL for new user registration. */
+	public static String buildNewProjectURL() {
+		return WatchDogGlobals.watchDogServerURI + "project";
 	}
 
 	/** @return the base URL for (existing) user-based operations. */

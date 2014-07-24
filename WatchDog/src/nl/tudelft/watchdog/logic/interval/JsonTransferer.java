@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import nl.tudelft.watchdog.logic.NetworkUtils;
+import nl.tudelft.watchdog.logic.Project;
 import nl.tudelft.watchdog.logic.ServerCommunicationException;
 import nl.tudelft.watchdog.logic.User;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
@@ -53,16 +54,33 @@ public class JsonTransferer {
 
 	/**
 	 * Sends the user registration data and returns the received User-ID.
+	 */
+	public String registerNewUser(User user)
+			throws ServerCommunicationException {
+		return registerNew(NetworkUtils.buildNewUserURL(), gson.toJson(user));
+
+	}
+
+	/**
+	 * Sends the project registration data and returns the received project-ID.
+	 */
+	public String registerNewProject(Project project)
+			throws ServerCommunicationException {
+		return registerNew(NetworkUtils.buildNewProjectURL(),
+				gson.toJson(project));
+	}
+
+	/**
+	 * Register the new json string with the postURL and reads the response from
+	 * the server.
 	 * 
 	 * @throws ServerCommunicationException
 	 */
-	public String sendUserRegistration(User user)
+	public String registerNew(String postURL, String json)
 			throws ServerCommunicationException {
-		String postURL = NetworkUtils.buildNewUserURL();
-		HttpEntity inputStream = NetworkUtils.transferJson(postURL,
-				gson.toJson(user));
-		String json = NetworkUtils.readResponse(inputStream);
-		return gson.fromJson(json, String.class);
+		HttpEntity inputStream = NetworkUtils.transferJson(postURL, json);
+		String jsonResponse = NetworkUtils.readResponse(inputStream);
+		return gson.fromJson(jsonResponse, String.class);
 	}
 
 	/** Converts the intervals to Json. */

@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.ui.wizards.projectregistration;
 
+import nl.tudelft.watchdog.logic.YesNoDontKnowChoice;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 import nl.tudelft.watchdog.ui.wizards.FormValidationListener;
@@ -22,9 +23,11 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 
 	private static final String DOES_AT_LEAST_ONE_PROJECT_USE = "Does at least one of your projects in the workspace ...";
 
-	private Text projectNameInput;
+	/** Project name. */
+	Text projectNameInput;
 
-	private Text userRoleInput;
+	/** Role of the user. */
+	Text userRoleInput;
 
 	private Label multipleProjectLabel;
 
@@ -34,6 +37,9 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 
 	private Composite otherTestingStrategies;
 
+	/** No, these projects do not belong to a single physical project. */
+	Button noSingleProjectButton;
+
 	/** Constructor. */
 	protected ProjectRegistrationPage() {
 		super("Register Project");
@@ -41,7 +47,7 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 
 	@Override
 	public void createControl(Composite parent) {
-		setTitle("Register a new project");
+		setTitle("Register a new project (2/3)");
 		setDescription("Create a new WatchDog Project for this workspace!");
 		Composite topComposite = createComposite(parent);
 		setControl(topComposite);
@@ -55,15 +61,12 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 	private Composite createComposite(final Composite parent) {
 		Composite topComposite = UIUtils.createFullGridedComposite(parent, 1);
 
-		UIUtils.createBoldLabel("Register a new project", topComposite);
-
 		Composite composite = UIUtils.createGridedComposite(topComposite, 2);
 		composite.setLayoutData(UIUtils.createFullGridUsageData());
 		noSingleProjectComposite = createSimpleYesNoQuestion(
-				"Do the Eclipse projects in the workspace mainly belong to a single software project or program? ",
+				"Do the Eclipse projects in the workspace belong to a single software project or program? ",
 				composite);
-		final Button noSingleProjectButton = (Button) noSingleProjectComposite
-				.getChildren()[1];
+		noSingleProjectButton = (Button) noSingleProjectComposite.getChildren()[1];
 		final Button yesSingleProjectButton = (Button) noSingleProjectComposite
 				.getChildren()[0];
 
@@ -100,7 +103,7 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 		useJunit = createSimpleYesNoDontKnowQuestion("  ... use JUnit? \n",
 				questionComposite);
 		otherTestingStrategies = createSimpleYesNoDontKnowQuestion(
-				"  ... use other testing 'frameworks' than JUnit, for example \n  Mockito, Powermock, Selenium, or manual testing? ",
+				"  ... use other testing 'frameworks' than JUnit, for example \n  Mockito, Powermock, Selenium? ",
 				questionComposite);
 		addValidationListenerToAllChildren(useJunit, formValidationListener);
 		addValidationListenerToAllChildren(otherTestingStrategies,
@@ -138,20 +141,18 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 	}
 
 	/**
-	 * @return <code>true</code> if this project uses Junit. <code>false</code>
-	 *         otherwise.
+	 * @return Whether or not this project uses Junit.
 	 */
-	boolean usesJunit() {
-		return ((Button) useJunit.getChildren()[0]).getSelection();
+	/* package */YesNoDontKnowChoice usesJunit() {
+		return evaluateWhichSelection(useJunit);
 	}
 
 	/**
-	 * @return <code>true</code> if this project uses other testing strategies
-	 *         than Junit. <code>false</code> otherwise.
+	 * @return Whether or not this project uses other testing strategies (than
+	 *         Junit).
 	 */
-	boolean usesOtherTestingStrategies() {
-		return ((Button) otherTestingStrategies.getChildren()[0])
-				.getSelection();
+	/* package */YesNoDontKnowChoice usesOtherTestingStrategies() {
+		return evaluateWhichSelection(otherTestingStrategies);
 	}
 
 	private class singleProjectSelectionListener implements SelectionListener {
