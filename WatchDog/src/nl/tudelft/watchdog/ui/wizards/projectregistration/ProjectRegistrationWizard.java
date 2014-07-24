@@ -1,5 +1,8 @@
 package nl.tudelft.watchdog.ui.wizards.projectregistration;
 
+import nl.tudelft.watchdog.logic.YesNoDontKnowChoice;
+import nl.tudelft.watchdog.ui.UIUtils;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 
 import org.eclipse.jface.wizard.IWizardPage;
@@ -13,6 +16,12 @@ public class ProjectRegistrationWizard extends Wizard {
 	private ProjectSliderPage projectSliderPage;
 	private ProjectCreatedEndingPage projectedCreatedPage;
 	private ProjectRegistrationPage projectRegistrationPage;
+
+	/**
+	 * The projectid, either entered on the previous wizard pages or as
+	 * retrieved by the server.
+	 */
+	/* package */String projectId;
 
 	@Override
 	public void addPages() {
@@ -45,8 +54,8 @@ public class ProjectRegistrationWizard extends Wizard {
 			return null;
 		}
 		if (currentPage == projectRegistrationPage
-				&& !projectRegistrationPage.usesOtherTestingStrategies()
-				&& !projectRegistrationPage.usesJunit()) {
+				&& projectRegistrationPage.usesOtherTestingStrategies() == YesNoDontKnowChoice.No
+				&& projectRegistrationPage.usesJunit() == YesNoDontKnowChoice.No) {
 			return projectedCreatedPage;
 		}
 		if (currentPage == projectSliderPage) {
@@ -57,6 +66,8 @@ public class ProjectRegistrationWizard extends Wizard {
 
 	@Override
 	public boolean performFinish() {
+		Preferences.getInstance().registerWorkspaceProject(
+				UIUtils.getWorkspaceName(), projectId);
 		return true;
 	}
 }

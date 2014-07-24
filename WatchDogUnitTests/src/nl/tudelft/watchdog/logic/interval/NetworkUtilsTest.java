@@ -13,6 +13,7 @@ import nl.tudelft.watchdog.logic.document.DocumentType;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -31,14 +32,15 @@ public class NetworkUtilsTest {
 	}
 
 	@Test
+	@Ignore
 	public void testUserExistsTransfer() {
-		String url = NetworkUtils
-				.buildExistingUserURL(fooBarUser);
+		String url = NetworkUtils.buildExistingUserURL(fooBarUser);
 		assertEquals(Connection.SUCCESSFUL,
 				NetworkUtils.urlExistsAndReturnsStatus200(url));
 	}
 
 	@Test
+	@Ignore
 	public void testIntervalTransfer() {
 		JsonTransferer it = new JsonTransferer();
 		SessionInterval interval = new SessionInterval();
@@ -46,11 +48,8 @@ public class NetworkUtilsTest {
 		String json = it.toJson(intervals);
 
 		try {
-			NetworkUtils
-					.transferJson(
-							NetworkUtils
-									.buildIntervalsPostURL(fooBarUser),
-							json);
+			NetworkUtils.transferJson(
+					NetworkUtils.buildIntervalsPostURL(fooBarUser), json);
 		} catch (ServerCommunicationException e) {
 			fail(e.getMessage());
 		}

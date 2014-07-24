@@ -15,7 +15,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PartInitException;
@@ -33,6 +32,9 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	/** The text to welcome the user. To be changed by subclasses. */
 	protected String welcomeText;
 
+	/** Info that goes before the question */
+	protected String additionalInfo;
+
 	/** The text on the label for the user input. To be changed by subclasses. */
 	protected String labelText;
 
@@ -41,6 +43,8 @@ abstract public class WelcomePage extends FinishableWizardPage {
 
 	/** The label question. To be changed by subclasses. */
 	protected String labelQuestion;
+
+	private String title;
 
 	/** The length (in characters) of the WatchDog id. */
 	private static final int idLength = 40;
@@ -64,13 +68,15 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	public WelcomePage(String title) {
 		super(title);
 		setTitle(title);
+		this.title = title;
 	}
 
 	@Override
 	public void createControl(Composite parent) {
-		Composite topContainer = UIUtils.createGridedComposite(parent, 1);
+		Composite topContainer = UIUtils.createFullGridedComposite(parent, 1);
 
 		// Sets up the basis layout
+		createLogoRow(topContainer);
 		createQuestionComposite(topContainer);
 
 		setControl(topContainer);
@@ -81,11 +87,14 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	 * Creates and returns the question whether WatchDog Id is already known.
 	 */
 	private Composite createQuestionComposite(final Composite parent) {
-		Composite composite = UIUtils.createGridedComposite(parent, 2);
+		final Composite composite = UIUtils
+				.createFullGridedComposite(parent, 2);
 		UIUtils.createLabel(labelQuestion, composite);
 
-		final Composite radioButtons = UIUtils.createGridedComposite(composite,
-				1);
+		final Composite radioButtons = UIUtils.createFullGridedComposite(
+				composite, 1);
+		radioButtons.setLayoutData(new GridData(SWT.BEGINNING, SWT.END, false,
+				true));
 		radioButtons.setLayout(new FillLayout());
 		final Button radioButtonYes = UIUtils.createRadioButton(radioButtons,
 				"Yes");
@@ -95,7 +104,9 @@ abstract public class WelcomePage extends FinishableWizardPage {
 			public void widgetSelected(SelectionEvent e) {
 				removeDynamicContent(parent);
 				dynamicContent = createLoginComposite(parent);
+				setTitle(title + " (1/1)");
 				parent.layout();
+				parent.update();
 				setPageComplete(false);
 			}
 
@@ -112,7 +123,9 @@ abstract public class WelcomePage extends FinishableWizardPage {
 				setErrorMessageAndPageComplete(null);
 				removeDynamicContent(parent);
 				dynamicContent = createWelcomeComposite(parent);
+				setTitle(title + " (1/3)");
 				parent.layout();
+				parent.update();
 			}
 
 			@Override
@@ -137,8 +150,7 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	 * existing WatchDog ID.
 	 */
 	private Composite createLoginComposite(Composite parent) {
-		Composite composite = UIUtils.createGridedComposite(parent, 2);
-		composite.setLayoutData(UIUtils.createFullGridUsageData());
+		Composite composite = UIUtils.createFullGridedComposite(parent, 2);
 
 		userInput = UIUtils.createLinkedFieldInput(labelText, inputToolTip,
 				composite);
@@ -161,15 +173,13 @@ abstract public class WelcomePage extends FinishableWizardPage {
 
 	/** Creates and returns a welcoming composite for new ids. */
 	private Composite createWelcomeComposite(Composite parent) {
-		Composite composite = UIUtils.createGridedComposite(parent, 1);
-		createSeparator(composite);
+		Composite composite = UIUtils.createFullGridedComposite(parent, 1);
 		UIUtils.createBoldLabel(welcomeTitle, composite);
-		UIUtils.createLabel("", composite);
 
 		Link linkedText = new Link(composite, SWT.WRAP);
 		linkedText.setText(welcomeText);
 		GridData labelData = new GridData();
-		labelData.widthHint = parent.getClientArea().width - 30;
+		labelData.widthHint = parent.getClientArea().width;
 		linkedText.setLayoutData(labelData);
 		linkedText.addSelectionListener(new SelectionAdapter() {
 
@@ -186,15 +196,6 @@ abstract public class WelcomePage extends FinishableWizardPage {
 		});
 
 		return composite;
-	}
-
-	/** Creates a horizontal separator. */
-	private void createSeparator(Composite parent) {
-		Label separator = UIUtils.createLabel("", SWT.SEPARATOR
-				| SWT.HORIZONTAL | SWT.FILL, parent);
-		GridData layoutData = UIUtils.createFullGridUsageData();
-		layoutData.horizontalSpan = 2;
-		separator.setLayoutData(layoutData);
 	}
 
 	/** @return Whether a possibly valid id has been entered. */

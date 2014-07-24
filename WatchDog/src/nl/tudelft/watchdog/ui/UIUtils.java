@@ -36,6 +36,14 @@ public class UIUtils {
 		return label;
 	}
 
+	/** Creates and returns a bold text label with associated SWT-Style. */
+	public static Label createBoldLabel(String text, int swtStyle,
+			Composite parent) {
+		Label label = createLabel(text, swtStyle, parent);
+		label.setFont(JFaceResources.getFontRegistry().getBold(""));
+		return label;
+	}
+
 	/** Creates and returns an italic text label. */
 	public static Label createItalicLabel(String text, Composite parent) {
 		Label label = createLabel(text, parent);
@@ -115,6 +123,7 @@ public class UIUtils {
 		Label label = UIUtils.createLabel(labelText, composite);
 		label.setToolTipText(toolTip);
 		Text input = UIUtils.createTextInput(composite);
+		input.setLayoutData(UIUtils.createFullGridUsageData());
 		input.setToolTipText(toolTip);
 		UIUtils.attachListenerOnLabelClickFocusTextElement(label, input);
 		return input;

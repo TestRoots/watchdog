@@ -61,11 +61,16 @@ public class StartUpHandler implements IStartup {
 				// to be active for this workspace -- it's obvious that he does
 				// not want to be bothered for the moment.
 				checkWorkspaceRegistration();
-				if (preferences.getStore().needsSaving()) {
-					try {
-						((ScopedPreferenceStore) preferences.getStore()).save();
-					} catch (IOException exception) {
-					}
+				savePreferenceStoreIfNeeded();
+			}
+		}
+
+		private void savePreferenceStoreIfNeeded() {
+			if (preferences.getStore().needsSaving()) {
+				try {
+					((ScopedPreferenceStore) preferences.getStore()).save();
+				} catch (IOException exception) {
+					// no exception logging
 				}
 			}
 		}
@@ -115,9 +120,10 @@ public class StartUpHandler implements IStartup {
 					try {
 						newProjectWizardHandler.execute(new ExecutionEvent());
 					} catch (ExecutionException exception) {
-						exception.printStackTrace();
+						// no exception logging
 					}
 				}
+				savePreferenceStoreIfNeeded();
 				setting = preferences.getWorkspaceSetting(workspace);
 				if (!UIUtils.isEmpty(setting.projectId)) {
 					startWatchDog();

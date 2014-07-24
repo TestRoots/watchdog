@@ -44,19 +44,15 @@ class ProjectIdEnteredEndingPage extends FinishableWizardPage {
 		switch (NetworkUtils.urlExistsAndReturnsStatus200(url)) {
 		case SUCCESSFUL:
 			setTitle("Welcome back!");
-			setDescription("Thanks for re-using your existing project!");
+			setDescription("Thanks for using your existing project!");
 			setPageComplete(true);
 			dynamicComposite = createSuccessWizzard(topComposite);
 			break;
 		case UNSUCCESSFUL:
+		case NETWORK_ERROR:
 			setTitle("Wrong project id");
 			setErrorMessageAndPageComplete("This id does not exist.");
 			dynamicComposite = createUserNotFoundComposite(topComposite);
-			break;
-		case NETWORK_ERROR:
-			setTitle("WatchDog Server not reachable");
-			setDescription("There was an error contacting our server.");
-			dynamicComposite = createConnectionFailureComposite(topComposite);
 			break;
 		}
 	}
@@ -107,17 +103,6 @@ class ProjectIdEnteredEndingPage extends FinishableWizardPage {
 						+ projectid
 						+ " on our server. Did you miss-type the id? Or did something go wrong while copy-and-pasting your user id? Please, go back and correct it, or create a new user.",
 				composite);
-		return composite;
-	}
-
-	/** Creates and returns a composite in case of unsuccessful input. */
-	private Composite createConnectionFailureComposite(Composite parent) {
-		Composite composite = UIUtils.createGridedComposite(parent, 1);
-		composite.setLayoutData(UIUtils.createFullGridUsageData());
-		UIUtils.createBoldLabel("WatchDog server not reached!", composite);
-		UIUtils.createWrappingLabel(
-				"We could not contact our server. Are you behind a firewall? Are you connected to the internet at all? If there is an issue with your connection that you can fix quickly, you can go back and try again.\n\nIf not: We've registered your project id with this Eclipse installation. Even if you never have (proper) Internet access, you can still use WatchDog. It will store all data on your computer, and you can export it and send it to us manually via email. In this case, please just make sure that you created the user via the new user dialog."
-						+ encouragingEndMessage, composite);
 		return composite;
 	}
 

@@ -1,5 +1,9 @@
 package nl.tudelft.watchdog.util;
 
+import nl.tudelft.watchdog.Activator;
+
+import org.eclipse.jface.resource.ImageDescriptor;
+
 /**
  * Globals for the current WatchDog instance.
  */
@@ -22,4 +26,9 @@ public class WatchDogGlobals {
 
 	/** The typing timeout in milliseconds. */
 	public static int TYPING_TIMEOUT = 3000;
+
+	/** The TU Logo. */
+	public static ImageDescriptor tuLogoImageDescriptor = Activator
+			.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
+					"resources/images/tudelft_with_frame.png");
 }

@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.ui.wizards.projectregistration;
 
+import nl.tudelft.watchdog.logic.YesNoDontKnowChoice;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 import nl.tudelft.watchdog.ui.wizards.FormValidationListener;
@@ -17,9 +18,15 @@ import org.eclipse.swt.widgets.Scale;
  */
 public class ProjectSliderPage extends FinishableWizardPage {
 
-	private Composite junitForTestingOnly;
+	private Composite junitForUnitTestingOnly;
 	private Composite testDrivenDesing;
 	private boolean sliderTouched = false;
+
+	/**
+	 * The slider. Its value denotes in full percentage how much production code
+	 * the user estimates to write.
+	 */
+	protected Scale percentageProductionSlider;
 
 	/** Constructor. */
 	protected ProjectSliderPage() {
@@ -28,31 +35,27 @@ public class ProjectSliderPage extends FinishableWizardPage {
 
 	@Override
 	public void createControl(Composite parent) {
-		setTitle("Last question ...");
-		setDescription("You're nearly there, hold on :).");
+		setTitle("Register a new project (2/3)");
+		setDescription("You nearly made it! Only this page left.");
 
-		Composite topComposite = UIUtils.createGridedComposite(parent, 1);
-		topComposite.setLayoutData(UIUtils.createFullGridUsageData());
+		Composite topComposite = UIUtils.createFullGridedComposite(parent, 1);
 
-		UIUtils.createBoldLabel(
-				"Estimate your time distribution for this workspace",
-				topComposite);
 		UIUtils.createLabel(
 				"Estimate how you divide your time into the two activities testing and production. Just have a wild guess!\n",
 				topComposite);
 
-		Composite row = UIUtils.createGridedComposite(topComposite, 3);
-		row.setLayoutData(UIUtils.createFullGridUsageData());
+		Composite row = UIUtils.createFullGridedComposite(topComposite, 3);
 		Label testingLabel = UIUtils.createLabel("100% Testing  ", row);
 		testingLabel
 				.setToolTipText("To the testing activity, everything you do with Junit tests counts. Examples: writing, modifying, debugging, and executing Junit tests");
-		final Scale slider = new Scale(row, SWT.HORIZONTAL);
-		slider.setLayoutData(UIUtils.createFullGridUsageData());
-		slider.setSelection(50);
-		slider.setIncrement(5);
-		slider.setPageIncrement(5);
-		slider.setMaximum(100);
-		slider.setMinimum(0);
+		percentageProductionSlider = new Scale(row, SWT.HORIZONTAL);
+		percentageProductionSlider.setLayoutData(UIUtils
+				.createFullGridUsageData());
+		percentageProductionSlider.setSelection(50);
+		percentageProductionSlider.setIncrement(5);
+		percentageProductionSlider.setPageIncrement(5);
+		percentageProductionSlider.setMaximum(100);
+		percentageProductionSlider.setMinimum(0);
 		Label productionLabel = UIUtils.createLabel("  100% Production", row);
 		productionLabel
 				.setToolTipText("To the production activity, every activity that has to do with regular, non-test production code counts.");
@@ -61,39 +64,41 @@ public class ProjectSliderPage extends FinishableWizardPage {
 				"50% Testing, 50% Production", row);
 		sliderValueText.setLayoutData(UIUtils.createFullGridUsageData());
 		sliderValueText.setAlignment(SWT.CENTER);
-		slider.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				int developmentTimeValue = slider.getSelection();
-				int testingTimeValue = 100 - developmentTimeValue;
-				sliderValueText.setText(testingTimeValue + "% Testing, "
-						+ developmentTimeValue + "% Production");
-				sliderValueText.update();
-				sliderTouched = true;
-				validateFormInputs();
-			}
+		percentageProductionSlider
+				.addSelectionListener(new SelectionListener() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						int developmentTimeValue = percentageProductionSlider
+								.getSelection();
+						int testingTimeValue = 100 - developmentTimeValue;
+						sliderValueText.setText(testingTimeValue
+								+ "% Testing, " + developmentTimeValue
+								+ "% Production");
+						sliderValueText.update();
+						sliderTouched = true;
+						validateFormInputs();
+					}
 
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
+					@Override
+					public void widgetDefaultSelected(SelectionEvent e) {
+					}
+				});
 
 		UIUtils.createLabel(
 				"Testing is every activity related to testing (reading, writing, modifying, refactoring and executing JUnit tests).\nProduction is every activity related to regular code (reading, writing, modifying, and refactoring Java classes).\n",
 				topComposite);
 
-		UIUtils.createBoldLabel("Questions on how you test", topComposite);
 		Composite questionComposite = UIUtils.createFullGridedComposite(
 				topComposite, 2);
-		junitForTestingOnly = createSimpleYesNoDontKnowQuestion(
-				"Do you use JUnit for isolated unit testing only \n (i.e. only one class tested per test case)? ",
+		junitForUnitTestingOnly = createSimpleYesNoDontKnowQuestion(
+				"Do you use JUnit only for unit testing \n (i.e. only one production class tested per Junit test class)? ",
 				questionComposite);
 		testDrivenDesing = createSimpleYesNoDontKnowQuestion(
-				"Do you follow Test-Driven Design or similar practices (Test-first, ...)? ",
+				"Do you follow Test-Driven Design or similar practices (Test-first)? ",
 				questionComposite);
 		FormValidationListener formValidationListener = new FormValidationListener(
 				this);
-		addValidationListenerToAllChildren(junitForTestingOnly,
+		addValidationListenerToAllChildren(junitForUnitTestingOnly,
 				formValidationListener);
 		addValidationListenerToAllChildren(testDrivenDesing,
 				formValidationListener);
@@ -106,7 +111,7 @@ public class ProjectSliderPage extends FinishableWizardPage {
 	public void validateFormInputs() {
 		if (!sliderTouched) {
 			setErrorMessage("Move the slider to estimate your personal time distribution.");
-		} else if (!hasOneSelection(junitForTestingOnly)
+		} else if (!hasOneSelection(junitForUnitTestingOnly)
 				|| !hasOneSelection(testDrivenDesing)) {
 			setErrorMessageAndPageComplete("Please answer all yes/no/don't know questions!");
 		} else {
@@ -118,6 +123,20 @@ public class ProjectSliderPage extends FinishableWizardPage {
 	@Override
 	public boolean canFinish() {
 		return false;
+	}
+
+	/**
+	 * @return Whether this project uses Junit for Unit testing only.
+	 */
+	/* package */YesNoDontKnowChoice usesJunitForUnitTestingOnly() {
+		return evaluateWhichSelection(junitForUnitTestingOnly);
+	}
+
+	/**
+	 * @return Whether this project uses TDD.
+	 */
+	/* package */YesNoDontKnowChoice usesTestDrivenDesing() {
+		return evaluateWhichSelection(testDrivenDesing);
 	}
 
 }

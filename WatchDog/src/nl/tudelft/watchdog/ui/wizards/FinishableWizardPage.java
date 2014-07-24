@@ -1,13 +1,20 @@
 package nl.tudelft.watchdog.ui.wizards;
 
+import nl.tudelft.watchdog.Activator;
+import nl.tudelft.watchdog.logic.YesNoDontKnowChoice;
 import nl.tudelft.watchdog.ui.UIUtils;
+import nl.tudelft.watchdog.util.WatchDogGlobals;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * A {@link WizardPage} that can determine for itself via the
@@ -19,6 +26,7 @@ public abstract class FinishableWizardPage extends WizardPage {
 	/** Constructor. */
 	protected FinishableWizardPage(String pageName) {
 		super(pageName);
+		this.setImageDescriptor(WatchDogGlobals.tuLogoImageDescriptor);
 	}
 
 	/** @return whether this page can currently be finished. */
@@ -103,5 +111,46 @@ public abstract class FinishableWizardPage extends WizardPage {
 			return null;
 		}
 		return super.getPreviousPage();
+	}
+
+	/**
+	 * Creates a a new composite with the TestRoots and WatchDog logo.
+	 */
+	public void createLogoRow(Composite composite) {
+		Composite logoContainer = UIUtils.createFullGridedComposite(composite,
+				2);
+		logoContainer
+				.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+
+		Label watchdogLogo = new Label(logoContainer, SWT.NONE);
+		ImageDescriptor watchdogLogoImageDescriptor = Activator
+				.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
+						"resources/images/watchdog_small.png");
+		watchdogLogo.setImage(watchdogLogoImageDescriptor.createImage());
+		watchdogLogo.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING,
+				true, false));
+
+		Label testrootsLogo = new Label(logoContainer, SWT.NONE);
+		ImageDescriptor testrootsImageDescriptor = Activator
+				.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
+						"resources/images/testroots_small.png");
+		testrootsLogo.setImage(testrootsImageDescriptor.createImage());
+		testrootsLogo.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING,
+				true, false));
+	}
+
+	/**
+	 * Given a composite consisting of three buttons Yes/No/Don't Know, returns
+	 * which of the buttons was clicked.
+	 */
+	public YesNoDontKnowChoice evaluateWhichSelection(
+			Composite yesNoDontKnowComposite) {
+		if (((Button) yesNoDontKnowComposite.getChildren()[0]).getSelection()) {
+			return YesNoDontKnowChoice.Yes;
+		} else if (((Button) yesNoDontKnowComposite.getChildren()[1])
+				.getSelection()) {
+			return YesNoDontKnowChoice.No;
+		}
+		return YesNoDontKnowChoice.DontKnow;
 	}
 }

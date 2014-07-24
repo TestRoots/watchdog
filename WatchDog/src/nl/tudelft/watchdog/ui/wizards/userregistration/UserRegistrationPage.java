@@ -13,6 +13,8 @@ import org.eclipse.swt.widgets.Text;
 /** The Page on which new users can register themselves. */
 class UserRegistrationPage extends FinishableWizardPage {
 
+	private static final String userRegistration = "User Registration (3/3)";
+
 	/** The email address entered by the user. */
 	private Text emailInput;
 
@@ -27,9 +29,9 @@ class UserRegistrationPage extends FinishableWizardPage {
 
 	/** Constructor. */
 	protected UserRegistrationPage() {
-		super("Registration Page");
-		setTitle("Register with WatchDog!");
-		setDescription("Only he who participates, can win!");
+		super(userRegistration);
+		setTitle(userRegistration);
+		setDescription("Only if you participate, can you win.");
 	}
 
 	@Override
@@ -47,7 +49,7 @@ class UserRegistrationPage extends FinishableWizardPage {
 		Composite introductionText = UIUtils.createGridedComposite(innerParent,
 				1);
 		UIUtils.createBoldLabel(
-				"We keep your user data private. From everybody. Always.",
+				"We keep your data private. From everybody. Always.",
 				introductionText);
 		UIUtils.createLabel(
 				"By filling out this form, you help us a lot with our research. And you participate in our lottery.",

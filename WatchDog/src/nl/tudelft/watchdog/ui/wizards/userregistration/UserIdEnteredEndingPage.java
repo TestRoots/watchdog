@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 class UserIdEnteredEndingPage extends FinishableWizardPage {
 
 	/** An encouraging message for the end of a sentence. */
-	public static final String encouragingEndMessage = "\n\nHappy hours-collecting and prize-winning with WatchDog!";
+	public static final String encouragingEndMessage = "\n\nHappy hours-collecting and prize-winning with WatchDog! \nThe longer you use WatchDog, the higher your chances of winning!";
 
 	/** The top-level composite. */
 	private Composite topComposite;
@@ -44,7 +44,7 @@ class UserIdEnteredEndingPage extends FinishableWizardPage {
 		case SUCCESSFUL:
 			((UserRegistrationWizard) getWizard()).userid = userid;
 			setTitle("Welcome back!");
-			setDescription("Thanks for re-using your existing user!");
+			setDescription("Thanks for using your existing user!");
 			setPageComplete(true);
 			dynamicComposite = createSuccessWizzard(topComposite);
 			break;
@@ -101,21 +101,8 @@ class UserIdEnteredEndingPage extends FinishableWizardPage {
 		UIUtils.createWrappingLabel(
 				"We could not find the user id  "
 						+ userid
-						+ "  on our server. Did you miss-type the id? Or did something go wrong while copy-and-pasting your user id? Please, go back and correct it, or create a new user.",
+						+ "  on our server. Did you miss-type the id? Or did something go wrong while copy-and-pasting your user id? Please, go back and correct it.",
 				composite);
-		return composite;
-	}
-
-	/** Creates and returns a composite in case of unsuccessful input. */
-	private Composite createConnectionFailureComposite(Composite parent) {
-		setTitle("WatchDog Server not reachable");
-		setDescription("There was an error contacting our server.");
-		Composite composite = UIUtils.createGridedComposite(parent, 1);
-		composite.setLayoutData(UIUtils.createFullGridUsageData());
-		UIUtils.createBoldLabel("WatchDog server not reached!", composite);
-		UIUtils.createWrappingLabel(
-				"We could not contact our server. Are you behind a firewall? Are you connected to the internet at all? If there is an issue with your connection that you can fix quickly, you can go back and try again.\n\nIf not: We've registered your user id with this Eclipse installation. Even if you never have (proper) Internet access, you can still use WatchDog. It will store all data on your computer, and you can export it and send it to us manually via email. In this case, please just make sure that you created the user via the new user dialog."
-						+ encouragingEndMessage, composite);
 		return composite;
 	}
 
