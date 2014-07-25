@@ -7,4 +7,9 @@ timeout 15
 
 preload_app true
 
-listen "/tmp/unicorn.watchdog.socket"
+if env == 'production'
+  listen "/tmp/unicorn.watchdog.socket"
+else
+  puts "Starting WatchDog in development mode (127.0.0.1:3000) ..."
+  listen "127.0.0.1:3000" 
+end
