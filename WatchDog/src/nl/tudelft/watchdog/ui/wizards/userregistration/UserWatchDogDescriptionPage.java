@@ -19,19 +19,19 @@ import org.eclipse.ui.PlatformUI;
 /**
  * A page that contains the WatchDog project description.
  */
-public class WatchDogDescriptionPage extends FinishableWizardPage {
+public class UserWatchDogDescriptionPage extends FinishableWizardPage {
 
 	private Link linkedText;
 	private Label welcomeText;
 
 	/** Constructor. */
-	protected WatchDogDescriptionPage() {
+	protected UserWatchDogDescriptionPage() {
 		super("WatchDog Description");
 	}
 
 	@Override
 	public void createControl(Composite parent) {
-		setTitle("What is WatchDog? (1/3)");
+		setTitle("What is WatchDog? (2/3)");
 		setDescription("Help Science, and win prizes along the way");
 
 		Composite topComposite = UIUtils.createFullGridedComposite(parent, 1);

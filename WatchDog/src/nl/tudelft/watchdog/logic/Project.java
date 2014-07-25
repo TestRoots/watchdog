@@ -2,6 +2,8 @@ package nl.tudelft.watchdog.logic;
 
 import java.util.Date;
 
+import nl.tudelft.watchdog.ui.preferences.Preferences;
+
 /**
  * The concept of a project comprises all information entered about the project
  * by the user.
@@ -10,17 +12,15 @@ public class Project {
 
 	/** Constructor. */
 	public Project() {
-		registrationDate = new Date();
+		localRegistrationDate = new Date();
+		userId = Preferences.getInstance().getUserid();
 	}
 
 	/** eMail. */
 	public String name;
 
-	/** Organization. */
+	/** Role. */
 	public String role;
-
-	/** User who registered the projects. */
-	public String user;
 
 	/**
 	 * Does the registered WatchDog project belong to a single software project
@@ -43,10 +43,10 @@ public class Project {
 	/** Do you follow TDD? */
 	public YesNoDontKnowChoice followTestDrivenDesign;
 
-	/** Group. */
-	public String group;
-
 	/** The registration date. */
-	public Date registrationDate;
+	public Date localRegistrationDate;
+
+	/** The user who registers this project. */
+	public String userId;
 
 }

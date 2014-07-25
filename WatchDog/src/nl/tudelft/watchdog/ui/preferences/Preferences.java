@@ -6,6 +6,7 @@ import java.util.List;
 
 import nl.tudelft.watchdog.Activator;
 import nl.tudelft.watchdog.ui.UIUtils;
+import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -19,6 +20,9 @@ public class Preferences {
 
 	/** The user's id on the WatchDog server. */
 	public final static String USERID_KEY = "USERID";
+
+	/** The URL of the WatchDog server. */
+	public final static String SERVER_KEY = "SERVERURL";
 
 	/** Flag denoting whether WatchDog plugin should do logging or not. */
 	public final static String LOGGING_ENABLED_KEY = "ENABLE_LOGGING";
@@ -50,6 +54,7 @@ public class Preferences {
 		store = Activator.getDefault().getPreferenceStore();
 		store.setDefault(LOGGING_ENABLED_KEY, false);
 		store.setDefault(USERID_KEY, "");
+		store.setDefault(SERVER_KEY, WatchDogGlobals.DEFAULT_SERVER_URI);
 		store.setDefault(WORKSPACES_KEY, "");
 
 		workspaceSettings = readSerializedWorkspaceSettings(WORKSPACES_KEY);
@@ -92,6 +97,16 @@ public class Preferences {
 	/** Sets the userid for the store. */
 	public void setUserid(String userid) {
 		store.setValue(USERID_KEY, userid);
+	}
+
+	/** @return The serverURL. */
+	public String getServerURI() {
+		return store.getString(SERVER_KEY);
+	}
+
+	/** Sets the serverurl for the store. */
+	public void setServerURL(String url) {
+		store.setValue(SERVER_KEY, url);
 	}
 
 	/**

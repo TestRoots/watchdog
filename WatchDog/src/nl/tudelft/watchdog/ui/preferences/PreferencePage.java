@@ -96,6 +96,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	protected void createFieldEditors() {
 		addField(new IDFieldEditor(Preferences.USERID_KEY, "User-ID"));
+		addField(new StringFieldEditor(Preferences.SERVER_KEY, "Server-URL",
+				getFieldEditorParent()));
 		addField(new BooleanFieldEditor(Preferences.LOGGING_ENABLED_KEY,
 				"Enable Logging", getFieldEditorParent()));
 	}

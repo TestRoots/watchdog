@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.logic;
 import java.io.IOException;
 
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
-import nl.tudelft.watchdog.util.WatchDogGlobals;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -128,22 +128,22 @@ public class NetworkUtils {
 
 	/** @return the base URL for new user registration. */
 	public static String buildNewUserURL() {
-		return WatchDogGlobals.watchDogServerURI + "user";
+		return getServerURI() + "user";
 	}
 
 	/** @return the base URL for new user registration. */
 	public static String buildNewProjectURL() {
-		return WatchDogGlobals.watchDogServerURI + "project";
+		return getServerURI() + "project";
 	}
 
 	/** @return the base URL for (existing) user-based operations. */
 	public static String buildExistingUserURL(String id) {
-		return WatchDogGlobals.watchDogServerURI + "user/" + id;
+		return getServerURI() + "user/" + id;
 	}
 
 	/** @return the base URL for user-based operations. */
 	public static String buildProjectURL(String id) {
-		return WatchDogGlobals.watchDogServerURI + "project/" + id;
+		return getServerURI() + "project/" + id;
 	}
 
 	/** @return the URL to post new intervals to the server to for this user. */
@@ -163,5 +163,9 @@ public class NetworkUtils {
 			exception.printStackTrace();
 		}
 		return "";
+	}
+
+	private static String getServerURI() {
+		return Preferences.getInstance().getServerURI();
 	}
 }
