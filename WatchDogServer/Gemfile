@@ -7,7 +7,7 @@ gem 'sinatra-contrib'
 gem 'bson_ext'
 
 group :test do
-  gem 'rspec'
+  gem 'rspec', "~>2.9"
   gem 'nyan-cat-formatter'
 end
 
