@@ -38,7 +38,7 @@ public class UserRegistrationWizard extends Wizard {
 	public void addPages() {
 		welcomePage = new UserWelcomePage();
 		addPage(welcomePage);
-		addPage(new WatchDogDescriptionPage());
+		addPage(new UserWatchDogDescriptionPage());
 		userRegistrationPage = new UserRegistrationPage();
 		addPage(userRegistrationPage);
 		existingUserEndingPage = new UserIdEnteredEndingPage();

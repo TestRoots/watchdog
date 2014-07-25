@@ -10,7 +10,7 @@ public class User {
 
 	/** Constructor. */
 	public User() {
-		registrationDate = new Date();
+		localRegistrationDate = new Date();
 	}
 
 	/** eMail. */
@@ -29,5 +29,5 @@ public class User {
 	public boolean mayContactUser = false;
 
 	/** The registration date. */
-	public Date registrationDate;
+	public Date localRegistrationDate;
 }

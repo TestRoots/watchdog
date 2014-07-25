@@ -15,8 +15,8 @@ public class WatchDogGlobals {
 	/** A text used in the UI if WatchDog is not running. */
 	public final static String inactiveWatchDogUIText = "WatchDog is inactive!";
 
-	/** The URI of the WatchDogServer. */
-	public final static String watchDogServerURI = "http://www.testroots.org/watchdog/";
+	/** The default URI of the WatchDogServer. */
+	public final static String DEFAULT_SERVER_URI = "http://www.testroots.org/watchdog/";
 
 	/** Flag determining whether WatchDog is active. */
 	public static boolean isActive = false;
