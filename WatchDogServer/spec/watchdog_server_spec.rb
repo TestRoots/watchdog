@@ -17,6 +17,22 @@ def test_user(id = nil)
   user
 end
 
+
+def test_project(user, id = nil)
+  project = Hash.new
+  project['name']        = 'Foo Bar Proj'
+  project['role']        = 'Foo Barer'
+  project['belong_to_a_single_software'] = true
+  project['uses_junit'] = true
+  project['uses_other_frameworks'] = false
+  project['production_percentage'] = 50
+  project['use_junit_only_for_unit_testing'] = false
+  project['follow_test_driven_design'] = false
+  project['user_id'] = user['id']
+  project['id'] = if id.nil? then (0...10).map{('a'..'z').to_a[rand(26)]}.join else id end
+  user
+end
+
 def test_interval(from, to)
   interval = Hash.new
   interval['ts'] = from
@@ -38,15 +54,29 @@ describe 'The WatchDog Server' do
     expect(last_response.body).to eq('Woof Woof')
   end
 
-  it 'should create users when the details are correct' do
+  it 'should create a user when the details are correct' do
     post '/user', test_user.to_json
 
     last_response.status.should eql(201)
     expect(last_response.body).to match(/^[0-9a-z]{40}$/)
   end
 
-  it 'should return 400 on bad JSON request to /users' do
+  it 'should return 400 on bad JSON request to /user' do
     post '/user', 'foobar'
+    last_response.status.should eql(400)
+  end
+
+
+  it 'should create a project when the details are correct' do
+    post '/project', test_project(test_user).to_json
+
+    last_response.status.should eql(201)
+    expect(last_response.body).to match(/^[0-9a-z]{40}$/)
+  end
+
+
+  it 'should return 400 on bad JSON request to /project' do
+    post '/project', 'foobar'
     last_response.status.should eql(400)
   end
 
