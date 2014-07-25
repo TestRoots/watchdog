@@ -96,10 +96,40 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	protected void createFieldEditors() {
 		addField(new IDFieldEditor(Preferences.USERID_KEY, "User-ID"));
-		addField(new StringFieldEditor(Preferences.SERVER_KEY, "Server-URL",
-				getFieldEditorParent()));
+		addField(new URLFieldEditor(Preferences.SERVER_KEY, "Server-URL"));
+		addField(new BooleanFieldEditor(Preferences.AUTHENTICATION_ENABLED_KEY,
+				"Enable Authentication", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(Preferences.LOGGING_ENABLED_KEY,
 				"Enable Logging", getFieldEditorParent()));
+	}
+
+	/** A specific field editor allowing input of valid user URLs only. */
+	class URLFieldEditor extends StringFieldEditor {
+		/** Constructor, delegating call to parent's constructor. */
+		public URLFieldEditor(String key, String description) {
+			super(key, description, getFieldEditorParent());
+		}
+
+		/**
+		 * This hack-ish implementation allows for a modification of the inputed
+		 * value in the text field, by first saving the unchecked value in the
+		 * preferences, then loading it in again, then performing the URL checks
+		 * for a trailing / and then saving it.
+		 * 
+		 * Finally, it reloads the value to give imminent user-feedback.
+		 */
+		@Override
+		protected void doStore() {
+			super.doStore();
+			super.doLoad();
+			String url = oldValue;
+			url = url.trim();
+			if (!url.endsWith("/")) {
+				url = url.concat("/");
+			}
+			getPreferenceStore().setValue(getPreferenceName(), url);
+			super.doLoad();
+		}
 	}
 
 	/** A specific field editor allowing input of valid user IDs only. */
