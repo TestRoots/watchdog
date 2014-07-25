@@ -49,40 +49,49 @@ class WatchDogServer < Sinatra::Base
 
   # Create a new user and return unique SHA1
   post '/user' do
-    begin
-      user = JSON.parse(request.body.read)
-    rescue Exception => e
-      puts e
-      halt 400, "Wrong JSON object #{request.body.read}"
-    end
-
-    rnd = (0...100).map { ('a'..'z').to_a[rand(26)] }.join
-    sha = Digest::SHA1.hexdigest rnd
+    user = create_json_object(request)
+    sha = create_40_char_SHA    
 
     user['id'] = sha
+    user['registrationDate'] = Time.now
+    logger.info user
     users.save(user)
     stored_user = get_user_by_id(sha)
 
     unless user['email'].nil? or user['email'].empty?
-      send_registration_email(user['email'], sha)
+      send_registration_email(USER_REGISTERED, user['email'], sha, nil)
     end
 
     status 201
     body stored_user['id']
   end
 
-  # Get user intervals
-  get '/user/:id/intervals' do
+  # Create a new project and return unique SHA1
+  post '/project' do
+    project = create_json_object(request)
 
+    associated_user = get_user_by_id(project['userId'])
+    if associated_user.nil?
+      halt 404, "The user who registers the project does not exist on the server. Create a new user first."
+    end
+
+    sha = create_40_char_SHA()
+
+    project['id'] = sha
+    project['registrationDate'] = Time.now
+    projects.save(project)
+
+    unless user['email'].nil? or user['email'].empty?
+      send_registration_email(PROJECT_REGISTERED, user['email'], sha, project['name'])
+    end
+
+    status 201
+    body sha
   end
 
   # Create new intervals
   post '/user/:id/intervals' do
-    begin
-      ivals = JSON.parse(request.body.read)
-    rescue
-      halt 400, "Wrong JSON object #{request.body.read}"
-    end
+    ivals = create_json_object(request)
 
     unless ivals.kind_of?(Array)
       halt 400, 'Wrong request, body is not a JSON array'
@@ -120,6 +129,10 @@ class WatchDogServer < Sinatra::Base
     @db.collection('users')
   end
 
+  def users
+    @db.collection('projects')
+  end
+
   def intervals
     @db.collection('intervals')
   end
@@ -132,8 +145,25 @@ class WatchDogServer < Sinatra::Base
     users.find_one({'unq' => unq})
   end
 
-  def send_registration_email(email, user_id)
-    text = sprintf(USER_REGISTERED, Time.now, user_id)
+  # creates a json object from a http request
+  def create_json_object(request)
+     begin
+      object = JSON.parse(request.body.read)
+    rescue Exception => e
+      logger.error e
+      halt 400, "Wrong JSON object #{request.body.read}"
+    end
+    return object
+  end
+
+  # creates a 40 character long SHA hash
+  def create_40_char_SHA()
+    rnd = (0...100).map { ('a'..'z').to_a[rand(26)] }.join
+    return Digest::SHA1.hexdigest rnd
+  end
+
+  def send_registration_email(mailtext, email, id, projectname)
+    text = sprintf(mailtext, Time.now.rfc2822, id, projectname)
 
     Net::SMTP.start('localhost', 25, 'testroots.org') do |smtp|
       begin
@@ -146,19 +176,43 @@ class WatchDogServer < Sinatra::Base
   end
 
   USER_REGISTERED = <<-END_EMAIL
-Subject: Your Watchdog user id
+Subject: Your new Watchdog user id
 Date: %s
 
 Dear Watchdog user,
 
-You recently registered with the Watchdog server.
+You recently registered with Watchdog.
 
 Your user id is: %s
 
-You can use this user id to link another Watchdog installation to your account.
+You can use this id to link other Watchdog installations to your user.
 
-Thank you for using Watchdog!
-The Watchdog team
+Thank you for contributing to science -- with Watchdog!
+
+The TestRoots team
+http://www.testroots.org - http://www.tudelft.nl
+  END_EMAIL
+
+
+  PROJECT_REGISTERED = <<-END_EMAIL
+Subject: Your new Watchdog project id
+Date: %s
+
+Dear Watchdog user,
+
+You recently registered a new project with the Watchdog.
+
+Your new project-id is: %s
+Your project name: %s
+
+You can use this id for other workspaces where you work on the same project.
+If your colleagues work on the same project, please ask them to create new
+project-ids, but with the same project name.
+
+Thank you for contributing to science -- with Watchdog!
+
+The TestRoots team
+http://www.testroots.org - http://www.tudelft.nl
   END_EMAIL
 
 end
