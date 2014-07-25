@@ -71,23 +71,6 @@ public class NetworkUtils {
 		return Connection.NETWORK_ERROR;
 	}
 
-	private static HttpClient createAuthenticatedHttpClient() {
-		int connectionTimeout = 5000;
-		RequestConfig config = RequestConfig.custom()
-				.setConnectionRequestTimeout(connectionTimeout)
-				.setConnectTimeout(connectionTimeout)
-				.setSocketTimeout(connectionTimeout).build();
-		CredentialsProvider provider = new BasicCredentialsProvider();
-		byte[] password = { 104, 110, 115, 112, 113, 115, 122, 110, 112, 113 };
-		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
-				"watchdogplugin", new String(password));
-		provider.setCredentials(AuthScope.ANY, credentials);
-		HttpClient client = HttpClientBuilder.create()
-				.setDefaultRequestConfig(config)
-				.setDefaultCredentialsProvider(provider).build();
-		return client;
-	}
-
 	/**
 	 * Opens an HTTP connection to the server, and transmits the supplied json
 	 * data to the server. In case of error, the exact problem is logged.
@@ -97,7 +80,7 @@ public class NetworkUtils {
 	 */
 	public static HttpEntity transferJson(String url, String jsonData)
 			throws ServerCommunicationException {
-		HttpClient client = createAuthenticatedHttpClient();
+		HttpClient client = createHTTPClient();
 		HttpPost post = new HttpPost(url);
 		String errorMessage = "";
 
@@ -168,4 +151,42 @@ public class NetworkUtils {
 	private static String getServerURI() {
 		return Preferences.getInstance().getServerURI();
 	}
+
+	/** Builds the correct HTTPClient according to the Preferences. */
+	private static HttpClient createHTTPClient() {
+		if (Preferences.getInstance().isAuthenticationEnabled()) {
+			return createAuthenticatedHttpClient();
+		}
+		return createNormalHttpClient();
+	}
+
+	/** Creates an HTTP client that uses a normal connection. */
+	private static HttpClient createNormalHttpClient() {
+		return createPlainHttpClientBuilder().build();
+	}
+
+	/** Creates a vanilla HTTP client builder with some timeouts. */
+	private static HttpClientBuilder createPlainHttpClientBuilder() {
+		int connectionTimeout = 5000;
+		RequestConfig config = RequestConfig.custom()
+				.setConnectionRequestTimeout(connectionTimeout)
+				.setConnectTimeout(connectionTimeout)
+				.setSocketTimeout(connectionTimeout).build();
+		HttpClientBuilder client = HttpClientBuilder.create()
+				.setDefaultRequestConfig(config);
+		return client;
+	}
+
+	/** Creates an HTTP client that uses an authenticated connection. */
+	private static HttpClient createAuthenticatedHttpClient() {
+		CredentialsProvider provider = new BasicCredentialsProvider();
+		byte[] password = { 104, 110, 115, 112, 113, 115, 122, 110, 112, 113 };
+		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
+				"watchdogplugin", new String(password));
+		provider.setCredentials(AuthScope.ANY, credentials);
+		HttpClient client = createPlainHttpClientBuilder()
+				.setDefaultCredentialsProvider(provider).build();
+		return client;
+	}
+
 }

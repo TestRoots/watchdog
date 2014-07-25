@@ -27,6 +27,9 @@ public class Preferences {
 	/** Flag denoting whether WatchDog plugin should do logging or not. */
 	public final static String LOGGING_ENABLED_KEY = "ENABLE_LOGGING";
 
+	/** Flag denoting whether WatchDog plugin should do authentication or not. */
+	public final static String AUTHENTICATION_ENABLED_KEY = "ENABLE_AUTH";
+
 	/** A serialized List of {@link WorkspacePreferenceSetting}s. */
 	public final static String WORKSPACES_KEY = "WORKSPACE_SETTINGS";
 
@@ -53,6 +56,7 @@ public class Preferences {
 	private Preferences() {
 		store = Activator.getDefault().getPreferenceStore();
 		store.setDefault(LOGGING_ENABLED_KEY, false);
+		store.setDefault(AUTHENTICATION_ENABLED_KEY, true);
 		store.setDefault(USERID_KEY, "");
 		store.setDefault(SERVER_KEY, WatchDogGlobals.DEFAULT_SERVER_URI);
 		store.setDefault(WORKSPACES_KEY, "");
@@ -84,9 +88,20 @@ public class Preferences {
 		return singletonInstance;
 	}
 
-	/** Returns whether logging is enabled (true) or not (false). */
+	/**
+	 * Returns whether logging is enabled (<code>true</code>) or not (
+	 * <code>false</code>).
+	 */
 	public boolean isLoggingEnabled() {
 		return store.getBoolean(LOGGING_ENABLED_KEY);
+	}
+
+	/**
+	 * Returns whether authentication on the url is enabled (<code>true</code>)
+	 * or not ( <code>false</code>).
+	 */
+	public boolean isAuthenticationEnabled() {
+		return store.getBoolean(AUTHENTICATION_ENABLED_KEY);
 	}
 
 	/** @return The userid. */
@@ -102,11 +117,6 @@ public class Preferences {
 	/** @return The serverURL. */
 	public String getServerURI() {
 		return store.getString(SERVER_KEY);
-	}
-
-	/** Sets the serverurl for the store. */
-	public void setServerURL(String url) {
-		store.setValue(SERVER_KEY, url);
 	}
 
 	/**
