@@ -14,7 +14,7 @@ import org.mapdb.DBMaker;
 /**
  * Support for storing and querying intervals.
  */
-public final class IntervalPersister {
+public class IntervalPersister {
 
 	/** In memory representation of the interval store */
 	private NavigableMap<Long, IntervalBase> intervals;
