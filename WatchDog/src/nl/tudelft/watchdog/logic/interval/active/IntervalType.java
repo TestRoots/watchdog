@@ -19,20 +19,6 @@ public enum IntervalType {
 	@SerializedName("se")
 	Session;
 
-	/** Return the JSON field name from each enum value */
-	public String jsonFieldName() {
-		switch (this.ordinal()) {
-		case 1:
-			return "ty";
-		case 2:
-			return "re";
-		case 3:
-			return "se";
-		default:
-			return null;
-		}
-	}
-
 	/** Constructs an IntervalType from its JSON mnemonic */
 	public static IntervalType fromMnemonic(String mnem) {
 		switch (mnem) {

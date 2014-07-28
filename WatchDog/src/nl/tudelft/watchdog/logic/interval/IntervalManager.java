@@ -49,7 +49,7 @@ public class IntervalManager {
 	private static IntervalManager instance = null;
 
 	/**
-	 * The session seed, a random number generated on each instanziation of the
+	 * The session seed, a random number generated on each instantiation of the
 	 * IntervalManager to be able to tell running Eclipse instances apart.
 	 */
 	private long sessionSeed;
@@ -60,7 +60,7 @@ public class IntervalManager {
 		this.intervalEventObservable = new ImmediateNotifyingObservable();
 		addIntervalListener(new IntervalLoggerObserver());
 
-		sessionSeed = new Random(new Date().getTime()).nextLong();
+		this.sessionSeed = new Random(new Date().getTime()).nextLong();
 		addNewSessionInterval();
 		this.documentFactory = new DocumentFactory();
 		this.editorEventObservable = new ImmediateNotifyingObservable();

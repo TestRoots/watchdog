@@ -24,7 +24,7 @@ public class IntervalPersisterTest {
 	@Before
 	@After
 	public void cleanup() {
-		
+
 	}
 
 	@Test
@@ -34,13 +34,13 @@ public class IntervalPersisterTest {
 
 	public void testInteraction(int items) {
 		IntervalPersister persister = new IntervalPersister(path);
-		List<IntervalBase> genIntervals = genIntervalList(items);
+		List<IntervalBase> generatedIntervals = generateIntervalList(items);
 
 		// Shuffle the generated intervals to test for
 		// correct ordering of returned values
-		Collections.shuffle(genIntervals);
+		Collections.shuffle(generatedIntervals);
 
-		persister.saveIntervals(genIntervals);
+		persister.saveIntervals(generatedIntervals);
 
 		List<IntervalBase> readIntervals = persister.readIntevals(new Date(0),
 				new Date(Long.MAX_VALUE));
@@ -52,7 +52,7 @@ public class IntervalPersisterTest {
 					.get(i).getStart().getTime());
 		}
 
-		Collections.sort(genIntervals, new Comparator<IntervalBase>(){
+		Collections.sort(generatedIntervals, new Comparator<IntervalBase>() {
 
 			@Override
 			public int compare(IntervalBase a, IntervalBase b) {
@@ -62,29 +62,30 @@ public class IntervalPersisterTest {
 					return 1;
 				return 0;
 			}
-			
+
 		});
 
-		long median = genIntervals.get(items/2).getStart().getTime();
-		readIntervals = persister.readIntevals(new Date(median), new Date(Long.MAX_VALUE));
+		long median = generatedIntervals.get(items / 2).getStart().getTime();
+		readIntervals = persister.readIntevals(new Date(median), new Date(
+				Long.MAX_VALUE));
 		assertEquals(readIntervals.size(), (items / 2) + 1);
 	}
 
-	private List<IntervalBase> genIntervalList(int n) {
+	private List<IntervalBase> generateIntervalList(int n) {
 
 		List<IntervalBase> intervals = new ArrayList<IntervalBase>();
 		for (int i = 0; i < n; i++) {
-			intervals.add(rndInterval());
+			intervals.add(createRandomInterval());
 		}
 		return intervals;
 	}
 
-	private IntervalBase rndInterval() {
-		SessionInterval i = new SessionInterval(0);
-		i.setStartTime(new Date(i.getStart().getTime()
+	private IntervalBase createRandomInterval() {
+		SessionInterval interval = new SessionInterval(0);
+		interval.setStartTime(new Date(interval.getStart().getTime()
 				+ (new Random()).nextInt(100000)));
-		i.setEndTime(new Date(i.getStart().getTime()
+		interval.setEndTime(new Date(interval.getStart().getTime()
 				+ (new Random()).nextInt(100000)));
-		return i;
+		return interval;
 	}
 }
