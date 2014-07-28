@@ -32,6 +32,8 @@ class ProjectCreatedEndingPage extends RegistrationEndingPage {
 				.usesJunitForUnitTestingOnly();
 		project.followTestDrivenDesign = sliderPage.usesTestDrivenDesing();
 
+		windowTitle = "User Registration";
+
 		try {
 			id = new JsonTransferer().registerNewProject(project);
 		} catch (ServerCommunicationException exception) {
