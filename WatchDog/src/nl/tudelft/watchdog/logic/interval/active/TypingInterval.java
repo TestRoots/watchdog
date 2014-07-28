@@ -14,8 +14,8 @@ import org.eclipse.ui.IWorkbenchPart;
 public class TypingInterval extends UserActivityIntervalBase {
 
 	/** Constructor. */
-	public TypingInterval(IWorkbenchPart part) {
-		super(part, IntervalType.Typing);
+	public TypingInterval(IWorkbenchPart part, long sessionSeed) {
+		super(part, IntervalType.Typing, sessionSeed);
 		checkForChangeTimer = new Timer();
 	}
 

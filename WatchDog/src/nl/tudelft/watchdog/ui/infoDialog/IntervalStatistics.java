@@ -38,8 +38,10 @@ public class IntervalStatistics {
 		for (IntervalType activity : IntervalType.values()) {
 			Duration activityTime = calculateTime(activity);
 			activityTypeToDuration.put(activity, activityTime);
-			totalTimeOverAllActivities = totalTimeOverAllActivities
-					.plus(activityTime);
+			if (activity != IntervalType.Session) {
+				totalTimeOverAllActivities = totalTimeOverAllActivities
+						.plus(activityTime);
+			}
 		}
 	}
 
@@ -50,7 +52,7 @@ public class IntervalStatistics {
 	private Duration calculateTime(IntervalType activity) {
 		Duration totalTime = new Duration(0);
 		for (IntervalBase interval : intervals) {
-			if (interval.getActivityType() == activity) {
+			if (interval.getActivityType().equals(activity)) {
 				totalTime = totalTime.plus(interval.getDuration());
 			}
 		}

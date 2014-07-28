@@ -1,16 +1,17 @@
 package nl.tudelft.watchdog.ui.infoDialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.IntervalType;
+import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
@@ -45,7 +46,6 @@ public class InfoStatisticsDialog extends Dialog {
 	/** Creates a grid layout for the given {@link Composite}. */
 	private void createGridLayout(Composite container) {
 		final int layoutMargin = 10;
-
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginTop = layoutMargin;
 		layout.marginLeft = layoutMargin;
@@ -58,7 +58,7 @@ public class InfoStatisticsDialog extends Dialog {
 	private void createStatusText(Composite container) {
 		Color colorRed = new Color(getShell().getDisplay(), 255, 0, 0);
 		Color colorGreen = new Color(getShell().getDisplay(), 0, 150, 0);
-		createLabel("WatchDog Status: ", container);
+		UIUtils.createLabel("WatchDog Status: ", container);
 		if (WatchDogGlobals.isActive) {
 			createLabel(WatchDogGlobals.activeWatchDogUIText, container,
 					colorGreen);
@@ -72,14 +72,18 @@ public class InfoStatisticsDialog extends Dialog {
 
 	/** Creates a summary from the current Eclipse session in WatchDog. */
 	private void createCurrentIntervalSummary(Composite container) {
-		createIntervalSummary("Current Eclipse Session:", container,
-				IntervalManager.getInstance().getRecordedIntervals());
+		List<IntervalBase> intervals = new ArrayList<IntervalBase>();
+		intervals.addAll(IntervalManager.getInstance().getClosedIntervals());
+		intervals.addAll(IntervalManager.getInstance().getOpenIntervals());
+		createIntervalSummary("Current Eclipse Session:", container, intervals);
 	}
 
 	/** Creates a summary with all the intervals in WatchDog added up. */
 	private void createTotalIntervalSummary(Composite container) {
-		createIntervalSummary("All Other Recording Sessions: ", container,
-				WatchDogUtils.getAllRecordedIntervals());
+		// TODO (MMB) commented out for as long as we do not have levelDB
+		// storage to actually produce this.
+		// createIntervalSummary("All Other Recording Sessions: ", container,
+		// WatchDogUtils.getAllRecordedIntervals());
 	}
 
 	/**
@@ -93,16 +97,21 @@ public class InfoStatisticsDialog extends Dialog {
 		intervalStatistics.calculateDurations();
 
 		// create some space before each listing
-		createLabel("\n", container);
-		createLabel("\n", container);
-		createLabel(text, container);
-		createLabel(WatchDogUtils.makeDurationHumanReadable(intervalStatistics
-				.getTotalTimeOverAllActivities()), container);
+		UIUtils.createLabel("\n", container);
+		UIUtils.createLabel("\n", container);
+		UIUtils.createLabel(text, container);
+		UIUtils.createLabel(WatchDogUtils
+				.makeDurationHumanReadable(intervalStatistics
+						.getDurationOfAcitivity(IntervalType.Session)),
+				container);
 
 		for (IntervalType activity : IntervalType.values()) {
+			if (activity == IntervalType.Session) {
+				return;
+			}
 			Duration duration = intervalStatistics
 					.getDurationOfAcitivity(activity);
-			createLabel(activity.toString(), container);
+			UIUtils.createLabel(activity.toString(), container);
 
 			String labelText = WatchDogUtils
 					.makeDurationHumanReadable(duration);
@@ -115,21 +124,14 @@ public class InfoStatisticsDialog extends Dialog {
 				labelText = percentageOfActivity + "%" + " (" + labelText + ")";
 			}
 
-			createLabel(labelText, container);
+			UIUtils.createLabel(labelText, container);
 		}
 	}
 
 	/** Creates and returns a label with the given text and color. */
 	private Label createLabel(String text, Composite parent, Color color) {
-		Label label = createLabel(text, parent);
+		Label label = UIUtils.createLabel(text, parent);
 		label.setForeground(color);
-		return label;
-	}
-
-	/** Creates and returns a label with the given text. */
-	private Label createLabel(String text, Composite parent) {
-		Label label = new Label(parent, SWT.NONE);
-		label.setText(text);
 		return label;
 	}
 

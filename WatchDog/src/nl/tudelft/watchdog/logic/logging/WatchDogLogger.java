@@ -8,34 +8,37 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import nl.tudelft.watchdog.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.ui.preferences.WatchdogPreferences;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
 
 /** Wrapper class for providing logging capability. */
 public class WatchDogLogger {
 
 	/** The logger instance. */
-	private static Logger logger = Logger.getLogger(WatchDogLogger.class
-			.getName());
+	private Logger logger;
 
-	/** Is the logger already setup? */
-	private static boolean isLoggerSetup = false;
+	/** Determines whether the logger is setup. */
+	private boolean isLoggerSetup = false;
+
+	/** The singleton instance of the interval manager. */
+	private static WatchDogLogger instance = null;
 
 	/** Private Constructor. */
 	private WatchDogLogger() {
-	}
-
-	/** Sets up the logger, if logging is enabled in the WatchDog Preferences. */
-	public static void setUpLogger() {
-		if (!WatchdogPreferences.getInstance().isLoggingEnabled()
-				|| isLoggerSetup) {
-			return;
+		try {
+			if (!Preferences.getInstance().isLoggingEnabled()) {
+				// If logging is not enabled in the preferences: Abort setting
+				// up the logger
+				return;
+			}
+		} catch (NoClassDefFoundError | NullPointerException error) {
+			// We purposefully capture an error here.
+			// There was an error in creating the preferences instance, so
+			// Eclipse is not running. In this case, always set up the logger.
 		}
 
-		isLoggerSetup = true;
-		logInfo("Starting up...");
-		IntervalManager.getInstance().addIntervalListener(
-				new IntervalLoggerObserver());
+		this.isLoggerSetup = true;
+		this.logger = Logger.getLogger(WatchDogLogger.class.getName());
+		logInfo("Starting up WatchDogLogger...");
 
 		try {
 			// TODO (MMB) Stores logs to a path in the Eclipse installation
@@ -45,11 +48,7 @@ public class WatchDogLogger {
 			FileHandler fileHandler = new FileHandler(
 					"watchdog/logs/watchdoglog.log", true);
 			fileHandler.setFormatter(new SimpleFormatter());
-			Level level = Level.OFF;
-			if (WatchdogPreferences.getInstance().isLoggingEnabled()) {
-				level = Level.ALL;
-			}
-			addHandlerAndSetLevel(fileHandler, level);
+			addHandlerAndSetLevel(fileHandler, Level.ALL);
 		} catch (SecurityException e) {
 			logSevere(e.getMessage());
 		} catch (IOException e) {
@@ -57,54 +56,67 @@ public class WatchDogLogger {
 		}
 	}
 
+	/**
+	 * @return The instance of the single WatchDogLogger.
+	 */
+	public static WatchDogLogger getInstance() {
+		if (instance == null) {
+			instance = new WatchDogLogger();
+		}
+		return instance;
+	}
+
 	/** Adds the given log handler and sets the given Level on it. */
-	public static void addHandlerAndSetLevel(Handler handler, Level level) {
+	public void addHandlerAndSetLevel(Handler handler, Level level) {
+		if (!isLoggerSetup) {
+			return;
+		}
 		logger.addHandler(handler);
 		handler.setLevel(level);
 	}
 
 	/** Closes all log handlers. */
-	public static void closeAllHandlers() {
-		for (Handler h : logger.getHandlers()) {
-			h.close();
+	public void closeAllHandlers() {
+		for (Handler handler : logger.getHandlers()) {
+			handler.close();
 		}
 	}
 
 	/** Logs message at warning level INFO. */
-	public static void logInfo(String message) {
-		if (!WatchdogPreferences.getInstance().isLoggingEnabled()) {
+	public void logInfo(String message) {
+		if (!isLoggerSetup) {
 			return;
 		}
 		logger.log(Level.INFO, message);
 	}
 
 	/** Logs message at warning level SEVERE. */
-	public static void logSevere(String message) {
-		if (!WatchdogPreferences.getInstance().isLoggingEnabled()) {
+	public void logSevere(String message) {
+		if (!isLoggerSetup) {
 			return;
 		}
 		logger.log(Level.SEVERE, message);
 	}
 
 	/** Logs the {@link Throwable} at warning level SEVERE. */
-	public static void logSevere(Throwable throwable) {
-		if (!WatchdogPreferences.getInstance().isLoggingEnabled()) {
+	public void logSevere(Throwable throwable) {
+		if (!isLoggerSetup) {
 			return;
 		}
 		logger.log(Level.SEVERE, throwable.getMessage(), throwable);
 	}
 
 	/** Logs the message at the given warning level. */
-	public static void log(Level level, String message) {
-		if (!WatchdogPreferences.getInstance().isLoggingEnabled()) {
+	public void log(Level level, String message) {
+		if (!isLoggerSetup) {
 			return;
 		}
 		logger.log(level, message);
 	}
 
 	/** Logs the message and the {@link Throwable} at the given warning level. */
-	public static void log(Level level, String message, Throwable throwable) {
-		if (!WatchdogPreferences.getInstance().isLoggingEnabled()) {
+	public void log(Level level, String message, Throwable throwable) {
+		if (!isLoggerSetup) {
 			return;
 		}
 		logger.log(level, message, throwable);

@@ -1,11 +1,13 @@
 package nl.tudelft.watchdog.logic.interval;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observer;
+import java.util.Random;
 
-import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentFactory;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObservable;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.interval.ClosingIntervalEvent;
@@ -28,6 +30,9 @@ public class IntervalManager {
 	/** A list of currently opened intervals. */
 	private List<IntervalBase> intervals = new ArrayList<IntervalBase>();
 
+	/** The recorded intervals of this session */
+	private List<IntervalBase> recordedIntervals = new ArrayList<IntervalBase>();
+
 	/** Notifies subscribers of editorEvents. */
 	private ImmediateNotifyingObservable editorEventObservable;
 
@@ -40,19 +45,26 @@ public class IntervalManager {
 	/** The document factory. */
 	private DocumentFactory documentFactory;
 
-	/** The recorded intervals of this session */
-	private List<IntervalBase> recordedIntervals;
-
 	/** The singleton instance of the interval manager. */
 	private static IntervalManager instance = null;
 
+	/**
+	 * The session seed, a random number generated on each instanziation of the
+	 * IntervalManager to be able to tell running Eclipse instances apart.
+	 */
+	private long sessionSeed;
+
 	/** Private constructor. */
 	private IntervalManager() {
-		recordedIntervals = new ArrayList<IntervalBase>();
-		documentFactory = new DocumentFactory();
-		editorEventObservable = new ImmediateNotifyingObservable();
-		intervalEventObservable = new ImmediateNotifyingObservable();
-		uiListener = new UIListener(editorEventObservable);
+		// setup logging
+		this.intervalEventObservable = new ImmediateNotifyingObservable();
+		addIntervalListener(new IntervalLoggerObserver());
+
+		sessionSeed = new Random(new Date().getTime()).nextLong();
+		addNewSessionInterval();
+		this.documentFactory = new DocumentFactory();
+		this.editorEventObservable = new ImmediateNotifyingObservable();
+		this.uiListener = new UIListener(editorEventObservable);
 		addEditorObserversAndUIListeners();
 	}
 
@@ -71,25 +83,6 @@ public class IntervalManager {
 			instance = new IntervalManager();
 		}
 		return instance;
-	}
-
-	/** Closes the current interval (if it is not already closed). */
-	/* package */void closeInterval(IntervalBase interval) {
-		if (!interval.isClosed()) {
-			Document document = null;
-			if (interval instanceof UserActivityIntervalBase) {
-				UserActivityIntervalBase activeInterval = (UserActivityIntervalBase) interval;
-				document = documentFactory.createDocument(activeInterval
-						.getPart());
-			}
-			interval.setDocument(document);
-			interval.setEndTime(new Date());
-			interval.setIsInDebugMode(WatchDogUtils.isInDebugMode());
-			interval.closeInterval();
-			recordedIntervals.add(interval);
-			intervalEventObservable.notifyObservers(new ClosingIntervalEvent(
-					interval));
-		}
 	}
 
 	/** Creates a new editing interval. */
@@ -117,6 +110,29 @@ public class IntervalManager {
 		intervalEventObservable.notifyObservers(new NewIntervalEvent(interval));
 	}
 
+	/**
+	 * Closes the current interval (if it is not already closed). Handles
+	 * <code>null</code> gracefully.
+	 */
+	/* package */void closeInterval(IntervalBase interval) {
+		if (interval != null && !interval.isClosed()) {
+			intervalEventObservable.notifyObservers(new ClosingIntervalEvent(
+					interval));
+
+			if (interval instanceof UserActivityIntervalBase) {
+				UserActivityIntervalBase activeInterval = (UserActivityIntervalBase) interval;
+				interval.setDocument(documentFactory
+						.createDocument(activeInterval.getPart()));
+			}
+			interval.setEndTime(new Date());
+			interval.setIsInDebugMode(WatchDogUtils.isInDebugMode());
+			interval.closeInterval();
+
+			intervals.remove(interval);
+			recordedIntervals.add(interval);
+		}
+	}
+
 	/** Sets a list of recorded intervals. */
 	/* package */void setRecordedIntervals(List<IntervalBase> intervals) {
 		recordedIntervals = intervals;
@@ -138,14 +154,24 @@ public class IntervalManager {
 
 	/** Closes all currently open intervals. */
 	public void closeAllCurrentIntervals() {
-		for (IntervalBase interval : intervals) {
+		Iterator<IntervalBase> iterator = intervals.listIterator();
+		while (iterator.hasNext()) {
+			// we need to remove the interval first from the list in order to
+			// avoid ConcurrentListModification Exceptions.
+			IntervalBase interval = iterator.next();
+			iterator.remove();
 			closeInterval(interval);
 		}
 	}
 
-	/** Returns a list of recorded intervals. */
-	public List<IntervalBase> getRecordedIntervals() {
-		return recordedIntervals;
+	/** Returns an immutable list of recorded intervals. */
+	public List<IntervalBase> getClosedIntervals() {
+		return Collections.unmodifiableList(recordedIntervals);
+	}
+
+	/** Returns an immutable list of recorded intervals. */
+	public List<IntervalBase> getOpenIntervals() {
+		return Collections.unmodifiableList(intervals);
 	}
 
 	/**
@@ -166,8 +192,18 @@ public class IntervalManager {
 	}
 
 	/** Starts and registers a new session interval. */
-	public void startNewSessionInterval() {
-		SessionInterval activeSessionInterval = new SessionInterval();
+	public void addNewSessionInterval() {
+		SessionInterval activeSessionInterval = new SessionInterval(
+				getSessionSeed());
+		intervals.add(activeSessionInterval);
 		addNewIntervalHandler(activeSessionInterval, 0);
+	}
+
+	/**
+	 * @return The session seed, a random number generated on each start of
+	 *         Eclipse to be able to tell running Eclipse instances apart.
+	 */
+	public long getSessionSeed() {
+		return sessionSeed;
 	}
 }
