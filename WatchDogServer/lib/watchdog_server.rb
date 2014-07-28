@@ -36,7 +36,6 @@ class WatchDogServer < Sinatra::Base
 
   # Get info about stored user
   get '/user/:id' do
-    # TODO (MMB) check userid
     stored_user = get_user_by_id(params[:'id'])
 
     if stored_user.nil?
@@ -54,7 +53,7 @@ class WatchDogServer < Sinatra::Base
 
     user['id'] = sha
     user['registrationDate'] = Time.now
-    logger.info user
+
     users.save(user)
     stored_user = get_user_by_id(sha)
 
@@ -70,7 +69,7 @@ class WatchDogServer < Sinatra::Base
   post '/project' do
     project = create_json_object(request)
 
-    associated_user = get_user_by_id(project['userId'])
+    associated_user = get_user_by_id(project['user_id'])
     if associated_user.nil?
       halt 404, "The user who registers the project does not exist on the server. Create a new user first."
     end
@@ -81,8 +80,8 @@ class WatchDogServer < Sinatra::Base
     project['registrationDate'] = Time.now
     projects.save(project)
 
-    unless user['email'].nil? or user['email'].empty?
-      send_registration_email(PROJECT_REGISTERED, user['email'], sha, project['name'])
+    unless associated_user['email'].nil? or associated_user['email'].empty?
+      send_registration_email(PROJECT_REGISTERED, associated_user['email'], sha, project['name'])
     end
 
     status 201
@@ -107,7 +106,6 @@ class WatchDogServer < Sinatra::Base
       halt 400, 'Request contains negative intervals'
     end
 
-    # TODO (MMB) check userid
     user_id = params[:id]
     user = get_user_by_id(user_id)
 
@@ -129,7 +127,7 @@ class WatchDogServer < Sinatra::Base
     @db.collection('users')
   end
 
-  def users
+  def projects
     @db.collection('projects')
   end
 
