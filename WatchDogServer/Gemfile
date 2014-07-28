@@ -1,7 +1,16 @@
+source 'https://rubygems.org'
+ruby "1.9.3"
+
 gem 'mongo'
 gem 'sinatra'
 gem 'sinatra-contrib'
+gem 'bson_ext'
 
 group :test do
-  gem 'rspec'
+  gem 'rspec', "~>2.9"
+  gem 'nyan-cat-formatter'
+end
+
+group :production do
+  gem 'unicorn'
 end

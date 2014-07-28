@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.interval;
+package nl.tudelft.watchdog.logic.interval;
 
 import static org.junit.Assert.*;
 
@@ -80,7 +80,7 @@ public class IntervalPersisterTest {
 	}
 
 	private IntervalBase rndInterval() {
-		SessionInterval i = new SessionInterval();
+		SessionInterval i = new SessionInterval(0);
 		i.setStartTime(new Date(i.getStart().getTime()
 				+ (new Random()).nextInt(100000)));
 		i.setEndTime(new Date(i.getStart().getTime()

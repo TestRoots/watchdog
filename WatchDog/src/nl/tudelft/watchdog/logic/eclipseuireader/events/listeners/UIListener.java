@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.logic.eclipseuireader.events.listeners;
 import nl.tudelft.watchdog.logic.eclipseuireader.DocumentChangeListenerAttacher;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObservable;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
+import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.active.IntervalSerializationManager;
 
 import org.eclipse.ui.IWorkbench;
@@ -54,6 +55,10 @@ public class UIListener {
 							final boolean forced) {
 						// TODO (MMB) we need to hook in here to transfer all
 						// data from this Eclipse session.
+						// TODO (MMB) shutdown hook, final try to send remaining
+						// data to server
+						IntervalManager.getInstance()
+								.closeAllCurrentIntervals();
 						serializationManager.saveRecordedIntervals();
 						return true;
 					}

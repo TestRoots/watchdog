@@ -133,11 +133,11 @@ public class WatchDogUtils {
 			completeList.addAll(serializationManager
 					.retrieveRecordedIntervals());
 		} catch (IOException exception) {
-			WatchDogLogger.logSevere(exception);
+			WatchDogLogger.getInstance().logSevere(exception);
 		} catch (ClassNotFoundException exception) {
-			WatchDogLogger.logSevere(exception);
+			WatchDogLogger.getInstance().logSevere(exception);
 		}
-		completeList.addAll(intervalKeeper.getRecordedIntervals());
+		completeList.addAll(intervalKeeper.getClosedIntervals());
 		return completeList;
 	}
 
@@ -149,4 +149,5 @@ public class WatchDogUtils {
 		return periodFormatter.print(duration.toPeriod().withMillis(0)
 				.normalizedStandard());
 	}
+
 }

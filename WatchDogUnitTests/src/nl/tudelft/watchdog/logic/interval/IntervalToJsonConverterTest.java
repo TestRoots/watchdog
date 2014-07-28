@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.interval;
+package nl.tudelft.watchdog.logic.interval;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,7 +7,7 @@ import java.util.Date;
 
 import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentType;
-import nl.tudelft.watchdog.logic.interval.IntervalTransferer;
+import nl.tudelft.watchdog.logic.interval.JsonTransferer;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
@@ -23,38 +23,38 @@ public class IntervalToJsonConverterTest {
 	/** Tests the format of the returned Json representation. */
 	@Test
 	public void testJsonReadingIntervalRepresentation() {
-		ReadingInterval interval = new ReadingInterval(null);
+		ReadingInterval interval = new ReadingInterval(null, 0);
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
-		IntervalTransferer intervalTransferer = new IntervalTransferer();
+		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"at\":\"re\",\"LEGACY_DEBUGMODE\":false}]",
-				intervalTransferer.prepareIntervals(intervals));
+				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"it\":\"re\",\"ss\":0,\"LEGACY_DEBUGMODE\":false}]",
+				intervalTransferer.toJson(intervals));
 	}
 
 	/** Tests the format of the returned Json representation. */
 	@Test
 	public void testJsonTypingIntervalRepresentation() {
-		TypingInterval interval = new TypingInterval(null);
+		TypingInterval interval = new TypingInterval(null, 0);
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
-		IntervalTransferer intervalTransferer = new IntervalTransferer();
+		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"at\":\"ty\",\"LEGACY_DEBUGMODE\":false}]",
-				intervalTransferer.prepareIntervals(intervals));
+				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"it\":\"ty\",\"ss\":0,\"LEGACY_DEBUGMODE\":false}]",
+				intervalTransferer.toJson(intervals));
 	}
 
 	/** Tests the format of the returned Json representation. */
 	@Test
 	public void testJsonSessionIntervalRepresentation() {
 
-		SessionInterval interval = new SessionInterval();
+		SessionInterval interval = new SessionInterval(0);
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
-		IntervalTransferer intervalTransferer = new IntervalTransferer();
+		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"at\":\"se\",\"LEGACY_DEBUGMODE\":false}]",
-				intervalTransferer.prepareIntervals(intervals));
+				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"it\":\"se\",\"ss\":0,\"LEGACY_DEBUGMODE\":false}]",
+				intervalTransferer.toJson(intervals));
 	}
 
 	private ArrayList<IntervalBase> createSampleIntervals(IntervalBase interval) {

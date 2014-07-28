@@ -1,8 +1,5 @@
 package nl.tudelft.watchdog.logic.interval.active;
 
-import static nl.tudelft.watchdog.util.GSONUtil.gson;
-
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Timer;
 
@@ -13,10 +10,11 @@ import org.joda.time.Duration;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormat;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 /** The interval base. */
-public abstract class IntervalBase implements Serializable {
+public abstract class IntervalBase {
 
 	/** The document associated with this {@link RecordedInterval}. */
 	@SerializedName("doc")
@@ -31,8 +29,15 @@ public abstract class IntervalBase implements Serializable {
 	private Date end;
 
 	/** The Activity type. */
-	@SerializedName("at")
-	protected IntervalType activityType;
+	@SerializedName("it")
+	protected IntervalType intervalType;
+
+	/**
+	 * The session seed, a random number generated on each start of Eclipse to
+	 * be able to tell running Eclipse instances apart.
+	 */
+	@SerializedName("ss")
+	protected long sessionSeed;
 
 	/** Legacy debug flag. */
 	@SerializedName("LEGACY_DEBUGMODE")
@@ -45,10 +50,11 @@ public abstract class IntervalBase implements Serializable {
 	protected transient boolean isClosed;
 
 	/** Constructor. */
-	public IntervalBase(IntervalType activity) {
+	public IntervalBase(IntervalType activity, long sessionSeed) {
 		this.start = new Date();
 		this.isClosed = false;
-		this.activityType = activity;
+		this.intervalType = activity;
+		this.sessionSeed = sessionSeed;
 	}
 
 	/**
@@ -69,7 +75,9 @@ public abstract class IntervalBase implements Serializable {
 	/** Closes this interval. */
 	public void closeInterval() {
 		isClosed = true;
-		checkForChangeTimer.cancel();
+		if (checkForChangeTimer != null) {
+			checkForChangeTimer.cancel();
+		}
 		listenForReactivation();
 	}
 
@@ -95,17 +103,21 @@ public abstract class IntervalBase implements Serializable {
 	}
 
 	/**
-	 * @return the duration.
+	 * @return the duration of this interval. If the interval is not yet closed,
+	 *         return the duration until now.
 	 */
 	public Duration getDuration() {
-		return new Duration(start.getTime(), end.getTime());
+		if (isClosed) {
+			return new Duration(start.getTime(), end.getTime());
+		}
+		return new Duration(start.getTime(), new Date().getTime());
 	}
 
 	/**
 	 * @return A human-readable duration.
 	 */
 	public String getDurationString() {
-		Duration duration = new Duration(start.getTime(), end.getTime());
+		Duration duration = getDuration();
 		Period period = duration.toPeriod();
 		return PeriodFormat.getDefault().print(period);
 	}
@@ -137,14 +149,14 @@ public abstract class IntervalBase implements Serializable {
 		this.end = date;
 	}
 
-	/** @return the {@link IntervalType}. */
+	/** @return the {@link ActivityType}. */
 	public IntervalType getActivityType() {
-		return activityType;
+		return intervalType;
 	}
 
 	/** Listener for reactivation of this interval. */
 	// TODO (MMB) once redesign of classes is complete, not sure if we still
-	// need this
+	// need this?
 	public abstract void listenForReactivation();
 
 	/** Adds a timeout listener. */
@@ -153,6 +165,8 @@ public abstract class IntervalBase implements Serializable {
 
 	/** Convert this to a JSON string */
 	public String toJSON() {
-		return gson().toJson(this);
+		Gson gson = new Gson();
+		return gson.toJson(this);
 	}
+
 }

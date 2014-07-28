@@ -37,6 +37,7 @@ public class TypingCheckerTask extends CheckerTimerTask {
 	public void run() {
 		try {
 			if (!checker.hasChanged()) {
+				WatchDogLogger.getInstance().logInfo("Checker has changed!");
 				// not an active document any longer, as no changes had been
 				// made.
 				// (1) stop the timer
@@ -48,10 +49,10 @@ public class TypingCheckerTask extends CheckerTimerTask {
 		} catch (EditorClosedPrematurelyException e) {
 			// this can happen when eclipse is closed while the document is
 			// still active
-			WatchDogLogger.logInfo("Editor closed prematurely");
+			WatchDogLogger.getInstance().logInfo("Editor closed prematurely");
 		} catch (ContentReaderException e) {
 			// this can happen when a file is moved inside the workspace
-			WatchDogLogger.logInfo("Unavailable doc provider");
+			WatchDogLogger.getInstance().logInfo("Unavailable doc provider");
 		}
 	}
 

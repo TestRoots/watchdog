@@ -2,11 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.ui.startup">
-      <startup
-            class="nl.tudelft.watchdog.ui.commands.StartUpHandler"></startup>
-   </extension>
-   <extension
          point="org.eclipse.ui.preferencePages">
       <page
             class="nl.tudelft.watchdog.ui.preferences.PreferencePage"
@@ -18,14 +13,24 @@
          point="org.eclipse.ui.commands">
       <command
             id="nl.tudelft.watchdog.commands.exportData"
-            defaultHandler="nl.tudelft.watchdog.ui.commands.XMLExportHandler"
+            defaultHandler="nl.tudelft.watchdog.ui.handlers.XMLExportHandler"
             description="Exports the data from the WatchDog plugin"
             name="Export WatchDog Data">
       </command>
       <command
-            defaultHandler="nl.tudelft.watchdog.ui.infoDialog.InfoStatisticsDialogHandler"
+            defaultHandler="nl.tudelft.watchdog.ui.handlers.InfoStatisticsDialogHandler"
             id="nl.tudelft.watchdog.commands.showWatchDogInfo"
             name="Display WatchDogInfo">
+      </command>
+      <command
+            defaultHandler="nl.tudelft.watchdog.ui.handlers.UserRegistrationWizardDialogHandler"
+            id="nl.tudelft.watchdog.commands.UserWizardDialog"
+            name="Start User Wizard">
+      </command>
+      <command
+            defaultHandler="nl.tudelft.watchdog.ui.handlers.ProjectRegistrationWizardDialogHandler"
+            id="nl.tudelft.watchdog.commands.ProjectWizardDialog"
+            name="Start Project Wizard">
       </command>
    </extension>
    <extension
@@ -60,8 +65,24 @@
                   label="WatchDog Statistics"
                   style="push">
             </command>
+            <command
+                  commandId="nl.tudelft.watchdog.commands.UserWizardDialog"
+                  label="Start User Wizard Dialog"
+                  style="push">
+            </command>
+            <command
+                  commandId="nl.tudelft.watchdog.commands.ProjectWizardDialog"
+                  label="Start Project Wizard Dialog"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="nl.tudelft.watchdog.ui.handlers.StartUpHandler">
+      </startup>
    </extension>
 
 </plugin>
