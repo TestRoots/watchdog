@@ -5,3 +5,4 @@ Gemfile.lock
 config.yaml
 *~
 WatchDog/bundledLibs.jar
+WatchDogServer/logfile.log
