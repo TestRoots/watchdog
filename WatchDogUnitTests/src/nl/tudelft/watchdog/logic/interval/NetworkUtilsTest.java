@@ -25,6 +25,7 @@ public class NetworkUtilsTest {
 	private String fooBarUser = "407c87ddd731a223ec30e6dc4a63971ed3b2e7b0";
 
 	@Test
+	@Ignore
 	public void testUserDoesNotExistTransfer() {
 		String url = NetworkUtils.buildExistingUserURL("nonexistantSHA1");
 		assertEquals(Connection.UNSUCCESSFUL,
@@ -43,7 +44,7 @@ public class NetworkUtilsTest {
 	@Ignore
 	public void testIntervalTransfer() {
 		JsonTransferer it = new JsonTransferer();
-		SessionInterval interval = new SessionInterval();
+		SessionInterval interval = new SessionInterval(0);
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 		String json = it.toJson(intervals);
 

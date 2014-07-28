@@ -4,13 +4,13 @@ import java.util.Date;
 import java.util.Timer;
 
 import nl.tudelft.watchdog.logic.document.Document;
-import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallback;
 
 import org.joda.time.Duration;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormat;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 /** The interval base. */
@@ -29,8 +29,8 @@ public abstract class IntervalBase {
 	private Date end;
 
 	/** The Activity type. */
-	@SerializedName("at")
-	protected ActivityType activityType;
+	@SerializedName("it")
+	protected IntervalType intervalType;
 
 	/**
 	 * The session seed, a random number generated on each start of Eclipse to
@@ -50,11 +50,11 @@ public abstract class IntervalBase {
 	protected transient boolean isClosed;
 
 	/** Constructor. */
-	public IntervalBase(ActivityType activity) {
+	public IntervalBase(IntervalType activity, long sessionSeed) {
 		this.start = new Date();
 		this.isClosed = false;
-		this.activityType = activity;
-		this.sessionSeed = IntervalManager.getInstance().getSessionSeed();
+		this.intervalType = activity;
+		this.sessionSeed = sessionSeed;
 	}
 
 	/**
@@ -150,8 +150,8 @@ public abstract class IntervalBase {
 	}
 
 	/** @return the {@link ActivityType}. */
-	public ActivityType getActivityType() {
-		return activityType;
+	public IntervalType getActivityType() {
+		return intervalType;
 	}
 
 	/** Listener for reactivation of this interval. */
@@ -162,5 +162,11 @@ public abstract class IntervalBase {
 	/** Adds a timeout listener. */
 	public abstract void addTimeoutListener(long timeout,
 			OnInactiveCallback callbackWhenFinished);
+
+	/** Convert this to a JSON string */
+	public String toJSON() {
+		Gson gson = new Gson();
+		return gson.toJson(this);
+	}
 
 }
