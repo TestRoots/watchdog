@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observer;
+import java.util.Random;
 
 import nl.tudelft.watchdog.logic.document.DocumentFactory;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObservable;
@@ -47,12 +48,19 @@ public class IntervalManager {
 	/** The singleton instance of the interval manager. */
 	private static IntervalManager instance = null;
 
+	/**
+	 * The session seed, a random number generated on each instanziation of the
+	 * IntervalManager to be able to tell running Eclipse instances apart.
+	 */
+	private long sessionSeed;
+
 	/** Private constructor. */
 	private IntervalManager() {
 		// setup logging
 		this.intervalEventObservable = new ImmediateNotifyingObservable();
 		addIntervalListener(new IntervalLoggerObserver());
 
+		sessionSeed = new Random(new Date().getTime()).nextLong();
 		addNewSessionInterval();
 		this.documentFactory = new DocumentFactory();
 		this.editorEventObservable = new ImmediateNotifyingObservable();
@@ -188,5 +196,13 @@ public class IntervalManager {
 		SessionInterval activeSessionInterval = new SessionInterval();
 		intervals.add(activeSessionInterval);
 		addNewIntervalHandler(activeSessionInterval, 0);
+	}
+
+	/**
+	 * @return The session seed, a random number generated on each start of
+	 *         Eclipse to be able to tell running Eclipse instances apart.
+	 */
+	public long getSessionSeed() {
+		return sessionSeed;
 	}
 }

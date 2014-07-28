@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Timer;
 
 import nl.tudelft.watchdog.logic.document.Document;
+import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallback;
 
 import org.joda.time.Duration;
@@ -31,6 +32,13 @@ public abstract class IntervalBase {
 	@SerializedName("at")
 	protected ActivityType activityType;
 
+	/**
+	 * The session seed, a random number generated on each start of Eclipse to
+	 * be able to tell running Eclipse instances apart.
+	 */
+	@SerializedName("ss")
+	protected long sessionSeed;
+
 	/** Legacy debug flag. */
 	@SerializedName("LEGACY_DEBUGMODE")
 	private boolean isInDebugMode;
@@ -46,6 +54,7 @@ public abstract class IntervalBase {
 		this.start = new Date();
 		this.isClosed = false;
 		this.activityType = activity;
+		this.sessionSeed = IntervalManager.getInstance().getSessionSeed();
 	}
 
 	/**
