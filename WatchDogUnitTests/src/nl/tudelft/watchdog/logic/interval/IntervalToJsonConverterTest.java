@@ -23,24 +23,24 @@ public class IntervalToJsonConverterTest {
 	/** Tests the format of the returned Json representation. */
 	@Test
 	public void testJsonReadingIntervalRepresentation() {
-		ReadingInterval interval = new ReadingInterval(null);
+		ReadingInterval interval = new ReadingInterval(null, 0);
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"at\":\"re\",\"LEGACY_DEBUGMODE\":false}]",
+				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"it\":\"re\",\"ss\":0,\"LEGACY_DEBUGMODE\":false}]",
 				intervalTransferer.toJson(intervals));
 	}
 
 	/** Tests the format of the returned Json representation. */
 	@Test
 	public void testJsonTypingIntervalRepresentation() {
-		TypingInterval interval = new TypingInterval(null);
+		TypingInterval interval = new TypingInterval(null, 0);
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"at\":\"ty\",\"LEGACY_DEBUGMODE\":false}]",
+				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"it\":\"ty\",\"ss\":0,\"LEGACY_DEBUGMODE\":false}]",
 				intervalTransferer.toJson(intervals));
 	}
 
@@ -48,12 +48,12 @@ public class IntervalToJsonConverterTest {
 	@Test
 	public void testJsonSessionIntervalRepresentation() {
 
-		SessionInterval interval = new SessionInterval();
+		SessionInterval interval = new SessionInterval(0);
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"at\":\"eo\",\"LEGACY_DEBUGMODE\":false}]",
+				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"it\":\"se\",\"ss\":0,\"LEGACY_DEBUGMODE\":false}]",
 				intervalTransferer.toJson(intervals));
 	}
 

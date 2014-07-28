@@ -25,5 +25,6 @@
 	<classpathentry kind="lib" path="libs/fluent-hc-4.3.3.jar"/>
 	<classpathentry kind="lib" path="libs/httpclient-cache-4.3.3.jar"/>
 	<classpathentry kind="lib" path="libs/httpmime-4.3.3.jar"/>
+	<classpathentry kind="lib" path="libs/mapdb-0.9.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

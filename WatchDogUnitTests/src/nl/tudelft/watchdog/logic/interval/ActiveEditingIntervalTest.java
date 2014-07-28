@@ -69,8 +69,7 @@ public class ActiveEditingIntervalTest {
 		when(mockedDocument.get()).thenReturn("read when initialized")
 				.thenReturn("read after 100ms");
 
-		TypingInterval interval = new TypingInterval(
-				mockedITextEditor);
+		TypingInterval interval = new TypingInterval(mockedITextEditor, 0);
 		interval.addTimeoutListener(100, new OnInactiveCallback() {
 
 			@Override
@@ -92,8 +91,7 @@ public class ActiveEditingIntervalTest {
 		when(mockedDocument.get()).thenReturn("read when initialized")
 				.thenReturn("read after 100ms").thenReturn("read after 200ms");
 
-		TypingInterval interval = new TypingInterval(
-				mockedITextEditor);
+		TypingInterval interval = new TypingInterval(mockedITextEditor, 0);
 		interval.addTimeoutListener(100, new OnInactiveCallback() {
 
 			@Override

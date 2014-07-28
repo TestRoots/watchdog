@@ -6,8 +6,8 @@ import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallback;
 public class SessionInterval extends IntervalBase {
 
 	/** Constructor. */
-	public SessionInterval() {
-		super(ActivityType.EclipseOpen);
+	public SessionInterval(long sessionSeed) {
+		super(IntervalType.Session, sessionSeed);
 	}
 
 	@Override
@@ -15,8 +15,8 @@ public class SessionInterval extends IntervalBase {
 	}
 
 	@Override
-	public ActivityType getActivityType() {
-		return ActivityType.EclipseOpen;
+	public IntervalType getActivityType() {
+		return IntervalType.Session;
 	}
 
 	@Override

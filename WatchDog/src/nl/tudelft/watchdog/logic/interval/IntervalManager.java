@@ -193,7 +193,8 @@ public class IntervalManager {
 
 	/** Starts and registers a new session interval. */
 	public void addNewSessionInterval() {
-		SessionInterval activeSessionInterval = new SessionInterval();
+		SessionInterval activeSessionInterval = new SessionInterval(
+				getSessionSeed());
 		intervals.add(activeSessionInterval);
 		addNewIntervalHandler(activeSessionInterval, 0);
 	}
