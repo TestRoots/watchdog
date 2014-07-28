@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/mapdb-0.9.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-validator-1.4.0.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/WatchDog/libs/javadocs/commons-validator-1.4.0-javadoc.jar!/"/>
@@ -25,6 +26,5 @@
 	<classpathentry kind="lib" path="libs/fluent-hc-4.3.3.jar"/>
 	<classpathentry kind="lib" path="libs/httpclient-cache-4.3.3.jar"/>
 	<classpathentry kind="lib" path="libs/httpmime-4.3.3.jar"/>
-	<classpathentry kind="lib" path="libs/mapdb-0.9.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

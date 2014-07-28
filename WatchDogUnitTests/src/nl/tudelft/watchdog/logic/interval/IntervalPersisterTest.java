@@ -33,16 +33,16 @@ public class IntervalPersisterTest {
 	}
 
 	public void testInteraction(int items) {
-		IntervalPersister db = new IntervalPersister(path);
+		IntervalPersister persister = new IntervalPersister(path);
 		List<IntervalBase> genIntervals = genIntervalList(items);
 
 		// Shuffle the generated intervals to test for
 		// correct ordering of returned values
 		Collections.shuffle(genIntervals);
 
-		db.saveIntervals(genIntervals);
+		persister.saveIntervals(genIntervals);
 
-		List<IntervalBase> readIntervals = db.readIntevals(new Date(0),
+		List<IntervalBase> readIntervals = persister.readIntevals(new Date(0),
 				new Date(Long.MAX_VALUE));
 		assertEquals(readIntervals.size(), items);
 
@@ -66,7 +66,7 @@ public class IntervalPersisterTest {
 		});
 
 		long median = genIntervals.get(items/2).getStart().getTime();
-		readIntervals = db.readIntevals(new Date(median), new Date(Long.MAX_VALUE));
+		readIntervals = persister.readIntevals(new Date(median), new Date(Long.MAX_VALUE));
 		assertEquals(readIntervals.size(), (items / 2) + 1);
 	}
 
