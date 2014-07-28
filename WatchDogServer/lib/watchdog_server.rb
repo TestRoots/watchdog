@@ -5,6 +5,7 @@ require 'mongo'
 require 'sinatra/contrib'
 require 'json'
 require 'net/smtp'
+require 'logger'
 
 class WatchDogServer < Sinatra::Base
   include Mongo
@@ -30,6 +31,8 @@ class WatchDogServer < Sinatra::Base
   # Enable request logging
   enable :logging
 
+  logger = Logger.new('logfile.log')
+
   get '/' do
     'Woof Woof'
   end
@@ -42,6 +45,7 @@ class WatchDogServer < Sinatra::Base
       halt 404, "User does not exist"
     else
       status 200
+      # TODO (MMB) Not sure whether we should return the stored_user as a body for privacy reasons?
       body stored_user.to_json
     end
   end
@@ -49,7 +53,8 @@ class WatchDogServer < Sinatra::Base
   # Create a new user and return unique SHA1
   post '/user' do
     user = create_json_object(request)
-    sha = create_40_char_SHA    
+    sha = create_40_char_SHA
+    logger.info user
 
     user['id'] = sha
     user['registrationDate'] = Time.now
@@ -68,8 +73,9 @@ class WatchDogServer < Sinatra::Base
   # Create a new project and return unique SHA1
   post '/project' do
     project = create_json_object(request)
+    logger.info project
 
-    associated_user = get_user_by_id(project['user_id'])
+    associated_user = get_user_by_id(project['userId'])
     if associated_user.nil?
       halt 404, "The user who registers the project does not exist on the server. Create a new user first."
     end

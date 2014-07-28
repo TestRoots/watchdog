@@ -23,13 +23,13 @@ def test_project(user_id)
   project = Hash.new
   project['name']        = 'Foo Bar Proj'
   project['role']        = 'Foo Barer'
-  project['belong_to_a_single_software'] = true
-  project['uses_junit'] = true
-  project['uses_other_frameworks'] = false
-  project['production_percentage'] = 50
-  project['use_junit_only_for_unit_testing'] = false
-  project['follow_test_driven_design'] = false
-  project['user_id'] = user_id
+  project['belongToASingleSofware'] = true
+  project['usesJunit'] = true
+  project['usesOtherFrameworks'] = false
+  project['productionPercentage'] = 50
+  project['useJunitOnlyForUnitTesting'] = false
+  project['followTestDrivenDesign'] = false
+  project['userId'] = user_id
   project
 end
 
