@@ -10,6 +10,7 @@ import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPage;
  *
  */
 class UserRegistrationEndingPage extends RegistrationEndingPage {
+
 	protected void makeRegistration() {
 		UserRegistrationPage page = ((UserRegistrationWizard) getWizard()).userRegistrationPage;
 		User user = new User();
@@ -17,6 +18,8 @@ class UserRegistrationEndingPage extends RegistrationEndingPage {
 		user.organization = page.getOrganizationInput().getText();
 		user.group = page.getGroupInput().getText();
 		user.mayContactUser = page.getMayContactUser();
+
+		windowTitle = "User Registration";
 
 		try {
 			id = new JsonTransferer().registerNewUser(user);
@@ -32,7 +35,7 @@ class UserRegistrationEndingPage extends RegistrationEndingPage {
 		messageTitle = "New user registered!";
 		messageBody = "Your new user id "
 				+ id
-				+ " is registered.\nIf you ever have to, you can change other WatchDog settings in the Eclipse preferences."
+				+ " is registered.\nYou can change it and other WatchDog settings in the Eclipse preferences."
 				+ UserIdEnteredEndingPage.encouragingEndMessage;
 	}
 }

@@ -24,6 +24,9 @@ public abstract class RegistrationEndingPage extends FinishableWizardPage {
 	/** Whether the registration was successful. */
 	protected boolean successfulRegistration = false;
 
+	/** The string to be shown as the window title. */
+	protected String windowTitle;
+
 	/** The message title to be shown above the messageBody. */
 	protected String messageTitle;
 
@@ -64,7 +67,7 @@ public abstract class RegistrationEndingPage extends FinishableWizardPage {
 		dynamicComposite.setLayoutData(UIUtils.createFullGridUsageData());
 
 		UIUtils.createBoldLabel(messageTitle, dynamicComposite);
-		setTitle(messageTitle);
+		setTitle(windowTitle);
 		UIUtils.createLabel(messageBody, dynamicComposite);
 	}
 
