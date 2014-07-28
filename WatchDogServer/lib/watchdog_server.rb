@@ -204,7 +204,7 @@ Date: %s
 
 Dear Watchdog user,
 
-You recently registered a new project with the Watchdog.
+You recently registered a new project with Watchdog.
 
 Your new project-id is: %s
 Your project name: %s
