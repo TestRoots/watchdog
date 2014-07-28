@@ -67,7 +67,6 @@ describe 'The WatchDog Server' do
     last_response.status.should eql(400)
   end
 
-
   it 'should create a project when the details are correct' do
     post '/project', test_project(existing_user).to_json
 
@@ -78,6 +77,13 @@ describe 'The WatchDog Server' do
   it 'should return 400 on bad JSON request to /project' do
     post '/project', 'foobar'
     last_response.status.should eql(400)
+  end
+
+
+  it 'should not create a project when the user does not exist' do
+    post '/project', test_project(nil).to_json
+
+    last_response.status.should eql(404)
   end
 
   it 'should return 400 on bad JSON to /users/:id/intervals' do
