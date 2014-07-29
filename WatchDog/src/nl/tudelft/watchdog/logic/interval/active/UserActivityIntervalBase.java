@@ -19,8 +19,8 @@ public abstract class UserActivityIntervalBase extends IntervalBase {
 
 	/** Constructor. */
 	public UserActivityIntervalBase(IWorkbenchPart part, IntervalType activity,
-			long sessionSeed) {
-		super(activity, sessionSeed);
+			String userid, long sessionSeed) {
+		super(activity, userid, sessionSeed);
 		this.part = part;
 		this.editor = (ITextEditor) part;
 	}

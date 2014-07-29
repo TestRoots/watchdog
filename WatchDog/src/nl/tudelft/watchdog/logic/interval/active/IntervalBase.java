@@ -43,6 +43,10 @@ public abstract class IntervalBase {
 	@SerializedName("LEGACY_DEBUGMODE")
 	private boolean isInDebugMode;
 
+	/** The userid this interval is transfered from */
+	@SerializedName("userid")
+	private String userid;
+
 	/** The timer controlling the timeout used for this interval. */
 	protected transient Timer checkForChangeTimer;
 
@@ -50,11 +54,12 @@ public abstract class IntervalBase {
 	protected transient boolean isClosed;
 
 	/** Constructor. */
-	public IntervalBase(IntervalType activity, long sessionSeed) {
+	public IntervalBase(IntervalType activity, String userid, long sessionSeed) {
 		this.start = new Date();
 		this.isClosed = false;
 		this.intervalType = activity;
 		this.sessionSeed = sessionSeed;
+		this.userid = userid;
 	}
 
 	/**
