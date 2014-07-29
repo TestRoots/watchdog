@@ -6,8 +6,8 @@ import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallback;
 public class SessionInterval extends IntervalBase {
 
 	/** Constructor. */
-	public SessionInterval(long sessionSeed) {
-		super(IntervalType.Session, sessionSeed);
+	public SessionInterval(String userid, long sessionSeed) {
+		super(IntervalType.Session, userid, sessionSeed);
 	}
 
 	@Override
