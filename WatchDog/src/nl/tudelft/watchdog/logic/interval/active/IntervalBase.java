@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.logic.interval.active;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Timer;
 
@@ -14,7 +15,10 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 /** The interval base. */
-public abstract class IntervalBase {
+public abstract class IntervalBase implements Serializable {
+
+	/** The version id of this class. */
+	private static final long serialVersionUID = 1L;
 
 	/** The document associated with this {@link RecordedInterval}. */
 	@SerializedName("doc")

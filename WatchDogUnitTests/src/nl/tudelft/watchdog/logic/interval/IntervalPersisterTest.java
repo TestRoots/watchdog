@@ -1,7 +1,9 @@
 package nl.tudelft.watchdog.logic.interval;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -11,19 +13,53 @@ import java.util.Random;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class IntervalPersisterTest {
 
-	public static final String path = "test.mapdb";
+	private IntervalPersister persister;
+
+	private static File databaseFile = new File("test.mapdb");
+
+	@BeforeClass
+	public static void beforeClass() {
+		if (databaseFile.exists() && databaseFile.canWrite()) {
+			databaseFile.delete();
+		}
+	}
+
+	@Before
+	public void setUp() {
+		persister = new IntervalPersister(databaseFile);
+	}
+
+	@After
+	public void tearDown() {
+		persister.closeDatabase();
+	}
 
 	@Test
-	public void testInteraction100() {
+	public void test0DatabaseEmpty() {
+		assertEquals(-1, persister.getHighestKey());
+	}
+
+	@Test
+	public void test1Interaction100() {
 		testInteraction(100);
 	}
 
+	@Test
+	public void test2DatabasePersisted() {
+		assertEquals(99, persister.getHighestKey());
+	}
+
 	public void testInteraction(int items) {
-		IntervalPersister persister = new IntervalPersister(path);
 		List<IntervalBase> generatedIntervals = generateIntervalList(items);
 
 		// Shuffle the generated intervals to test for

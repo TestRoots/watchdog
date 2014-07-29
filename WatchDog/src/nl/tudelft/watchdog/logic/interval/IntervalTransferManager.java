@@ -7,6 +7,8 @@ import java.util.TimerTask;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
+import nl.tudelft.watchdog.ui.UIUtils;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
 
 /**
  * This manager takes care of the repeated transferal of all closed intervals to
@@ -15,7 +17,7 @@ import nl.tudelft.watchdog.logic.network.JsonTransferer;
  */
 public class IntervalTransferManager {
 
-	private static int UPDATE_RATE = 5 * 60 * 1000;
+	private static int UPDATE_RATE = 20 * 1000;
 
 	private Timer timer;
 
@@ -23,7 +25,8 @@ public class IntervalTransferManager {
 
 	/**
 	 * Constructor. Tries to immediately transfer all remaining intervals, and
-	 * sets up a scheduled timer to run every {@value #UPDATE_RATE} miliseconds.
+	 * sets up a scheduled timer to run every {@value #UPDATE_RATE}
+	 * milliseconds.
 	 */
 	public IntervalTransferManager(final IntervalPersister intervalPersister) {
 		task = new IntervalsTransferTimerTask(intervalPersister);
@@ -53,6 +56,9 @@ public class IntervalTransferManager {
 		 */
 		@Override
 		public void run() {
+			lastTransferedIntervalKey = Preferences.getInstance()
+					.getWorkspaceSetting(UIUtils.getWorkspaceName()).lastTransferedInterval;
+
 			List<IntervalBase> intervalsToTransfer = intervalPersister
 					.readIntevals(lastTransferedIntervalKey);
 
@@ -67,6 +73,9 @@ public class IntervalTransferManager {
 				WatchDogLogger.getInstance().logSevere(
 						"Could not transfer intervals to server!");
 			}
+
+			Preferences.getInstance().registerLastTransferedInterval(
+					UIUtils.getWorkspaceName(), lastTransferedIntervalKey);
 		}
 	}
 }

@@ -174,6 +174,14 @@ public class Preferences {
 		storeWorkspaceSettings();
 	}
 
+	/** Registers the given projectId with the given workspace. */
+	public void registerLastTransferedInterval(String workspace,
+			long intervalKey) {
+		WorkspacePreferenceSetting setting = getOrCreateWorkspaceSetting(workspace);
+		setting.lastTransferedInterval = intervalKey;
+		storeWorkspaceSettings();
+	}
+
 	/** Updates the serialized workspace settings in the preference store. */
 	private void storeWorkspaceSettings() {
 		store.setValue(WORKSPACES_KEY,

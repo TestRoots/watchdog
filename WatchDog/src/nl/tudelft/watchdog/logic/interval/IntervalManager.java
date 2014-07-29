@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.logic.interval;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Observer;
 import java.util.Random;
 
+import nl.tudelft.watchdog.Activator;
 import nl.tudelft.watchdog.logic.document.DocumentFactory;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObservable;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.interval.ClosingIntervalEvent;
@@ -64,8 +66,12 @@ public class IntervalManager {
 		addIntervalListener(new IntervalLoggerObserver());
 
 		this.sessionSeed = new Random(new Date().getTime()).nextLong();
-		// TODO (MMB) change location to somewhere in Eclipse scope
-		this.intervalPersister = new IntervalPersister("watchdog.mapdb");
+
+		File file = new File(
+				Activator.getDefault().getStateLocation().toFile(),
+				"intervals.mapdb");
+		this.intervalPersister = new IntervalPersister(file);
+
 		this.documentFactory = new DocumentFactory();
 		this.editorEventObservable = new ImmediateNotifyingObservable();
 		this.uiListener = new UIListener(editorEventObservable,
