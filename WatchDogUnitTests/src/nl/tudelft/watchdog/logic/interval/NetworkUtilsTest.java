@@ -45,7 +45,7 @@ public class NetworkUtilsTest {
 	@Ignore
 	public void testIntervalTransfer() {
 		JsonTransferer it = new JsonTransferer();
-		SessionInterval interval = new SessionInterval("123", 0);
+		SessionInterval interval = new SessionInterval(0);
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 		String json = it.toJson(intervals);
 

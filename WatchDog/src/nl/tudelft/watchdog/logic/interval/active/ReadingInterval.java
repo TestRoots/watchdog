@@ -16,8 +16,8 @@ public class ReadingInterval extends UserActivityIntervalBase {
 	 * @param editor
 	 *            the editor in this interval
 	 */
-	public ReadingInterval(IWorkbenchPart part, String userid, long sessionSeed) {
-		super(part, IntervalType.Reading, userid, sessionSeed);
+	public ReadingInterval(IWorkbenchPart part, long sessionSeed) {
+		super(part, IntervalType.Reading, sessionSeed);
 		checkForChangeTimer = new Timer();
 	}
 

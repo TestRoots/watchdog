@@ -44,7 +44,7 @@ public abstract class IntervalBase {
 	private boolean isInDebugMode;
 
 	/** The userid this interval is transfered from */
-	@SerializedName("userid")
+	@SerializedName("uid")
 	private String userid;
 
 	/** The timer controlling the timeout used for this interval. */
@@ -54,12 +54,11 @@ public abstract class IntervalBase {
 	protected transient boolean isClosed;
 
 	/** Constructor. */
-	public IntervalBase(IntervalType activity, String userid, long sessionSeed) {
+	public IntervalBase(IntervalType activity, long sessionSeed) {
 		this.start = new Date();
 		this.isClosed = false;
 		this.intervalType = activity;
 		this.sessionSeed = sessionSeed;
-		this.userid = userid;
 	}
 
 	/**
@@ -152,6 +151,11 @@ public abstract class IntervalBase {
 	/** Sets the end time. */
 	public void setEndTime(Date date) {
 		this.end = date;
+	}
+
+	/** Sets the userid. */
+	public void setUserid(String userid) {
+		this.userid = userid;
 	}
 
 	/** @return the {@link ActivityType}. */
