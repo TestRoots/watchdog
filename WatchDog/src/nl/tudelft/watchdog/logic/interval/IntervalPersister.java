@@ -18,24 +18,30 @@ import org.mapdb.DBMaker;
  */
 public class IntervalPersister {
 
+	private DB database;
+
 	/** In memory representation of the interval store */
-	private NavigableMap<Long, IntervalBase> database;
+	private NavigableMap<Long, IntervalBase> map;
 
 	/**
 	 * Create a new interval persister. If @path points to an existing database
 	 * of intervals, it will be reused.
 	 */
-	public IntervalPersister(final String path) {
-		DB db = DBMaker.newFileDB(new File(path)).closeOnJvmShutdown().make();
-		database = db.getTreeMap("intervals");
+	public IntervalPersister(final File file) {
+		database = DBMaker.newFileDB(file).closeOnJvmShutdown().make();
+		map = database.getTreeMap("intervals");
+		// Compact database on every 100th new interval.
+		if (!map.isEmpty() && map.size() % 100 == 0) {
+			database.compact();
+		}
 	}
 
 	/**
 	 * Read all intervals starting from @from (inclusive) return them as a List.
 	 */
 	public List<IntervalBase> readIntevals(final long from) {
-		return new ArrayList<IntervalBase>(database
-				.subMap(from, Long.MAX_VALUE).values());
+		return new ArrayList<IntervalBase>(map.subMap(from, Long.MAX_VALUE)
+				.values());
 	}
 
 	/**
@@ -43,29 +49,42 @@ public class IntervalPersister {
 	 * them as a List.
 	 */
 	public List<IntervalBase> readIntevals(final long from, final long to) {
-		return new ArrayList<IntervalBase>(database.subMap(from, to).values());
+		return new ArrayList<IntervalBase>(map.subMap(from, to).values());
 	}
 
-	/** Save a list of intervals to persistent storage */
+	/**
+	 * Save a list of intervals to the persistent storage, as a single commit
+	 * (and hence in a very performance-oriented way)
+	 */
 	public void saveIntervals(final List<IntervalBase> intervals) {
+		long newKey = getHighestKey() + 1;
 		for (IntervalBase interval : intervals) {
-			saveInterval(interval);
+			map.put(newKey, interval);
+			++newKey;
 		}
+		database.commit();
 	}
 
 	/** Saves one interval to persistent storage */
 	public void saveInterval(IntervalBase interval) {
-		long highestKey = 0;
-		try {
-			highestKey = getHighestKey();
-		} catch (NoSuchElementException e) {
-			// intentionally left empty, start with key 0 if database is empty.
-		}
-		database.put(highestKey + 1, interval);
+		map.put(getHighestKey() + 1, interval);
+		database.commit(); // persist changes to disk
 	}
 
 	/** @return The highest key in the database. */
 	public long getHighestKey() {
-		return database.lastKey();
+		try {
+			return map.lastKey();
+		} catch (NoSuchElementException e) {
+			return -1;
+		}
+	}
+
+	/**
+	 * Properly close the database. Note: The database should be ACID even when
+	 * not properly closed.
+	 */
+	public void closeDatabase() {
+		database.close();
 	}
 }
