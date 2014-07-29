@@ -60,7 +60,7 @@ public class IntervalTransferManager {
 					.getWorkspaceSetting(UIUtils.getWorkspaceName()).lastTransferedInterval;
 
 			List<IntervalBase> intervalsToTransfer = intervalPersister
-					.readIntevals(lastTransferedIntervalKey);
+					.readIntevals(lastTransferedIntervalKey + 1);
 
 			if (intervalsToTransfer.isEmpty()) {
 				return;
