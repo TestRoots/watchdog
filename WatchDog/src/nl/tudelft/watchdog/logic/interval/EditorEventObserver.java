@@ -11,7 +11,6 @@ import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.StopEditingEditor
 import nl.tudelft.watchdog.logic.interval.active.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.active.TypingInterval;
 import nl.tudelft.watchdog.logic.interval.active.UserActivityIntervalBase;
-import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 /**
@@ -70,17 +69,15 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 	/** Creates a new active typing interval from the supplied event. */
 	private void createNewActiveTypingInterval(EditorEvent event) {
-		intervalManager.createNewInterval(
-				new TypingInterval(event.getPart(), Preferences.getInstance()
-						.getUserid(), intervalManager.getSessionSeed()),
+		intervalManager.createNewInterval(new TypingInterval(event.getPart(),
+				intervalManager.getSessionSeed()),
 				WatchDogGlobals.TYPING_TIMEOUT);
 	}
 
 	/** Creates a new active reading interval from the supplied event. */
 	private void createNewActiveReadingInterval(EditorEvent event) {
-		intervalManager.createNewInterval(
-				new ReadingInterval(event.getPart(), Preferences.getInstance()
-						.getUserid(), intervalManager.getSessionSeed()),
+		intervalManager.createNewInterval(new ReadingInterval(event.getPart(),
+				intervalManager.getSessionSeed()),
 				WatchDogGlobals.READING_TIMEOUT);
 	}
 }

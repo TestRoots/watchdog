@@ -17,7 +17,6 @@ import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
 import nl.tudelft.watchdog.logic.interval.active.UserActivityIntervalBase;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallback;
-import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 /**
@@ -46,7 +45,7 @@ public class IntervalManager {
 	/** The document factory. */
 	private DocumentFactory documentFactory;
 
-	/** The interval persistance storage on the local hd. */
+	/** The interval persistence storage on the local hd. */
 	private IntervalPersister intervalPersister;
 
 	/** The singleton instance of the interval manager. */
@@ -196,8 +195,8 @@ public class IntervalManager {
 
 	/** Starts and registers a new session interval. */
 	public void addNewSessionInterval() {
-		SessionInterval activeSessionInterval = new SessionInterval(Preferences
-				.getInstance().getUserid(), getSessionSeed());
+		SessionInterval activeSessionInterval = new SessionInterval(
+				getSessionSeed());
 		intervals.add(activeSessionInterval);
 		addNewIntervalHandler(activeSessionInterval, 0);
 	}

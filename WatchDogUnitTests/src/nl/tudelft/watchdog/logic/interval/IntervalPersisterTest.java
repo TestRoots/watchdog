@@ -50,7 +50,8 @@ public class IntervalPersisterTest {
 	}
 
 	private IntervalBase createRandomInterval() {
-		SessionInterval interval = new SessionInterval("123", 0);
+		SessionInterval interval = new SessionInterval(0);
+		interval.setUserid("123");
 		interval.setStartTime(new Date(interval.getStart().getTime()
 				+ (new Random()).nextInt(100000)));
 		interval.setEndTime(new Date(interval.getStart().getTime()
