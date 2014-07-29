@@ -179,6 +179,10 @@ public class Preferences {
 			long intervalKey) {
 		WorkspacePreferenceSetting setting = getOrCreateWorkspaceSetting(workspace);
 		setting.lastTransferedInterval = intervalKey;
+		// TODO (MMB) this does not get stored when called from preshutdown hook
+		// (the whole save workspace settings concept seems a bit flawed)
+		// TODO (MMB) investigate what happens when this is called to the list
+		// workspaceSettings -- is it actually updated?
 		storeWorkspaceSettings();
 	}
 
