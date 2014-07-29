@@ -30,8 +30,8 @@ public class IntervalPersister {
 	public IntervalPersister(final File file) {
 		database = DBMaker.newFileDB(file).closeOnJvmShutdown().make();
 		map = database.getTreeMap("intervals");
-		// Compact database on every 100th new interval.
-		if (!map.isEmpty() && map.size() % 100 == 0) {
+		// Compact database on every 500th new interval.
+		if (!map.isEmpty() && map.size() % 500 == 0) {
 			database.compact();
 		}
 	}
