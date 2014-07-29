@@ -8,6 +8,7 @@ import nl.tudelft.watchdog.logic.Project;
 import nl.tudelft.watchdog.logic.User;
 import nl.tudelft.watchdog.logic.exceptions.ServerCommunicationException;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
+import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 
 import org.apache.http.HttpEntity;
@@ -20,8 +21,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 /**
- * Transmits WatchDog data objects in a Json format to the WatchDog server, e.g.
- * the currently recorded intervals.
+ * Transmits WatchDog data objects in a Json format to the WatchDog server.
  */
 public class JsonTransferer {
 
@@ -40,13 +40,13 @@ public class JsonTransferer {
 	/** Sends the recorded intervals to the server. */
 	public boolean sendIntervals(List<IntervalBase> recordedIntervals) {
 		String userid = Preferences.getInstance().getUserid();
-		for (IntervalBase interval : recordedIntervals) {
-			interval.setUserid(userid);
-		}
+		String projectid = Preferences.getInstance().getWorkspaceSetting(
+				UIUtils.getWorkspaceName()).projectId;
 		String json = toJson(recordedIntervals);
 		try {
-			NetworkUtils.transferJson(
-					NetworkUtils.buildIntervalsPostURL(userid), json);
+			NetworkUtils
+					.transferJson(NetworkUtils.buildIntervalsPostURL(userid,
+							projectid), json);
 			return true;
 		} catch (ServerCommunicationException | IllegalArgumentException exception) {
 			return false;
