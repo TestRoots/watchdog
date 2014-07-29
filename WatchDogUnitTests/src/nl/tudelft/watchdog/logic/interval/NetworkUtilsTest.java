@@ -25,6 +25,8 @@ public class NetworkUtilsTest {
 
 	private String fooBarUser = "407c87ddd731a223ec30e6dc4a63971ed3b2e7b0";
 
+	private String fooBarProject = "";
+
 	@Test
 	@Ignore
 	public void testUserDoesNotExistTransfer() {
@@ -50,8 +52,8 @@ public class NetworkUtilsTest {
 		String json = it.toJson(intervals);
 
 		try {
-			NetworkUtils.transferJson(
-					NetworkUtils.buildIntervalsPostURL(fooBarUser), json);
+			NetworkUtils.transferJson(NetworkUtils.buildIntervalsPostURL(
+					fooBarUser, fooBarProject), json);
 		} catch (ServerCommunicationException e) {
 			fail(e.getMessage());
 		}

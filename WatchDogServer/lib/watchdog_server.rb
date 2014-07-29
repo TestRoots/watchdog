@@ -95,7 +95,7 @@ class WatchDogServer < Sinatra::Base
   end
 
   # Create new intervals
-  post '/user/:id/intervals' do
+  post '/user/:uid/:pid/intervals' do
     ivals = create_json_object(request)
 
     unless ivals.kind_of?(Array)
@@ -112,14 +112,23 @@ class WatchDogServer < Sinatra::Base
       halt 400, 'Request contains negative intervals'
     end
 
-    user_id = params[:id]
+    user_id = params[:uid]
     user = get_user_by_id(user_id)
 
     if user.nil?
       halt 404, "User does not exist"
     end
 
+    project_id = params[:pid]
+    project = get_project_by_id(project_id)
+
+    if project.nil?
+      halt 404, "Project does not exist"
+    end
+
     ivals.each do |i|
+      i['uid'] = user_id
+      i['pid'] = project_id
       intervals.save(i)
     end
 
@@ -143,6 +152,10 @@ class WatchDogServer < Sinatra::Base
 
   def get_user_by_id(id)
     users.find_one({'id' => id})
+  end
+
+  def get_project_by_id(id)
+    projects.find_one({'id' => id})
   end
 
   def get_user_by_unq(unq)

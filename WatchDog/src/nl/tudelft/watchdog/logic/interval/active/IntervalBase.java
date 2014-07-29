@@ -43,9 +43,13 @@ public abstract class IntervalBase {
 	@SerializedName("LEGACY_DEBUGMODE")
 	private boolean isInDebugMode;
 
-	/** The userid this interval is transfered from */
+	/** The projectId this interval is transfered from */
+	@SerializedName("pid")
+	private String projectId;
+
+	/** The userId this interval is transfered from */
 	@SerializedName("uid")
-	private String userid;
+	private String userId;
 
 	/** The timer controlling the timeout used for this interval. */
 	protected transient Timer checkForChangeTimer;
@@ -153,9 +157,14 @@ public abstract class IntervalBase {
 		this.end = date;
 	}
 
-	/** Sets the userid. */
-	public void setUserid(String userid) {
-		this.userid = userid;
+	/** Sets the userId. */
+	public void setUserid(String userId) {
+		this.userId = userId;
+	}
+
+	/** Sets the projectId. */
+	public void setProjectId(String projectId) {
+		this.projectId = projectId;
 	}
 
 	/** @return the {@link ActivityType}. */

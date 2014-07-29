@@ -87,26 +87,26 @@ describe 'The WatchDog Server' do
   end
 
   it 'should return 400 on bad JSON to /users/:id/intervals' do
-    post '/user/foobar/intervals', 'foobar'
+    post '/user/foobar/foobarproject/intervals', 'foobar'
     last_response.status.should eql(400)
   end
 
   it 'should return 400 on non JSON array being sent to /users/:id/intervals' do
-    post '/user/foobar/intervals', '{"foo":"bar"}'
+    post '/user/foobar/foobarproject/intervals', '{"foo":"bar"}'
     last_response.status.should eql(400)
   end
 
   it 'should return 400 when > 1000 intervals are sent at once' do
     intervals = (1..1001).map{|x| test_interval(x, x + 1)}
 
-    post '/user/foobar/intervals', intervals.to_json
+    post '/user/foobar/foobarproj/intervals', intervals.to_json
     last_response.status.should eql(400)
   end
 
   it 'should return 400 when negative intervals exist' do
     intervals = (1..10).map{|x| test_interval(x + 1, x)}
 
-    post '/user/foobar/intervals', intervals.to_json
+    post '/user/foobar/foobarproj/intervals', intervals.to_json
     last_response.status.should eql(400)
   end
 
@@ -124,7 +124,14 @@ describe 'The WatchDog Server' do
   it 'should return 404 when posting intervals for non-existing user' do
     intervals = (1..10).map{|x| test_interval(x, x + 1)}
 
-    post '/user/foobar/intervals', intervals.to_json
+    post '/user/foobar/foobarprojects/intervals', intervals.to_json
+    last_response.status.should eql(404)
+  end
+
+  it 'should return 404 when posting intervals for non-existing project' do
+    intervals = (1..10).map{|x| test_interval(x, x + 1)}
+
+    post '/user/' + existing_user + '/intervals', intervals.to_json
     last_response.status.should eql(404)
   end
 
@@ -133,8 +140,11 @@ describe 'The WatchDog Server' do
     user = test_user
     post '/user', user.to_json
     user_id = last_response.body
+    project = test_project(user_id)
+    post '/project', project.to_json
+    project_id = last_response.body
 
-    post "/user/#{user_id}/intervals", intervals.to_json
+    post "/user/#{user_id}/#{project_id}/intervals", intervals.to_json
     last_response.status.should eql(201)
     expect(last_response.body).to eq('10')
 

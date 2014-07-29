@@ -131,8 +131,8 @@ public class NetworkUtils {
 	}
 
 	/** @return the URL to post new intervals to the server to for this user. */
-	public static String buildIntervalsPostURL(String userid) {
-		return buildExistingUserURL(userid) + "/intervals";
+	public static String buildIntervalsPostURL(String userid, String projectid) {
+		return buildExistingUserURL(userid) + "/" + projectid + "/intervals";
 	}
 
 	/**

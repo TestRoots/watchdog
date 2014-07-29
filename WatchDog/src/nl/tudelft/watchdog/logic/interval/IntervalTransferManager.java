@@ -21,9 +21,13 @@ public class IntervalTransferManager {
 
 	private IntervalsTransferTimerTask task;
 
-	/** Constructor. */
+	/**
+	 * Constructor. Tries to immediately transfer all remaining intervals, and
+	 * sets up a scheduled timer to run every {@value #UPDATE_RATE} miliseconds.
+	 */
 	public IntervalTransferManager(final IntervalPersister intervalPersister) {
 		task = new IntervalsTransferTimerTask(intervalPersister);
+		task.run();
 		timer = new Timer(true);
 		timer.scheduleAtFixedRate(task, 0, UPDATE_RATE);
 	}
