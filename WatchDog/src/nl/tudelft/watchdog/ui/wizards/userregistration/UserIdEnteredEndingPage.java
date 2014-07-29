@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.ui.wizards.userregistration;
 
-import nl.tudelft.watchdog.logic.NetworkUtils;
+import nl.tudelft.watchdog.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 

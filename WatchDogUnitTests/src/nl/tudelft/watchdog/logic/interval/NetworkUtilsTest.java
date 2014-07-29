@@ -5,13 +5,14 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Date;
 
-import nl.tudelft.watchdog.logic.NetworkUtils;
-import nl.tudelft.watchdog.logic.NetworkUtils.Connection;
-import nl.tudelft.watchdog.logic.ServerCommunicationException;
 import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentType;
+import nl.tudelft.watchdog.logic.exceptions.ServerCommunicationException;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
+import nl.tudelft.watchdog.logic.network.JsonTransferer;
+import nl.tudelft.watchdog.logic.network.NetworkUtils;
+import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
 
 import org.junit.Ignore;
 import org.junit.Test;

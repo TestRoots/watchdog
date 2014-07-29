@@ -4,7 +4,7 @@ import nl.tudelft.watchdog.logic.eclipseuireader.DocumentChangeListenerAttacher;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObservable;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.logic.interval.active.IntervalSerializationManager;
+import nl.tudelft.watchdog.logic.interval.IntervalTransferManager;
 
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
@@ -20,7 +20,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class UIListener {
 	/** The serialization manager. */
-	private IntervalSerializationManager serializationManager;
+	private IntervalTransferManager intervalTransferManager;
 
 	/** The editorObservable. */
 	private ImmediateNotifyingObservable editorObservable;
@@ -29,10 +29,11 @@ public class UIListener {
 	private WindowListener windowListener;
 
 	/** Constructor. */
-	public UIListener(ImmediateNotifyingObservable editorObservable) {
+	public UIListener(ImmediateNotifyingObservable editorObservable,
+			IntervalTransferManager intervalTransferManager) {
 		this.editorObservable = editorObservable;
+		this.intervalTransferManager = intervalTransferManager;
 		windowListener = new WindowListener(editorObservable);
-		serializationManager = new IntervalSerializationManager();
 	}
 
 	/**
@@ -53,13 +54,9 @@ public class UIListener {
 					@Override
 					public boolean preShutdown(final IWorkbench workbench,
 							final boolean forced) {
-						// TODO (MMB) we need to hook in here to transfer all
-						// data from this Eclipse session.
-						// TODO (MMB) shutdown hook, final try to send remaining
-						// data to server
 						IntervalManager.getInstance()
 								.closeAllCurrentIntervals();
-						serializationManager.saveRecordedIntervals();
+						intervalTransferManager.sendIntervalsImmediately();
 						return true;
 					}
 
