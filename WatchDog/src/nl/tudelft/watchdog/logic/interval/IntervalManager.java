@@ -45,6 +45,9 @@ public class IntervalManager {
 	/** The document factory. */
 	private DocumentFactory documentFactory;
 
+	/** The interval persistance storage on the local hd. */
+	private IntervalPersister intervalPersister;
+
 	/** The singleton instance of the interval manager. */
 	private static IntervalManager instance = null;
 
@@ -61,10 +64,13 @@ public class IntervalManager {
 		addIntervalListener(new IntervalLoggerObserver());
 
 		this.sessionSeed = new Random(new Date().getTime()).nextLong();
-		addNewSessionInterval();
+		// TODO (MMB) change location to somewhere in Eclipse scope
+		this.intervalPersister = new IntervalPersister("watchdog.mapdb");
 		this.documentFactory = new DocumentFactory();
 		this.editorEventObservable = new ImmediateNotifyingObservable();
-		this.uiListener = new UIListener(editorEventObservable);
+		this.uiListener = new UIListener(editorEventObservable,
+				new IntervalTransferManager(intervalPersister));
+		addNewSessionInterval();
 		addEditorObserversAndUIListeners();
 	}
 
@@ -130,12 +136,20 @@ public class IntervalManager {
 
 			intervals.remove(interval);
 			recordedIntervals.add(interval);
+			intervalPersister.saveInterval(interval);
 		}
 	}
 
-	/** Sets a list of recorded intervals. */
-	/* package */void setRecordedIntervals(List<IntervalBase> intervals) {
-		recordedIntervals = intervals;
+	/** Closes all currently open intervals. */
+	public void closeAllCurrentIntervals() {
+		Iterator<IntervalBase> iterator = intervals.listIterator();
+		while (iterator.hasNext()) {
+			// we need to remove the interval first from the list in order to
+			// avoid ConcurrentListModification Exceptions.
+			IntervalBase interval = iterator.next();
+			iterator.remove();
+			closeInterval(interval);
+		}
 	}
 
 	/**
@@ -150,18 +164,6 @@ public class IntervalManager {
 			}
 		}
 		return null;
-	}
-
-	/** Closes all currently open intervals. */
-	public void closeAllCurrentIntervals() {
-		Iterator<IntervalBase> iterator = intervals.listIterator();
-		while (iterator.hasNext()) {
-			// we need to remove the interval first from the list in order to
-			// avoid ConcurrentListModification Exceptions.
-			IntervalBase interval = iterator.next();
-			iterator.remove();
-			closeInterval(interval);
-		}
 	}
 
 	/** Returns an immutable list of recorded intervals. */

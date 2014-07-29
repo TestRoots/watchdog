@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic;
+package nl.tudelft.watchdog.logic.exceptions;
 
 /** Default exception for server communication problems. */
 public class ServerCommunicationException extends Exception {

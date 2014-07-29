@@ -6,3 +6,4 @@ config.yaml
 *~
 WatchDog/bundledLibs.jar
 WatchDogServer/logfile.log
+WatchDogUnitTests/test.mapdb*

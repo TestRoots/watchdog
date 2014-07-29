@@ -1,16 +1,9 @@
 package nl.tudelft.watchdog.util;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 import nl.tudelft.watchdog.logic.exceptions.ContentReaderException;
-import nl.tudelft.watchdog.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
-import nl.tudelft.watchdog.logic.interval.active.IntervalSerializationManager;
-import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;
@@ -119,26 +112,6 @@ public class WatchDogUtils {
 		} else {
 			throw new IllegalArgumentException("can't read resource file");
 		}
-	}
-
-	/**
-	 * @return A list of all stored recorded intervals.
-	 */
-	public static List<IntervalBase> getAllRecordedIntervals() {
-		IntervalSerializationManager serializationManager = new IntervalSerializationManager();
-
-		IntervalManager intervalKeeper = IntervalManager.getInstance();
-		List<IntervalBase> completeList = new ArrayList<IntervalBase>();
-		try {
-			completeList.addAll(serializationManager
-					.retrieveRecordedIntervals());
-		} catch (IOException exception) {
-			WatchDogLogger.getInstance().logSevere(exception);
-		} catch (ClassNotFoundException exception) {
-			WatchDogLogger.getInstance().logSevere(exception);
-		}
-		completeList.addAll(intervalKeeper.getClosedIntervals());
-		return completeList;
 	}
 
 	/**

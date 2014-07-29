@@ -12,12 +12,6 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            id="nl.tudelft.watchdog.commands.exportData"
-            defaultHandler="nl.tudelft.watchdog.ui.handlers.XMLExportHandler"
-            description="Exports the data from the WatchDog plugin"
-            name="Export WatchDog Data">
-      </command>
-      <command
             defaultHandler="nl.tudelft.watchdog.ui.handlers.InfoStatisticsDialogHandler"
             id="nl.tudelft.watchdog.commands.showWatchDogInfo"
             name="Display WatchDogInfo">

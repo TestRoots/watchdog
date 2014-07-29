@@ -7,11 +7,11 @@ import java.util.Date;
 
 import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentType;
-import nl.tudelft.watchdog.logic.interval.JsonTransferer;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
 import nl.tudelft.watchdog.logic.interval.active.TypingInterval;
+import nl.tudelft.watchdog.logic.network.JsonTransferer;
 
 import org.junit.Test;
 
