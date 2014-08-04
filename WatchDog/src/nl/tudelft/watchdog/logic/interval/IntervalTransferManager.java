@@ -17,7 +17,7 @@ import nl.tudelft.watchdog.ui.preferences.Preferences;
  */
 public class IntervalTransferManager {
 
-	private static int UPDATE_RATE = 20 * 1000;
+	private static int UPDATE_RATE = 3 * 60 * 1000;
 
 	private Timer timer;
 

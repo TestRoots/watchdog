@@ -1,14 +1,17 @@
 package nl.tudelft.watchdog.ui.preferences;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.watchdog.Activator;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -41,7 +44,7 @@ public class Preferences {
 	private final static Gson gson = new Gson();
 
 	/** The preference store. */
-	private IPreferenceStore store;
+	private ScopedPreferenceStore store;
 
 	/** The map of registered workspaces. */
 	private List<WorkspacePreferenceSetting> workspaceSettings = new ArrayList<WorkspacePreferenceSetting>();
@@ -54,7 +57,8 @@ public class Preferences {
 	 * users. The preferences are stored on a per eclipse installation basis.
 	 */
 	private Preferences() {
-		store = Activator.getDefault().getPreferenceStore();
+		store = (ScopedPreferenceStore) Activator.getDefault()
+				.getPreferenceStore();
 		store.setDefault(LOGGING_ENABLED_KEY, false);
 		store.setDefault(AUTHENTICATION_ENABLED_KEY, true);
 		store.setDefault(USERID_KEY, "");
@@ -190,6 +194,13 @@ public class Preferences {
 	private void storeWorkspaceSettings() {
 		store.setValue(WORKSPACES_KEY,
 				gson.toJson(workspaceSettings, TYPE_WORKSPACE_SETTINGS));
+		try {
+			store.save();
+		} catch (IOException exception) {
+			// If this happens, our plugin is basically not functional in this
+			// client setup!
+			WatchDogLogger.getInstance().logSevere(exception);
+		}
 	}
 
 	/** @return The {@link IPreferenceStore} for WatchDog. */
