@@ -11,6 +11,7 @@ import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
 import nl.tudelft.watchdog.logic.interval.active.TypingInterval;
+import nl.tudelft.watchdog.logic.interval.active.UserActivityIntervalBase;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
 
 import org.junit.Test;
@@ -55,14 +56,23 @@ public class IntervalToJsonConverterTest {
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"it\":\"se\",\"ss\":0,\"LEGACY_DEBUGMODE\":false,\"uid\":\"123\"}]",
+				"[{\"ts\":1,\"te\":2,\"it\":\"se\",\"ss\":0,\"LEGACY_DEBUGMODE\":false,\"uid\":\"123\"}]",
 				intervalTransferer.toJson(intervals));
 	}
 
-	private ArrayList<IntervalBase> createSampleIntervals(IntervalBase interval) {
+	private ArrayList<IntervalBase> createSampleIntervals(UserActivityIntervalBase interval) {
 		ArrayList<IntervalBase> intervals = new ArrayList<IntervalBase>();
 		interval.setDocument(new Document("Project", "Production.java",
 				DocumentType.PRODUCTION));
+		interval.setStartTime(new Date(1));
+		interval.setEndTime(new Date(2));
+		interval.setIsInDebugMode(false);
+		intervals.add(interval);
+		return intervals;
+	}
+	
+	private ArrayList<IntervalBase> createSampleIntervals(IntervalBase interval) {
+		ArrayList<IntervalBase> intervals = new ArrayList<IntervalBase>();
 		interval.setStartTime(new Date(1));
 		interval.setEndTime(new Date(2));
 		interval.setIsInDebugMode(false);

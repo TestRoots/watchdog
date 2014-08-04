@@ -1,12 +1,11 @@
 package nl.tudelft.watchdog.logic.interval;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-import nl.tudelft.watchdog.logic.document.Document;
-import nl.tudelft.watchdog.logic.document.DocumentType;
 import nl.tudelft.watchdog.logic.exceptions.ServerCommunicationException;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
@@ -61,8 +60,6 @@ public class NetworkUtilsTest {
 
 	private ArrayList<IntervalBase> createSampleIntervals(IntervalBase interval) {
 		ArrayList<IntervalBase> intervals = new ArrayList<IntervalBase>();
-		interval.setDocument(new Document("Project", "Production.java",
-				DocumentType.PRODUCTION));
 		interval.setStartTime(new Date(1));
 		interval.setEndTime(new Date(2));
 		interval.setIsInDebugMode(false);

@@ -28,12 +28,23 @@ public class IntervalPersister {
 	 * of intervals, it will be reused.
 	 */
 	public IntervalPersister(final File file) {
-		database = DBMaker.newFileDB(file).closeOnJvmShutdown().make();
+		try {
+			database = createDatabase(file);
+		} catch (RuntimeException e) {
+			// Happens when an update to the serializables in the database
+			// was made, and the new objects cannot be created from the old data
+			file.delete();
+			database = createDatabase(file);
+		}
 		map = database.getTreeMap("intervals");
 		// Compact database on every 500th new interval.
 		if (!map.isEmpty() && map.size() % 500 == 0) {
 			database.compact();
 		}
+	}
+
+	private DB createDatabase(final File file) {
+		return DBMaker.newFileDB(file).closeOnJvmShutdown().make();
 	}
 
 	/**

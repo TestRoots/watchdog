@@ -73,7 +73,8 @@ public class InfoStatisticsDialog extends Dialog {
 	/** Creates a summary from the current Eclipse session in WatchDog. */
 	private void createCurrentIntervalSummary(Composite container) {
 		List<IntervalBase> intervals = new ArrayList<IntervalBase>();
-		intervals.addAll(IntervalManager.getInstance().getClosedIntervals());
+		// TODO (MMB) replace with intervals from intervalpersister!
+		// intervals.addAll(IntervalManager.getInstance().getClosedIntervals());
 		intervals.addAll(IntervalManager.getInstance().getOpenIntervals());
 		createIntervalSummary("Current Eclipse Session:", container, intervals);
 	}
