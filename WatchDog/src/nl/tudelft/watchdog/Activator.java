@@ -42,14 +42,11 @@ public class Activator extends AbstractUIPlugin {
 		WatchDogLogger.getInstance().logInfo("Shutting down Plugin...");
 		plugin = null;
 		WatchDogGlobals.isActive = false;
+		preferenceStore.save();
 		super.stop(context);
 	}
 
-	/**
-	 * Returns the shared instance
-	 * 
-	 * @return the shared instance
-	 */
+	/** Returns the shared instance. */
 	public static Activator getDefault() {
 		return plugin;
 	}
