@@ -1,7 +1,6 @@
 package nl.tudelft.watchdog.ui.wizards;
 
 import nl.tudelft.watchdog.Activator;
-import nl.tudelft.watchdog.logic.YesNoDontKnowChoice;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 

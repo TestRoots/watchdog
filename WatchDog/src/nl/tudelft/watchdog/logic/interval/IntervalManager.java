@@ -13,12 +13,10 @@ import nl.tudelft.watchdog.Activator;
 import nl.tudelft.watchdog.logic.document.DocumentFactory;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObservable;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.interval.ClosingIntervalEvent;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.interval.NewIntervalEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.listeners.UIListener;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
 import nl.tudelft.watchdog.logic.interval.active.UserActivityIntervalBase;
-import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallback;
 
 /**
  * Manages interval listeners and keeps track of all intervals. Implements the
@@ -99,25 +97,6 @@ public class IntervalManager {
 		// TODO (MMB) shouldn't this handler be added to the interval itself?
 		intervals.add(interval);
 		interval.setDocument(documentFactory.createDocument(interval.getPart()));
-		addNewIntervalHandler(interval, timeout);
-	}
-
-	/**
-	 * Adds a new interval handler base, and defines its timeout, i.e. when the
-	 * interval is closed.
-	 */
-	private void addNewIntervalHandler(final IntervalBase interval,
-			final int timeout) {
-		interval.addTimeoutListener(timeout, new OnInactiveCallback() {
-			@Override
-			public void onInactive() {
-				if (timeout == 0) {
-					return;
-				}
-				closeInterval(interval);
-			}
-		});
-		intervalEventObservable.notifyObservers(new NewIntervalEvent(interval));
 	}
 
 	/**
@@ -125,13 +104,14 @@ public class IntervalManager {
 	 * <code>null</code> gracefully.
 	 */
 	/* package */void closeInterval(IntervalBase interval) {
-		if (interval != null) {
-			intervalEventObservable.notifyObservers(new ClosingIntervalEvent(
-					interval));
-			interval.closeInterval();
-			intervals.remove(interval);
-			intervalPersister.saveInterval(interval);
+		if (interval == null) {
+			return;
 		}
+		intervalEventObservable.notifyObservers(new ClosingIntervalEvent(
+				interval));
+		interval.closeInterval();
+		intervals.remove(interval);
+		intervalPersister.saveInterval(interval);
 	}
 
 	/** Closes all currently open intervals. */
@@ -187,7 +167,6 @@ public class IntervalManager {
 		SessionInterval activeSessionInterval = new SessionInterval(
 				getSessionSeed());
 		intervals.add(activeSessionInterval);
-		addNewIntervalHandler(activeSessionInterval, 0);
 	}
 
 	/**

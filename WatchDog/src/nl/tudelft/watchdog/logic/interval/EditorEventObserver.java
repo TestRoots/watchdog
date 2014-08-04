@@ -58,6 +58,8 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
 			if (previousIntervalHasSameEditor
 					&& userActivityInterval instanceof ReadingInterval) {
 				// in case we already have a reading interval do nothing
+				// TODO (MMB) I think in this case, we need to prolong the
+				// timeout time
 				return;
 			}
 			intervalManager.closeInterval(userActivityInterval);
@@ -69,15 +71,15 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 	/** Creates a new active typing interval from the supplied event. */
 	private void createNewActiveTypingInterval(EditorEvent event) {
-		intervalManager.createNewActiveInterval(new TypingInterval(event.getPart(),
-				intervalManager.getSessionSeed()),
-				WatchDogGlobals.TYPING_TIMEOUT);
+		intervalManager.createNewActiveInterval(
+				new TypingInterval(event.getPart(), intervalManager
+						.getSessionSeed()), WatchDogGlobals.TYPING_TIMEOUT);
 	}
 
 	/** Creates a new active reading interval from the supplied event. */
 	private void createNewActiveReadingInterval(EditorEvent event) {
-		intervalManager.createNewActiveInterval(new ReadingInterval(event.getPart(),
-				intervalManager.getSessionSeed()),
-				WatchDogGlobals.READING_TIMEOUT);
+		intervalManager.createNewActiveInterval(
+				new ReadingInterval(event.getPart(), intervalManager
+						.getSessionSeed()), WatchDogGlobals.READING_TIMEOUT);
 	}
 }

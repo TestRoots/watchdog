@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Timer;
 
-import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallback;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.joda.time.Duration;
@@ -51,9 +50,6 @@ public abstract class IntervalBase implements Serializable {
 	@SerializedName("uid")
 	private String userId;
 
-	/** The timer controlling the timeout used for this interval. */
-	protected transient Timer checkForChangeTimer;
-
 	/** Whether this interval is closed, or still recording. */
 	protected transient boolean isClosed;
 
@@ -73,6 +69,9 @@ public abstract class IntervalBase implements Serializable {
 		return isClosed;
 	}
 
+	/** The timer controlling the timeout used for this interval. */
+	protected transient Timer checkForChangeTimer;
+
 	/**
 	 * @return The timer.
 	 */
@@ -89,7 +88,6 @@ public abstract class IntervalBase implements Serializable {
 			}
 			setEndTime(new Date());
 			setIsInDebugMode(WatchDogUtils.isInDebugMode());
-			listenForReactivation();
 		}
 	}
 
@@ -163,15 +161,6 @@ public abstract class IntervalBase implements Serializable {
 	public IntervalType getActivityType() {
 		return intervalType;
 	}
-
-	/** Listener for reactivation of this interval. */
-	// TODO (MMB) once redesign of classes is complete, not sure if we still
-	// need this?
-	public abstract void listenForReactivation();
-
-	/** Adds a timeout listener. */
-	public abstract void addTimeoutListener(long timeout,
-			OnInactiveCallback callbackWhenFinished);
 
 	/** Convert this to a JSON string */
 	public String toJSON() {

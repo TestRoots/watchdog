@@ -2,12 +2,19 @@ package nl.tudelft.watchdog.logic.interval.activityCheckers;
 
 import java.util.TimerTask;
 
+import nl.tudelft.watchdog.logic.exceptions.ContentReaderException;
+import nl.tudelft.watchdog.logic.exceptions.EditorClosedPrematurelyException;
+
 public abstract class CheckerTimerTask extends TimerTask {
 
 	/** An update checker. */
-	protected IUpdateChecker checker;
+	protected IUpdateChecker stillActiveChecker;
 
-	/** Creates the listener for reactivation of this checker. */
-	public abstract void createListenerForReactivation();
+	public interface IUpdateChecker {
+
+		public abstract boolean hasChanged()
+				throws EditorClosedPrematurelyException, ContentReaderException;
+
+	}
 
 }

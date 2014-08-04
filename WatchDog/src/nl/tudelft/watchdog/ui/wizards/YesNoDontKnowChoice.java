@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic;
+package nl.tudelft.watchdog.ui.wizards;
 
 
 /**
