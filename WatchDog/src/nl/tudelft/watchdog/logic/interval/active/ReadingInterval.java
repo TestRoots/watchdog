@@ -10,6 +10,9 @@ import org.eclipse.ui.IWorkbenchPart;
 /** A reading interval, i.e. an interval in which the user read some code. */
 public class ReadingInterval extends UserActivityIntervalBase {
 
+	/** Serial id. */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor.
 	 * 

@@ -19,7 +19,6 @@ import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
 import nl.tudelft.watchdog.logic.interval.active.UserActivityIntervalBase;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallback;
-import nl.tudelft.watchdog.util.WatchDogUtils;
 
 /**
  * Manages interval listeners and keeps track of all intervals. Implements the
@@ -31,9 +30,6 @@ public class IntervalManager {
 
 	/** A list of currently opened intervals. */
 	private List<IntervalBase> intervals = new ArrayList<IntervalBase>();
-
-	/** The recorded intervals of this session */
-	private List<IntervalBase> recordedIntervals = new ArrayList<IntervalBase>();
 
 	/** Notifies subscribers of editorEvents. */
 	private ImmediateNotifyingObservable editorEventObservable;
@@ -98,9 +94,11 @@ public class IntervalManager {
 	}
 
 	/** Creates a new editing interval. */
-	/* package */void createNewInterval(IntervalBase interval, int timeout) {
+	/* package */void createNewActiveInterval(
+			UserActivityIntervalBase interval, int timeout) {
 		// TODO (MMB) shouldn't this handler be added to the interval itself?
 		intervals.add(interval);
+		interval.setDocument(documentFactory.createDocument(interval.getPart()));
 		addNewIntervalHandler(interval, timeout);
 	}
 
@@ -127,21 +125,11 @@ public class IntervalManager {
 	 * <code>null</code> gracefully.
 	 */
 	/* package */void closeInterval(IntervalBase interval) {
-		if (interval != null && !interval.isClosed()) {
+		if (interval != null) {
 			intervalEventObservable.notifyObservers(new ClosingIntervalEvent(
 					interval));
-
-			if (interval instanceof UserActivityIntervalBase) {
-				UserActivityIntervalBase activeInterval = (UserActivityIntervalBase) interval;
-				interval.setDocument(documentFactory
-						.createDocument(activeInterval.getPart()));
-			}
-			interval.setEndTime(new Date());
-			interval.setIsInDebugMode(WatchDogUtils.isInDebugMode());
 			interval.closeInterval();
-
 			intervals.remove(interval);
-			recordedIntervals.add(interval);
 			intervalPersister.saveInterval(interval);
 		}
 	}
@@ -170,11 +158,6 @@ public class IntervalManager {
 			}
 		}
 		return null;
-	}
-
-	/** Returns an immutable list of recorded intervals. */
-	public List<IntervalBase> getClosedIntervals() {
-		return Collections.unmodifiableList(recordedIntervals);
 	}
 
 	/** Returns an immutable list of recorded intervals. */

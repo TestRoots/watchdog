@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Timer;
 
-import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallback;
+import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.joda.time.Duration;
 import org.joda.time.Period;
@@ -18,11 +18,7 @@ import com.google.gson.annotations.SerializedName;
 public abstract class IntervalBase implements Serializable {
 
 	/** The version id of this class. */
-	private static final long serialVersionUID = 1L;
-
-	/** The document associated with this {@link RecordedInterval}. */
-	@SerializedName("doc")
-	private Document document;
+	private static final long serialVersionUID = 2L;
 
 	/** The timestamp start (when this interval was started). */
 	@SerializedName("ts")
@@ -86,18 +82,15 @@ public abstract class IntervalBase implements Serializable {
 
 	/** Closes this interval. */
 	public void closeInterval() {
-		isClosed = true;
-		if (checkForChangeTimer != null) {
-			checkForChangeTimer.cancel();
+		if (!isClosed()) {
+			isClosed = true;
+			if (checkForChangeTimer != null) {
+				checkForChangeTimer.cancel();
+			}
+			setEndTime(new Date());
+			setIsInDebugMode(WatchDogUtils.isInDebugMode());
+			listenForReactivation();
 		}
-		listenForReactivation();
-	}
-
-	/**
-	 * @return the document the interval is associated with.
-	 */
-	public Document getDocument() {
-		return document;
 	}
 
 	/**
@@ -144,11 +137,6 @@ public abstract class IntervalBase implements Serializable {
 	/** Sets the debug mode. */
 	public void setIsInDebugMode(boolean isInDebugMode) {
 		this.isInDebugMode = isInDebugMode;
-	}
-
-	/** Sets the document. */
-	public void setDocument(Document document) {
-		this.document = document;
 	}
 
 	/** Sets the start time. */

@@ -13,6 +13,9 @@ import org.eclipse.ui.IWorkbenchPart;
  */
 public class TypingInterval extends UserActivityIntervalBase {
 
+	/** Serial ID. */
+	private static final long serialVersionUID = 1L;
+
 	/** Constructor. */
 	public TypingInterval(IWorkbenchPart part, long sessionSeed) {
 		super(part, IntervalType.Typing, sessionSeed);

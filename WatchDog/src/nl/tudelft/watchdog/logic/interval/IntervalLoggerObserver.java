@@ -26,9 +26,9 @@ import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 					+ intervalEvent.getInterval().getStart() + " - "
 					+ intervalEvent.getInterval().getEnd();
 			if (intervalEvent.getInterval() instanceof UserActivityIntervalBase) {
-				logString += intervalEvent.getInterval().getDocument()
-						.getFileName()
-						+ " \n";
+				UserActivityIntervalBase interval = (UserActivityIntervalBase) intervalEvent
+						.getInterval();
+				logString += interval.getDocument().getFileName() + " \n";
 			}
 		}
 		WatchDogLogger.getInstance().logInfo(logString);
