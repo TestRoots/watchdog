@@ -2,8 +2,8 @@ package nl.tudelft.watchdog.logic.interval.active;
 
 import java.util.Timer;
 
-import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallback;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.TypingCheckerTask;
+import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -20,14 +20,9 @@ public class TypingInterval extends UserActivityIntervalBase {
 	public TypingInterval(IWorkbenchPart part, long sessionSeed) {
 		super(part, IntervalType.Typing, sessionSeed);
 		checkForChangeTimer = new Timer();
-	}
-
-	@Override
-	public void addTimeoutListener(long timeout,
-			OnInactiveCallback callbackWhenFinished) {
-		task = new TypingCheckerTask(this.getPart(), callbackWhenFinished);
-		checkForChangeTimer.schedule(new TypingCheckerTask(this.getEditor(),
-				callbackWhenFinished), timeout, timeout);
+		task = new TypingCheckerTask(this.getPart());
+		checkForChangeTimer.schedule(new TypingCheckerTask(this.getEditor()),
+				WatchDogGlobals.TYPING_TIMEOUT, WatchDogGlobals.TYPING_TIMEOUT);
 	}
 
 	@Override

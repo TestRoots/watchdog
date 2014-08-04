@@ -35,14 +35,6 @@ public abstract class UserActivityIntervalBase extends IntervalBase {
 		this.editor = (ITextEditor) part;
 	}
 
-	@Override
-	public void listenForReactivation() {
-		// TODO (MMB) task would be null if addTimeoutListener had not been
-		// called before listenForReactivation ?
-		assert (task != null);
-		task.createListenerForReactivation();
-	}
-
 	/** @return The {@link ITextEditor} associated with this interval. */
 	public IWorkbenchPart getPart() {
 		return part;

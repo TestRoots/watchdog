@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.logic.interval.activityCheckers;
 
 import nl.tudelft.watchdog.logic.exceptions.ContentReaderException;
 import nl.tudelft.watchdog.logic.exceptions.EditorClosedPrematurelyException;
+import nl.tudelft.watchdog.logic.interval.activityCheckers.CheckerTimerTask.IUpdateChecker;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 

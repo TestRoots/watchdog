@@ -4,12 +4,12 @@ import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 
-import nl.tudelft.watchdog.logic.Project;
-import nl.tudelft.watchdog.logic.User;
 import nl.tudelft.watchdog.logic.exceptions.ServerCommunicationException;
 import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
+import nl.tudelft.watchdog.ui.wizards.Project;
+import nl.tudelft.watchdog.ui.wizards.User;
 
 import org.apache.http.HttpEntity;
 
