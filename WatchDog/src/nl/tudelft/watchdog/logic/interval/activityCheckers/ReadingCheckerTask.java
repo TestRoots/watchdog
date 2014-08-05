@@ -1,5 +1,7 @@
 package nl.tudelft.watchdog.logic.interval.activityCheckers;
 
+import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
+import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActivityIntervalBase;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 
@@ -27,14 +29,16 @@ public class ReadingCheckerTask extends CheckerTimerTask {
 
 	private boolean isActive;
 
-	/** The editor. */
-	private ITextEditor editor;
+	private IWorkbenchPart part;
 
 	/** Constructor. */
 	public ReadingCheckerTask(IWorkbenchPart part,
 			UserActivityIntervalBase interval) {
 		super(interval);
-		this.editor = (ITextEditor) part;
+		this.part = part;
+		this.isActive = true;
+
+		ITextEditor editor = (ITextEditor) part;
 		this.styledText = (StyledText) editor.getAdapter(Control.class);
 
 		createListeners();
@@ -89,6 +93,7 @@ public class ReadingCheckerTask extends CheckerTimerTask {
 			cancel();
 			removeListeners();
 			interval.closeInterval();
+			createListenerForReactivation();
 			WatchDogLogger.getInstance().logInfo("closing reading interval.");
 		}
 	}
@@ -102,5 +107,57 @@ public class ReadingCheckerTask extends CheckerTimerTask {
 				styledText.removePaintListener(paintListener);
 			}
 		});
+	}
+
+	/** Creates the listener for reactivation of this checker. */
+	public void createListenerForReactivation() {
+		if (!styledText.isDisposed()) {
+			Display.getDefault().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					if (styledText.isDisposed()) {
+						return;
+					}
+
+					styledText.addCaretListener(new CaretListener() {
+
+						@Override
+						public void caretMoved(CaretEvent event) {
+							// cursor place changed
+							IntervalManager
+									.getInstance()
+									.getEditorObserveable()
+									.notifyObservers(
+											new FocusStartEditorEvent(part));
+							// listen just once to not get millions
+							// of events fired
+							styledText.removeCaretListener(this);
+						}
+					});
+
+					styledText.addPaintListener(new PaintListener() { // for
+								// redraws
+								// of
+								// the
+								// view,
+								// e.g.
+								// when
+								// scrolled
+								@Override
+								public void paintControl(PaintEvent e) {
+									IntervalManager
+											.getInstance()
+											.getEditorObserveable()
+											.notifyObservers(
+													new FocusStartEditorEvent(
+															part));
+									// listen just once to not get millions
+									// of events fired
+									styledText.removePaintListener(this);
+								}
+							});
+				}
+			});
+		}
 	}
 }

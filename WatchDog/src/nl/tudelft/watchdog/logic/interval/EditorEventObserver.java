@@ -28,6 +28,7 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 	@Override
 	public void update(Observable observable, Object event) {
+		// double events may fire!
 		if (!(event instanceof EditorEvent)) {
 			return;
 		}
@@ -57,10 +58,15 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
 		} else if (editorEvent instanceof FocusStartEditorEvent) {
 			if (previousIntervalHasSameEditor
 					&& userActivityInterval instanceof ReadingInterval) {
-				// in case we already have a reading interval do nothing
-				// TODO (MMB) I think in this case, we need to prolong the
-				// timeout time
-				return;
+				if (userActivityInterval.isClosed()) {
+					intervalManager.closeInterval(userActivityInterval);
+					createNewActiveReadingInterval(editorEvent);
+				} else {
+					// in case we already have a reading interval do nothing
+					// TODO (MMB) I think in this case, we need to prolong the
+					// timeout time
+					return;
+				}
 			}
 			intervalManager.closeInterval(userActivityInterval);
 			createNewActiveReadingInterval(editorEvent);
