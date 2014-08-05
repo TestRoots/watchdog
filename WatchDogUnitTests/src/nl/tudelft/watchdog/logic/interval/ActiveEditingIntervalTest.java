@@ -5,8 +5,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import nl.tudelft.watchdog.logic.interval.active.TypingInterval;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallback;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.texteditor.IDocumentProvider;

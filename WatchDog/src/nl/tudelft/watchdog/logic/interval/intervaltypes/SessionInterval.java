@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.interval.active;
+package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
 
 /** Interval for the active session. */

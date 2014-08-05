@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.interval.active;
+package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
 import java.util.Timer;
 
@@ -19,10 +19,10 @@ public class TypingInterval extends UserActivityIntervalBase {
 	/** Constructor. */
 	public TypingInterval(IWorkbenchPart part, long sessionSeed) {
 		super(part, IntervalType.Typing, sessionSeed);
-		checkForChangeTimer = new Timer();
-		task = new TypingCheckerTask(this.getPart());
-		checkForChangeTimer.schedule(new TypingCheckerTask(this.getEditor()),
-				WatchDogGlobals.TYPING_TIMEOUT, WatchDogGlobals.TYPING_TIMEOUT);
+		timer = new Timer();
+		stillActiveCheckerTask = new TypingCheckerTask(this.getPart(), this);
+		timer.schedule(stillActiveCheckerTask, WatchDogGlobals.TYPING_TIMEOUT,
+				WatchDogGlobals.TYPING_TIMEOUT);
 	}
 
 	@Override

@@ -13,15 +13,23 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+/** Manages and attaches a list of change listeners for document modifications. */
 public class DocumentChangeListenerAttacher {
 	private static List<IWorkbenchPart> editorsWithChangeListeners = new LinkedList<IWorkbenchPart>();
 
-	public static void listenToDocumentChanges(final IWorkbenchPart part)
+	/**
+	 * Adds a document change listener to the supplied editor. Fires a
+	 * {@link StartEditingEditorEvent} when a change to a document is made.
+	 * 
+	 * @param partEditor
+	 * @throws IllegalArgumentException
+	 */
+	public static void listenToDocumentChanges(final IWorkbenchPart partEditor)
 			throws IllegalArgumentException {
-		if (!editorsWithChangeListeners.contains(part)) {
-			if (part instanceof ITextEditor) {
-				editorsWithChangeListeners.add(part);
-				ITextEditor editor = (ITextEditor) part;
+		if (!editorsWithChangeListeners.contains(partEditor)) {
+			if (partEditor instanceof ITextEditor) {
+				editorsWithChangeListeners.add(partEditor);
+				ITextEditor editor = (ITextEditor) partEditor;
 
 				IDocumentProvider documentProvider = editor
 						.getDocumentProvider();
@@ -35,11 +43,11 @@ public class DocumentChangeListenerAttacher {
 								.getInstance()
 								.getEditorObserveable()
 								.notifyObservers(
-										new StartEditingEditorEvent(part));
+										new StartEditingEditorEvent(partEditor));
 						// just listen 1 time for this event to prevent overflow
 						// of events
 						document.removeDocumentListener(this);
-						editorsWithChangeListeners.remove(part);
+						editorsWithChangeListeners.remove(partEditor);
 					}
 
 					@Override

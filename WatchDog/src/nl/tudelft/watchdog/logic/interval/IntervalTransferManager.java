@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.ui.UIUtils;
