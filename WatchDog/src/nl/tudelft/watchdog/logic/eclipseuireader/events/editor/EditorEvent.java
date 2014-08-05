@@ -6,7 +6,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /** An Editor event. */
-public class EditorEvent extends EventObject {
+public abstract class EditorEvent extends EventObject {
 
 	/** Serial ID. */
 	private static final long serialVersionUID = 1L;
@@ -25,4 +25,5 @@ public class EditorEvent extends EventObject {
 	public ITextEditor getTextEditor() {
 		return (ITextEditor) source;
 	}
+
 }

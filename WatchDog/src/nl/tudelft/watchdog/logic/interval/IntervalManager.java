@@ -15,6 +15,7 @@ import nl.tudelft.watchdog.logic.eclipseuireader.events.listeners.UIListener;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.SessionInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActivityIntervalBase;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 
 /**
  * Manages interval listeners and keeps track of all intervals. Implements the
@@ -85,9 +86,10 @@ public class IntervalManager {
 	/** Creates a new editing interval. */
 	/* package */void addAndSetNewActiveInterval(
 			UserActivityIntervalBase interval, int timeout) {
-		// TODO (MMB) shouldn't this handler be added to the interval itself?
 		intervals.add(interval);
 		interval.setDocument(documentFactory.createDocument(interval.getPart()));
+		WatchDogLogger.getInstance()
+				.logInfo("created new interval " + interval);
 	}
 
 	/**
