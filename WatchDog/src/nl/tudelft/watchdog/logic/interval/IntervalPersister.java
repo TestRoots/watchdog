@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.NavigableMap;
 import java.util.NoSuchElementException;
 
-import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 
 import org.mapdb.DB;
 import org.mapdb.DBMaker;

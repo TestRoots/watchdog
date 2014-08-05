@@ -6,17 +6,15 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Observer;
 import java.util.Random;
 
 import nl.tudelft.watchdog.Activator;
 import nl.tudelft.watchdog.logic.document.DocumentFactory;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObservable;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.interval.ClosingIntervalEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.listeners.UIListener;
-import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
-import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
-import nl.tudelft.watchdog.logic.interval.active.UserActivityIntervalBase;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.SessionInterval;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActivityIntervalBase;
 
 /**
  * Manages interval listeners and keeps track of all intervals. Implements the
@@ -31,9 +29,6 @@ public class IntervalManager {
 
 	/** Notifies subscribers of editorEvents. */
 	private ImmediateNotifyingObservable editorEventObservable;
-
-	/** Notifies subscribers of intervalEvents. */
-	private ImmediateNotifyingObservable intervalEventObservable;
 
 	/** The UI listener */
 	private UIListener uiListener;
@@ -55,10 +50,6 @@ public class IntervalManager {
 
 	/** Private constructor. */
 	private IntervalManager() {
-		// setup logging
-		this.intervalEventObservable = new ImmediateNotifyingObservable();
-		addIntervalListener(new IntervalLoggerObserver());
-
 		this.sessionSeed = new Random(new Date().getTime()).nextLong();
 
 		File file = new File(
@@ -92,7 +83,7 @@ public class IntervalManager {
 	}
 
 	/** Creates a new editing interval. */
-	/* package */void createNewActiveInterval(
+	/* package */void addAndSetNewActiveInterval(
 			UserActivityIntervalBase interval, int timeout) {
 		// TODO (MMB) shouldn't this handler be added to the interval itself?
 		intervals.add(interval);
@@ -107,8 +98,6 @@ public class IntervalManager {
 		if (interval == null) {
 			return;
 		}
-		intervalEventObservable.notifyObservers(new ClosingIntervalEvent(
-				interval));
 		interval.closeInterval();
 		intervals.remove(interval);
 		intervalPersister.saveInterval(interval);
@@ -150,16 +139,6 @@ public class IntervalManager {
 	 */
 	public ImmediateNotifyingObservable getEditorObserveable() {
 		return editorEventObservable;
-	}
-
-	/** Registers a new interval listener. */
-	public void addIntervalListener(Observer listener) {
-		intervalEventObservable.addObserver(listener);
-	}
-
-	/** Removes an existing interval listener. */
-	public void removeIntervalListener(Observer listener) {
-		intervalEventObservable.deleteObserver(listener);
 	}
 
 	/** Starts and registers a new session interval. */

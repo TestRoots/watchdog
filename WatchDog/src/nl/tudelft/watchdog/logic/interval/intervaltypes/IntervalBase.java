@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.interval.active;
+package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -70,21 +70,21 @@ public abstract class IntervalBase implements Serializable {
 	}
 
 	/** The timer controlling the timeout used for this interval. */
-	protected transient Timer checkForChangeTimer;
+	protected transient Timer timer;
 
 	/**
 	 * @return The timer.
 	 */
 	public Timer getTimer() {
-		return checkForChangeTimer;
+		return timer;
 	}
 
 	/** Closes this interval. */
 	public void closeInterval() {
 		if (!isClosed()) {
 			isClosed = true;
-			if (checkForChangeTimer != null) {
-				checkForChangeTimer.cancel();
+			if (timer != null) {
+				timer.cancel();
 			}
 			setEndTime(new Date());
 			setIsInDebugMode(WatchDogUtils.isInDebugMode());

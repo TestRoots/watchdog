@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.interval.active;
+package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
 import java.util.Timer;
 
@@ -9,18 +9,16 @@ import org.eclipse.ui.IWorkbenchPart;
 
 /** A reading interval, i.e. an interval in which the user read some code. */
 public class ReadingInterval extends UserActivityIntervalBase {
-	// TODO Add inactive checker
-
 	/** Serial id. */
 	private static final long serialVersionUID = 1L;
 
 	/** Constructor. */
 	public ReadingInterval(IWorkbenchPart part, long sessionSeed) {
 		super(part, IntervalType.Reading, sessionSeed);
-		checkForChangeTimer = new Timer();
-		task = new ReadingCheckerTask(this.getEditor());
-		checkForChangeTimer.schedule(new ReadingCheckerTask(this.getEditor()),
-				0, WatchDogGlobals.READING_TIMEOUT);
+		timer = new Timer();
+		stillActiveCheckerTask = new ReadingCheckerTask(this.getEditor(), this);
+		timer.schedule(stillActiveCheckerTask, 0,
+				WatchDogGlobals.READING_TIMEOUT);
 	}
 
 }

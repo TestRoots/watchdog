@@ -9,8 +9,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
-import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.SessionInterval;
 
 import org.junit.After;
 import org.junit.Before;

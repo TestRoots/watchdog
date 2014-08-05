@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import nl.tudelft.watchdog.logic.exceptions.ServerCommunicationException;
-import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.wizards.Project;

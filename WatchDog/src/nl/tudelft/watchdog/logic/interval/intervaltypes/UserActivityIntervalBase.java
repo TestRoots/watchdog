@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.interval.active;
+package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
 import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.interval.activityCheckers.CheckerTimerTask;
@@ -12,14 +12,14 @@ import com.google.gson.annotations.SerializedName;
 public abstract class UserActivityIntervalBase extends IntervalBase {
 
 	/** Serialized version. */
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
 
 	/** The document associated with this {@link RecordedInterval}. */
 	@SerializedName("doc")
 	private Document document;
 
 	/** The typing task. */
-	protected transient CheckerTimerTask task;
+	protected transient CheckerTimerTask stillActiveCheckerTask;
 
 	/** The {@link ITextEditor} associated with this interval. */
 	protected transient ITextEditor editor;
@@ -56,4 +56,8 @@ public abstract class UserActivityIntervalBase extends IntervalBase {
 	public void setDocument(Document document) {
 		this.document = document;
 	}
+
+	/** Whether this activity is currently still going on. */
+	protected boolean isActive;
+
 }
