@@ -20,7 +20,11 @@ public class WatchDogEvent extends EventObject {
 	/** The different type of events. */
 	@SuppressWarnings("javadoc")
 	public enum EventType {
-		ACTIVE_FOCUS, END_FOCUS, EDIT, ACTIVE_WINDOW, END_WINDOW, CARET_MOVED, PAINT, START_ECLIPSE, END_ECLIPSE,
+		ACTIVE_FOCUS, END_FOCUS, EDIT, CARET_MOVED, PAINT,
+
+		ACTIVE_WINDOW, END_WINDOW, START_ECLIPSE, END_ECLIPSE,
+
+		START_DEBUG_PERSPECTIVE, START_JAVA_PERSPECTIVE, START_UNKNOWN_PERSPECTIVE,
 	}
 
 	/** @return the {@link EventType} of this event. */
