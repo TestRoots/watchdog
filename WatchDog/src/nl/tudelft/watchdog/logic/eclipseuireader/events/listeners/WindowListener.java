@@ -1,6 +1,8 @@
 package nl.tudelft.watchdog.logic.eclipseuireader.events.listeners;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.events.UserActionManager;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.EventManager;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.WatchDogEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.WatchDogEvent.EventType;
 
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchPage;
@@ -10,12 +12,12 @@ import org.eclipse.ui.IWorkbenchWindow;
 public class WindowListener implements IWindowListener {
 
 	/** The eventObservable. */
-	private UserActionManager userActionManager;
+	private EventManager eventManager;
 	private PageListener pageListener;
 
 	/** Constructor. */
-	public WindowListener(UserActionManager userActionManager) {
-		this.userActionManager = userActionManager;
+	public WindowListener(EventManager userActionManager) {
+		this.eventManager = userActionManager;
 	}
 
 	@Override
@@ -26,23 +28,25 @@ public class WindowListener implements IWindowListener {
 
 	@Override
 	public void windowDeactivated(IWorkbenchWindow window) {
-		// TODO (MMB) Generate new Eclipse Active interval
+		eventManager.update(new WatchDogEvent(window, EventType.END_WINDOW));
+
 	}
 
 	@Override
 	public void windowClosed(IWorkbenchWindow window) {
-		window.removePageListener(pageListener);
+		// TODO (MMB) find a place where it's safe to remove the listeners?
+		// window.removePageListener(pageListener);
 	}
 
 	@Override
 	public void windowActivated(IWorkbenchWindow window) {
-		// TODO (MMB) Generate new Eclipse Active interval
+		eventManager.update(new WatchDogEvent(window, EventType.ACTIVE_WINDOW));
 	}
 
 	/** Adds page listeners for all open pages of the supplied windows. */
 	private void addPageListener(IWorkbenchWindow window) {
 		// for new pages added in this window
-		pageListener = new PageListener(userActionManager);
+		pageListener = new PageListener(eventManager);
 		window.addPageListener(pageListener);
 
 		// for existing pages in this window

@@ -1,33 +1,32 @@
 package nl.tudelft.watchdog.logic.eclipseuireader.events.listeners;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.events.UserActionListenerManager;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.UserActionManager;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusEndEditorEvent;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.EditorEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.EventManager;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.WatchDogEvent.EventType;
 
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-/** A listener on parts. */
+/**
+ * A listener on parts. Eclipse parts can be views or editors. We are only
+ * interested in parts that are ITextEditors.
+ */
 public class PartListener implements IPartListener {
 
 	/** Constructor. */
-	public PartListener(UserActionManager userActionManager) {
-		this.userActionManager = userActionManager;
+	public PartListener(EventManager userActionManager) {
+		this.eventManager = userActionManager;
 	}
 
 	/** The eventObservable. */
-	private UserActionManager userActionManager;
-	private UserActionListenerManager userActionListener;
+	private EventManager eventManager;
 
 	@Override
 	public void partOpened(IWorkbenchPart part) {
 		if (part instanceof ITextEditor) {
 			ITextEditor editor = (ITextEditor) part;
-			userActionListener = new UserActionListenerManager(
-					userActionManager, editor);
-			// userActionManager.update(new FocusStartEditorEvent(part));
+			new EditorListener(eventManager, editor);
 		}
 	}
 
@@ -35,13 +34,12 @@ public class PartListener implements IPartListener {
 	public void partDeactivated(IWorkbenchPart part) {
 		// TODO (MMB) extract instanceof check outside of PartListener?
 		if (part instanceof ITextEditor) {
-			userActionManager.update(new FocusEndEditorEvent(part));
+			eventManager.update(new EditorEvent(part, EventType.END_FOCUS));
 		}
 	}
 
 	@Override
 	public void partClosed(IWorkbenchPart part) {
-		userActionListener.removeListeners();
 	}
 
 	@Override
@@ -51,7 +49,7 @@ public class PartListener implements IPartListener {
 	@Override
 	public void partActivated(IWorkbenchPart part) {
 		if (part instanceof ITextEditor) {
-			userActionManager.update(new FocusStartEditorEvent(part));
+			eventManager.update(new EditorEvent(part, EventType.ACTIVE_FOCUS));
 		}
 	}
 
