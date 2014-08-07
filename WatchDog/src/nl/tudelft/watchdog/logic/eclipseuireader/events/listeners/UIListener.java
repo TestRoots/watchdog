@@ -1,18 +1,13 @@
 package nl.tudelft.watchdog.logic.eclipseuireader.events.listeners;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.DocumentChangeListenerAttacher;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObservable;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.UserActionManager;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.IntervalTransferManager;
 
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
  * Sets up the listeners for eclipse UI events and registers the shutdown
@@ -23,17 +18,19 @@ public class UIListener {
 	private IntervalTransferManager intervalTransferManager;
 
 	/** The editorObservable. */
-	private ImmediateNotifyingObservable editorObservable;
+	private UserActionManager userActionManager;
 
-	/** The window listener bound to this UI listener. */
+	/**
+	 * The window listener. An Eclipse window is the whole Eclipse application
+	 * window.
+	 */
 	private WindowListener windowListener;
 
 	/** Constructor. */
-	public UIListener(ImmediateNotifyingObservable editorObservable,
+	public UIListener(UserActionManager userActionManager,
 			IntervalTransferManager intervalTransferManager) {
-		this.editorObservable = editorObservable;
+		this.userActionManager = userActionManager;
 		this.intervalTransferManager = intervalTransferManager;
-		windowListener = new WindowListener(editorObservable);
 	}
 
 	/**
@@ -42,6 +39,7 @@ public class UIListener {
 	 */
 	public void attachListeners() {
 		addShutdownListeners();
+		windowListener = new WindowListener(userActionManager);
 		PlatformUI.getWorkbench().addWindowListener(windowListener);
 		addListenersToAlreadyOpenWindows();
 	}
@@ -68,24 +66,17 @@ public class UIListener {
 
 	/**
 	 * If windows are already open when the listener registration from WatchDog
-	 * starts (e.g. due to saved Eclispe workspace state), add these listeners
+	 * starts (e.g. due to saved Eclipse workspace state), add these listeners
 	 * to already opened windows.
+	 * 
+	 * This is usually the single Eclipse application window.
 	 */
 	private void addListenersToAlreadyOpenWindows() {
+
 		for (IWorkbenchWindow window : PlatformUI.getWorkbench()
 				.getWorkbenchWindows()) {
-			windowListener.addPageListener(window);
-			IWorkbenchPage activePage = window.getActivePage();
-
-			if (activePage != null) {
-				IWorkbenchPart activePart = activePage.getActivePart();
-				if (activePart instanceof ITextEditor) {
-					editorObservable.notifyObservers(new FocusStartEditorEvent(
-							activePart));
-					DocumentChangeListenerAttacher
-							.listenToDocumentChanges(activePart);
-				}
-			}
+			windowListener.windowOpened(window);
 		}
 	}
+
 }

@@ -1,7 +1,6 @@
 package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
 import nl.tudelft.watchdog.logic.document.Document;
-import nl.tudelft.watchdog.logic.interval.activityCheckers.CheckerTimerTask;
 
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -17,9 +16,6 @@ public abstract class UserActivityIntervalBase extends IntervalBase {
 	/** The document associated with this {@link RecordedInterval}. */
 	@SerializedName("doc")
 	private Document document;
-
-	/** The typing task. */
-	protected transient CheckerTimerTask stillActiveCheckerTask;
 
 	/** The {@link ITextEditor} associated with this interval. */
 	protected transient ITextEditor editor;

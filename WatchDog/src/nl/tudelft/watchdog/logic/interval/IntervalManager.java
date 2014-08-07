@@ -10,7 +10,7 @@ import java.util.Random;
 
 import nl.tudelft.watchdog.Activator;
 import nl.tudelft.watchdog.logic.document.DocumentFactory;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObservable;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.UserActionManager;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.listeners.UIListener;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.SessionInterval;
@@ -28,16 +28,13 @@ public class IntervalManager {
 	/** A list of currently opened intervals. */
 	private List<IntervalBase> intervals = new ArrayList<IntervalBase>();
 
-	/** Notifies subscribers of editorEvents. */
-	private ImmediateNotifyingObservable editorEventObservable;
-
 	/** The UI listener */
 	private UIListener uiListener;
 
 	/** The document factory. */
 	private DocumentFactory documentFactory;
 
-	/** The interval persistence storage on the local hd. */
+	/** The interval persistence storage. */
 	private IntervalPersister intervalPersister;
 
 	/** The singleton instance of the interval manager. */
@@ -49,6 +46,8 @@ public class IntervalManager {
 	 */
 	private long sessionSeed;
 
+	private UserActionManager userActionManager;
+
 	/** Private constructor. */
 	private IntervalManager() {
 		this.sessionSeed = new Random(new Date().getTime()).nextLong();
@@ -59,16 +58,10 @@ public class IntervalManager {
 		this.intervalPersister = new IntervalPersister(file);
 
 		this.documentFactory = new DocumentFactory();
-		this.editorEventObservable = new ImmediateNotifyingObservable();
-		this.uiListener = new UIListener(editorEventObservable,
+		userActionManager = new UserActionManager(this);
+		this.uiListener = new UIListener(userActionManager,
 				new IntervalTransferManager(intervalPersister));
 		addNewSessionInterval();
-		addEditorObserversAndUIListeners();
-	}
-
-	/** Creates change listeners for different document events. */
-	private void addEditorObserversAndUIListeners() {
-		editorEventObservable.addObserver(new EditorEventObserver(this));
 		uiListener.attachListeners();
 	}
 
@@ -84,8 +77,8 @@ public class IntervalManager {
 	}
 
 	/** Creates a new editing interval. */
-	/* package */void addAndSetNewActiveInterval(
-			UserActivityIntervalBase interval, int timeout) {
+	public void addAndSetNewActiveInterval(UserActivityIntervalBase interval,
+			int timeout) {
 		intervals.add(interval);
 		interval.setDocument(documentFactory.createDocument(interval.getPart()));
 		WatchDogLogger.getInstance()
@@ -96,7 +89,7 @@ public class IntervalManager {
 	 * Closes the current interval (if it is not already closed). Handles
 	 * <code>null</code> gracefully.
 	 */
-	/* package */void closeInterval(IntervalBase interval) {
+	public/* package */void closeInterval(IntervalBase interval) {
 		if (interval == null) {
 			return;
 		}
@@ -122,7 +115,7 @@ public class IntervalManager {
 	 *         UserActivityInterval. There can only be one such interval at any
 	 *         given time. If there is none, <code>null</code>.
 	 */
-	/* package */UserActivityIntervalBase getUserActivityIntervalIfAny() {
+	public UserActivityIntervalBase getUserActivityIntervalIfAny() {
 		for (IntervalBase interval : intervals) {
 			if (interval instanceof UserActivityIntervalBase) {
 				return (UserActivityIntervalBase) interval;
@@ -134,13 +127,6 @@ public class IntervalManager {
 	/** Returns an immutable list of recorded intervals. */
 	public List<IntervalBase> getOpenIntervals() {
 		return Collections.unmodifiableList(intervals);
-	}
-
-	/**
-	 * @return editorEventObservable
-	 */
-	public ImmediateNotifyingObservable getEditorObserveable() {
-		return editorEventObservable;
 	}
 
 	/** Starts and registers a new session interval. */
@@ -156,5 +142,12 @@ public class IntervalManager {
 	 */
 	public long getSessionSeed() {
 		return sessionSeed;
+	}
+
+	/**
+	 * @return {@link UserActionManager}
+	 */
+	public UserActionManager getUserActionManager() {
+		return userActionManager;
 	}
 }

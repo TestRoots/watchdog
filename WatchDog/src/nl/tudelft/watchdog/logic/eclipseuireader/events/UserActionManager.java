@@ -1,13 +1,11 @@
-package nl.tudelft.watchdog.logic.interval;
-
-import java.util.Observable;
-import java.util.Observer;
+package nl.tudelft.watchdog.logic.eclipseuireader.events;
 
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.EditorEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusEndEditorEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.StartEditingEditorEvent;
 import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.StopEditingEditorEvent;
+import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActivityIntervalBase;
@@ -17,23 +15,22 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
  * Observer for {@link EditorEvent}s. Links such events to actions in the
  * IntervalManager.
  */
-/* package */class EditorEventObserver implements Observer {
+public class UserActionManager {
 	/** The {@link IntervalManager} this observer is working with. */
 	private IntervalManager intervalManager;
 
 	/** Constructor. */
-	EditorEventObserver(IntervalManager intervalManager) {
+	public UserActionManager(IntervalManager intervalManager) {
 		this.intervalManager = intervalManager;
 	}
 
-	@Override
-	public void update(Observable observable, Object event) {
-		// double events may fire!
-		if (!(event instanceof EditorEvent)) {
-			return;
-		}
+	/**
+	 * Introduces the supplied editorEvent
+	 */
+	public void update(EditorEvent editorEvent) {
+		System.out.println("Event " + editorEvent);
+		// TODO (MMB) double events may fire!
 		boolean previousIntervalHasSameEditor = false;
-		EditorEvent editorEvent = (EditorEvent) event;
 
 		UserActivityIntervalBase userActivityInterval = intervalManager
 				.getUserActivityIntervalIfAny();
@@ -45,7 +42,7 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
 			}
 		}
 
-		if (event instanceof StartEditingEditorEvent) {
+		if (editorEvent instanceof StartEditingEditorEvent) {
 			if (previousIntervalHasSameEditor
 					&& userActivityInterval instanceof TypingInterval) {
 				// in case we already have a typing interval do nothing
