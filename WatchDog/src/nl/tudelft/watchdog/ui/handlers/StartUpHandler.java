@@ -87,7 +87,7 @@ public class StartUpHandler implements IStartup {
 								.openWarning(
 										null,
 										"WatchDog Warning",
-										"WatchDog only works when you register a (possibly anonymous) user.\n\nTakes less than one minute, requires no internet, and you can win prices. As a registered user, you decide on which workspaces WatchDog is active.");
+										"WatchDog only works when you register a (possibly anonymous) user.\n\nTakes less than one minute,  and you can win prices. As a registered user, you decide where WatchDog is active.");
 					}
 				} catch (ExecutionException exception) {
 					WatchDogLogger.getInstance().logInfo(

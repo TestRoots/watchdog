@@ -53,7 +53,4 @@ public abstract class UserActivityIntervalBase extends IntervalBase {
 		this.document = document;
 	}
 
-	/** Whether this activity is currently still going on. */
-	protected boolean isActive;
-
 }
