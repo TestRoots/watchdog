@@ -1,19 +1,20 @@
 package nl.tudelft.watchdog.logic.eclipseuireader.events.listeners;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObservable;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.UserActionManager;
 
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 
 /** A listener on Pages. */
 public class PageListener implements IPageListener {
 
 	/** The editorObservable. */
-	private ImmediateNotifyingObservable editorObservable;
+	private UserActionManager userActionManager;
 
 	/** Constructor. */
-	public PageListener(ImmediateNotifyingObservable editorObservable) {
-		this.editorObservable = editorObservable;
+	public PageListener(UserActionManager editorObservable) {
+		this.userActionManager = editorObservable;
 	}
 
 	@Override
@@ -31,6 +32,13 @@ public class PageListener implements IPageListener {
 
 	/** Adds a part listener for newly added parts */
 	public void addPartListener(IWorkbenchPage page) {
-		page.addPartListener(new PartListener(editorObservable));
+		final PartListener partListener = new PartListener(userActionManager);
+		page.addPartListener(partListener);
+
+		// trigger already opened part
+		IWorkbenchPart activePart = page.getActiveEditor();
+		if (activePart != null) {
+			partListener.partOpened(activePart);
+		}
 	}
 }
