@@ -1,6 +1,8 @@
 package nl.tudelft.watchdog.logic.eclipseuireader.events.listeners;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.events.UserActionManager;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.EventManager;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.WatchDogEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.IntervalTransferManager;
 
@@ -13,12 +15,12 @@ import org.eclipse.ui.PlatformUI;
  * Sets up the listeners for eclipse UI events and registers the shutdown
  * listeners.
  */
-public class UIListener {
+public class WorkbenchListener {
 	/** The serialization manager. */
 	private IntervalTransferManager intervalTransferManager;
 
 	/** The editorObservable. */
-	private UserActionManager userActionManager;
+	private EventManager eventManager;
 
 	/**
 	 * The window listener. An Eclipse window is the whole Eclipse application
@@ -26,11 +28,14 @@ public class UIListener {
 	 */
 	private WindowListener windowListener;
 
+	private IWorkbench workbench;
+
 	/** Constructor. */
-	public UIListener(UserActionManager userActionManager,
+	public WorkbenchListener(EventManager userActionManager,
 			IntervalTransferManager intervalTransferManager) {
-		this.userActionManager = userActionManager;
+		this.eventManager = userActionManager;
 		this.intervalTransferManager = intervalTransferManager;
+		workbench = PlatformUI.getWorkbench();
 	}
 
 	/**
@@ -38,30 +43,32 @@ public class UIListener {
 	 * registers shutdown listeners.
 	 */
 	public void attachListeners() {
+		eventManager.update(new WatchDogEvent(workbench,
+				EventType.START_ECLIPSE));
 		addShutdownListeners();
-		windowListener = new WindowListener(userActionManager);
-		PlatformUI.getWorkbench().addWindowListener(windowListener);
+		windowListener = new WindowListener(eventManager);
+		workbench.addWindowListener(windowListener);
 		addListenersToAlreadyOpenWindows();
 	}
 
 	/** The shutdown listeners, executed when Eclipse is shutdown. */
 	private void addShutdownListeners() {
-		PlatformUI.getWorkbench().addWorkbenchListener(
-				new IWorkbenchListener() {
+		workbench.addWorkbenchListener(new IWorkbenchListener() {
 
-					@Override
-					public boolean preShutdown(final IWorkbench workbench,
-							final boolean forced) {
-						IntervalManager.getInstance()
-								.closeAllCurrentIntervals();
-						intervalTransferManager.sendIntervalsImmediately();
-						return true;
-					}
+			@Override
+			public boolean preShutdown(final IWorkbench workbench,
+					final boolean forced) {
+				eventManager.update(new WatchDogEvent(workbench,
+						EventType.END_ECLIPSE));
+				IntervalManager.getInstance().closeAllCurrentIntervals();
+				intervalTransferManager.sendIntervalsImmediately();
+				return true;
+			}
 
-					@Override
-					public void postShutdown(final IWorkbench workbench) {
-					}
-				});
+			@Override
+			public void postShutdown(final IWorkbench workbench) {
+			}
+		});
 	}
 
 	/**
@@ -72,11 +79,11 @@ public class UIListener {
 	 * This is usually the single Eclipse application window.
 	 */
 	private void addListenersToAlreadyOpenWindows() {
-
-		for (IWorkbenchWindow window : PlatformUI.getWorkbench()
-				.getWorkbenchWindows()) {
+		for (IWorkbenchWindow window : workbench.getWorkbenchWindows()) {
 			windowListener.windowOpened(window);
 		}
+		IWorkbenchWindow activeWindow = workbench.getActiveWorkbenchWindow();
+		windowListener.windowActivated(activeWindow);
 	}
 
 }

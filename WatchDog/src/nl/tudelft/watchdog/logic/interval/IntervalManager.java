@@ -10,10 +10,9 @@ import java.util.Random;
 
 import nl.tudelft.watchdog.Activator;
 import nl.tudelft.watchdog.logic.document.DocumentFactory;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.UserActionManager;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.listeners.UIListener;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.EventManager;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.listeners.WorkbenchListener;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.SessionInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActivityIntervalBase;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 
@@ -29,7 +28,7 @@ public class IntervalManager {
 	private List<IntervalBase> intervals = new ArrayList<IntervalBase>();
 
 	/** The UI listener */
-	private UIListener uiListener;
+	private WorkbenchListener uiListener;
 
 	/** The document factory. */
 	private DocumentFactory documentFactory;
@@ -46,7 +45,7 @@ public class IntervalManager {
 	 */
 	private long sessionSeed;
 
-	private UserActionManager userActionManager;
+	private EventManager userActionManager;
 
 	/** Private constructor. */
 	private IntervalManager() {
@@ -58,10 +57,9 @@ public class IntervalManager {
 		this.intervalPersister = new IntervalPersister(file);
 
 		this.documentFactory = new DocumentFactory();
-		userActionManager = new UserActionManager(this);
-		this.uiListener = new UIListener(userActionManager,
+		userActionManager = new EventManager(this);
+		this.uiListener = new WorkbenchListener(userActionManager,
 				new IntervalTransferManager(intervalPersister));
-		addNewSessionInterval();
 		uiListener.attachListeners();
 	}
 
@@ -129,13 +127,6 @@ public class IntervalManager {
 		return Collections.unmodifiableList(intervals);
 	}
 
-	/** Starts and registers a new session interval. */
-	public void addNewSessionInterval() {
-		SessionInterval activeSessionInterval = new SessionInterval(
-				getSessionSeed());
-		intervals.add(activeSessionInterval);
-	}
-
 	/**
 	 * @return The session seed, a random number generated on each start of
 	 *         Eclipse to be able to tell running Eclipse instances apart.
@@ -145,9 +136,23 @@ public class IntervalManager {
 	}
 
 	/**
-	 * @return {@link UserActionManager}
+	 * Adds the supplied interval to the list of intervals.
 	 */
-	public UserActionManager getUserActionManager() {
+	public void addInterval(IntervalBase interval) {
+		if (intervals.size() > 10) {
+			WatchDogLogger
+					.getInstance()
+					.logSevere(
+							"More than 10 open intervals. Something fishy is going on here! Cannot add more intervals.");
+		}
+		intervals.add(interval);
+	}
+
+	/**
+	 * @return {@link EventManager}
+	 */
+	public EventManager getUserActionManager() {
 		return userActionManager;
 	}
+
 }

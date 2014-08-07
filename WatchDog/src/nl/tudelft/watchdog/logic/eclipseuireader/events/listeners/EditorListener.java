@@ -1,8 +1,8 @@
-package nl.tudelft.watchdog.logic.eclipseuireader.events;
+package nl.tudelft.watchdog.logic.eclipseuireader.events.listeners;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusEndEditorEvent;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.FocusStartEditorEvent;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.editor.StartEditingEditorEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.EditorEvent;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.EventManager;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.WatchDogEvent.EventType;
 
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -20,9 +20,9 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /** Enriches an {@link IEditorPart} for all user-triggered events. */
-public class UserActionListenerManager {
-	private IEditorPart editor;
-	private UserActionManager userActionManager;
+public class EditorListener {
+	private ITextEditor editor;
+	private EventManager eventManager;
 	private IDocument document;
 	private IDocumentListener documentListener;
 	private CaretListener caretListener;
@@ -31,9 +31,8 @@ public class UserActionListenerManager {
 	private PaintListener paintListener;
 
 	/** Enriches the supplied editor with all suitable listeners. */
-	public UserActionListenerManager(UserActionManager userActionManager,
-			IEditorPart editor) {
-		this.userActionManager = userActionManager;
+	public EditorListener(EventManager userActionManager, ITextEditor editor) {
+		this.eventManager = userActionManager;
 		this.editor = editor;
 		listenToDocumentChanges();
 		listenToEditorScrolling();
@@ -47,28 +46,20 @@ public class UserActionListenerManager {
 	 * @throws IllegalArgumentException
 	 */
 	private void listenToDocumentChanges() throws IllegalArgumentException {
-		if (editor instanceof ITextEditor) {
-			final ITextEditor editor = (ITextEditor) this.editor;
+		IDocumentProvider documentProvider = editor.getDocumentProvider();
+		document = documentProvider.getDocument(editor.getEditorInput());
+		documentListener = new IDocumentListener() {
 
-			IDocumentProvider documentProvider = editor.getDocumentProvider();
-			document = documentProvider.getDocument(editor.getEditorInput());
-			documentListener = new IDocumentListener() {
+			@Override
+			public void documentChanged(DocumentEvent event) {
+			}
 
-				@Override
-				public void documentChanged(DocumentEvent event) {
-					userActionManager
-							.update(new StartEditingEditorEvent(editor));
-				}
-
-				@Override
-				public void documentAboutToBeChanged(DocumentEvent event) {
-				}
-			};
-			document.addDocumentListener(documentListener);
-		} else {
-			throw new IllegalArgumentException(
-					"Part was not instance of ITextEditor");
-		}
+			@Override
+			public void documentAboutToBeChanged(DocumentEvent event) {
+				eventManager.update(new EditorEvent(editor, EventType.EDIT));
+			}
+		};
+		document.addDocumentListener(documentListener);
 	}
 
 	private void listenToEditorScrolling() {
@@ -84,9 +75,9 @@ public class UserActionListenerManager {
 		caretListener = new CaretListener() {
 			@Override
 			public void caretMoved(CaretEvent event) {
-				// TODO (MMB) event needs updating
+				eventManager.update(new EditorEvent(editor,
+						EventType.CARET_MOVED));
 				// cursor place changed
-				userActionManager.update(new FocusStartEditorEvent(editor));
 			}
 		};
 		styledText.addCaretListener(caretListener);
@@ -95,8 +86,7 @@ public class UserActionListenerManager {
 		paintListener = new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {
-				// TODO (MMB) event needs updating
-				userActionManager.update(new FocusStartEditorEvent(editor));
+				eventManager.update(new EditorEvent(editor, EventType.PAINT));
 			}
 		};
 		styledText.addPaintListener(paintListener);
@@ -105,12 +95,14 @@ public class UserActionListenerManager {
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				userActionManager.update(new FocusEndEditorEvent(editor));
+				eventManager
+						.update(new EditorEvent(editor, EventType.END_FOCUS));
 			}
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				userActionManager.update(new FocusStartEditorEvent(editor));
+				eventManager.update(new EditorEvent(editor,
+						EventType.ACTIVE_FOCUS));
 			}
 		};
 		styledText.addFocusListener(focusListener);

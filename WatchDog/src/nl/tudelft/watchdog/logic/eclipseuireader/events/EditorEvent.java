@@ -1,19 +1,17 @@
-package nl.tudelft.watchdog.logic.eclipseuireader.events.editor;
-
-import java.util.EventObject;
+package nl.tudelft.watchdog.logic.eclipseuireader.events;
 
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /** An Editor event. */
-public abstract class EditorEvent extends EventObject {
+public class EditorEvent extends WatchDogEvent {
 
 	/** Serial ID. */
 	private static final long serialVersionUID = 1L;
 
 	/** Constructor. */
-	public EditorEvent(IWorkbenchPart part) {
-		super(part);
+	public EditorEvent(IWorkbenchPart part, EventType type) {
+		super(part, type);
 	}
 
 	/** @return The workbench part this event occurred on. */

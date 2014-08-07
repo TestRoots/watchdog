@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.logic.eclipseuireader.events.listeners;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.events.UserActionManager;
+import nl.tudelft.watchdog.logic.eclipseuireader.events.EventManager;
 
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IWorkbenchPage;
@@ -10,10 +10,10 @@ import org.eclipse.ui.IWorkbenchPart;
 public class PageListener implements IPageListener {
 
 	/** The editorObservable. */
-	private UserActionManager userActionManager;
+	private EventManager userActionManager;
 
 	/** Constructor. */
-	public PageListener(UserActionManager editorObservable) {
+	public PageListener(EventManager editorObservable) {
 		this.userActionManager = editorObservable;
 	}
 
