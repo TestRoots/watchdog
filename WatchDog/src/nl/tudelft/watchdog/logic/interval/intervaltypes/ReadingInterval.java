@@ -11,7 +11,7 @@ public class ReadingInterval extends UserActivityIntervalBase {
 
 	/** Constructor. */
 	public ReadingInterval(IWorkbenchPart part, long sessionSeed) {
-		super(part, IntervalType.Reading, sessionSeed);
+		super(part, IntervalType.READING, sessionSeed);
 		timer = new Timer();
 	}
 

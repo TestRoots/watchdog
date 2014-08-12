@@ -9,25 +9,29 @@ import com.google.gson.annotations.SerializedName;
 public enum IntervalType {
 	/** Users types in the IDE. */
 	@SerializedName("ty")
-	Typing,
+	TYPING,
 
 	/** User reads, ie. no key strokes detectable. */
 	@SerializedName("re")
-	Reading,
+	READING,
 
 	/** EclipseOpen. */
-	@SerializedName("se")
-	Session;
+	@SerializedName("eo")
+	ECLIPSE_OPEN,
+
+	/** EclipseOpen. */
+	@SerializedName("ea")
+	ECLIPSE_ACTIVE;
 
 	/** Constructs an IntervalType from its JSON mnemonic */
 	public static IntervalType fromMnemonic(String mnem) {
 		switch (mnem) {
 		case "ty":
-			return IntervalType.Typing;
+			return IntervalType.TYPING;
 		case "re":
-			return IntervalType.Reading;
+			return IntervalType.READING;
 		case "se":
-			return IntervalType.Session;
+			return IntervalType.ECLIPSE_ACTIVE;
 		default:
 			return null;
 		}

@@ -103,11 +103,11 @@ public class InfoStatisticsDialog extends Dialog {
 		UIUtils.createLabel(text, container);
 		UIUtils.createLabel(WatchDogUtils
 				.makeDurationHumanReadable(intervalStatistics
-						.getDurationOfAcitivity(IntervalType.Session)),
+						.getDurationOfAcitivity(IntervalType.ECLIPSE_ACTIVE)),
 				container);
 
 		for (IntervalType activity : IntervalType.values()) {
-			if (activity == IntervalType.Session) {
+			if (activity == IntervalType.ECLIPSE_ACTIVE) {
 				return;
 			}
 			Duration duration = intervalStatistics

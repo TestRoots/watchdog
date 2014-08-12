@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Timer;
 
-import nl.tudelft.watchdog.util.WatchDogUtils;
-
 import org.joda.time.Duration;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormat;
@@ -37,10 +35,6 @@ public abstract class IntervalBase implements Serializable {
 	 */
 	@SerializedName("ss")
 	protected long sessionSeed;
-
-	/** Legacy debug flag. */
-	@SerializedName("LEGACY_DEBUGMODE")
-	private boolean isInDebugMode;
 
 	/** The projectId this interval is transfered from */
 	@SerializedName("pid")
@@ -87,7 +81,6 @@ public abstract class IntervalBase implements Serializable {
 				timer.cancel();
 			}
 			setEndTime(new Date());
-			setIsInDebugMode(WatchDogUtils.isInDebugMode());
 		}
 	}
 
@@ -123,18 +116,6 @@ public abstract class IntervalBase implements Serializable {
 		Duration duration = getDuration();
 		Period period = duration.toPeriod();
 		return PeriodFormat.getDefault().print(period);
-	}
-
-	/**
-	 * @return <code>true</code> if in DebugMode, <code>false</code> otherwise.
-	 */
-	public boolean isDebugMode() {
-		return isInDebugMode;
-	}
-
-	/** Sets the debug mode. */
-	public void setIsInDebugMode(boolean isInDebugMode) {
-		this.isInDebugMode = isInDebugMode;
 	}
 
 	/** Sets the start time. */
