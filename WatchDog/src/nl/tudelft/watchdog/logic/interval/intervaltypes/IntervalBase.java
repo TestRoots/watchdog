@@ -8,14 +8,17 @@ import org.joda.time.Duration;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormat;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 /** The interval base. */
-public abstract class IntervalBase implements Serializable {
+public class IntervalBase implements Serializable {
 
 	/** The version id of this class. */
 	private static final long serialVersionUID = 2L;
+
+	/** The Activity type. */
+	@SerializedName("it")
+	protected IntervalType intervalType;
 
 	/** The timestamp start (when this interval was started). */
 	@SerializedName("ts")
@@ -24,10 +27,6 @@ public abstract class IntervalBase implements Serializable {
 	/** The timestamp end (when this interval ended). */
 	@SerializedName("te")
 	private Date end;
-
-	/** The Activity type. */
-	@SerializedName("it")
-	protected IntervalType intervalType;
 
 	/**
 	 * The session seed, a random number generated on each start of Eclipse to
@@ -48,11 +47,10 @@ public abstract class IntervalBase implements Serializable {
 	protected transient boolean isClosed;
 
 	/** Constructor. */
-	public IntervalBase(IntervalType activity, long sessionSeed) {
+	public IntervalBase(IntervalType type) {
 		this.start = new Date();
 		this.isClosed = false;
-		this.intervalType = activity;
-		this.sessionSeed = sessionSeed;
+		this.intervalType = type;
 	}
 
 	/**
@@ -138,15 +136,14 @@ public abstract class IntervalBase implements Serializable {
 		this.projectId = projectId;
 	}
 
+	/** Sets the projectId. */
+	public void setSessionSeed(long sessionSeed) {
+		this.sessionSeed = sessionSeed;
+	}
+
 	/** @return the {@link ActivityType}. */
 	public IntervalType getActivityType() {
 		return intervalType;
-	}
-
-	/** Convert this to a JSON string */
-	public String toJSON() {
-		Gson gson = new Gson();
-		return gson.toJson(this);
 	}
 
 }
