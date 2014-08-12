@@ -1,10 +1,10 @@
-package nl.tudelft.watchdog.logic.eclipseuireader.events.listeners;
+package nl.tudelft.watchdog.logic.ui.listeners;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.events.EventManager;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.WatchDogEvent;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.IntervalTransferManager;
+import nl.tudelft.watchdog.logic.ui.EventManager;
+import nl.tudelft.watchdog.logic.ui.WatchDogEvent;
+import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
 
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
@@ -45,10 +45,11 @@ public class WorkbenchListener {
 	public void attachListeners() {
 		eventManager.update(new WatchDogEvent(workbench,
 				EventType.START_ECLIPSE));
-		addShutdownListeners();
 		windowListener = new WindowListener(eventManager);
 		workbench.addWindowListener(windowListener);
 		addListenersToAlreadyOpenWindows();
+		new JUnitListener(eventManager);
+		addShutdownListeners();
 	}
 
 	/** The shutdown listeners, executed when Eclipse is shutdown. */

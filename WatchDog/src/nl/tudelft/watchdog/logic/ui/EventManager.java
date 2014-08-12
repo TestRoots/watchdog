@@ -1,11 +1,8 @@
-package nl.tudelft.watchdog.logic.eclipseuireader.events;
+package nl.tudelft.watchdog.logic.ui;
 
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.SessionInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActivityIntervalBase;
-import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 /**
  * Manager for {@link EditorEvent}s. Links such events to actions in the
@@ -13,6 +10,7 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
  * the incoming events. Is a state machine.
  */
 public class EventManager {
+
 	/** The {@link IntervalManager} this observer is working with. */
 	private IntervalManager intervalManager;
 
@@ -26,6 +24,11 @@ public class EventManager {
 		switch (event.getType()) {
 		case START_ECLIPSE:
 			addNewSessionInterval();
+			break;
+		case ACTIVE_WINDOW:
+
+			break;
+		case END_WINDOW:
 			break;
 		case END_ECLIPSE:
 			intervalManager.closeAllCurrentIntervals();
@@ -56,19 +59,5 @@ public class EventManager {
 		SessionInterval activeSessionInterval = new SessionInterval(
 				intervalManager.getSessionSeed());
 		intervalManager.addInterval(activeSessionInterval);
-	}
-
-	/** Creates a new active typing interval from the supplied event. */
-	private void createNewActiveTypingInterval(EditorEvent event) {
-		intervalManager.addAndSetNewActiveInterval(
-				new TypingInterval(event.getPart(), intervalManager
-						.getSessionSeed()), WatchDogGlobals.TYPING_TIMEOUT);
-	}
-
-	/** Creates a new active reading interval from the supplied event. */
-	private void createNewActiveReadingInterval(EditorEvent event) {
-		intervalManager.addAndSetNewActiveInterval(
-				new ReadingInterval(event.getPart(), intervalManager
-						.getSessionSeed()), WatchDogGlobals.READING_TIMEOUT);
 	}
 }

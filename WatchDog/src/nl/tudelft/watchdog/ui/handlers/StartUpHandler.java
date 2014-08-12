@@ -23,7 +23,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
  */
 public class StartUpHandler implements IStartup {
 
-	/** The ui thread for WatchDog registration. */
+	/** The UI thread for WatchDog registration. */
 	private Runnable watchDogUiThread = new StartupUIThread();
 
 	/** The preferences. */
