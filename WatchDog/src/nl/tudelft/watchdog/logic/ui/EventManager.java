@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.logic.ui;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.JUnitInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
 
@@ -56,6 +57,10 @@ public class EventManager {
 			break;
 		case START_UNKNOWN_PERSPECTIVE:
 			createNewPerspectiveInterval(Perspective.OTHER);
+			break;
+		case JUNIT:
+			JUnitInterval junitInterval = (JUnitInterval) event.getSource();
+			intervalManager.addInterval(junitInterval);
 			break;
 		default:
 			break;

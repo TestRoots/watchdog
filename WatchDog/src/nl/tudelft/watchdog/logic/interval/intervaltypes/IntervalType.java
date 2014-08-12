@@ -25,6 +25,10 @@ public enum IntervalType {
 
 	/** A Perspective interval. */
 	@SerializedName("pe")
-	PERSPECTIVE;
+	PERSPECTIVE,
+
+	/** A Junit execution interval. */
+	@SerializedName("ju")
+	JUNIT;
 
 }
