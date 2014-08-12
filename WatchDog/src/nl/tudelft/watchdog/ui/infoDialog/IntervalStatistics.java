@@ -38,7 +38,7 @@ public class IntervalStatistics {
 		for (IntervalType activity : IntervalType.values()) {
 			Duration activityTime = calculateTime(activity);
 			activityTypeToDuration.put(activity, activityTime);
-			if (activity != IntervalType.Session) {
+			if (activity != IntervalType.ECLIPSE_ACTIVE) {
 				totalTimeOverAllActivities = totalTimeOverAllActivities
 						.plus(activityTime);
 			}

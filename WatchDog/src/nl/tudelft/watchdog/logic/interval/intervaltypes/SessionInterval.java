@@ -1,6 +1,5 @@
 package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
-
 /** Interval for the active session. */
 public class SessionInterval extends IntervalBase {
 
@@ -9,12 +8,12 @@ public class SessionInterval extends IntervalBase {
 
 	/** Constructor. */
 	public SessionInterval(long sessionSeed) {
-		super(IntervalType.Session, sessionSeed);
+		super(IntervalType.ECLIPSE_OPEN, sessionSeed);
 	}
 
 	@Override
 	public IntervalType getActivityType() {
-		return IntervalType.Session;
+		return IntervalType.ECLIPSE_OPEN;
 	}
 
 }

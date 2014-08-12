@@ -30,7 +30,7 @@ public class IntervalToJsonConverterTest {
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"it\":\"re\",\"ss\":0,\"LEGACY_DEBUGMODE\":false,\"uid\":\"123\"}]",
+				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"it\":\"re\",\"ss\":0,\"uid\":\"123\"}]",
 				intervalTransferer.toJson(intervals));
 	}
 
@@ -43,7 +43,7 @@ public class IntervalToJsonConverterTest {
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"it\":\"ty\",\"ss\":0,\"LEGACY_DEBUGMODE\":false,\"uid\":\"123\"}]",
+				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"ts\":1,\"te\":2,\"it\":\"ty\",\"ss\":0,\"uid\":\"123\"}]",
 				intervalTransferer.toJson(intervals));
 	}
 
@@ -56,7 +56,7 @@ public class IntervalToJsonConverterTest {
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"ts\":1,\"te\":2,\"it\":\"se\",\"ss\":0,\"LEGACY_DEBUGMODE\":false,\"uid\":\"123\"}]",
+				"[{\"ts\":1,\"te\":2,\"it\":\"eo\",\"ss\":0,\"uid\":\"123\"}]",
 				intervalTransferer.toJson(intervals));
 	}
 
@@ -66,7 +66,6 @@ public class IntervalToJsonConverterTest {
 				DocumentType.PRODUCTION));
 		interval.setStartTime(new Date(1));
 		interval.setEndTime(new Date(2));
-		interval.setIsInDebugMode(false);
 		intervals.add(interval);
 		return intervals;
 	}
@@ -75,7 +74,6 @@ public class IntervalToJsonConverterTest {
 		ArrayList<IntervalBase> intervals = new ArrayList<IntervalBase>();
 		interval.setStartTime(new Date(1));
 		interval.setEndTime(new Date(2));
-		interval.setIsInDebugMode(false);
 		intervals.add(interval);
 		return intervals;
 	}

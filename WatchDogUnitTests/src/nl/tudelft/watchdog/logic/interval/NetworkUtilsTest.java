@@ -62,7 +62,6 @@ public class NetworkUtilsTest {
 		ArrayList<IntervalBase> intervals = new ArrayList<IntervalBase>();
 		interval.setStartTime(new Date(1));
 		interval.setEndTime(new Date(2));
-		interval.setIsInDebugMode(false);
 		intervals.add(interval);
 		return intervals;
 	}
