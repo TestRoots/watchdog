@@ -19,13 +19,19 @@ public class PerspectiveInterval extends IntervalBase {
 	private Perspective perspectiveType;
 
 	/** The perspective that is open. */
+	@SuppressWarnings("javadoc")
 	public enum Perspective {
-		JAVA, DEBUG, OTHER
+		@SerializedName("ja")
+		JAVA,
+
+		@SerializedName("de")
+		DEBUG,
+
+		@SerializedName("ot")
+		OTHER
 	}
 
-	/**
-	 * @return the perspective Type.
-	 */
+	/** @return the perspective Type. */
 	public Perspective getPerspectiveType() {
 		return perspectiveType;
 	}
