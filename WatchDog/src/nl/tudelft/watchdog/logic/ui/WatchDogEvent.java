@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.eclipseuireader.events;
+package nl.tudelft.watchdog.logic.ui;
 
 import java.util.EventObject;
 
@@ -24,7 +24,7 @@ public class WatchDogEvent extends EventObject {
 
 		ACTIVE_WINDOW, END_WINDOW, START_ECLIPSE, END_ECLIPSE,
 
-		START_DEBUG_PERSPECTIVE, START_JAVA_PERSPECTIVE, START_UNKNOWN_PERSPECTIVE,
+		START_DEBUG_PERSPECTIVE, START_JAVA_PERSPECTIVE, START_UNKNOWN_PERSPECTIVE, JUNIT,
 	}
 
 	/** @return the {@link EventType} of this event. */

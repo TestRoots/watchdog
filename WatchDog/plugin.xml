@@ -50,11 +50,6 @@
          <menu
                label="WatchDog">
             <command
-                  commandId="nl.tudelft.watchdog.commands.exportData"
-                  label="Export WatchDog Data"
-                  style="push">
-            </command>
-            <command
                   commandId="nl.tudelft.watchdog.commands.showWatchDogInfo"
                   label="WatchDog Statistics"
                   style="push">

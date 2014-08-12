@@ -1,6 +1,6 @@
-package nl.tudelft.watchdog.logic.eclipseuireader.events.listeners;
+package nl.tudelft.watchdog.logic.ui.listeners;
 
-import nl.tudelft.watchdog.logic.eclipseuireader.events.EventManager;
+import nl.tudelft.watchdog.logic.ui.EventManager;
 
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IWorkbenchPage;

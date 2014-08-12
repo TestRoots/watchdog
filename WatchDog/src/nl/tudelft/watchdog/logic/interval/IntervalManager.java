@@ -10,11 +10,11 @@ import java.util.Random;
 
 import nl.tudelft.watchdog.Activator;
 import nl.tudelft.watchdog.logic.document.DocumentFactory;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.EventManager;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.listeners.WorkbenchListener;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActivityIntervalBase;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
+import nl.tudelft.watchdog.logic.ui.EventManager;
+import nl.tudelft.watchdog.logic.ui.listeners.WorkbenchListener;
 
 /**
  * Manages interval listeners and keeps track of all intervals. Implements the
