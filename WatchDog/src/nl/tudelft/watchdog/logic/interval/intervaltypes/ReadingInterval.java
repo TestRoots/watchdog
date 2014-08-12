@@ -10,8 +10,8 @@ public class ReadingInterval extends UserActivityIntervalBase {
 	private static final long serialVersionUID = 1L;
 
 	/** Constructor. */
-	public ReadingInterval(IWorkbenchPart part, long sessionSeed) {
-		super(part, IntervalType.READING, sessionSeed);
+	public ReadingInterval(IWorkbenchPart part) {
+		super(part, IntervalType.READING);
 		timer = new Timer();
 	}
 

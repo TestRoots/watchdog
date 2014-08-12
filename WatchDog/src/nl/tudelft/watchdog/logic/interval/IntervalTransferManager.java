@@ -69,13 +69,12 @@ public class IntervalTransferManager {
 			JsonTransferer intervalTransferer = new JsonTransferer();
 			if (intervalTransferer.sendIntervals(intervalsToTransfer)) {
 				lastTransferedIntervalKey = intervalPersister.getHighestKey();
+				Preferences.getInstance().registerLastTransferedInterval(
+						UIUtils.getWorkspaceName(), lastTransferedIntervalKey);
 			} else {
 				WatchDogLogger.getInstance().logSevere(
 						"Could not transfer intervals to server!");
 			}
-
-			Preferences.getInstance().registerLastTransferedInterval(
-					UIUtils.getWorkspaceName(), lastTransferedIntervalKey);
 		}
 	}
 }

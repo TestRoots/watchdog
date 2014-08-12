@@ -8,7 +8,7 @@ import java.util.Date;
 
 import nl.tudelft.watchdog.logic.exceptions.ServerCommunicationException;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.SessionInterval;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
@@ -46,7 +46,7 @@ public class NetworkUtilsTest {
 	@Ignore
 	public void testIntervalTransfer() {
 		JsonTransferer it = new JsonTransferer();
-		SessionInterval interval = new SessionInterval(0);
+		IntervalBase interval = new IntervalBase(IntervalType.ECLIPSE_OPEN);
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 		String json = it.toJson(intervals);
 

@@ -8,8 +8,8 @@ import java.util.Date;
 import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.SessionInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActivityIntervalBase;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
@@ -24,7 +24,7 @@ public class IntervalToJsonConverterTest {
 	/** Tests the format of the returned Json representation. */
 	@Test
 	public void testJsonReadingIntervalRepresentation() {
-		ReadingInterval interval = new ReadingInterval(null, 0);
+		ReadingInterval interval = new ReadingInterval(null);
 		interval.setUserid("123");
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
@@ -37,7 +37,7 @@ public class IntervalToJsonConverterTest {
 	/** Tests the format of the returned Json representation. */
 	@Test
 	public void testJsonTypingIntervalRepresentation() {
-		TypingInterval interval = new TypingInterval(null, 0);
+		TypingInterval interval = new TypingInterval(null);
 		interval.setUserid("123");
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
@@ -50,7 +50,7 @@ public class IntervalToJsonConverterTest {
 	/** Tests the format of the returned Json representation. */
 	@Test
 	public void testJsonSessionIntervalRepresentation() {
-		SessionInterval interval = new SessionInterval(0);
+		IntervalBase interval = new IntervalBase(IntervalType.ECLIPSE_OPEN);
 		interval.setUserid("123");
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 

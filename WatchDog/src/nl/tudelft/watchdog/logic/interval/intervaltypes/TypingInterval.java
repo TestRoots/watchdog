@@ -14,8 +14,8 @@ public class TypingInterval extends UserActivityIntervalBase {
 	private static final long serialVersionUID = 1L;
 
 	/** Constructor. */
-	public TypingInterval(IWorkbenchPart part, long sessionSeed) {
-		super(part, IntervalType.TYPING, sessionSeed);
+	public TypingInterval(IWorkbenchPart part) {
+		super(part, IntervalType.TYPING);
 		timer = new Timer();
 	}
 

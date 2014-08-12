@@ -11,6 +11,7 @@ import java.util.Random;
 import nl.tudelft.watchdog.Activator;
 import nl.tudelft.watchdog.logic.document.DocumentFactory;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActivityIntervalBase;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.logic.ui.EventManager;
@@ -109,6 +110,19 @@ public class IntervalManager {
 	}
 
 	/**
+	 * @return An interval of the specified type, or <code>null</code> if no
+	 *         such interval is currently open.
+	 */
+	public IntervalBase getIntervalOfType(IntervalType type) {
+		for (IntervalBase interval : intervals) {
+			if (interval.getActivityType() == type && !interval.isClosed()) {
+				return interval;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * @return the single ActivityInterval that is actually a
 	 *         UserActivityInterval. There can only be one such interval at any
 	 *         given time. If there is none, <code>null</code>.
@@ -127,32 +141,24 @@ public class IntervalManager {
 		return Collections.unmodifiableList(intervals);
 	}
 
-	/**
-	 * @return The session seed, a random number generated on each start of
-	 *         Eclipse to be able to tell running Eclipse instances apart.
-	 */
-	public long getSessionSeed() {
-		return sessionSeed;
-	}
-
-	/**
-	 * Adds the supplied interval to the list of intervals.
-	 */
-	public void addInterval(IntervalBase interval) {
-		if (intervals.size() > 10) {
-			WatchDogLogger
-					.getInstance()
-					.logSevere(
-							"More than 10 open intervals. Something fishy is going on here! Cannot add more intervals.");
-		}
-		intervals.add(interval);
-	}
-
-	/**
-	 * @return {@link EventManager}
-	 */
+	/** @return {@link EventManager} */
 	public EventManager getUserActionManager() {
 		return userActionManager;
 	}
 
+	/**
+	 * Adds the supplied interval to the list of intervals. New intervals must
+	 * use this method to be registered properly.
+	 */
+	public void addInterval(IntervalBase interval) {
+		if (intervals.size() > 20) {
+			WatchDogLogger
+					.getInstance()
+					.logSevere(
+							"Too many open intervals. Something fishy is going on here! Cannot add more intervals.");
+			return;
+		}
+		interval.setSessionSeed(sessionSeed);
+		intervals.add(interval);
+	}
 }
