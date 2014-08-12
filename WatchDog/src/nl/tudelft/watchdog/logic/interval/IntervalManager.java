@@ -88,7 +88,7 @@ public class IntervalManager {
 	 * Closes the current interval (if it is not already closed). Handles
 	 * <code>null</code> gracefully.
 	 */
-	public/* package */void closeInterval(IntervalBase interval) {
+	public void closeInterval(IntervalBase interval) {
 		if (interval == null) {
 			return;
 		}
@@ -148,7 +148,8 @@ public class IntervalManager {
 
 	/**
 	 * Adds the supplied interval to the list of intervals. New intervals must
-	 * use this method to be registered properly.
+	 * use this method to be registered properly. Hanldes the addition of
+	 * already closed intervals properly.
 	 */
 	public void addInterval(IntervalBase interval) {
 		if (intervals.size() > 20) {
@@ -160,5 +161,8 @@ public class IntervalManager {
 		}
 		interval.setSessionSeed(sessionSeed);
 		intervals.add(interval);
+		if (interval.isClosed()) {
+			closeInterval(interval);
+		}
 	}
 }
