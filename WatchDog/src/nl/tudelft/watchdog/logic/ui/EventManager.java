@@ -6,6 +6,7 @@ import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.JUnitInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 
 /**
  * Manager for {@link EditorEvent}s. Links such events to actions in the
@@ -66,8 +67,7 @@ public class EventManager {
 			break;
 		}
 
-		System.out.println("Event " + event.getType());
-
+		WatchDogLogger.getInstance().logInfo("Event " + event.getType());
 	}
 
 	/** Creates a new perspective Interval of the given type. */

@@ -35,7 +35,7 @@ public class WorkbenchListener {
 			IntervalTransferManager intervalTransferManager) {
 		this.eventManager = userActionManager;
 		this.intervalTransferManager = intervalTransferManager;
-		workbench = PlatformUI.getWorkbench();
+		this.workbench = PlatformUI.getWorkbench();
 	}
 
 	/**
@@ -49,6 +49,7 @@ public class WorkbenchListener {
 		workbench.addWindowListener(windowListener);
 		addListenersToAlreadyOpenWindows();
 		new JUnitListener(eventManager);
+		new GeneralActivityListener(eventManager, workbench.getDisplay());
 		addShutdownListeners();
 	}
 
