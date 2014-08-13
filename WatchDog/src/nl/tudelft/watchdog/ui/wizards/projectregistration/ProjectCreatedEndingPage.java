@@ -6,8 +6,8 @@ import nl.tudelft.watchdog.ui.wizards.Project;
 import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPage;
 
 /**
- * Possible finishing page in the wizard. If the user exists on the server, or
- * the server is not reachable, the user can exit here.
+ * Possible finishing page in the wizard. If the project exists on the server,
+ * or the server is not reachable, the user can exit here.
  */
 class ProjectCreatedEndingPage extends RegistrationEndingPage {
 
@@ -32,7 +32,7 @@ class ProjectCreatedEndingPage extends RegistrationEndingPage {
 				.usesJunitForUnitTestingOnly();
 		project.followTestDrivenDesign = sliderPage.usesTestDrivenDesing();
 
-		windowTitle = "User Registration";
+		windowTitle = "Project Registration";
 
 		try {
 			id = new JsonTransferer().registerNewProject(project);
@@ -45,10 +45,10 @@ class ProjectCreatedEndingPage extends RegistrationEndingPage {
 
 		successfulRegistration = true;
 		((ProjectRegistrationWizard) getWizard()).projectId = id;
-		messageTitle = "New user registered!";
-		messageBody = "Your new user id "
+		messageTitle = "New project registered!";
+		messageBody = "Your new project id "
 				+ id
-				+ " is registered.\nIf you ever have to, you can change other WatchDog settings in the Eclipse preferences."
+				+ " is registered.\nYou can change it and other WatchDog settings in the Eclipse preferences."
 				+ ProjectIdEnteredEndingPage.encouragingEndMessage;
 	}
 }
