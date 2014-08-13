@@ -15,7 +15,7 @@ public class WatchDogEvent extends EventObject {
 	}
 
 	/** The type of the event. */
-	protected EventType type;
+	private EventType type;
 
 	/** The different type of events. */
 	@SuppressWarnings("javadoc")
@@ -26,7 +26,7 @@ public class WatchDogEvent extends EventObject {
 
 		START_DEBUG_PERSPECTIVE, START_JAVA_PERSPECTIVE, START_UNKNOWN_PERSPECTIVE, JUNIT,
 
-		ACTIVITY, INACTIVITY
+		ACTIVITY, USER_INACTIVITY, EDITOR_INACTIVITY
 	}
 
 	/** @return the {@link EventType} of this event. */

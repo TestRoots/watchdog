@@ -24,10 +24,10 @@ public abstract class EditorIntervalBase extends IntervalBase {
 	protected transient IWorkbenchPart part;
 
 	/** Constructor. */
-	public EditorIntervalBase(IWorkbenchPart part, IntervalType activity) {
+	public EditorIntervalBase(ITextEditor editor, IntervalType activity) {
 		super(activity);
-		this.part = part;
-		this.editor = (ITextEditor) part;
+		this.part = editor;
+		this.editor = (ITextEditor) editor;
 	}
 
 	/** @return The {@link ITextEditor} associated with this interval. */

@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
  * An interval for when the user is currently typing, connected to the
@@ -12,7 +12,7 @@ public class TypingInterval extends EditorIntervalBase {
 	private static final long serialVersionUID = 1L;
 
 	/** Constructor. */
-	public TypingInterval(IWorkbenchPart part) {
+	public TypingInterval(ITextEditor part) {
 		super(part, IntervalType.TYPING);
 	}
 

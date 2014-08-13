@@ -21,32 +21,26 @@ public class DocumentFactory {
 	 */
 	// TODO (MMB) This might return a document which is not alive any more (and
 	// thus has an unknown file type)
-	public Document createDocument(IWorkbenchPart part) {
-		if (part instanceof ITextEditor) {
-			ITextEditor editor = (ITextEditor) part;
-
-			if (part instanceof IEditorPart) {
-				IEditorPart editorPart = (IEditorPart) part;
-				String activeProjectName;
-				if (editorPart.getEditorInput() instanceof IFileEditorInput) {
-					IFileEditorInput input = (IFileEditorInput) editorPart
-							.getEditorInput();
-					IProject activeProject = input.getFile().getProject();
-					activeProjectName = activeProject.getName();
-				} else {
-					activeProjectName = "";
-				}
-
-				DocumentType documentType = determineDocumentType(editor,
-						editorPart);
-
-				return new Document(activeProjectName, editor.getTitle(),
-						documentType);
+	public Document createDocument(ITextEditor editor) {
+		if (editor instanceof IEditorPart) {
+			IEditorPart editorPart = (IEditorPart) editor;
+			String activeProjectName;
+			if (editorPart.getEditorInput() instanceof IFileEditorInput) {
+				IFileEditorInput input = (IFileEditorInput) editorPart
+						.getEditorInput();
+				IProject activeProject = input.getFile().getProject();
+				activeProjectName = activeProject.getName();
 			} else {
-				throw new IllegalArgumentException("Part not an IEditorPart");
+				activeProjectName = "";
 			}
+
+			DocumentType documentType = determineDocumentType(editor,
+					editorPart);
+
+			return new Document(activeProjectName, editor.getTitle(),
+					documentType);
 		} else {
-			throw new IllegalArgumentException("Part not an ITextEditor");
+			throw new IllegalArgumentException("Part not an IEditorPart");
 		}
 	}
 
