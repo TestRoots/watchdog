@@ -62,7 +62,7 @@ public class WorkbenchListener {
 					final boolean forced) {
 				eventManager.update(new WatchDogEvent(workbench,
 						EventType.END_ECLIPSE));
-				IntervalManager.getInstance().closeAllCurrentIntervals();
+				IntervalManager.getInstance().closeAllIntervals();
 				intervalTransferManager.sendIntervalsImmediately();
 				return true;
 			}

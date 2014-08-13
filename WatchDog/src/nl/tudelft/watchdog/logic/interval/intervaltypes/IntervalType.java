@@ -29,6 +29,9 @@ public enum IntervalType {
 
 	/** A Junit execution interval. */
 	@SerializedName("ju")
-	JUNIT;
+	JUNIT,
+
+	/** The user is active */
+	USER_ACTIVE;
 
 }

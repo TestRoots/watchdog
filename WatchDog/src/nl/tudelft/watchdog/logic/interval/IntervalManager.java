@@ -98,7 +98,7 @@ public class IntervalManager {
 	}
 
 	/** Closes all currently open intervals. */
-	public void closeAllCurrentIntervals() {
+	public void closeAllIntervals() {
 		Iterator<IntervalBase> iterator = intervals.listIterator();
 		while (iterator.hasNext()) {
 			// we need to remove the interval first from the list in order to
