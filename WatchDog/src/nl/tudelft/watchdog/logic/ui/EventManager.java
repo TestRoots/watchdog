@@ -1,16 +1,15 @@
 package nl.tudelft.watchdog.logic.ui;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.JUnitInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
-import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
+
+import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
  * Manager for {@link EditorEvent}s. Links such events to actions in the
@@ -19,29 +18,28 @@ import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
  */
 public class EventManager {
 
-	private class InactivityTimerTask extends TimerTask {
-		@Override
-		public void run() {
-			update(new WatchDogEvent(this, EventType.INACTIVITY));
-		}
+	private enum State {
+		Writing, Reading
 	}
 
-	private static final int ACTIVITY_TIMEOUT = 16000;
+	static final int ACTIVITY_TIMEOUT = 16000;
 
 	/** The {@link IntervalManager} this observer is working with. */
 	private IntervalManager intervalManager;
 
-	private Timer activityTimer;
+	private State state;
 
-	private InactivityTimerTask inactivityTask;
+	private InactivityNotifier userInactivityNotifier;
 
 	/** Constructor. */
 	public EventManager(IntervalManager intervalManager) {
 		this.intervalManager = intervalManager;
+		userInactivityNotifier = new InactivityNotifier(this, ACTIVITY_TIMEOUT);
 	}
 
 	/** Introduces the supplied editorEvent */
 	public void update(WatchDogEvent event) {
+
 		IntervalBase interval;
 		switch (event.getType()) {
 		case START_ECLIPSE:
@@ -56,7 +54,6 @@ public class EventManager {
 					IntervalType.ECLIPSE_ACTIVE));
 			break;
 		case END_WINDOW:
-			// TODO (MMB) close all "active" events
 			interval = intervalManager
 					.getIntervalOfType(IntervalType.ECLIPSE_ACTIVE);
 			intervalManager.closeInterval(interval);
@@ -75,18 +72,7 @@ public class EventManager {
 			intervalManager.addInterval(junitInterval);
 			break;
 		case ACTIVITY:
-			if (activityTimer == null) {
-				createNewTimer();
-			} else if (inactivityTask.scheduledExecutionTime()
-					- System.currentTimeMillis() < 0.9 * ACTIVITY_TIMEOUT) {
-				// Performance optimization: only update activity timer every
-				// second. This means that we have 10% imprecision, ie. the user
-				// may have actually stayed inactive shorter than we think he
-				// did. Reduces the number of calls to createNewTimer().
-				activityTimer.cancel();
-				createNewTimer();
-				break;
-			}
+			userInactivityNotifier.triggerActivity();
 			interval = intervalManager
 					.getIntervalOfType(IntervalType.USER_ACTIVE);
 			if (interval == null) {
@@ -99,6 +85,20 @@ public class EventManager {
 					.getIntervalOfType(IntervalType.USER_ACTIVE);
 			intervalManager.closeInterval(interval);
 			break;
+		case EDIT:
+			ITextEditor editor = (ITextEditor) event.getSource();
+			EditorIntervalBase editorInterval = intervalManager
+					.getEditorIntervalIfAny();
+			if (editorInterval.getActivityType() == IntervalType.READING) {
+				intervalManager.closeInterval(editorInterval);
+			} else if (editorInterval.getEditor().getEditorInput() == editor
+					.getEditorSite()) {
+
+			}
+			break;
+		case PAINT:
+		case CARET_MOVED:
+			break;
 		default:
 			break;
 		}
@@ -106,14 +106,8 @@ public class EventManager {
 		WatchDogLogger.getInstance().logInfo("Event " + event.getType() + " ");
 	}
 
-	private void createNewTimer() {
-		activityTimer = new Timer(true);
-		inactivityTask = new InactivityTimerTask();
-		activityTimer.schedule(inactivityTask, ACTIVITY_TIMEOUT);
-	}
-
 	/** Creates a new perspective Interval of the given type. */
-	public void createNewPerspectiveInterval(
+	private void createNewPerspectiveInterval(
 			PerspectiveInterval.Perspective perspecitveType) {
 		PerspectiveInterval perspectiveInterval = (PerspectiveInterval) intervalManager
 				.getIntervalOfType(IntervalType.PERSPECTIVE);

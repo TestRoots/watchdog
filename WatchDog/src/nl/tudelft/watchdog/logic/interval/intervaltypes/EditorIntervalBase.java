@@ -8,7 +8,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import com.google.gson.annotations.SerializedName;
 
 /** A base class for */
-public abstract class UserActivityIntervalBase extends IntervalBase {
+public abstract class EditorIntervalBase extends IntervalBase {
 
 	/** Serialized version. */
 	private static final long serialVersionUID = 3L;
@@ -24,7 +24,7 @@ public abstract class UserActivityIntervalBase extends IntervalBase {
 	protected transient IWorkbenchPart part;
 
 	/** Constructor. */
-	public UserActivityIntervalBase(IWorkbenchPart part, IntervalType activity) {
+	public EditorIntervalBase(IWorkbenchPart part, IntervalType activity) {
 		super(activity);
 		this.part = part;
 		this.editor = (ITextEditor) part;
