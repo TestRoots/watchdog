@@ -32,18 +32,18 @@ public class InactivityNotifierTest {
 	@Test
 	public void testTimerExecutedAfterOneTrigger() {
 		inactivityNotifier.triggerActivity();
-		Mockito.verify(eventManagerMock, Mockito.timeout(TIMEOUT*2)).update(
-				Mockito.any());
+		Mockito.verify(eventManagerMock, Mockito.timeout(TIMEOUT * 2)).update(
+				createAnyWatchDogEvent());
 	}
 
 	@Test
 	public void testTimerExecutedTwice() {
 		inactivityNotifier.triggerActivity();
 		Mockito.verify(eventManagerMock, Mockito.timeout(TIMEOUT)).update(
-				Mockito.any());
+				createAnyWatchDogEvent());
 		inactivityNotifier.triggerActivity();
 		Mockito.verify(eventManagerMock, Mockito.timeout(TIMEOUT)).update(
-				Mockito.any());
+				createAnyWatchDogEvent());
 		Mockito.verifyNoMoreInteractions(eventManagerMock);
 	}
 
@@ -51,10 +51,10 @@ public class InactivityNotifierTest {
 	public void testTimerNotExecutedTooEarly() {
 		inactivityNotifier.triggerActivity();
 		Mockito.verify(eventManagerMock, Mockito.timeout(HALF_TIMEOUT).never())
-				.update(Mockito.any());
+				.update(createAnyWatchDogEvent());
 		inactivityNotifier.triggerActivity();
-		Mockito.verify(eventManagerMock, Mockito.timeout(TIMEOUT*2)).update(
-				Mockito.any());
+		Mockito.verify(eventManagerMock, Mockito.timeout(TIMEOUT * 2)).update(
+				createAnyWatchDogEvent());
 		Mockito.verifyNoMoreInteractions(eventManagerMock);
 	}
 
@@ -62,10 +62,10 @@ public class InactivityNotifierTest {
 	public void testTimerStoppedAfterCancel() {
 		inactivityNotifier.triggerActivity();
 		Mockito.verify(eventManagerMock, Mockito.timeout(HALF_TIMEOUT).never())
-				.update(Mockito.any());
+				.update(createAnyWatchDogEvent());
 		inactivityNotifier.cancelTimer();
-		Mockito.verify(eventManagerMock, Mockito.times(1))
-				.update(Mockito.any());
+		Mockito.verify(eventManagerMock, Mockito.times(1)).update(
+				createAnyWatchDogEvent());
 		Mockito.verifyNoMoreInteractions(eventManagerMock);
 	}
 
@@ -77,8 +77,12 @@ public class InactivityNotifierTest {
 		}
 		Mockito.verifyZeroInteractions(eventManagerMock);
 		Mockito.verify(eventManagerMock, Mockito.timeout(TIMEOUT)).update(
-				Mockito.any());
+				createAnyWatchDogEvent());
 		Mockito.verifyNoMoreInteractions(eventManagerMock);
+	}
+
+	private WatchDogEvent createAnyWatchDogEvent() {
+		return Mockito.any(WatchDogEvent.class);
 	}
 
 }
