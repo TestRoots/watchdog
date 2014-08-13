@@ -10,9 +10,9 @@ import java.util.Random;
 
 import nl.tudelft.watchdog.Activator;
 import nl.tudelft.watchdog.logic.document.DocumentFactory;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActivityIntervalBase;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.logic.ui.EventManager;
 import nl.tudelft.watchdog.logic.ui.listeners.WorkbenchListener;
@@ -76,7 +76,7 @@ public class IntervalManager {
 	}
 
 	/** Creates a new editing interval. */
-	public void addAndSetNewActiveInterval(UserActivityIntervalBase interval,
+	public void addAndSetNewActiveInterval(EditorIntervalBase interval,
 			int timeout) {
 		intervals.add(interval);
 		interval.setDocument(documentFactory.createDocument(interval.getPart()));
@@ -123,14 +123,14 @@ public class IntervalManager {
 	}
 
 	/**
-	 * @return the single ActivityInterval that is actually a
-	 *         UserActivityInterval. There can only be one such interval at any
-	 *         given time. If there is none, <code>null</code>.
+	 * @return the single {@link EditorIntervalBase} that is actually a
+	 *         {@link EditorIntervalBase}. There can only be one such interval
+	 *         at any given time. If there is none, <code>null</code>.
 	 */
-	public UserActivityIntervalBase getUserActivityIntervalIfAny() {
+	public EditorIntervalBase getEditorIntervalIfAny() {
 		for (IntervalBase interval : intervals) {
-			if (interval instanceof UserActivityIntervalBase) {
-				return (UserActivityIntervalBase) interval;
+			if (interval instanceof EditorIntervalBase) {
+				return (EditorIntervalBase) interval;
 			}
 		}
 		return null;
@@ -148,7 +148,7 @@ public class IntervalManager {
 
 	/**
 	 * Adds the supplied interval to the list of intervals. New intervals must
-	 * use this method to be registered properly. Hanldes the addition of
+	 * use this method to be registered properly. Handles the addition of
 	 * already closed intervals properly.
 	 */
 	public void addInterval(IntervalBase interval) {

@@ -11,7 +11,7 @@ import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActivityIntervalBase;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
 
 import org.junit.Test;
@@ -60,7 +60,7 @@ public class IntervalToJsonConverterTest {
 				intervalTransferer.toJson(intervals));
 	}
 
-	private ArrayList<IntervalBase> createSampleIntervals(UserActivityIntervalBase interval) {
+	private ArrayList<IntervalBase> createSampleIntervals(EditorIntervalBase interval) {
 		ArrayList<IntervalBase> intervals = new ArrayList<IntervalBase>();
 		interval.setDocument(new Document("Project", "Production.java",
 				DocumentType.PRODUCTION));
