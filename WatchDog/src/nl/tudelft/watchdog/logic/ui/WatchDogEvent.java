@@ -26,7 +26,7 @@ public class WatchDogEvent extends EventObject {
 
 		START_DEBUG_PERSPECTIVE, START_JAVA_PERSPECTIVE, START_UNKNOWN_PERSPECTIVE, JUNIT,
 
-		ACTIVITY
+		ACTIVITY, INACTIVITY
 	}
 
 	/** @return the {@link EventType} of this event. */
