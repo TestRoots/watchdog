@@ -19,22 +19,25 @@ import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
  */
 public class EventManager {
 
-	private static final int ACTIVITY_TIMEOUT = 10000;
+	private class InactivityTimerTask extends TimerTask {
+		@Override
+		public void run() {
+			update(new WatchDogEvent(this, EventType.INACTIVITY));
+		}
+	}
+
+	private static final int ACTIVITY_TIMEOUT = 16000;
+
 	/** The {@link IntervalManager} this observer is working with. */
 	private IntervalManager intervalManager;
+
 	private Timer activityTimer;
-	private TimerTask inactivityTask;
+
+	private InactivityTimerTask inactivityTask;
 
 	/** Constructor. */
 	public EventManager(IntervalManager intervalManager) {
 		this.intervalManager = intervalManager;
-		activityTimer = new Timer(true);
-		inactivityTask = new TimerTask() {
-			@Override
-			public void run() {
-				update(new WatchDogEvent(this, EventType.INACTIVITY));
-			}
-		};
 	}
 
 	/** Introduces the supplied editorEvent */
@@ -53,6 +56,7 @@ public class EventManager {
 					IntervalType.ECLIPSE_ACTIVE));
 			break;
 		case END_WINDOW:
+			// TODO (MMB) close all "active" events
 			interval = intervalManager
 					.getIntervalOfType(IntervalType.ECLIPSE_ACTIVE);
 			intervalManager.closeInterval(interval);
@@ -71,13 +75,16 @@ public class EventManager {
 			intervalManager.addInterval(junitInterval);
 			break;
 		case ACTIVITY:
-			// Performance optimization: only update activity timer every
-			// second. This means that we have 10% imprecision, ie. the user may
-			// have actually stayed inactive shorter than we think he did.
-			if (inactivityTask.scheduledExecutionTime()
+			if (activityTimer == null) {
+				createNewTimer();
+			} else if (inactivityTask.scheduledExecutionTime()
 					- System.currentTimeMillis() < 0.9 * ACTIVITY_TIMEOUT) {
-				inactivityTask.cancel();
-				activityTimer.schedule(inactivityTask, ACTIVITY_TIMEOUT);
+				// Performance optimization: only update activity timer every
+				// second. This means that we have 10% imprecision, ie. the user
+				// may have actually stayed inactive shorter than we think he
+				// did. Reduces the number of calls to createNewTimer().
+				activityTimer.cancel();
+				createNewTimer();
 				break;
 			}
 			interval = intervalManager
@@ -96,7 +103,13 @@ public class EventManager {
 			break;
 		}
 
-		WatchDogLogger.getInstance().logInfo("Event " + event.getType());
+		WatchDogLogger.getInstance().logInfo("Event " + event.getType() + " ");
+	}
+
+	private void createNewTimer() {
+		activityTimer = new Timer(true);
+		inactivityTask = new InactivityTimerTask();
+		activityTimer.schedule(inactivityTask, ACTIVITY_TIMEOUT);
 	}
 
 	/** Creates a new perspective Interval of the given type. */
@@ -112,4 +125,5 @@ public class EventManager {
 		intervalManager.closeInterval(perspectiveInterval);
 		intervalManager.addInterval(new PerspectiveInterval(perspecitveType));
 	}
+
 }
