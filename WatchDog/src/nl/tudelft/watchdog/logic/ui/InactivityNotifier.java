@@ -6,9 +6,9 @@ import java.util.TimerTask;
 import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
 
 /**
- * A performance-optimized notifier for a timeout when its
- * {@link #triggerActivity()} was not called for a given timeout. When an
- * inactivity is detected, an inactivityEvent is fired.
+ * A performance-optimized notifier for a timeout when its {@link #trigger()}
+ * was not called for a given timeout. When an inactivity is detected, an
+ * inactivityEvent is fired. The type of this event can be specified.
  * 
  * Performance optimization: only update activity timer every second. This means
  * that we have 10% imprecision, ie. the user may have actually stayed inactive
@@ -24,14 +24,21 @@ import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
 
 	private ActivityTimerTask activityTimerTask;
 
+	private EventType eventType;
+
+	private boolean isRunning;
+
 	/** Constructor. */
-	public InactivityNotifier(EventManager eventManager, int activityTimeout) {
+	public InactivityNotifier(EventManager eventManager, int activityTimeout,
+			EventType type) {
 		this.eventManager = eventManager;
 		this.activityTimeout = activityTimeout;
+		this.eventType = type;
+		this.isRunning = false;
 	}
 
 	/**  */
-	public void triggerActivity() {
+	public void trigger() {
 		if (activityTimer == null) {
 			createNewTimer();
 		} else if (activityTimerTask.scheduledExecutionTime()
@@ -50,11 +57,12 @@ import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
 		activityTimer = new Timer(true);
 		activityTimerTask = new ActivityTimerTask();
 		activityTimer.schedule(activityTimerTask, activityTimeout);
+		isRunning = true;
 	}
 
 	/** Immediately cancels the timer, sending an inactivity event. */
 	public void cancelTimer() {
-		if (activityTimer == null) {
+		if (!isRunning) {
 			return;
 		}
 		activityTimerTask.run();
@@ -65,7 +73,8 @@ import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
 	private class ActivityTimerTask extends TimerTask {
 		@Override
 		public void run() {
-			eventManager.update(new WatchDogEvent(this, EventType.INACTIVITY));
+			eventManager.update(new WatchDogEvent(this, eventType));
+			isRunning = false;
 		}
 	}
 

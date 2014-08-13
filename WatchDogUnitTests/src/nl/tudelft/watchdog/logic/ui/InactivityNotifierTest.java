@@ -1,5 +1,7 @@
 package nl.tudelft.watchdog.logic.ui;
 
+import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -20,7 +22,8 @@ public class InactivityNotifierTest {
 	@Before
 	public void setup() {
 		eventManagerMock = Mockito.mock(EventManager.class);
-		inactivityNotifier = new InactivityNotifier(eventManagerMock, TIMEOUT);
+		inactivityNotifier = new InactivityNotifier(eventManagerMock, TIMEOUT,
+				EventType.USER_INACTIVITY);
 	}
 
 	@Test
@@ -31,17 +34,17 @@ public class InactivityNotifierTest {
 
 	@Test
 	public void testTimerExecutedAfterOneTrigger() {
-		inactivityNotifier.triggerActivity();
+		inactivityNotifier.trigger();
 		Mockito.verify(eventManagerMock, Mockito.timeout(TIMEOUT * 2)).update(
 				createAnyWatchDogEvent());
 	}
 
 	@Test
 	public void testTimerExecutedTwice() {
-		inactivityNotifier.triggerActivity();
+		inactivityNotifier.trigger();
 		Mockito.verify(eventManagerMock, Mockito.timeout(TIMEOUT)).update(
 				createAnyWatchDogEvent());
-		inactivityNotifier.triggerActivity();
+		inactivityNotifier.trigger();
 		Mockito.verify(eventManagerMock, Mockito.timeout(TIMEOUT)).update(
 				createAnyWatchDogEvent());
 		Mockito.verifyNoMoreInteractions(eventManagerMock);
@@ -49,10 +52,10 @@ public class InactivityNotifierTest {
 
 	@Test
 	public void testTimerNotExecutedTooEarly() {
-		inactivityNotifier.triggerActivity();
+		inactivityNotifier.trigger();
 		Mockito.verify(eventManagerMock, Mockito.timeout(HALF_TIMEOUT).never())
 				.update(createAnyWatchDogEvent());
-		inactivityNotifier.triggerActivity();
+		inactivityNotifier.trigger();
 		Mockito.verify(eventManagerMock, Mockito.timeout(TIMEOUT * 2)).update(
 				createAnyWatchDogEvent());
 		Mockito.verifyNoMoreInteractions(eventManagerMock);
@@ -60,7 +63,7 @@ public class InactivityNotifierTest {
 
 	@Test
 	public void testTimerStoppedAfterCancel() {
-		inactivityNotifier.triggerActivity();
+		inactivityNotifier.trigger();
 		Mockito.verify(eventManagerMock, Mockito.timeout(HALF_TIMEOUT).never())
 				.update(createAnyWatchDogEvent());
 		inactivityNotifier.cancelTimer();
@@ -72,7 +75,7 @@ public class InactivityNotifierTest {
 	@Test
 	public void testTimerExecutedRegularly() throws InterruptedException {
 		for (int i = 0; i < 5; i++) {
-			inactivityNotifier.triggerActivity();
+			inactivityNotifier.trigger();
 			Thread.sleep(HALF_TIMEOUT);
 		}
 		Mockito.verifyZeroInteractions(eventManagerMock);

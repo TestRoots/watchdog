@@ -76,10 +76,10 @@ public class IntervalManager {
 	}
 
 	/** Creates a new editing interval. */
-	public void addAndSetNewActiveInterval(EditorIntervalBase interval,
-			int timeout) {
-		intervals.add(interval);
-		interval.setDocument(documentFactory.createDocument(interval.getPart()));
+	public void addAndSetNewActiveInterval(EditorIntervalBase interval) {
+		addInterval(interval);
+		interval.setDocument(documentFactory.createDocument(interval
+				.getEditor()));
 		WatchDogLogger.getInstance()
 				.logInfo("created new interval " + interval);
 	}
@@ -127,7 +127,7 @@ public class IntervalManager {
 	 *         {@link EditorIntervalBase}. There can only be one such interval
 	 *         at any given time. If there is none, <code>null</code>.
 	 */
-	public EditorIntervalBase getEditorIntervalIfAny() {
+	public EditorIntervalBase getEditorInterval() {
 		for (IntervalBase interval : intervals) {
 			if (interval instanceof EditorIntervalBase) {
 				return (EditorIntervalBase) interval;
