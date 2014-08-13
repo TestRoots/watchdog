@@ -22,7 +22,7 @@ public class EventManager {
 		Writing, Reading
 	}
 
-	static final int ACTIVITY_TIMEOUT = 16000;
+	private static final int USER_ACTIVITY_TIMEOUT = 16000;
 
 	/** The {@link IntervalManager} this observer is working with. */
 	private IntervalManager intervalManager;
@@ -34,7 +34,8 @@ public class EventManager {
 	/** Constructor. */
 	public EventManager(IntervalManager intervalManager) {
 		this.intervalManager = intervalManager;
-		userInactivityNotifier = new InactivityNotifier(this, ACTIVITY_TIMEOUT);
+		userInactivityNotifier = new InactivityNotifier(this,
+				USER_ACTIVITY_TIMEOUT);
 	}
 
 	/** Introduces the supplied editorEvent */
@@ -45,32 +46,46 @@ public class EventManager {
 		case START_ECLIPSE:
 			intervalManager.addInterval(new IntervalBase(
 					IntervalType.ECLIPSE_OPEN));
+			userInactivityNotifier.triggerActivity();
 			break;
+
 		case END_ECLIPSE:
 			intervalManager.closeAllIntervals();
 			break;
+
 		case ACTIVE_WINDOW:
 			intervalManager.addInterval(new IntervalBase(
 					IntervalType.ECLIPSE_ACTIVE));
+			userInactivityNotifier.triggerActivity();
 			break;
+
 		case END_WINDOW:
 			interval = intervalManager
 					.getIntervalOfType(IntervalType.ECLIPSE_ACTIVE);
 			intervalManager.closeInterval(interval);
+			userInactivityNotifier.cancelTimer();
 			break;
+
 		case START_JAVA_PERSPECTIVE:
 			createNewPerspectiveInterval(Perspective.JAVA);
+			userInactivityNotifier.triggerActivity();
 			break;
+
 		case START_DEBUG_PERSPECTIVE:
 			createNewPerspectiveInterval(Perspective.DEBUG);
+			userInactivityNotifier.triggerActivity();
 			break;
+
 		case START_UNKNOWN_PERSPECTIVE:
 			createNewPerspectiveInterval(Perspective.OTHER);
+			userInactivityNotifier.triggerActivity();
 			break;
+
 		case JUNIT:
 			JUnitInterval junitInterval = (JUnitInterval) event.getSource();
 			intervalManager.addInterval(junitInterval);
 			break;
+
 		case ACTIVITY:
 			userInactivityNotifier.triggerActivity();
 			interval = intervalManager
@@ -80,11 +95,13 @@ public class EventManager {
 						IntervalType.USER_ACTIVE));
 			}
 			break;
+
 		case INACTIVITY:
 			interval = intervalManager
 					.getIntervalOfType(IntervalType.USER_ACTIVE);
 			intervalManager.closeInterval(interval);
 			break;
+
 		case EDIT:
 			ITextEditor editor = (ITextEditor) event.getSource();
 			EditorIntervalBase editorInterval = intervalManager
@@ -96,9 +113,11 @@ public class EventManager {
 
 			}
 			break;
+
 		case PAINT:
 		case CARET_MOVED:
 			break;
+
 		default:
 			break;
 		}

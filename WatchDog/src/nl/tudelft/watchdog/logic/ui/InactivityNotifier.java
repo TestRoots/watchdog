@@ -20,8 +20,9 @@ import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
 
 	private int activityTimeout;
 
-	private ActivityTimerTask activityTimerTask;
 	private Timer activityTimer;
+
+	private ActivityTimerTask activityTimerTask;
 
 	/** Constructor. */
 	public InactivityNotifier(EventManager eventManager, int activityTimeout) {
@@ -40,6 +41,7 @@ import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
 			// may have actually stayed inactive shorter than we think he
 			// did. Reduces the number of calls to createNewTimer().
 			activityTimer.cancel();
+			activityTimerTask.cancel();
 			createNewTimer();
 		}
 	}
@@ -48,6 +50,16 @@ import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
 		activityTimer = new Timer(true);
 		activityTimerTask = new ActivityTimerTask();
 		activityTimer.schedule(activityTimerTask, activityTimeout);
+	}
+
+	/** Immediately cancels the timer, sending an inactivity event. */
+	public void cancelTimer() {
+		if (activityTimer == null) {
+			return;
+		}
+		activityTimerTask.run();
+		activityTimer.cancel();
+		activityTimerTask.cancel();
 	}
 
 	private class ActivityTimerTask extends TimerTask {
