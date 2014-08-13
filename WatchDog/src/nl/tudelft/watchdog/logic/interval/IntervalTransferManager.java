@@ -35,9 +35,7 @@ public class IntervalTransferManager {
 		timer.scheduleAtFixedRate(task, 0, UPDATE_RATE);
 	}
 
-	/**
-	 * Immediately synchronizes the intervals with the server.
-	 */
+	/** Immediately synchronizes the intervals with the server. */
 	public void sendIntervalsImmediately() {
 		task.run();
 	}
