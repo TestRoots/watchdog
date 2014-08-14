@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.logic.ui;
 
+import nl.tudelft.watchdog.logic.interval.IntervalIntializationManager;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
@@ -24,7 +25,7 @@ public class EventManager {
 
 	private static final int USER_ACTIVITY_TIMEOUT = 16000;
 
-	/** The {@link IntervalManager} this observer is working with. */
+	/** The {@link IntervalIntializationManager} this observer is working with. */
 	private IntervalManager intervalManager;
 
 	private InactivityNotifier userInactivityNotifier;
