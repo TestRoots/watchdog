@@ -22,10 +22,10 @@ public class WatchDogGlobals {
 	public static boolean isActive = false;
 
 	/** The reading timeout in milliseconds. */
-	public static int READING_TIMEOUT = 10000;
+	public static int READING_TIMEOUT = 4 * 1000;
 
 	/** The typing timeout in milliseconds. */
-	public static int TYPING_TIMEOUT = 3000;
+	public static int TYPING_TIMEOUT = 4 * 1000;
 
 	/** The TU Logo. */
 	public static ImageDescriptor tuLogoImageDescriptor = Activator

@@ -7,8 +7,6 @@ import nl.tudelft.watchdog.logic.exceptions.ContentReaderException;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -30,25 +28,6 @@ public class WatchDogUtils {
 			.appendMinutes().appendSuffix(" minute", " minutes")
 			.appendSeparator(" and ").appendSeconds()
 			.appendSuffix(" second", " seconds").toFormatter();
-
-	/** Returns <code>true</code> when Eclipse's Debug Perspective is activated. */
-	public static boolean isInDebugMode() {
-		// TODO (MMB) it appears to me, recognition of debug mode might be
-		// buggy. As it stands, as long as the active page of any window
-		// (regardless of the window being active or not) is in debug, the debug
-		// flag is set. However, if ANY window is in debug perspective, this
-		// does not mean we the user is currently debugging at all.
-		boolean isDebugMode = false;
-		for (IWorkbenchWindow window : PlatformUI.getWorkbench()
-				.getWorkbenchWindows()) {
-			isDebugMode = window.getActivePage().getPerspective().getId()
-					.equals("org.eclipse.debug.ui.DebugPerspective");
-			if (isDebugMode) {
-				return isDebugMode;
-			}
-		}
-		return isDebugMode;
-	}
 
 	/**
 	 * Returns the contents of the supplied {@link ITextEditor}.

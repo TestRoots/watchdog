@@ -14,15 +14,21 @@
   </modules>
 
   <properties>
-    <tycho.version>0.19.0</tycho.version>
+    <tycho.version>0.21.0</tycho.version>
 
     <kepler-repo.url>http://download.eclipse.org/releases/kepler</kepler-repo.url>
+    <luna-repo.url>http://download.eclipse.org/releases/luna</luna-repo.url>
   </properties>
 
   <repositories>
     <repository>
       <id>kepler</id>
       <url>${kepler-repo.url}</url>
+      <layout>p2</layout>
+    </repository>
+    <repository>
+      <id>luna</id>
+      <url>${luna-repo.url}</url>
       <layout>p2</layout>
     </repository>
   </repositories>
