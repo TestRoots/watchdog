@@ -23,8 +23,6 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class EventManager {
 
-	private static final int USER_ACTIVITY_TIMEOUT = 16000;
-
 	/** The {@link IntervalIntializationManager} this observer is working with. */
 	private IntervalManager intervalManager;
 
@@ -33,12 +31,12 @@ public class EventManager {
 	private InactivityNotifier editorInactivityNotifier;
 
 	/** Constructor. */
-	public EventManager(IntervalManager intervalManager) {
+	public EventManager(IntervalManager intervalManager, int userActivityTimeout) {
 		this.intervalManager = intervalManager;
 		userInactivityNotifier = new InactivityNotifier(this,
-				USER_ACTIVITY_TIMEOUT, EventType.USER_INACTIVITY);
+				userActivityTimeout, EventType.USER_INACTIVITY);
 		editorInactivityNotifier = new InactivityNotifier(this,
-				USER_ACTIVITY_TIMEOUT, EventType.EDITOR_INACTIVITY);
+				userActivityTimeout, EventType.EDITOR_INACTIVITY);
 	}
 
 	/** Introduces the supplied editorEvent */
