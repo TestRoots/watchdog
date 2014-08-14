@@ -44,22 +44,22 @@ public class IntervalPersister {
 	}
 
 	private DB createDatabase(final File file) {
+		// TODO (MMB) reset head pointer in preferences!
 		return DBMaker.newFileDB(file).closeOnJvmShutdown().make();
 	}
 
 	/**
 	 * Read all intervals starting from @from (inclusive) return them as a List.
 	 */
-	public List<IntervalBase> readIntevals(final long from) {
-		return new ArrayList<IntervalBase>(map.subMap(from, Long.MAX_VALUE)
-				.values());
+	public List<IntervalBase> readIntervals(final long from) {
+		return readIntervals(from, Long.MAX_VALUE);
 	}
 
 	/**
 	 * Read intervals between @from (inclusive) and @to (exclusive) and return
 	 * them as a List.
 	 */
-	public List<IntervalBase> readIntevals(final long from, final long to) {
+	public List<IntervalBase> readIntervals(final long from, final long to) {
 		return new ArrayList<IntervalBase>(map.subMap(from, to).values());
 	}
 
