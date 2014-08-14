@@ -56,6 +56,14 @@ public class IntervalTransferManager {
 		public void run() {
 			lastTransferedIntervalKey = Preferences.getInstance()
 					.getWorkspaceSetting(UIUtils.getWorkspaceName()).lastTransferedInterval;
+			long databaseHighestKey = intervalPersister.getHighestKey();
+			if (lastTransferedIntervalKey > databaseHighestKey) {
+				// something is amiss, the reported last transfered key in the
+				// preferences is higher than the actual last key in the
+				// database
+				Preferences.getInstance().registerLastTransferedInterval(
+						UIUtils.getWorkspaceName(), databaseHighestKey);
+			}
 
 			List<IntervalBase> intervalsToTransfer = intervalPersister
 					.readIntervals(lastTransferedIntervalKey + 1);
@@ -66,7 +74,7 @@ public class IntervalTransferManager {
 
 			JsonTransferer intervalTransferer = new JsonTransferer();
 			if (intervalTransferer.sendIntervals(intervalsToTransfer)) {
-				lastTransferedIntervalKey = intervalPersister.getHighestKey();
+				lastTransferedIntervalKey = databaseHighestKey;
 				Preferences.getInstance().registerLastTransferedInterval(
 						UIUtils.getWorkspaceName(), lastTransferedIntervalKey);
 			} else {
