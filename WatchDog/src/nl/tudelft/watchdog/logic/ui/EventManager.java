@@ -92,7 +92,7 @@ public class EventManager {
 			intervalManager.addInterval(junitInterval);
 			break;
 
-		case ACTIVITY:
+		case USER_ACTIVITY:
 			userInactivityNotifier.trigger();
 			interval = intervalManager
 					.getIntervalOfType(IntervalType.USER_ACTIVE);
@@ -106,7 +106,6 @@ public class EventManager {
 			interval = intervalManager
 					.getIntervalOfType(IntervalType.USER_ACTIVE);
 			intervalManager.closeInterval(interval);
-			editorInactivityNotifier.cancelTimer();
 			break;
 
 		case EDIT:
@@ -116,11 +115,12 @@ public class EventManager {
 					.getEditorInterval();
 			if (editorInterval == null
 					|| editorInterval.getType() != IntervalType.TYPING) {
+				editorInactivityNotifier.cancelTimer();
 				intervalManager.closeInterval(editorInterval);
 				intervalManager.addAndSetEditorInterval(new TypingInterval(
 						editor));
 			}
-
+			userInactivityNotifier.trigger();
 			writingInactivityNotifier.trigger();
 			break;
 
@@ -134,6 +134,7 @@ public class EventManager {
 						editor));
 			}
 			editorInactivityNotifier.trigger();
+			userInactivityNotifier.trigger();
 			break;
 
 		case END_FOCUS:

@@ -67,7 +67,7 @@ public class IntervalPersisterTest {
 
 		persister.saveIntervals(generatedIntervals);
 
-		List<IntervalBase> readIntervals = persister.readIntevals(0,
+		List<IntervalBase> readIntervals = persister.readIntervals(0,
 				Long.MAX_VALUE);
 		assertEquals(readIntervals.size(), items);
 

@@ -24,7 +24,7 @@ public class GeneralActivityListener {
 			@Override
 			public void handleEvent(Event event) {
 				eventManager
-						.update(new WatchDogEvent(event, EventType.ACTIVITY));
+						.update(new WatchDogEvent(event, EventType.USER_ACTIVITY));
 			}
 		});
 	}
