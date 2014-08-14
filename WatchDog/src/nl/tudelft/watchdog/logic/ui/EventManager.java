@@ -9,7 +9,7 @@ import nl.tudelft.watchdog.logic.interval.intervaltypes.JUnitInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
-import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
 
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -30,6 +30,8 @@ public class EventManager {
 
 	private InactivityNotifier editorInactivityNotifier;
 
+	private InactivityNotifier writingInactivityNotifier;
+
 	/** Constructor. */
 	public EventManager(IntervalManager intervalManager, int userActivityTimeout) {
 		this.intervalManager = intervalManager;
@@ -37,6 +39,8 @@ public class EventManager {
 				userActivityTimeout, EventType.USER_INACTIVITY);
 		editorInactivityNotifier = new InactivityNotifier(this,
 				userActivityTimeout, EventType.EDITOR_INACTIVITY);
+		writingInactivityNotifier = new InactivityNotifier(this,
+				userActivityTimeout, EventType.WRITING_INACTIVITY);
 	}
 
 	/** Introduces the supplied editorEvent */
@@ -65,6 +69,7 @@ public class EventManager {
 					.getIntervalOfType(IntervalType.ECLIPSE_ACTIVE);
 			intervalManager.closeInterval(interval);
 			userInactivityNotifier.cancelTimer();
+			editorInactivityNotifier.cancelTimer();
 			break;
 
 		case START_JAVA_PERSPECTIVE:
@@ -106,22 +111,24 @@ public class EventManager {
 
 		case EDIT:
 			ITextEditor editor = (ITextEditor) event.getSource();
-			// something like this:
-			// WatchDogUtils.getEditorContent(editor))
 
-			// editorInterval = intervalManager.getEditorInterval();
-			// if (editorInterval.getActivityType() == IntervalType.READING
-			// || editorInterval.getEditor() != editor.getEditorSite()) {
-			// // intervalManager.closeInterval(editorInterval1);
-			// }
+			EditorIntervalBase editorInterval = intervalManager
+					.getEditorInterval();
+			if (editorInterval == null
+					|| editorInterval.getType() != IntervalType.TYPING) {
+				intervalManager.closeInterval(editorInterval);
+				intervalManager.addAndSetEditorInterval(new TypingInterval(
+						editor));
+			}
+
+			writingInactivityNotifier.trigger();
 			break;
 
 		case PAINT:
 		case CARET_MOVED:
 		case ACTIVE_FOCUS:
 			editor = (ITextEditor) event.getSource();
-			EditorIntervalBase editorInterval = intervalManager
-					.getEditorInterval();
+			editorInterval = intervalManager.getEditorInterval();
 			if (editorInterval == null) {
 				intervalManager.addAndSetEditorInterval(new ReadingInterval(
 						editor));
@@ -131,6 +138,7 @@ public class EventManager {
 
 		case END_FOCUS:
 			editorInactivityNotifier.cancelTimer();
+			writingInactivityNotifier.cancelTimer();
 			intervalManager.closeInterval(intervalManager.getEditorInterval());
 			break;
 
@@ -138,11 +146,17 @@ public class EventManager {
 			intervalManager.closeInterval(intervalManager.getEditorInterval());
 			break;
 
+		case WRITING_INACTIVITY:
+			editorInterval = intervalManager.getEditorInterval();
+			if (editorInterval != null
+					&& editorInterval.getType() == IntervalType.TYPING) {
+				intervalManager.closeInterval(editorInterval);
+			}
+			break;
+
 		default:
 			break;
 		}
-
-		WatchDogLogger.getInstance().logInfo("Event " + event.getType() + " ");
 	}
 
 	/** Creates a new perspective Interval of the given type. */

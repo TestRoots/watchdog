@@ -52,7 +52,7 @@ public class IntervalStatistics {
 	private Duration calculateTime(IntervalType activity) {
 		Duration totalTime = new Duration(0);
 		for (IntervalBase interval : intervals) {
-			if (interval.getActivityType().equals(activity)) {
+			if (interval.getType().equals(activity)) {
 				totalTime = totalTime.plus(interval.getDuration());
 			}
 		}

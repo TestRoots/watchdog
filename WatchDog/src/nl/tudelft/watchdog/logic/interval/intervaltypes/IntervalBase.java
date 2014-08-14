@@ -142,7 +142,7 @@ public class IntervalBase implements Serializable {
 	}
 
 	/** @return the {@link ActivityType}. */
-	public IntervalType getActivityType() {
+	public IntervalType getType() {
 		return intervalType;
 	}
 

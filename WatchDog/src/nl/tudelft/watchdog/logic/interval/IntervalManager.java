@@ -60,10 +60,8 @@ public class IntervalManager {
 	/** Creates a new editing interval. */
 	public void addAndSetEditorInterval(EditorIntervalBase interval) {
 		addInterval(interval);
-		if (interval.getEditor() != null) {
-			interval.setDocument(documentFactory.createDocument(interval
-					.getEditor()));
-		}
+		interval.setDocument(documentFactory.createDocument(interval
+				.getEditor()));
 		WatchDogLogger.getInstance()
 				.logInfo("created new interval " + interval);
 	}
@@ -100,7 +98,7 @@ public class IntervalManager {
 	 */
 	public IntervalBase getIntervalOfType(IntervalType type) {
 		for (IntervalBase interval : intervals) {
-			if (interval.getActivityType() == type && !interval.isClosed()) {
+			if (interval.getType() == type && !interval.isClosed()) {
 				return interval;
 			}
 		}
