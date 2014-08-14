@@ -15,6 +15,8 @@ import nl.tudelft.watchdog.logic.ui.listeners.WorkbenchListener;
  */
 public class IntervalIntializationManager {
 
+	private static final int USER_ACTIVITY_TIMEOUT = 16000;
+
 	/** The singleton instance of the interval manager. */
 	private static IntervalIntializationManager instance = null;
 
@@ -28,7 +30,8 @@ public class IntervalIntializationManager {
 		IntervalPersister intervalPersister = new IntervalPersister(file);
 		this.intervalManager = new IntervalManager(intervalPersister,
 				new DocumentFactory());
-		EventManager eventManager = new EventManager(intervalManager);
+		EventManager eventManager = new EventManager(intervalManager,
+				USER_ACTIVITY_TIMEOUT);
 
 		WorkbenchListener workbenchListener = new WorkbenchListener(
 				eventManager, new IntervalTransferManager(intervalPersister));
