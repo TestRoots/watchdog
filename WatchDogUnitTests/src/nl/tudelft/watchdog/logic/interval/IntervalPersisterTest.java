@@ -9,8 +9,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
-import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 
 import org.junit.After;
 import org.junit.Before;
@@ -85,7 +85,8 @@ public class IntervalPersisterTest {
 	}
 
 	private IntervalBase createRandomInterval() {
-		SessionInterval interval = new SessionInterval(0);
+		IntervalBase interval = new IntervalBase(IntervalType.ECLIPSE_OPEN);
+		interval.setSessionSeed(444);
 		interval.setUserid("123");
 		interval.setStartTime(new Date(interval.getStart().getTime()
 				+ (new Random()).nextInt(100000)));

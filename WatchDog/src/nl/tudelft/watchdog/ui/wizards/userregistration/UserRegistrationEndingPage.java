@@ -1,9 +1,9 @@
 package nl.tudelft.watchdog.ui.wizards.userregistration;
 
-import nl.tudelft.watchdog.logic.User;
 import nl.tudelft.watchdog.logic.exceptions.ServerCommunicationException;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPage;
+import nl.tudelft.watchdog.ui.wizards.User;
 
 /**
  * @author mbeller

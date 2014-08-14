@@ -6,19 +6,16 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Observer;
 import java.util.Random;
 
 import nl.tudelft.watchdog.Activator;
 import nl.tudelft.watchdog.logic.document.DocumentFactory;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.ImmediateNotifyingObservable;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.interval.ClosingIntervalEvent;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.interval.NewIntervalEvent;
-import nl.tudelft.watchdog.logic.eclipseuireader.events.listeners.UIListener;
-import nl.tudelft.watchdog.logic.interval.active.IntervalBase;
-import nl.tudelft.watchdog.logic.interval.active.SessionInterval;
-import nl.tudelft.watchdog.logic.interval.active.UserActivityIntervalBase;
-import nl.tudelft.watchdog.logic.interval.activityCheckers.OnInactiveCallback;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
+import nl.tudelft.watchdog.logic.ui.EventManager;
+import nl.tudelft.watchdog.logic.ui.listeners.WorkbenchListener;
 
 /**
  * Manages interval listeners and keeps track of all intervals. Implements the
@@ -31,19 +28,13 @@ public class IntervalManager {
 	/** A list of currently opened intervals. */
 	private List<IntervalBase> intervals = new ArrayList<IntervalBase>();
 
-	/** Notifies subscribers of editorEvents. */
-	private ImmediateNotifyingObservable editorEventObservable;
-
-	/** Notifies subscribers of intervalEvents. */
-	private ImmediateNotifyingObservable intervalEventObservable;
-
 	/** The UI listener */
-	private UIListener uiListener;
+	private WorkbenchListener uiListener;
 
 	/** The document factory. */
 	private DocumentFactory documentFactory;
 
-	/** The interval persistence storage on the local hd. */
+	/** The interval persistence storage. */
 	private IntervalPersister intervalPersister;
 
 	/** The singleton instance of the interval manager. */
@@ -55,12 +46,10 @@ public class IntervalManager {
 	 */
 	private long sessionSeed;
 
+	private EventManager userActionManager;
+
 	/** Private constructor. */
 	private IntervalManager() {
-		// setup logging
-		this.intervalEventObservable = new ImmediateNotifyingObservable();
-		addIntervalListener(new IntervalLoggerObserver());
-
 		this.sessionSeed = new Random(new Date().getTime()).nextLong();
 
 		File file = new File(
@@ -69,16 +58,9 @@ public class IntervalManager {
 		this.intervalPersister = new IntervalPersister(file);
 
 		this.documentFactory = new DocumentFactory();
-		this.editorEventObservable = new ImmediateNotifyingObservable();
-		this.uiListener = new UIListener(editorEventObservable,
+		this.userActionManager = new EventManager(this);
+		this.uiListener = new WorkbenchListener(userActionManager,
 				new IntervalTransferManager(intervalPersister));
-		addNewSessionInterval();
-		addEditorObserversAndUIListeners();
-	}
-
-	/** Creates change listeners for different document events. */
-	private void addEditorObserversAndUIListeners() {
-		editorEventObservable.addObserver(new EditorEventObserver(this));
 		uiListener.attachListeners();
 	}
 
@@ -94,48 +76,29 @@ public class IntervalManager {
 	}
 
 	/** Creates a new editing interval. */
-	/* package */void createNewActiveInterval(
-			UserActivityIntervalBase interval, int timeout) {
-		// TODO (MMB) shouldn't this handler be added to the interval itself?
-		intervals.add(interval);
-		interval.setDocument(documentFactory.createDocument(interval.getPart()));
-		addNewIntervalHandler(interval, timeout);
-	}
-
-	/**
-	 * Adds a new interval handler base, and defines its timeout, i.e. when the
-	 * interval is closed.
-	 */
-	private void addNewIntervalHandler(final IntervalBase interval,
-			final int timeout) {
-		interval.addTimeoutListener(timeout, new OnInactiveCallback() {
-			@Override
-			public void onInactive() {
-				if (timeout == 0) {
-					return;
-				}
-				closeInterval(interval);
-			}
-		});
-		intervalEventObservable.notifyObservers(new NewIntervalEvent(interval));
+	public void addAndSetEditorInterval(EditorIntervalBase interval) {
+		addInterval(interval);
+		interval.setDocument(documentFactory.createDocument(interval
+				.getEditor()));
+		WatchDogLogger.getInstance()
+				.logInfo("created new interval " + interval);
 	}
 
 	/**
 	 * Closes the current interval (if it is not already closed). Handles
 	 * <code>null</code> gracefully.
 	 */
-	/* package */void closeInterval(IntervalBase interval) {
-		if (interval != null) {
-			intervalEventObservable.notifyObservers(new ClosingIntervalEvent(
-					interval));
-			interval.closeInterval();
-			intervals.remove(interval);
-			intervalPersister.saveInterval(interval);
+	public void closeInterval(IntervalBase interval) {
+		if (interval == null) {
+			return;
 		}
+		interval.closeInterval();
+		intervals.remove(interval);
+		intervalPersister.saveInterval(interval);
 	}
 
 	/** Closes all currently open intervals. */
-	public void closeAllCurrentIntervals() {
+	public void closeAllIntervals() {
 		Iterator<IntervalBase> iterator = intervals.listIterator();
 		while (iterator.hasNext()) {
 			// we need to remove the interval first from the list in order to
@@ -147,14 +110,27 @@ public class IntervalManager {
 	}
 
 	/**
-	 * @return the single ActivityInterval that is actually a
-	 *         UserActivityInterval. There can only be one such interval at any
-	 *         given time. If there is none, <code>null</code>.
+	 * @return An interval of the specified type, or <code>null</code> if no
+	 *         such interval is currently open.
 	 */
-	/* package */UserActivityIntervalBase getUserActivityIntervalIfAny() {
+	public IntervalBase getIntervalOfType(IntervalType type) {
 		for (IntervalBase interval : intervals) {
-			if (interval instanceof UserActivityIntervalBase) {
-				return (UserActivityIntervalBase) interval;
+			if (interval.getActivityType() == type && !interval.isClosed()) {
+				return interval;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @return the single {@link EditorIntervalBase} that is actually a
+	 *         {@link EditorIntervalBase}. There can only be one such interval
+	 *         at any given time. If there is none, <code>null</code>.
+	 */
+	public EditorIntervalBase getEditorInterval() {
+		for (IntervalBase interval : intervals) {
+			if (interval instanceof EditorIntervalBase) {
+				return (EditorIntervalBase) interval;
 			}
 		}
 		return null;
@@ -165,36 +141,28 @@ public class IntervalManager {
 		return Collections.unmodifiableList(intervals);
 	}
 
-	/**
-	 * @return editorEventObservable
-	 */
-	public ImmediateNotifyingObservable getEditorObserveable() {
-		return editorEventObservable;
-	}
-
-	/** Registers a new interval listener. */
-	public void addIntervalListener(Observer listener) {
-		intervalEventObservable.addObserver(listener);
-	}
-
-	/** Removes an existing interval listener. */
-	public void removeIntervalListener(Observer listener) {
-		intervalEventObservable.deleteObserver(listener);
-	}
-
-	/** Starts and registers a new session interval. */
-	public void addNewSessionInterval() {
-		SessionInterval activeSessionInterval = new SessionInterval(
-				getSessionSeed());
-		intervals.add(activeSessionInterval);
-		addNewIntervalHandler(activeSessionInterval, 0);
+	/** @return {@link EventManager} */
+	public EventManager getUserActionManager() {
+		return userActionManager;
 	}
 
 	/**
-	 * @return The session seed, a random number generated on each start of
-	 *         Eclipse to be able to tell running Eclipse instances apart.
+	 * Adds the supplied interval to the list of intervals. New intervals must
+	 * use this method to be registered properly. Handles the addition of
+	 * already closed intervals properly.
 	 */
-	public long getSessionSeed() {
-		return sessionSeed;
+	public void addInterval(IntervalBase interval) {
+		if (intervals.size() > 20) {
+			WatchDogLogger
+					.getInstance()
+					.logSevere(
+							"Too many open intervals. Something fishy is going on here! Cannot add more intervals.");
+			return;
+		}
+		interval.setSessionSeed(sessionSeed);
+		intervals.add(interval);
+		if (interval.isClosed()) {
+			closeInterval(interval);
+		}
 	}
 }
