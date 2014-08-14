@@ -58,7 +58,7 @@ public class IntervalManager {
 		this.intervalPersister = new IntervalPersister(file);
 
 		this.documentFactory = new DocumentFactory();
-		userActionManager = new EventManager(this);
+		this.userActionManager = new EventManager(this);
 		this.uiListener = new WorkbenchListener(userActionManager,
 				new IntervalTransferManager(intervalPersister));
 		uiListener.attachListeners();
@@ -76,7 +76,7 @@ public class IntervalManager {
 	}
 
 	/** Creates a new editing interval. */
-	public void addAndSetNewActiveInterval(EditorIntervalBase interval) {
+	public void addAndSetEditorInterval(EditorIntervalBase interval) {
 		addInterval(interval);
 		interval.setDocument(documentFactory.createDocument(interval
 				.getEditor()));
