@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import nl.tudelft.watchdog.logic.exceptions.ContentReaderException;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;
@@ -46,6 +47,16 @@ public class WatchDogUtils {
 	 */
 	public static String getEditorContent(final ITextEditor editor)
 			throws ContentReaderException, IllegalArgumentException {
+		IDocument document = extractDocument(editor);
+		if (document == null) {
+			throw new ContentReaderException("Document is null");
+		}
+
+		return document.get();
+	}
+
+	private static IDocument extractDocument(final ITextEditor editor)
+			throws ContentReaderException {
 		if (editor == null) {
 			throw new IllegalArgumentException("Editor is null");
 		}
@@ -58,11 +69,21 @@ public class WatchDogUtils {
 
 		IDocument document = documentProvider.getDocument(editor
 				.getEditorInput());
-		if (document == null) {
-			throw new ContentReaderException("Document is null");
-		}
+		return document;
+	}
 
-		return document.get();
+	/**
+	 * Determines whether the both given {@link ITextEditor}s have the same
+	 * underlying document (<code>true</code>) or not (<code>false</code>).
+	 */
+	public static boolean hasSameUnderlyingDocument(ITextEditor editor1,
+			ITextEditor editor2) {
+		try {
+			return (extractDocument(editor1) == extractDocument(editor2));
+		} catch (ContentReaderException exception) {
+			WatchDogLogger.getInstance().logSevere(exception);
+		}
+		return false;
 	}
 
 	/**

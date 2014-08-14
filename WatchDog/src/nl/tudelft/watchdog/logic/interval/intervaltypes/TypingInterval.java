@@ -17,7 +17,7 @@ public class TypingInterval extends EditorIntervalBase {
 	}
 
 	@Override
-	public IntervalType getActivityType() {
+	public IntervalType getType() {
 		return IntervalType.TYPING;
 	}
 }

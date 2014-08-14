@@ -11,7 +11,6 @@ import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -23,6 +22,7 @@ import org.mockito.Mockito;
 public class EventManagerTest {
 
 	private static final int USER_ACTIVITY_TIMEOUT = 300;
+	private static final int TIMEOUT_GRACE_PERIOD = (int) (USER_ACTIVITY_TIMEOUT * 1.1);
 	private EventManager eventManager;
 	private IntervalManager intervalManager;
 
@@ -37,86 +37,92 @@ public class EventManagerTest {
 
 	@Test
 	public void testCreateReadInterval() {
-		eventManager.update(new WatchDogEvent(Mockito.mock(ITextEditor.class),
-				EventType.ACTIVE_FOCUS));
+		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
 		Mockito.verify(intervalManager).addAndSetEditorInterval(
-				Mockito.any(ReadingInterval.class));
+				Mockito.isA(ReadingInterval.class));
 	}
 
 	@Test
 	public void testCreateReadIntervalOnlyOnce() {
-		eventManager.update(new WatchDogEvent(Mockito.mock(ITextEditor.class),
-				EventType.ACTIVE_FOCUS));
+		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
 		Mockito.verify(intervalManager).addAndSetEditorInterval(
-				Mockito.any(ReadingInterval.class));
-		eventManager.update(new WatchDogEvent(Mockito.mock(ITextEditor.class),
-				EventType.CARET_MOVED));
-		eventManager.update(new WatchDogEvent(Mockito.mock(ITextEditor.class),
-				EventType.CARET_MOVED));
-		eventManager.update(new WatchDogEvent(Mockito.mock(ITextEditor.class),
-				EventType.PAINT));
+				Mockito.isA(ReadingInterval.class));
+		eventManager.update(createMockEvent(EventType.CARET_MOVED));
+		eventManager.update(createMockEvent(EventType.CARET_MOVED));
+		eventManager.update(createMockEvent(EventType.PAINT));
 		Mockito.verify(intervalManager).addAndSetEditorInterval(
-				Mockito.any(ReadingInterval.class));
+				Mockito.isA(ReadingInterval.class));
 	}
 
 	@Test
 	public void testReadIntervalIsClosed() {
-		eventManager.update(new WatchDogEvent(Mockito.mock(ITextEditor.class),
-				EventType.ACTIVE_FOCUS));
+		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
 		Mockito.verify(intervalManager).addAndSetEditorInterval(
-				Mockito.any(ReadingInterval.class));
-		eventManager.update(new WatchDogEvent(Mockito.mock(ITextEditor.class),
-				EventType.END_FOCUS));
+				Mockito.isA(ReadingInterval.class));
+		eventManager.update(createMockEvent(EventType.END_FOCUS));
 		Mockito.verify(intervalManager, Mockito.atLeastOnce()).closeInterval(
-				Mockito.any(ReadingInterval.class));
+				Mockito.isA(ReadingInterval.class));
 		Assert.assertEquals(null, intervalManager.getEditorInterval());
 	}
 
 	@Test
-	@Ignore
 	public void testCreateWriteInterval() {
-		eventManager.update(new WatchDogEvent(Mockito.mock(ITextEditor.class),
-				EventType.EDIT));
+		eventManager.update(createMockEvent(EventType.EDIT));
 		Mockito.verify(intervalManager).addAndSetEditorInterval(
-				Mockito.any(TypingInterval.class));
+				Mockito.isA(TypingInterval.class));
 	}
 
 	@Test
-	@Ignore
 	public void testCreateWriteIntervalOnlyOnce() {
-		eventManager.update(new WatchDogEvent(Mockito.mock(ITextEditor.class),
-				EventType.EDIT));
+		eventManager.update(createMockEvent(EventType.EDIT));
 		Mockito.verify(intervalManager).addAndSetEditorInterval(
-				Mockito.any(ReadingInterval.class));
-		eventManager.update(new WatchDogEvent(Mockito.mock(ITextEditor.class),
-				EventType.CARET_MOVED));
-		eventManager.update(new WatchDogEvent(Mockito.mock(ITextEditor.class),
-				EventType.EDIT));
-		eventManager.update(new WatchDogEvent(Mockito.mock(ITextEditor.class),
-				EventType.PAINT));
+				Mockito.isA(TypingInterval.class));
+		Mockito.verify(intervalManager, Mockito.never())
+				.addAndSetEditorInterval(Mockito.isA(ReadingInterval.class));
+		eventManager.update(createMockEvent(EventType.CARET_MOVED));
+		eventManager.update(createMockEvent(EventType.EDIT));
+		eventManager.update(createMockEvent(EventType.PAINT));
 		Mockito.verify(intervalManager).addAndSetEditorInterval(
-				Mockito.any(TypingInterval.class));
+				Mockito.isA(TypingInterval.class));
+	}
+
+	@Test
+	public void testWritingIntervalsGetClosedOnHigherCancel() {
+		eventManager.update(createMockEvent(EventType.EDIT));
+		eventManager.update(createMockEvent(EventType.END_ECLIPSE));
+		Mockito.verify(intervalManager).closeInterval(
+				Mockito.isA(TypingInterval.class));
 	}
 
 	@Test
 	public void testTimeoutWorksForRegularIntervals() {
-		eventManager.update(new WatchDogEvent(Mockito.mock(ITextEditor.class),
-				EventType.ACTIVE_WINDOW));
-		eventManager.update(new WatchDogEvent(Mockito.mock(ITextEditor.class),
-				EventType.ACTIVITY));
-		Mockito.verify(intervalManager,
-				Mockito.timeout((int) (USER_ACTIVITY_TIMEOUT * 1.1)))
-				.closeInterval(Mockito.any(IntervalBase.class));
+		eventManager.update(createMockEvent(EventType.ACTIVE_WINDOW));
+		eventManager.update(createMockEvent(EventType.ACTIVITY));
+		Mockito.verify(intervalManager, Mockito.timeout(TIMEOUT_GRACE_PERIOD))
+				.closeInterval(Mockito.isA(IntervalBase.class));
 		Assert.assertEquals(null, intervalManager.getEditorInterval());
 	}
 
 	@Test
 	public void testTimeoutWorksForReadingIntervals() {
-		eventManager.update(new WatchDogEvent(Mockito.mock(ITextEditor.class),
-				EventType.ACTIVE_FOCUS));
-		Mockito.verify(intervalManager,
-				Mockito.timeout((int) (USER_ACTIVITY_TIMEOUT * 1.1)))
-				.closeInterval(Mockito.any(ReadingInterval.class));
+		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
+		Mockito.verify(intervalManager, Mockito.timeout(TIMEOUT_GRACE_PERIOD))
+				.closeInterval(Mockito.isA(ReadingInterval.class));
 		Assert.assertEquals(null, intervalManager.getEditorInterval());
+	}
+
+	@Test
+	public void testTimeoutWorksForWritingIntervals() {
+		eventManager.update(createMockEvent(EventType.EDIT));
+		// first close null interval
+		Mockito.verify(intervalManager).closeInterval(
+				Mockito.isNull(IntervalBase.class));
+		Mockito.verify(intervalManager, Mockito.timeout(TIMEOUT_GRACE_PERIOD))
+				.closeInterval(Mockito.isA(TypingInterval.class));
+		Assert.assertEquals(null, intervalManager.getEditorInterval());
+	}
+
+	private WatchDogEvent createMockEvent(EventType eventType) {
+		return new WatchDogEvent(Mockito.mock(ITextEditor.class), eventType);
 	}
 }

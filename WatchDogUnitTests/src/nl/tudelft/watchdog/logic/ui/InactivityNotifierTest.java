@@ -85,7 +85,7 @@ public class InactivityNotifierTest {
 	}
 
 	private WatchDogEvent createAnyWatchDogEvent() {
-		return Mockito.any(WatchDogEvent.class);
+		return Mockito.isA(WatchDogEvent.class);
 	}
 
 }
