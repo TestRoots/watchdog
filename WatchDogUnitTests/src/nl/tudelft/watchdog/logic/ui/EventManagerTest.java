@@ -97,7 +97,7 @@ public class EventManagerTest {
 	@Test
 	public void testTimeoutWorksForRegularIntervals() {
 		eventManager.update(createMockEvent(EventType.ACTIVE_WINDOW));
-		eventManager.update(createMockEvent(EventType.ACTIVITY));
+		eventManager.update(createMockEvent(EventType.USER_ACTIVITY));
 		Mockito.verify(intervalManager, Mockito.timeout(TIMEOUT_GRACE_PERIOD))
 				.closeInterval(Mockito.isA(IntervalBase.class));
 		Assert.assertEquals(null, intervalManager.getEditorInterval());
@@ -130,10 +130,32 @@ public class EventManagerTest {
 				.closeInterval(Mockito.any(IntervalBase.class));
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 		Mockito.verify(intervalManager,
-				Mockito.timeout(TIMEOUT_GRACE_PERIOD).never())
+				Mockito.timeout(TIMEOUT_GRACE_PERIOD).never()).closeInterval(
+				Mockito.any(IntervalBase.class));
+		Mockito.verify(intervalManager,
+				Mockito.timeout(TIMEOUT_GRACE_PERIOD * 2)).closeInterval(
+				Mockito.isA(ReadingInterval.class));
+		Assert.assertEquals(null, intervalManager.getEditorInterval());
+	}
+
+	@Test
+	public void userInactiveShouldNotCloseReading() {
+		eventManager.update(createMockEvent(EventType.USER_ACTIVITY));
+		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
+		Mockito.verify(intervalManager,
+				Mockito.timeout(USER_ACTIVITY_TIMEOUT / 2).never())
 				.closeInterval(Mockito.any(IntervalBase.class));
-		Mockito.verify(intervalManager, Mockito.timeout(TIMEOUT_GRACE_PERIOD*2))
-				.closeInterval(Mockito.isA(ReadingInterval.class));
+		eventManager.update(createMockEvent(EventType.CARET_MOVED));
+		Mockito.verify(intervalManager,
+				Mockito.timeout(TIMEOUT_GRACE_PERIOD).never()).closeInterval(
+				Mockito.any(IntervalBase.class));
+		eventManager.update(createMockEvent(EventType.CARET_MOVED));
+		Mockito.verify(intervalManager,
+				Mockito.timeout((int) (TIMEOUT_GRACE_PERIOD * 2.4)).never())
+				.closeInterval(Mockito.any(IntervalBase.class));
+		Mockito.verify(intervalManager,
+				Mockito.timeout(TIMEOUT_GRACE_PERIOD * 3)).closeInterval(
+				Mockito.isA(ReadingInterval.class));
 		Assert.assertEquals(null, intervalManager.getEditorInterval());
 	}
 
