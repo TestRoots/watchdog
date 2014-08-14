@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.ui.handlers;
 
 import java.io.IOException;
 
-import nl.tudelft.watchdog.logic.interval.IntervalManager;
+import nl.tudelft.watchdog.logic.interval.IntervalIntializationManager;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
@@ -41,7 +41,7 @@ public class StartUpHandler implements IStartup {
 		WatchDogGlobals.isActive = true;
 		WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
 		// initializes the interval manager, and thereby, watchdog.
-		IntervalManager.getInstance();
+		IntervalIntializationManager.getInstance();
 	}
 
 	/**
