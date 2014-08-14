@@ -30,16 +30,16 @@ public class IntervalPersister {
 	public IntervalPersister(final File file) {
 		try {
 			database = createDatabase(file);
+			map = database.getTreeMap("intervals");
+			// Compact database on every 10th new interval.
+			if (!map.isEmpty() && map.size() % 10 == 0) {
+				database.compact();
+			}
 		} catch (RuntimeException e) {
 			// Happens when an update to the serializables in the database
 			// was made, and the new objects cannot be created from the old data
 			file.delete();
 			database = createDatabase(file);
-		}
-		map = database.getTreeMap("intervals");
-		// Compact database on every 500th new interval.
-		if (!map.isEmpty() && map.size() % 500 == 0) {
-			database.compact();
 		}
 	}
 
