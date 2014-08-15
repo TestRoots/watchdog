@@ -143,8 +143,7 @@ public class NetworkUtils {
 		try {
 			return EntityUtils.toString(entity);
 		} catch (ParseException | IOException exception) {
-			// TODO Auto-generated catch block
-			exception.printStackTrace();
+			WatchDogLogger.getInstance().logSevere(exception);
 		}
 		return "";
 	}

@@ -52,7 +52,6 @@ public class TypingInterval extends EditorIntervalBase {
 			String endingContent = endingDocument.getContent();
 			editDistance = StringUtilities.levenshteinDistance(startingContent,
 					endingContent);
-			// TODO (MMB) calculate document length
 		}
 		super.close();
 	}

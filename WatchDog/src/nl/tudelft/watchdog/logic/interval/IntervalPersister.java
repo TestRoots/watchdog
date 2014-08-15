@@ -44,7 +44,6 @@ public class IntervalPersister {
 	}
 
 	private DB createDatabase(final File file) {
-		// TODO (MMB) reset head pointer in preferences!
 		return DBMaker.newFileDB(file).closeOnJvmShutdown().make();
 	}
 
