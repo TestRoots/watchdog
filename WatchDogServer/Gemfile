@@ -5,6 +5,7 @@ gem 'mongo'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'bson_ext'
+gem 'geocoder'
 
 group :test do
   gem 'rspec', "~>2.9"
