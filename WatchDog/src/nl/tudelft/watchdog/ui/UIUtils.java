@@ -167,22 +167,4 @@ public class UIUtils {
 		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile()
 				.toString();
 	}
-
-	/**
-	 * @return <code>true</code> when the given string is either
-	 *         <code>null</code> or empty. <code>false</code> otherwise.
-	 */
-	public static boolean isEmpty(String string) {
-		if (string == null || string.isEmpty()) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * @return Whether the string with whitespaces trimmed is empty.
-	 */
-	public static boolean isEmptyOrHasOnlyWhitespaces(String string) {
-		return isEmpty(string) ? true : string.trim().isEmpty();
-	}
 }

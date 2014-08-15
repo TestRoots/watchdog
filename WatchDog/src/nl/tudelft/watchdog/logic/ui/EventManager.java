@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.logic.ui;
 
+import nl.tudelft.watchdog.logic.document.DocumentFactory;
 import nl.tudelft.watchdog.logic.interval.IntervalIntializationManager;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
@@ -10,6 +11,7 @@ import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
 
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -32,9 +34,14 @@ public class EventManager {
 
 	private InactivityNotifier writingInactivityNotifier;
 
+	private DocumentFactory documentFactory;
+
 	/** Constructor. */
-	public EventManager(IntervalManager intervalManager, int userActivityTimeout) {
+	public EventManager(IntervalManager intervalManager,
+			DocumentFactory documentFactory, int userActivityTimeout) {
 		this.intervalManager = intervalManager;
+		this.documentFactory = documentFactory;
+
 		userInactivityNotifier = new InactivityNotifier(this,
 				userActivityTimeout, EventType.USER_INACTIVITY);
 		editorInactivityNotifier = new InactivityNotifier(this,
@@ -115,10 +122,22 @@ public class EventManager {
 					.getEditorInterval();
 			if (editorInterval == null
 					|| editorInterval.getType() != IntervalType.TYPING) {
+				// create new typing interval
 				editorInactivityNotifier.cancelTimer();
 				intervalManager.closeInterval(editorInterval);
 				intervalManager.addAndSetEditorInterval(new TypingInterval(
 						editor));
+			} else if (editorInterval.getType() == IntervalType.TYPING) {
+				// refresh document content for calculation of edit distance
+				TypingInterval typingInterval = (TypingInterval) editorInterval;
+				try {
+					// TODO (MMB) was null after i closed laptop, restarted and
+					// tried to close eclipse
+					typingInterval.setEndingDocument(documentFactory
+							.createDocument(editor));
+				} catch (IllegalArgumentException exception) {
+					WatchDogLogger.getInstance().logSevere(exception);
+				}
 			}
 			userInactivityNotifier.trigger();
 			writingInactivityNotifier.trigger();

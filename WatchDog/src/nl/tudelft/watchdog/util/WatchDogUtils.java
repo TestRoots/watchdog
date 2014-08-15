@@ -16,9 +16,7 @@ import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
-/**
- * Utilities for watchDog.
- */
+/** Utilities for watchDog. */
 public class WatchDogUtils {
 
 	/** Formatter for a {@link Period}. */
@@ -121,6 +119,38 @@ public class WatchDogUtils {
 	public static String makeDurationHumanReadable(Duration duration) {
 		return periodFormatter.print(duration.toPeriod().withMillis(0)
 				.normalizedStandard());
+	}
+
+	/**
+	 * @return <code>true</code> when the given string is either
+	 *         <code>null</code> or empty. <code>false</code> otherwise.
+	 */
+	public static boolean isEmpty(String string) {
+		if (string == null || string.isEmpty()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @return Whether the string with whitespaces trimmed is empty.
+	 */
+	public static boolean isEmptyOrHasOnlyWhitespaces(String string) {
+		return isEmpty(string) ? true : string.trim().isEmpty();
+	}
+
+	/**
+	 * @return the number of source lines of code in the given string.
+	 */
+	public static long countSLOC(String text) {
+		String[] lines = text.split("\r\n|\r|\n");
+		long sloc = 0;
+		for (String line : lines) {
+			if (!isEmptyOrHasOnlyWhitespaces(line)) {
+				sloc++;
+			}
+		}
+		return sloc;
 	}
 
 }

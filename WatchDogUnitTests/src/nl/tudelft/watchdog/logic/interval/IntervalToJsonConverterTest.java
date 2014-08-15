@@ -30,7 +30,7 @@ public class IntervalToJsonConverterTest {
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"it\":\"re\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\"}]",
+				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"re\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\"}]",
 				intervalTransferer.toJson(intervals));
 	}
 
@@ -43,7 +43,7 @@ public class IntervalToJsonConverterTest {
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"diff\":0,\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\"}]",
+				"[{\"diff\":0,\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\"}]",
 				intervalTransferer.toJson(intervals));
 	}
 
@@ -60,16 +60,17 @@ public class IntervalToJsonConverterTest {
 				intervalTransferer.toJson(intervals));
 	}
 
-	private ArrayList<IntervalBase> createSampleIntervals(EditorIntervalBase interval) {
+	private ArrayList<IntervalBase> createSampleIntervals(
+			EditorIntervalBase interval) {
 		ArrayList<IntervalBase> intervals = new ArrayList<IntervalBase>();
 		interval.setDocument(new Document("Project", "Production.java",
-				DocumentType.PRODUCTION));
+				DocumentType.PRODUCTION, "blah-document"));
 		interval.setStartTime(new Date(1));
 		interval.setEndTime(new Date(2));
 		intervals.add(interval);
 		return intervals;
 	}
-	
+
 	private ArrayList<IntervalBase> createSampleIntervals(IntervalBase interval) {
 		ArrayList<IntervalBase> intervals = new ArrayList<IntervalBase>();
 		interval.setStartTime(new Date(1));

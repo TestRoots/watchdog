@@ -4,6 +4,7 @@ import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 import nl.tudelft.watchdog.ui.wizards.FormValidationListener;
 import nl.tudelft.watchdog.ui.wizards.YesNoDontKnowChoice;
+import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -131,7 +132,7 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 	}
 
 	private boolean inputFieldDoesNotHaveMinimumSensibleInput(Text input) {
-		return UIUtils.isEmptyOrHasOnlyWhitespaces(input.getText())
+		return WatchDogUtils.isEmptyOrHasOnlyWhitespaces(input.getText())
 				|| input.getText().length() < 3;
 	}
 

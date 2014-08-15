@@ -76,7 +76,7 @@ public class IntervalManager {
 			return;
 		}
 		System.out.println("Closing " + interval.getType());
-		interval.closeInterval();
+		interval.close();
 		intervals.remove(interval);
 		persister.saveInterval(interval);
 	}
