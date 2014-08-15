@@ -91,7 +91,6 @@ public class IntervalManager {
 			iterator.remove();
 			closeInterval(interval);
 		}
-		persister.closeDatabase();
 	}
 
 	/**
