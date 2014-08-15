@@ -76,7 +76,7 @@ public class EventManagerTest {
 	}
 
 	@Test
-	public void testCreateWriteIntervalOnlyOnce() {
+	public void testCreateWriteIntervalAndNotAReadInterval() {
 		eventManager.update(createMockEvent(EventType.EDIT));
 		Mockito.verify(intervalManager).addAndSetEditorInterval(
 				Mockito.isA(TypingInterval.class));
