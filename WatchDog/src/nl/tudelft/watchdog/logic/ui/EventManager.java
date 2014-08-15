@@ -62,6 +62,9 @@ public class EventManager {
 			break;
 
 		case END_ECLIPSE:
+			userInactivityNotifier.cancelTimer();
+			editorInactivityNotifier.cancelTimer();
+			writingInactivityNotifier.cancelTimer();
 			intervalManager.closeAllIntervals();
 			break;
 
@@ -131,8 +134,6 @@ public class EventManager {
 				// refresh document content for calculation of edit distance
 				TypingInterval typingInterval = (TypingInterval) editorInterval;
 				try {
-					// TODO (MMB) was null after i closed laptop, restarted and
-					// tried to close eclipse
 					typingInterval.setEndingDocument(documentFactory
 							.createDocument(editor));
 				} catch (IllegalArgumentException exception) {

@@ -55,7 +55,6 @@ public class IntervalManager {
 		if (interval.isClosed()) {
 			closeInterval(interval);
 		}
-		System.out.println("Starting " + interval.getType());
 	}
 
 	/** Creates a new editing interval. */
@@ -75,7 +74,6 @@ public class IntervalManager {
 		if (interval == null) {
 			return;
 		}
-		System.out.println("Closing " + interval.getType());
 		interval.close();
 		intervals.remove(interval);
 		persister.saveInterval(interval);

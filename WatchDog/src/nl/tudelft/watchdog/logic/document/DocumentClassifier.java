@@ -3,7 +3,6 @@ package nl.tudelft.watchdog.logic.document;
 /**
  * Estimates the nature of a document into one of {@link DocumentType}.
  */
-// TODO (MMB) This class needs some serious enhancement.
 public class DocumentClassifier {
 	/**
 	 * Classifies the document type of the given document, by analyzing its
