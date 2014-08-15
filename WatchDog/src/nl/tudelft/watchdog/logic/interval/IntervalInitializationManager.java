@@ -18,7 +18,7 @@ public class IntervalInitializationManager {
 	private static final int USER_ACTIVITY_TIMEOUT = 16000;
 
 	/** The singleton instance of the interval manager. */
-	private static IntervalInitializationManager instance = null;
+	private static volatile IntervalInitializationManager instance = null;
 
 	private IntervalManager intervalManager;
 

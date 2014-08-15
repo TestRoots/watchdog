@@ -31,9 +31,6 @@ public class UserRegistrationWizard extends Wizard {
 	 */
 	/* package */String userid;
 
-	/** Allows a shortcut to the finish button. */
-	boolean shortcutToCanFinish = false;
-
 	@Override
 	public void addPages() {
 		welcomePage = new UserWelcomePage();

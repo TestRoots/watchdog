@@ -90,7 +90,7 @@ public class JsonTransferer {
 	}
 
 	/** A JSon Serializer for Date. */
-	private class DateSerializer implements JsonSerializer<Date> {
+	private static class DateSerializer implements JsonSerializer<Date> {
 
 		@Override
 		public JsonElement serialize(Date date, Type type,

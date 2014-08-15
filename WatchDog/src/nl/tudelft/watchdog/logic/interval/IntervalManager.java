@@ -2,16 +2,15 @@ package nl.tudelft.watchdog.logic.interval;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 import nl.tudelft.watchdog.logic.document.DocumentFactory;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
+import nl.tudelft.watchdog.util.WatchDogUtils;
 
 /** The interval manager handles the addition and removal */
 public class IntervalManager {
@@ -34,7 +33,7 @@ public class IntervalManager {
 			DocumentFactory documentFactory) {
 		this.persister = persister;
 		this.documentFactory = documentFactory;
-		this.sessionSeed = new Random(new Date().getTime()).nextLong();
+		this.sessionSeed = WatchDogUtils.randomObject.nextLong();
 	}
 
 	/**
@@ -110,9 +109,18 @@ public class IntervalManager {
 	 *         at any given time. If there is none, <code>null</code>.
 	 */
 	public EditorIntervalBase getEditorInterval() {
+		return getEditorIntervalOfClass(EditorIntervalBase.class);
+	}
+
+	/**
+	 * @return Returns an editor interval of the given class, if there is any
+	 *         such open. If not, returns null.
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends IntervalBase> T getEditorIntervalOfClass(Class<T> clazz) {
 		for (IntervalBase interval : intervals) {
-			if (interval instanceof EditorIntervalBase) {
-				return (EditorIntervalBase) interval;
+			if (clazz.isInstance(interval) && !interval.isClosed()) {
+				return (T) interval;
 			}
 		}
 		return null;

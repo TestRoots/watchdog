@@ -40,7 +40,7 @@ public class IntervalTransferManager {
 		task.run();
 	}
 
-	private class IntervalsTransferTimerTask extends TimerTask {
+	private static class IntervalsTransferTimerTask extends TimerTask {
 		private final IntervalPersister intervalPersister;
 		private long lastTransferedIntervalKey;
 
