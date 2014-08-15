@@ -1,8 +1,11 @@
 package nl.tudelft.watchdog.util;
 
-import nl.tudelft.watchdog.Activator;
+import java.io.File;
+import java.io.FileReader;
 
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.apache.maven.project.MavenProject;
 
 /**
  * Globals for the current WatchDog instance.
@@ -16,19 +19,30 @@ public class WatchDogGlobals {
 	public final static String inactiveWatchDogUIText = "WatchDog is inactive!";
 
 	/** The default URI of the WatchDogServer. */
-	public final static String DEFAULT_SERVER_URI = "http://www.testroots.org/watchdog/";
+	public final static String DEFAULT_SERVER_URI = "http://watchdog.testroots.org/";
 
 	/** Flag determining whether WatchDog is active. */
 	public static boolean isActive = false;
 
-	/** The reading timeout in milliseconds. */
-	public static int READING_TIMEOUT = 4 * 1000;
+	/** The client's version, as set in pom.xml. */
+	public static String CLIENT_VERSION = "1.0-standard";
 
-	/** The typing timeout in milliseconds. */
-	public static int TYPING_TIMEOUT = 4 * 1000;
+	static {
+		Model model = null;
+		FileReader reader = null;
+		MavenXpp3Reader mavenreader = new MavenXpp3Reader();
 
-	/** The TU Logo. */
-	public static ImageDescriptor tuLogoImageDescriptor = Activator
-			.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
-					"resources/images/tudelft_with_frame.png");
+		try {
+			File pomFile = new File("pom.xml");
+			reader = new FileReader(pomFile); // <-- pomfile is your pom.xml
+			model = mavenreader.read(reader);
+			model.setPomFile(pomFile);
+		} catch (Exception ex) {
+			// intentionally left empty;
+		}
+
+		MavenProject project = new MavenProject(model);
+		CLIENT_VERSION = project.getVersion();
+	}
+
 }

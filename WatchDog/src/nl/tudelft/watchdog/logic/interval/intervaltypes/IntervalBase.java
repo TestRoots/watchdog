@@ -3,6 +3,8 @@ package nl.tudelft.watchdog.logic.interval.intervaltypes;
 import java.io.Serializable;
 import java.util.Date;
 
+import nl.tudelft.watchdog.util.WatchDogGlobals;
+
 import org.joda.time.Duration;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormat;
@@ -41,6 +43,9 @@ public class IntervalBase implements Serializable {
 	/** The userId this interval is transfered from */
 	@SerializedName("uid")
 	private String userId;
+
+	@SerializedName("wdv")
+	private String watchDogClientVersion = WatchDogGlobals.CLIENT_VERSION;
 
 	/** Whether this interval is closed, or still recording. */
 	protected transient boolean isClosed;

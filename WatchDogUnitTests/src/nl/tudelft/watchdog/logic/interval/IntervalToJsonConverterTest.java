@@ -13,6 +13,7 @@ import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
+import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.junit.Test;
 
@@ -30,7 +31,7 @@ public class IntervalToJsonConverterTest {
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"re\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\"}]",
+				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"re\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"" + WatchDogGlobals.CLIENT_VERSION + "\"}]",
 				intervalTransferer.toJson(intervals));
 	}
 
@@ -43,7 +44,7 @@ public class IntervalToJsonConverterTest {
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"diff\":0,\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\"}]",
+				"[{\"diff\":0,\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"" + WatchDogGlobals.CLIENT_VERSION + "\"}]",
 				intervalTransferer.toJson(intervals));
 	}
 
@@ -56,7 +57,7 @@ public class IntervalToJsonConverterTest {
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\"}]",
+				"[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"" + WatchDogGlobals.CLIENT_VERSION + "\"}]",
 				intervalTransferer.toJson(intervals));
 	}
 
