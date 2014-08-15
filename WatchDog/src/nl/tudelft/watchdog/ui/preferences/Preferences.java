@@ -50,7 +50,7 @@ public class Preferences {
 	private List<WorkspacePreferenceSetting> workspaceSettings = new ArrayList<WorkspacePreferenceSetting>();
 
 	/** The WatchDog preference instance. */
-	private static Preferences singletonInstance;
+	private static volatile Preferences singletonInstance;
 
 	/**
 	 * Constructor internally implements a singleton, not visible to class

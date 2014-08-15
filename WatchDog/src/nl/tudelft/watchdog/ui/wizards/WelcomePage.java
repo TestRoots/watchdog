@@ -32,9 +32,6 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	/** The text to welcome the user. To be changed by subclasses. */
 	protected String welcomeText;
 
-	/** Info that goes before the question */
-	protected String additionalInfo;
-
 	/** The text on the label for the user input. To be changed by subclasses. */
 	protected String labelText;
 

@@ -63,10 +63,6 @@ public class EditorListener {
 	}
 
 	private void listenToEditorScrolling() {
-		if (!(editor instanceof ITextEditor)) {
-			return;
-		}
-
 		styledText = (StyledText) editor.getAdapter(Control.class);
 		if (styledText == null) {
 			return;

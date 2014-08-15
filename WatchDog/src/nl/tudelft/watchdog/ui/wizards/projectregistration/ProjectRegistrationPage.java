@@ -72,10 +72,10 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 				.getChildren()[0];
 
 		noSingleProjectButton
-				.addSelectionListener(new singleProjectSelectionListener(
+				.addSelectionListener(new SingleProjectSelectionListener(
 						noSingleProjectButton, parent));
 		yesSingleProjectButton
-				.addSelectionListener(new singleProjectSelectionListener(
+				.addSelectionListener(new SingleProjectSelectionListener(
 						noSingleProjectButton, parent));
 
 		Composite textInputComposite = UIUtils.createFullGridedComposite(
@@ -156,11 +156,11 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 		return evaluateWhichSelection(otherTestingStrategies);
 	}
 
-	private class singleProjectSelectionListener implements SelectionListener {
+	private class SingleProjectSelectionListener implements SelectionListener {
 		private final Button noSingleProjectButton;
 		private final Composite parent;
 
-		private singleProjectSelectionListener(Button noSingleProjectButton,
+		private SingleProjectSelectionListener(Button noSingleProjectButton,
 				Composite parent) {
 			this.noSingleProjectButton = noSingleProjectButton;
 			this.parent = parent;

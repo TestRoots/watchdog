@@ -42,7 +42,7 @@ public class DocumentFactory {
 			WatchDogLogger.getInstance().logSevere(exception);
 		}
 		return new Document(activeProjectName, editor.getTitle(), documentType,
-				null);
+				"");
 	}
 
 	/**

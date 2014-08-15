@@ -2,10 +2,12 @@ package nl.tudelft.watchdog.util;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 /**
  * Globals for the current WatchDog instance.
@@ -37,7 +39,7 @@ public class WatchDogGlobals {
 			reader = new FileReader(pomFile); // <-- pomfile is your pom.xml
 			model = mavenreader.read(reader);
 			model.setPomFile(pomFile);
-		} catch (Exception ex) {
+		} catch (IOException | XmlPullParserException ex) {
 			// intentionally left empty;
 		}
 
