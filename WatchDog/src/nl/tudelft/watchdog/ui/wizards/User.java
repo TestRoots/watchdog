@@ -30,4 +30,7 @@ public class User {
 
 	/** The registration date. */
 	public Date localRegistrationDate;
+
+	/** The operating system. */
+	public String operatingSystem;
 }
