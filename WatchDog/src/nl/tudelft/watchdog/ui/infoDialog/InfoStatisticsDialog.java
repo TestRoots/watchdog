@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.ui.infoDialog;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.tudelft.watchdog.logic.interval.IntervalIntializationManager;
+import nl.tudelft.watchdog.logic.interval.IntervalInitializationManager;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.ui.UIUtils;
@@ -75,7 +75,7 @@ public class InfoStatisticsDialog extends Dialog {
 		List<IntervalBase> intervals = new ArrayList<IntervalBase>();
 		// TODO (MMB) replace with intervals from intervalpersister!
 		// intervals.addAll(IntervalManager.getInstance().getClosedIntervals());
-		intervals.addAll(IntervalIntializationManager.getInstance()
+		intervals.addAll(IntervalInitializationManager.getInstance()
 				.getIntervalManager().getOpenIntervals());
 		createIntervalSummary("Current Eclipse Session:", container, intervals);
 	}

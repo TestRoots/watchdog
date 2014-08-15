@@ -13,21 +13,23 @@ import nl.tudelft.watchdog.logic.ui.listeners.WorkbenchListener;
  * there is only one properly initialized {@link IntervalManager} that does the
  * real work.
  */
-public class IntervalIntializationManager {
+public class IntervalInitializationManager {
 
 	private static final int USER_ACTIVITY_TIMEOUT = 16000;
 
 	/** The singleton instance of the interval manager. */
-	private static IntervalIntializationManager instance = null;
+	private static IntervalInitializationManager instance = null;
 
 	private IntervalManager intervalManager;
 
+	private IntervalPersister intervalPersister;
+
 	/** Private constructor. */
-	private IntervalIntializationManager() {
+	private IntervalInitializationManager() {
 		File file = new File(
 				Activator.getDefault().getStateLocation().toFile(),
 				"intervals.mapdb");
-		IntervalPersister intervalPersister = new IntervalPersister(file);
+		intervalPersister = new IntervalPersister(file);
 		DocumentFactory documentFactory = new DocumentFactory();
 		this.intervalManager = new IntervalManager(intervalPersister,
 				documentFactory);
@@ -41,11 +43,11 @@ public class IntervalIntializationManager {
 
 	/**
 	 * Returns the existing or creates and returns a new
-	 * {@link IntervalIntializationManager} instance.
+	 * {@link IntervalInitializationManager} instance.
 	 */
-	public static IntervalIntializationManager getInstance() {
+	public static IntervalInitializationManager getInstance() {
 		if (instance == null) {
-			instance = new IntervalIntializationManager();
+			instance = new IntervalInitializationManager();
 		}
 		return instance;
 	}
@@ -53,5 +55,13 @@ public class IntervalIntializationManager {
 	/** @return the intervalManager. */
 	public IntervalManager getIntervalManager() {
 		return intervalManager;
+	}
+
+	/**
+	 * Closes the database. The database can recover even if it is not closed
+	 * properly, but it is good practice to close it anyway.
+	 */
+	public void shutdown() {
+		intervalPersister.closeDatabase();
 	}
 }

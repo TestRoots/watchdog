@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.logic.ui.listeners;
 
-import nl.tudelft.watchdog.logic.interval.IntervalIntializationManager;
+import nl.tudelft.watchdog.logic.interval.IntervalInitializationManager;
 import nl.tudelft.watchdog.logic.interval.IntervalTransferManager;
 import nl.tudelft.watchdog.logic.ui.EventManager;
 import nl.tudelft.watchdog.logic.ui.WatchDogEvent;
@@ -60,11 +60,14 @@ public class WorkbenchListener {
 			@Override
 			public boolean preShutdown(final IWorkbench workbench,
 					final boolean forced) {
+				IntervalInitializationManager intervalInitializationManager = IntervalInitializationManager
+						.getInstance();
 				eventManager.update(new WatchDogEvent(workbench,
 						EventType.END_ECLIPSE));
-				IntervalIntializationManager.getInstance().getIntervalManager()
+				intervalInitializationManager.getIntervalManager()
 						.closeAllIntervals();
 				intervalTransferManager.sendIntervalsImmediately();
+				intervalInitializationManager.shutdown();
 				return true;
 			}
 
