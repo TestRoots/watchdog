@@ -5,10 +5,9 @@ import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPage;
 import nl.tudelft.watchdog.ui.wizards.User;
 
-/**
- * @author mbeller
- *
- */
+import org.eclipse.core.runtime.Platform;
+
+/** Page called when registering a new user with the server. */
 class UserRegistrationEndingPage extends RegistrationEndingPage {
 
 	protected void makeRegistration() {
@@ -18,6 +17,7 @@ class UserRegistrationEndingPage extends RegistrationEndingPage {
 		user.organization = page.getOrganizationInput().getText();
 		user.group = page.getGroupInput().getText();
 		user.mayContactUser = page.getMayContactUser();
+		user.operatingSystem = Platform.getOS();
 
 		windowTitle = "User Registration";
 

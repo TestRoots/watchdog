@@ -32,6 +32,7 @@ public enum IntervalType {
 	JUNIT,
 
 	/** The user is active */
+	@SerializedName("ua")
 	USER_ACTIVE;
 
 }
