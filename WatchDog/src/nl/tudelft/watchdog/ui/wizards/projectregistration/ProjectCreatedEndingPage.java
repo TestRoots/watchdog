@@ -13,10 +13,21 @@ class ProjectCreatedEndingPage extends RegistrationEndingPage {
 
 	@Override
 	protected void makeRegistration() {
-		ProjectSliderPage sliderPage = (ProjectSliderPage) getPreviousPage();
-		ProjectRegistrationPage projectPage = (ProjectRegistrationPage) getPreviousPage()
-				.getPreviousPage();
 		Project project = new Project();
+
+		ProjectSliderPage sliderPage;
+		ProjectRegistrationPage projectPage = (ProjectRegistrationPage) getPreviousPage();
+		if (getPreviousPage() instanceof ProjectSliderPage) {
+			sliderPage = (ProjectSliderPage) getPreviousPage();
+			projectPage = (ProjectRegistrationPage) getPreviousPage()
+					.getPreviousPage();
+
+			project.productionPercentage = sliderPage.percentageProductionSlider
+					.getSelection();
+			project.useJunitOnlyForUnitTesting = sliderPage
+					.usesJunitForUnitTestingOnly();
+			project.followTestDrivenDesign = sliderPage.usesTestDrivenDesing();
+		}
 
 		// initialize from projectPage
 		project.belongToASingleSofware = !projectPage.noSingleProjectButton
@@ -25,12 +36,6 @@ class ProjectCreatedEndingPage extends RegistrationEndingPage {
 		project.role = projectPage.userRoleInput.getText();
 		project.usesJunit = projectPage.usesJunit();
 		project.usesOtherFrameworks = projectPage.usesOtherTestingStrategies();
-
-		project.productionPercentage = sliderPage.percentageProductionSlider
-				.getSelection();
-		project.useJunitOnlyForUnitTesting = sliderPage
-				.usesJunitForUnitTestingOnly();
-		project.followTestDrivenDesign = sliderPage.usesTestDrivenDesing();
 
 		windowTitle = "Project Registration";
 
