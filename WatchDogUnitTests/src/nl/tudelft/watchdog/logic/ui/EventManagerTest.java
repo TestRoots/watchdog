@@ -157,7 +157,7 @@ public class EventManagerTest {
 				Mockito.timeout((int) (TIMEOUT_GRACE_PERIOD * 2.4)).never())
 				.closeInterval(Mockito.any(IntervalBase.class));
 		Mockito.verify(intervalManager,
-				Mockito.timeout(TIMEOUT_GRACE_PERIOD * 3)).closeInterval(
+				Mockito.timeout((int) (TIMEOUT_GRACE_PERIOD * 3.5))).closeInterval(
 				Mockito.isA(ReadingInterval.class));
 		Assert.assertEquals(null, intervalManager.getEditorInterval());
 	}
