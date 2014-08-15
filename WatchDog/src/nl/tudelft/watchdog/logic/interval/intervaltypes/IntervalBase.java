@@ -2,7 +2,6 @@ package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Timer;
 
 import org.joda.time.Duration;
 import org.joda.time.Period;
@@ -61,23 +60,10 @@ public class IntervalBase implements Serializable {
 		return isClosed;
 	}
 
-	/** The timer controlling the timeout used for this interval. */
-	protected transient Timer timer;
-
-	/**
-	 * @return The timer.
-	 */
-	public Timer getTimer() {
-		return timer;
-	}
-
 	/** Closes this interval. */
-	public void closeInterval() {
+	public void close() {
 		if (!isClosed()) {
 			isClosed = true;
-			if (timer != null) {
-				timer.cancel();
-			}
 			setEndTime(new Date());
 		}
 	}
@@ -107,9 +93,7 @@ public class IntervalBase implements Serializable {
 		return new Duration(start.getTime(), new Date().getTime());
 	}
 
-	/**
-	 * @return A human-readable duration.
-	 */
+	/** @return A human-readable duration. */
 	public String getDurationString() {
 		Duration duration = getDuration();
 		Period period = duration.toPeriod();
@@ -141,7 +125,7 @@ public class IntervalBase implements Serializable {
 		this.sessionSeed = sessionSeed;
 	}
 
-	/** @return the {@link ActivityType}. */
+	/** @return the {@link IntervalType}. */
 	public IntervalType getType() {
 		return intervalType;
 	}

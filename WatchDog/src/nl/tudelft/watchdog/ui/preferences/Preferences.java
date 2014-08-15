@@ -7,8 +7,8 @@ import java.util.List;
 
 import nl.tudelft.watchdog.Activator;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
-import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
+import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
@@ -75,7 +75,7 @@ public class Preferences {
 	private List<WorkspacePreferenceSetting> readSerializedWorkspaceSettings(
 			String KEY) {
 		String serializedWorksapceSettings = store.getString(KEY);
-		if (UIUtils.isEmpty(serializedWorksapceSettings)) {
+		if (WatchDogUtils.isEmpty(serializedWorksapceSettings)) {
 			return new ArrayList<WorkspacePreferenceSetting>();
 		}
 

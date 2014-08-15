@@ -13,7 +13,7 @@ public abstract class EditorIntervalBase extends IntervalBase {
 	/** Serialized version. */
 	private static final long serialVersionUID = 3L;
 
-	/** The document associated with this {@link RecordedInterval}. */
+	/** The document associated with this {@link EditorIntervalBase}. */
 	@SerializedName("doc")
 	private Document document;
 

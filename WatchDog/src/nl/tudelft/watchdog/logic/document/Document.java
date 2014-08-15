@@ -2,6 +2,8 @@ package nl.tudelft.watchdog.logic.document;
 
 import java.io.Serializable;
 
+import nl.tudelft.watchdog.util.WatchDogUtils;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -11,7 +13,7 @@ import com.google.gson.annotations.SerializedName;
 public class Document implements Serializable {
 
 	/** Serialization UID. */
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
 
 	/** The project name. */
 	@SerializedName("pn")
@@ -21,15 +23,24 @@ public class Document implements Serializable {
 	@SerializedName("fn")
 	private String fileName;
 
+	/** The file's length, in LoC. */
+	@SerializedName("sloc")
+	private long sloc;
+
 	/** The type of document. */
 	@SerializedName("dt")
 	private DocumentType docType;
 
+	private transient String content;
+
 	/** Constructor. */
-	public Document(String projectName, String fileName, DocumentType docType) {
+	public Document(String projectName, String fileName, DocumentType docType,
+			String content) {
 		this.projectName = projectName;
 		this.fileName = fileName;
 		this.docType = docType;
+		this.content = content;
+		this.sloc = WatchDogUtils.countSLOC(content);
 	}
 
 	/** @return the project's name */
@@ -45,6 +56,11 @@ public class Document implements Serializable {
 	/** @return the document type */
 	public DocumentType getDocumentType() {
 		return docType;
+	}
+
+	/** @return the contents of the document. */
+	public String getContent() {
+		return content;
 	}
 
 	/** Sets the document type to the supplied type. */

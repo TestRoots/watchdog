@@ -17,7 +17,8 @@ import org.mockito.Mockito;
 /**
  * Tests the {@link EventManager}. Because this creates the intervals that are
  * eventually transfered to the server, this is one of the most crucial parts of
- * WatchDog.
+ * WatchDog. Tests could flicker because they deal with timers (and Java gives
+ * no guarantee as to when these timers will be executed).
  */
 public class EventManagerTest {
 
@@ -28,11 +29,13 @@ public class EventManagerTest {
 
 	@Before
 	public void setup() {
+		DocumentFactory documentFactoryMock = Mockito
+				.mock(DocumentFactory.class);
 		IntervalManager intervalManagerReal = new IntervalManager(
-				Mockito.mock(IntervalPersister.class),
-				Mockito.mock(DocumentFactory.class));
+				Mockito.mock(IntervalPersister.class), documentFactoryMock);
 		intervalManager = Mockito.spy(intervalManagerReal);
-		eventManager = new EventManager(intervalManager, USER_ACTIVITY_TIMEOUT);
+		eventManager = new EventManager(intervalManager, documentFactoryMock,
+				USER_ACTIVITY_TIMEOUT);
 	}
 
 	@Test

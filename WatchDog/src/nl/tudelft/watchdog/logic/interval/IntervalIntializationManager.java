@@ -28,10 +28,11 @@ public class IntervalIntializationManager {
 				Activator.getDefault().getStateLocation().toFile(),
 				"intervals.mapdb");
 		IntervalPersister intervalPersister = new IntervalPersister(file);
+		DocumentFactory documentFactory = new DocumentFactory();
 		this.intervalManager = new IntervalManager(intervalPersister,
-				new DocumentFactory());
+				documentFactory);
 		EventManager eventManager = new EventManager(intervalManager,
-				USER_ACTIVITY_TIMEOUT);
+				documentFactory, USER_ACTIVITY_TIMEOUT);
 
 		WorkbenchListener workbenchListener = new WorkbenchListener(
 				eventManager, new IntervalTransferManager(intervalPersister));

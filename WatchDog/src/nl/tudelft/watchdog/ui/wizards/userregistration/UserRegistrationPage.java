@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.ui.wizards.userregistration;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 import nl.tudelft.watchdog.ui.wizards.FormValidationListener;
+import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.eclipse.swt.SWT;
@@ -88,14 +89,14 @@ class UserRegistrationPage extends FinishableWizardPage {
 
 	@Override
 	public void validateFormInputs() {
-		if (!UIUtils.isEmpty(emailInput.getText())) {
+		if (!WatchDogUtils.isEmpty(emailInput.getText())) {
 			if (!EmailValidator.getInstance(false)
 					.isValid(emailInput.getText())) {
 				setErrorMessageAndPageComplete("Your mail address is not valid!");
 			} else {
 				setErrorMessageAndPageComplete(null);
 			}
-		} else if (UIUtils.isEmpty(emailInput.getText())
+		} else if (WatchDogUtils.isEmpty(emailInput.getText())
 				&& mayContactButton.getSelection()) {
 			setErrorMessageAndPageComplete("You can only participate in the lottery if you enter your email address.");
 		} else {
