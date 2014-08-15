@@ -2,7 +2,6 @@ package nl.tudelft.watchdog.ui.wizards;
 
 import nl.tudelft.watchdog.Activator;
 import nl.tudelft.watchdog.ui.UIUtils;
-import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -25,7 +24,7 @@ public abstract class FinishableWizardPage extends WizardPage {
 	/** Constructor. */
 	protected FinishableWizardPage(String pageName) {
 		super(pageName);
-		this.setImageDescriptor(WatchDogGlobals.tuLogoImageDescriptor);
+		this.setImageDescriptor(UIUtils.tuLogoImageDescriptor);
 	}
 
 	/** @return whether this page can currently be finished. */

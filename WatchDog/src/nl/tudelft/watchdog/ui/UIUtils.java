@@ -1,6 +1,9 @@
 package nl.tudelft.watchdog.ui;
 
+import nl.tudelft.watchdog.Activator;
+
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -167,4 +170,9 @@ public class UIUtils {
 		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile()
 				.toString();
 	}
+
+	/** The TU Logo. */
+	public static ImageDescriptor tuLogoImageDescriptor = Activator
+			.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
+					"resources/images/tudelft_with_frame.png");
 }
