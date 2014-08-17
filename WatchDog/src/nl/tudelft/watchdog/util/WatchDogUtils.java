@@ -21,7 +21,7 @@ import org.joda.time.format.PeriodFormatterBuilder;
 public class WatchDogUtils {
 
 	/** A random (generator) object. */
-	public static Random randomObject = new Random();
+	public static final Random randomObject = new Random();
 
 	/** Formatter for a {@link Period}. */
 	private static PeriodFormatter periodFormatter = new PeriodFormatterBuilder()
@@ -100,7 +100,7 @@ public class WatchDogUtils {
 			BufferedReader reader;
 			try {
 				reader = new BufferedReader(new InputStreamReader(
-						fileEditorInput.getFile().getContents()));
+						fileEditorInput.getFile().getContents(), "UTF-8"));
 				StringBuilder sb = new StringBuilder();
 				String line;
 				while ((line = reader.readLine()) != null) {
