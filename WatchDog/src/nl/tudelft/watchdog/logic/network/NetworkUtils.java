@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.logic.network;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import nl.tudelft.watchdog.logic.exceptions.ServerCommunicationException;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
@@ -182,7 +183,8 @@ public class NetworkUtils {
 		CredentialsProvider provider = new BasicCredentialsProvider();
 		byte[] password = { 104, 110, 115, 112, 113, 115, 122, 110, 112, 113 };
 		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
-				"watchdogplugin", new String(password));
+				"watchdogplugin",
+				new String(password, Charset.defaultCharset()));
 		provider.setCredentials(AuthScope.ANY, credentials);
 		HttpClient client = createPlainHttpClientBuilder()
 				.setDefaultCredentialsProvider(provider).build();
