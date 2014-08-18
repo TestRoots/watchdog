@@ -6,18 +6,28 @@
       provider-name="Software Engineering Research Group (TU Delft)">
 
    <description url="http://www.testroots.org">
-      Eclipse plugin for monitoring how Java applications are developed and tested.
+      WatchDog is an Eclipse plugin from TU Delft that unobtrusively monitors how Java applications are developed
+and tested.
    </description>
 
    <copyright url="http://www.testroots.org">
-      Copyright 2014 Moritz Beller, Georgios Gousios
+      Copyright 2012-2014 Software Engineering Research Group, TU Delft
+http://swerl.tudelft.nl/bin/view/Main/WebHome
+Copyright 2014 Moritz Beller, Georgios Gousios
 http://www.testroots.org
 Copyright 2013 Wouter Willems
 http://wouterwillems.com/
    </copyright>
 
    <license url="">
-      Permission is hereby granted, free of charge, to any person obtaining
+      Copyright 2012-2014 Software Engineering Research Group, TU Delft
+http://swerl.tudelft.nl/bin/view/Main/WebHome
+Copyright 2014 Moritz Beller, Georgios Gousios
+http://www.testroots.org
+Copyright 2013 Wouter Willems
+http://wouterwillems.com/
+
+Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 &quot;Software&quot;), to deal in the Software without restriction, including
 without limitation the rights to use, copy, modify, merge, publish,
