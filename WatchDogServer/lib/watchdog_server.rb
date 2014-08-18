@@ -15,7 +15,7 @@ class WatchDogServer < Sinatra::Base
     MongoClient.new("localhost", 27017)
   end
 
-  ## The API
+  # Setup database connection
   before  do
     @db ||= mongo.db('watchdog')
   end
@@ -46,8 +46,7 @@ class WatchDogServer < Sinatra::Base
       halt 404, "User does not exist"
     else
       status 200
-      # TODO (MMB) Not sure whether we should return the stored_user as a body for privacy reasons?
-      body stored_user.to_json
+      body stored_user['id'].to_json
     end
   end
 
