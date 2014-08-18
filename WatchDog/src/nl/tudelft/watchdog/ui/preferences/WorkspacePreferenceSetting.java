@@ -19,4 +19,10 @@ public class WorkspacePreferenceSetting {
 	 * <code>true</code>), or not.
 	 */
 	public boolean enableWatchdog = false;
+
+	/**
+	 * Flag denoting whether Watchdog has already asked the user whether it
+	 * should be active in this workspace.
+	 */
+	public boolean startupQuestionAsked = false;
 }

@@ -40,8 +40,8 @@ public class JsonTransferer {
 	/** Sends the recorded intervals to the server. */
 	public boolean sendIntervals(List<IntervalBase> recordedIntervals) {
 		String userid = Preferences.getInstance().getUserid();
-		String projectid = Preferences.getInstance().getWorkspaceSetting(
-				UIUtils.getWorkspaceName()).projectId;
+		String projectid = Preferences.getInstance()
+				.getOrCreateWorkspaceSetting(UIUtils.getWorkspaceName()).projectId;
 		String json = toJson(recordedIntervals);
 		try {
 			NetworkUtils

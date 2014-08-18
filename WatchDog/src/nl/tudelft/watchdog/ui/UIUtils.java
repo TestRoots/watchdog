@@ -175,4 +175,9 @@ public class UIUtils {
 	public static final ImageDescriptor tuLogoImageDescriptor = Activator
 			.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
 					"resources/images/tudelft_with_frame.png");
+
+	/**
+	 * The warning displayed when WatchDog is not active.
+	 */
+	public static final String WATCHDOG_WARNING = "WatchDog only works when you register a (possibly anonymous) user.\n\nTakes less than one minute,  and you can win prices. As a registered user, you decide where WatchDog is active.";
 }

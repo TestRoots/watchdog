@@ -41,12 +41,12 @@ public class WatchDogGlobals {
 					"UTF-8");
 			model = mavenreader.read(reader);
 			model.setPomFile(pomFile);
+			MavenProject project = new MavenProject(model);
+			CLIENT_VERSION = project.getVersion();
 		} catch (IOException | XmlPullParserException ex) {
 			// intentionally left empty;
 		}
 
-		MavenProject project = new MavenProject(model);
-		CLIENT_VERSION = project.getVersion();
 	}
 
 	/**

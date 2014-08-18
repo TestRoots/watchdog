@@ -130,27 +130,16 @@ public class Preferences {
 	 *         {@link #shouldWatchDogBeActive(String)}.
 	 */
 	public boolean isWorkspaceRegistered(String workspace) {
-		return (getWorkspaceSetting(workspace) == null) ? false : true;
-	}
-
-	/**
-	 * @return The matching {@link WorkspacePreferenceSetting}, or
-	 *         <code>null</code> in case there was no match.
-	 */
-	public WorkspacePreferenceSetting getWorkspaceSetting(String workspace) {
-		for (WorkspacePreferenceSetting setting : workspaceSettings) {
-			if (setting.workspace.equals(workspace)) {
-				return setting;
-			}
-		}
-		return null;
+		WorkspacePreferenceSetting workspaceSetting = getWorkspaceSetting(workspace);
+		return (workspaceSetting != null && workspaceSetting.startupQuestionAsked) ? false
+				: true;
 	}
 
 	/**
 	 * @return The matching {@link WorkspacePreferenceSetting}, or a completely
 	 *         new one in case there was no match.
 	 */
-	private WorkspacePreferenceSetting getOrCreateWorkspaceSetting(
+	public WorkspacePreferenceSetting getOrCreateWorkspaceSetting(
 			String workspace) {
 		WorkspacePreferenceSetting setting = getWorkspaceSetting(workspace);
 		if (setting == null) {
@@ -162,12 +151,30 @@ public class Preferences {
 	}
 
 	/**
+	 * @return The matching {@link WorkspacePreferenceSetting}, or
+	 *         <code>null</code> in case there was no match.
+	 */
+	private WorkspacePreferenceSetting getWorkspaceSetting(String workspace) {
+		for (WorkspacePreferenceSetting setting : workspaceSettings) {
+			if (setting.workspace.equals(workspace)) {
+				return setting;
+			}
+		}
+		return null;
+	}
+
+	private void setWorkspaceSetting(WorkspacePreferenceSetting setting) {
+		// TODO (MMB) here
+	}
+
+	/**
 	 * Registers the given workspace with WatchDog. If use is <code>true</code>,
 	 * WatchDog will be used.
 	 */
 	public void registerWorkspaceUse(String workspace, boolean use) {
 		WorkspacePreferenceSetting setting = getOrCreateWorkspaceSetting(workspace);
 		setting.enableWatchdog = use;
+		setting.startupQuestionAsked = true;
 		storeWorkspaceSettings();
 	}
 

@@ -55,7 +55,7 @@ public class IntervalTransferManager {
 		@Override
 		public void run() {
 			lastTransferedIntervalKey = Preferences.getInstance()
-					.getWorkspaceSetting(UIUtils.getWorkspaceName()).lastTransferedInterval;
+					.getOrCreateWorkspaceSetting(UIUtils.getWorkspaceName()).lastTransferedInterval;
 			long databaseHighestKey = intervalPersister.getHighestKey();
 			if (lastTransferedIntervalKey > databaseHighestKey) {
 				// something is amiss, the reported last transfered key in the

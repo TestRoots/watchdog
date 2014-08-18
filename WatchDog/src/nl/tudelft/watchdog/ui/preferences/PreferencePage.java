@@ -65,12 +65,9 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 		enableWatchdogInput.setText("Monitor this workspace with WatchDog ");
 
 		WorkspacePreferenceSetting workspaceSetting = preferences
-				.getWorkspaceSetting(workspace);
-		if (workspaceSetting != null) {
-			// display settings from previous workspace entry if there is any.
-			projectIDInput.setText(workspaceSetting.projectId);
-			enableWatchdogInput.setSelection(workspaceSetting.enableWatchdog);
-		}
+				.getOrCreateWorkspaceSetting(workspace);
+		projectIDInput.setText(workspaceSetting.projectId);
+		enableWatchdogInput.setSelection(workspaceSetting.enableWatchdog);
 
 		UIUtils.createLabel("", parent);
 
@@ -86,6 +83,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	public boolean performOk() {
 		boolean returnStatus = super.performOk();
+		// TODO (MMB) hook into me
 		preferences.registerWorkspaceProject(workspace,
 				projectIDInput.getText());
 		preferences.registerWorkspaceUse(workspace,
