@@ -16,8 +16,10 @@ class ProjectCreatedEndingPage extends RegistrationEndingPage {
 		Project project = new Project();
 
 		ProjectSliderPage sliderPage;
-		ProjectRegistrationPage projectPage = (ProjectRegistrationPage) getPreviousPage();
-		if (getPreviousPage() instanceof ProjectSliderPage) {
+		ProjectRegistrationPage projectPage = null;
+		if (getPreviousPage() instanceof ProjectRegistrationPage) {
+			projectPage = (ProjectRegistrationPage) getPreviousPage();
+		} else if (getPreviousPage() instanceof ProjectSliderPage) {
 			sliderPage = (ProjectSliderPage) getPreviousPage();
 			projectPage = (ProjectRegistrationPage) getPreviousPage()
 					.getPreviousPage();
