@@ -58,10 +58,13 @@ class WatchDogServer < Sinatra::Base
     logger.info user
 
     user['id'] = sha
-    user['registrationDate'] = Time.now
-    user['ip'] = request.ip
+
+    user['postCode'] = request.location.postal_code
+    user['city'] = request.location.city
     user['country'] = request.location.country
 
+    add_ip_timestamp(user, request)
+    
     users.save(user)
     stored_user = get_user_by_id(sha)
 
@@ -86,8 +89,9 @@ class WatchDogServer < Sinatra::Base
     sha = create_40_char_SHA()
 
     project['id'] = sha
-    project['registrationDate'] = Time.now
-    project['ip'] = request.ip
+
+    add_ip_timestamp(project, request)
+
     projects.save(project)
 
     unless associated_user['email'].nil? or associated_user['email'].empty?
@@ -131,9 +135,9 @@ class WatchDogServer < Sinatra::Base
     end
 
     ivals.each do |i|
-      i['uid'] = user_id
-      i['pid'] = project_id
-      i['ip'] = request.ip
+      i['userId'] = user_id
+      i['projectId'] = project_id
+      add_ip_timestamp(i, request)
       intervals.save(i)
     end
 
@@ -178,12 +182,18 @@ class WatchDogServer < Sinatra::Base
     return object
   end
 
+  def add_ip_timestamp(object, request)
+    object['ip'] = request.ip
+    object['regDate'] = Time.now
+  end
+
   # creates a 40 character long SHA hash
   def create_40_char_SHA()
     rnd = (0...100).map { ('a'..'z').to_a[rand(26)] }.join
     return Digest::SHA1.hexdigest rnd
   end
 
+  # sends a registration mail 
   def send_registration_email(mailtext, email, id, projectname)
     text = sprintf(mailtext, Time.now.rfc2822, id, projectname)
 
@@ -196,6 +206,7 @@ class WatchDogServer < Sinatra::Base
       end
     end
   end
+
 
   USER_REGISTERED = <<-END_EMAIL
 Subject: Your new Watchdog user id
