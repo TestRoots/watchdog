@@ -50,6 +50,18 @@ class WatchDogServer < Sinatra::Base
     end
   end
 
+  # Get info about stored user
+  get '/project/:id' do
+    stored_project = get_project_by_id(params[:'id'])
+
+    if stored_project.nil?
+      halt 404, "Project does not exist"
+    else
+      status 200
+      body stored_project['id'].to_json
+    end
+  end
+
   # Create a new user and return unique SHA1
   post '/user' do
     user = create_json_object(request)

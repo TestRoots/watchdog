@@ -17,7 +17,7 @@ def test_user
 end
 
 existing_user = nil
-
+existing_project = nil
 
 def test_project(user_id)
   project = Hash.new
@@ -72,13 +72,13 @@ describe 'The WatchDog Server' do
 
     last_response.status.should eql(201)
     expect(last_response.body).to match(/^[0-9a-z]{40}$/)
+    existing_project = last_response.body
   end
 
   it 'should return 400 on bad JSON request to /project' do
     post '/project', 'foobar'
     last_response.status.should eql(400)
   end
-
 
   it 'should not create a project when the user does not exist' do
     post '/project', test_project(nil).to_json
@@ -116,8 +116,12 @@ describe 'The WatchDog Server' do
   end
 
   it 'should return 200 for existing user' do
-    post '/user', test_user.to_json
-    get '/user/' + last_response.body
+    get '/user/' + existing_user
+    last_response.status.should eql(200)
+  end
+
+ it 'should return 200 for existing project' do
+    get '/project/' + existing_project
     last_response.status.should eql(200)
   end
 
@@ -135,7 +139,7 @@ describe 'The WatchDog Server' do
     last_response.status.should eql(404)
   end
 
-  it 'should return then number of stored intervals on successful insert' do
+  it 'should return the number of stored intervals on successful insert' do
     intervals = (1..10).map{|x| test_interval(x, x + 1)}
     user = test_user
     post '/user', user.to_json
