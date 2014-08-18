@@ -67,7 +67,9 @@ public class InfoStatisticsDialog extends Dialog {
 					colorRed);
 		}
 		createCurrentIntervalSummary(container);
-		createTotalIntervalSummary(container);
+		// TODO (MMB) commented out for as long as we do not have levelDB
+		// storage to actually produce this.
+		// createTotalIntervalSummary(container);
 	}
 
 	/** Creates a summary from the current Eclipse session in WatchDog. */
@@ -78,14 +80,6 @@ public class InfoStatisticsDialog extends Dialog {
 		intervals.addAll(IntervalInitializationManager.getInstance()
 				.getIntervalManager().getOpenIntervals());
 		createIntervalSummary("Current Eclipse Session:", container, intervals);
-	}
-
-	/** Creates a summary with all the intervals in WatchDog added up. */
-	private void createTotalIntervalSummary(Composite container) {
-		// TODO (MMB) commented out for as long as we do not have levelDB
-		// storage to actually produce this.
-		// createIntervalSummary("All Other Recording Sessions: ", container,
-		// WatchDogUtils.getAllRecordedIntervals());
 	}
 
 	/**

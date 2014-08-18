@@ -81,7 +81,7 @@ public class WatchDogUtils {
 	public static boolean hasSameUnderlyingDocument(ITextEditor editor1,
 			ITextEditor editor2) {
 		try {
-			return (extractDocument(editor1) == extractDocument(editor2));
+			return extractDocument(editor1) == extractDocument(editor2);
 		} catch (ContentReaderException exception) {
 			WatchDogLogger.getInstance().logSevere(exception);
 		}
