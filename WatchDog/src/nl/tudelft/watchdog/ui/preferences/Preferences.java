@@ -131,8 +131,8 @@ public class Preferences {
 	 */
 	public boolean isWorkspaceRegistered(String workspace) {
 		WorkspacePreferenceSetting workspaceSetting = getWorkspaceSetting(workspace);
-		return (workspaceSetting != null && workspaceSetting.startupQuestionAsked) ? false
-				: true;
+		return (workspaceSetting != null && workspaceSetting.startupQuestionAsked) ? true
+				: false;
 	}
 
 	/**
@@ -161,10 +161,6 @@ public class Preferences {
 			}
 		}
 		return null;
-	}
-
-	private void setWorkspaceSetting(WorkspacePreferenceSetting setting) {
-		// TODO (MMB) here
 	}
 
 	/**

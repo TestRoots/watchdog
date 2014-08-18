@@ -18,7 +18,7 @@ public class StartUpHandler implements IStartup {
 	@Override
 	public void earlyStartup() {
 		StartupUIThread watchDogUiThread = new StartupUIThread(
-				Preferences.getInstance(), this);
+				this, Preferences.getInstance());
 		Display.getDefault().asyncExec(watchDogUiThread);
 	}
 
@@ -26,7 +26,7 @@ public class StartUpHandler implements IStartup {
 	/* package */void startWatchDog() {
 		WatchDogGlobals.isActive = true;
 		WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
-		// initializes the interval manager, and thereby, WatchDog Inteval
+		// initializes the interval manager, and thereby, WatchDog interval
 		// recording.
 		IntervalInitializationManager.getInstance();
 	}
