@@ -31,7 +31,7 @@ public class IntervalToJsonConverterTest {
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"re\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"" + WatchDogGlobals.CLIENT_VERSION + "\"}]",
+				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"re\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"" + WatchDogGlobals.getClientVersion() + "\"}]",
 				intervalTransferer.toJson(intervals));
 	}
 
@@ -44,7 +44,7 @@ public class IntervalToJsonConverterTest {
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"diff\":0,\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"" + WatchDogGlobals.CLIENT_VERSION + "\"}]",
+				"[{\"diff\":0,\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"" + WatchDogGlobals.getClientVersion() + "\"}]",
 				intervalTransferer.toJson(intervals));
 	}
 
@@ -57,7 +57,7 @@ public class IntervalToJsonConverterTest {
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"" + WatchDogGlobals.CLIENT_VERSION + "\"}]",
+				"[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"" + WatchDogGlobals.getClientVersion() + "\"}]",
 				intervalTransferer.toJson(intervals));
 	}
 

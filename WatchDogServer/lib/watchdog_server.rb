@@ -6,6 +6,7 @@ require 'sinatra/contrib'
 require 'json'
 require 'net/smtp'
 require 'logger'
+require 'geocoder'
 
 class WatchDogServer < Sinatra::Base
   include Mongo
@@ -58,6 +59,8 @@ class WatchDogServer < Sinatra::Base
 
     user['id'] = sha
     user['registrationDate'] = Time.now
+    user['ip'] = request.ip
+    user['country'] = request.location.country
 
     users.save(user)
     stored_user = get_user_by_id(sha)
@@ -84,6 +87,7 @@ class WatchDogServer < Sinatra::Base
 
     project['id'] = sha
     project['registrationDate'] = Time.now
+    project['ip'] = request.ip
     projects.save(project)
 
     unless associated_user['email'].nil? or associated_user['email'].empty?
@@ -129,6 +133,7 @@ class WatchDogServer < Sinatra::Base
     ivals.each do |i|
       i['uid'] = user_id
       i['pid'] = project_id
+      i['ip'] = request.ip
       intervals.save(i)
     end
 

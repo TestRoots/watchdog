@@ -20,7 +20,7 @@ public class WatchDogLogger {
 	private boolean isLoggerSetup = false;
 
 	/** The singleton instance of the interval manager. */
-	private static WatchDogLogger instance = null;
+	private static volatile WatchDogLogger instance = null;
 
 	/** Private Constructor. */
 	private WatchDogLogger() {

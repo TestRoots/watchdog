@@ -183,8 +183,8 @@ public class EventManager {
 	/** Creates a new perspective Interval of the given type. */
 	private void createNewPerspectiveInterval(
 			PerspectiveInterval.Perspective perspecitveType) {
-		PerspectiveInterval perspectiveInterval = (PerspectiveInterval) intervalManager
-				.getIntervalOfType(IntervalType.PERSPECTIVE);
+		PerspectiveInterval perspectiveInterval = intervalManager
+				.getEditorIntervalOfClass(PerspectiveInterval.class);
 		if (perspectiveInterval != null
 				&& perspectiveInterval.getPerspectiveType() == perspecitveType) {
 			// abort if such an interval is already open.

@@ -172,7 +172,7 @@ public class UIUtils {
 	}
 
 	/** The TU Logo. */
-	public static ImageDescriptor tuLogoImageDescriptor = Activator
+	public static final ImageDescriptor tuLogoImageDescriptor = Activator
 			.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
 					"resources/images/tudelft_with_frame.png");
 }

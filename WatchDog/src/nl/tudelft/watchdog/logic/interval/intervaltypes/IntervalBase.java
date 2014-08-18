@@ -45,7 +45,7 @@ public class IntervalBase implements Serializable {
 	private String userId;
 
 	@SerializedName("wdv")
-	private String watchDogClientVersion = WatchDogGlobals.CLIENT_VERSION;
+	private String watchDogClientVersion = WatchDogGlobals.getClientVersion();
 
 	/** Whether this interval is closed, or still recording. */
 	protected transient boolean isClosed;

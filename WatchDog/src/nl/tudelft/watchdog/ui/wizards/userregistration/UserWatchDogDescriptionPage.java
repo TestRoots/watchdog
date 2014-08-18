@@ -91,7 +91,7 @@ public class UserWatchDogDescriptionPage extends FinishableWizardPage {
 
 	/** Creates a horizontal separator. */
 	@SuppressWarnings("unused")
-	private void createSeparator(Composite parent) {
+	public void createSeparator(Composite parent) {
 		Label separator = UIUtils.createLabel("", SWT.SEPARATOR
 				| SWT.HORIZONTAL | SWT.FILL, parent);
 		GridData layoutData = UIUtils.createFullGridUsageData();
