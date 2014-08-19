@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NavigableMap;
-import java.util.NoSuchElementException;
 
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 
@@ -18,6 +17,8 @@ import org.mapdb.DBMaker;
  */
 public class IntervalPersister {
 
+	private static final String INTERVALS = "intervals";
+
 	private DB database;
 
 	/** In memory representation of the interval store */
@@ -30,7 +31,7 @@ public class IntervalPersister {
 	public IntervalPersister(final File file) {
 		try {
 			database = createDatabase(file);
-			map = database.getTreeMap("intervals");
+			map = database.getTreeMap(INTERVALS);
 			// Compact database on every 10th new interval.
 			if (!map.isEmpty() && map.size() % 10 == 0) {
 				database.compact();
@@ -81,11 +82,11 @@ public class IntervalPersister {
 		database.commit(); // persist changes to disk
 	}
 
-	/** @return The highest key in the database. */
+	/** @return The highest key in the database. -1, if the database is empty */
 	public long getHighestKey() {
 		try {
 			return map.lastKey();
-		} catch (NoSuchElementException e) {
+		} catch (RuntimeException e) {
 			return -1;
 		}
 	}
@@ -96,5 +97,12 @@ public class IntervalPersister {
 	 */
 	public void closeDatabase() {
 		database.close();
+	}
+
+	/** Clears the database on the computer and resets it. */
+	public void clearAndResetDatabase() {
+		database.delete(INTERVALS);
+		database.commit();
+		map = database.getTreeMap(INTERVALS);
 	}
 }

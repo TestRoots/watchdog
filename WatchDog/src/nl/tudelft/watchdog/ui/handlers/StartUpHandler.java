@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.ui.handlers;
 
-import nl.tudelft.watchdog.logic.interval.IntervalInitializationManager;
+import nl.tudelft.watchdog.logic.IntervalInitializationManager;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.util.WatchDogGlobals;

@@ -12,8 +12,10 @@ import nl.tudelft.watchdog.ui.preferences.Preferences;
 
 /**
  * This manager takes care of the repeated transferal of all closed intervals to
- * the server. Furthermore, it allows the immediate execution of this regularly
- * scheduled task, e.g. when it is needed on exiting.
+ * the server. When the transfer to the server was successful, the intervals are
+ * immediately deleted from the local database. Furthermore, it allows the
+ * immediate execution of this regularly scheduled task, e.g. when it is needed
+ * on exiting.
  */
 public class IntervalTransferManager {
 
@@ -74,7 +76,8 @@ public class IntervalTransferManager {
 
 			JsonTransferer intervalTransferer = new JsonTransferer();
 			if (intervalTransferer.sendIntervals(intervalsToTransfer)) {
-				lastTransferedIntervalKey = databaseHighestKey;
+				intervalPersister.clearAndResetDatabase();
+				lastTransferedIntervalKey = 0;
 				Preferences.getInstance().registerLastTransferedInterval(
 						UIUtils.getWorkspaceName(), lastTransferedIntervalKey);
 			} else {

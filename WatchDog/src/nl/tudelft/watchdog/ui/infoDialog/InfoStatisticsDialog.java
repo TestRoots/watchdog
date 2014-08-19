@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.ui.infoDialog;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.tudelft.watchdog.logic.interval.IntervalInitializationManager;
+import nl.tudelft.watchdog.logic.IntervalInitializationManager;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.ui.UIUtils;

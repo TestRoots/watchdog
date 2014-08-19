@@ -7,13 +7,12 @@ import java.util.Date;
 
 import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentType;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
-import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.junit.Test;
 
@@ -31,7 +30,7 @@ public class IntervalToJsonConverterTest {
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"re\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"" + WatchDogGlobals.getClientVersion() + "\"}]",
+				"[{\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"re\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"1.0-SNAPSHOT\"}]",
 				intervalTransferer.toJson(intervals));
 	}
 
@@ -44,7 +43,7 @@ public class IntervalToJsonConverterTest {
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"diff\":0,\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"" + WatchDogGlobals.getClientVersion() + "\"}]",
+				"[{\"diff\":0,\"doc\":{\"pn\":\"Project\",\"fn\":\"Production.java\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"1.0-SNAPSHOT\"}]",
 				intervalTransferer.toJson(intervals));
 	}
 
@@ -57,7 +56,7 @@ public class IntervalToJsonConverterTest {
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"" + WatchDogGlobals.getClientVersion() + "\"}]",
+				"[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"1.0-SNAPSHOT\"}]",
 				intervalTransferer.toJson(intervals));
 	}
 

@@ -37,7 +37,10 @@ public class JsonTransferer {
 		gson = gsonBuilder.create();
 	}
 
-	/** Sends the recorded intervals to the server. */
+	/**
+	 * Sends the recorded intervals to the server. Returns <code>true</code> on
+	 * successful transfer, <code>false</code> otherwise.
+	 */
 	public boolean sendIntervals(List<IntervalBase> recordedIntervals) {
 		String userid = Preferences.getInstance().getUserid();
 		String projectid = Preferences.getInstance()

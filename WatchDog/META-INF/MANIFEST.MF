@@ -58,7 +58,4 @@ Bundle-ClassPath: .,
  libs/httpmime-4.3.3.jar,
  libs/commons-validator-1.4.0.jar,
  libs/mapdb-1.0.5.jar,
- libs/java-util-1.12.0.jar,
- libs/maven-core-3.2.3.jar,
- libs/maven-model-3.2.3.jar,
- libs/plexus-utils-3.0.17.jar
+ libs/java-util-1.12.0.jar

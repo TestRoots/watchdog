@@ -53,12 +53,7 @@ public class IntervalPersisterTest {
 		testInteraction(100);
 	}
 
-	@Test
-	public void test2DatabasePersisted() {
-		assertEquals(99, persister.getHighestKey());
-	}
-
-	public void testInteraction(int items) {
+	private void testInteraction(int items) {
 		List<IntervalBase> generatedIntervals = generateIntervalList(items);
 
 		// Shuffle the generated intervals to test for
@@ -94,4 +89,16 @@ public class IntervalPersisterTest {
 				+ (new Random()).nextInt(100000)));
 		return interval;
 	}
+
+	@Test
+	public void test2DatabasePersisted() {
+		assertEquals(99, persister.getHighestKey());
+	}
+
+	@Test
+	public void test3DatabaseCleared() {
+		persister.clearAndResetDatabase();
+		assertEquals(-1, persister.getHighestKey());
+	}
+
 }

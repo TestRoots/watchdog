@@ -1,16 +1,5 @@
 package nl.tudelft.watchdog.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-
 /**
  * Globals for the current WatchDog instance.
  */
@@ -29,31 +18,6 @@ public class WatchDogGlobals {
 	public static boolean isActive = false;
 
 	/** The client's version, as set in pom.xml. */
-	private static String CLIENT_VERSION = "unknown";
-
-	static {
-		Model model = null;
-		MavenXpp3Reader mavenreader = new MavenXpp3Reader();
-
-		try {
-			File pomFile = new File("pom.xml");
-			Reader reader = new InputStreamReader(new FileInputStream(pomFile),
-					"UTF-8");
-			model = mavenreader.read(reader);
-			model.setPomFile(pomFile);
-			MavenProject project = new MavenProject(model);
-			CLIENT_VERSION = project.getVersion();
-		} catch (IOException | XmlPullParserException ex) {
-			// intentionally left empty;
-		}
-
-	}
-
-	/**
-	 * @return The client version
-	 */
-	public final static String getClientVersion() {
-		return CLIENT_VERSION;
-	}
+	public final static String CLIENT_VERSION = "1.0-SNAPSHOT";
 
 }

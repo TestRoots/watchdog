@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.logic.ui.listeners;
 
-import nl.tudelft.watchdog.logic.interval.IntervalInitializationManager;
+import nl.tudelft.watchdog.logic.IntervalInitializationManager;
 import nl.tudelft.watchdog.logic.interval.IntervalTransferManager;
 import nl.tudelft.watchdog.logic.ui.EventManager;
 import nl.tudelft.watchdog.logic.ui.WatchDogEvent;
