@@ -127,7 +127,7 @@ public class NetworkUtils {
 	}
 
 	/** @return the base URL for user-based operations. */
-	public static String buildProjectURL(String id) {
+	public static String buildExistingProjectURL(String id) {
 		return getServerURI() + "project/" + id;
 	}
 

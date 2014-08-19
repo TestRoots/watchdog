@@ -35,7 +35,7 @@ public class ProjectSliderPage extends FinishableWizardPage {
 
 	@Override
 	public void createControl(Composite parent) {
-		setTitle("Register a new project (2/3)");
+		setTitle("Register a new project (3/3)");
 		setDescription("You nearly made it! Only this page left.");
 
 		Composite topComposite = UIUtils.createFullGridedComposite(parent, 1);

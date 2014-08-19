@@ -54,7 +54,7 @@ public class ProjectRegistrationWizard extends Wizard {
 			return null;
 		}
 		if (currentPage == projectRegistrationPage
-				&& projectRegistrationPage.usesOtherTestingStrategies() == YesNoDontKnowChoice.No
+				&& projectRegistrationPage.usesOtherTestingFrameworks() == YesNoDontKnowChoice.No
 				&& projectRegistrationPage.usesJunit() == YesNoDontKnowChoice.No) {
 			return projectedCreatedPage;
 		}

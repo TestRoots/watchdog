@@ -21,7 +21,7 @@ class ProjectIdEnteredEndingPage extends IdEnteredEndingPage {
 
 	@Override
 	protected String buildTransferURLforId() {
-		return NetworkUtils.buildProjectURL(id);
+		return NetworkUtils.buildExistingProjectURL(id);
 	}
 
 	@Override

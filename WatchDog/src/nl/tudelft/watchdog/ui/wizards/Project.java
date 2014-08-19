@@ -4,6 +4,8 @@ import java.util.Date;
 
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 
+import org.eclipse.swt.widgets.Text;
+
 /**
  * The concept of a project comprises all information entered about the project
  * by the user.
@@ -19,9 +21,6 @@ public class Project {
 	/** eMail. */
 	public String name;
 
-	/** Role. */
-	public String role;
-
 	/**
 	 * Does the registered WatchDog project belong to a single software project
 	 * (<code>true</code> if it does)
@@ -32,7 +31,10 @@ public class Project {
 	public YesNoDontKnowChoice usesJunit;
 
 	/** Do you use other frameworks than Junit? */
-	public YesNoDontKnowChoice usesOtherFrameworks;
+	public YesNoDontKnowChoice usesOtherTestingFrameworks;
+
+	/** Do you use other testing strategies than Unit testing? */
+	public YesNoDontKnowChoice usesOtherTestingForms;
 
 	/** The percentage of how much production code is done (0% - 100%). */
 	public int productionPercentage;
@@ -48,5 +50,8 @@ public class Project {
 
 	/** The user who registers this project. */
 	public String userId;
+
+	/** The project's website. */
+	public Text website;
 
 }

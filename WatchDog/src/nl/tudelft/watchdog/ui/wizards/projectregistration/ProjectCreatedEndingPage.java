@@ -35,9 +35,11 @@ class ProjectCreatedEndingPage extends RegistrationEndingPage {
 		project.belongToASingleSofware = !projectPage.noSingleProjectButton
 				.getSelection();
 		project.name = projectPage.projectNameInput.getText();
-		project.role = projectPage.userRoleInput.getText();
+		project.website = projectPage.projectWebsite;
 		project.usesJunit = projectPage.usesJunit();
-		project.usesOtherFrameworks = projectPage.usesOtherTestingStrategies();
+		project.usesOtherTestingFrameworks = projectPage
+				.usesOtherTestingFrameworks();
+		project.usesOtherTestingForms = projectPage.usesOtherTestingForms();
 
 		windowTitle = "Project Registration";
 

@@ -20,15 +20,15 @@ import org.eclipse.swt.widgets.Text;
  */
 class ProjectRegistrationPage extends FinishableWizardPage {
 
-	private static final String DOES_YOUR_PROJECT = "Does your project ...";
+	private static final String DOES_YOUR_PROJECT = "Does your project use ...";
 
-	private static final String DOES_AT_LEAST_ONE_PROJECT_USE = "Does at least one of your projects in the workspace ...";
+	private static final String DOES_AT_LEAST_ONE_PROJECT_USE = "Does at least one of your projects use ...";
 
 	/** Project name. */
 	Text projectNameInput;
 
-	/** Role of the user. */
-	Text userRoleInput;
+	/** Project website */
+	Text projectWebsite;
 
 	private Label multipleProjectLabel;
 
@@ -36,7 +36,9 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 
 	private Composite useJunit;
 
-	private Composite otherTestingStrategies;
+	private Composite otherTestingFrameworks;
+
+	private Composite otherTestingForms;
 
 	/** No, these projects do not belong to a single physical project. */
 	Button noSingleProjectButton;
@@ -65,7 +67,7 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 		Composite composite = UIUtils.createGridedComposite(topComposite, 2);
 		composite.setLayoutData(UIUtils.createFullGridUsageData());
 		noSingleProjectComposite = createSimpleYesNoQuestion(
-				"Do the Eclipse projects in the workspace belong to a single software project or program? ",
+				"All projects in this workspace belong to one ('bigger') project? ",
 				composite);
 		noSingleProjectButton = (Button) noSingleProjectComposite.getChildren()[1];
 		final Button yesSingleProjectButton = (Button) noSingleProjectComposite
@@ -80,18 +82,17 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 
 		Composite textInputComposite = UIUtils.createFullGridedComposite(
 				topComposite, 2);
-		projectNameInput = UIUtils
-				.createLinkedFieldInput(
-						"Project Name: ",
-						"The name of the project(s) you work on in this workspace (if you have a website, we'd love to see it here)",
-						textInputComposite);
-		userRoleInput = UIUtils.createLinkedFieldInput("Your Role: ",
-				"Try best describe what you do: Developer, Tester, ...",
+		projectNameInput = UIUtils.createLinkedFieldInput("Project Name: ",
+				"The name of the project(s) you work on in this workspace",
 				textInputComposite);
+		projectWebsite = UIUtils.createLinkedFieldInput("Project Website: ",
+				"If you have a website, we'd love to see it here.",
+				textInputComposite);
+
 		FormValidationListener formValidationListener = new FormValidationListener(
 				this);
 		projectNameInput.addModifyListener(formValidationListener);
-		userRoleInput.addModifyListener(formValidationListener);
+		projectWebsite.addModifyListener(formValidationListener);
 
 		Composite questionComposite = UIUtils.createFullGridedComposite(
 				topComposite, 2);
@@ -101,13 +102,21 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 		multipleProjectLabel = UIUtils.createLabel(DOES_YOUR_PROJECT,
 				questionComposite);
 		UIUtils.createLabel("", questionComposite);
-		useJunit = createSimpleYesNoDontKnowQuestion("  ... use JUnit? \n",
+		useJunit = createSimpleYesNoDontKnowQuestion("  ... JUnit? ",
 				questionComposite);
-		otherTestingStrategies = createSimpleYesNoDontKnowQuestion(
-				"  ... use other testing 'frameworks' than JUnit, for example \n  Mockito, Powermock, Selenium? ",
+		otherTestingFrameworks = createSimpleYesNoDontKnowQuestion(
+				"  ... other testing frameworks (e.g. Mockito)? ",
 				questionComposite);
 		addValidationListenerToAllChildren(useJunit, formValidationListener);
-		addValidationListenerToAllChildren(otherTestingStrategies,
+		addValidationListenerToAllChildren(otherTestingFrameworks,
+				formValidationListener);
+		otherTestingForms = createSimpleYesNoDontKnowQuestion(
+				"  ... other testing forms (e.g. manual testing)? ",
+				questionComposite);
+		addValidationListenerToAllChildren(useJunit, formValidationListener);
+		addValidationListenerToAllChildren(otherTestingFrameworks,
+				formValidationListener);
+		addValidationListenerToAllChildren(otherTestingForms,
 				formValidationListener);
 
 		return topComposite;
@@ -120,10 +129,9 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 		} else if (inputFieldDoesNotHaveMinimumSensibleInput(projectNameInput)
 				&& projectNameInput.getEnabled()) {
 			setErrorMessageAndPageComplete("You must enter a proper project's name.");
-		} else if (inputFieldDoesNotHaveMinimumSensibleInput(userRoleInput)) {
-			setErrorMessageAndPageComplete("Please try to describe what you do in the project, e.g. developer or tester.");
 		} else if (!hasOneSelection(useJunit)
-				|| !hasOneSelection(otherTestingStrategies)) {
+				|| !hasOneSelection(otherTestingFrameworks)
+				|| !hasOneSelection(otherTestingForms)) {
 			setErrorMessageAndPageComplete("Please answer all yes/no/don't know questions!");
 		} else {
 			setErrorMessageAndPageComplete(null);
@@ -149,11 +157,18 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 	}
 
 	/**
-	 * @return Whether or not this project uses other testing strategies (than
+	 * @return Whether or not this project uses other testing frameworks (than
 	 *         Junit).
 	 */
-	/* package */YesNoDontKnowChoice usesOtherTestingStrategies() {
-		return evaluateWhichSelection(otherTestingStrategies);
+	/* package */YesNoDontKnowChoice usesOtherTestingFrameworks() {
+		return evaluateWhichSelection(otherTestingFrameworks);
+	}
+
+	/**
+	 * @return Whether or not this project uses other testing strategies.
+	 */
+	/* package */YesNoDontKnowChoice usesOtherTestingForms() {
+		return evaluateWhichSelection(otherTestingForms);
 	}
 
 	private class SingleProjectSelectionListener implements SelectionListener {
@@ -180,6 +195,7 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 			multipleProjectLabel.update();
 			multipleProjectLabel.pack();
 			projectNameInput.setEnabled(enableState);
+			projectWebsite.setEnabled(enableState);
 			parent.update();
 			validateFormInputs();
 		}
