@@ -4,8 +4,6 @@ import java.util.Date;
 
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 
-import org.eclipse.swt.widgets.Text;
-
 /**
  * The concept of a project comprises all information entered about the project
  * by the user.
@@ -52,6 +50,6 @@ public class Project {
 	public String userId;
 
 	/** The project's website. */
-	public Text website;
+	public String website;
 
 }

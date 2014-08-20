@@ -79,7 +79,8 @@ public class IntervalPersister {
 	/** Saves one interval to persistent storage */
 	public void saveInterval(IntervalBase interval) {
 		map.put(getHighestKey() + 1, interval);
-		database.commit(); // persist changes to disk
+		// persist changes to disk
+		database.commit();
 	}
 
 	/** @return The highest key in the database. -1, if the database is empty */

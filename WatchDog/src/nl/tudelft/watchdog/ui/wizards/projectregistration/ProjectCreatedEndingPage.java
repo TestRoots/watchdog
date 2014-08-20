@@ -35,7 +35,7 @@ class ProjectCreatedEndingPage extends RegistrationEndingPage {
 		project.belongToASingleSofware = !projectPage.noSingleProjectButton
 				.getSelection();
 		project.name = projectPage.projectNameInput.getText();
-		project.website = projectPage.projectWebsite;
+		project.website = projectPage.projectWebsite.getText();
 		project.usesJunit = projectPage.usesJunit();
 		project.usesOtherTestingFrameworks = projectPage
 				.usesOtherTestingFrameworks();
