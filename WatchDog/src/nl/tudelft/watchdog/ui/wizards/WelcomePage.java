@@ -3,18 +3,22 @@ package nl.tudelft.watchdog.ui.wizards;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import nl.tudelft.watchdog.Activator;
 import nl.tudelft.watchdog.ui.UIUtils;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PartInitException;
@@ -73,7 +77,6 @@ abstract public class WelcomePage extends FinishableWizardPage {
 		Composite topContainer = UIUtils.createFullGridedComposite(parent, 1);
 
 		// Sets up the basis layout
-		createLogoRow(topContainer);
 		createQuestionComposite(topContainer);
 
 		setControl(topContainer);
@@ -84,14 +87,21 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	 * Creates and returns the question whether WatchDog Id is already known.
 	 */
 	private Composite createQuestionComposite(final Composite parent) {
-		final Composite composite = UIUtils
-				.createFullGridedComposite(parent, 2);
-		UIUtils.createLabel(labelQuestion, composite);
+		final Composite composite = UIUtils.createGridedComposite(parent, 3);
+
+		Label questionIcon = new Label(composite, SWT.NONE);
+		ImageDescriptor questionIconImageDescriptor = Activator
+				.imageDescriptorFromPlugin(Activator.PLUGIN_ID, getIconPath());
+		Image questionIconImage = questionIconImageDescriptor.createImage();
+		questionIcon.setImage(questionIconImage);
+		questionIconImage.dispose();
+
+		UIUtils.createLabel("   " + labelQuestion, composite);
 
 		final Composite radioButtons = UIUtils.createFullGridedComposite(
 				composite, 1);
-		radioButtons.setLayoutData(new GridData(SWT.BEGINNING, SWT.END, false,
-				true));
+		radioButtons.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER,
+				false, true));
 		radioButtons.setLayout(new FillLayout());
 		final Button radioButtonYes = UIUtils.createRadioButton(radioButtons,
 				"Yes");
@@ -132,6 +142,11 @@ abstract public class WelcomePage extends FinishableWizardPage {
 
 		return composite;
 	}
+
+	/**
+	 * @return The path to the image that is displayed next to the question.
+	 */
+	protected abstract String getIconPath();
 
 	/** Removes the dynamic content from the page, if it exists. */
 	private void removeDynamicContent(final Composite parent) {

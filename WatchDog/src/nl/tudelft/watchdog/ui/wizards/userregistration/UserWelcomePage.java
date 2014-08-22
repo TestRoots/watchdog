@@ -20,4 +20,8 @@ class UserWelcomePage extends WelcomePage {
 		labelQuestion = "Do you have a WatchDog UserId? ";
 	}
 
+	@Override
+	protected String getIconPath() {
+		return "resources/images/user.png";
+	}
 }

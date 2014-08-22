@@ -7,6 +7,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -48,9 +49,22 @@ public abstract class FinishableWizardPage extends WizardPage {
 
 	/**
 	 * Validates the form inputs, and sets the error message for the wizard if
-	 * there is any. Should be overriden by subclasses.
+	 * there is any. Empty default implementation can be overridden by
+	 * subclasses.
 	 */
 	public void validateFormInputs() {
+	}
+
+	/**
+	 * Creates a simple question with according yes/no/don't know radio buttons.
+	 * 
+	 * @return the composite where the buttons are put onto.
+	 */
+	protected Composite createSimpleYesNoDontKnowQuestion(String question,
+			Composite parent) {
+		Composite buttonComposite = createSimpleYesNoQuestion(question, parent);
+		UIUtils.createRadioButton(buttonComposite, "Don't know");
+		return buttonComposite;
 	}
 
 	/**
@@ -66,18 +80,6 @@ public abstract class FinishableWizardPage extends WizardPage {
 		UIUtils.createRadioButton(composite, "Yes");
 		UIUtils.createRadioButton(composite, "No");
 		return composite;
-	}
-
-	/**
-	 * Creates a simple question with according yes/no/don't know radio buttons.
-	 * 
-	 * @return the composite where the buttons are put onto.
-	 */
-	protected Composite createSimpleYesNoDontKnowQuestion(String question,
-			Composite parent) {
-		Composite buttonComposite = createSimpleYesNoQuestion(question, parent);
-		UIUtils.createRadioButton(buttonComposite, "Don't know");
-		return buttonComposite;
 	}
 
 	/** Use on composites which consist of radio buttons only. */
@@ -124,17 +126,21 @@ public abstract class FinishableWizardPage extends WizardPage {
 		ImageDescriptor watchdogLogoImageDescriptor = Activator
 				.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
 						"resources/images/watchdog_small.png");
-		watchdogLogo.setImage(watchdogLogoImageDescriptor.createImage());
+		Image watchdogLogoImage = watchdogLogoImageDescriptor.createImage();
+		watchdogLogo.setImage(watchdogLogoImage);
 		watchdogLogo.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING,
 				true, false));
 
-		Label testrootsLogo = new Label(logoContainer, SWT.NONE);
+		Label testRootsLogo = new Label(logoContainer, SWT.NONE);
 		ImageDescriptor testrootsImageDescriptor = Activator
 				.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
 						"resources/images/testroots_small.png");
-		testrootsLogo.setImage(testrootsImageDescriptor.createImage());
-		testrootsLogo.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING,
+		Image testRootsLogoImage = testrootsImageDescriptor.createImage();
+		testRootsLogo.setImage(testRootsLogoImage);
+		testRootsLogo.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING,
 				true, false));
+		watchdogLogoImage.dispose();
+		testRootsLogoImage.dispose();
 	}
 
 	/**

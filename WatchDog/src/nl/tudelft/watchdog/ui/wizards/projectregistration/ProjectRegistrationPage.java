@@ -20,6 +20,8 @@ import org.eclipse.swt.widgets.Text;
  */
 class ProjectRegistrationPage extends FinishableWizardPage {
 
+	private static final String TITLE = "Register a new project";
+
 	private static final String DOES_YOUR_PROJECT = "Does your project use ...";
 
 	private static final String DOES_AT_LEAST_ONE_PROJECT_USE = "Does at least one of your projects use ...";
@@ -50,7 +52,7 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 
 	@Override
 	public void createControl(Composite parent) {
-		setTitle("Register a new project (2/3)");
+		setTitle(TITLE + " (2/3)");
 		setDescription("Create a new WatchDog Project for this workspace!");
 		Composite topComposite = createComposite(parent);
 		setControl(topComposite);
@@ -128,13 +130,18 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 			setErrorMessageAndPageComplete("Please answer all yes/no questions!");
 		} else if (inputFieldDoesNotHaveMinimumSensibleInput(projectNameInput)
 				&& projectNameInput.getEnabled()) {
-			setErrorMessageAndPageComplete("You must enter a proper project's name.");
+			setErrorMessageAndPageComplete("You must enter a project name longer than 2 chars.");
 		} else if (!hasOneSelection(useJunit)
 				|| !hasOneSelection(otherTestingFrameworks)
 				|| !hasOneSelection(otherTestingForms)) {
 			setErrorMessageAndPageComplete("Please answer all yes/no/don't know questions!");
 		} else {
 			setErrorMessageAndPageComplete(null);
+		}
+
+		setTitle(TITLE + " (2/3)");
+		if (shouldSkipProjectSliderPage()) {
+			setTitle(TITLE + " (2/2)");
 		}
 		getWizard().getContainer().updateButtons();
 	}
@@ -169,6 +176,17 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 	 */
 	/* package */YesNoDontKnowChoice usesOtherTestingForms() {
 		return evaluateWhichSelection(otherTestingForms);
+	}
+
+	/**
+	 * @return Whether the {@link ProjectSliderPage}, which logically follows
+	 *         this page in the wizard, can be skipped (because the selection by
+	 *         the user in this wizard don't make sense to fill-out the next
+	 *         page).
+	 */
+	public boolean shouldSkipProjectSliderPage() {
+		return usesOtherTestingFrameworks() == YesNoDontKnowChoice.No
+				&& usesJunit() == YesNoDontKnowChoice.No;
 	}
 
 	private class SingleProjectSelectionListener implements SelectionListener {

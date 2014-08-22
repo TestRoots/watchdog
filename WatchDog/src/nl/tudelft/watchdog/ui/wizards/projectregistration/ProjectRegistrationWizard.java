@@ -3,7 +3,6 @@ package nl.tudelft.watchdog.ui.wizards.projectregistration;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
-import nl.tudelft.watchdog.ui.wizards.YesNoDontKnowChoice;
 
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -54,8 +53,7 @@ public class ProjectRegistrationWizard extends Wizard {
 			return null;
 		}
 		if (currentPage == projectRegistrationPage
-				&& projectRegistrationPage.usesOtherTestingFrameworks() == YesNoDontKnowChoice.No
-				&& projectRegistrationPage.usesJunit() == YesNoDontKnowChoice.No) {
+				&& projectRegistrationPage.shouldSkipProjectSliderPage()) {
 			return projectedCreatedPage;
 		}
 		if (currentPage == projectSliderPage) {

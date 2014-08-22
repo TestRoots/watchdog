@@ -19,4 +19,9 @@ class ProjectWelcomePage extends WelcomePage {
 		labelText = "Your WatchDog Project ID: ";
 		inputToolTip = "The Project ID we sent you upon your Project registration.";
 	}
+
+	@Override
+	protected String getIconPath() {
+		return "resources/images/project.png";
+	}
 }
