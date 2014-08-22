@@ -24,7 +24,7 @@ public abstract class FinishableWizardPage extends WizardPage {
 	/** Constructor. */
 	protected FinishableWizardPage(String pageName) {
 		super(pageName);
-		this.setImageDescriptor(UIUtils.tuLogoImageDescriptor);
+		this.setImageDescriptor(UIUtils.TU_DELFT_LOGO);
 	}
 
 	/** @return whether this page can currently be finished. */

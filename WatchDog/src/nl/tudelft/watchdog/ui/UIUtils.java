@@ -172,9 +172,9 @@ public class UIUtils {
 	}
 
 	/** The TU Logo. */
-	public static final ImageDescriptor tuLogoImageDescriptor = Activator
+	public static final ImageDescriptor TU_DELFT_LOGO = Activator
 			.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
-					"resources/images/tudelft_with_frame.png");
+					"resources/images/tudelft.png");
 
 	/**
 	 * The warning displayed when WatchDog is not active.

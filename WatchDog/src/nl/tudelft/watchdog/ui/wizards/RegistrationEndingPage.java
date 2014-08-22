@@ -35,7 +35,7 @@ public abstract class RegistrationEndingPage extends FinishableWizardPage {
 
 	/** Constructor. */
 	protected RegistrationEndingPage() {
-		super("User created.");
+		super("ID created.");
 	}
 
 	@Override

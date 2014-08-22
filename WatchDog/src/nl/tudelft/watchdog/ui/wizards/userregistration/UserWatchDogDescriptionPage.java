@@ -78,7 +78,7 @@ public class UserWatchDogDescriptionPage extends FinishableWizardPage {
 			welcomeText.getParent().layout();
 			welcomeText.getParent().update();
 
-			String welcomeText = "\nIt measures how much production versus test code you write (never what you write!), and when you run tests. Our promise: <a href=\"http://www.testroots.org/data\">Your data</a> is always encrypted, and we never do anything bad with it.\n\nWhat's in it for you? Super-amazing <a href=\"http://www.testroots.org/prizes\">prizes</a> and a truly appreciated contribution to science! :-).\n";
+			String welcomeText = "\nIt measures how you write code and tests, but never what you write! And when you run tests. Our promise: <a href=\"http://www.testroots.org/watchdog.html#details\">Your data</a> is strictly numerical, and we never do anything bad with it.\n\nWhat's in it for you? Super-amazing <a href=\"http://www.testroots.org/watchdog.html#prizes\">prizes</a> and a truly appreciated contribution to science! :-).\n";
 
 			linkedText.setText(welcomeText);
 			linkedText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
