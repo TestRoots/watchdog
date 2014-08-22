@@ -117,8 +117,6 @@ public class UIUtils {
 	 *            The tooltip displayed on both the label and the input.
 	 * @param composite
 	 *            The composite on which both should be put.
-	 * @return
-	 * 
 	 * @return input The linked input.
 	 */
 	public static Text createLinkedFieldInput(String labelText, String toolTip,
@@ -174,7 +172,7 @@ public class UIUtils {
 	/** The TU Logo. */
 	public static final ImageDescriptor TU_DELFT_LOGO = Activator
 			.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
-					"resources/images/tudelft.png");
+					"resources/images/tudelft_with_frame.png");
 
 	/**
 	 * The warning displayed when WatchDog is not active.
