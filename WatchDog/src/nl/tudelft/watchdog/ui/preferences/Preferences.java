@@ -59,7 +59,7 @@ public class Preferences {
 	private Preferences() {
 		store = (ScopedPreferenceStore) Activator.getDefault()
 				.getPreferenceStore();
-		store.setDefault(LOGGING_ENABLED_KEY, false);
+		store.setDefault(LOGGING_ENABLED_KEY, true);
 		store.setDefault(AUTHENTICATION_ENABLED_KEY, true);
 		store.setDefault(USERID_KEY, "");
 		store.setDefault(SERVER_KEY, WatchDogGlobals.DEFAULT_SERVER_URI);

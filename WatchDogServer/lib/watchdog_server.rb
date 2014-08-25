@@ -7,17 +7,20 @@ require 'json'
 require 'net/smtp'
 require 'logger'
 require 'geocoder'
+require 'yaml'
 
 class WatchDogServer < Sinatra::Base
   include Mongo
-
+ 
   def mongo
-    MongoClient.new("localhost", 27017)
+    @serverconfig ||= YAML.load_file('config.yaml')[settings.environment.to_s]
+    MongoClient.new(@serverconfig['mongo_host'], 27017)
   end
 
   # Setup database connection
   before  do
-    @db ||= mongo.db('watchdog')
+    mongo
+    @db ||= mongo.db(@serverconfig['mongo_db'])
   end
 
   after do

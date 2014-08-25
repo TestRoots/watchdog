@@ -83,7 +83,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	public boolean performOk() {
 		boolean returnStatus = super.performOk();
-		// TODO (MMB) hook into me
 		preferences.registerWorkspaceProject(workspace,
 				projectIDInput.getText());
 		preferences.registerWorkspaceUse(workspace,

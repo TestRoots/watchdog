@@ -52,11 +52,11 @@ public class EditorListener {
 
 			@Override
 			public void documentChanged(DocumentEvent event) {
+				// eventManager.update(new EditorEvent(editor, EventType.EDIT));
 			}
 
 			@Override
 			public void documentAboutToBeChanged(DocumentEvent event) {
-				eventManager.update(new EditorEvent(editor, EventType.EDIT));
 			}
 		};
 		document.addDocumentListener(documentListener);

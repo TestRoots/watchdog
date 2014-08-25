@@ -30,10 +30,6 @@ public class EventManager {
 
 	private InactivityNotifier userInactivityNotifier;
 
-	private InactivityNotifier editorInactivityNotifier;
-
-	private InactivityNotifier writingInactivityNotifier;
-
 	private DocumentFactory documentFactory;
 
 	/** Constructor. */
@@ -44,10 +40,6 @@ public class EventManager {
 
 		userInactivityNotifier = new InactivityNotifier(this,
 				userActivityTimeout, EventType.USER_INACTIVITY);
-		editorInactivityNotifier = new InactivityNotifier(this,
-				userActivityTimeout, EventType.EDITOR_INACTIVITY);
-		writingInactivityNotifier = new InactivityNotifier(this,
-				userActivityTimeout, EventType.WRITING_INACTIVITY);
 	}
 
 	/** Introduces the supplied editorEvent */
@@ -63,8 +55,6 @@ public class EventManager {
 
 		case END_ECLIPSE:
 			userInactivityNotifier.cancelTimer();
-			editorInactivityNotifier.cancelTimer();
-			writingInactivityNotifier.cancelTimer();
 			intervalManager.closeAllIntervals();
 			break;
 
@@ -79,7 +69,6 @@ public class EventManager {
 					.getIntervalOfType(IntervalType.ECLIPSE_ACTIVE);
 			intervalManager.closeInterval(interval);
 			userInactivityNotifier.cancelTimer();
-			editorInactivityNotifier.cancelTimer();
 			break;
 
 		case START_JAVA_PERSPECTIVE:
@@ -116,17 +105,17 @@ public class EventManager {
 			interval = intervalManager
 					.getIntervalOfType(IntervalType.USER_ACTIVE);
 			intervalManager.closeInterval(interval);
+			interval = intervalManager.getEditorInterval();
+			intervalManager.closeInterval(interval);
 			break;
 
 		case EDIT:
 			ITextEditor editor = (ITextEditor) event.getSource();
-
 			EditorIntervalBase editorInterval = intervalManager
 					.getEditorInterval();
 			if (editorInterval == null
 					|| editorInterval.getType() != IntervalType.TYPING) {
 				// create new typing interval
-				editorInactivityNotifier.cancelTimer();
 				intervalManager.closeInterval(editorInterval);
 				intervalManager.addAndSetEditorInterval(new TypingInterval(
 						editor));
@@ -141,25 +130,21 @@ public class EventManager {
 				}
 			}
 			userInactivityNotifier.trigger();
-			writingInactivityNotifier.trigger();
 			break;
 
 		case PAINT:
 		case CARET_MOVED:
 		case ACTIVE_FOCUS:
-			editor = (ITextEditor) event.getSource();
 			editorInterval = intervalManager.getEditorInterval();
 			if (editorInterval == null) {
+				editor = (ITextEditor) event.getSource();
 				intervalManager.addAndSetEditorInterval(new ReadingInterval(
 						editor));
 			}
-			editorInactivityNotifier.trigger();
 			userInactivityNotifier.trigger();
 			break;
 
 		case END_FOCUS:
-			editorInactivityNotifier.cancelTimer();
-			writingInactivityNotifier.cancelTimer();
 			intervalManager.closeInterval(intervalManager.getEditorInterval());
 			break;
 
@@ -184,7 +169,7 @@ public class EventManager {
 	private void createNewPerspectiveInterval(
 			PerspectiveInterval.Perspective perspecitveType) {
 		PerspectiveInterval perspectiveInterval = intervalManager
-				.getEditorIntervalOfClass(PerspectiveInterval.class);
+				.getIntervalOfClass(PerspectiveInterval.class);
 		if (perspectiveInterval != null
 				&& perspectiveInterval.getPerspectiveType() == perspecitveType) {
 			// abort if such an interval is already open.

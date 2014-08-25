@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.NavigableMap;
 
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
@@ -57,10 +58,15 @@ public class IntervalPersister {
 
 	/**
 	 * Read intervals between @from (inclusive) and @to (exclusive) and return
-	 * them as a List.
+	 * them as a List. In case of any database error, returns a new empty list.
 	 */
 	public List<IntervalBase> readIntervals(final long from, final long to) {
-		return new ArrayList<IntervalBase>(map.subMap(from, to).values());
+		try {
+			return new ArrayList<IntervalBase>(map.subMap(from, to).values());
+		} catch (RuntimeException exception) {
+			WatchDogLogger.getInstance().logSevere(exception);
+		}
+		return new ArrayList<IntervalBase>();
 	}
 
 	/**

@@ -17,6 +17,8 @@ public class IntervalManager {
 	/** A list of currently opened intervals. */
 	private List<IntervalBase> intervals = new ArrayList<IntervalBase>();
 
+	private EditorIntervalBase editorInterval;
+
 	/** The document factory. */
 	private DocumentFactory documentFactory;
 
@@ -56,13 +58,20 @@ public class IntervalManager {
 		}
 	}
 
-	/** Creates a new editing interval. */
-	public void addAndSetEditorInterval(EditorIntervalBase interval) {
-		addInterval(interval);
-		interval.setDocument(documentFactory.createDocument(interval
-				.getEditor()));
-		WatchDogLogger.getInstance()
-				.logInfo("created new interval " + interval);
+	/**
+	 * Adds the given EditorIntervalBase, if the existing editorInterval is
+	 * closed.
+	 */
+	public void addAndSetEditorInterval(EditorIntervalBase editorInterval) {
+		System.out.println("add interval " + editorInterval);
+
+		if (this.editorInterval == null || this.editorInterval.isClosed()) {
+			this.editorInterval = editorInterval;
+		}
+		editorInterval.setDocument(documentFactory
+				.createDocument(editorInterval.getEditor()));
+		WatchDogLogger.getInstance().logInfo(
+				"created new interval " + editorInterval);
 	}
 
 	/**
@@ -80,6 +89,7 @@ public class IntervalManager {
 
 	/** Closes all currently open intervals. */
 	public void closeAllIntervals() {
+		closeInterval(editorInterval);
 		Iterator<IntervalBase> iterator = intervals.listIterator();
 		while (iterator.hasNext()) {
 			// we need to remove the interval first from the list in order to
@@ -109,17 +119,18 @@ public class IntervalManager {
 	 *         at any given time. If there is none, <code>null</code>.
 	 */
 	public EditorIntervalBase getEditorInterval() {
-		return getEditorIntervalOfClass(EditorIntervalBase.class);
+		return editorInterval;
 	}
 
 	/**
-	 * @return Returns an editor interval of the given class, if there is any
-	 *         such open. If not, returns null.
+	 * @return Returns an interval of the given class, if there is any such
+	 *         open. If not, returns null.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends IntervalBase> T getEditorIntervalOfClass(Class<T> clazz) {
+	public <T extends IntervalBase> T getIntervalOfClass(Class<T> clazz) {
 		for (IntervalBase interval : intervals) {
-			if (clazz.isInstance(interval) && !interval.isClosed()) {
+			if (clazz.isAssignableFrom(interval.getClass())
+					&& !interval.isClosed()) {
 				return (T) interval;
 			}
 		}

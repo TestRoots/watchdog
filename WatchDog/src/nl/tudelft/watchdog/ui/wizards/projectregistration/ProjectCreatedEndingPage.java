@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.ui.wizards.projectregistration;
 
 import nl.tudelft.watchdog.logic.exceptions.ServerCommunicationException;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.ui.wizards.Project;
 import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPage;
@@ -49,6 +50,9 @@ class ProjectCreatedEndingPage extends RegistrationEndingPage {
 			successfulRegistration = false;
 			messageTitle = "Problem creating new project!";
 			messageBody = exception.getMessage();
+			messageBody += "\nAre you connected to the internet, and is port 80 open?";
+			messageBody += "\nPlease contact us via <a href=\"http://testroots.org/\">testroots.org/contact.html</a>. We'll troubleshoot the issue!";
+			WatchDogLogger.getInstance().logSevere(exception);
 			return;
 		}
 

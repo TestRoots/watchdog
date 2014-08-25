@@ -1,0 +1,11 @@
+test:
+  mongo_host: 'localhost'
+  mongo_db: 'watchdog-test'
+
+production:
+  mongo_host: 'localhost'
+  mongo_db: 'watchdog'
+
+development:
+  mongo_host: 'localhost'
+  mongo_db: 'watchdog-dev'

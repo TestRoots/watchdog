@@ -68,8 +68,6 @@ public class NetworkUtils {
 		} catch (IOException exception) {
 			// intentionally empty
 		}
-		// TODO (MMB) throw network access fail exception
-		// this return is present just to fulfill the method requirements.
 		return Connection.NETWORK_ERROR;
 	}
 
@@ -96,7 +94,7 @@ public class NetworkUtils {
 				return response.getEntity();
 			} else {
 				// server returns not created
-				errorMessage = "Failed to execute Json request on server (status code: "
+				errorMessage = "Failed to execute request on server (status code: "
 						+ response.getStatusLine().getStatusCode()
 						+ "). "
 						+ readResponse(response.getEntity());
@@ -104,7 +102,7 @@ public class NetworkUtils {
 			}
 		} catch (IOException e) {
 			// server unreachable case
-			errorMessage = "Failed to commuincate with server. "
+			errorMessage = "Failed to commuincate with our server. "
 					+ e.getMessage();
 		}
 		WatchDogLogger.getInstance().logInfo(errorMessage);
