@@ -11,7 +11,7 @@ require 'yaml'
 
 class WatchDogServer < Sinatra::Base
   include Mongo
- 
+
   def mongo
     @serverconfig ||= YAML.load_file('config.yaml')[settings.environment.to_s]
     MongoClient.new(@serverconfig['mongo_host'], 27017)
@@ -20,7 +20,7 @@ class WatchDogServer < Sinatra::Base
   # Setup database connection
   before  do
     mongo
-    @db ||= mongo.db(@serverconfig['mongo_db'])
+    @db = mongo.db(@serverconfig['mongo_db'])
   end
 
   after do
@@ -78,7 +78,7 @@ class WatchDogServer < Sinatra::Base
     user['country'] = request.location.country
 
     add_ip_timestamp(user, request)
-    
+
     users.save(user)
     stored_user = get_user_by_id(sha)
 
@@ -207,7 +207,7 @@ class WatchDogServer < Sinatra::Base
     return Digest::SHA1.hexdigest rnd
   end
 
-  # sends a registration mail 
+  # sends a registration mail
   def send_registration_email(mailtext, email, id, projectname)
     text = sprintf(mailtext, Time.now.rfc2822, id, projectname)
 
