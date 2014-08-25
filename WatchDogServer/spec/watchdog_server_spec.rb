@@ -44,7 +44,6 @@ describe 'The WatchDog Server' do
 
   before(:each) do
     mongo = WatchDogServer.new.helpers.mongo
-    mongo.drop_database('watchdog_test')
     mongo.close
   end
 
@@ -93,13 +92,6 @@ describe 'The WatchDog Server' do
 
   it 'should return 400 on non JSON array being sent to /users/:id/intervals' do
     post '/user/foobar/foobarproject/intervals', '{"foo":"bar"}'
-    last_response.status.should eql(400)
-  end
-
-  it 'should return 400 when > 1000 intervals are sent at once' do
-    intervals = (1..1001).map{|x| test_interval(x, x + 1)}
-
-    post '/user/foobar/foobarproj/intervals', intervals.to_json
     last_response.status.should eql(400)
   end
 

@@ -124,8 +124,8 @@ class WatchDogServer < Sinatra::Base
       halt 400, 'Wrong request, body is not a JSON array'
     end
 
-    if ivals.size > 1000
-      halt 400, 'Request too long (> 1000 intervals)'
+    if ivals.size > 100000
+      halt 400, 'Request too long (> 100000 intervals)'
     end
 
     negative_intervals = ivals.find{|x| (x['te'].to_i - x['ts'].to_i) < 0}
