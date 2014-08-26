@@ -63,15 +63,14 @@ public class IntervalManager {
 	 * closed.
 	 */
 	public void addAndSetEditorInterval(EditorIntervalBase editorInterval) {
-		System.out.println("add interval " + editorInterval);
-
 		if (this.editorInterval == null || this.editorInterval.isClosed()) {
 			this.editorInterval = editorInterval;
 		}
+		editorInterval.setSessionSeed(sessionSeed);
 		editorInterval.setDocument(documentFactory
 				.createDocument(editorInterval.getEditor()));
 		WatchDogLogger.getInstance().logInfo(
-				"created new interval " + editorInterval);
+				"created new editor interval " + editorInterval);
 	}
 
 	/**
@@ -90,6 +89,7 @@ public class IntervalManager {
 			intervals.remove(interval);
 		}
 		persister.saveInterval(interval);
+		WatchDogLogger.getInstance().logInfo("closed interval " + interval);
 	}
 
 	/** Closes all currently open intervals. */

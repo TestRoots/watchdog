@@ -52,7 +52,7 @@ public class EditorListener {
 
 			@Override
 			public void documentChanged(DocumentEvent event) {
-				// eventManager.update(new EditorEvent(editor, EventType.EDIT));
+				eventManager.update(new EditorEvent(editor, EventType.EDIT));
 			}
 
 			@Override
@@ -91,8 +91,8 @@ public class EditorListener {
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				eventManager
-						.update(new EditorEvent(editor, EventType.INACTIVE_FOCUS));
+				eventManager.update(new EditorEvent(editor,
+						EventType.INACTIVE_FOCUS));
 			}
 
 			@Override

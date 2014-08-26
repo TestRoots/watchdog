@@ -144,8 +144,8 @@ public class EventManager {
 				intervalManager.addAndSetEditorInterval(new ReadingInterval(
 						editor));
 			}
-			userInactivityNotifier.trigger();
 			readingInactivityNotifier.trigger();
+			userInactivityNotifier.trigger();
 			break;
 
 		case INACTIVE_FOCUS:
