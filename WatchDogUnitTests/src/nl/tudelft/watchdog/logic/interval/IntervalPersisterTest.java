@@ -99,7 +99,7 @@ public class IntervalPersisterTest {
 
 	@Test
 	public void test3DatabaseCleared() {
-		persister.clearAndResetDatabase();
+		persister.clearAndResetMap();
 		assertEquals(-1, persister.getHighestKey());
 	}
 

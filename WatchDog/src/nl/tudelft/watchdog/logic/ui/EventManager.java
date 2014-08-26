@@ -52,7 +52,6 @@ public class EventManager {
 
 	/** Introduces the supplied editorEvent */
 	public void update(WatchDogEvent event) {
-
 		IntervalBase interval;
 		switch (event.getType()) {
 		case START_ECLIPSE:

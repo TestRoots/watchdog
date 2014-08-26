@@ -76,7 +76,7 @@ public class IntervalTransferManager {
 
 			JsonTransferer intervalTransferer = new JsonTransferer();
 			if (intervalTransferer.sendIntervals(intervalsToTransfer)) {
-				intervalPersister.clearAndResetDatabase();
+				intervalPersister.clearAndResetMap();
 				lastTransferedIntervalKey = 0;
 				Preferences.getInstance().registerLastTransferedInterval(
 						UIUtils.getWorkspaceName(), lastTransferedIntervalKey);

@@ -40,10 +40,7 @@ public class IntervalPersister {
 				database.compact();
 			}
 		} catch (RuntimeException e) {
-			// Happens when an update to the serializables in the database
-			// was made, and the new objects cannot be created from the old data
-			file.delete();
-			initalizeDatabase(file);
+			recreateDatabase(file);
 		}
 	}
 
@@ -54,6 +51,15 @@ public class IntervalPersister {
 
 	private DB createDatabase(final File file) {
 		return DBMaker.newFileDB(file).closeOnJvmShutdown().make();
+	}
+
+	private void recreateDatabase(final File file) {
+		clearAndResetMap();
+		closeDatabase();
+		// Happens when an update to the serializables in the database
+		// was made, and the new objects cannot be created from the old data
+		file.delete();
+		initalizeDatabase(file);
 	}
 
 	/**
@@ -83,8 +89,7 @@ public class IntervalPersister {
 			// persist changes to disk
 			database.commit();
 		} catch (RuntimeException exception) {
-			file.delete();
-			createDatabase(file);
+			recreateDatabase(file);
 		}
 
 	}
@@ -107,7 +112,7 @@ public class IntervalPersister {
 	}
 
 	/** Clears the database on the computer and resets it. */
-	public void clearAndResetDatabase() {
+	public void clearAndResetMap() {
 		database.delete(INTERVALS);
 		database.commit();
 		map = database.getTreeMap(INTERVALS);

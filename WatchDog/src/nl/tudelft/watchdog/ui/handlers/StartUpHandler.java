@@ -17,17 +17,23 @@ public class StartUpHandler implements IStartup {
 	/** {@inheritDoc} Starts the WatchDog plugin. */
 	@Override
 	public void earlyStartup() {
-		StartupUIThread watchDogUiThread = new StartupUIThread(
-				this, Preferences.getInstance());
+		StartupUIThread watchDogUiThread = new StartupUIThread(this,
+				Preferences.getInstance());
 		Display.getDefault().asyncExec(watchDogUiThread);
 	}
 
 	/** Starts WatchDog. */
 	/* package */void startWatchDog() {
-		WatchDogGlobals.isActive = true;
-		WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
-		// initializes the interval manager, and thereby, WatchDog interval
-		// recording.
-		IntervalInitializationManager.getInstance();
+		try {
+			WatchDogGlobals.isActive = true;
+			WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
+			// initializes the interval manager, and thereby, WatchDog interval
+			// recording.
+			IntervalInitializationManager.getInstance();
+		} catch (Exception exception) {
+			WatchDogLogger.getInstance().logSevere(
+					"Caught sever exception on top-level: ");
+			WatchDogLogger.getInstance().logSevere(exception);
+		}
 	}
 }
