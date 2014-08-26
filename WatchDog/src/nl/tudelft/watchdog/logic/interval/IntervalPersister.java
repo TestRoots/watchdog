@@ -25,14 +25,16 @@ public class IntervalPersister {
 	/** In memory representation of the interval store */
 	private NavigableMap<Long, IntervalBase> map;
 
+	private File file;
+
 	/**
 	 * Create a new interval persister. If @path points to an existing database
 	 * of intervals, it will be reused.
 	 */
 	public IntervalPersister(final File file) {
+		this.file = file;
 		try {
-			database = createDatabase(file);
-			map = database.getTreeMap(INTERVALS);
+			initalizeDatabase(file);
 			// Compact database on every 10th new interval.
 			if (!map.isEmpty() && map.size() % 10 == 0) {
 				database.compact();
@@ -41,8 +43,13 @@ public class IntervalPersister {
 			// Happens when an update to the serializables in the database
 			// was made, and the new objects cannot be created from the old data
 			file.delete();
-			database = createDatabase(file);
+			initalizeDatabase(file);
 		}
+	}
+
+	private void initalizeDatabase(File file) {
+		database = createDatabase(file);
+		map = database.getTreeMap(INTERVALS);
 	}
 
 	private DB createDatabase(final File file) {
@@ -69,24 +76,17 @@ public class IntervalPersister {
 		return new ArrayList<IntervalBase>();
 	}
 
-	/**
-	 * Save a list of intervals to the persistent storage, as a single commit
-	 * (and hence in a very performance-oriented way)
-	 */
-	public void saveIntervals(final List<IntervalBase> intervals) {
-		long newKey = getHighestKey() + 1;
-		for (IntervalBase interval : intervals) {
-			map.put(newKey, interval);
-			++newKey;
-		}
-		database.commit();
-	}
-
 	/** Saves one interval to persistent storage */
 	public void saveInterval(IntervalBase interval) {
-		map.put(getHighestKey() + 1, interval);
-		// persist changes to disk
-		database.commit();
+		try {
+			map.put(getHighestKey() + 1, interval);
+			// persist changes to disk
+			database.commit();
+		} catch (RuntimeException exception) {
+			file.delete();
+			createDatabase(file);
+		}
+
 	}
 
 	/** @return The highest key in the database. -1, if the database is empty */

@@ -60,7 +60,9 @@ public class IntervalPersisterTest {
 		// correct ordering of returned values
 		Collections.shuffle(generatedIntervals);
 
-		persister.saveIntervals(generatedIntervals);
+		for (IntervalBase intervalBase : generatedIntervals) {
+			persister.saveInterval(intervalBase);
+		}
 
 		List<IntervalBase> readIntervals = persister.readIntervals(0,
 				Long.MAX_VALUE);
