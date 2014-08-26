@@ -16,16 +16,6 @@
             id="nl.tudelft.watchdog.commands.showWatchDogInfo"
             name="Display WatchDogInfo">
       </command>
-      <command
-            defaultHandler="nl.tudelft.watchdog.ui.handlers.UserRegistrationWizardDialogHandler"
-            id="nl.tudelft.watchdog.commands.UserWizardDialog"
-            name="Start User Wizard">
-      </command>
-      <command
-            defaultHandler="nl.tudelft.watchdog.ui.handlers.ProjectRegistrationWizardDialogHandler"
-            id="nl.tudelft.watchdog.commands.ProjectWizardDialog"
-            name="Start Project Wizard">
-      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -43,28 +33,6 @@
                   tooltip="WatchDog is inactive">
             </command>
          </toolbar>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:org.eclipse.ui.main.menu">
-         <menu
-               label="WatchDog">
-            <command
-                  commandId="nl.tudelft.watchdog.commands.showWatchDogInfo"
-                  label="WatchDog Statistics"
-                  style="push">
-            </command>
-            <command
-                  commandId="nl.tudelft.watchdog.commands.UserWizardDialog"
-                  label="Start User Wizard Dialog"
-                  style="push">
-            </command>
-            <command
-                  commandId="nl.tudelft.watchdog.commands.ProjectWizardDialog"
-                  label="Start Project Wizard Dialog"
-                  style="push">
-            </command>
-         </menu>
       </menuContribution>
    </extension>
    <extension
