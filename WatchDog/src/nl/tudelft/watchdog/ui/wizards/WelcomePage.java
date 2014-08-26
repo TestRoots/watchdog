@@ -65,8 +65,6 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	/** The no button from the question. */
 	private Button radioButtonNo;
 
-	private Image questionIconImage;
-
 	/** Constructor. */
 	public WelcomePage(String title) {
 		super(title);
@@ -94,7 +92,7 @@ abstract public class WelcomePage extends FinishableWizardPage {
 		Label questionIcon = new Label(composite, SWT.NONE);
 		ImageDescriptor questionIconImageDescriptor = Activator
 				.imageDescriptorFromPlugin(Activator.PLUGIN_ID, getIconPath());
-		questionIconImage = questionIconImageDescriptor.createImage();
+		Image questionIconImage = questionIconImageDescriptor.createImage();
 		questionIcon.setImage(questionIconImage);
 
 		UIUtils.createLabel("   " + labelQuestion, composite);
@@ -233,12 +231,6 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	@Override
 	public boolean canFinish() {
 		return false;
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
-		questionIconImage.dispose();
 	}
 
 }
