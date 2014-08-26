@@ -34,7 +34,7 @@ public class PartListener implements IPartListener {
 	public void partDeactivated(IWorkbenchPart part) {
 		// TODO (MMB) extract instanceof check outside of PartListener?
 		if (part instanceof ITextEditor) {
-			eventManager.update(new EditorEvent(part, EventType.END_FOCUS));
+			eventManager.update(new EditorEvent(part, EventType.INACTIVE_FOCUS));
 		}
 	}
 

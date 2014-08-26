@@ -30,6 +30,10 @@ public class EventManager {
 
 	private InactivityNotifier userInactivityNotifier;
 
+	private InactivityNotifier typingInactivityNotifier;
+
+	private InactivityNotifier readingInactivityNotifier;
+
 	private DocumentFactory documentFactory;
 
 	/** Constructor. */
@@ -40,6 +44,10 @@ public class EventManager {
 
 		userInactivityNotifier = new InactivityNotifier(this,
 				userActivityTimeout, EventType.USER_INACTIVITY);
+		typingInactivityNotifier = new InactivityNotifier(this,
+				userActivityTimeout, EventType.TYPING_INACTIVITY);
+		readingInactivityNotifier = new InactivityNotifier(this,
+				userActivityTimeout, EventType.READING_INACTIVITY);
 	}
 
 	/** Introduces the supplied editorEvent */
@@ -64,7 +72,7 @@ public class EventManager {
 			userInactivityNotifier.trigger();
 			break;
 
-		case END_WINDOW:
+		case INACTIVE_WINDOW:
 			interval = intervalManager
 					.getIntervalOfType(IntervalType.ECLIPSE_ACTIVE);
 			intervalManager.closeInterval(interval);
@@ -101,20 +109,13 @@ public class EventManager {
 			}
 			break;
 
-		case USER_INACTIVITY:
-			interval = intervalManager
-					.getIntervalOfType(IntervalType.USER_ACTIVE);
-			intervalManager.closeInterval(interval);
-			interval = intervalManager.getEditorInterval();
-			intervalManager.closeInterval(interval);
-			break;
-
 		case EDIT:
 			ITextEditor editor = (ITextEditor) event.getSource();
 			EditorIntervalBase editorInterval = intervalManager
 					.getEditorInterval();
 			if (editorInterval == null
 					|| editorInterval.getType() != IntervalType.TYPING) {
+				readingInactivityNotifier.cancelTimer();
 				// create new typing interval
 				intervalManager.closeInterval(editorInterval);
 				intervalManager.addAndSetEditorInterval(new TypingInterval(
@@ -123,12 +124,14 @@ public class EventManager {
 				// refresh document content for calculation of edit distance
 				TypingInterval typingInterval = (TypingInterval) editorInterval;
 				try {
+					// TODO (MMB) This might be potentially expensive
 					typingInterval.setEndingDocument(documentFactory
 							.createDocument(editor));
 				} catch (IllegalArgumentException exception) {
 					WatchDogLogger.getInstance().logSevere(exception);
 				}
 			}
+			typingInactivityNotifier.trigger();
 			userInactivityNotifier.trigger();
 			break;
 
@@ -142,17 +145,36 @@ public class EventManager {
 						editor));
 			}
 			userInactivityNotifier.trigger();
+			readingInactivityNotifier.trigger();
 			break;
 
-		case END_FOCUS:
-		case EDITOR_INACTIVITY:
-			intervalManager.closeInterval(intervalManager.getEditorInterval());
+		case INACTIVE_FOCUS:
+			editorInterval = intervalManager.getEditorInterval();
+			intervalManager.closeInterval(editorInterval);
+			readingInactivityNotifier.cancelTimer();
+			typingInactivityNotifier.cancelTimer();
 			break;
 
-		case WRITING_INACTIVITY:
+		case USER_INACTIVITY:
+			interval = intervalManager
+					.getIntervalOfType(IntervalType.USER_ACTIVE);
+			intervalManager.closeInterval(interval);
+			typingInactivityNotifier.cancelTimer();
+			readingInactivityNotifier.cancelTimer();
+			break;
+
+		case TYPING_INACTIVITY:
 			editorInterval = intervalManager.getEditorInterval();
 			if (editorInterval != null
 					&& editorInterval.getType() == IntervalType.TYPING) {
+				intervalManager.closeInterval(editorInterval);
+			}
+			break;
+
+		case READING_INACTIVITY:
+			editorInterval = intervalManager.getEditorInterval();
+			if (editorInterval != null
+					&& editorInterval.getType() == IntervalType.READING) {
 				intervalManager.closeInterval(editorInterval);
 			}
 			break;

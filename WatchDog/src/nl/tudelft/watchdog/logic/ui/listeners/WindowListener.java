@@ -32,7 +32,8 @@ public class WindowListener implements IWindowListener {
 
 	@Override
 	public void windowDeactivated(IWorkbenchWindow window) {
-		eventManager.update(new WatchDogEvent(window, EventType.END_WINDOW));
+		eventManager
+				.update(new WatchDogEvent(window, EventType.INACTIVE_WINDOW));
 
 	}
 

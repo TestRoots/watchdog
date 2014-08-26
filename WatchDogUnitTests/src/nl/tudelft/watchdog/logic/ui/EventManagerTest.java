@@ -62,7 +62,7 @@ public class EventManagerTest {
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
 		Mockito.verify(intervalManager).addAndSetEditorInterval(
 				Mockito.isA(ReadingInterval.class));
-		eventManager.update(createMockEvent(EventType.END_FOCUS));
+		eventManager.update(createMockEvent(EventType.INACTIVE_FOCUS));
 		Mockito.verify(intervalManager, Mockito.atLeastOnce()).closeInterval(
 				Mockito.isA(ReadingInterval.class));
 		Assert.assertEquals(null, intervalManager.getEditorInterval());

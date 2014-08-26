@@ -37,7 +37,10 @@ import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
 		this.isRunning = false;
 	}
 
-	/**  */
+	/**
+	 * Triggers the timer, i.e. prolongs its lifetime or creates a new timer if
+	 * non is running.
+	 */
 	public void trigger() {
 		if (activityTimer == null) {
 			createNewTimer();

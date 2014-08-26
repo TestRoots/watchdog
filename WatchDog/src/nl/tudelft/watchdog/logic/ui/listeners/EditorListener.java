@@ -92,7 +92,7 @@ public class EditorListener {
 			@Override
 			public void focusLost(FocusEvent e) {
 				eventManager
-						.update(new EditorEvent(editor, EventType.END_FOCUS));
+						.update(new EditorEvent(editor, EventType.INACTIVE_FOCUS));
 			}
 
 			@Override
