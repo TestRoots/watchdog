@@ -2,6 +2,8 @@ package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
 import java.util.Date;
 
+import nl.tudelft.watchdog.util.WatchDogUtils;
+
 import org.eclipse.jdt.junit.model.ITestCaseElement;
 import org.eclipse.jdt.junit.model.ITestElement;
 import org.eclipse.jdt.junit.model.ITestElementContainer;
@@ -25,7 +27,7 @@ public class JUnitInterval extends IntervalBase {
 
 	/** The project on which the JUnit test was executed. */
 	@SerializedName("pn")
-	private String projectName;
+	private String projectHash;
 
 	/** Result of the test run. When aborted duration is NaN. */
 	@SerializedName("re")
@@ -73,7 +75,7 @@ public class JUnitInterval extends IntervalBase {
 
 	/** Sets the project name the Junit test run was executed on. */
 	public void setProjectName(String projectName) {
-		this.projectName = projectName;
+		this.projectHash = WatchDogUtils.createHash(projectName);
 	}
 
 }

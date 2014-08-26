@@ -8,7 +8,7 @@ public class JUnitEvent extends WatchDogEvent {
 		super(source, EventType.JUNIT);
 	}
 
-	/** Serialised version id. */
+	/** Serialized version id. */
 	private static final long serialVersionUID = 1L;
 
 }

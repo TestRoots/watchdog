@@ -7,6 +7,7 @@ import java.util.Random;
 import nl.tudelft.watchdog.logic.exceptions.ContentReaderException;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
@@ -155,6 +156,14 @@ public class WatchDogUtils {
 			}
 		}
 		return sloc;
+	}
+
+	/**
+	 * @return A hash code for the given String, so that it is completely
+	 *         anonymous.
+	 */
+	public static String createHash(String name) {
+		return DigestUtils.shaHex(name);
 	}
 
 }

@@ -11,7 +11,6 @@ import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 

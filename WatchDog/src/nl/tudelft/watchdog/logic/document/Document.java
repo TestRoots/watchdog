@@ -16,12 +16,16 @@ public class Document implements Serializable {
 	private static final long serialVersionUID = 3L;
 
 	/** The project name. */
+	private transient String projectName;
+
 	@SerializedName("pn")
-	private String projectName;
+	private String projectNameHash;
 
 	/** The file's name. */
+	private transient String fileName;
+
 	@SerializedName("fn")
-	private String fileName;
+	private String fileNameHash;
 
 	/** The file's length, in LoC. */
 	@SerializedName("sloc")
@@ -38,6 +42,17 @@ public class Document implements Serializable {
 			String content) {
 		this.projectName = projectName;
 		this.fileName = fileName;
+
+		String shortenedName = fileName.toLowerCase().replace(".java", "");
+		if (shortenedName.startsWith("test") || shortenedName.endsWith("test")) {
+			shortenedName = shortenedName.replace("test", "");
+			this.fileNameHash = WatchDogUtils.createHash(shortenedName)
+					+ "Test";
+		} else {
+			this.fileNameHash = WatchDogUtils.createHash(shortenedName);
+		}
+		projectNameHash = WatchDogUtils.createHash(projectName);
+
 		this.docType = docType;
 		this.content = content;
 		this.sloc = WatchDogUtils.countSLOC(content);

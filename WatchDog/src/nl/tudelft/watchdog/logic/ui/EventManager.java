@@ -145,9 +145,6 @@ public class EventManager {
 			break;
 
 		case END_FOCUS:
-			intervalManager.closeInterval(intervalManager.getEditorInterval());
-			break;
-
 		case EDITOR_INACTIVITY:
 			intervalManager.closeInterval(intervalManager.getEditorInterval());
 			break;
