@@ -82,8 +82,13 @@ public class IntervalManager {
 		if (interval == null) {
 			return;
 		}
+
 		interval.close();
-		intervals.remove(interval);
+		if (interval instanceof EditorIntervalBase) {
+			editorInterval = null;
+		} else {
+			intervals.remove(interval);
+		}
 		persister.saveInterval(interval);
 	}
 

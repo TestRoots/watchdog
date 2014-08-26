@@ -94,7 +94,7 @@ public class EventManagerTest {
 	public void testWritingIntervalsGetClosedOnHigherCancel() {
 		eventManager.update(createMockEvent(EventType.EDIT));
 		eventManager.update(createMockEvent(EventType.END_ECLIPSE));
-		Mockito.verify(intervalManager).closeInterval(
+		Mockito.verify(intervalManager, Mockito.atLeastOnce()).closeInterval(
 				Mockito.isA(TypingInterval.class));
 	}
 
@@ -143,7 +143,6 @@ public class EventManagerTest {
 	}
 
 	@Test
-	@Ignore
 	public void testUserInactiveShouldNotCloseReading() {
 		eventManager.update(createMockEvent(EventType.USER_ACTIVITY));
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
