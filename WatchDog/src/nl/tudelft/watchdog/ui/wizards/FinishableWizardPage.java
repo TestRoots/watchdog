@@ -22,6 +22,9 @@ import org.eclipse.swt.widgets.Label;
  */
 public abstract class FinishableWizardPage extends WizardPage {
 
+	private Image watchdogLogoImage;
+	private Image testRootsLogoImage;
+
 	/** Constructor. */
 	protected FinishableWizardPage(String pageName) {
 		super(pageName);
@@ -126,7 +129,7 @@ public abstract class FinishableWizardPage extends WizardPage {
 		ImageDescriptor watchdogLogoImageDescriptor = Activator
 				.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
 						"resources/images/watchdog_small.png");
-		Image watchdogLogoImage = watchdogLogoImageDescriptor.createImage();
+		watchdogLogoImage = watchdogLogoImageDescriptor.createImage();
 		watchdogLogo.setImage(watchdogLogoImage);
 		watchdogLogo.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING,
 				true, false));
@@ -135,12 +138,10 @@ public abstract class FinishableWizardPage extends WizardPage {
 		ImageDescriptor testrootsImageDescriptor = Activator
 				.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
 						"resources/images/testroots_small.png");
-		Image testRootsLogoImage = testrootsImageDescriptor.createImage();
+		testRootsLogoImage = testrootsImageDescriptor.createImage();
 		testRootsLogo.setImage(testRootsLogoImage);
 		testRootsLogo.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING,
 				true, false));
-		watchdogLogoImage.dispose();
-		testRootsLogoImage.dispose();
 	}
 
 	/**
@@ -156,5 +157,12 @@ public abstract class FinishableWizardPage extends WizardPage {
 			return YesNoDontKnowChoice.No;
 		}
 		return YesNoDontKnowChoice.DontKnow;
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		watchdogLogoImage.dispose();
+		testRootsLogoImage.dispose();
 	}
 }
