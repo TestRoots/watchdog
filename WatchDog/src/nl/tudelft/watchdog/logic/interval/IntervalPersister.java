@@ -35,12 +35,22 @@ public class IntervalPersister {
 		this.file = file;
 		try {
 			initalizeDatabase(file);
+		} catch (Error e) {
+			// MapDB wraps every exception inside an Error, so this code is
+			// unfortunately necessary.
+			try {
+				recreateDatabase(file);
+			} catch (Error innerError) {
+				WatchDogLogger.getInstance().logSevere(innerError);
+			}
+		}
+		try {
 			// Compact database on every 10th new interval.
 			if (!map.isEmpty() && map.size() % 10 == 0) {
 				database.compact();
 			}
-		} catch (RuntimeException e) {
-			recreateDatabase(file);
+		} catch (Error e) {
+			// intentionally left empty.
 		}
 	}
 
@@ -88,8 +98,12 @@ public class IntervalPersister {
 			map.put(getHighestKey() + 1, interval);
 			// persist changes to disk
 			database.commit();
-		} catch (RuntimeException exception) {
-			recreateDatabase(file);
+		} catch (Error error) {
+			try {
+				recreateDatabase(file);
+			} catch (Error innerError) {
+				WatchDogLogger.getInstance().logSevere(innerError);
+			}
 		}
 
 	}
@@ -108,13 +122,17 @@ public class IntervalPersister {
 	 * not properly closed.
 	 */
 	public void closeDatabase() {
-		database.close();
+		if (database != null) {
+			database.close();
+		}
 	}
 
 	/** Clears the database on the computer and resets it. */
 	public void clearAndResetMap() {
-		database.delete(INTERVALS);
-		database.commit();
-		map = database.getTreeMap(INTERVALS);
+		if (database != null) {
+			database.delete(INTERVALS);
+			database.commit();
+			map = database.getTreeMap(INTERVALS);
+		}
 	}
 }
