@@ -81,7 +81,7 @@ public class IntervalPersisterTest {
 		return intervals;
 	}
 
-	private IntervalBase createRandomInterval() {
+	public static IntervalBase createRandomInterval() {
 		IntervalBase interval = new IntervalBase(IntervalType.ECLIPSE_OPEN);
 		interval.setSessionSeed(444);
 		interval.setUserid("123");

@@ -68,8 +68,16 @@ public class IntervalPersister {
 		closeDatabase();
 		// Happens when an update to the serializables in the database
 		// was made, and the new objects cannot be created from the old data
-		file.delete();
+		deleteDatabaseFile();
 		initalizeDatabase(file);
+	}
+
+	private void deleteDatabaseFile() {
+		file.delete();
+		File axuiliaryDatabaseFile = new File(file + ".p");
+		axuiliaryDatabaseFile.delete();
+		axuiliaryDatabaseFile = new File(file + ".t");
+		axuiliaryDatabaseFile.delete();
 	}
 
 	/**
