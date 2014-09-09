@@ -7,5 +7,6 @@ Fragment-Host: nl.tudelft.WatchDog;bundle-version="[0.0.0,2.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.junit
 Bundle-ClassPath: libs/mockito-all-1.9.5.jar,
- .
+ .,
+ libs/commons-io-2.4.jar
 Import-Package: org.eclipse.ui

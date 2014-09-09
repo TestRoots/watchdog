@@ -1,14 +1,7 @@
 package nl.tudelft.watchdog.ui.infoDialog;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import nl.tudelft.watchdog.logic.IntervalInitializationManager;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
-import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -20,7 +13,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.joda.time.Duration;
 
 /**
  * A dialog displaying statistics about the WatchDog recordings. This dialog is
@@ -65,62 +57,6 @@ public class InfoStatisticsDialog extends Dialog {
 		} else {
 			createLabel(WatchDogGlobals.inactiveWatchDogUIText, container,
 					colorRed);
-		}
-		createCurrentIntervalSummary(container);
-		// TODO (MMB) commented out for as long as we do not have levelDB
-		// storage to actually produce this.
-		// createTotalIntervalSummary(container);
-	}
-
-	/** Creates a summary from the current Eclipse session in WatchDog. */
-	private void createCurrentIntervalSummary(Composite container) {
-		List<IntervalBase> intervals = new ArrayList<IntervalBase>();
-		// TODO (MMB) replace with intervals from intervalpersister!
-		// intervals.addAll(IntervalManager.getInstance().getClosedIntervals());
-		intervals.addAll(IntervalInitializationManager.getInstance()
-				.getIntervalManager().getOpenIntervals());
-		createIntervalSummary("Current Eclipse Session:", container, intervals);
-	}
-
-	/**
-	 * Creates a summary from the given intervals, adding their durations up and
-	 * listing the times per activity.
-	 */
-	private void createIntervalSummary(String text, Composite container,
-			List<IntervalBase> intervals) {
-		IntervalStatistics intervalStatistics = new IntervalStatistics(
-				intervals);
-		intervalStatistics.calculateDurations();
-
-		// create some space before each listing
-		UIUtils.createLabel("\n", container);
-		UIUtils.createLabel("\n", container);
-		UIUtils.createLabel(text, container);
-		UIUtils.createLabel(WatchDogUtils
-				.makeDurationHumanReadable(intervalStatistics
-						.getDurationOfAcitivity(IntervalType.ECLIPSE_ACTIVE)),
-				container);
-
-		for (IntervalType activity : IntervalType.values()) {
-			if (activity == IntervalType.ECLIPSE_ACTIVE) {
-				return;
-			}
-			Duration duration = intervalStatistics
-					.getDurationOfAcitivity(activity);
-			UIUtils.createLabel(activity.toString(), container);
-
-			String labelText = WatchDogUtils
-					.makeDurationHumanReadable(duration);
-
-			if (intervalStatistics.getTotalTimeOverAllActivities().getMillis() > 0) {
-				int percentageOfActivity = (int) Math.round(((double) duration
-						.getMillis() / intervalStatistics
-						.getTotalTimeOverAllActivities().getMillis()) * 100);
-
-				labelText = percentageOfActivity + "%" + " (" + labelText + ")";
-			}
-
-			UIUtils.createLabel(labelText, container);
 		}
 	}
 

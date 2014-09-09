@@ -30,7 +30,7 @@
                   icon="resources/images/rsz_dog_icon.png"
                   label="Show WatchDog Info"
                   style="push"
-                  tooltip="WatchDog is inactive">
+                  tooltip="WatchDog Information">
             </command>
          </toolbar>
       </menuContribution>

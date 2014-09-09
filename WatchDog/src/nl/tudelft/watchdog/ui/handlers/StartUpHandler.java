@@ -25,11 +25,11 @@ public class StartUpHandler implements IStartup {
 	/** Starts WatchDog. */
 	/* package */void startWatchDog() {
 		try {
-			WatchDogGlobals.isActive = true;
 			WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
 			// initializes the interval manager, and thereby, WatchDog interval
 			// recording.
 			IntervalInitializationManager.getInstance();
+			WatchDogGlobals.isActive = true;
 		} catch (Exception exception) {
 			WatchDogLogger.getInstance().logSevere(
 					"Caught sever exception on top-level: ");
