@@ -51,7 +51,7 @@ class ProjectCreatedEndingPage extends RegistrationEndingPage {
 			messageTitle = "Problem creating new project!";
 			messageBody = exception.getMessage();
 			messageBody += "\nAre you connected to the internet, and is port 80 open?";
-			messageBody += "\nPlease contact us via <a href=\"http://testroots.org/\">testroots.org/contact.html</a>. We'll troubleshoot the issue!";
+			messageBody += "\nPlease contact us via www.testroots.org. \nWe'll troubleshoot the issue!";
 			WatchDogLogger.getInstance().logSevere(exception);
 			return;
 		}

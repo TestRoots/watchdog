@@ -28,7 +28,7 @@ public class IntervalPersister {
 	private File file;
 
 	/**
-	 * Create a new interval persister. If @path points to an existing database
+	 * Create a new interval persister. If file points to an existing database
 	 * of intervals, it will be reused.
 	 */
 	public IntervalPersister(final File file) {
@@ -56,7 +56,11 @@ public class IntervalPersister {
 
 	private void initalizeDatabase(File file) {
 		database = createDatabase(file);
-		map = database.getTreeMap(INTERVALS);
+		try {
+			map = database.getTreeMap(INTERVALS);
+		} catch (RuntimeException e) {
+			recreateDatabase(file);
+		}
 	}
 
 	private DB createDatabase(final File file) {
@@ -64,7 +68,6 @@ public class IntervalPersister {
 	}
 
 	private void recreateDatabase(final File file) {
-		clearAndResetMap();
 		closeDatabase();
 		// Happens when an update to the serializables in the database
 		// was made, and the new objects cannot be created from the old data
