@@ -7,6 +7,9 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 
 /**
  * Handler called when an Eclipse instance with the WatchDog plugin installed
@@ -30,6 +33,14 @@ public class StartUpHandler implements IStartup {
 			// recording.
 			IntervalInitializationManager.getInstance();
 			WatchDogGlobals.isActive = true;
+			IWorkbenchWindow window = PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow();
+			ICommandService commandService = (ICommandService) window
+					.getService(ICommandService.class);
+			if (commandService != null) {
+				commandService.refreshElements(
+						"nl.tudelft.watchdog.commands.showWatchDogInfo", null);
+			}
 		} catch (Exception exception) {
 			WatchDogLogger.getInstance().logSevere(
 					"Caught sever exception on top-level: ");
