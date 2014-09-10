@@ -6,6 +6,7 @@ import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -40,14 +41,14 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(Preferences.getInstance().getStore());
-		setDescription("Settings for WatchDog");
 	}
 
 	@Override
 	protected Control createContents(Composite parent) {
+		Color colorRed = new Color(getShell().getDisplay(), 255, 0, 0);
 		UIUtils.createLabel(
-				"WatchDog has local settings (different per workspace) and global settings (per Eclipse installation).",
-				parent);
+				"Changes in the settings become active after a restart of Eclipse.",
+				parent, colorRed);
 		UIUtils.createLabel("", parent);
 		Group localGroup = createGroup(parent, "Local Settings", 1);
 		UIUtils.createLabel(

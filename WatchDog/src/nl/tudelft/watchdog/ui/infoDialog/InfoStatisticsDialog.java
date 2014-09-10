@@ -12,7 +12,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -53,10 +52,10 @@ public class InfoStatisticsDialog extends Dialog {
 		Color colorGreen = new Color(getShell().getDisplay(), 0, 150, 0);
 		UIUtils.createLabel("WatchDog Status: ", container);
 		if (WatchDogGlobals.isActive) {
-			createLabel(WatchDogGlobals.activeWatchDogUIText, container,
+			UIUtils.createLabel(WatchDogGlobals.activeWatchDogUIText, container,
 					colorGreen);
 		} else {
-			createLabel(WatchDogGlobals.inactiveWatchDogUIText, container,
+			UIUtils.createLabel(WatchDogGlobals.inactiveWatchDogUIText, container,
 					colorRed);
 		}
 		Preferences preferences = Preferences.getInstance();
@@ -68,13 +67,6 @@ public class InfoStatisticsDialog extends Dialog {
 		UIUtils.createLabel("Last Transfered: ", container);
 		UIUtils.createLabel(preferences.getLastIntervalTransferDate(),
 				container);
-	}
-
-	/** Creates and returns a label with the given text and color. */
-	private Label createLabel(String text, Composite parent, Color color) {
-		Label label = UIUtils.createLabel(text, parent);
-		label.setForeground(color);
-		return label;
 	}
 
 	/** Disables the creation of a cancel button in the dialog */

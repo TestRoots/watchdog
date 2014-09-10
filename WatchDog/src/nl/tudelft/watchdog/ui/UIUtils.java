@@ -8,6 +8,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -176,4 +177,11 @@ public class UIUtils {
 	 * The warning displayed when WatchDog is not active.
 	 */
 	public static final String WATCHDOG_WARNING = "WatchDog only works when you register a (possibly anonymous) user.\n\nTakes less than one minute,  and you can win prices. As a registered user, you decide where WatchDog is active.";
+
+	/** Creates and returns a label with the given text and color. */
+	public static Label createLabel(String text, Composite parent, Color color) {
+		Label label = createLabel(text, parent);
+		label.setForeground(color);
+		return label;
+	}
 }
