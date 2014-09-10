@@ -43,9 +43,7 @@ public class NetworkUtils {
 	 * Checks whether the given url is reachable and exists. The connection
 	 * timeout is set to 5 seconds.
 	 * 
-	 * @return if the url exists and returns a 200 status code.
-	 *         <code>false</code> if the url does not return 200. In case of
-	 *         NetworkFailure, throws an execpetion.
+	 * @return a {@link Connection} object depicting how the connection went.
 	 */
 	public static Connection urlExistsAndReturnsStatus200(String url) {
 		HttpClient client = createAuthenticatedHttpClient();

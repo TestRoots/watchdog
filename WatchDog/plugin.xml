@@ -16,6 +16,16 @@
             id="nl.tudelft.watchdog.commands.showWatchDogInfo"
             name="Display WatchDogInfo">
       </command>
+            <command
+            defaultHandler="nl.tudelft.watchdog.ui.handlers.UserRegistrationWizardDialogHandler"
+            id="nl.tudelft.watchdog.commands.UserWizardDialog"
+            name="Start User Wizard">
+      </command>
+      <command
+            defaultHandler="nl.tudelft.watchdog.ui.handlers.ProjectRegistrationWizardDialogHandler"
+            id="nl.tudelft.watchdog.commands.ProjectWizardDialog"
+            name="Start Project Wizard">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">

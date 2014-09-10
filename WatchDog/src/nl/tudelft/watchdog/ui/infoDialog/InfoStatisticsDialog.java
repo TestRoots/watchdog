@@ -1,11 +1,16 @@
 package nl.tudelft.watchdog.ui.infoDialog;
 
+import nl.tudelft.watchdog.logic.network.NetworkUtils;
+import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
@@ -15,11 +20,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * A dialog displaying statistics about the WatchDog recordings. This dialog is
- * needed for the user to benefit from WatchDog and gain insights into how much
- * he's developing, and how much he is testing.
+ * A dialog displaying statistics about the health and status quo of WatchDog.
  */
 public class InfoStatisticsDialog extends Dialog {
+
+	private Color colorRed;
+	private Color colorGreen;
 
 	/** Constructor. */
 	public InfoStatisticsDialog(Shell parentShell) {
@@ -48,17 +54,45 @@ public class InfoStatisticsDialog extends Dialog {
 
 	/** Creates a label with the status of WatchDog plugin */
 	private void createStatusText(Composite container) {
-		Color colorRed = new Color(getShell().getDisplay(), 255, 0, 0);
-		Color colorGreen = new Color(getShell().getDisplay(), 0, 150, 0);
+		colorRed = new Color(getShell().getDisplay(), 255, 0, 0);
+		colorGreen = new Color(getShell().getDisplay(), 0, 150, 0);
 		UIUtils.createLabel("WatchDog Status: ", container);
 		if (WatchDogGlobals.isActive) {
-			UIUtils.createLabel(WatchDogGlobals.activeWatchDogUIText, container,
-					colorGreen);
+			UIUtils.createLabel(WatchDogGlobals.activeWatchDogUIText,
+					container, colorGreen);
 		} else {
-			UIUtils.createLabel(WatchDogGlobals.inactiveWatchDogUIText, container,
-					colorRed);
+			UIUtils.createLabel(WatchDogGlobals.inactiveWatchDogUIText,
+					container, colorRed);
 		}
 		Preferences preferences = Preferences.getInstance();
+		UIUtils.createLabel(" ", container);
+		UIUtils.createLabel(" ", container);
+		UIUtils.createLabel("User ID: ", container);
+		Connection userConnection = NetworkUtils
+				.urlExistsAndReturnsStatus200(NetworkUtils
+						.buildExistingUserURL(preferences.getUserid()));
+		reactOnConnectionStatus(container, userConnection,
+				new UserButtonListener());
+
+		Connection projectConnection = Connection.UNSUCCESSFUL;
+		if (userConnection == Connection.SUCCESSFUL) {
+			UIUtils.createLabel("Project ID: ", container);
+			String projectId = preferences.getOrCreateWorkspaceSetting(UIUtils
+					.getWorkspaceName()).projectId;
+			projectConnection = NetworkUtils
+					.urlExistsAndReturnsStatus200(NetworkUtils
+							.buildExistingProjectURL(projectId));
+			reactOnConnectionStatus(container, projectConnection,
+					new ProjectButtonListener());
+		}
+
+		if (userConnection != Connection.SUCCESSFUL
+				|| projectConnection != Connection.SUCCESSFUL) {
+			UIUtils.createLabel(" ", container);
+			UIUtils.createLabel("WatchDog cannot transfer its data.",
+					container, colorRed);
+		}
+
 		UIUtils.createLabel(" ", container);
 		UIUtils.createLabel(" ", container);
 		UIUtils.createLabel("Transfered intervals: ", container);
@@ -67,6 +101,26 @@ public class InfoStatisticsDialog extends Dialog {
 		UIUtils.createLabel("Last Transfered: ", container);
 		UIUtils.createLabel(preferences.getLastIntervalTransferDate(),
 				container);
+	}
+
+	private void reactOnConnectionStatus(Composite container,
+			Connection userConnection, SelectionListener listener) {
+		switch (userConnection) {
+		case SUCCESSFUL:
+			UIUtils.createLabel("OK", container, colorGreen);
+			break;
+		case UNSUCCESSFUL:
+			Composite localGrid = UIUtils.createFullGridedComposite(container,
+					2);
+			UIUtils.createLabel("Does not exist!", localGrid, colorRed);
+			Button userRegistration = new Button(localGrid, SWT.NONE);
+
+			userRegistration.addSelectionListener(listener);
+			userRegistration.setText("Fix this problem.");
+			break;
+		case NETWORK_ERROR:
+			UIUtils.createLabel("(Temporary) Network Error.", container);
+		}
 	}
 
 	/** Disables the creation of a cancel button in the dialog */
@@ -87,7 +141,35 @@ public class InfoStatisticsDialog extends Dialog {
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 200);
+		return new Point(450, 300);
+	}
+
+	private class UserButtonListener implements SelectionListener {
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			UIUtils.invokeCommand("nl.tudelft.watchdog.commands.UserWizardDialog");
+			okPressed();
+			UIUtils.invokeCommand("nl.tudelft.watchdog.commands.showWatchDogInfo");
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			// Intentionally empty
+		}
+	}
+
+	private class ProjectButtonListener implements SelectionListener {
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			UIUtils.invokeCommand("nl.tudelft.watchdog.commands.ProjectWizardDialog");
+			okPressed();
+			UIUtils.invokeCommand("nl.tudelft.watchdog.commands.showWatchDogInfo");
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			// Intentionally empty
+		}
 	}
 
 }

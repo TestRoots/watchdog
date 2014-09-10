@@ -12,19 +12,12 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.menus.UIElement;
 
 /** Base handler for displaying a blocking Wizards. */
-public class WizardDialogHandlerBase extends AbstractHandler implements
+public abstract class WizardDialogHandlerBase extends AbstractHandler implements
 		IElementUpdater {
 
-	/** The wizard which the dialog creates. */
-	protected IWizard wizard;
-
-	/** Constructor for setting the wizard. */
-	public WizardDialogHandlerBase(IWizard wizard) {
-		this.wizard = wizard;
-	}
-
-	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	/** Opens the wizard page. */
+	protected Object execute(IWizard wizard, ExecutionEvent event)
+			throws ExecutionException {
 		WizardDialog wizardDialog = new NoCancelOnFinishablePageWizardDialog(
 				HandlerUtil.getActiveShell(event), wizard);
 		wizardDialog.setBlockOnOpen(true);
