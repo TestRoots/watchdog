@@ -6,3 +6,4 @@ Gemfile.lock
 WatchDog/bundledLibs.jar
 WatchDogServer/logfile.log
 WatchDogUnitTests/test.mapdb*
+WatchDogUnitTests/invalidtest.mapdb*
