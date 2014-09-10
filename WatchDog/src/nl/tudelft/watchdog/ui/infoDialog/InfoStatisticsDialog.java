@@ -78,6 +78,8 @@ public class InfoStatisticsDialog extends Dialog {
 		UIUtils.createLabel("Last Transfered: ", container);
 		UIUtils.createLabel(preferences.getLastIntervalTransferDate(),
 				container);
+		UIUtils.createLabel(" ", container);
+		UIUtils.createLabel(" ", container);
 
 		UIUtils.createLabel("WatchDog Version:", container);
 		UIUtils.createLabel(WatchDogGlobals.CLIENT_VERSION, container);
@@ -181,7 +183,7 @@ public class InfoStatisticsDialog extends Dialog {
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 345);
+		return new Point(450, 355);
 	}
 
 	private class UserButtonListener implements SelectionListener {
