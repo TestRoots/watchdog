@@ -113,10 +113,8 @@ public abstract class FinishableWizardPage extends WizardPage {
 		return super.getPreviousPage();
 	}
 
-	/**
-	 * Creates a a new composite with the TestRoots and WatchDog logo.
-	 */
-	public void createLogoRow(Composite composite) {
+	/** Creates a a new composite with the TestRoots and WatchDog logo. */
+	protected void createLogoRow(Composite composite) {
 		Composite logoContainer = UIUtils.createFullGridedComposite(composite,
 				2);
 		logoContainer

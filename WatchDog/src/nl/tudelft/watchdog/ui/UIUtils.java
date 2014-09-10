@@ -103,7 +103,7 @@ public class UIUtils {
 
 	/** @return A fully horizontally greedy Grid. */
 	public static GridData createFullGridUsageData() {
-		// has to create new instances because the existing instance are altered
+		// Has to create new instances because the existing instance are altered
 		// once passed into an object.
 		return new GridData(SWT.FILL, SWT.NONE, true, false);
 	}
@@ -161,9 +161,7 @@ public class UIUtils {
 
 	}
 
-	/**
-	 * @return The workspace name.
-	 */
+	/** Returns the workspace name. */
 	public static String getWorkspaceName() {
 		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile()
 				.toString();

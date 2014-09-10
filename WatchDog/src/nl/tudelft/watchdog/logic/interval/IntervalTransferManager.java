@@ -45,9 +45,11 @@ public class IntervalTransferManager {
 	private static class IntervalsTransferTimerTask extends TimerTask {
 		private final IntervalPersister intervalPersister;
 		private long lastTransferedIntervalKey;
+		private Preferences preferences;
 
 		private IntervalsTransferTimerTask(IntervalPersister intervalPersister) {
 			this.intervalPersister = intervalPersister;
+			this.preferences = Preferences.getInstance();
 		}
 
 		/**
@@ -56,14 +58,14 @@ public class IntervalTransferManager {
 		 */
 		@Override
 		public void run() {
-			lastTransferedIntervalKey = Preferences.getInstance()
+			lastTransferedIntervalKey = preferences
 					.getOrCreateWorkspaceSetting(UIUtils.getWorkspaceName()).lastTransferedInterval;
 			long databaseHighestKey = intervalPersister.getHighestKey();
 			if (lastTransferedIntervalKey > databaseHighestKey) {
 				// something is amiss, the reported last transfered key in the
 				// preferences is higher than the actual last key in the
 				// database
-				Preferences.getInstance().registerLastTransferedInterval(
+				preferences.registerLastTransferedInterval(
 						UIUtils.getWorkspaceName(), databaseHighestKey);
 			}
 
@@ -78,8 +80,10 @@ public class IntervalTransferManager {
 			if (intervalTransferer.sendIntervals(intervalsToTransfer)) {
 				intervalPersister.clearAndResetMap();
 				lastTransferedIntervalKey = 0;
-				Preferences.getInstance().registerLastTransferedInterval(
+				preferences.registerLastTransferedInterval(
 						UIUtils.getWorkspaceName(), lastTransferedIntervalKey);
+				preferences.addTransferedIntervals(intervalsToTransfer.size());
+				preferences.setLastTransferedInterval();
 			} else {
 				WatchDogLogger.getInstance().logSevere(
 						"Could not transfer intervals to server!");

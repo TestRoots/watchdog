@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.ui.infoDialog;
 
 import nl.tudelft.watchdog.ui.UIUtils;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -58,6 +59,15 @@ public class InfoStatisticsDialog extends Dialog {
 			createLabel(WatchDogGlobals.inactiveWatchDogUIText, container,
 					colorRed);
 		}
+		Preferences preferences = Preferences.getInstance();
+		UIUtils.createLabel(" ", container);
+		UIUtils.createLabel(" ", container);
+		UIUtils.createLabel("Transfered intervals: ", container);
+		UIUtils.createLabel(Long.toString(preferences.getIntervals()),
+				container);
+		UIUtils.createLabel("Last Transfered: ", container);
+		UIUtils.createLabel(preferences.getLastIntervalTransferDate(),
+				container);
 	}
 
 	/** Creates and returns a label with the given text and color. */
@@ -85,7 +95,7 @@ public class InfoStatisticsDialog extends Dialog {
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 450);
+		return new Point(450, 200);
 	}
 
 }

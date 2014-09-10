@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.ui.preferences;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import nl.tudelft.watchdog.Activator;
@@ -26,6 +27,12 @@ public class Preferences {
 
 	/** The URL of the WatchDog server. */
 	public final static String SERVER_KEY = "SERVERURL";
+
+	/** The number of successfully transfered intervals. */
+	public final static String TRANSFERED_INTERVALS_KEY = "TRANSFERED_INTERVALS";
+
+	/** The last date of successfully transfered intervals. */
+	public final static String LAST_TRANSFERED_INTERVALS_KEY = "LAST_TRANSFERED_INTERVALS";
 
 	/** Flag denoting whether WatchDog plugin should do logging or not. */
 	public final static String LOGGING_ENABLED_KEY = "ENABLE_LOGGING";
@@ -64,6 +71,8 @@ public class Preferences {
 		store.setDefault(USERID_KEY, "");
 		store.setDefault(SERVER_KEY, WatchDogGlobals.DEFAULT_SERVER_URI);
 		store.setDefault(WORKSPACES_KEY, "");
+		store.setDefault(TRANSFERED_INTERVALS_KEY, 0);
+		store.setDefault(LAST_TRANSFERED_INTERVALS_KEY, "never");
 
 		workspaceSettings = readSerializedWorkspaceSettings(WORKSPACES_KEY);
 	}
@@ -116,6 +125,26 @@ public class Preferences {
 	/** Sets the userid for the store. */
 	public void setUserid(String userid) {
 		store.setValue(USERID_KEY, userid);
+	}
+
+	/** @return The number of successfully transfered intervals. */
+	public long getIntervals() {
+		return store.getLong(TRANSFERED_INTERVALS_KEY);
+	}
+
+	/** Adds the number to the transfered intervals for the store. */
+	public void addTransferedIntervals(long number) {
+		store.setValue(TRANSFERED_INTERVALS_KEY, getIntervals() + number);
+	}
+
+	/** @return The number of successfully transfered intervals. */
+	public String getLastIntervalTransferDate() {
+		return store.getString(LAST_TRANSFERED_INTERVALS_KEY);
+	}
+
+	/** Adds the number to the transfered intervals for the store. */
+	public void setLastTransferedInterval() {
+		store.setValue(LAST_TRANSFERED_INTERVALS_KEY, new Date().toString());
 	}
 
 	/** @return The serverURL. */

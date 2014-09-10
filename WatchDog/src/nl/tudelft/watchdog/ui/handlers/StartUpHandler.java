@@ -29,10 +29,13 @@ public class StartUpHandler implements IStartup {
 	/* package */void startWatchDog() {
 		try {
 			WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
+
 			// initializes the interval manager, and thereby, WatchDog interval
 			// recording.
 			IntervalInitializationManager.getInstance();
 			WatchDogGlobals.isActive = true;
+
+			// Update WatchDog icon
 			IWorkbenchWindow window = PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow();
 			ICommandService commandService = (ICommandService) window
