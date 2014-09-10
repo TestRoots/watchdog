@@ -55,8 +55,8 @@ public class IntervalPersister {
 	}
 
 	private void initalizeDatabase(File file) {
-		database = createDatabase(file);
 		try {
+			database = createDatabase(file);
 			map = database.getTreeMap(INTERVALS);
 		} catch (RuntimeException e) {
 			recreateDatabase(file);
