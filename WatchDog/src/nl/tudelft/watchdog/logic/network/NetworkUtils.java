@@ -40,13 +40,39 @@ public class NetworkUtils {
 	};
 
 	/**
+	 * Returns the content at the given URL.
+	 * 
+	 * @throws ServerCommunicationException
+	 */
+	public static HttpEntity getURLAndGetResponse(String url)
+			throws ServerCommunicationException {
+		HttpClient client = createHTTPClient();
+		HttpGet get;
+		String errorMessage = "";
+
+		try {
+			get = new HttpGet(url);
+			HttpResponse response = client.execute(get);
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode == HttpStatus.SC_OK) {
+				return response.getEntity();
+			} else {
+				errorMessage = "Not received " + HttpStatus.SC_OK;
+			}
+		} catch (IllegalArgumentException | IOException exception) {
+			// intentionally empty
+		}
+		throw new ServerCommunicationException(errorMessage);
+	}
+
+	/**
 	 * Checks whether the given url is reachable and exists. The connection
 	 * timeout is set to 5 seconds.
 	 * 
 	 * @return a {@link Connection} object depicting how the connection went.
 	 */
 	public static Connection urlExistsAndReturnsStatus200(String url) {
-		HttpClient client = createAuthenticatedHttpClient();
+		HttpClient client = createHTTPClient();
 		HttpGet get;
 
 		try {
@@ -73,11 +99,11 @@ public class NetworkUtils {
 	 * Opens an HTTP connection to the server, and transmits the supplied json
 	 * data to the server. In case of error, the exact problem is logged.
 	 * 
-	 * @return The inputstream from the response.
+	 * @return The InputStream from the response.
 	 * @throws ServerCommunicationException
 	 */
-	public static HttpEntity transferJson(String url, String jsonData)
-			throws ServerCommunicationException, IllegalArgumentException {
+	public static HttpEntity transferJsonAndGetResponse(String url,
+			String jsonData) throws ServerCommunicationException {
 		HttpClient client = createHTTPClient();
 		HttpPost post = new HttpPost(url);
 		String errorMessage = "";
@@ -96,7 +122,6 @@ public class NetworkUtils {
 						+ response.getStatusLine().getStatusCode()
 						+ "). "
 						+ readResponse(response.getEntity());
-
 			}
 		} catch (IOException e) {
 			// server unreachable case
@@ -105,6 +130,11 @@ public class NetworkUtils {
 		}
 		WatchDogLogger.getInstance().logInfo(errorMessage);
 		throw new ServerCommunicationException(errorMessage);
+	}
+
+	/** @return the URL for client query. */
+	public static String buildClientURL() {
+		return getServerURI() + "client";
 	}
 
 	/** @return the base URL for new user registration. */
@@ -177,10 +207,11 @@ public class NetworkUtils {
 	/** Creates an HTTP client that uses an authenticated connection. */
 	private static HttpClient createAuthenticatedHttpClient() {
 		CredentialsProvider provider = new BasicCredentialsProvider();
-		byte[] password = { 104, 110, 115, 112, 113, 115, 122, 110, 112, 113 };
+		byte[] providerInfo = { 104, 110, 115, 112, 113, 115, 122, 110, 112,
+				113 };
 		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
-				"watchdogplugin",
-				new String(password, Charset.defaultCharset()));
+				"watchdogplugin", new String(providerInfo,
+						Charset.defaultCharset()));
 		provider.setCredentials(AuthScope.ANY, credentials);
 		HttpClient client = createPlainHttpClientBuilder()
 				.setDefaultCredentialsProvider(provider).build();

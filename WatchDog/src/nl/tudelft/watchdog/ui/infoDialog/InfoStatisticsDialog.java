@@ -77,6 +77,20 @@ public class InfoStatisticsDialog extends Dialog {
 		UIUtils.createLabel("Last Transfered: ", container);
 		UIUtils.createLabel(preferences.getLastIntervalTransferDate(),
 				container);
+
+		UIUtils.createLabel("WatchDog Version:", container);
+		UIUtils.createLabel(WatchDogGlobals.CLIENT_VERSION, container);
+		UIUtils.createLabel(" ", container);
+		if (preferences.isOldVersion()) {
+			Composite localGrid = UIUtils.createFullGridedComposite(container,
+					2);
+			UIUtils.createLabel("Outdated!", localGrid, colorRed);
+			Button userRegistration = new Button(localGrid, SWT.PUSH);
+			WatchDogGlobals.lastTransactionFailed = true;
+
+			userRegistration.addSelectionListener(null);
+			userRegistration.setText("Fix this problem.");
+		}
 		UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);
 	}
 

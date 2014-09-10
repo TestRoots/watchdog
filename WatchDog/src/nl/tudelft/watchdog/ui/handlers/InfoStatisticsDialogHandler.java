@@ -4,6 +4,7 @@ import java.util.Map;
 
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.infoDialog.InfoStatisticsDialog;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -30,7 +31,8 @@ public class InfoStatisticsDialogHandler extends AbstractHandler implements
 	public void updateElement(UIElement element,
 			@SuppressWarnings("rawtypes") Map parameters) {
 		if (WatchDogGlobals.isActive) {
-			if (WatchDogGlobals.lastTransactionFailed) {
+			if (WatchDogGlobals.lastTransactionFailed
+					|| Preferences.getInstance().isOldVersion()) {
 				element.setTooltip(WatchDogGlobals.activeWatchDogUIText);
 				element.setIcon(UIUtils.watchDogIconWarning);
 			} else {

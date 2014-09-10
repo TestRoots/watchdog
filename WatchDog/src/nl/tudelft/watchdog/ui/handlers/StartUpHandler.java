@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.ui.handlers;
 
-import nl.tudelft.watchdog.logic.IntervalInitializationManager;
+import nl.tudelft.watchdog.logic.InitializationManager;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
@@ -30,7 +30,7 @@ public class StartUpHandler implements IStartup {
 
 			// initializes the interval manager, and thereby, WatchDog interval
 			// recording.
-			IntervalInitializationManager.getInstance();
+			InitializationManager.getInstance();
 			WatchDogGlobals.isActive = true;
 			// Update WatchDog icon
 			UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);

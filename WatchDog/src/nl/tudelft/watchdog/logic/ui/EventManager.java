@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.logic.ui;
 
-import nl.tudelft.watchdog.logic.IntervalInitializationManager;
+import nl.tudelft.watchdog.logic.InitializationManager;
 import nl.tudelft.watchdog.logic.document.DocumentFactory;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
@@ -25,7 +25,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class EventManager {
 
-	/** The {@link IntervalInitializationManager} this observer is working with. */
+	/** The {@link InitializationManager} this observer is working with. */
 	private IntervalManager intervalManager;
 
 	private InactivityNotifier userInactivityNotifier;

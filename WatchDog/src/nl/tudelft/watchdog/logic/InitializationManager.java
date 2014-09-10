@@ -7,33 +7,34 @@ import nl.tudelft.watchdog.logic.document.DocumentFactory;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.IntervalPersister;
 import nl.tudelft.watchdog.logic.interval.IntervalTransferManager;
+import nl.tudelft.watchdog.logic.network.ClientVersionChecker;
 import nl.tudelft.watchdog.logic.ui.EventManager;
 import nl.tudelft.watchdog.logic.ui.listeners.WorkbenchListener;
 
 /**
  * Manages the setup process of the interval recording infrastructure. Is a
- * singleton and contains UI code. It is basically a proxy for guaranteeing that
- * there is only one properly initialized {@link IntervalManager} that does the
- * real work.
+ * singleton and contains UI code. Guarantees that there is only one properly
+ * initialized {@link IntervalManager} that does the real work.
  */
-public class IntervalInitializationManager {
+public class InitializationManager {
 
 	private static final int USER_ACTIVITY_TIMEOUT = 16000;
 
 	/** The singleton instance of the interval manager. */
-	private static volatile IntervalInitializationManager instance = null;
+	private static volatile InitializationManager instance = null;
 
 	private IntervalManager intervalManager;
 
 	private IntervalPersister intervalPersister;
 
 	/** Private constructor. */
-	private IntervalInitializationManager() {
+	private InitializationManager() {
 		File file = new File(
 				Activator.getDefault().getStateLocation().toFile(),
 				"intervals.mapdb");
 		intervalPersister = new IntervalPersister(file);
 		DocumentFactory documentFactory = new DocumentFactory();
+		new ClientVersionChecker();
 		this.intervalManager = new IntervalManager(intervalPersister,
 				documentFactory);
 		EventManager eventManager = new EventManager(intervalManager,
@@ -46,11 +47,11 @@ public class IntervalInitializationManager {
 
 	/**
 	 * Returns the existing or creates and returns a new
-	 * {@link IntervalInitializationManager} instance.
+	 * {@link InitializationManager} instance.
 	 */
-	public static IntervalInitializationManager getInstance() {
+	public static InitializationManager getInstance() {
 		if (instance == null) {
-			instance = new IntervalInitializationManager();
+			instance = new InitializationManager();
 		}
 		return instance;
 	}

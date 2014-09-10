@@ -51,7 +51,7 @@ public class NetworkUtilsTest {
 		String json = it.toJson(intervals);
 
 		try {
-			NetworkUtils.transferJson(NetworkUtils.buildIntervalsPostURL(
+			NetworkUtils.transferJsonAndGetResponse(NetworkUtils.buildIntervalsPostURL(
 					fooBarUser, fooBarProject), json);
 		} catch (ServerCommunicationException e) {
 			fail(e.getMessage());

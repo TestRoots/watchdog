@@ -37,6 +37,9 @@ public class Preferences {
 	/** Flag denoting whether WatchDog plugin should do logging or not. */
 	public final static String LOGGING_ENABLED_KEY = "ENABLE_LOGGING";
 
+	/** Flag denoting whether the WatchDog plugin is outdated. */
+	public final static String IS_OLD_VERSION = "OLD_VERSION";
+
 	/** Flag denoting whether WatchDog plugin should do authentication or not. */
 	public final static String AUTHENTICATION_ENABLED_KEY = "ENABLE_AUTH";
 
@@ -73,6 +76,7 @@ public class Preferences {
 		store.setDefault(WORKSPACES_KEY, "");
 		store.setDefault(TRANSFERED_INTERVALS_KEY, 0);
 		store.setDefault(LAST_TRANSFERED_INTERVALS_KEY, "never");
+		store.setDefault(IS_OLD_VERSION, false);
 
 		workspaceSettings = readSerializedWorkspaceSettings(WORKSPACES_KEY);
 	}
@@ -125,6 +129,16 @@ public class Preferences {
 	/** Sets the userid for the store. */
 	public void setUserid(String userid) {
 		store.setValue(USERID_KEY, userid);
+	}
+
+	/** @return Whether this client version is outdated. */
+	public Boolean isOldVersion() {
+		return store.getBoolean(IS_OLD_VERSION);
+	}
+
+	/** Sets Whether this client version is outdated. */
+	public void setIsOldVersion(Boolean outdated) {
+		store.setValue(IS_OLD_VERSION, outdated);
 	}
 
 	/** @return The number of successfully transfered intervals. */

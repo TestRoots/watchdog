@@ -48,8 +48,8 @@ public class JsonTransferer {
 		String json = toJson(recordedIntervals);
 		try {
 			NetworkUtils
-					.transferJson(NetworkUtils.buildIntervalsPostURL(userid,
-							projectid), json);
+					.transferJsonAndGetResponse(NetworkUtils
+							.buildIntervalsPostURL(userid, projectid), json);
 			return true;
 		} catch (ServerCommunicationException | IllegalArgumentException exception) {
 			return false;
@@ -82,7 +82,20 @@ public class JsonTransferer {
 	 */
 	public String registerNew(String postURL, String json)
 			throws ServerCommunicationException {
-		HttpEntity inputStream = NetworkUtils.transferJson(postURL, json);
+		HttpEntity inputStream = NetworkUtils.transferJsonAndGetResponse(
+				postURL, json);
+		String jsonResponse = NetworkUtils.readResponse(inputStream);
+		return gson.fromJson(jsonResponse, String.class);
+	}
+
+	/**
+	 * Queries the get URL and reads the response from the server.
+	 * 
+	 * @throws ServerCommunicationException
+	 */
+	public String queryGetURL(String getURL)
+			throws ServerCommunicationException {
+		HttpEntity inputStream = NetworkUtils.getURLAndGetResponse(getURL);
 		String jsonResponse = NetworkUtils.readResponse(inputStream);
 		return gson.fromJson(jsonResponse, String.class);
 	}
