@@ -4,6 +4,7 @@ import nl.tudelft.watchdog.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
+import nl.tudelft.watchdog.ui.preferences.WorkspacePreferenceSetting;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -52,7 +53,7 @@ public class InfoStatisticsDialog extends Dialog {
 		container.setLayout(layout);
 	}
 
-	/** Creates a label with the status of WatchDog plugin */
+	/** Creates a label with the status of WatchDog plugin. */
 	private void createStatusText(Composite container) {
 		colorRed = new Color(getShell().getDisplay(), 255, 0, 0);
 		colorGreen = new Color(getShell().getDisplay(), 0, 150, 0);
@@ -75,19 +76,23 @@ public class InfoStatisticsDialog extends Dialog {
 				new UserButtonListener());
 
 		Connection projectConnection = Connection.UNSUCCESSFUL;
-		if (userConnection == Connection.SUCCESSFUL) {
+		WorkspacePreferenceSetting workspaceSettings = preferences
+				.getOrCreateWorkspaceSetting(UIUtils.getWorkspaceName());
+		boolean projectIdHasProblem = false;
+		if (userConnection == Connection.SUCCESSFUL
+				&& workspaceSettings.enableWatchdog) {
 			UIUtils.createLabel("Project ID: ", container);
-			String projectId = preferences.getOrCreateWorkspaceSetting(UIUtils
-					.getWorkspaceName()).projectId;
 			projectConnection = NetworkUtils
 					.urlExistsAndReturnsStatus200(NetworkUtils
-							.buildExistingProjectURL(projectId));
+							.buildExistingProjectURL(workspaceSettings.projectId));
+			if (projectConnection != Connection.SUCCESSFUL) {
+				projectIdHasProblem = true;
+			}
 			reactOnConnectionStatus(container, projectConnection,
 					new ProjectButtonListener());
 		}
 
-		if (userConnection != Connection.SUCCESSFUL
-				|| projectConnection != Connection.SUCCESSFUL) {
+		if (userConnection != Connection.SUCCESSFUL || projectIdHasProblem) {
 			UIUtils.createLabel(" ", container);
 			UIUtils.createLabel("WatchDog cannot transfer its data.",
 					container, colorRed);
@@ -101,6 +106,7 @@ public class InfoStatisticsDialog extends Dialog {
 		UIUtils.createLabel("Last Transfered: ", container);
 		UIUtils.createLabel(preferences.getLastIntervalTransferDate(),
 				container);
+		UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);
 	}
 
 	private void reactOnConnectionStatus(Composite container,
@@ -108,29 +114,32 @@ public class InfoStatisticsDialog extends Dialog {
 		switch (userConnection) {
 		case SUCCESSFUL:
 			UIUtils.createLabel("OK", container, colorGreen);
+			WatchDogGlobals.lastTransactionFailed = false;
 			break;
 		case UNSUCCESSFUL:
 			Composite localGrid = UIUtils.createFullGridedComposite(container,
 					2);
 			UIUtils.createLabel("Does not exist!", localGrid, colorRed);
-			Button userRegistration = new Button(localGrid, SWT.NONE);
+			Button userRegistration = new Button(localGrid, SWT.PUSH);
+			WatchDogGlobals.lastTransactionFailed = true;
 
 			userRegistration.addSelectionListener(listener);
 			userRegistration.setText("Fix this problem.");
 			break;
 		case NETWORK_ERROR:
 			UIUtils.createLabel("(Temporary) Network Error.", container);
+			WatchDogGlobals.lastTransactionFailed = true;
 		}
 	}
 
-	/** Disables the creation of a cancel button in the dialog */
+	/** {@inheritDoc} Disables the creation of a cancel button in the dialog */
 	@Override
 	protected Button createButton(Composite parent, int id, String label,
 			boolean defaultButton) {
 		if (id == IDialogConstants.CANCEL_ID) {
 			return null;
 		}
-		return super.createButton(parent, id, label, defaultButton);
+		return super.createButton(parent, id, label, true);
 	}
 
 	@Override
@@ -149,7 +158,7 @@ public class InfoStatisticsDialog extends Dialog {
 		public void widgetSelected(SelectionEvent e) {
 			UIUtils.invokeCommand("nl.tudelft.watchdog.commands.UserWizardDialog");
 			okPressed();
-			UIUtils.invokeCommand("nl.tudelft.watchdog.commands.showWatchDogInfo");
+			UIUtils.invokeCommand(UIUtils.COMMAND_SHOW_INFO);
 		}
 
 		@Override
@@ -163,7 +172,7 @@ public class InfoStatisticsDialog extends Dialog {
 		public void widgetSelected(SelectionEvent e) {
 			UIUtils.invokeCommand("nl.tudelft.watchdog.commands.ProjectWizardDialog");
 			okPressed();
-			UIUtils.invokeCommand("nl.tudelft.watchdog.commands.showWatchDogInfo");
+			UIUtils.invokeCommand(UIUtils.COMMAND_SHOW_INFO);
 		}
 
 		@Override

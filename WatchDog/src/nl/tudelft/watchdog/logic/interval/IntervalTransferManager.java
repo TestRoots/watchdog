@@ -9,6 +9,7 @@ import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
+import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 /**
  * This manager takes care of the repeated transferal of all closed intervals to
@@ -84,10 +85,13 @@ public class IntervalTransferManager {
 						UIUtils.getWorkspaceName(), lastTransferedIntervalKey);
 				preferences.addTransferedIntervals(intervalsToTransfer.size());
 				preferences.setLastTransferedInterval();
+				WatchDogGlobals.lastTransactionFailed = false;
 			} else {
+				WatchDogGlobals.lastTransactionFailed = true;
 				WatchDogLogger.getInstance().logSevere(
 						"Could not transfer intervals to server!");
 			}
+			UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);
 		}
 	}
 }

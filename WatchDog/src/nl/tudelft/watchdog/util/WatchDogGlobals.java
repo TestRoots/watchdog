@@ -17,6 +17,9 @@ public class WatchDogGlobals {
 	/** Flag determining whether WatchDog is active. */
 	public static boolean isActive = false;
 
+	/** Whether the last interval transmission succeeded or failed. */
+	public static boolean lastTransactionFailed = false;
+
 	/** The client's version, as set in pom.xml. */
 	public final static String CLIENT_VERSION = "1.0-SNAPSHOT";
 

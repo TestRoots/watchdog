@@ -26,6 +26,11 @@ import org.eclipse.ui.commands.ICommandService;
 
 /** Utility methods for the UI. */
 public class UIUtils {
+	/** The warning displayed when WatchDog is not active. */
+	public static final String WATCHDOG_WARNING = "WatchDog only works when you register a (possibly anonymous) user.\n\nTakes less than one minute,  and you can win prices. As a registered user, you decide where WatchDog is active.";
+
+	/** The command to show the WatchDog info. */
+	public static final String COMMAND_SHOW_INFO = "nl.tudelft.watchdog.commands.showWatchDogInfo";
 
 	/**
 	 * Creates and returns a label whose text is wrapped inside the supplied
@@ -191,10 +196,10 @@ public class UIUtils {
 			.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
 					"resources/images/watchdog_icon_disabled.png");
 
-	/**
-	 * The warning displayed when WatchDog is not active.
-	 */
-	public static final String WATCHDOG_WARNING = "WatchDog only works when you register a (possibly anonymous) user.\n\nTakes less than one minute,  and you can win prices. As a registered user, you decide where WatchDog is active.";
+	/** The WatchDog Icon Warning. */
+	public static final ImageDescriptor watchDogIconWarning = Activator
+			.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
+					"resources/images/watchdog_icon_warning.png");
 
 	/** Creates and returns a label with the given text and color. */
 	public static Label createLabel(String text, Composite parent, Color color) {
@@ -206,6 +211,9 @@ public class UIUtils {
 	private static ICommandService getCommandService() {
 		IWorkbenchWindow window = PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow();
+		if (window == null) {
+			return null;
+		}
 		return (ICommandService) window.getService(ICommandService.class);
 	}
 

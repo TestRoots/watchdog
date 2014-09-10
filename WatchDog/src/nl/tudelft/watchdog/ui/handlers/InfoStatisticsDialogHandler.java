@@ -30,8 +30,13 @@ public class InfoStatisticsDialogHandler extends AbstractHandler implements
 	public void updateElement(UIElement element,
 			@SuppressWarnings("rawtypes") Map parameters) {
 		if (WatchDogGlobals.isActive) {
-			element.setTooltip(WatchDogGlobals.activeWatchDogUIText);
-			element.setIcon(UIUtils.watchDogIcon);
+			if (WatchDogGlobals.lastTransactionFailed) {
+				element.setTooltip(WatchDogGlobals.activeWatchDogUIText);
+				element.setIcon(UIUtils.watchDogIconWarning);
+			} else {
+				element.setTooltip(WatchDogGlobals.activeWatchDogUIText);
+				element.setIcon(UIUtils.watchDogIcon);
+			}
 		} else {
 			element.setTooltip(WatchDogGlobals.inactiveWatchDogUIText);
 			element.setIcon(UIUtils.watchDogIconDisabled);

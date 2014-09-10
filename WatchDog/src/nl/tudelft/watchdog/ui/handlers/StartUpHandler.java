@@ -33,7 +33,7 @@ public class StartUpHandler implements IStartup {
 			IntervalInitializationManager.getInstance();
 			WatchDogGlobals.isActive = true;
 			// Update WatchDog icon
-			UIUtils.refreshCommand("nl.tudelft.watchdog.commands.showWatchDogInfo");
+			UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);
 		} catch (Exception exception) {
 			WatchDogLogger.getInstance().logSevere(
 					"Caught sever exception on top-level: ");
