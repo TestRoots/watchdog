@@ -109,6 +109,24 @@ public class UIUtils {
 	 * @return A {@link GridLayout}ed composite with the given number of
 	 *         columns.
 	 */
+	public static Composite createZeroMarginGridedComposite(Composite parent,
+			int columns) {
+		Composite composite = createGridedComposite(parent, columns);
+		GridLayout layout = (GridLayout) composite.getLayout();
+		layout.marginBottom = 0;
+		layout.marginHeight = 0;
+		layout.marginLeft = 0;
+		layout.marginRight = 0;
+		layout.marginTop = 0;
+		layout.marginWidth = 0;
+		composite.setLayout(layout);
+		return composite;
+	}
+
+	/**
+	 * @return A {@link GridLayout}ed composite with the given number of
+	 *         columns.
+	 */
 	public static Composite createGridedComposite(Composite parent, int columns) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(columns, false));

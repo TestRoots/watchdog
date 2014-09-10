@@ -18,6 +18,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -82,14 +83,24 @@ public class InfoStatisticsDialog extends Dialog {
 		UIUtils.createLabel(WatchDogGlobals.CLIENT_VERSION, container);
 		UIUtils.createLabel(" ", container);
 		if (preferences.isOldVersion()) {
-			Composite localGrid = UIUtils.createFullGridedComposite(container,
-					2);
+			Composite localGrid = UIUtils.createZeroMarginGridedComposite(
+					container, 2);
 			UIUtils.createLabel("Outdated!", localGrid, colorRed);
-			Button userRegistration = new Button(localGrid, SWT.PUSH);
+			Link link = new Link(localGrid, SWT.WRAP);
 			WatchDogGlobals.lastTransactionFailed = true;
 
-			userRegistration.addSelectionListener(null);
-			userRegistration.setText("Fix this problem.");
+			link.setText("<a href=\"\">Fix this problem.</a>");
+			link.addSelectionListener(new SelectionListener() {
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					UIUtils.invokeCommand("org.eclipse.equinox.p2.ui.sdk.update");
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
 		}
 		UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);
 	}
@@ -137,14 +148,14 @@ public class InfoStatisticsDialog extends Dialog {
 			WatchDogGlobals.lastTransactionFailed = false;
 			break;
 		case UNSUCCESSFUL:
-			Composite localGrid = UIUtils.createFullGridedComposite(container,
-					2);
+			Composite localGrid = UIUtils.createZeroMarginGridedComposite(
+					container, 2);
 			UIUtils.createLabel("Does not exist!", localGrid, colorRed);
-			Button userRegistration = new Button(localGrid, SWT.PUSH);
+			Link link = new Link(localGrid, SWT.WRAP);
 			WatchDogGlobals.lastTransactionFailed = true;
 
-			userRegistration.addSelectionListener(listener);
-			userRegistration.setText("Fix this problem.");
+			link.addSelectionListener(listener);
+			link.setText("<a href=\"\">Fix this problem.</a>");
 			break;
 		case NETWORK_ERROR:
 			UIUtils.createLabel("(Temporary) Network Error.", container);
@@ -170,7 +181,7 @@ public class InfoStatisticsDialog extends Dialog {
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 300);
+		return new Point(450, 345);
 	}
 
 	private class UserButtonListener implements SelectionListener {
