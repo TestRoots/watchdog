@@ -173,6 +173,16 @@ public class UIUtils {
 			.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
 					"resources/images/tudelft_with_frame.png");
 
+	/** The WatchDog Icon. */
+	public static final ImageDescriptor watchDogIcon = Activator
+			.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
+					"resources/images/watchdog_icon.png");
+
+	/** The WatchDog Icon Disabled. */
+	public static final ImageDescriptor watchDogIconDisabled = Activator
+			.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
+					"resources/images/watchdog_icon_disabled.png");
+
 	/**
 	 * The warning displayed when WatchDog is not active.
 	 */

@@ -26,8 +26,8 @@
                id="WatchDog.toolbar">
             <command
                   commandId="nl.tudelft.watchdog.commands.showWatchDogInfo"
-                  disabledIcon="resources/images/rsz_dog_icon_del.png"
-                  icon="resources/images/rsz_dog_icon.png"
+                  disabledIcon="resources/images/watchdog_icon_disabled.png"
+                  icon="resources/images/watchdog_icon.png"
                   label="Show WatchDog Info"
                   style="push"
                   tooltip="WatchDog is inactive!">

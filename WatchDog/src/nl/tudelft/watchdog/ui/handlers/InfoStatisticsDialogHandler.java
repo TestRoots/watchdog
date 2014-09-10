@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.ui.handlers;
 
 import java.util.Map;
 
+import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.infoDialog.InfoStatisticsDialog;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
@@ -30,8 +31,10 @@ public class InfoStatisticsDialogHandler extends AbstractHandler implements
 			@SuppressWarnings("rawtypes") Map parameters) {
 		if (WatchDogGlobals.isActive) {
 			element.setTooltip(WatchDogGlobals.activeWatchDogUIText);
+			element.setIcon(UIUtils.watchDogIcon);
 		} else {
 			element.setTooltip(WatchDogGlobals.inactiveWatchDogUIText);
+			element.setIcon(UIUtils.watchDogIconDisabled);
 		}
 	}
 
