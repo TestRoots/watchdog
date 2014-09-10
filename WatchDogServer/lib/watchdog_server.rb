@@ -42,6 +42,14 @@ class WatchDogServer < Sinatra::Base
   end
 
   # Get info about stored user
+  get '/client' do
+    client_version = "1.0"
+
+    status 200
+    body client_version.to_json
+  end
+
+  # Get info about stored user
   get '/user/:id' do
     stored_user = get_user_by_id(params[:'id'])
 

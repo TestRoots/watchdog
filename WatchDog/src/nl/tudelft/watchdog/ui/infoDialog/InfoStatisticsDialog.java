@@ -66,6 +66,22 @@ public class InfoStatisticsDialog extends Dialog {
 					container, colorRed);
 		}
 		Preferences preferences = Preferences.getInstance();
+
+		createCheckIdsOnServer(container, preferences);
+
+		UIUtils.createLabel(" ", container);
+		UIUtils.createLabel(" ", container);
+		UIUtils.createLabel("Transfered intervals: ", container);
+		UIUtils.createLabel(Long.toString(preferences.getIntervals()),
+				container);
+		UIUtils.createLabel("Last Transfered: ", container);
+		UIUtils.createLabel(preferences.getLastIntervalTransferDate(),
+				container);
+		UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);
+	}
+
+	private void createCheckIdsOnServer(Composite container,
+			Preferences preferences) {
 		UIUtils.createLabel(" ", container);
 		UIUtils.createLabel(" ", container);
 		UIUtils.createLabel("User ID: ", container);
@@ -97,16 +113,6 @@ public class InfoStatisticsDialog extends Dialog {
 			UIUtils.createLabel("WatchDog cannot transfer its data.",
 					container, colorRed);
 		}
-
-		UIUtils.createLabel(" ", container);
-		UIUtils.createLabel(" ", container);
-		UIUtils.createLabel("Transfered intervals: ", container);
-		UIUtils.createLabel(Long.toString(preferences.getIntervals()),
-				container);
-		UIUtils.createLabel("Last Transfered: ", container);
-		UIUtils.createLabel(preferences.getLastIntervalTransferDate(),
-				container);
-		UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);
 	}
 
 	private void reactOnConnectionStatus(Composite container,

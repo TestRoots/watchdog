@@ -53,6 +53,12 @@ describe 'The WatchDog Server' do
     expect(last_response.body).to eq('Woof Woof')
   end
 
+  it 'should get client version' do
+    get '/client'
+    expect(last_response).to be_ok
+    expect(last_response.body).to eq('"1.0"')
+  end
+
   it 'should create a user when the details are correct' do
     post '/user', test_user.to_json
 
@@ -143,7 +149,6 @@ describe 'The WatchDog Server' do
     post "/user/#{user_id}/#{project_id}/intervals", intervals.to_json
     last_response.status.should eql(201)
     expect(last_response.body).to eq('10')
-
   end
 
 end
