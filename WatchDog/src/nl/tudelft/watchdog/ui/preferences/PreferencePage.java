@@ -38,6 +38,9 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 	/** This workspace. */
 	private String workspace = UIUtils.getWorkspaceName();
 
+	/** The Id of this preference page as set in plugin.xml */
+	public final static String ID = "WatchDog.PreferencePage";
+
 	@Override
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(Preferences.getInstance().getStore());

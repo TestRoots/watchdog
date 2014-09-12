@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.ui.infoDialog;
 import nl.tudelft.watchdog.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
 import nl.tudelft.watchdog.ui.UIUtils;
+import nl.tudelft.watchdog.ui.preferences.PreferencePage;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.preferences.WorkspacePreferenceSetting;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
@@ -20,6 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 
 /**
  * A dialog displaying statistics about the health and status quo of WatchDog.
@@ -63,8 +65,19 @@ public class InfoStatisticsDialog extends Dialog {
 			UIUtils.createLabel(WatchDogGlobals.activeWatchDogUIText,
 					container, colorGreen);
 		} else {
+			Composite localGrid = UIUtils.createZeroMarginGridedComposite(
+					container, 2);
 			UIUtils.createLabel(WatchDogGlobals.inactiveWatchDogUIText,
-					container, colorRed);
+					localGrid, colorRed);
+			createFixThisProblemLink(localGrid, new DefaultSelectionListener() {
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					PreferencesUtil.createPreferenceDialogOn(null,
+							PreferencePage.ID, null, null).open();
+				}
+			});
+
 		}
 		Preferences preferences = Preferences.getInstance();
 
@@ -88,19 +101,11 @@ public class InfoStatisticsDialog extends Dialog {
 			Composite localGrid = UIUtils.createZeroMarginGridedComposite(
 					container, 2);
 			UIUtils.createLabel("Outdated!", localGrid, colorRed);
-			Link link = new Link(localGrid, SWT.WRAP);
-			WatchDogGlobals.lastTransactionFailed = true;
-
-			link.setText("<a href=\"\">Fix this problem.</a>");
-			link.addSelectionListener(new SelectionListener() {
+			createFixThisProblemLink(localGrid, new DefaultSelectionListener() {
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					UIUtils.invokeCommand("org.eclipse.equinox.p2.ui.sdk.update");
-				}
-
-				@Override
-				public void widgetDefaultSelected(SelectionEvent e) {
 				}
 			});
 		}
@@ -165,6 +170,13 @@ public class InfoStatisticsDialog extends Dialog {
 		}
 	}
 
+	private void createFixThisProblemLink(Composite localGrid,
+			SelectionListener listener) {
+		Link link = new Link(localGrid, SWT.WRAP);
+		link.setText("<a href=\"\">Fix this problem.</a>");
+		link.addSelectionListener(listener);
+	}
+
 	/** {@inheritDoc} Disables the creation of a cancel button in the dialog */
 	@Override
 	protected Button createButton(Composite parent, int id, String label,
@@ -172,7 +184,9 @@ public class InfoStatisticsDialog extends Dialog {
 		if (id == IDialogConstants.CANCEL_ID) {
 			return null;
 		}
-		return super.createButton(parent, id, label, true);
+		Button createdButton = super.createButton(parent, id, label, true);
+		createdButton.setFocus();
+		return createdButton;
 	}
 
 	@Override
@@ -183,35 +197,35 @@ public class InfoStatisticsDialog extends Dialog {
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 355);
+		return new Point(460, 355);
 	}
 
-	private class UserButtonListener implements SelectionListener {
+	private class UserButtonListener extends DefaultSelectionListener {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			UIUtils.invokeCommand("nl.tudelft.watchdog.commands.UserWizardDialog");
 			okPressed();
 			UIUtils.invokeCommand(UIUtils.COMMAND_SHOW_INFO);
 		}
-
-		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
-			// Intentionally empty
-		}
 	}
 
-	private class ProjectButtonListener implements SelectionListener {
+	private class ProjectButtonListener extends DefaultSelectionListener {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			UIUtils.invokeCommand("nl.tudelft.watchdog.commands.ProjectWizardDialog");
 			okPressed();
 			UIUtils.invokeCommand(UIUtils.COMMAND_SHOW_INFO);
 		}
+	}
+
+	private abstract class DefaultSelectionListener implements
+			SelectionListener {
 
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			// Intentionally empty
 		}
+
 	}
 
 }
