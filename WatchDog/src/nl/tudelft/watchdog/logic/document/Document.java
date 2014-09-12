@@ -43,15 +43,8 @@ public class Document implements Serializable {
 		this.projectName = projectName;
 		this.fileName = fileName;
 
-		String shortenedName = fileName.toLowerCase().replace(".java", "");
-		if (shortenedName.startsWith("test") || shortenedName.endsWith("test")) {
-			shortenedName = shortenedName.replace("test", "");
-			this.fileNameHash = WatchDogUtils.createHash(shortenedName)
-					+ "Test";
-		} else {
-			this.fileNameHash = WatchDogUtils.createHash(shortenedName);
-		}
-		projectNameHash = WatchDogUtils.createHash(projectName);
+		this.fileNameHash = WatchDogUtils.createFileNameHash(fileName);
+		this.projectNameHash = WatchDogUtils.createHash(projectName);
 
 		this.docType = docType;
 		this.content = content;

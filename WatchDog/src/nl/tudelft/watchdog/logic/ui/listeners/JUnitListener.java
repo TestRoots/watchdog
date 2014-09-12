@@ -19,7 +19,6 @@ public class JUnitListener {
 			public void sessionFinished(ITestRunSession session) {
 				super.sessionFinished(session);
 				JUnitInterval interval = new JUnitInterval(session);
-				// When aborted duration is NaN
 
 				eventManager.update(new JUnitEvent(interval));
 			}
