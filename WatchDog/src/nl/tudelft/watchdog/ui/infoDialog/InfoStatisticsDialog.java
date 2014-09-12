@@ -71,14 +71,7 @@ public class InfoStatisticsDialog extends Dialog {
 					container, 2);
 			UIUtils.createLabel(WatchDogGlobals.inactiveWatchDogUIText,
 					localGrid, colorRed);
-			createFixThisProblemLink(localGrid, new DefaultSelectionListener() {
-
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					PreferencesUtil.createPreferenceDialogOn(null,
-							PreferencePage.ID, null, null).open();
-				}
-			});
+			createFixThisProblemLink(localGrid, new PreferenceListener());
 
 		}
 		Preferences preferences = Preferences.getInstance();
@@ -160,22 +153,21 @@ public class InfoStatisticsDialog extends Dialog {
 			Composite localGrid = UIUtils.createZeroMarginGridedComposite(
 					container, 2);
 			UIUtils.createLabel("Does not exist!", localGrid, colorRed);
-			Link link = new Link(localGrid, SWT.WRAP);
 			WatchDogGlobals.lastTransactionFailed = true;
-
-			link.addSelectionListener(listener);
-			link.setText("<a href=\"\">Fix this problem.</a>");
+			createFixThisProblemLink(localGrid, listener);
 			break;
 		case NETWORK_ERROR:
-			UIUtils.createLabel("(Temporary) Network Error.", container);
+			localGrid = UIUtils.createZeroMarginGridedComposite(container, 2);
+			UIUtils.createLabel("(Temp.) Network Error.", localGrid);
 			WatchDogGlobals.lastTransactionFailed = true;
+			createFixThisProblemLink(localGrid, new PreferenceListener());
 		}
 	}
 
 	private void createFixThisProblemLink(Composite localGrid,
 			SelectionListener listener) {
 		Link link = new Link(localGrid, SWT.WRAP);
-		link.setText("<a href=\"\">Fix this problem.</a>");
+		link.setText("<a href=\"\">Fix this.</a>");
 		link.addSelectionListener(listener);
 	}
 
@@ -200,6 +192,16 @@ public class InfoStatisticsDialog extends Dialog {
 	@Override
 	protected Point getInitialSize() {
 		return new Point(460, 355);
+	}
+
+	private class PreferenceListener extends DefaultSelectionListener {
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			PreferencesUtil.createPreferenceDialogOn(null, PreferencePage.ID,
+					null, null).open();
+			super.widgetSelected(e);
+		}
 	}
 
 	private class UserButtonListener extends DefaultSelectionListener {
@@ -234,7 +236,6 @@ public class InfoStatisticsDialog extends Dialog {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			// Intentionally empty
 		}
-
 	}
 
 }

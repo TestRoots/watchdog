@@ -18,12 +18,8 @@ public class JUnitListener {
 			@Override
 			public void sessionFinished(ITestRunSession session) {
 				super.sessionFinished(session);
-				JUnitInterval interval = new JUnitInterval();
+				JUnitInterval interval = new JUnitInterval(session);
 				// When aborted duration is NaN
-				interval.calculateAndSetDates(session.getElapsedTimeInSeconds());
-				interval.setProjectName(session.getTestRunName());
-				interval.setResult(session.getTestResult(true));
-				interval.countTests(session);
 
 				eventManager.update(new JUnitEvent(interval));
 			}

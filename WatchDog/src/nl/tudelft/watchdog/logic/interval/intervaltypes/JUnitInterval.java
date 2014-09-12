@@ -4,22 +4,32 @@ import java.util.Date;
 
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
-import org.eclipse.jdt.junit.model.ITestCaseElement;
 import org.eclipse.jdt.junit.model.ITestElement;
-import org.eclipse.jdt.junit.model.ITestElementContainer;
+import org.eclipse.jdt.junit.model.ITestRunSession;
 
 import com.google.gson.annotations.SerializedName;
 
-/** Data object containing information on JUnit test runs. */
+/**
+ * Data object containing information on JUnit test runs. This is a tree data
+ * structure. Hence, every JunitInterval can contain any number of child
+ * JUnitIntervals.
+ */
 public class JUnitInterval extends IntervalBase {
 
 	/**
 	 * Constructor. JUnit intervals are by definition closed (or non-existent
 	 * yet), as they report on finished JUnit executions.
 	 */
-	public JUnitInterval() {
+	public JUnitInterval(ITestElement test) {
 		super(IntervalType.JUNIT);
 		isClosed = true;
+
+		calculateAndSetDates(test.getElapsedTimeInSeconds());
+		setResult(test.getTestResult(true));
+		if (test instanceof ITestRunSession) {
+			ITestRunSession session = (ITestRunSession) test;
+			setProjectNameHash(session.getTestRunName());
+		}
 	}
 
 	/** Class version. */
@@ -32,32 +42,6 @@ public class JUnitInterval extends IntervalBase {
 	/** Result of the test run. When aborted duration is NaN. */
 	@SerializedName("re")
 	private String result;
-
-	/** Number of test cases. */
-	@SerializedName("etests")
-	private int executedTestCases = 0;
-
-	/** Number of executed test cases. */
-	@SerializedName("ttests")
-	private int totalTestCases = 0;
-
-	/**
-	 * Counts and sets the number of tests contained in the given
-	 * {@link ITestElement}.
-	 */
-	public void countTests(ITestElement testElement) {
-		if (testElement instanceof ITestCaseElement) {
-			totalTestCases += 1;
-			if (testElement.getProgressState() == ITestElement.ProgressState.COMPLETED) {
-				executedTestCases += 1;
-			}
-		} else if (testElement instanceof ITestElementContainer) {
-			ITestElementContainer testContainer = (ITestElementContainer) testElement;
-			for (ITestElement childTestElement : testContainer.getChildren()) {
-				countTests(childTestElement);
-			}
-		}
-	}
 
 	/** Calculates and sets the dates in this interval. */
 	public void calculateAndSetDates(double duration) {
@@ -73,9 +57,14 @@ public class JUnitInterval extends IntervalBase {
 		this.result = result.toString();
 	}
 
-	/** Sets the project name the Junit test run was executed on. */
-	public void setProjectName(String projectName) {
+	/** Sets the hashed project name the Junit test run was executed on. */
+	public void setProjectNameHash(String projectName) {
 		this.projectHash = WatchDogUtils.createHash(projectName);
 	}
 
+	public void setTree(ITestRunSession session) {
+		for (ITestElement testChild : session.getChildren()) {
+		}
+
+	}
 }
