@@ -30,6 +30,7 @@ public class InfoStatisticsDialog extends Dialog {
 
 	private Color colorRed;
 	private Color colorGreen;
+	private Composite parentContainer;
 
 	/** Constructor. */
 	public InfoStatisticsDialog(Shell parentShell) {
@@ -38,6 +39,7 @@ public class InfoStatisticsDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
+		this.parentContainer = parent;
 		Composite container = (Composite) super.createDialogArea(parent);
 		createGridLayout(container);
 		createStatusText(container);
@@ -204,8 +206,7 @@ public class InfoStatisticsDialog extends Dialog {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			UIUtils.invokeCommand("nl.tudelft.watchdog.commands.UserWizardDialog");
-			okPressed();
-			UIUtils.invokeCommand(UIUtils.COMMAND_SHOW_INFO);
+			super.widgetSelected(e);
 		}
 	}
 
@@ -213,13 +214,21 @@ public class InfoStatisticsDialog extends Dialog {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			UIUtils.invokeCommand("nl.tudelft.watchdog.commands.ProjectWizardDialog");
-			okPressed();
-			UIUtils.invokeCommand(UIUtils.COMMAND_SHOW_INFO);
+			super.widgetSelected(e);
 		}
 	}
 
 	private abstract class DefaultSelectionListener implements
 			SelectionListener {
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			Composite uberParentContainer = parentContainer.getParent();
+			parentContainer.dispose();
+			createContents(uberParentContainer);
+			uberParentContainer.layout(true);
+			uberParentContainer.redraw();
+		}
 
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
