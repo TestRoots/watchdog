@@ -24,6 +24,7 @@ public class DocumentFactory {
 	// TODO (MMB) This might return a document which is not alive any more (and
 	// thus has an unknown file type)
 	public Document createDocument(ITextEditor editor) {
+		long beginDate = System.nanoTime();
 		String activeProjectName;
 		if (editor.getEditorInput() instanceof IFileEditorInput) {
 			IFileEditorInput input = (IFileEditorInput) editor.getEditorInput();
@@ -32,6 +33,9 @@ public class DocumentFactory {
 		} else {
 			activeProjectName = "";
 		}
+		long endDate = System.nanoTime();
+		WatchDogLogger.getInstance().logInfo(
+				"get1: " + Long.toString(endDate - beginDate));
 
 		DocumentType documentType = determineDocumentType(editor, editor);
 
