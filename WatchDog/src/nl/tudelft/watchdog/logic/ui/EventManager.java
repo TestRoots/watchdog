@@ -1,7 +1,7 @@
 package nl.tudelft.watchdog.logic.ui;
 
 import nl.tudelft.watchdog.logic.InitializationManager;
-import nl.tudelft.watchdog.logic.document.DocumentFactory;
+import nl.tudelft.watchdog.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
@@ -34,11 +34,11 @@ public class EventManager {
 
 	private InactivityNotifier readingInactivityNotifier;
 
-	private DocumentFactory documentFactory;
+	private DocumentCreator documentFactory;
 
 	/** Constructor. */
 	public EventManager(IntervalManager intervalManager,
-			DocumentFactory documentFactory, int userActivityTimeout) {
+			DocumentCreator documentFactory, int userActivityTimeout) {
 		this.intervalManager = intervalManager;
 		this.documentFactory = documentFactory;
 
@@ -109,6 +109,8 @@ public class EventManager {
 			break;
 
 		case EDIT:
+			long beginDate = System.currentTimeMillis();
+
 			ITextEditor editor = (ITextEditor) event.getSource();
 			EditorIntervalBase editorInterval = intervalManager
 					.getEditorInterval();
@@ -132,6 +134,9 @@ public class EventManager {
 			}
 			typingInactivityNotifier.trigger();
 			userInactivityNotifier.trigger();
+			long endDate = System.currentTimeMillis();
+			WatchDogLogger.getInstance().logInfo(
+					"editEvent: " + Long.toString(endDate - beginDate));
 			break;
 
 		case PAINT:

@@ -22,10 +22,10 @@ public class Document implements Serializable {
 	private String projectNameHash;
 
 	/** The file's name. */
-	private transient String fileName;
+	private transient String name;
 
 	@SerializedName("fn")
-	private String fileNameHash;
+	private String nameHash;
 
 	/** The file's length, in LoC. */
 	@SerializedName("sloc")
@@ -38,24 +38,10 @@ public class Document implements Serializable {
 	private transient String content;
 
 	/** Constructor. */
-	public Document(String projectName, String fileName, DocumentType docType,
-			String content) {
+	public Document(String projectName, String fileName, String content) {
 		this.projectName = projectName;
-		this.fileName = fileName;
-
-		String shortenedName = fileName.toLowerCase().replace(".java", "");
-		if (shortenedName.startsWith("test") || shortenedName.endsWith("test")) {
-			shortenedName = shortenedName.replace("test", "");
-			this.fileNameHash = WatchDogUtils.createHash(shortenedName)
-					+ "Test";
-		} else {
-			this.fileNameHash = WatchDogUtils.createHash(shortenedName);
-		}
-		projectNameHash = WatchDogUtils.createHash(projectName);
-
-		this.docType = docType;
+		this.name = fileName;
 		this.content = content;
-		this.sloc = WatchDogUtils.countSLOC(content);
 	}
 
 	/** @return the project's name */
@@ -65,7 +51,7 @@ public class Document implements Serializable {
 
 	/** @return the file's name */
 	public String getFileName() {
-		return fileName;
+		return name;
 	}
 
 	/** @return the document type */
@@ -81,5 +67,19 @@ public class Document implements Serializable {
 	/** Sets the document type to the supplied type. */
 	public void setDocumentType(DocumentType type) {
 		this.docType = type;
+	}
+
+	/** Prepares this document to extract statistics out of it. */
+	public void prepareDocument() {
+		String shortenedName = name.toLowerCase().replace(".java", "");
+		if (shortenedName.startsWith("test") || shortenedName.endsWith("test")) {
+			shortenedName = shortenedName.replace("test", "");
+			this.nameHash = WatchDogUtils.createHash(shortenedName) + "Test";
+		} else {
+			this.nameHash = WatchDogUtils.createHash(shortenedName);
+		}
+		this.projectNameHash = WatchDogUtils.createHash(projectName);
+		this.sloc = WatchDogUtils.countSLOC(content);
+		this.docType = DocumentClassifier.classifyDocument(name, content);
 	}
 }

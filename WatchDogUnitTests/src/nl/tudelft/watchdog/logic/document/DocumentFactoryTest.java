@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import nl.tudelft.watchdog.logic.document.Document;
-import nl.tudelft.watchdog.logic.document.DocumentFactory;
+import nl.tudelft.watchdog.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.logic.document.DocumentType;
 
 import org.eclipse.ui.texteditor.IDocumentProvider;
@@ -13,13 +13,13 @@ import org.junit.Test;
 import org.mockito.Matchers;
 
 /**
- * Mock tests for {@link DocumentFactory}.
+ * Mock tests for {@link DocumentCreator}.
  */
 public class DocumentFactoryTest {
 
     /**
      * Tests whether the creation of a Java production class via the
-     * {@link DocumentFactory} actually returns said class, and that the
+     * {@link DocumentCreator} actually returns said class, and that the
      * document classification returns the correct type.
      */
     @Test
@@ -36,7 +36,7 @@ public class DocumentFactoryTest {
 	when(mockedDocument.get()).thenReturn(contents);
 	when(mockedEditor.getTitle()).thenReturn("A.java");
 
-	Document doc = new DocumentFactory().createDocument(mockedEditor);
+	Document doc = new DocumentCreator().createDocument(mockedEditor);
 
 	assertEquals("A.java", doc.getFileName());
 	assertEquals(DocumentType.PRODUCTION, doc.getDocumentType());

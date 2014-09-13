@@ -46,6 +46,11 @@ public class TypingInterval extends EditorIntervalBase {
 
 	@Override
 	public void close() {
+		// TODO (MMB) might be useful to have document.getContent return null to
+		// avoid bad numbers.
+		if (endingDocument != null) {
+			endingDocument.prepareDocument();
+		}
 		// calculate the Levenshtein distance between the two edit operations.
 		if (getDocument() != null && endingDocument != null) {
 			String startingContent = getDocument().getContent();

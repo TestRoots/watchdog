@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.logic;
 import java.io.File;
 
 import nl.tudelft.watchdog.Activator;
-import nl.tudelft.watchdog.logic.document.DocumentFactory;
+import nl.tudelft.watchdog.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.IntervalPersister;
 import nl.tudelft.watchdog.logic.interval.IntervalTransferManager;
@@ -33,7 +33,7 @@ public class InitializationManager {
 				Activator.getDefault().getStateLocation().toFile(),
 				"intervals.mapdb");
 		intervalPersister = new IntervalPersister(file);
-		DocumentFactory documentFactory = new DocumentFactory();
+		DocumentCreator documentFactory = new DocumentCreator();
 		new ClientVersionChecker();
 		this.intervalManager = new IntervalManager(intervalPersister,
 				documentFactory);

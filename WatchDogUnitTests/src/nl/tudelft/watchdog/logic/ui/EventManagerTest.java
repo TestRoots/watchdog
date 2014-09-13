@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.logic.ui;
 
-import nl.tudelft.watchdog.logic.document.DocumentFactory;
+import nl.tudelft.watchdog.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.IntervalPersister;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
@@ -29,8 +29,8 @@ public class EventManagerTest {
 
 	@Before
 	public void setup() {
-		DocumentFactory documentFactoryMock = Mockito
-				.mock(DocumentFactory.class);
+		DocumentCreator documentFactoryMock = Mockito
+				.mock(DocumentCreator.class);
 		IntervalManager intervalManagerReal = new IntervalManager(
 				Mockito.mock(IntervalPersister.class), documentFactoryMock);
 		intervalManager = Mockito.spy(intervalManagerReal);

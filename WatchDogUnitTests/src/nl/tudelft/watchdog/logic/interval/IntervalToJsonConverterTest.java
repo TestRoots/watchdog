@@ -63,8 +63,8 @@ public class IntervalToJsonConverterTest {
 	private ArrayList<IntervalBase> createSampleIntervals(
 			EditorIntervalBase interval) {
 		ArrayList<IntervalBase> intervals = new ArrayList<IntervalBase>();
-		interval.setDocument(new Document("Project", "Production.java",
-				DocumentType.PRODUCTION, "blah-document"));
+		interval.setDocument(new Document("Project", "Production.java", "blah-document"));
+		interval.close();
 		interval.setStartTime(new Date(1));
 		interval.setEndTime(new Date(2));
 		intervals.add(interval);

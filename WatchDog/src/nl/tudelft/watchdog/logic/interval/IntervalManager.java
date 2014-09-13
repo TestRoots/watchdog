@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import nl.tudelft.watchdog.logic.document.DocumentFactory;
+import nl.tudelft.watchdog.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
@@ -20,7 +20,7 @@ public class IntervalManager {
 	private EditorIntervalBase editorInterval;
 
 	/** The document factory. */
-	private DocumentFactory documentFactory;
+	private DocumentCreator documentFactory;
 
 	/**
 	 * The session seed, a random number generated on each instantiation of the
@@ -32,7 +32,7 @@ public class IntervalManager {
 
 	/** Constructor. */
 	public IntervalManager(IntervalPersister persister,
-			DocumentFactory documentFactory) {
+			DocumentCreator documentFactory) {
 		this.persister = persister;
 		this.documentFactory = documentFactory;
 		this.sessionSeed = WatchDogUtils.randomObject.nextLong();

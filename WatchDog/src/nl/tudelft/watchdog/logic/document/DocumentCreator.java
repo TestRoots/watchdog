@@ -5,7 +5,6 @@ import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -13,9 +12,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 /**
  * A factory for creating {@link Document}s from a supplied {@link ITextEditor}.
  */
-// TODO (MMB) The naming of this class is seriously flawed. It does not work
-// like a Factory pattern (where different kinds of objects are created)
-public class DocumentFactory {
+public class DocumentCreator {
 	/**
 	 * Factory method that creates and returns a {@link Document} from a given
 	 * {@link IWorkbenchPart}. For this to succeed, it is necessary that the the
@@ -36,23 +33,25 @@ public class DocumentFactory {
 				"get1: " + Long.toString(endDate - beginDate));
 
 		try {
-			String editorContent = getEditorContent(editor, editor);
-			DocumentType documentType = DocumentClassifier.classifyDocument(
-					editor.getTitle(), editorContent);
-
 			return new Document(activeProjectName, editor.getTitle(),
-					documentType, editorContent);
+					getFileContent(editor));
 		} catch (IllegalArgumentException exception) {
 			WatchDogLogger.getInstance().logSevere(exception);
 		}
-		return new Document(activeProjectName, editor.getTitle(),
-				DocumentType.UNDEFINED, "");
+		return new Document(activeProjectName, editor.getTitle(), "");
 	}
 
-	private String getEditorContent(ITextEditor editor, IEditorPart editorPart) {
+	private String getFileContent(ITextEditor editor) {
+		long beginDate = System.nanoTime();
 		String editorContent = "";
 		try {
+			long lbeginDate = System.nanoTime();
+
 			editorContent = WatchDogUtils.getEditorContent(editor);
+			long lendDate = System.nanoTime();
+			WatchDogLogger.getInstance().logInfo(
+					"inner getFileContent: "
+							+ Long.toString(lendDate - lbeginDate));
 		} catch (IllegalArgumentException | ContentReaderException exception) {
 			// Editor was null, there is nothing we can do to get the file
 			// contents.
@@ -69,6 +68,9 @@ public class DocumentFactory {
 						"File does not exist anymore: " + editor.getTitle());
 			}
 		}
+		long endDate = System.nanoTime();
+		WatchDogLogger.getInstance().logInfo(
+				"getFileContent: " + Long.toString(endDate - beginDate));
 		return editorContent;
 	}
 }
