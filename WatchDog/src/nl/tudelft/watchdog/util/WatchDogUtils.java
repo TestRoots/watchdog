@@ -172,4 +172,29 @@ public class WatchDogUtils {
 		return DigestUtils.shaHex(name);
 	}
 
+	/**
+	 * Generates an intelligent hash code the supplied fileName.
+	 * 
+	 * <br>
+	 * <br>
+	 * Example: Generates a hash code <br>
+	 * <code>a6bb3545c5d1424e8bb6e95aceb1c734535e7ca3</code> for input
+	 * "AClass.java" and <br>
+	 * <code>a6bb3545c5d1424e8bb6e95aceb1c734535e7ca3Test</code> for
+	 * "AClassTest.java". This means it is possible to relate a test file to its
+	 * related Production class hash, by removing the trailing "Test" string
+	 * from the string returned by this method.
+	 * 
+	 * @return A hash for the given filename.
+	 */
+	public static String createFileNameHash(String fileName) {
+		String shortenedName = fileName.toLowerCase().replace(".java", "");
+		if (shortenedName.startsWith("test") || shortenedName.endsWith("test")) {
+			shortenedName = shortenedName.replace("test", "");
+			return createHash(shortenedName) + "Test";
+		} else {
+			return createHash(shortenedName);
+		}
+	}
+
 }

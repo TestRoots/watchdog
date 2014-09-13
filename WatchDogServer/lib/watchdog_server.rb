@@ -28,7 +28,6 @@ class WatchDogServer < Sinatra::Base
     @db = nil
   end
 
-
   # Do not support static files
   set :static, false
 
@@ -133,7 +132,7 @@ class WatchDogServer < Sinatra::Base
     end
 
     if ivals.size > 100000
-      halt 400, 'Request too long (> 100000 intervals)'
+      halt 413, 'Request too long (> 100000 intervals)'
     end
 
     negative_intervals = ivals.find{|x| (x['te'].to_i - x['ts'].to_i) < 0}

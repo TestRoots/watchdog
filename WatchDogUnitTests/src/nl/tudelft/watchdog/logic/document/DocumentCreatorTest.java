@@ -15,7 +15,7 @@ import org.mockito.Matchers;
 /**
  * Mock tests for {@link DocumentCreator}.
  */
-public class DocumentFactoryTest {
+public class DocumentCreatorTest {
 
     /**
      * Tests whether the creation of a Java production class via the
@@ -39,6 +39,8 @@ public class DocumentFactoryTest {
 	Document doc = new DocumentCreator().createDocument(mockedEditor);
 
 	assertEquals("A.java", doc.getFileName());
+
+	doc.prepareDocument();
 	assertEquals(DocumentType.PRODUCTION, doc.getDocumentType());
     }
 

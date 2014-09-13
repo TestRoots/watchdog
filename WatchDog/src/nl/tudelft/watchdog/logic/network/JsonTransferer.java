@@ -33,7 +33,9 @@ public class JsonTransferer {
 
 	/** Constructor. */
 	public JsonTransferer() {
-		gsonBuilder.registerTypeAdapter(Date.class, new DateSerializer());
+		gsonBuilder.registerTypeAdapter(Date.class, new DateSerializer())
+				.registerTypeAdapter(JsonifiedDouble.class,
+						new JsonifiedDoubleSerializer());
 		gson = gsonBuilder.create();
 	}
 
@@ -102,7 +104,11 @@ public class JsonTransferer {
 
 	/** Converts the intervals to Json. */
 	public String toJson(List<IntervalBase> recordedIntervals) {
-		return gson.toJson(recordedIntervals);
+		try {
+			return gson.toJson(recordedIntervals);
+		} catch (RuntimeException e) {
+			return "[]";
+		}
 	}
 
 	/** A JSon Serializer for Date. */
@@ -114,4 +120,16 @@ public class JsonTransferer {
 			return new JsonPrimitive(date.getTime());
 		}
 	}
+
+	/** A JSon Serializer for Date. */
+	private static class JsonifiedDoubleSerializer implements
+			JsonSerializer<JsonifiedDouble> {
+
+		@Override
+		public JsonElement serialize(JsonifiedDouble doubleValue, Type type,
+				JsonSerializationContext context) {
+			return new JsonPrimitive(doubleValue.value);
+		}
+	}
+
 }
