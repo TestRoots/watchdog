@@ -11,7 +11,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
- * A DocumentFactory for creating {@link Document}s.
+ * A factory for creating {@link Document}s from a supplied {@link ITextEditor}.
  */
 // TODO (MMB) The naming of this class is seriously flawed. It does not work
 // like a Factory pattern (where different kinds of objects are created)
@@ -21,8 +21,6 @@ public class DocumentFactory {
 	 * {@link IWorkbenchPart}. For this to succeed, it is necessary that the the
 	 * supplied part is an IEditorPart.
 	 */
-	// TODO (MMB) This might return a document which is not alive any more (and
-	// thus has an unknown file type)
 	public Document createDocument(ITextEditor editor) {
 		long beginDate = System.nanoTime();
 		String activeProjectName;
@@ -37,33 +35,28 @@ public class DocumentFactory {
 		WatchDogLogger.getInstance().logInfo(
 				"get1: " + Long.toString(endDate - beginDate));
 
-		DocumentType documentType = determineDocumentType(editor, editor);
-
 		try {
+			String editorContent = getEditorContent(editor, editor);
+			DocumentType documentType = DocumentClassifier.classifyDocument(
+					editor.getTitle(), editorContent);
+
 			return new Document(activeProjectName, editor.getTitle(),
-					documentType, WatchDogUtils.getEditorContent(editor));
-		} catch (IllegalArgumentException | ContentReaderException exception) {
+					documentType, editorContent);
+		} catch (IllegalArgumentException exception) {
 			WatchDogLogger.getInstance().logSevere(exception);
 		}
-		return new Document(activeProjectName, editor.getTitle(), documentType,
-				"");
+		return new Document(activeProjectName, editor.getTitle(),
+				DocumentType.UNDEFINED, "");
 	}
 
-	/**
-	 * @return The document type for the given editor and editorPart. If an
-	 *         error occurred, {value DocumentType#UNDEFINED} is returned.
-	 */
-	private DocumentType determineDocumentType(ITextEditor editor,
-			IEditorPart editorPart) {
+	private String getEditorContent(ITextEditor editor, IEditorPart editorPart) {
 		String editorContent = "";
 		try {
 			editorContent = WatchDogUtils.getEditorContent(editor);
-		} catch (IllegalArgumentException exception) {
+		} catch (IllegalArgumentException | ContentReaderException exception) {
 			// Editor was null, there is nothing we can do to get the file
 			// contents.
-			// TODO (MMB) Try read-in via IFile?
 			WatchDogLogger.getInstance().logSevere(exception);
-		} catch (ContentReaderException exception) {
 			WatchDogLogger
 					.getInstance()
 					.logInfo(
@@ -74,11 +67,8 @@ public class DocumentFactory {
 			} catch (IllegalArgumentException ex) {
 				WatchDogLogger.getInstance().logInfo(
 						"File does not exist anymore: " + editor.getTitle());
-				// TODO (MMB) hm, in that case, wouldn't it be better to stop
-				// the recording interval?
 			}
 		}
-		return DocumentClassifier.classifyDocument(editorPart.getTitle(),
-				editorContent);
+		return editorContent;
 	}
 }
