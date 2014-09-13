@@ -1,6 +1,5 @@
 package nl.tudelft.watchdog.logic.ui;
 
-import nl.tudelft.watchdog.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.IntervalPersister;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
@@ -29,13 +28,10 @@ public class EventManagerTest {
 
 	@Before
 	public void setup() {
-		DocumentCreator documentFactoryMock = Mockito
-				.mock(DocumentCreator.class);
 		IntervalManager intervalManagerReal = new IntervalManager(
-				Mockito.mock(IntervalPersister.class), documentFactoryMock);
+				Mockito.mock(IntervalPersister.class));
 		intervalManager = Mockito.spy(intervalManagerReal);
-		eventManager = new EventManager(intervalManager, documentFactoryMock,
-				USER_ACTIVITY_TIMEOUT);
+		eventManager = new EventManager(intervalManager, USER_ACTIVITY_TIMEOUT);
 	}
 
 	@Test
@@ -81,7 +77,8 @@ public class EventManagerTest {
 		Mockito.verify(intervalManager).addEditorIntervalAndSetDocument(
 				Mockito.isA(TypingInterval.class));
 		Mockito.verify(intervalManager, Mockito.never())
-				.addEditorIntervalAndSetDocument(Mockito.isA(ReadingInterval.class));
+				.addEditorIntervalAndSetDocument(
+						Mockito.isA(ReadingInterval.class));
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 		eventManager.update(createMockEvent(EventType.EDIT));
 		eventManager.update(createMockEvent(EventType.PAINT));
@@ -109,7 +106,8 @@ public class EventManagerTest {
 	@Test
 	public void testTimeoutWorksForReadingIntervals() {
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
-		Mockito.verify(intervalManager, Mockito.timeout(TIMEOUT_GRACE_PERIOD))
+		Mockito.verify(intervalManager,
+				Mockito.timeout(TIMEOUT_GRACE_PERIOD).atLeast(1))
 				.closeInterval(Mockito.isA(ReadingInterval.class));
 		Assert.assertEquals(null, intervalManager.getEditorInterval());
 	}
@@ -120,7 +118,8 @@ public class EventManagerTest {
 		// first close null interval
 		Mockito.verify(intervalManager).closeInterval(
 				Mockito.isNull(IntervalBase.class));
-		Mockito.verify(intervalManager, Mockito.timeout(TIMEOUT_GRACE_PERIOD))
+		Mockito.verify(intervalManager,
+				Mockito.timeout(TIMEOUT_GRACE_PERIOD).atLeast(1))
 				.closeInterval(Mockito.isA(TypingInterval.class));
 		Assert.assertEquals(null, intervalManager.getEditorInterval());
 	}
@@ -157,8 +156,8 @@ public class EventManagerTest {
 				Mockito.timeout((int) (TIMEOUT_GRACE_PERIOD * 2.4)).never())
 				.closeInterval(Mockito.any(IntervalBase.class));
 		Mockito.verify(intervalManager,
-				Mockito.timeout((int) (TIMEOUT_GRACE_PERIOD * 3.5))).closeInterval(
-				Mockito.isA(ReadingInterval.class));
+				Mockito.timeout((int) (TIMEOUT_GRACE_PERIOD * 3.5)))
+				.closeInterval(Mockito.isA(ReadingInterval.class));
 		Assert.assertEquals(null, intervalManager.getEditorInterval());
 	}
 

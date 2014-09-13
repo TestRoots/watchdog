@@ -1,7 +1,6 @@
 package nl.tudelft.watchdog.logic.ui;
 
 import nl.tudelft.watchdog.logic.InitializationManager;
-import nl.tudelft.watchdog.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
@@ -34,13 +33,9 @@ public class EventManager {
 
 	private InactivityNotifier readingInactivityNotifier;
 
-	private DocumentCreator documentFactory;
-
 	/** Constructor. */
-	public EventManager(IntervalManager intervalManager,
-			DocumentCreator documentFactory, int userActivityTimeout) {
+	public EventManager(IntervalManager intervalManager, int userActivityTimeout) {
 		this.intervalManager = intervalManager;
-		this.documentFactory = documentFactory;
 
 		userInactivityNotifier = new InactivityNotifier(this,
 				userActivityTimeout, EventType.USER_INACTIVITY);
@@ -52,6 +47,7 @@ public class EventManager {
 
 	/** Introduces the supplied editorEvent */
 	public void update(WatchDogEvent event) {
+		WatchDogLogger.getInstance().logInfo("Event: " + event.getType());
 		IntervalBase interval;
 		switch (event.getType()) {
 		case START_ECLIPSE:
@@ -129,7 +125,6 @@ public class EventManager {
 		case EDIT:
 			long beginDate = System.currentTimeMillis();
 			editorInterval = intervalManager.getEditorInterval();
-			editor = (ITextEditor) event.getSource();
 
 			if (editorInterval == null
 					|| editorInterval.getType() != IntervalType.TYPING) {
@@ -138,14 +133,6 @@ public class EventManager {
 				break;
 			}
 
-			TypingInterval typingInterval = (TypingInterval) editorInterval;
-			try {
-				// refresh document content
-				typingInterval.setEndingDocument(documentFactory
-						.createDocument(editor));
-			} catch (IllegalArgumentException exception) {
-				WatchDogLogger.getInstance().logSevere(exception);
-			}
 			typingInactivityNotifier.trigger();
 			userInactivityNotifier.trigger();
 			long endDate = System.currentTimeMillis();

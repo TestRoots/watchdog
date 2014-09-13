@@ -19,9 +19,6 @@ public class IntervalManager {
 
 	private EditorIntervalBase editorInterval;
 
-	/** The document factory. */
-	private DocumentCreator documentFactory;
-
 	/**
 	 * The session seed, a random number generated on each instantiation of the
 	 * IntervalManager to be able to tell running Eclipse instances apart.
@@ -31,10 +28,8 @@ public class IntervalManager {
 	private IntervalPersister persister;
 
 	/** Constructor. */
-	public IntervalManager(IntervalPersister persister,
-			DocumentCreator documentFactory) {
+	public IntervalManager(IntervalPersister persister) {
 		this.persister = persister;
-		this.documentFactory = documentFactory;
 		this.sessionSeed = WatchDogUtils.randomObject.nextLong();
 	}
 
@@ -62,12 +57,13 @@ public class IntervalManager {
 	 * Adds the given EditorIntervalBase, if the existing editorInterval is
 	 * closed.
 	 */
-	public void addEditorIntervalAndSetDocument(EditorIntervalBase editorInterval) {
+	public void addEditorIntervalAndSetDocument(
+			EditorIntervalBase editorInterval) {
 		if (this.editorInterval == null || this.editorInterval.isClosed()) {
 			this.editorInterval = editorInterval;
 		}
 		editorInterval.setSessionSeed(sessionSeed);
-		editorInterval.setDocument(documentFactory
+		editorInterval.setDocument(DocumentCreator
 				.createDocument(editorInterval.getEditor()));
 		WatchDogLogger.getInstance().logInfo(
 				"created new editor interval " + editorInterval);

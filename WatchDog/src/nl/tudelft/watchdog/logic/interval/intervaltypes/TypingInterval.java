@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
 import nl.tudelft.watchdog.logic.document.Document;
+import nl.tudelft.watchdog.logic.document.DocumentCreator;
 
 import org.eclipse.ui.texteditor.ITextEditor;
 
@@ -30,8 +31,8 @@ public class TypingInterval extends EditorIntervalBase {
 	long editDistance;
 
 	/** Constructor. */
-	public TypingInterval(ITextEditor part) {
-		super(part, IntervalType.TYPING);
+	public TypingInterval(ITextEditor editor) {
+		super(editor, IntervalType.TYPING);
 	}
 
 	@Override
@@ -47,6 +48,7 @@ public class TypingInterval extends EditorIntervalBase {
 	@Override
 	public void close() {
 		super.close();
+		setEndingDocument(DocumentCreator.createDocument(editor));
 		// TODO (MMB) might be useful to have document.getContent return null to
 		// avoid bad numbers.
 		if (endingDocument != null) {

@@ -9,6 +9,8 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+import com.cedarsoftware.util.StringUtilities;
+
 /**
  * A factory for creating {@link Document}s from a supplied {@link ITextEditor}.
  */
@@ -18,7 +20,7 @@ public class DocumentCreator {
 	 * {@link IWorkbenchPart}. For this to succeed, it is necessary that the the
 	 * supplied part is an IEditorPart.
 	 */
-	public Document createDocument(ITextEditor editor) {
+	public static Document createDocument(ITextEditor editor) {
 		long beginDate = System.nanoTime();
 		String activeProjectName;
 		if (editor.getEditorInput() instanceof IFileEditorInput) {
@@ -28,20 +30,24 @@ public class DocumentCreator {
 		} else {
 			activeProjectName = "";
 		}
+		String title = "";
+		if (!StringUtilities.isEmpty(editor.getTitle())) {
+			title = editor.getTitle();
+		}
 		long endDate = System.nanoTime();
 		WatchDogLogger.getInstance().logInfo(
 				"get1: " + Long.toString(endDate - beginDate));
 
 		try {
-			return new Document(activeProjectName, editor.getTitle(),
+			return new Document(activeProjectName, title,
 					getFileContent(editor));
 		} catch (IllegalArgumentException exception) {
 			WatchDogLogger.getInstance().logSevere(exception);
 		}
-		return new Document(activeProjectName, editor.getTitle(), "");
+		return new Document(activeProjectName, title, "");
 	}
 
-	private String getFileContent(ITextEditor editor) {
+	private static String getFileContent(ITextEditor editor) {
 		long beginDate = System.nanoTime();
 		String editorContent = "";
 		try {

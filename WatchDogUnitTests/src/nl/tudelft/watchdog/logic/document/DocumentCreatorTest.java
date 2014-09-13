@@ -36,7 +36,7 @@ public class DocumentCreatorTest {
 		when(mockedDocument.get()).thenReturn(contents);
 		when(mockedEditor.getTitle()).thenReturn("A.java");
 
-		Document doc = new DocumentCreator().createDocument(mockedEditor);
+		Document doc = DocumentCreator.createDocument(mockedEditor);
 
 		assertEquals("A.java", doc.getFileName());
 
