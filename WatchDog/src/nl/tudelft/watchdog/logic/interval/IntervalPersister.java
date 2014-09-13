@@ -123,7 +123,7 @@ public class IntervalPersister {
 	public long getHighestKey() {
 		try {
 			return map.lastKey();
-		} catch (RuntimeException e) {
+		} catch (Error | RuntimeException e) {
 			return -1;
 		}
 	}
@@ -133,14 +133,14 @@ public class IntervalPersister {
 	 * not properly closed.
 	 */
 	public void closeDatabase() {
-		if (database != null) {
+		if (database != null && !database.isClosed()) {
 			database.close();
 		}
 	}
 
 	/** Clears the database on the computer and resets it. */
 	public void clearAndResetMap() {
-		if (database != null) {
+		if (database != null && !database.isClosed()) {
 			database.delete(INTERVALS);
 			database.commit();
 			map = database.getTreeMap(INTERVALS);
