@@ -54,10 +54,10 @@ public abstract class EditorIntervalBase extends IntervalBase {
 
 	@Override
 	public void close() {
+		super.close();
 		if (document != null) {
 			document.prepareDocument();
 		}
-		super.close();
 	}
 
 }

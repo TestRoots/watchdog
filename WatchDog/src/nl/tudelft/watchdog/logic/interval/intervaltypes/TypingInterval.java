@@ -46,6 +46,7 @@ public class TypingInterval extends EditorIntervalBase {
 
 	@Override
 	public void close() {
+		super.close();
 		// TODO (MMB) might be useful to have document.getContent return null to
 		// avoid bad numbers.
 		if (endingDocument != null) {
@@ -58,6 +59,5 @@ public class TypingInterval extends EditorIntervalBase {
 			editDistance = StringUtilities.levenshteinDistance(startingContent,
 					endingContent);
 		}
-		super.close();
 	}
 }
