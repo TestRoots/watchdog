@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import nl.tudelft.watchdog.logic.document.Document;
-import nl.tudelft.watchdog.logic.document.DocumentType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
