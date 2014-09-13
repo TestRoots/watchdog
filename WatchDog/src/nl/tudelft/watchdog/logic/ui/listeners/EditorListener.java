@@ -57,6 +57,8 @@ public class EditorListener {
 
 			@Override
 			public void documentAboutToBeChanged(DocumentEvent event) {
+				eventManager.update(new EditorEvent(editor,
+						EventType.START_EDIT));
 			}
 		};
 		document.addDocumentListener(documentListener);

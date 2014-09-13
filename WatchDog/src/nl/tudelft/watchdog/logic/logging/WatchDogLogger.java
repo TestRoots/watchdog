@@ -41,7 +41,6 @@ public class WatchDogLogger {
 		logInfo("Starting up WatchDogLogger...");
 
 		try {
-			// TODO (MMB) Stores logs to a path in the Eclipse installation
 			File parent = new File("watchdog/logs/");
 			parent.mkdirs();
 

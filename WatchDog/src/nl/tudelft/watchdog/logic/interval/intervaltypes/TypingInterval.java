@@ -27,7 +27,7 @@ public class TypingInterval extends EditorIntervalBase {
 	 * of text that was updated.
 	 */
 	@SerializedName("diff")
-	long editDistance = 0;
+	long editDistance;
 
 	/** Constructor. */
 	public TypingInterval(ITextEditor part) {

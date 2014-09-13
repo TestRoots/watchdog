@@ -108,29 +108,43 @@ public class EventManager {
 			}
 			break;
 
-		case EDIT:
-			long beginDate = System.currentTimeMillis();
-
-			ITextEditor editor = (ITextEditor) event.getSource();
+		case START_EDIT:
 			EditorIntervalBase editorInterval = intervalManager
 					.getEditorInterval();
+			ITextEditor editor = (ITextEditor) event.getSource();
+
 			if (editorInterval == null
 					|| editorInterval.getType() != IntervalType.TYPING) {
 				readingInactivityNotifier.cancelTimer();
 				// create new typing interval
 				intervalManager.closeInterval(editorInterval);
-				intervalManager.addAndSetEditorInterval(new TypingInterval(
-						editor));
-			} else if (editorInterval.getType() == IntervalType.TYPING) {
-				// refresh document content for calculation of edit distance
-				TypingInterval typingInterval = (TypingInterval) editorInterval;
-				try {
-					// TODO (MMB) This might be potentially expensive
-					typingInterval.setEndingDocument(documentFactory
-							.createDocument(editor));
-				} catch (IllegalArgumentException exception) {
-					WatchDogLogger.getInstance().logSevere(exception);
-				}
+				intervalManager
+						.addEditorIntervalAndSetDocument(new TypingInterval(
+								editor));
+			}
+			typingInactivityNotifier.trigger();
+			userInactivityNotifier.trigger();
+			break;
+
+		case EDIT:
+			long beginDate = System.currentTimeMillis();
+			editorInterval = intervalManager.getEditorInterval();
+			editor = (ITextEditor) event.getSource();
+
+			if (editorInterval == null
+					|| editorInterval.getType() != IntervalType.TYPING) {
+				update(new WatchDogEvent(event.getSource(),
+						EventType.START_EDIT));
+				break;
+			}
+
+			TypingInterval typingInterval = (TypingInterval) editorInterval;
+			try {
+				// refresh document content
+				typingInterval.setEndingDocument(documentFactory
+						.createDocument(editor));
+			} catch (IllegalArgumentException exception) {
+				WatchDogLogger.getInstance().logSevere(exception);
 			}
 			typingInactivityNotifier.trigger();
 			userInactivityNotifier.trigger();
@@ -145,8 +159,9 @@ public class EventManager {
 			editorInterval = intervalManager.getEditorInterval();
 			if (editorInterval == null) {
 				editor = (ITextEditor) event.getSource();
-				intervalManager.addAndSetEditorInterval(new ReadingInterval(
-						editor));
+				intervalManager
+						.addEditorIntervalAndSetDocument(new ReadingInterval(
+								editor));
 			}
 			readingInactivityNotifier.trigger();
 			userInactivityNotifier.trigger();

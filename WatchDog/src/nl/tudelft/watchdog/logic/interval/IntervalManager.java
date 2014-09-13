@@ -62,7 +62,7 @@ public class IntervalManager {
 	 * Adds the given EditorIntervalBase, if the existing editorInterval is
 	 * closed.
 	 */
-	public void addAndSetEditorInterval(EditorIntervalBase editorInterval) {
+	public void addEditorIntervalAndSetDocument(EditorIntervalBase editorInterval) {
 		if (this.editorInterval == null || this.editorInterval.isClosed()) {
 			this.editorInterval = editorInterval;
 		}
