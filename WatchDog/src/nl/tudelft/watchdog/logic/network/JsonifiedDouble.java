@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.interval.intervaltypes;
+package nl.tudelft.watchdog.logic.network;
 
 import java.io.Serializable;
 

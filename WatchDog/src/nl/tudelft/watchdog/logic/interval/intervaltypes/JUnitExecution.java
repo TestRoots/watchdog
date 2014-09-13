@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.logic.interval.intervaltypes;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import nl.tudelft.watchdog.logic.network.JsonifiedDouble;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.jdt.junit.model.ITestCaseElement;
