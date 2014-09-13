@@ -48,16 +48,10 @@ public class DocumentCreator {
 	}
 
 	private static String getFileContent(ITextEditor editor) {
-		long beginDate = System.nanoTime();
 		String editorContent = "";
 		try {
-			long lbeginDate = System.nanoTime();
 
 			editorContent = WatchDogUtils.getEditorContent(editor);
-			long lendDate = System.nanoTime();
-			WatchDogLogger.getInstance().logInfo(
-					"inner getFileContent: "
-							+ Long.toString(lendDate - lbeginDate));
 		} catch (IllegalArgumentException | ContentReaderException exception) {
 			// Editor was null, there is nothing we can do to get the file
 			// contents.
@@ -74,9 +68,6 @@ public class DocumentCreator {
 						"File does not exist anymore: " + editor.getTitle());
 			}
 		}
-		long endDate = System.nanoTime();
-		WatchDogLogger.getInstance().logInfo(
-				"getFileContent: " + Long.toString(endDate - beginDate));
 		return editorContent;
 	}
 }

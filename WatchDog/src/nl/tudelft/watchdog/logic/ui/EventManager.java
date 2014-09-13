@@ -10,7 +10,6 @@ import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
-import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
 
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -47,7 +46,6 @@ public class EventManager {
 
 	/** Introduces the supplied editorEvent */
 	public void update(WatchDogEvent event) {
-		WatchDogLogger.getInstance().logInfo("Event: " + event.getType());
 		IntervalBase interval;
 		switch (event.getType()) {
 		case START_ECLIPSE:
@@ -123,7 +121,6 @@ public class EventManager {
 			break;
 
 		case EDIT:
-			long beginDate = System.currentTimeMillis();
 			editorInterval = intervalManager.getEditorInterval();
 
 			if (editorInterval == null
@@ -135,9 +132,6 @@ public class EventManager {
 
 			typingInactivityNotifier.trigger();
 			userInactivityNotifier.trigger();
-			long endDate = System.currentTimeMillis();
-			WatchDogLogger.getInstance().logInfo(
-					"editEvent: " + Long.toString(endDate - beginDate));
 			break;
 
 		case PAINT:
