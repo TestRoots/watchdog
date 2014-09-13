@@ -36,6 +36,10 @@ class WatchDogServer < Sinatra::Base
 
   logger = Logger.new('logfile.log')
 
+  # Enable post payloads up to 4MB
+  Rack::Utils.key_space_limit = 4914304
+  logger.info("key_space_limit=#{Rack::Utils.key_space_limit}")
+
   get '/' do
     'Woof Woof'
   end
