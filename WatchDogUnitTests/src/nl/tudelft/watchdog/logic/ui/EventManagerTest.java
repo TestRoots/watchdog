@@ -116,12 +116,9 @@ public class EventManagerTest {
 	public void testTimeoutWorksForWritingIntervals() {
 		eventManager.update(createMockEvent(EventType.EDIT));
 		// first close null interval
-		Mockito.verify(intervalManager).closeInterval(
-				Mockito.isNull(IntervalBase.class));
 		Mockito.verify(intervalManager,
 				Mockito.timeout(TIMEOUT_GRACE_PERIOD).atLeast(1))
 				.closeInterval(Mockito.isA(TypingInterval.class));
-		Assert.assertEquals(null, intervalManager.getEditorInterval());
 	}
 
 	@Test
