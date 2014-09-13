@@ -1,7 +1,6 @@
 package nl.tudelft.watchdog.logic.ui;
 
 import nl.tudelft.watchdog.logic.InitializationManager;
-import nl.tudelft.watchdog.logic.document.DocumentFactory;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
@@ -34,13 +33,9 @@ public class EventManager {
 
 	private InactivityNotifier readingInactivityNotifier;
 
-	private DocumentFactory documentFactory;
-
 	/** Constructor. */
-	public EventManager(IntervalManager intervalManager,
-			DocumentFactory documentFactory, int userActivityTimeout) {
+	public EventManager(IntervalManager intervalManager, int userActivityTimeout) {
 		this.intervalManager = intervalManager;
-		this.documentFactory = documentFactory;
 
 		userInactivityNotifier = new InactivityNotifier(this,
 				userActivityTimeout, EventType.USER_INACTIVITY);
@@ -52,6 +47,7 @@ public class EventManager {
 
 	/** Introduces the supplied editorEvent */
 	public void update(WatchDogEvent event) {
+		WatchDogLogger.getInstance().logInfo("Event: " + event.getType());
 		IntervalBase interval;
 		switch (event.getType()) {
 		case START_ECLIPSE:
@@ -108,30 +104,40 @@ public class EventManager {
 			}
 			break;
 
-		case EDIT:
-			ITextEditor editor = (ITextEditor) event.getSource();
+		case START_EDIT:
 			EditorIntervalBase editorInterval = intervalManager
 					.getEditorInterval();
+			ITextEditor editor = (ITextEditor) event.getSource();
+
 			if (editorInterval == null
 					|| editorInterval.getType() != IntervalType.TYPING) {
 				readingInactivityNotifier.cancelTimer();
 				// create new typing interval
 				intervalManager.closeInterval(editorInterval);
-				intervalManager.addAndSetEditorInterval(new TypingInterval(
-						editor));
-			} else if (editorInterval.getType() == IntervalType.TYPING) {
-				// refresh document content for calculation of edit distance
-				TypingInterval typingInterval = (TypingInterval) editorInterval;
-				try {
-					// TODO (MMB) This might be potentially expensive
-					typingInterval.setEndingDocument(documentFactory
-							.createDocument(editor));
-				} catch (IllegalArgumentException exception) {
-					WatchDogLogger.getInstance().logSevere(exception);
-				}
+				intervalManager
+						.addEditorIntervalAndSetDocument(new TypingInterval(
+								editor));
 			}
 			typingInactivityNotifier.trigger();
 			userInactivityNotifier.trigger();
+			break;
+
+		case EDIT:
+			long beginDate = System.currentTimeMillis();
+			editorInterval = intervalManager.getEditorInterval();
+
+			if (editorInterval == null
+					|| editorInterval.getType() != IntervalType.TYPING) {
+				update(new WatchDogEvent(event.getSource(),
+						EventType.START_EDIT));
+				break;
+			}
+
+			typingInactivityNotifier.trigger();
+			userInactivityNotifier.trigger();
+			long endDate = System.currentTimeMillis();
+			WatchDogLogger.getInstance().logInfo(
+					"editEvent: " + Long.toString(endDate - beginDate));
 			break;
 
 		case PAINT:
@@ -140,8 +146,9 @@ public class EventManager {
 			editorInterval = intervalManager.getEditorInterval();
 			if (editorInterval == null) {
 				editor = (ITextEditor) event.getSource();
-				intervalManager.addAndSetEditorInterval(new ReadingInterval(
-						editor));
+				intervalManager
+						.addEditorIntervalAndSetDocument(new ReadingInterval(
+								editor));
 			}
 			readingInactivityNotifier.trigger();
 			userInactivityNotifier.trigger();

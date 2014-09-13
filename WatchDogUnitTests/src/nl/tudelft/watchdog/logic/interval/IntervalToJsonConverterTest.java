@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import nl.tudelft.watchdog.logic.document.Document;
-import nl.tudelft.watchdog.logic.document.DocumentType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
@@ -14,7 +13,9 @@ import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
 
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Test the transfer from {@link IInterval}s to JSon.
@@ -37,13 +38,14 @@ public class IntervalToJsonConverterTest {
 	/** Tests the format of the returned Json representation. */
 	@Test
 	public void testJsonTypingIntervalRepresentation() {
-		TypingInterval interval = new TypingInterval(null);
+		ITextEditor editor = Mockito.mock(ITextEditor.class);
+		TypingInterval interval = new TypingInterval(editor);
 		interval.setUserid("123");
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"diff\":0,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"1.0-SNAPSHOT\"}]",
+				"[{\"endingDocument\":{\"pn\":\"da39a3ee5e6b4b0d3255bfef95601890afd80709\",\"fn\":\"da39a3ee5e6b4b0d3255bfef95601890afd80709\",\"sloc\":0,\"dt\":\"un\"},\"diff\":13,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"1.0-SNAPSHOT\"}]",
 				intervalTransferer.toJson(intervals));
 	}
 
@@ -64,7 +66,8 @@ public class IntervalToJsonConverterTest {
 			EditorIntervalBase interval) {
 		ArrayList<IntervalBase> intervals = new ArrayList<IntervalBase>();
 		interval.setDocument(new Document("Project", "Production.java",
-				DocumentType.PRODUCTION, "blah-document"));
+				"blah-document"));
+		interval.close();
 		interval.setStartTime(new Date(1));
 		interval.setEndTime(new Date(2));
 		intervals.add(interval);

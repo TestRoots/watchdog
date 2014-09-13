@@ -50,12 +50,18 @@ public class WatchDogUtils {
 	 */
 	public static String getEditorContent(final ITextEditor editor)
 			throws ContentReaderException, IllegalArgumentException {
+		long beginDate = System.nanoTime();
+
 		IDocument document = extractDocument(editor);
 		if (document == null) {
 			throw new ContentReaderException("Document is null");
 		}
 
-		return document.get();
+		String documentContent = document.get();
+		long endDate = System.nanoTime();
+		WatchDogLogger.getInstance().logInfo(
+				"getEditorContent: " + Long.toString(endDate - beginDate));
+		return documentContent;
 	}
 
 	private static IDocument extractDocument(final ITextEditor editor)

@@ -31,8 +31,8 @@ public class EditorListener {
 	private PaintListener paintListener;
 
 	/** Enriches the supplied editor with all suitable listeners. */
-	public EditorListener(EventManager userActionManager, ITextEditor editor) {
-		this.eventManager = userActionManager;
+	public EditorListener(EventManager eventManager, ITextEditor editor) {
+		this.eventManager = eventManager;
 		this.editor = editor;
 		listenToDocumentChanges();
 		listenToEditorScrolling();
@@ -57,6 +57,8 @@ public class EditorListener {
 
 			@Override
 			public void documentAboutToBeChanged(DocumentEvent event) {
+				eventManager.update(new EditorEvent(editor,
+						EventType.START_EDIT));
 			}
 		};
 		document.addDocumentListener(documentListener);
@@ -91,8 +93,8 @@ public class EditorListener {
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				eventManager.update(new EditorEvent(editor,
-						EventType.INACTIVE_FOCUS));
+				// eventManager.update(new EditorEvent(editor,
+				// EventType.INACTIVE_FOCUS));
 			}
 
 			@Override

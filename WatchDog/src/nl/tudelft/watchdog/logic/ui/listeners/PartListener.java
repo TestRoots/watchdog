@@ -32,14 +32,18 @@ public class PartListener implements IPartListener {
 
 	@Override
 	public void partDeactivated(IWorkbenchPart part) {
-		// TODO (MMB) extract instanceof check outside of PartListener?
 		if (part instanceof ITextEditor) {
-			eventManager.update(new EditorEvent(part, EventType.INACTIVE_FOCUS));
+			eventManager
+					.update(new EditorEvent(part, EventType.INACTIVE_FOCUS));
 		}
 	}
 
 	@Override
 	public void partClosed(IWorkbenchPart part) {
+		if (part instanceof ITextEditor) {
+			eventManager
+					.update(new EditorEvent(part, EventType.INACTIVE_FOCUS));
+		}
 	}
 
 	@Override

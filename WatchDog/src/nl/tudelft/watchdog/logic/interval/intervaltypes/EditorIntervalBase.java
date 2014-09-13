@@ -52,4 +52,12 @@ public abstract class EditorIntervalBase extends IntervalBase {
 		this.document = document;
 	}
 
+	@Override
+	public void close() {
+		super.close();
+		if (document != null) {
+			document.prepareDocument();
+		}
+	}
+
 }
