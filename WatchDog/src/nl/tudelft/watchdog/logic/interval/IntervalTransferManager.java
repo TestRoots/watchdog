@@ -82,6 +82,7 @@ public class IntervalTransferManager {
 			case SUCCESSFUL:
 				intervalPersister.removeIntervals(intervalsToTransfer);
 				preferences.setLastTransferedInterval();
+				preferences.addTransferedIntervals(intervalsToTransfer.size());
 				WatchDogGlobals.lastTransactionFailed = false;
 				break;
 
