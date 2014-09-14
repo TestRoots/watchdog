@@ -29,8 +29,8 @@ public class JUnitInterval extends IntervalBase {
 		isClosed = true;
 		double duration = test.getElapsedTimeInSeconds();
 
+		setEndTime(new Date());
 		if (!Double.isNaN(duration)) {
-			setEndTime(new Date());
 			setStartTime(new Date(new Date().getTime()
 					- roundElapsedTime(duration)));
 		}
