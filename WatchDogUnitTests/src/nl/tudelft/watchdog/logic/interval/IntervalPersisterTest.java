@@ -45,7 +45,7 @@ public class IntervalPersisterTest {
 
 	@Test
 	public void test0DatabaseEmpty() {
-		assertEquals(-1, persister.getSize());
+		assertEquals(0, persister.getSize());
 	}
 
 	@Test
@@ -59,6 +59,7 @@ public class IntervalPersisterTest {
 		// Shuffle the generated intervals to test for
 		// correct ordering of returned values
 		Collections.shuffle(generatedIntervals);
+		Collections.sort(generatedIntervals);
 
 		for (IntervalBase intervalBase : generatedIntervals) {
 			persister.saveInterval(intervalBase);
@@ -94,13 +95,13 @@ public class IntervalPersisterTest {
 
 	@Test
 	public void test2DatabasePersisted() {
-		assertEquals(99, persister.getSize());
+		assertEquals(100, persister.getSize());
 	}
 
 	@Test
 	public void test3DatabaseCleared() {
 		persister.clearAndResetMap();
-		assertEquals(-1, persister.getSize());
+		assertEquals(0, persister.getSize());
 	}
 
 }

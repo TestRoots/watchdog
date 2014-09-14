@@ -63,7 +63,7 @@ public class IntervalPersister {
 	}
 
 	private Set<IntervalBase> createSet() {
-		return database.getHashSet(INTERVALS);
+		return database.getTreeSet(INTERVALS);
 	}
 
 	private DB createDatabase(final File file) {

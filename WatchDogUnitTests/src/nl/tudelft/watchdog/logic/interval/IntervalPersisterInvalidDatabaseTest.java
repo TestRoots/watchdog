@@ -40,13 +40,13 @@ public class IntervalPersisterInvalidDatabaseTest {
 
 	@Test
 	public void test0DatabaseEmpty() {
-		assertEquals(-1, persister.getSize());
+		assertEquals(0, persister.getSize());
 	}
 	
 	@Test
 	public void test1CreateInterval() {
 		persister.saveInterval(IntervalPersisterTest.createRandomInterval());
-		assertEquals(0, persister.getSize());
+		assertEquals(1, persister.getSize());
 	}
 	
 }

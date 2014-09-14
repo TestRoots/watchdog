@@ -12,7 +12,7 @@ import org.joda.time.format.PeriodFormat;
 import com.google.gson.annotations.SerializedName;
 
 /** The interval base. */
-public class IntervalBase implements Serializable {
+public class IntervalBase implements Serializable, Comparable<IntervalBase> {
 
 	/** The version id of this class. */
 	private static final long serialVersionUID = 2L;
@@ -133,6 +133,12 @@ public class IntervalBase implements Serializable {
 	/** @return the {@link IntervalType}. */
 	public IntervalType getType() {
 		return intervalType;
+	}
+
+	@Override
+	/** Necessary for storage of Intervals. */
+	public int compareTo(IntervalBase comparedInterval) {
+		return getEnd().compareTo(comparedInterval.getEnd());
 	}
 
 }
