@@ -20,7 +20,9 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
  */
 public class IntervalTransferManager {
 
-	private static int UPDATE_RATE = 3 * 60 * 1000;
+	private static final int UPDATE_RATE = 3 * 60 * 1000;
+
+	private static final int intervalsPerRoundTransfer = 50;
 
 	private Timer timer;
 
@@ -77,21 +79,50 @@ public class IntervalTransferManager {
 				return;
 			}
 
-			JsonTransferer intervalTransferer = new JsonTransferer();
-			if (intervalTransferer.sendIntervals(intervalsToTransfer)) {
-				intervalPersister.clearAndResetMap();
-				lastTransferedIntervalKey = 0;
-				preferences.registerLastTransferedInterval(
-						UIUtils.getWorkspaceName(), lastTransferedIntervalKey);
-				preferences.addTransferedIntervals(intervalsToTransfer.size());
-				preferences.setLastTransferedInterval();
-				WatchDogGlobals.lastTransactionFailed = false;
-			} else {
-				WatchDogGlobals.lastTransactionFailed = true;
-				WatchDogLogger.getInstance().logSevere(
-						"Could not transfer intervals to server!");
-			}
+			transferIntervals(intervalsToTransfer);
+
 			UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);
+		}
+
+		private void transferIntervals(List<IntervalBase> intervalsToTransfer) {
+			JsonTransferer intervalTransferer = new JsonTransferer();
+
+			int transferRounds = (int) Math.ceil((double) intervalsToTransfer
+					.size() / intervalsPerRoundTransfer);
+			for (int i = 0; i < transferRounds; i++) {
+				int endIndex = i + 1 == transferRounds ? intervalsToTransfer
+						.size() : i * intervalsPerRoundTransfer + 1;
+				List<IntervalBase> intervalsToTransferInRound = intervalsToTransfer
+						.subList(i * intervalsPerRoundTransfer, endIndex);
+
+				if (intervalTransferer
+						.sendIntervals(intervalsToTransferInRound)) {
+					int roundIntervals = intervalsToTransferInRound.size();
+					lastTransferedIntervalKey += roundIntervals;
+					preferences.registerLastTransferedInterval(
+							UIUtils.getWorkspaceName(),
+							lastTransferedIntervalKey);
+					preferences.addTransferedIntervals(roundIntervals);
+					preferences.setLastTransferedInterval();
+					WatchDogGlobals.lastTransactionFailed = false;
+				} else {
+					WatchDogGlobals.lastTransactionFailed = true;
+					WatchDogLogger.getInstance().logSevere(
+							"Could not transfer intervals to server!");
+					break;
+				}
+			}
+
+			if (!WatchDogGlobals.lastTransactionFailed) {
+				resetDatabase();
+			}
+		}
+
+		private void resetDatabase() {
+			lastTransferedIntervalKey = 0;
+			preferences.registerLastTransferedInterval(
+					UIUtils.getWorkspaceName(), lastTransferedIntervalKey);
+			intervalPersister.clearAndResetMap();
 		}
 	}
 }

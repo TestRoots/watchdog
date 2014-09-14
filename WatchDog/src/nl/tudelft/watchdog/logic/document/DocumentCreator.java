@@ -21,7 +21,6 @@ public class DocumentCreator {
 	 * supplied part is an IEditorPart.
 	 */
 	public static Document createDocument(ITextEditor editor) {
-		long beginDate = System.nanoTime();
 		String activeProjectName;
 		if (editor.getEditorInput() instanceof IFileEditorInput) {
 			IFileEditorInput input = (IFileEditorInput) editor.getEditorInput();
@@ -34,9 +33,6 @@ public class DocumentCreator {
 		if (!StringUtilities.isEmpty(editor.getTitle())) {
 			title = editor.getTitle();
 		}
-		long endDate = System.nanoTime();
-		WatchDogLogger.getInstance().logInfo(
-				"get1: " + Long.toString(endDate - beginDate));
 
 		try {
 			return new Document(activeProjectName, title,
