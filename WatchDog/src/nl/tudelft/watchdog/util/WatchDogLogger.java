@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.logging;
+package nl.tudelft.watchdog.util;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.ui;
+package nl.tudelft.watchdog.logic.ui.events;
 
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;

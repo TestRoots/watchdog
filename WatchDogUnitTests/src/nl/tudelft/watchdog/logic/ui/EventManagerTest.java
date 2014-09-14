@@ -5,7 +5,8 @@ import nl.tudelft.watchdog.logic.interval.IntervalPersister;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
-import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
 
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.junit.Assert;

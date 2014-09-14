@@ -1,8 +1,8 @@
 package nl.tudelft.watchdog.logic.ui.listeners;
 
 import nl.tudelft.watchdog.logic.ui.EventManager;
-import nl.tudelft.watchdog.logic.ui.WatchDogEvent;
-import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
 
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveListener;

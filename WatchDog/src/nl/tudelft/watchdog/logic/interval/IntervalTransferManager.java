@@ -6,12 +6,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
+import nl.tudelft.watchdog.util.WatchDogLogger;
 
 /**
  * This manager takes care of the repeated transferal of all closed intervals to
@@ -101,7 +101,7 @@ public class IntervalTransferManager {
 				}
 
 				// divide and conquer
-				int halfOfIntervals = Math.floorDiv(intervals, 2);
+				int halfOfIntervals = (int) Math.floor(intervals / 2);
 				List<IntervalBase> firstHalfIntervals = intervalsToTransfer
 						.subList(0, halfOfIntervals);
 				List<IntervalBase> secondHalfIntervals = intervalsToTransfer

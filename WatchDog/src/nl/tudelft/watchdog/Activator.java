@@ -2,8 +2,8 @@ package nl.tudelft.watchdog;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
+import nl.tudelft.watchdog.util.WatchDogLogger;
 
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.InstanceScope;

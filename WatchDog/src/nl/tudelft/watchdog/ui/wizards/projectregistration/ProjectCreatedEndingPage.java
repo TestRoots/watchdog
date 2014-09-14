@@ -1,10 +1,10 @@
 package nl.tudelft.watchdog.ui.wizards.projectregistration;
 
-import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.ui.wizards.Project;
 import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPage;
+import nl.tudelft.watchdog.util.WatchDogLogger;
 
 /**
  * Possible finishing page in the wizard. If the project exists on the server,

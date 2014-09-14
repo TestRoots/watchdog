@@ -8,7 +8,7 @@ import java.util.List;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
-import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
+import nl.tudelft.watchdog.util.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 /** The interval manager handles the addition and removal */

@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Random;
 
-import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;

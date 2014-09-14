@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
+import nl.tudelft.watchdog.util.WatchDogLogger;
 
 import org.mapdb.DB;
 import org.mapdb.DBMaker;

@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.logic.ui;
 
-import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
 
 import org.junit.Before;
 import org.junit.Test;

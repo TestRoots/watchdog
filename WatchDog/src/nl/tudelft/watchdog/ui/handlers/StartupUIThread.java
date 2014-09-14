@@ -2,10 +2,10 @@ package nl.tudelft.watchdog.ui.handlers;
 
 import java.io.IOException;
 
-import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.preferences.WorkspacePreferenceSetting;
+import nl.tudelft.watchdog.util.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.core.commands.ExecutionEvent;

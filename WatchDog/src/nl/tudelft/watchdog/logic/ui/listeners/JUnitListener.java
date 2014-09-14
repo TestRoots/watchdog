@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.logic.ui.listeners;
 
 import nl.tudelft.watchdog.logic.interval.intervaltypes.JUnitInterval;
 import nl.tudelft.watchdog.logic.ui.EventManager;
-import nl.tudelft.watchdog.logic.ui.JUnitEvent;
+import nl.tudelft.watchdog.logic.ui.events.JUnitEvent;
 
 import org.eclipse.jdt.junit.JUnitCore;
 import org.eclipse.jdt.junit.TestRunListener;

@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.ui;
+package nl.tudelft.watchdog.logic.ui.events;
 
 /** Event that is thrown when a JUnit execution occurred. */
 public class JUnitEvent extends WatchDogEvent {

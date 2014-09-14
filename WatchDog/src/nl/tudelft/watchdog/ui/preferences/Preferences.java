@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.List;
 
 import nl.tudelft.watchdog.Activator;
-import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
+import nl.tudelft.watchdog.util.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.jface.preference.IPreferenceStore;

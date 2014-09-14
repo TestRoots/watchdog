@@ -3,8 +3,8 @@ package nl.tudelft.watchdog.logic.network;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
+import nl.tudelft.watchdog.util.WatchDogLogger;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;

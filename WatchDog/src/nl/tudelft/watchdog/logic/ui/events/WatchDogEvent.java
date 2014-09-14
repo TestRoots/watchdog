@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.ui;
+package nl.tudelft.watchdog.logic.ui.events;
 
 import java.util.EventObject;
 

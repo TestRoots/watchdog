@@ -3,7 +3,8 @@ package nl.tudelft.watchdog.logic.ui;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
 
 /**
  * A performance-optimized notifier for a timeout when its {@link #trigger()}
