@@ -34,7 +34,7 @@ public class NetworkUtils {
 		SUCCESSFUL,
 		/** Server returned something, but not the expected answer. */
 		UNSUCCESSFUL,
-		/** Network error. */
+		/** Network error. Can be temporary. */
 		NETWORK_ERROR
 	};
 

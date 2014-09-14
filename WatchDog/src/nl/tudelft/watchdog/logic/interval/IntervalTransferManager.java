@@ -89,6 +89,7 @@ public class IntervalTransferManager {
 				WatchDogLogger.getInstance().logSevere(
 						"Could not transfer interval and removed permanently!");
 				intervalPersister.removeIntervals(intervalsToTransfer);
+				WatchDogGlobals.lastTransactionFailed = true;
 				break;
 
 			case NETWORK_ERROR:
