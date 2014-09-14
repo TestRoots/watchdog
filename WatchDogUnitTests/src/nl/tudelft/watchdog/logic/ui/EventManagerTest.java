@@ -10,7 +10,6 @@ import nl.tudelft.watchdog.logic.ui.WatchDogEvent.EventType;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -38,26 +37,26 @@ public class EventManagerTest {
 	@Test
 	public void testCreateReadInterval() {
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
-		Mockito.verify(intervalManager).addEditorIntervalAndSetDocument(
+		Mockito.verify(intervalManager).addEditorInterval(
 				Mockito.isA(ReadingInterval.class));
 	}
 
 	@Test
 	public void testCreateReadIntervalOnlyOnce() {
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
-		Mockito.verify(intervalManager).addEditorIntervalAndSetDocument(
+		Mockito.verify(intervalManager).addEditorInterval(
 				Mockito.isA(ReadingInterval.class));
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 		eventManager.update(createMockEvent(EventType.PAINT));
-		Mockito.verify(intervalManager).addEditorIntervalAndSetDocument(
+		Mockito.verify(intervalManager).addEditorInterval(
 				Mockito.isA(ReadingInterval.class));
 	}
 
 	@Test
 	public void testReadIntervalIsClosed() {
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
-		Mockito.verify(intervalManager).addEditorIntervalAndSetDocument(
+		Mockito.verify(intervalManager).addEditorInterval(
 				Mockito.isA(ReadingInterval.class));
 		eventManager.update(createMockEvent(EventType.INACTIVE_FOCUS));
 		Mockito.verify(intervalManager, Mockito.atLeastOnce()).closeInterval(
@@ -68,22 +67,23 @@ public class EventManagerTest {
 	@Test
 	public void testCreateWriteInterval() {
 		eventManager.update(createMockEvent(EventType.EDIT));
-		Mockito.verify(intervalManager).addEditorIntervalAndSetDocument(
+		Mockito.verify(intervalManager).addEditorInterval(
 				Mockito.isA(TypingInterval.class));
 	}
 
 	@Test
 	public void testCreateWriteIntervalAndNotAReadInterval() {
+		eventManager.update(createMockEvent(EventType.START_EDIT));
 		eventManager.update(createMockEvent(EventType.EDIT));
-		Mockito.verify(intervalManager).addEditorIntervalAndSetDocument(
+		Mockito.verify(intervalManager, Mockito.atLeast(1)).addEditorInterval(
 				Mockito.isA(TypingInterval.class));
 		Mockito.verify(intervalManager, Mockito.never())
-				.addEditorIntervalAndSetDocument(
+				.addEditorInterval(
 						Mockito.isA(ReadingInterval.class));
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 		eventManager.update(createMockEvent(EventType.EDIT));
 		eventManager.update(createMockEvent(EventType.PAINT));
-		Mockito.verify(intervalManager).addEditorIntervalAndSetDocument(
+		Mockito.verify(intervalManager, Mockito.atLeast(1)).addEditorInterval(
 				Mockito.isA(TypingInterval.class));
 	}
 
@@ -128,7 +128,6 @@ public class EventManagerTest {
 	}
 
 	@Test
-	@Ignore
 	public void testReadingTimeoutIsProlonged() {
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
 		Mockito.verify(intervalManager,
@@ -139,7 +138,7 @@ public class EventManagerTest {
 				Mockito.timeout(TIMEOUT_GRACE_PERIOD).never()).closeInterval(
 				Mockito.any(IntervalBase.class));
 		Mockito.verify(intervalManager,
-				Mockito.timeout(TIMEOUT_GRACE_PERIOD * 2)).closeInterval(
+				Mockito.timeout(TIMEOUT_GRACE_PERIOD * 2).atLeast(1)).closeInterval(
 				Mockito.isA(ReadingInterval.class));
 		Assert.assertEquals(null, intervalManager.getEditorInterval());
 	}

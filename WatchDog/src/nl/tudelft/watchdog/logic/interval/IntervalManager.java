@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import nl.tudelft.watchdog.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
@@ -57,14 +56,15 @@ public class IntervalManager {
 	 * Adds the given EditorIntervalBase, if the existing editorInterval is
 	 * closed.
 	 */
-	public void addEditorIntervalAndSetDocument(
-			EditorIntervalBase editorInterval) {
-		if (this.editorInterval == null || this.editorInterval.isClosed()) {
-			this.editorInterval = editorInterval;
+	public void addEditorInterval(EditorIntervalBase editorInterval) {
+		if (!(this.editorInterval == null || this.editorInterval.isClosed())) {
+			WatchDogLogger.getInstance().logSevere(
+					"Failure: Unclosed editor interval! " + editorInterval);
+			closeInterval(this.editorInterval);
 		}
+
 		editorInterval.setSessionSeed(sessionSeed);
-		editorInterval.setDocument(DocumentCreator
-				.createDocument(editorInterval.getEditor()));
+		this.editorInterval = editorInterval;
 		WatchDogLogger.getInstance().logInfo(
 				"created new editor interval " + editorInterval);
 	}

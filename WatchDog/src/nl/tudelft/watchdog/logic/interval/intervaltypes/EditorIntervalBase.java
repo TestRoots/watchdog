@@ -40,9 +40,7 @@ public abstract class EditorIntervalBase extends IntervalBase {
 		return editor;
 	}
 
-	/**
-	 * @return the document the interval is associated with.
-	 */
+	/** @return the document the interval is associated with. */
 	public Document getDocument() {
 		return document;
 	}

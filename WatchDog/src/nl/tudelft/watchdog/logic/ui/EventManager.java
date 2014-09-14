@@ -1,6 +1,8 @@
 package nl.tudelft.watchdog.logic.ui;
 
 import nl.tudelft.watchdog.logic.InitializationManager;
+import nl.tudelft.watchdog.logic.document.Document;
+import nl.tudelft.watchdog.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
@@ -107,24 +109,36 @@ public class EventManager {
 					.getEditorInterval();
 			ITextEditor editor = (ITextEditor) event.getSource();
 
-			if (editorInterval == null
-					|| editorInterval.getType() != IntervalType.TYPING) {
-				readingInactivityNotifier.cancelTimer();
-				// create new typing interval
-				intervalManager.closeInterval(editorInterval);
-				intervalManager
-						.addEditorIntervalAndSetDocument(new TypingInterval(
-								editor));
+			readingInactivityNotifier.cancelTimer();
+			if (editorInterval != null
+					&& editorInterval.getType() == IntervalType.TYPING
+					&& editorInterval.getEditor() == editor) {
+				return;
 			}
+
+			intervalManager.closeInterval(editorInterval);
+
+			TypingInterval typingInterval = new TypingInterval(editor);
+			Document document = null;
+			if (editorInterval != null && editorInterval.getEditor() == editor) {
+				document = editorInterval.getDocument();
+			} else {
+				document = DocumentCreator.createDocument(editor);
+			}
+			typingInterval.setDocument(document);
+			intervalManager.addEditorInterval(typingInterval);
+
 			typingInactivityNotifier.trigger();
 			userInactivityNotifier.trigger();
 			break;
 
 		case EDIT:
 			editorInterval = intervalManager.getEditorInterval();
+			editor = (ITextEditor) event.getSource();
 
 			if (editorInterval == null
-					|| editorInterval.getType() != IntervalType.TYPING) {
+					|| editorInterval.getType() != IntervalType.TYPING
+					|| editorInterval.getEditor() != editor) {
 				update(new WatchDogEvent(event.getSource(),
 						EventType.START_EDIT));
 				break;
@@ -138,11 +152,12 @@ public class EventManager {
 		case CARET_MOVED:
 		case ACTIVE_FOCUS:
 			editorInterval = intervalManager.getEditorInterval();
-			if (editorInterval == null) {
+			if (editorInterval == null || editorInterval.isClosed()) {
 				editor = (ITextEditor) event.getSource();
-				intervalManager
-						.addEditorIntervalAndSetDocument(new ReadingInterval(
-								editor));
+				ReadingInterval readingInterval = new ReadingInterval(editor);
+				readingInterval.setDocument(DocumentCreator
+						.createDocument(editor));
+				intervalManager.addEditorInterval(readingInterval);
 			}
 			readingInactivityNotifier.trigger();
 			userInactivityNotifier.trigger();
