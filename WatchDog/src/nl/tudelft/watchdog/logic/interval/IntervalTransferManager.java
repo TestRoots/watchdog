@@ -87,17 +87,18 @@ public class IntervalTransferManager {
 				break;
 
 			case UNSUCCESSFUL:
-				WatchDogLogger.getInstance().logSevere(
-						"Could not transfer interval and removed permanently!");
-				intervalPersister.removeIntervals(intervalsToTransfer);
-				WatchDogGlobals.lastTransactionFailed = true;
-				break;
-
 			case NETWORK_ERROR:
 				WatchDogGlobals.lastTransactionFailed = true;
 				int intervals = intervalsToTransfer.size();
 
 				if (intervals == 1) {
+					if (connection == Connection.UNSUCCESSFUL) {
+						WatchDogLogger
+								.getInstance()
+								.logSevere(
+										"Could not transfer interval and removed permanently!");
+						intervalPersister.removeIntervals(intervalsToTransfer);
+					}
 					return;
 				}
 
