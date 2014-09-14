@@ -6,12 +6,13 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.Date;
 
-import nl.tudelft.watchdog.logic.exceptions.ServerCommunicationException;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.logic.network.NetworkUtils;
+import nl.tudelft.watchdog.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
+import nl.tudelft.watchdog.logic.network.ServerReturnCodeException;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -53,7 +54,7 @@ public class NetworkUtilsTest {
 		try {
 			NetworkUtils.transferJsonAndGetResponse(NetworkUtils.buildIntervalsPostURL(
 					fooBarUser, fooBarProject), json);
-		} catch (ServerCommunicationException e) {
+		} catch (ServerCommunicationException | ServerReturnCodeException e) {
 			fail(e.getMessage());
 		}
 	}

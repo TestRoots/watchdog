@@ -1,14 +1,9 @@
-package nl.tudelft.watchdog.logic.exceptions;
+package nl.tudelft.watchdog.util;
 
 /** Exception thrown if the contents of an editor could not be read. */
 public class ContentReaderException extends Exception {
 	/** Version. */
 	private static final long serialVersionUID = 1L;
-
-	/** Constructor. */
-	public ContentReaderException() {
-		super();
-	}
 
 	/** Constructor. */
 	public ContentReaderException(String message) {

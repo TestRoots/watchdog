@@ -3,7 +3,6 @@ package nl.tudelft.watchdog.logic.network;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import nl.tudelft.watchdog.logic.exceptions.ServerCommunicationException;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 
@@ -101,9 +100,11 @@ public class NetworkUtils {
 	 * 
 	 * @return The InputStream from the response.
 	 * @throws ServerCommunicationException
+	 * @throws ServerReturnCodeException
 	 */
 	public static HttpEntity transferJsonAndGetResponse(String url,
-			String jsonData) throws ServerCommunicationException {
+			String jsonData) throws ServerCommunicationException,
+			ServerReturnCodeException {
 		HttpClient client = createHTTPClient();
 		HttpPost post = new HttpPost(url);
 		String errorMessage = "";
@@ -112,7 +113,7 @@ public class NetworkUtils {
 			StringEntity input = new StringEntity(jsonData);
 			WatchDogLogger.getInstance().logInfo(
 					"Data length: " + ((double) input.getContentLength())
-							/ 1024 + "kB");
+							/ 1024 + " kB");
 			input.setContentType("application/json");
 			post.setEntity(input);
 
@@ -121,10 +122,10 @@ public class NetworkUtils {
 				return response.getEntity();
 			} else {
 				// server returns not created
-				errorMessage = "Failed to execute request on server (status code: "
-						+ response.getStatusLine().getStatusCode()
-						+ "). "
-						+ readResponse(response.getEntity());
+				throw new ServerReturnCodeException(
+						"Failed to execute request on server (status code: "
+								+ response.getStatusLine().getStatusCode()
+								+ "). " + readResponse(response.getEntity()));
 			}
 		} catch (IOException e) {
 			// server unreachable case

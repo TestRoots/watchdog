@@ -1,7 +1,7 @@
 package nl.tudelft.watchdog.logic.document;
 
-import nl.tudelft.watchdog.logic.exceptions.ContentReaderException;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
+import nl.tudelft.watchdog.util.ContentReaderException;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.core.resources.IProject;

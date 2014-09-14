@@ -6,7 +6,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
+import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
@@ -73,22 +75,30 @@ public class IntervalTransferManager {
 
 		private void transferIntervals(List<IntervalBase> intervalsToTransfer) {
 			JsonTransferer intervalTransferer = new JsonTransferer();
-			if (intervalTransferer.sendIntervals(intervalsToTransfer)) {
-				// success scenario
+
+			Connection connection = intervalTransferer
+					.sendIntervals(intervalsToTransfer);
+			switch (connection) {
+			case SUCCESSFUL:
 				intervalPersister.removeIntervals(intervalsToTransfer);
 				preferences.setLastTransferedInterval();
 				WatchDogGlobals.lastTransactionFailed = false;
-			} else {
+				break;
+
+			case UNSUCCESSFUL:
+				WatchDogLogger.getInstance().logSevere(
+						"Could not transfer interval and removed permanently!");
+				intervalPersister.removeIntervals(intervalsToTransfer);
+				break;
+
+			case NETWORK_ERROR:
+				WatchDogGlobals.lastTransactionFailed = true;
 				int intervals = intervalsToTransfer.size();
-				// failure scenario
+
 				if (intervals == 1) {
-					// TODO (MMB) react to Network error scenario
-					// currently, Intervals that are not transferable remain in
-					// the database and clutter it, but do not prevent new
-					// intervals being sent.
-					WatchDogGlobals.lastTransactionFailed = true;
 					return;
 				}
+
 				// divide and conquer
 				int halfOfIntervals = Math.floorDiv(intervals, 2);
 				List<IntervalBase> firstHalfIntervals = intervalsToTransfer
@@ -97,6 +107,7 @@ public class IntervalTransferManager {
 						.subList(halfOfIntervals, intervals);
 				transferIntervals(firstHalfIntervals);
 				transferIntervals(secondHalfIntervals);
+				break;
 			}
 
 		}

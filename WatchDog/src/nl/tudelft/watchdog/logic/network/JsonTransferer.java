@@ -4,8 +4,8 @@ import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 
-import nl.tudelft.watchdog.logic.exceptions.ServerCommunicationException;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
 import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.wizards.Project;
@@ -43,7 +43,7 @@ public class JsonTransferer {
 	 * Sends the recorded intervals to the server. Returns <code>true</code> on
 	 * successful transfer, <code>false</code> otherwise.
 	 */
-	public boolean sendIntervals(List<IntervalBase> recordedIntervals) {
+	public Connection sendIntervals(List<IntervalBase> recordedIntervals) {
 		String userid = Preferences.getInstance().getUserid();
 		String projectid = Preferences.getInstance()
 				.getOrCreateWorkspaceSetting(UIUtils.getWorkspaceName()).projectId;
@@ -52,9 +52,11 @@ public class JsonTransferer {
 			NetworkUtils
 					.transferJsonAndGetResponse(NetworkUtils
 							.buildIntervalsPostURL(userid, projectid), json);
-			return true;
+			return Connection.SUCCESSFUL;
+		} catch (ServerReturnCodeException exception) {
+			return Connection.UNSUCCESSFUL;
 		} catch (ServerCommunicationException | IllegalArgumentException exception) {
-			return false;
+			return Connection.NETWORK_ERROR;
 		}
 	}
 
@@ -81,13 +83,18 @@ public class JsonTransferer {
 	 * the server.
 	 * 
 	 * @throws ServerCommunicationException
+	 * @throws
 	 */
 	public String registerNew(String postURL, String json)
 			throws ServerCommunicationException {
-		HttpEntity inputStream = NetworkUtils.transferJsonAndGetResponse(
-				postURL, json);
-		String jsonResponse = NetworkUtils.readResponse(inputStream);
-		return gson.fromJson(jsonResponse, String.class);
+		try {
+			HttpEntity inputStream = NetworkUtils.transferJsonAndGetResponse(
+					postURL, json);
+			String jsonResponse = NetworkUtils.readResponse(inputStream);
+			return gson.fromJson(jsonResponse, String.class);
+		} catch (ServerReturnCodeException exception) {
+			throw new ServerCommunicationException(exception.getMessage());
+		}
 	}
 
 	/**
