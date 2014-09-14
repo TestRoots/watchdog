@@ -1,9 +1,8 @@
 package nl.tudelft.watchdog.logic.interval;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.NavigableMap;
+import java.util.Set;
 
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.logging.WatchDogLogger;
@@ -23,7 +22,7 @@ public class IntervalPersister {
 	private DB database;
 
 	/** In memory representation of the interval store */
-	private NavigableMap<Long, IntervalBase> map;
+	private Set<IntervalBase> set;
 
 	private File file;
 
@@ -46,7 +45,7 @@ public class IntervalPersister {
 		}
 		try {
 			// Compact database on every 10th new interval.
-			if (!map.isEmpty() && map.size() % 10 == 0) {
+			if (!set.isEmpty() && set.size() % 10 == 0) {
 				database.compact();
 			}
 		} catch (Error e) {
@@ -57,10 +56,14 @@ public class IntervalPersister {
 	private void initalizeDatabase(File file) {
 		try {
 			database = createDatabase(file);
-			map = database.getTreeMap(INTERVALS);
+			set = createSet();
 		} catch (RuntimeException e) {
 			recreateDatabase(file);
 		}
+	}
+
+	private Set<IntervalBase> createSet() {
+		return database.getHashSet(INTERVALS);
 	}
 
 	private DB createDatabase(final File file) {
@@ -83,30 +86,15 @@ public class IntervalPersister {
 		axuiliaryDatabaseFile.delete();
 	}
 
-	/**
-	 * Read all intervals starting from @from (inclusive) return them as a List.
-	 */
-	public List<IntervalBase> readIntervals(final long from) {
-		return readIntervals(from, Long.MAX_VALUE);
-	}
-
-	/**
-	 * Read intervals between @from (inclusive) and @to (exclusive) and return
-	 * them as a List. In case of any database error, returns a new empty list.
-	 */
-	public List<IntervalBase> readIntervals(final long from, final long to) {
-		try {
-			return new ArrayList<IntervalBase>(map.subMap(from, to).values());
-		} catch (RuntimeException exception) {
-			WatchDogLogger.getInstance().logSevere(exception);
-		}
-		return new ArrayList<IntervalBase>();
+	/** Reads all intervals and returns them as a List. */
+	public Set<IntervalBase> readIntervals() {
+		return set;
 	}
 
 	/** Saves one interval to persistent storage */
 	public void saveInterval(IntervalBase interval) {
 		try {
-			map.put(getHighestKey() + 1, interval);
+			set.add(interval);
 			// persist changes to disk
 			database.commit();
 		} catch (Error error) {
@@ -119,10 +107,18 @@ public class IntervalPersister {
 
 	}
 
+	/** Removes the intervals from the database.. */
+	public void removeIntervals(List<IntervalBase> intervalsToRemove) {
+		for (IntervalBase interval : intervalsToRemove) {
+			set.remove(interval);
+		}
+		database.commit();
+	}
+
 	/** @return The highest key in the database. -1, if the database is empty */
-	public long getHighestKey() {
+	public long getSize() {
 		try {
-			return map.lastKey();
+			return set.size();
 		} catch (Error | RuntimeException e) {
 			return -1;
 		}
@@ -143,7 +139,7 @@ public class IntervalPersister {
 		if (database != null && !database.isClosed()) {
 			database.delete(INTERVALS);
 			database.commit();
-			map = database.getTreeMap(INTERVALS);
+			set = createSet();
 		}
 	}
 }

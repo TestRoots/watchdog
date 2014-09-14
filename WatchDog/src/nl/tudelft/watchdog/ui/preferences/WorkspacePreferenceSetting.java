@@ -9,12 +9,6 @@ public class WorkspacePreferenceSetting {
 	public String projectId = "";
 
 	/**
-	 * A pointer to the Persistence storage denoting the last transfered
-	 * interval.
-	 */
-	public long lastTransferedInterval = -1;
-
-	/**
 	 * Flag denoting whether Watchdog should be activated for this workspace (
 	 * <code>true</code>), or not.
 	 */

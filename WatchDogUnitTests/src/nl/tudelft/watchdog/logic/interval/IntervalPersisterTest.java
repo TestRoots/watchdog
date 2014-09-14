@@ -45,7 +45,7 @@ public class IntervalPersisterTest {
 
 	@Test
 	public void test0DatabaseEmpty() {
-		assertEquals(-1, persister.getHighestKey());
+		assertEquals(-1, persister.getSize());
 	}
 
 	@Test
@@ -64,8 +64,8 @@ public class IntervalPersisterTest {
 			persister.saveInterval(intervalBase);
 		}
 
-		List<IntervalBase> readIntervals = persister.readIntervals(0,
-				Long.MAX_VALUE);
+		List<IntervalBase> readIntervals = new ArrayList<IntervalBase>(
+				persister.readIntervals());
 		assertEquals(readIntervals.size(), items);
 
 		// Test order of returned results
@@ -94,13 +94,13 @@ public class IntervalPersisterTest {
 
 	@Test
 	public void test2DatabasePersisted() {
-		assertEquals(99, persister.getHighestKey());
+		assertEquals(99, persister.getSize());
 	}
 
 	@Test
 	public void test3DatabaseCleared() {
 		persister.clearAndResetMap();
-		assertEquals(-1, persister.getHighestKey());
+		assertEquals(-1, persister.getSize());
 	}
 
 }
