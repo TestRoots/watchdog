@@ -113,7 +113,6 @@ public class NetworkUtils {
 			WatchDogLogger.getInstance().logInfo(
 					"Data length: " + ((double) input.getContentLength())
 							/ 1024 + "kB");
-			WatchDogLogger.getInstance().logInfo(jsonData);
 			input.setContentType("application/json");
 			post.setEntity(input);
 
