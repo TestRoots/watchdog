@@ -19,6 +19,8 @@ public class WatchDogLogger {
 	/** Determines whether the logger is setup. */
 	private boolean isLoggerSetup = false;
 
+	private File logDirectory;
+
 	/** The singleton instance of the interval manager. */
 	private static volatile WatchDogLogger instance = null;
 
@@ -41,8 +43,8 @@ public class WatchDogLogger {
 		logInfo("Starting up WatchDogLogger...");
 
 		try {
-			File parent = new File("watchdog/logs/");
-			parent.mkdirs();
+			logDirectory = new File("watchdog/logs/");
+			logDirectory.mkdirs();
 
 			FileHandler fileHandler = new FileHandler(
 					"watchdog/logs/watchdoglog.log", true);
@@ -119,6 +121,11 @@ public class WatchDogLogger {
 			return;
 		}
 		logger.log(level, message, throwable);
+	}
+
+	/** @return the path where all the log files are stored. */
+	public String getLogDirectoryPath() {
+		return logDirectory.getAbsolutePath();
 	}
 
 }

@@ -11,6 +11,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -219,6 +220,23 @@ public class UIUtils {
 		Label label = createLabel(text, parent);
 		label.setForeground(color);
 		return label;
+	}
+
+	/** Creates a centered label containing the WatchDogLogo. */
+	public static Label createWatchDogLogo(Composite logoContainer) {
+		return createLogo(logoContainer, "resources/images/watchdog_small.png");
+	}
+
+	/** Creates a logo from the given image url. */
+	public static Label createLogo(Composite logoContainer, String imageLocation) {
+		Label watchdogLogo = new Label(logoContainer, SWT.NONE);
+		ImageDescriptor watchdogLogoImageDescriptor = Activator
+				.imageDescriptorFromPlugin(Activator.PLUGIN_ID, imageLocation);
+		Image watchdogLogoImage = watchdogLogoImageDescriptor.createImage();
+		watchdogLogo.setImage(watchdogLogoImage);
+		watchdogLogo.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING,
+				true, false));
+		return watchdogLogo;
 	}
 
 	/** Invokes the supplied command. */

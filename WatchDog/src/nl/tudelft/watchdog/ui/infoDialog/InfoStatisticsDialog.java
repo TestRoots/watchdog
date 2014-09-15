@@ -8,6 +8,7 @@ import nl.tudelft.watchdog.ui.preferences.WorkspacePreferenceSetting;
 import nl.tudelft.watchdog.ui.util.BrowserOpenerSelection;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
+import nl.tudelft.watchdog.util.WatchDogLogger;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -16,10 +17,12 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.PreferencesUtil;
@@ -49,15 +52,10 @@ public class InfoStatisticsDialog extends Dialog {
 		return container;
 	}
 
-	private void createStaticLinks(Composite container) {
-		createProblemLink(container, new BrowserOpenerSelection(),
-				"Report a bug.", "https://github.com/TestRoots/watchdog/issues");
-	}
-
 	/** Creates a grid layout for the given {@link Composite}. */
 	private void createGridLayout(Composite container) {
 		final int layoutMargin = 10;
-		GridLayout layout = new GridLayout(2, false);
+		GridLayout layout = new GridLayout(1, false);
 		layout.marginTop = layoutMargin;
 		layout.marginLeft = layoutMargin;
 		layout.marginBottom = layoutMargin;
@@ -66,7 +64,17 @@ public class InfoStatisticsDialog extends Dialog {
 	}
 
 	/** Creates a label with the status of WatchDog plugin. */
-	private void createStatusText(Composite container) {
+	private void createStatusText(Composite parentContainer) {
+		Composite logoContainer = UIUtils.createFullGridedComposite(
+				parentContainer, 1);
+		logoContainer.setData(new GridData(SWT.CENTER, SWT.NONE, true, false));
+		Label watchdogLogo = UIUtils.createWatchDogLogo(logoContainer);
+		watchdogLogo.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING,
+				true, false));
+		UIUtils.createLabel(" ", logoContainer);
+
+		Composite container = UIUtils.createZeroMarginGridedComposite(
+				parentContainer, 2);
 		colorRed = new Color(getShell().getDisplay(), 255, 0, 0);
 		colorGreen = new Color(getShell().getDisplay(), 0, 150, 0);
 		UIUtils.createLabel("WatchDog Status: ", container);
@@ -174,16 +182,34 @@ public class InfoStatisticsDialog extends Dialog {
 		}
 	}
 
+	private void createStaticLinks(Composite parentContainer) {
+		Composite container = UIUtils.createFullGridedComposite(
+				parentContainer, 3);
+		container.setData(new GridData(SWT.CENTER, SWT.NONE, true, false));
+
+		createProblemLink(container, new BrowserOpenerSelection(),
+				"Report a bug.", "https://github.com/TestRoots/watchdog/issues")
+				.setLayoutData(UIUtils.createFullGridUsageData());
+		createProblemLink(container, new BrowserOpenerSelection(),
+				"Open logs.",
+				"file://" + WatchDogLogger.getInstance().getLogDirectoryPath())
+				.setLayoutData(UIUtils.createFullGridUsageData());
+		createProblemLink(container, new PreferenceListener(),
+				"Open Preferences.", "").setLayoutData(
+				UIUtils.createFullGridUsageData());
+	}
+
 	private void createFixThisProblemLink(Composite localGrid,
 			SelectionListener listener) {
 		createProblemLink(localGrid, listener, "Fix this.", "");
 	}
 
-	private void createProblemLink(Composite localGrid,
+	private Link createProblemLink(Composite localGrid,
 			SelectionListener listener, String description, String url) {
 		Link link = new Link(localGrid, SWT.WRAP);
 		link.setText("<a href=\"" + url + "\">" + description + "</a>");
 		link.addSelectionListener(listener);
+		return link;
 	}
 
 	/** {@inheritDoc} Disables the creation of a cancel button in the dialog */
@@ -206,7 +232,7 @@ public class InfoStatisticsDialog extends Dialog {
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(460, 355);
+		return new Point(450, 450);
 	}
 
 	private class PreferenceListener extends DefaultSelectionListener {
