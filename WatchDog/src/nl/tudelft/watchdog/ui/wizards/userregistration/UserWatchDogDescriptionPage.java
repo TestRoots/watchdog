@@ -1,20 +1,14 @@
 package nl.tudelft.watchdog.ui.wizards.userregistration;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
+import nl.tudelft.watchdog.ui.util.BrowserOpenerSelection;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * A page that contains the WatchDog project description.
@@ -51,19 +45,7 @@ public class UserWatchDogDescriptionPage extends FinishableWizardPage {
 
 		linkedText = new Link(composite, SWT.WRAP);
 		linkedText.setText("");
-		linkedText.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent event) {
-				try {
-					// Open default external browser
-					PlatformUI.getWorkbench().getBrowserSupport()
-							.getExternalBrowser().openURL(new URL(event.text));
-				} catch (PartInitException | MalformedURLException exception) {
-					// Browser could not be opened. We do nothing about it.
-				}
-			}
-		});
+		linkedText.addSelectionListener(new BrowserOpenerSelection());
 
 		return composite;
 	}

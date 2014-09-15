@@ -5,6 +5,7 @@ import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
 import nl.tudelft.watchdog.ui.preferences.PreferencePage;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.preferences.WorkspacePreferenceSetting;
+import nl.tudelft.watchdog.ui.util.BrowserOpenerSelection;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
@@ -43,8 +44,14 @@ public class InfoStatisticsDialog extends Dialog {
 		Composite container = (Composite) super.createDialogArea(parent);
 		createGridLayout(container);
 		createStatusText(container);
+		createStaticLinks(container);
 
 		return container;
+	}
+
+	private void createStaticLinks(Composite container) {
+		createProblemLink(container, new BrowserOpenerSelection(),
+				"Report a bug.", "https://github.com/TestRoots/watchdog/issues");
 	}
 
 	/** Creates a grid layout for the given {@link Composite}. */
@@ -103,6 +110,9 @@ public class InfoStatisticsDialog extends Dialog {
 					UIUtils.invokeCommand("org.eclipse.equinox.p2.ui.sdk.update");
 				}
 			});
+		} else {
+			UIUtils.createLabel(" ", container);
+
 		}
 		UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);
 	}
@@ -166,8 +176,13 @@ public class InfoStatisticsDialog extends Dialog {
 
 	private void createFixThisProblemLink(Composite localGrid,
 			SelectionListener listener) {
+		createProblemLink(localGrid, listener, "Fix this.", "");
+	}
+
+	private void createProblemLink(Composite localGrid,
+			SelectionListener listener, String description, String url) {
 		Link link = new Link(localGrid, SWT.WRAP);
-		link.setText("<a href=\"\">Fix this.</a>");
+		link.setText("<a href=\"" + url + "\">" + description + "</a>");
 		link.addSelectionListener(listener);
 	}
 
