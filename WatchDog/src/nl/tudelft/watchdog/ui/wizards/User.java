@@ -22,6 +22,9 @@ public class User {
 	/** Group. */
 	public String group;
 
+	/** The programming experience. */
+	public String programmingExperience;
+
 	/**
 	 * Whether the user participates in the lottery, and whether we may contact
 	 * him.

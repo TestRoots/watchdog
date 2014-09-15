@@ -17,6 +17,7 @@ class UserRegistrationEndingPage extends RegistrationEndingPage {
 		user.organization = page.getOrganizationInput().getText();
 		user.group = page.getGroupInput().getText();
 		user.mayContactUser = page.getMayContactUser();
+		user.programmingExperience = page.getProgrammingExperience();
 		user.operatingSystem = Platform.getOS();
 
 		windowTitle = "User Registration";

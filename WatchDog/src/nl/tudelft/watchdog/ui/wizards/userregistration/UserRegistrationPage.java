@@ -8,6 +8,7 @@ import nl.tudelft.watchdog.util.WatchDogUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
@@ -27,6 +28,8 @@ class UserRegistrationPage extends FinishableWizardPage {
 
 	/** User may be contacted. */
 	private Button mayContactButton;
+
+	private Combo experienceDropDown;
 
 	/** Constructor. */
 	protected UserRegistrationPage() {
@@ -73,6 +76,15 @@ class UserRegistrationPage extends FinishableWizardPage {
 		FormValidationListener formValidator = new FormValidationListener(this);
 		emailInput.addModifyListener(formValidator);
 
+		UIUtils.createLabel("Your Programming Experience: ", composite);
+		experienceDropDown = new Combo(composite, SWT.DROP_DOWN | SWT.BORDER);
+		experienceDropDown.add("< 1 year");
+		experienceDropDown.add("1-2 years");
+		experienceDropDown.add("3-6 years");
+		experienceDropDown.add("7-10 years");
+		experienceDropDown.add("> 10 years");
+		experienceDropDown.addModifyListener(formValidator);
+
 		mayContactButton = new Button(innerParent, SWT.CHECK);
 		mayContactButton
 				.setText("I want to win prizes! The lovely TestRoots team from TU Delft may contact me.");
@@ -89,19 +101,23 @@ class UserRegistrationPage extends FinishableWizardPage {
 
 	@Override
 	public void validateFormInputs() {
+		setErrorMessageAndPageComplete(null);
 		if (!WatchDogUtils.isEmpty(emailInput.getText())) {
 			if (!EmailValidator.getInstance(false)
 					.isValid(emailInput.getText())) {
 				setErrorMessageAndPageComplete("Your mail address is not valid!");
-			} else {
-				setErrorMessageAndPageComplete(null);
 			}
-		} else if (WatchDogUtils.isEmpty(emailInput.getText())
+		}
+		if (WatchDogUtils.isEmpty(emailInput.getText())
 				&& mayContactButton.getSelection()) {
 			setErrorMessageAndPageComplete("You can only participate in the lottery if you enter your email address.");
-		} else {
-			setErrorMessageAndPageComplete(null);
 		}
+
+		if (WatchDogUtils
+				.isEmptyOrHasOnlyWhitespaces(getProgrammingExperience())) {
+			setErrorMessage("Please fill in your years of programming experience");
+		}
+
 		getWizard().getContainer().updateButtons();
 	}
 
@@ -118,6 +134,11 @@ class UserRegistrationPage extends FinishableWizardPage {
 	/** @return the group */
 	public Text getGroupInput() {
 		return groupInput;
+	}
+
+	/** @return the programming experience in years. */
+	public String getProgrammingExperience() {
+		return experienceDropDown.getText();
 	}
 
 	/**
