@@ -22,7 +22,7 @@ import nl.tudelft.watchdog.util.WatchDogLogger;
  */
 public class IntervalTransferManager {
 
-	private static final int UPDATE_RATE = 1 * 1000;
+	private static final int UPDATE_RATE = 3 * 60 * 1000;
 
 	private Timer timer;
 

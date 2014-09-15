@@ -77,7 +77,8 @@ class UserRegistrationPage extends FinishableWizardPage {
 		emailInput.addModifyListener(formValidator);
 
 		UIUtils.createLabel("Your Programming Experience: ", composite);
-		experienceDropDown = new Combo(composite, SWT.DROP_DOWN | SWT.BORDER);
+		experienceDropDown = new Combo(composite, SWT.DROP_DOWN | SWT.BORDER
+				| SWT.READ_ONLY);
 		experienceDropDown.add("< 1 year");
 		experienceDropDown.add("1-2 years");
 		experienceDropDown.add("3-6 years");
@@ -102,20 +103,21 @@ class UserRegistrationPage extends FinishableWizardPage {
 	@Override
 	public void validateFormInputs() {
 		setErrorMessageAndPageComplete(null);
+		if (WatchDogUtils
+				.isEmptyOrHasOnlyWhitespaces(getProgrammingExperience())) {
+			setErrorMessageAndPageComplete("Please fill in your years of programming experience");
+		}
+
 		if (!WatchDogUtils.isEmpty(emailInput.getText())) {
 			if (!EmailValidator.getInstance(false)
 					.isValid(emailInput.getText())) {
 				setErrorMessageAndPageComplete("Your mail address is not valid!");
 			}
 		}
+
 		if (WatchDogUtils.isEmpty(emailInput.getText())
 				&& mayContactButton.getSelection()) {
 			setErrorMessageAndPageComplete("You can only participate in the lottery if you enter your email address.");
-		}
-
-		if (WatchDogUtils
-				.isEmptyOrHasOnlyWhitespaces(getProgrammingExperience())) {
-			setErrorMessage("Please fill in your years of programming experience");
 		}
 
 		getWizard().getContainer().updateButtons();
