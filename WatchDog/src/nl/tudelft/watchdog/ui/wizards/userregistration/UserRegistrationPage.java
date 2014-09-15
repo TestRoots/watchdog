@@ -94,7 +94,7 @@ class UserRegistrationPage extends FinishableWizardPage {
 
 		UIUtils.createLabel("", innerParent);
 		UIUtils.createLabel(
-				"You can stay anonymous (by leaving everything empty). But please consider registering, you can win prizes!",
+				"You can stay anonymous. But please consider registering, you can win prizes!",
 				innerParent);
 
 		return innerParent;
