@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.ui.wizards.userregistration;
 
-import nl.tudelft.watchdog.ui.UIUtils;
+import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 import nl.tudelft.watchdog.ui.wizards.FormValidationListener;
 import nl.tudelft.watchdog.util.WatchDogUtils;

@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.ui.wizards.userregistration;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import nl.tudelft.watchdog.ui.UIUtils;
+import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 
 import org.eclipse.swt.SWT;

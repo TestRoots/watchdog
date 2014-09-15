@@ -6,8 +6,8 @@ import java.util.List;
 
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
-import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
+import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.Project;
 import nl.tudelft.watchdog.ui.wizards.User;
 

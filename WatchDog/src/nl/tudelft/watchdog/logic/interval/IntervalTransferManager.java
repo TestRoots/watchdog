@@ -8,8 +8,8 @@ import java.util.TimerTask;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
-import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
+import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 import nl.tudelft.watchdog.util.WatchDogLogger;
 
@@ -22,7 +22,7 @@ import nl.tudelft.watchdog.util.WatchDogLogger;
  */
 public class IntervalTransferManager {
 
-	private static final int UPDATE_RATE = 3 * 60 * 1000;
+	private static final int UPDATE_RATE = 1 * 1000;
 
 	private Timer timer;
 

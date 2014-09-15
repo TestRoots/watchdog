@@ -3,8 +3,8 @@ package nl.tudelft.watchdog.logic.network;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
+import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 /**

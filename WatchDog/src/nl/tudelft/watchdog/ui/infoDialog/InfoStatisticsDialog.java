@@ -2,10 +2,10 @@ package nl.tudelft.watchdog.ui.infoDialog;
 
 import nl.tudelft.watchdog.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
-import nl.tudelft.watchdog.ui.UIUtils;
 import nl.tudelft.watchdog.ui.preferences.PreferencePage;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.preferences.WorkspacePreferenceSetting;
+import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.jface.dialogs.Dialog;

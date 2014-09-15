@@ -1,12 +1,9 @@
-package nl.tudelft.watchdog.ui;
+package nl.tudelft.watchdog.ui.util;
 
 import nl.tudelft.watchdog.Activator;
+import nl.tudelft.watchdog.ui.util.CommandExecuterBase.CommandExecuter;
+import nl.tudelft.watchdog.ui.util.CommandExecuterBase.CommandRefresher;
 
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.NotEnabledException;
-import org.eclipse.core.commands.NotHandledException;
-import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
@@ -20,12 +17,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 
 /** Utility methods for the UI. */
 public class UIUtils {
+
 	/** The warning displayed when WatchDog is not active. */
 	public static final String WATCHDOG_WARNING = "WatchDog only works when you register a (possibly anonymous) user.\n\nTakes less than one minute,  and you can win prices. As a registered user, you decide where WatchDog is active.";
 
@@ -226,35 +221,14 @@ public class UIUtils {
 		return label;
 	}
 
-	private static ICommandService getCommandService() {
-		IWorkbenchWindow window = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow();
-		if (window == null) {
-			return null;
-		}
-		return (ICommandService) window.getService(ICommandService.class);
-	}
-
 	/** Invokes the supplied command. */
-	public static void invokeCommand(String command) {
-		ICommandService commandService = getCommandService();
-
-		if (commandService != null) {
-			try {
-				commandService.getCommand(command).executeWithChecks(
-						new ExecutionEvent());
-			} catch (ExecutionException | NotDefinedException
-					| NotEnabledException | NotHandledException exception) {
-			}
-		}
+	public static void invokeCommand(final String command) {
+		new CommandExecuter(command).execute();
 	}
 
 	/** Refreshes the supplied command's ui elements. */
-	public static void refreshCommand(String command) {
-		ICommandService commandService = getCommandService();
-
-		if (commandService != null) {
-			commandService.refreshElements(command, null);
-		}
+	public static void refreshCommand(final String command) {
+		new CommandRefresher(command).execute();
 	}
+
 }

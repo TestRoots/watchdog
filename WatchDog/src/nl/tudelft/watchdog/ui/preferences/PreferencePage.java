@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.ui.preferences;
 
-import nl.tudelft.watchdog.ui.UIUtils;
+import nl.tudelft.watchdog.ui.util.UIUtils;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
