@@ -26,7 +26,6 @@ public class IntervalToJsonConverterTest {
 	@Test
 	public void testJsonReadingIntervalRepresentation() {
 		ReadingInterval interval = new ReadingInterval(null);
-		interval.setUserid("123");
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
@@ -35,17 +34,37 @@ public class IntervalToJsonConverterTest {
 				intervalTransferer.toJson(intervals));
 	}
 
-	/** Tests the format of the returned Json representation. */
+	/**
+	 * Tests the format of the returned Json representation, if one of the
+	 * typing intervals does not have its ending document properly set.
+	 */
 	@Test
-	public void testJsonTypingIntervalRepresentation() {
+	public void testJsonTypingIntervalMissingDocumentRepresentation() {
 		ITextEditor editor = Mockito.mock(ITextEditor.class);
 		TypingInterval interval = new TypingInterval(editor);
-		interval.setUserid("123");
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
-				"[{\"endingDocument\":{\"pn\":\"da39a3ee5e6b4b0d3255bfef95601890afd80709\",\"fn\":\"da39a3ee5e6b4b0d3255bfef95601890afd80709\",\"sloc\":0,\"dt\":\"un\"},\"diff\":13,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"1.0\"}]",
+				"[{\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"1.0\"}]",
+				intervalTransferer.toJson(intervals));
+	}
+
+	/** Tests the format of the returned Json representation. */
+	@Test
+	public void testJsonTypingIntervalTwoSameIntervalsRepresentation() {
+		ITextEditor editor = Mockito.mock(ITextEditor.class);
+		TypingInterval interval = new TypingInterval(editor);
+		interval.setDocument(new Document("Project", "Production.java",
+				"blah-document"));
+		interval.setEndingDocument(new Document("Project", "Production.java",
+				"blah-document"));
+
+		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
+
+		JsonTransferer intervalTransferer = new JsonTransferer();
+		assertEquals(
+				"[{\"endingDocument\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"diff\":0,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\"1.0\"}]",
 				intervalTransferer.toJson(intervals));
 	}
 
@@ -53,7 +72,6 @@ public class IntervalToJsonConverterTest {
 	@Test
 	public void testJsonSessionIntervalRepresentation() {
 		IntervalBase interval = new IntervalBase(IntervalType.ECLIPSE_OPEN);
-		interval.setUserid("123");
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		JsonTransferer intervalTransferer = new JsonTransferer();
@@ -64,18 +82,16 @@ public class IntervalToJsonConverterTest {
 
 	private ArrayList<IntervalBase> createSampleIntervals(
 			EditorIntervalBase interval) {
-		ArrayList<IntervalBase> intervals = new ArrayList<IntervalBase>();
 		interval.setDocument(new Document("Project", "Production.java",
 				"blah-document"));
-		interval.close();
-		interval.setStartTime(new Date(1));
-		interval.setEndTime(new Date(2));
-		intervals.add(interval);
+		ArrayList<IntervalBase> intervals = createSampleIntervals((IntervalBase) interval);
 		return intervals;
 	}
 
 	private ArrayList<IntervalBase> createSampleIntervals(IntervalBase interval) {
 		ArrayList<IntervalBase> intervals = new ArrayList<IntervalBase>();
+		interval.close();
+		interval.setUserid("123");
 		interval.setStartTime(new Date(1));
 		interval.setEndTime(new Date(2));
 		intervals.add(interval);

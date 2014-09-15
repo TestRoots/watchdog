@@ -5,9 +5,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import nl.tudelft.watchdog.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.util.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
@@ -76,6 +78,11 @@ public class IntervalManager {
 	public void closeInterval(IntervalBase interval) {
 		if (interval == null) {
 			return;
+		}
+		if (interval instanceof TypingInterval) {
+			TypingInterval typingInterval = (TypingInterval) interval;
+			typingInterval.setEndingDocument(DocumentCreator
+					.createDocument(typingInterval.getEditor()));
 		}
 
 		interval.close();

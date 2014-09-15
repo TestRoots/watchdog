@@ -1,7 +1,7 @@
 package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
 import nl.tudelft.watchdog.logic.document.Document;
-import nl.tudelft.watchdog.logic.document.DocumentCreator;
+import nl.tudelft.watchdog.logic.network.JsonifiedLong;
 
 import org.eclipse.ui.texteditor.ITextEditor;
 
@@ -28,7 +28,7 @@ public class TypingInterval extends EditorIntervalBase {
 	 * of text that was updated.
 	 */
 	@SerializedName("diff")
-	long editDistance;
+	JsonifiedLong editDistance;
 
 	/** Constructor. */
 	public TypingInterval(ITextEditor editor) {
@@ -48,9 +48,6 @@ public class TypingInterval extends EditorIntervalBase {
 	@Override
 	public void close() {
 		super.close();
-		setEndingDocument(DocumentCreator.createDocument(editor));
-		// TODO (MMB) might be useful to have document.getContent return null to
-		// avoid bad numbers.
 		if (endingDocument != null) {
 			endingDocument.prepareDocument();
 		}
@@ -58,8 +55,11 @@ public class TypingInterval extends EditorIntervalBase {
 		if (getDocument() != null && endingDocument != null) {
 			String startingContent = getDocument().getContent();
 			String endingContent = endingDocument.getContent();
-			editDistance = StringUtilities.levenshteinDistance(startingContent,
-					endingContent);
+			if (startingContent != null && endingContent != null) {
+				editDistance = new JsonifiedLong(
+						StringUtilities.levenshteinDistance(startingContent,
+								endingContent));
+			}
 		}
 	}
 }

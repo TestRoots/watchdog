@@ -21,33 +21,33 @@ public class DocumentCreator {
 	 * supplied part is an IEditorPart.
 	 */
 	public static Document createDocument(ITextEditor editor) {
-		String activeProjectName;
+		String activeProjectName = null;
 		if (editor.getEditorInput() instanceof IFileEditorInput) {
 			IFileEditorInput input = (IFileEditorInput) editor.getEditorInput();
 			IProject activeProject = input.getFile().getProject();
 			activeProjectName = activeProject.getName();
-		} else {
-			activeProjectName = "";
 		}
-		String title = "";
+		String title = null;
 		if (!StringUtilities.isEmpty(editor.getTitle())) {
 			title = editor.getTitle();
 		}
 
 		try {
 			return new Document(activeProjectName, title,
-					getFileContent(editor));
+					getEditorOrFileContent(editor));
 		} catch (IllegalArgumentException exception) {
 			WatchDogLogger.getInstance().logSevere(exception);
 		}
-		return new Document(activeProjectName, title, "");
+		return new Document(activeProjectName, title, null);
 	}
 
-	private static String getFileContent(ITextEditor editor) {
-		String editorContent = "";
+	/**
+	 * Gets the contents of the given editor. If it cannot get those, tries to
+	 * get the file from disk. If this fails, too, returns <code>null</code>.
+	 */
+	private static String getEditorOrFileContent(ITextEditor editor) {
 		try {
-
-			editorContent = WatchDogUtils.getEditorContent(editor);
+			return WatchDogUtils.getEditorContent(editor);
 		} catch (IllegalArgumentException | ContentReaderException exception) {
 			// Editor was null, there is nothing we can do to get the file
 			// contents.
@@ -57,13 +57,12 @@ public class DocumentCreator {
 					.logInfo(
 							"Document (provider) was null, trying to read resource file contents.");
 			try {
-				editorContent = WatchDogUtils
-						.getContentForEditorFromDisk(editor);
+				return WatchDogUtils.getContentForEditorFromDisk(editor);
 			} catch (IllegalArgumentException ex) {
 				WatchDogLogger.getInstance().logInfo(
 						"File does not exist anymore: " + editor.getTitle());
 			}
 		}
-		return editorContent;
+		return null;
 	}
 }

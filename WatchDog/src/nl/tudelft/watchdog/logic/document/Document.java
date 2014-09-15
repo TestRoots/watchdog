@@ -71,15 +71,23 @@ public class Document implements Serializable {
 
 	/** Prepares this document to extract statistics out of it. */
 	public void prepareDocument() {
-		String shortenedName = name.toLowerCase().replace(".java", "");
-		if (shortenedName.startsWith("test") || shortenedName.endsWith("test")) {
-			shortenedName = shortenedName.replace("test", "");
-			this.nameHash = WatchDogUtils.createHash(shortenedName) + "Test";
-		} else {
-			this.nameHash = WatchDogUtils.createHash(shortenedName);
+		if (name != null) {
+			String shortenedName = name.toLowerCase().replace(".java", "");
+			if (shortenedName.startsWith("test")
+					|| shortenedName.endsWith("test")) {
+				shortenedName = shortenedName.replace("test", "");
+				this.nameHash = WatchDogUtils.createHash(shortenedName)
+						+ "Test";
+			} else {
+				this.nameHash = WatchDogUtils.createHash(shortenedName);
+			}
 		}
-		this.projectNameHash = WatchDogUtils.createHash(projectName);
-		this.sloc = WatchDogUtils.countSLOC(content);
-		this.docType = DocumentClassifier.classifyDocument(name, content);
+		if (projectName != null) {
+			this.projectNameHash = WatchDogUtils.createHash(projectName);
+		}
+		if (name != null && content != null) {
+			this.sloc = WatchDogUtils.countSLOC(content);
+			this.docType = DocumentClassifier.classifyDocument(name, content);
+		}
 	}
 }

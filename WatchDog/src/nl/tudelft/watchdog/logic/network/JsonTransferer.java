@@ -33,9 +33,12 @@ public class JsonTransferer {
 
 	/** Constructor. */
 	public JsonTransferer() {
-		gsonBuilder.registerTypeAdapter(Date.class, new DateSerializer())
+		gsonBuilder
+				.registerTypeAdapter(Date.class, new DateSerializer())
 				.registerTypeAdapter(JsonifiedDouble.class,
-						new JsonifiedDoubleSerializer());
+						new JsonifiedDoubleSerializer())
+				.registerTypeAdapter(JsonifiedLong.class,
+						new JsonifiedLongSerializer());
 		gson = gsonBuilder.create();
 	}
 
@@ -128,7 +131,7 @@ public class JsonTransferer {
 		}
 	}
 
-	/** A JSon Serializer for Date. */
+	/** A JSon Serializer for {@link JsonifiedDouble}s. */
 	private static class JsonifiedDoubleSerializer implements
 			JsonSerializer<JsonifiedDouble> {
 
@@ -136,6 +139,17 @@ public class JsonTransferer {
 		public JsonElement serialize(JsonifiedDouble doubleValue, Type type,
 				JsonSerializationContext context) {
 			return new JsonPrimitive(doubleValue.value);
+		}
+	}
+
+	/** A JSon Serializer for {@link JsonifiedLong}s. */
+	private static class JsonifiedLongSerializer implements
+			JsonSerializer<JsonifiedLong> {
+
+		@Override
+		public JsonElement serialize(JsonifiedLong longValue, Type type,
+				JsonSerializationContext context) {
+			return new JsonPrimitive(longValue.value);
 		}
 	}
 
