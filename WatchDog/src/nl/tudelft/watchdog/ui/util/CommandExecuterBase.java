@@ -23,7 +23,7 @@ public abstract class CommandExecuterBase implements Runnable {
 	public void execute() {
 		Display display = Display.getDefault();
 		if (display != null) {
-			display.asyncExec(this);
+			display.syncExec(this);
 		}
 	}
 
@@ -38,7 +38,6 @@ public abstract class CommandExecuterBase implements Runnable {
 					| NotEnabledException | NotHandledException exception) {
 			}
 		}
-
 	}
 
 	private ICommandService getCommandService() {

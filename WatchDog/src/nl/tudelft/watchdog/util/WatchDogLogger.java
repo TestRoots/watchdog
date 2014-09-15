@@ -19,7 +19,7 @@ public class WatchDogLogger {
 	/** Determines whether the logger is setup. */
 	private boolean isLoggerSetup = false;
 
-	private File logDirectory;
+	private File logDirectory = new File("watchdog/logs/");
 
 	/** The singleton instance of the interval manager. */
 	private static volatile WatchDogLogger instance = null;
@@ -43,7 +43,6 @@ public class WatchDogLogger {
 		logInfo("Starting up WatchDogLogger...");
 
 		try {
-			logDirectory = new File("watchdog/logs/");
 			logDirectory.mkdirs();
 
 			FileHandler fileHandler = new FileHandler(
