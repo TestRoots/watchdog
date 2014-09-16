@@ -2,12 +2,11 @@
 <feature
       id="WatchDog"
       label="WatchDog"
-      version="1.0.0"
+      version="1.0.1"
       provider-name="Software Engineering Research Group (TU Delft)">
 
    <description url="http://www.testroots.org">
-      WatchDog is an Eclipse plugin from TU Delft that unobtrusively monitors how Java applications are developed
-and tested.
+      WatchDog is an Eclipse plugin from TU Delft that unobtrusively monitors how Java applications are developed and tested.
    </description>
 
    <copyright url="http://www.testroots.org">
@@ -21,7 +20,7 @@ Copyright 2013 Wouter Willems
 http://wouterwillems.com/
    </copyright>
 
-   <license url="">
+   <license url="http://www.testroots.org">
       Copyright 2012-2014 Software Engineering Research Group, TU Delft
 http://swerl.tudelft.nl/bin/view/Main/WebHome
 
