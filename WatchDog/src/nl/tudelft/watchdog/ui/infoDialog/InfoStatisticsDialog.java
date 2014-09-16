@@ -176,13 +176,14 @@ public class InfoStatisticsDialog extends Dialog {
 			break;
 		case NETWORK_ERROR:
 			localGrid = UIUtils.createZeroMarginGridedComposite(container, 2);
-			UIUtils.createLabel("(Temp.) Network Error.", localGrid);
+			UIUtils.createLabel("(Temporary) Network Error.", localGrid);
 			WatchDogGlobals.lastTransactionFailed = true;
 			createFixThisProblemLink(localGrid, new PreferenceListener());
 		}
 	}
 
 	private void createStaticLinks(Composite parentContainer) {
+		UIUtils.createLabel("", parentContainer);
 		Composite container = UIUtils.createFullGridedComposite(
 				parentContainer, 3);
 		container.setData(new GridData(SWT.CENTER, SWT.NONE, true, false));
