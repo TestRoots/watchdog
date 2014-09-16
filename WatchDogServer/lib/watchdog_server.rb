@@ -247,6 +247,8 @@ You can use this id to link other Watchdog installations to your user.
 
 Thank you for contributing to science -- with Watchdog!
 
+Moritz, Georgios and Andy
+--
 The TestRoots team
 http://www.testroots.org - http://www.tudelft.nl
   END_EMAIL
@@ -269,6 +271,8 @@ project-ids, but with the same project name.
 
 Thank you for contributing to science -- with Watchdog!
 
+Moritz, Georgios and Andy
+--
 The TestRoots team
 http://www.testroots.org - http://www.tudelft.nl
   END_EMAIL
