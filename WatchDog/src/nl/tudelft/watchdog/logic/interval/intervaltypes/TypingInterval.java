@@ -14,8 +14,30 @@ import com.google.gson.annotations.SerializedName;
  */
 public class TypingInterval extends EditorIntervalBase {
 
+	/** The operations that need to be carried out to close this interval. */
+	private class TypingIntervalCloserBase extends EditorIntervalCloser {
+		@Override
+		public void run() {
+			super.run();
+			if (endingDocument != null) {
+				endingDocument.prepareDocument();
+			}
+			// calculate the Levenshtein distance between the two edit
+			// operations.
+			if (getDocument() != null && endingDocument != null) {
+				String startingContent = getDocument().getContent();
+				String endingContent = endingDocument.getContent();
+				if (startingContent != null && endingContent != null) {
+					editDistance = new JsonifiedLong(
+							StringUtilities.levenshteinDistance(
+									startingContent, endingContent));
+				}
+			}
+		}
+	}
+
 	/** Serial ID. */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	/**
 	 * The document content associated with this {@link TypingInterval} when it
@@ -46,20 +68,8 @@ public class TypingInterval extends EditorIntervalBase {
 	}
 
 	@Override
-	public void close() {
-		super.close();
-		if (endingDocument != null) {
-			endingDocument.prepareDocument();
-		}
-		// calculate the Levenshtein distance between the two edit operations.
-		if (getDocument() != null && endingDocument != null) {
-			String startingContent = getDocument().getContent();
-			String endingContent = endingDocument.getContent();
-			if (startingContent != null && endingContent != null) {
-				editDistance = new JsonifiedLong(
-						StringUtilities.levenshteinDistance(startingContent,
-								endingContent));
-			}
-		}
+	protected EditorIntervalCloser createIntervalCloser() {
+		return new TypingIntervalCloserBase();
 	}
+
 }

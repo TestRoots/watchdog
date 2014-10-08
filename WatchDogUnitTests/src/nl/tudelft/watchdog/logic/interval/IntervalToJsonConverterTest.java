@@ -96,6 +96,7 @@ public class IntervalToJsonConverterTest {
 	private ArrayList<IntervalBase> createSampleIntervals(IntervalBase interval) {
 		ArrayList<IntervalBase> intervals = new ArrayList<IntervalBase>();
 		interval.close();
+		
 		interval.setUserid("123");
 		interval.setStartTime(new Date(1));
 		interval.setEndTime(new Date(2));
