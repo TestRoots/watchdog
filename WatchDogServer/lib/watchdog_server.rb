@@ -21,6 +21,8 @@ class WatchDogServer < Sinatra::Base
   before  do
     mongo
     @db = mongo.db(@serverconfig['mongo_db'])
+    @db.authenticate(@serverconfig['mongo_username'],
+                     @serverconfig['mongo_password'])
   end
 
   after do
