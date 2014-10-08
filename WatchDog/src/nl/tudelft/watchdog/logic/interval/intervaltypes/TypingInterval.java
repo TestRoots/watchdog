@@ -19,6 +19,8 @@ public class TypingInterval extends EditorIntervalBase {
 		@Override
 		public void run() {
 			super.run();
+			isClosed = false;
+
 			if (endingDocument != null) {
 				endingDocument.prepareDocument();
 			}
@@ -33,6 +35,7 @@ public class TypingInterval extends EditorIntervalBase {
 									startingContent, endingContent));
 				}
 			}
+			isClosed = true;
 		}
 	}
 

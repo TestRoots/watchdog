@@ -96,11 +96,22 @@ public class IntervalToJsonConverterTest {
 	private ArrayList<IntervalBase> createSampleIntervals(IntervalBase interval) {
 		ArrayList<IntervalBase> intervals = new ArrayList<IntervalBase>();
 		interval.close();
-		
+		sleepABit();
 		interval.setUserid("123");
 		interval.setStartTime(new Date(1));
 		interval.setEndTime(new Date(2));
 		intervals.add(interval);
 		return intervals;
+	}
+
+	private void sleepABit() {
+		try {
+			Thread.yield();
+			Thread.sleep(200);
+			Thread.yield();
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

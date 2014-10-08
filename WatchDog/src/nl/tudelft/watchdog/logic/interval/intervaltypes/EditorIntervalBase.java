@@ -25,6 +25,7 @@ public abstract class EditorIntervalBase extends IntervalBase {
 			if (document != null) {
 				document.prepareDocument();
 			}
+			isClosed = true;
 		}
 	}
 
@@ -88,14 +89,9 @@ public abstract class EditorIntervalBase extends IntervalBase {
 	@Override
 	public void close() {
 		super.close();
+		isClosed = false;
 		Thread thread = new Thread(editorIntervalCloser);
 		thread.start();
-		try {
-			thread.join();
-		} catch (InterruptedException exception) {
-			// TODO Auto-generated catch block
-			exception.printStackTrace();
-		}
 	}
 
 }
