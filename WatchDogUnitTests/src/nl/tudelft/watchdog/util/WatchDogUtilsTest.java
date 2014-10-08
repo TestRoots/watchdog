@@ -67,6 +67,19 @@ public class WatchDogUtilsTest {
 		assertEquals(false,
 				WatchDogUtils.isEmptyOrHasOnlyWhitespaces("   f   "));
 	}
+	
+	@Test
+	public void testIsEmptySansWhitespace() {
+		assertEquals(true, WatchDogUtils.isEmptyOrHasOnlyWhitespaces(""));
+		assertEquals(true, WatchDogUtils.isEmptyOrHasOnlyWhitespaces(null));
+		
+		assertEquals(true, WatchDogUtils.isEmptyOrHasOnlyWhitespaces(" "));
+		assertEquals(true, WatchDogUtils.isEmptyOrHasOnlyWhitespaces("  "));
+		assertEquals(true, WatchDogUtils.isEmptyOrHasOnlyWhitespaces("   "));
+		assertEquals(true, WatchDogUtils.isEmptyOrHasOnlyWhitespaces("  \n "));
+		
+		assertEquals(false, WatchDogUtils.isEmptyOrHasOnlyWhitespaces("  f "));
+	}
 
 	@Test
 	public void testCountSLOC() {
@@ -94,7 +107,6 @@ public class WatchDogUtilsTest {
 				WatchDogUtils.createFileNameHash("AClass.java"));
 		assertEquals(expectedHash + "Test",
 				WatchDogUtils.createFileNameHash("AClassTest.java"));
-
 	}
 
 }

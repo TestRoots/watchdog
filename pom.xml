@@ -16,6 +16,7 @@
 	<properties>
 		<tycho.version>0.21.0</tycho.version>
 
+		<juno-repo.url>http://download.eclipse.org/releases/indigo</juno-repo.url>
 		<kepler-repo.url>http://download.eclipse.org/releases/kepler</kepler-repo.url>
 		<luna-repo.url>http://download.eclipse.org/releases/luna</luna-repo.url>
 	</properties>
