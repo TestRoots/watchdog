@@ -109,7 +109,6 @@ public class IntervalToJsonConverterTest {
 			Thread.yield();
 			Thread.sleep(200);
 			Thread.yield();
-			Thread.sleep(200);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

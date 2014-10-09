@@ -90,8 +90,7 @@ public abstract class EditorIntervalBase extends IntervalBase {
 	public void close() {
 		super.close();
 		isClosed = false;
-		Thread thread = new Thread(editorIntervalCloser);
-		thread.start();
+		new Thread(editorIntervalCloser).start();
 	}
 
 }
