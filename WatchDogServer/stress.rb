@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'parallel'
+#require 'parallel'
 require 'rest_client'
 require 'json'
 
@@ -49,8 +49,8 @@ def interval
 end
 
 # Configuration params
-username = "foobar"
-passwd = "passwd"
+username = "watchdogplugin"
+passwd = "hnspqsznpq"
 urlbase = "http://#{username}:#{passwd}@watchdog.testroots.org"
 num_intervals = 10000
 
@@ -70,16 +70,16 @@ end
 
 start = Time.now.to_i
 
-Parallel.map((1..num_intervals), :in_threads => 30) do |req|
-  loader.call(req)
-end
-
-delta = Time.now.to_i - start
-puts "#{num_intervals} intervals in #{delta} secs #{(num_intervals/delta).to_f} intervals per sec"
-
-# Test how many intervals can se send at once
-#many_intervals = (1..2000).map do |x|
-#  interval()[0]
+#Parallel.map((1..num_intervals), :in_threads => 30) do |req|
+#  loader.call(req)
 #end
 
-#RestClient.post(urlbase + "/user/#{@user_id}/#{@pid}/intervals", many_intervals.to_json) 
+delta = Time.now.to_i - start
+#puts "#{num_intervals} intervals in #{delta} secs #{(num_intervals/delta).to_f} intervals per sec"
+
+# Test how many intervals can se send at once
+many_intervals = (1..20000).map do |x|
+  interval()[0]
+end
+
+RestClient.post(urlbase + "/user/#{@user_id}/#{@pid}/intervals", many_intervals.to_json) 

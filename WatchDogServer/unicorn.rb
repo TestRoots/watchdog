@@ -5,6 +5,9 @@ worker_processes (env == 'production' ? 6 : 1)
 
 timeout 15
 
+stderr_path "watchdog.err.log"
+stdout_path "watchdog.out.log"
+
 preload_app true
 
 if env == 'production'
