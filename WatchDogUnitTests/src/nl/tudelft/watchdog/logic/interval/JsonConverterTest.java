@@ -26,7 +26,7 @@ import com.google.gson.Gson;
 /**
  * Test the transfer from {@link IInterval}s to JSon.
  */
-public class IntervalToJsonConverterTest {
+public class JsonConverterTest {
 
 	private JsonTransferer transferer = new JsonTransferer();
 
@@ -37,7 +37,7 @@ public class IntervalToJsonConverterTest {
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"re\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\""
+				"[{\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"re\",\"ts\":1,\"te\":2,\"ss\":0,\"wdv\":\""
 						+ WatchDogGlobals.CLIENT_VERSION + "\"}]",
 				transferer.toJson(intervals));
 	}
@@ -53,7 +53,7 @@ public class IntervalToJsonConverterTest {
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\""
+				"[{\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"wdv\":\""
 						+ WatchDogGlobals.CLIENT_VERSION + "\"}]",
 				transferer.toJson(intervals));
 	}
@@ -71,7 +71,7 @@ public class IntervalToJsonConverterTest {
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals(
-				"[{\"endingDocument\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"diff\":0,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\""
+				"[{\"endingDocument\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"diff\":0,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"wdv\":\""
 						+ WatchDogGlobals.CLIENT_VERSION + "\"}]",
 				transferer.toJson(intervals));
 	}
@@ -83,7 +83,7 @@ public class IntervalToJsonConverterTest {
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals(
-				"[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\""
+				"[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":0,\"wdv\":\""
 						+ WatchDogGlobals.CLIENT_VERSION + "\"}]",
 				transferer.toJson(intervals));
 	}
@@ -100,7 +100,6 @@ public class IntervalToJsonConverterTest {
 		ArrayList<IntervalBase> intervals = new ArrayList<IntervalBase>();
 		interval.close();
 		sleepABit();
-		interval.setUserid("123");
 		interval.setStartTime(new Date(1));
 		interval.setEndTime(new Date(2));
 		intervals.add(interval);

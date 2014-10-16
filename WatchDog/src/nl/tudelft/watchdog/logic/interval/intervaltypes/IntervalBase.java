@@ -37,14 +37,6 @@ public class IntervalBase extends WatchDogTransferable implements Serializable,
 	@SerializedName("ss")
 	protected long sessionSeed;
 
-	/** The projectId this interval is transfered from */
-	@SerializedName("pid")
-	private String projectId;
-
-	/** The userId this interval is transfered from */
-	@SerializedName("uid")
-	private String userId;
-
 	/** Whether this interval is closed, or still recording. */
 	protected transient boolean isClosed;
 
@@ -111,16 +103,6 @@ public class IntervalBase extends WatchDogTransferable implements Serializable,
 	/** Sets the end time. */
 	public void setEndTime(Date date) {
 		this.end = date;
-	}
-
-	/** Sets the userId. */
-	public void setUserid(String userId) {
-		this.userId = userId;
-	}
-
-	/** Sets the projectId. */
-	public void setProjectId(String projectId) {
-		this.projectId = projectId;
 	}
 
 	/** Sets the projectId. */
