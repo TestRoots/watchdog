@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.logic.interval;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,16 +13,22 @@ import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
+import nl.tudelft.watchdog.ui.wizards.Project;
+import nl.tudelft.watchdog.ui.wizards.User;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.google.gson.Gson;
+
 /**
  * Test the transfer from {@link IInterval}s to JSon.
  */
 public class IntervalToJsonConverterTest {
+
+	private JsonTransferer transferer = new JsonTransferer();
 
 	/** Tests the format of the returned Json representation. */
 	@Test
@@ -29,11 +36,10 @@ public class IntervalToJsonConverterTest {
 		ReadingInterval interval = new ReadingInterval(null);
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
-		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
 				"[{\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"re\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\""
 						+ WatchDogGlobals.CLIENT_VERSION + "\"}]",
-				intervalTransferer.toJson(intervals));
+				transferer.toJson(intervals));
 	}
 
 	/**
@@ -46,11 +52,10 @@ public class IntervalToJsonConverterTest {
 		TypingInterval interval = new TypingInterval(editor);
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
-		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
 				"[{\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\""
 						+ WatchDogGlobals.CLIENT_VERSION + "\"}]",
-				intervalTransferer.toJson(intervals));
+				transferer.toJson(intervals));
 	}
 
 	/** Tests the format of the returned Json representation. */
@@ -65,11 +70,10 @@ public class IntervalToJsonConverterTest {
 
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
-		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
 				"[{\"endingDocument\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"diff\":0,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\""
 						+ WatchDogGlobals.CLIENT_VERSION + "\"}]",
-				intervalTransferer.toJson(intervals));
+				transferer.toJson(intervals));
 	}
 
 	/** Tests the format of the returned Json representation. */
@@ -78,11 +82,10 @@ public class IntervalToJsonConverterTest {
 		IntervalBase interval = new IntervalBase(IntervalType.ECLIPSE_OPEN);
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
-		JsonTransferer intervalTransferer = new JsonTransferer();
 		assertEquals(
 				"[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":0,\"uid\":\"123\",\"wdv\":\""
 						+ WatchDogGlobals.CLIENT_VERSION + "\"}]",
-				intervalTransferer.toJson(intervals));
+				transferer.toJson(intervals));
 	}
 
 	private ArrayList<IntervalBase> createSampleIntervals(
@@ -113,4 +116,21 @@ public class IntervalToJsonConverterTest {
 			e.printStackTrace();
 		}
 	}
+
+	@Test
+	public void testUserHasWatchDogVersion() {
+		String gsonRepresentation = new Gson().toJson(new User());
+		boolean containsWDVersion = gsonRepresentation.contains("\"wdv\":\""
+				+ WatchDogGlobals.CLIENT_VERSION + "\"}");
+		assertTrue(containsWDVersion);
+	}
+
+	@Test
+	public void testProjectHasWatchDogVersion() {
+		String gsonRepresentation = new Gson().toJson(new Project(""));
+		boolean containsWDVersion = gsonRepresentation.contains("\"wdv\":\""
+				+ WatchDogGlobals.CLIENT_VERSION + "\"}");
+		assertTrue(containsWDVersion);
+	}
+
 }

@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.ui.wizards.projectregistration;
 
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.logic.network.ServerCommunicationException;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.wizards.Project;
 import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPage;
 import nl.tudelft.watchdog.util.WatchDogLogger;
@@ -14,7 +15,7 @@ class ProjectCreatedEndingPage extends RegistrationEndingPage {
 
 	@Override
 	protected void makeRegistration() {
-		Project project = new Project();
+		Project project = new Project(Preferences.getInstance().getUserid());
 
 		ProjectSliderPage sliderPage;
 		ProjectRegistrationPage projectPage = null;
