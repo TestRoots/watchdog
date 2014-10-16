@@ -2,18 +2,18 @@ package nl.tudelft.watchdog.ui.wizards;
 
 import java.util.Date;
 
-import nl.tudelft.watchdog.ui.preferences.Preferences;
+import nl.tudelft.watchdog.logic.network.WatchDogTransferable;
 
 /**
  * The concept of a project comprises all information entered about the project
  * by the user.
  */
-public class Project {
+public class Project extends WatchDogTransferable {
 
 	/** Constructor. */
-	public Project() {
+	public Project(String userId) {
 		localRegistrationDate = new Date();
-		userId = Preferences.getInstance().getUserid();
+		this.userId = userId;
 	}
 
 	/** eMail. */

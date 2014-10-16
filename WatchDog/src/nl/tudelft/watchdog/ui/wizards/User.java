@@ -2,11 +2,13 @@ package nl.tudelft.watchdog.ui.wizards;
 
 import java.util.Date;
 
+import nl.tudelft.watchdog.logic.network.WatchDogTransferable;
+
 /**
  * The concept of a user comprises all information about the user who runs this
  * WatchDog instance.
  */
-public class User {
+public class User extends WatchDogTransferable {
 
 	/** Constructor. */
 	public User() {
