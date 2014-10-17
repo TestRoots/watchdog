@@ -4,8 +4,10 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -98,7 +100,18 @@ public class IntervalPersisterTest {
 	}
 
 	@Test
-	public void test3DatabaseCleared() {
+	public void test3RemoveFirstInterval() {
+		assertEquals(100, persister.getSize());
+		Iterator<IntervalBase> readIntervals = persister.readIntervals()
+				.iterator();
+		ArrayList<IntervalBase> firstInterval = new ArrayList<IntervalBase>(
+				Arrays.asList(readIntervals.next()));
+		persister.removeIntervals(firstInterval);
+		assertEquals(99, persister.getSize());
+	}
+
+	@Test
+	public void test4DatabaseCleared() {
 		persister.clearAndResetMap();
 		assertEquals(0, persister.getSize());
 	}
