@@ -24,21 +24,31 @@ public class InitializationManager {
 
 	private IntervalManager intervalManager;
 
-	private IntervalPersister intervalPersister;
+	private IntervalPersister intervalsToTransferPersister;
+
+	private IntervalPersister intervalsStatisticsPersister;
 
 	/** Private constructor. */
 	private InitializationManager() {
-		File file = new File(
-				Activator.getDefault().getStateLocation().toFile(),
-				"intervals.mapdb");
-		intervalPersister = new IntervalPersister(file);
+		File baseFolder = Activator.getDefault().getStateLocation().toFile();
+		File toTransferDatabaseFile = new File(baseFolder, "intervals.mapdb");
+		File statisticsDatabaseFile = new File(baseFolder,
+				"intervalsStatistics.mapdb");
+
+		intervalsToTransferPersister = new IntervalPersister(
+				toTransferDatabaseFile);
+		intervalsStatisticsPersister = new IntervalPersister(
+				statisticsDatabaseFile);
+
 		new ClientVersionChecker();
-		this.intervalManager = new IntervalManager(intervalPersister);
+		this.intervalManager = new IntervalManager(
+				intervalsToTransferPersister, intervalsStatisticsPersister);
 		EventManager eventManager = new EventManager(intervalManager,
 				USER_ACTIVITY_TIMEOUT);
 
 		WorkbenchListener workbenchListener = new WorkbenchListener(
-				eventManager, new IntervalTransferManager(intervalPersister));
+				eventManager, new IntervalTransferManager(
+						intervalsToTransferPersister));
 		workbenchListener.attachListeners();
 	}
 
@@ -63,6 +73,7 @@ public class InitializationManager {
 	 * properly, but it is good practice to close it anyway.
 	 */
 	public void shutdown() {
-		intervalPersister.closeDatabase();
+		intervalsToTransferPersister.closeDatabase();
+		intervalsStatisticsPersister.closeDatabase();
 	}
 }

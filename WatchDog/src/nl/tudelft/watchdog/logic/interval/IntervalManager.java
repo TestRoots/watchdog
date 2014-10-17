@@ -26,11 +26,15 @@ public class IntervalManager {
 	 */
 	private long sessionSeed;
 
-	private IntervalPersister persister;
+	private IntervalPersister intervalsToTransferPersister;
+
+	private IntervalPersister intervalsStatisticsPersister;
 
 	/** Constructor. */
-	public IntervalManager(IntervalPersister persister) {
-		this.persister = persister;
+	public IntervalManager(IntervalPersister intervalsToTransferPersister,
+			IntervalPersister intervalsStatisticsPersister) {
+		this.intervalsToTransferPersister = intervalsToTransferPersister;
+		this.intervalsStatisticsPersister = intervalsStatisticsPersister;
 		this.sessionSeed = WatchDogUtils.randomObject.nextLong();
 	}
 
@@ -91,7 +95,8 @@ public class IntervalManager {
 		} else {
 			intervals.remove(interval);
 		}
-		persister.saveInterval(interval);
+		intervalsToTransferPersister.saveInterval(interval);
+		intervalsStatisticsPersister.saveInterval(interval);
 		WatchDogLogger.getInstance().logInfo("closed interval " + interval);
 	}
 

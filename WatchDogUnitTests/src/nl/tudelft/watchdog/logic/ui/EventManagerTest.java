@@ -30,6 +30,7 @@ public class EventManagerTest {
 	@Before
 	public void setup() {
 		IntervalManager intervalManagerReal = new IntervalManager(
+				Mockito.mock(IntervalPersister.class),
 				Mockito.mock(IntervalPersister.class));
 		intervalManager = Mockito.spy(intervalManagerReal);
 		eventManager = new EventManager(intervalManager, USER_ACTIVITY_TIMEOUT);
@@ -78,9 +79,8 @@ public class EventManagerTest {
 		eventManager.update(createMockEvent(EventType.EDIT));
 		Mockito.verify(intervalManager, Mockito.atLeast(1)).addEditorInterval(
 				Mockito.isA(TypingInterval.class));
-		Mockito.verify(intervalManager, Mockito.never())
-				.addEditorInterval(
-						Mockito.isA(ReadingInterval.class));
+		Mockito.verify(intervalManager, Mockito.never()).addEditorInterval(
+				Mockito.isA(ReadingInterval.class));
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 		eventManager.update(createMockEvent(EventType.EDIT));
 		eventManager.update(createMockEvent(EventType.PAINT));
@@ -116,13 +116,13 @@ public class EventManagerTest {
 
 	@Test
 	public void testTimeoutWorksForWritingIntervals() {
-		
+
 		eventManager.update(createMockEvent(EventType.EDIT));
 		// first close null interval
 		Mockito.verify(intervalManager,
 				Mockito.timeout(TIMEOUT_GRACE_PERIOD).atLeast(1))
 				.closeInterval(null);
-		
+
 		Mockito.verify(intervalManager,
 				Mockito.timeout(TIMEOUT_GRACE_PERIOD).atLeast(1))
 				.closeInterval(Mockito.isA(TypingInterval.class));
@@ -139,13 +139,14 @@ public class EventManagerTest {
 				Mockito.timeout(TIMEOUT_GRACE_PERIOD).never()).closeInterval(
 				Mockito.any(IntervalBase.class));
 		Mockito.verify(intervalManager,
-				Mockito.timeout(TIMEOUT_GRACE_PERIOD * 2).atLeast(1)).closeInterval(
-				Mockito.isA(ReadingInterval.class));
+				Mockito.timeout(TIMEOUT_GRACE_PERIOD * 2).atLeast(1))
+				.closeInterval(Mockito.isA(ReadingInterval.class));
 		Assert.assertEquals(null, intervalManager.getEditorInterval());
 	}
 
 	@Test
 	public void testUserInactiveShouldNotCloseReading() {
+		// FIXME: This test flickers! 
 		eventManager.update(createMockEvent(EventType.USER_ACTIVITY));
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
 		Mockito.verify(intervalManager,
