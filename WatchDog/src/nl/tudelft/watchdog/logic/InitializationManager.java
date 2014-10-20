@@ -41,8 +41,8 @@ public class InitializationManager {
 				statisticsDatabaseFile);
 
 		new ClientVersionChecker();
-		this.intervalManager = new IntervalManager(
-				intervalsToTransferPersister, intervalsStatisticsPersister);
+		intervalManager = new IntervalManager(intervalsToTransferPersister,
+				intervalsStatisticsPersister);
 		EventManager eventManager = new EventManager(intervalManager,
 				USER_ACTIVITY_TIMEOUT);
 
@@ -66,6 +66,11 @@ public class InitializationManager {
 	/** @return the intervalManager. */
 	public IntervalManager getIntervalManager() {
 		return intervalManager;
+	}
+
+	/** @return the statistics interval persisters. */
+	public IntervalPersister getIntervalsStatisticsPersister() {
+		return intervalsStatisticsPersister;
 	}
 
 	/**

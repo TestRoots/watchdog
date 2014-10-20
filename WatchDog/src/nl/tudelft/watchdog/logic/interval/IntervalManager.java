@@ -1,6 +1,5 @@
 package nl.tudelft.watchdog.logic.interval;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -8,15 +7,12 @@ import java.util.List;
 import nl.tudelft.watchdog.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.util.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 /** The interval manager handles the addition and removal */
-public class IntervalManager {
-	/** A list of currently opened intervals. */
-	private List<IntervalBase> intervals = new ArrayList<IntervalBase>();
+public class IntervalManager extends IntervalManagerBase {
 
 	private EditorIntervalBase editorInterval;
 
@@ -114,40 +110,12 @@ public class IntervalManager {
 	}
 
 	/**
-	 * @return An interval of the specified type, or <code>null</code> if no
-	 *         such interval is currently open.
-	 */
-	public IntervalBase getIntervalOfType(IntervalType type) {
-		for (IntervalBase interval : intervals) {
-			if (interval.getType() == type && !interval.isClosed()) {
-				return interval;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * @return the single {@link EditorIntervalBase} that is actually a
 	 *         {@link EditorIntervalBase}. There can only be one such interval
 	 *         at any given time. If there is none, <code>null</code>.
 	 */
 	public EditorIntervalBase getEditorInterval() {
 		return editorInterval;
-	}
-
-	/**
-	 * @return Returns an interval of the given class, if there is any such
-	 *         open. If not, returns null.
-	 */
-	@SuppressWarnings("unchecked")
-	public <T extends IntervalBase> T getIntervalOfClass(Class<T> clazz) {
-		for (IntervalBase interval : intervals) {
-			if (clazz.isAssignableFrom(interval.getClass())
-					&& !interval.isClosed()) {
-				return (T) interval;
-			}
-		}
-		return null;
 	}
 
 	/** Returns an immutable list of recorded intervals. */
