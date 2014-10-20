@@ -48,7 +48,7 @@ public class IntervalManagerBase {
 	/**
 	 * @return An {@link ArrayList} of intervals of the specified type.
 	 */
-	public List<IntervalBase> getIntervalsOfType(IntervalType type) {
+	protected List<IntervalBase> getIntervalsOfType(IntervalType type) {
 		List<IntervalBase> collectedIntervals = new ArrayList<IntervalBase>();
 		for (IntervalBase interval : intervals) {
 			if (interval.getType() == type) {
@@ -58,7 +58,10 @@ public class IntervalManagerBase {
 		return collectedIntervals;
 	}
 
-	public List<IntervalBase> getEditorIntervalsWithDocType(DocumentType type) {
+	/**
+	 * @return An {@link ArrayList} of intervals of the specified document type.
+	 */
+	protected List<IntervalBase> getEditorIntervalsOfDocType(DocumentType type) {
 		List<IntervalBase> collectedIntervals = new ArrayList<IntervalBase>();
 		for (IntervalBase interval : intervals) {
 			if (interval instanceof EditorIntervalBase) {

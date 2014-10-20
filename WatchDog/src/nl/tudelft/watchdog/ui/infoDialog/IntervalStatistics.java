@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.ui.infoDialog;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import nl.tudelft.watchdog.logic.document.DocumentType;
 import nl.tudelft.watchdog.logic.interval.IntervalManagerBase;
@@ -14,30 +15,31 @@ import org.joda.time.Duration;
 
 /** Gathers and calculates statistics on interval length. */
 public class IntervalStatistics extends IntervalManagerBase {
+	private IntervalPersister intervalPersister;
 
 	private Duration eclipseOpen;
 	private Duration userActive;
 	private Duration userReading;
 	private Duration userTyping;
-	private IntervalPersister intervalPersister;
 	private Duration userProduction;
 	private Duration userTesting;
 
 	/** Constructor. */
 	public IntervalStatistics(IntervalPersister intervalPersister) {
 		this.intervalPersister = intervalPersister;
+
 		intervals.addAll(intervalPersister.readIntervals());
 		filterIntervals();
 		calculateStatistics();
 	}
 
 	private void calculateStatistics() {
-		eclipseOpen = aggregateDurations(IntervalType.ECLIPSE_OPEN);
-		userActive = aggregateDurations(IntervalType.USER_ACTIVE);
-		userReading = aggregateDurations(IntervalType.READING);
-		userTyping = aggregateDurations(IntervalType.TYPING);
-		userTesting = aggregateDurations(DocumentType.TEST);
-		userProduction = aggregateDurations(DocumentType.PRODUCTION);
+		eclipseOpen = aggregateDurations(getIntervalsOfType(IntervalType.ECLIPSE_OPEN));
+		userActive = aggregateDurations(getIntervalsOfType(IntervalType.USER_ACTIVE));
+		userReading = aggregateDurations(getIntervalsOfType(IntervalType.READING));
+		userTyping = aggregateDurations(getIntervalsOfType(IntervalType.TYPING));
+		userTesting = aggregateDurations(getEditorIntervalsOfDocType(DocumentType.TEST));
+		userProduction = aggregateDurations(getEditorIntervalsOfDocType(DocumentType.PRODUCTION));
 	}
 
 	/** Filters out and removes intervals which are older than one hour. */
@@ -61,18 +63,9 @@ public class IntervalStatistics extends IntervalManagerBase {
 		intervals = filteredIntervals;
 	}
 
-	private Duration aggregateDurations(DocumentType type) {
+	private Duration aggregateDurations(List<IntervalBase> intervals) {
 		Duration aggregatedDuration = new Duration(0);
-		for (IntervalBase interval : getEditorIntervalsWithDocType(type)) {
-			aggregatedDuration = aggregatedDuration
-					.plus(interval.getDuration());
-		}
-		return aggregatedDuration;
-	}
-
-	private Duration aggregateDurations(IntervalType type) {
-		Duration aggregatedDuration = new Duration(0);
-		for (IntervalBase interval : getIntervalsOfType(type)) {
+		for (IntervalBase interval : intervals) {
 			aggregatedDuration = aggregatedDuration
 					.plus(interval.getDuration());
 		}
