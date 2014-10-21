@@ -1,12 +1,10 @@
-package nl.tudelft.watchdog.ui.infoDialog;
+package nl.tudelft.watchdog.logic.interval;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import nl.tudelft.watchdog.logic.document.DocumentType;
-import nl.tudelft.watchdog.logic.interval.IntervalManagerBase;
-import nl.tudelft.watchdog.logic.interval.IntervalPersister;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 
@@ -17,12 +15,14 @@ import org.joda.time.Duration;
 public class IntervalStatistics extends IntervalManagerBase {
 	private IntervalPersister intervalPersister;
 
-	private Duration eclipseOpen;
-	private Duration userActive;
-	private Duration userReading;
-	private Duration userTyping;
-	private Duration userProduction;
-	private Duration userTesting;
+	public Duration eclipseOpen;
+	public Duration userActive;
+	public Duration userReading;
+	public Duration userTyping;
+	public Duration userProduction;
+	public Duration userTesting;
+
+	public Date mostRecentDate;
 
 	/** Constructor. */
 	public IntervalStatistics(IntervalPersister intervalPersister) {
@@ -47,7 +47,7 @@ public class IntervalStatistics extends IntervalManagerBase {
 		ArrayList<IntervalBase> filteredIntervals = new ArrayList<IntervalBase>();
 		ArrayList<IntervalBase> intervalsToRemove = new ArrayList<IntervalBase>();
 
-		Date mostRecentDate = intervals.get(intervals.size() - 1).getEnd();
+		mostRecentDate = intervals.get(intervals.size() - 1).getEnd();
 		DateTime thresholdDate = new DateTime(mostRecentDate);
 		thresholdDate = thresholdDate.minusHours(1);
 
@@ -70,5 +70,12 @@ public class IntervalStatistics extends IntervalManagerBase {
 					.plus(interval.getDuration());
 		}
 		return aggregatedDuration;
+	}
+
+	/**
+	 * @return the number of intervals.
+	 */
+	public int getNumberOfIntervals() {
+		return intervals.size();
 	}
 }

@@ -51,5 +51,15 @@
             class="nl.tudelft.watchdog.ui.handlers.StartUpHandler">
       </startup>
    </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="nl.tudelft.watchdog.ui.WatchDogView"
+            icon="resources/images/watchdog_icon.png"
+            id="WatchDog.view"
+            name="WatchDog Statistics"
+            restorable="true">
+      </view>
+   </extension>
 
 </plugin>

@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.ui.infoDialog;
 
 import nl.tudelft.watchdog.logic.InitializationManager;
+import nl.tudelft.watchdog.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
 import nl.tudelft.watchdog.ui.preferences.PreferencePage;
@@ -188,11 +189,14 @@ public class InfoStatisticsDialog extends Dialog {
 	private void createStaticLinks(Composite parentContainer) {
 		UIUtils.createLabel("", parentContainer);
 		Composite container = UIUtils.createFullGridedComposite(
-				parentContainer, 3);
+				parentContainer, 4);
 		container.setData(new GridData(SWT.CENTER, SWT.NONE, true, false));
 
 		createProblemLink(container, new BrowserOpenerSelection(),
-				"Report a bug.", "https://github.com/TestRoots/watchdog/issues")
+				"Show view.", "https://github.com/TestRoots/watchdog/issues")
+				.setLayoutData(UIUtils.createFullGridUsageData());
+		createProblemLink(container, new BrowserOpenerSelection(),
+				"Report bug.", "https://github.com/TestRoots/watchdog/issues")
 				.setLayoutData(UIUtils.createFullGridUsageData());
 		createProblemLink(container, new BrowserOpenerSelection(),
 				"Open logs.",
