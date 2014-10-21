@@ -1,7 +1,5 @@
 package nl.tudelft.watchdog.ui.infoDialog;
 
-import nl.tudelft.watchdog.logic.InitializationManager;
-import nl.tudelft.watchdog.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
 import nl.tudelft.watchdog.ui.preferences.PreferencePage;
@@ -45,8 +43,6 @@ public class InfoStatisticsDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		new IntervalStatistics(InitializationManager.getInstance()
-				.getIntervalsStatisticsPersister());
 		this.parentContainer = parent;
 		Composite container = (Composite) super.createDialogArea(parent);
 		createGridLayout(container);
