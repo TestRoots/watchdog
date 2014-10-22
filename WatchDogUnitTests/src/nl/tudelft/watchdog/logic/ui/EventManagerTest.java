@@ -1,5 +1,7 @@
 package nl.tudelft.watchdog.logic.ui;
 
+import java.util.Date;
+
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.IntervalPersister;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
@@ -43,26 +45,26 @@ public class EventManagerTest {
 	public void testCreateReadInterval() {
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
 		Mockito.verify(intervalManager).addInterval(
-				Mockito.isA(ReadingInterval.class));
+				Mockito.isA(ReadingInterval.class),  Mockito.any(Date.class));
 	}
 
 	@Test
 	public void testCreateReadIntervalOnlyOnce() {
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
 		Mockito.verify(intervalManager).addInterval(
-				Mockito.isA(ReadingInterval.class));
+				Mockito.isA(ReadingInterval.class),  Mockito.any(Date.class));
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 		eventManager.update(createMockEvent(EventType.PAINT));
 		Mockito.verify(intervalManager).addInterval(
-				Mockito.isA(ReadingInterval.class));
+				Mockito.isA(ReadingInterval.class),  Mockito.any(Date.class));
 	}
 
 	@Test
 	public void testReadIntervalIsClosed() {
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
 		Mockito.verify(intervalManager).addInterval(
-				Mockito.isA(ReadingInterval.class));
+				Mockito.isA(ReadingInterval.class),  Mockito.any(Date.class));
 		eventManager.update(createMockEvent(EventType.INACTIVE_FOCUS));
 		Mockito.verify(intervalManager, Mockito.atLeastOnce()).closeInterval(
 				Mockito.isA(ReadingInterval.class));
@@ -73,7 +75,7 @@ public class EventManagerTest {
 	public void testCreateWriteInterval() {
 		eventManager.update(createMockEvent(EventType.EDIT));
 		Mockito.verify(intervalManager).addInterval(
-				Mockito.isA(TypingInterval.class));
+				Mockito.isA(TypingInterval.class),  Mockito.any(Date.class));
 	}
 
 	@Test
@@ -81,14 +83,14 @@ public class EventManagerTest {
 		eventManager.update(createMockEvent(EventType.START_EDIT));
 		eventManager.update(createMockEvent(EventType.EDIT));
 		Mockito.verify(intervalManager, Mockito.atLeast(1)).addInterval(
-				Mockito.isA(TypingInterval.class));
+				Mockito.isA(TypingInterval.class),  Mockito.any(Date.class));
 		Mockito.verify(intervalManager, Mockito.never()).addInterval(
-				Mockito.isA(ReadingInterval.class));
+				Mockito.isA(ReadingInterval.class),  Mockito.any(Date.class));
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 		eventManager.update(createMockEvent(EventType.EDIT));
 		eventManager.update(createMockEvent(EventType.PAINT));
 		Mockito.verify(intervalManager, Mockito.atLeast(1)).addInterval(
-				Mockito.isA(TypingInterval.class));
+				Mockito.isA(TypingInterval.class), Mockito.any(Date.class));
 	}
 
 	@Test
@@ -178,7 +180,7 @@ public class EventManagerTest {
 	public void verifiesAtLeastOneIntervalIsCreated() {
 		eventManager.update(createMockEvent(EventType.EDIT));
 		Mockito.verify(intervalManager, Mockito.atLeast(1)).addInterval(
-				Mockito.isA(IntervalBase.class));
+				Mockito.isA(IntervalBase.class), Mockito.any(Date.class));
 		Assert.assertNotNull(intervalManager
 				.getIntervalOfType(IntervalType.USER_ACTIVE));
 

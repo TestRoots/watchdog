@@ -46,7 +46,7 @@ public class WatchDogView extends ViewPart {
 		container.setLayout(new GridLayout(1, false));
 
 		UIUtils.createLabel(
-				"Statistics based on your last hour of development, starting at "
+				"Statistics on your last hour of development, starting at "
 						+ intervalStatistics.mostRecentDate + " and comprise "
 						+ intervalStatistics.getNumberOfIntervals()
 						+ " recorded intervals.", container);

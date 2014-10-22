@@ -80,7 +80,7 @@ public class EventManager {
 		switch (event.getType()) {
 		case START_ECLIPSE:
 			intervalManager.addInterval(new IntervalBase(
-					IntervalType.ECLIPSE_OPEN));
+					IntervalType.ECLIPSE_OPEN), forcedDate);
 			userInactivityNotifier.trigger();
 			break;
 
@@ -94,7 +94,7 @@ public class EventManager {
 					.getIntervalOfType(IntervalType.ECLIPSE_ACTIVE);
 			if (interval == null || interval.isClosed()) {
 				intervalManager.addInterval(new IntervalBase(
-						IntervalType.ECLIPSE_ACTIVE));
+						IntervalType.ECLIPSE_ACTIVE), forcedDate);
 			}
 			userInactivityNotifier.trigger();
 			break;
@@ -106,23 +106,23 @@ public class EventManager {
 			break;
 
 		case START_JAVA_PERSPECTIVE:
-			createNewPerspectiveInterval(Perspective.JAVA);
+			createNewPerspectiveInterval(Perspective.JAVA, forcedDate);
 			userInactivityNotifier.trigger();
 			break;
 
 		case START_DEBUG_PERSPECTIVE:
-			createNewPerspectiveInterval(Perspective.DEBUG);
+			createNewPerspectiveInterval(Perspective.DEBUG, forcedDate);
 			userInactivityNotifier.trigger();
 			break;
 
 		case START_UNKNOWN_PERSPECTIVE:
-			createNewPerspectiveInterval(Perspective.OTHER);
+			createNewPerspectiveInterval(Perspective.OTHER, forcedDate);
 			userInactivityNotifier.trigger();
 			break;
 
 		case JUNIT:
 			JUnitInterval junitInterval = (JUnitInterval) event.getSource();
-			intervalManager.addInterval(junitInterval);
+			intervalManager.addInterval(junitInterval, forcedDate);
 			break;
 
 		case USER_ACTIVITY:
@@ -130,7 +130,7 @@ public class EventManager {
 					.getIntervalOfType(IntervalType.USER_ACTIVE);
 			if (interval == null) {
 				intervalManager.addInterval(new IntervalBase(
-						IntervalType.USER_ACTIVE));
+						IntervalType.USER_ACTIVE), forcedDate);
 			}
 			userInactivityNotifier.trigger();
 			break;
@@ -157,7 +157,7 @@ public class EventManager {
 				document = DocumentCreator.createDocument(editor);
 			}
 			typingInterval.setDocument(document);
-			intervalManager.addInterval(typingInterval);
+			intervalManager.addInterval(typingInterval, forcedDate);
 
 			typingInactivityNotifier.trigger();
 			userInactivityNotifier.trigger();
@@ -189,7 +189,7 @@ public class EventManager {
 				ReadingInterval readingInterval = new ReadingInterval(editor);
 				readingInterval.setDocument(DocumentCreator
 						.createDocument(editor));
-				intervalManager.addInterval(readingInterval);
+				intervalManager.addInterval(readingInterval, forcedDate);
 			}
 			readingInactivityNotifier.trigger();
 			userInactivityNotifier.trigger();
@@ -233,7 +233,7 @@ public class EventManager {
 
 	/** Creates a new perspective Interval of the given type. */
 	private void createNewPerspectiveInterval(
-			PerspectiveInterval.Perspective perspecitveType) {
+			PerspectiveInterval.Perspective perspecitveType, Date forcedDate) {
 		PerspectiveInterval perspectiveInterval = intervalManager
 				.getIntervalOfClass(PerspectiveInterval.class);
 		if (perspectiveInterval != null
@@ -242,7 +242,8 @@ public class EventManager {
 			return;
 		}
 		intervalManager.closeInterval(perspectiveInterval);
-		intervalManager.addInterval(new PerspectiveInterval(perspecitveType));
+		intervalManager.addInterval(new PerspectiveInterval(perspecitveType),
+				forcedDate);
 	}
 
 }
