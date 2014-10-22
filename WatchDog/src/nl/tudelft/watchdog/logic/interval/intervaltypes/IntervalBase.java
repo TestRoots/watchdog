@@ -59,7 +59,9 @@ public class IntervalBase extends WatchDogTransferable implements Serializable,
 	public void close() {
 		if (!isClosed()) {
 			isClosed = true;
-			setEndTime(new Date());
+			if (getEnd() == null) {
+				setEndTime(new Date());
+			}
 		}
 	}
 

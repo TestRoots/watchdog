@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.logic.ui;
 
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,6 +29,8 @@ import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
 	private EventType eventType;
 
 	private boolean isRunning;
+
+	private Date forcedDate;
 
 	/** Constructor. */
 	public InactivityNotifier(EventManager eventManager, int activityTimeout,
@@ -64,11 +67,18 @@ import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
 		isRunning = true;
 	}
 
-	/** Immediately cancels the timer, sending an inactivity event. */
-	public void cancelTimer() {
+	/**
+	 * Immediately cancels the timer, sending an inactivity event.
+	 * 
+	 * @param forcedDate
+	 *            the Date which should be supplied to the eventmanager for when
+	 *            this event actually happened.
+	 */
+	public void cancelTimer(Date forcedDate) {
 		if (!isRunning) {
 			return;
 		}
+		this.forcedDate = forcedDate;
 		activityTimerTask.run();
 		activityTimer.cancel();
 		activityTimerTask.cancel();
@@ -77,7 +87,8 @@ import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
 	private class ActivityTimerTask extends TimerTask {
 		@Override
 		public void run() {
-			eventManager.update(new WatchDogEvent(this, eventType));
+			Date date = forcedDate != null ? forcedDate : new Date();
+			eventManager.update(new WatchDogEvent(this, eventType), forcedDate);
 			isRunning = false;
 		}
 	}

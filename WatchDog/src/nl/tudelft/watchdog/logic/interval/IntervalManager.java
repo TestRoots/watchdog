@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.logic.interval;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -75,7 +76,7 @@ public class IntervalManager extends IntervalManagerBase {
 		if (!(this.editorInterval == null || this.editorInterval.isClosed())) {
 			WatchDogLogger.getInstance().logSevere(
 					"Failure: Unclosed editor interval! " + editorInterval);
-			closeInterval(this.editorInterval);
+			closeInterval(this.editorInterval, editorInterval.getStart());
 		}
 
 		this.editorInterval = editorInterval;
@@ -85,10 +86,20 @@ public class IntervalManager extends IntervalManagerBase {
 	 * Closes the current interval (if it is not already closed). Handles
 	 * <code>null</code> gracefully.
 	 */
-	public void closeInterval(IntervalBase interval) {
+	public void closeInterval(IntervalBase interval, Date forcedDate) {
 		if (interval == null) {
 			return;
 		}
+
+		interval.setEndTime(forcedDate);
+		closeInterval(interval);
+	}
+
+	private void closeInterval(IntervalBase interval) {
+		if (interval == null) {
+			return;
+		}
+
 		if (interval instanceof TypingInterval) {
 			TypingInterval typingInterval = (TypingInterval) interval;
 			typingInterval.setEndingDocument(DocumentCreator
@@ -96,6 +107,7 @@ public class IntervalManager extends IntervalManagerBase {
 		}
 
 		interval.close();
+
 		if (interval instanceof EditorIntervalBase) {
 			editorInterval = null;
 		} else {
@@ -109,14 +121,15 @@ public class IntervalManager extends IntervalManagerBase {
 
 	/** Closes all currently open intervals. */
 	public void closeAllIntervals() {
-		closeInterval(editorInterval);
+		Date closingDate = new Date();
+		closeInterval(editorInterval, closingDate);
 		Iterator<IntervalBase> iterator = intervals.listIterator();
 		while (iterator.hasNext()) {
 			// we need to remove the interval first from the list in order to
 			// avoid ConcurrentListModification Exceptions.
 			IntervalBase interval = iterator.next();
 			iterator.remove();
-			closeInterval(interval);
+			closeInterval(interval, closingDate);
 		}
 	}
 

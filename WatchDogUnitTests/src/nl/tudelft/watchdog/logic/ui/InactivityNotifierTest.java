@@ -1,5 +1,7 @@
 package nl.tudelft.watchdog.logic.ui;
 
+import java.util.Date;
+
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
 
@@ -67,7 +69,7 @@ public class InactivityNotifierTest {
 		inactivityNotifier.trigger();
 		Mockito.verify(eventManagerMock, Mockito.timeout(HALF_TIMEOUT).never())
 				.update(createAnyWatchDogEvent());
-		inactivityNotifier.cancelTimer();
+		inactivityNotifier.cancelTimer(new Date());
 		Mockito.verify(eventManagerMock, Mockito.times(1)).update(
 				createAnyWatchDogEvent());
 		Mockito.verifyNoMoreInteractions(eventManagerMock);
