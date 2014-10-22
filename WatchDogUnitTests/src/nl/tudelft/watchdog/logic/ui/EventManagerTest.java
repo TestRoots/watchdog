@@ -29,6 +29,8 @@ public class EventManagerTest {
 	private EventManager eventManager;
 	private IntervalManager intervalManager;
 	ITextEditor mockedTextEditor;
+	private EditorIntervalBase editorInterval;
+	private IntervalBase interval;
 
 	@Before
 	public void setup() {
@@ -153,55 +155,64 @@ public class EventManagerTest {
 	public void testNoMoreAdditionalUserActivitiesShouldNotCloseReading() {
 		eventManager.update(createMockEvent(EventType.USER_ACTIVITY));
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
+		editorInterval = intervalManager.getEditorInterval();
+		interval = intervalManager.getIntervalOfType(IntervalType.USER_ACTIVE);
 		sleep(USER_ACTIVITY_TIMEOUT / 2);
-		Assert.assertFalse(intervalManager.getEditorInterval().isClosed());
-		Assert.assertFalse(intervalManager.getIntervalOfType(
-				IntervalType.USER_ACTIVE).isClosed());
 
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 		sleep(USER_ACTIVITY_TIMEOUT / 2);
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 
-		Assert.assertFalse(intervalManager.getEditorInterval().isClosed());
-		Assert.assertFalse(intervalManager.getIntervalOfType(
-				IntervalType.USER_ACTIVE).isClosed());
+		Assert.assertFalse(editorInterval.isClosed());
+		Assert.assertFalse(interval.isClosed());
 
 		sleep(USER_ACTIVITY_TIMEOUT * 2);
 		Assert.assertEquals(null, intervalManager.getEditorInterval());
 		Assert.assertEquals(null,
 				intervalManager.getIntervalOfType(IntervalType.USER_ACTIVE));
+		Assert.assertTrue(editorInterval.isClosed());
+		Assert.assertTrue(interval.isClosed());
 	}
 
 	/**
-	 * This test verifies that one {@link IntervalBase} intervals is created
-	 * when a reading interval is created. This should be of type
+	 * Advanced synchronization test, which tests whether sub-sequent intervals
+	 * (stopped because another interval was stopped) have the same end time
+	 * stamp. These intervals used to have a slightly delayed end timestamp.
+	 * This test should document that this is fixed.
+	 */
+	@Test
+	public void testEndTimeStampSetAccuratelyForWritingIntervals() {
+		testNoMoreAdditionalUserActivitiesShouldNotCloseReading();
+
+		Assert.assertTrue(editorInterval.isClosed());
+		Assert.assertTrue(interval.isClosed());
+	}
+
+	/**
+	 * This test verifies that one additional {@link IntervalBase} interval is
+	 * created when a writing interval is created. This should be of type
 	 * {@link IntervalType#USER_ACTIVE}.
 	 */
 	@Test
 	public void verifiesAtLeastOneIntervalIsCreated() {
 		eventManager.update(createMockEvent(EventType.EDIT));
-		Mockito.verify(intervalManager, Mockito.atLeast(1)).addInterval(
-				Mockito.isA(IntervalBase.class));
-		Assert.assertNotNull(intervalManager
-				.getIntervalOfType(IntervalType.USER_ACTIVE));
-
+		sleep(TIMEOUT_GRACE_PERIOD / 5);
+		editorInterval = intervalManager.getEditorInterval();
+		interval = intervalManager.getIntervalOfType(IntervalType.USER_ACTIVE);
+		Assert.assertNotNull(interval);
 	}
 
 	/**
 	 * Advanced synchronization test, which tests whether sub-sequent intervals
 	 * (started because of another interval was created) have the same starting
-	 * time stamp. These intervals used to have a slightly delayed timestamp,
-	 * which this should fix.
+	 * time stamp. These intervals used to have a slightly delayed timestamp.
+	 * This test should document that this is fixed.
 	 */
 	@Test
 	public void testStartTimeStampSetAccuratelyForWritingIntervals() {
-		eventManager.update(createMockEvent(EventType.EDIT));
-		sleep(TIMEOUT_GRACE_PERIOD / 5);
-		EditorIntervalBase editorInterval = intervalManager.getEditorInterval();
-		IntervalBase indirectlyCreatedInterval = intervalManager
-				.getIntervalOfType(IntervalType.USER_ACTIVE);
+		verifiesAtLeastOneIntervalIsCreated();
 		Assert.assertEquals(editorInterval.getStart(),
-				indirectlyCreatedInterval.getStart());
+				interval.getStart());
 	}
 
 	private WatchDogEvent createMockEvent(EventType eventType) {
