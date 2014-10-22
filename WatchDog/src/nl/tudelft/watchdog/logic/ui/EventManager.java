@@ -81,7 +81,7 @@ public class EventManager {
 		case ACTIVE_WINDOW:
 			interval = intervalManager
 					.getIntervalOfType(IntervalType.ECLIPSE_ACTIVE);
-			if (interval == null || interval.isClosed()) {
+			if (intervalIsClosed(interval)) {
 				intervalManager.addInterval(new IntervalBase(
 						IntervalType.ECLIPSE_ACTIVE, forcedDate));
 			}
@@ -117,7 +117,7 @@ public class EventManager {
 		case USER_ACTIVITY:
 			interval = intervalManager
 					.getIntervalOfType(IntervalType.USER_ACTIVE);
-			if (interval == null) {
+			if (intervalIsClosed(interval)) {
 				intervalManager.addInterval(new IntervalBase(
 						IntervalType.USER_ACTIVE, forcedDate));
 			}
@@ -130,8 +130,7 @@ public class EventManager {
 			ITextEditor editor = (ITextEditor) event.getSource();
 
 			readingInactivityNotifier.cancelTimer();
-			if (editorInterval != null
-					&& editorInterval.getType() == IntervalType.TYPING
+			if (intervalIsOfType(editorInterval, IntervalType.TYPING)
 					&& editorInterval.getEditor() == editor) {
 				return;
 			}
@@ -157,8 +156,8 @@ public class EventManager {
 			editorInterval = intervalManager.getEditorInterval();
 			editor = (ITextEditor) event.getSource();
 
-			if (editorInterval == null
-					|| editorInterval.getType() != IntervalType.TYPING
+			if (intervalIsClosed(editorInterval)
+					|| !intervalIsOfType(editorInterval, IntervalType.TYPING)
 					|| editorInterval.getEditor() != editor) {
 				update(new WatchDogEvent(event.getSource(),
 						EventType.START_EDIT));
@@ -174,7 +173,7 @@ public class EventManager {
 		case ACTIVE_FOCUS:
 			editorInterval = intervalManager.getEditorInterval();
 			editor = (ITextEditor) event.getSource();
-			if (editorInterval == null || editorInterval.isClosed()
+			if (intervalIsClosed(editorInterval)
 					|| editorInterval.getEditor() != editor) {
 				ReadingInterval readingInterval = new ReadingInterval(editor,
 						forcedDate);
@@ -204,16 +203,14 @@ public class EventManager {
 
 		case TYPING_INACTIVITY:
 			editorInterval = intervalManager.getEditorInterval();
-			if (editorInterval != null
-					&& editorInterval.getType() == IntervalType.TYPING) {
+			if (intervalIsOfType(editorInterval, IntervalType.TYPING)) {
 				intervalManager.closeInterval(editorInterval);
 			}
 			break;
 
 		case READING_INACTIVITY:
 			editorInterval = intervalManager.getEditorInterval();
-			if (editorInterval != null
-					&& editorInterval.getType() == IntervalType.READING) {
+			if (intervalIsOfType(editorInterval, IntervalType.READING)) {
 				intervalManager.closeInterval(editorInterval);
 			}
 			break;
@@ -221,6 +218,14 @@ public class EventManager {
 		default:
 			break;
 		}
+	}
+
+	private boolean intervalIsOfType(IntervalBase interval, IntervalType type) {
+		return interval != null && interval.getType() == type;
+	}
+
+	private boolean intervalIsClosed(IntervalBase interval) {
+		return interval == null || interval.isClosed();
 	}
 
 	/** Creates a new perspective Interval of the given type. */
