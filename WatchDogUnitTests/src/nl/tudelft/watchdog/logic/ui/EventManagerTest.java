@@ -173,10 +173,11 @@ public class EventManagerTest {
 	@Test
 	public void testNoMoreAdditionalUserActivitiesShouldNotCloseReading() {
 		eventManager.update(createMockEvent(EventType.USER_ACTIVITY));
+		sleep(USER_ACTIVITY_TIMEOUT / 5);
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
+		sleep(USER_ACTIVITY_TIMEOUT / 2);
 		editorInterval = intervalManager.getEditorInterval();
 		interval = intervalManager.getIntervalOfType(IntervalType.USER_ACTIVE);
-		sleep(USER_ACTIVITY_TIMEOUT / 2);
 
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 		sleep(USER_ACTIVITY_TIMEOUT / 2);
@@ -184,8 +185,10 @@ public class EventManagerTest {
 
 		Assert.assertFalse(editorInterval.isClosed());
 		Assert.assertFalse(interval.isClosed());
+		eventManager.update(createMockEvent(EventType.USER_ACTIVITY));
+		sleep(USER_ACTIVITY_TIMEOUT / 2);
 
-		sleep(USER_ACTIVITY_TIMEOUT * 2);
+		sleep(USER_ACTIVITY_TIMEOUT * 3);
 		Assert.assertEquals(null, intervalManager.getEditorInterval());
 		Assert.assertEquals(null,
 				intervalManager.getIntervalOfType(IntervalType.USER_ACTIVE));
@@ -202,8 +205,9 @@ public class EventManagerTest {
 	@Test
 	public void testEndTimeStampSetAccuratelyForWritingIntervals() {
 		testNoMoreAdditionalUserActivitiesShouldNotCloseReading();
+		sleep(USER_ACTIVITY_TIMEOUT);
 
-		Assert.assertEquals(editorInterval.getEnd(), interval.getEnd());
+		Assert.assertTrue(editorInterval.getEnd().getTime() <= interval.getEnd().getTime());
 	}
 
 	/**

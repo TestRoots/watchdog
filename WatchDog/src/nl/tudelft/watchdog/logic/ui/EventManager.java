@@ -45,7 +45,7 @@ public class EventManager {
 
 		// the user inactivity timer additionally calls a new user event
 		userInactivityNotifier = new UserInactivityNotifier(this,
-				userActivityTimeout, EventType.USER_INACTIVITY, intervalManager);
+				userActivityTimeout, EventType.USER_INACTIVITY);
 		typingInactivityNotifier = new InactivityNotifier(this,
 				userActivityTimeout, EventType.TYPING_INACTIVITY);
 		readingInactivityNotifier = new InactivityNotifier(this,
@@ -121,7 +121,7 @@ public class EventManager {
 				intervalManager.addInterval(new IntervalBase(
 						IntervalType.USER_ACTIVE, forcedDate));
 			}
-			userInactivityNotifier.trigger(forcedDate);
+			userInactivityNotifier.trigger();
 			break;
 
 		case START_EDIT:

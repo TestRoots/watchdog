@@ -69,9 +69,10 @@ public class InactivityNotifierTest {
 		inactivityNotifier.trigger();
 		Mockito.verify(eventManagerMock, Mockito.timeout(HALF_TIMEOUT).never())
 				.update(createAnyWatchDogEvent());
-		inactivityNotifier.cancelTimer(new Date());
+		Date cancelDate = new Date();
+		inactivityNotifier.cancelTimer(cancelDate);
 		Mockito.verify(eventManagerMock, Mockito.times(1)).update(
-				createAnyWatchDogEvent());
+				createAnyWatchDogEvent(), Mockito.eq(cancelDate));
 		Mockito.verifyNoMoreInteractions(eventManagerMock);
 	}
 

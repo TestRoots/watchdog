@@ -30,8 +30,6 @@ import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
 
 	private boolean isRunning;
 
-	private Date forcedDate;
-
 	/** Constructor. */
 	public InactivityNotifier(EventManager eventManager, int activityTimeout,
 			EventType type) {
@@ -78,17 +76,21 @@ import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
 		if (!isRunning) {
 			return;
 		}
-		this.forcedDate = forcedDate;
-		activityTimerTask.run();
+		activityTimerTask.run(forcedDate);
 		activityTimer.cancel();
 		activityTimerTask.cancel();
 	}
 
 	private class ActivityTimerTask extends TimerTask {
+
+		protected void run(Date forcedDate) {
+			eventManager.update(new WatchDogEvent(this, eventType), forcedDate);
+			isRunning = false;
+		}
+
 		@Override
 		public void run() {
-			Date date = forcedDate != null ? forcedDate : new Date();
-			eventManager.update(new WatchDogEvent(this, eventType), date);
+			eventManager.update(new WatchDogEvent(this, eventType));
 			isRunning = false;
 		}
 	}
