@@ -1,9 +1,8 @@
 package nl.tudelft.watchdog.logic.ui;
 
-import java.util.Date;
-
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.IntervalPersister;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
@@ -45,26 +44,26 @@ public class EventManagerTest {
 	public void testCreateReadInterval() {
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
 		Mockito.verify(intervalManager).addInterval(
-				Mockito.isA(ReadingInterval.class),  Mockito.any(Date.class));
+				Mockito.isA(ReadingInterval.class));
 	}
 
 	@Test
 	public void testCreateReadIntervalOnlyOnce() {
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
 		Mockito.verify(intervalManager).addInterval(
-				Mockito.isA(ReadingInterval.class),  Mockito.any(Date.class));
+				Mockito.isA(ReadingInterval.class));
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 		eventManager.update(createMockEvent(EventType.PAINT));
 		Mockito.verify(intervalManager).addInterval(
-				Mockito.isA(ReadingInterval.class),  Mockito.any(Date.class));
+				Mockito.isA(ReadingInterval.class));
 	}
 
 	@Test
 	public void testReadIntervalIsClosed() {
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
 		Mockito.verify(intervalManager).addInterval(
-				Mockito.isA(ReadingInterval.class),  Mockito.any(Date.class));
+				Mockito.isA(ReadingInterval.class));
 		eventManager.update(createMockEvent(EventType.INACTIVE_FOCUS));
 		Mockito.verify(intervalManager, Mockito.atLeastOnce()).closeInterval(
 				Mockito.isA(ReadingInterval.class));
@@ -75,7 +74,7 @@ public class EventManagerTest {
 	public void testCreateWriteInterval() {
 		eventManager.update(createMockEvent(EventType.EDIT));
 		Mockito.verify(intervalManager).addInterval(
-				Mockito.isA(TypingInterval.class),  Mockito.any(Date.class));
+				Mockito.isA(TypingInterval.class));
 	}
 
 	@Test
@@ -83,14 +82,16 @@ public class EventManagerTest {
 		eventManager.update(createMockEvent(EventType.START_EDIT));
 		eventManager.update(createMockEvent(EventType.EDIT));
 		Mockito.verify(intervalManager, Mockito.atLeast(1)).addInterval(
-				Mockito.isA(TypingInterval.class),  Mockito.any(Date.class));
+				Mockito.isA(TypingInterval.class));
 		Mockito.verify(intervalManager, Mockito.never()).addInterval(
-				Mockito.isA(ReadingInterval.class),  Mockito.any(Date.class));
+				Mockito.isA(ReadingInterval.class));
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 		eventManager.update(createMockEvent(EventType.EDIT));
 		eventManager.update(createMockEvent(EventType.PAINT));
 		Mockito.verify(intervalManager, Mockito.atLeast(1)).addInterval(
-				Mockito.isA(TypingInterval.class), Mockito.any(Date.class));
+				Mockito.isA(TypingInterval.class));
+		Mockito.verify(intervalManager, Mockito.never()).addInterval(
+				Mockito.isA(ReadingInterval.class));
 	}
 
 	@Test
@@ -149,44 +150,69 @@ public class EventManagerTest {
 	}
 
 	@Test
-	public void testUserInactiveShouldNotCloseReading() {
-		// FIXME: This test flickers!
+	public void testNoMoreAdditionalUserActivitiesShouldNotCloseReading() {
 		eventManager.update(createMockEvent(EventType.USER_ACTIVITY));
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
-		Mockito.verify(intervalManager,
-				Mockito.timeout(USER_ACTIVITY_TIMEOUT / 2).never())
-				.closeInterval(Mockito.any(IntervalBase.class));
+		sleep(USER_ACTIVITY_TIMEOUT / 2);
+		Assert.assertFalse(intervalManager.getEditorInterval().isClosed());
+		Assert.assertFalse(intervalManager.getIntervalOfType(
+				IntervalType.USER_ACTIVE).isClosed());
+
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
-		Mockito.verify(intervalManager,
-				Mockito.timeout(TIMEOUT_GRACE_PERIOD).never()).closeInterval(
-				Mockito.any(IntervalBase.class));
+		sleep(USER_ACTIVITY_TIMEOUT / 2);
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
-		Mockito.verify(intervalManager,
-				Mockito.timeout((int) (TIMEOUT_GRACE_PERIOD * 2.4)).never())
-				.closeInterval(Mockito.any(IntervalBase.class));
-		Mockito.verify(intervalManager,
-				Mockito.timeout((int) (TIMEOUT_GRACE_PERIOD * 3.5)))
-				.closeInterval(Mockito.isA(ReadingInterval.class));
+
+		Assert.assertFalse(intervalManager.getEditorInterval().isClosed());
+		Assert.assertFalse(intervalManager.getIntervalOfType(
+				IntervalType.USER_ACTIVE).isClosed());
+
+		sleep(USER_ACTIVITY_TIMEOUT * 2);
 		Assert.assertEquals(null, intervalManager.getEditorInterval());
+		Assert.assertEquals(null,
+				intervalManager.getIntervalOfType(IntervalType.USER_ACTIVE));
 	}
 
 	/**
 	 * This test verifies that one {@link IntervalBase} intervals is created
 	 * when a reading interval is created. This should be of type
-	 * {@link IntervalType#USER_ACTIVE}, but this is not possible to test for
-	 * due to limitations in Mockito.
+	 * {@link IntervalType#USER_ACTIVE}.
 	 */
 	@Test
 	public void verifiesAtLeastOneIntervalIsCreated() {
 		eventManager.update(createMockEvent(EventType.EDIT));
 		Mockito.verify(intervalManager, Mockito.atLeast(1)).addInterval(
-				Mockito.isA(IntervalBase.class), Mockito.any(Date.class));
+				Mockito.isA(IntervalBase.class));
 		Assert.assertNotNull(intervalManager
 				.getIntervalOfType(IntervalType.USER_ACTIVE));
 
 	}
 
+	/**
+	 * Advanced synchronization test, which tests whether sub-sequent intervals
+	 * (started because of another interval was created) have the same starting
+	 * time stamp. These intervals used to have a slightly delayed timestamp,
+	 * which this should fix.
+	 */
+	@Test
+	public void testStartTimeStampSetAccuratelyForWritingIntervals() {
+		eventManager.update(createMockEvent(EventType.EDIT));
+		sleep(TIMEOUT_GRACE_PERIOD / 5);
+		EditorIntervalBase editorInterval = intervalManager.getEditorInterval();
+		IntervalBase indirectlyCreatedInterval = intervalManager
+				.getIntervalOfType(IntervalType.USER_ACTIVE);
+		Assert.assertEquals(editorInterval.getStart(),
+				indirectlyCreatedInterval.getStart());
+	}
+
 	private WatchDogEvent createMockEvent(EventType eventType) {
 		return new WatchDogEvent(mockedTextEditor, eventType);
+	}
+
+	private void sleep(long milis) {
+		try {
+			Thread.sleep(milis);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

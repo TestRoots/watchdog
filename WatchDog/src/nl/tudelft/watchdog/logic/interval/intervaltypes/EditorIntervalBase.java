@@ -1,5 +1,7 @@
 package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
+import java.util.Date;
+
 import nl.tudelft.watchdog.logic.document.Document;
 
 import org.eclipse.ui.IWorkbenchPart;
@@ -49,8 +51,9 @@ public abstract class EditorIntervalBase extends IntervalBase {
 	protected transient EditorIntervalCloser editorIntervalCloser;
 
 	/** Constructor. */
-	public EditorIntervalBase(ITextEditor editor, IntervalType activity) {
-		super(activity);
+	public EditorIntervalBase(ITextEditor editor, IntervalType activity,
+			Date start) {
+		super(activity, start);
 		this.part = editor;
 		this.editor = (ITextEditor) editor;
 		this.editorIntervalCloser = createIntervalCloser();

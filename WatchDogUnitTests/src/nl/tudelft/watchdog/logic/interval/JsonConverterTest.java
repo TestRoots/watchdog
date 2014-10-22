@@ -33,7 +33,7 @@ public class JsonConverterTest {
 	/** Tests the format of the returned Json representation. */
 	@Test
 	public void testJsonReadingIntervalRepresentation() {
-		ReadingInterval interval = new ReadingInterval(null);
+		ReadingInterval interval = new ReadingInterval(null, new Date());
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals(
@@ -49,7 +49,7 @@ public class JsonConverterTest {
 	@Test
 	public void testJsonTypingIntervalMissingDocumentRepresentation() {
 		ITextEditor editor = Mockito.mock(ITextEditor.class);
-		TypingInterval interval = new TypingInterval(editor);
+		TypingInterval interval = new TypingInterval(editor, new Date());
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals(
@@ -62,7 +62,7 @@ public class JsonConverterTest {
 	@Test
 	public void testJsonTypingIntervalTwoSameIntervalsRepresentation() {
 		ITextEditor editor = Mockito.mock(ITextEditor.class);
-		TypingInterval interval = new TypingInterval(editor);
+		TypingInterval interval = new TypingInterval(editor, new Date());
 		interval.setDocument(new Document("Project", "Production.java",
 				"blah-document"));
 		interval.setEndingDocument(new Document("Project", "Production.java",
@@ -79,7 +79,7 @@ public class JsonConverterTest {
 	/** Tests the format of the returned Json representation. */
 	@Test
 	public void testJsonSessionIntervalRepresentation() {
-		IntervalBase interval = new IntervalBase(IntervalType.ECLIPSE_OPEN);
+		IntervalBase interval = new IntervalBase(IntervalType.ECLIPSE_OPEN, new Date());
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals(

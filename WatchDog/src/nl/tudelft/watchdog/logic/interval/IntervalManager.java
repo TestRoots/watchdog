@@ -1,7 +1,6 @@
 package nl.tudelft.watchdog.logic.interval;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -41,9 +40,8 @@ public class IntervalManager extends IntervalManagerBase {
 	 * already closed intervals properly. Delegates to the correct adding
 	 * mechanism.
 	 */
-	public void addInterval(IntervalBase interval, Date forcedDate) {
+	public void addInterval(IntervalBase interval) {
 		interval.setSessionSeed(sessionSeed);
-		interval.setStartTime(forcedDate);
 		if (interval instanceof EditorIntervalBase) {
 			EditorIntervalBase editorInterval = (EditorIntervalBase) interval;
 			addEditorInterval(editorInterval);

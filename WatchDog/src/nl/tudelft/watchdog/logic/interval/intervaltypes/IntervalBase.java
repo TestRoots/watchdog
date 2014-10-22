@@ -41,8 +41,8 @@ public class IntervalBase extends WatchDogTransferable implements Serializable,
 	protected transient boolean isClosed;
 
 	/** Constructor. */
-	public IntervalBase(IntervalType type) {
-		this.start = new Date();
+	public IntervalBase(IntervalType type, Date start) {
+		this.start = start;
 		this.isClosed = false;
 		this.intervalType = type;
 	}

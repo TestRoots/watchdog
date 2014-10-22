@@ -25,7 +25,7 @@ public class JUnitInterval extends IntervalBase {
 	 * yet), as they report on finished JUnit executions.
 	 */
 	public JUnitInterval(ITestElement test) {
-		super(IntervalType.JUNIT);
+		super(IntervalType.JUNIT, new Date());
 		isClosed = true;
 		double duration = test.getElapsedTimeInSeconds();
 

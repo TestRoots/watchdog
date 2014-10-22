@@ -1,5 +1,7 @@
 package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
+import java.util.Date;
+
 import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.network.JsonifiedLong;
 
@@ -56,8 +58,8 @@ public class TypingInterval extends EditorIntervalBase {
 	JsonifiedLong editDistance;
 
 	/** Constructor. */
-	public TypingInterval(ITextEditor editor) {
-		super(editor, IntervalType.TYPING);
+	public TypingInterval(ITextEditor editor, Date start) {
+		super(editor, IntervalType.TYPING, start);
 	}
 
 	@Override

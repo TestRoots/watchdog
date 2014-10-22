@@ -1,13 +1,15 @@
 package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
+import java.util.Date;
+
 import com.google.gson.annotations.SerializedName;
 
 /** Interval describing a certain opened perspective. */
 public class PerspectiveInterval extends IntervalBase {
 
 	/** Constructor. */
-	public PerspectiveInterval(Perspective perspectiveType) {
-		super(IntervalType.PERSPECTIVE);
+	public PerspectiveInterval(Perspective perspectiveType, Date start) {
+		super(IntervalType.PERSPECTIVE, start);
 		this.perspectiveType = perspectiveType;
 	}
 

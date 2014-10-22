@@ -47,7 +47,7 @@ public class NetworkUtilsTest {
 	@Ignore
 	public void testIntervalTransfer() {
 		JsonTransferer it = new JsonTransferer();
-		IntervalBase interval = new IntervalBase(IntervalType.ECLIPSE_OPEN);
+		IntervalBase interval = new IntervalBase(IntervalType.ECLIPSE_OPEN, new Date());
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 		String json = it.toJson(intervals);
 

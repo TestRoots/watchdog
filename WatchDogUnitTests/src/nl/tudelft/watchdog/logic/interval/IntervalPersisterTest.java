@@ -85,7 +85,7 @@ public class IntervalPersisterTest {
 	}
 
 	public static IntervalBase createRandomInterval() {
-		IntervalBase interval = new IntervalBase(IntervalType.ECLIPSE_OPEN);
+		IntervalBase interval = new IntervalBase(IntervalType.ECLIPSE_OPEN, new Date());
 		interval.setSessionSeed(444);
 		interval.setStartTime(new Date(interval.getStart().getTime()
 				+ (new Random()).nextInt(100000)));
