@@ -25,10 +25,10 @@ public class IntervalStatistics extends IntervalManagerBase {
 	public Date mostRecentDate;
 
 	/** Constructor. */
-	public IntervalStatistics(IntervalPersister intervalPersister) {
-		this.intervalPersister = intervalPersister;
-
+	public IntervalStatistics(IntervalManager intervalManager) {
+		intervalPersister = intervalManager.getIntervalsStatisticsPersister();
 		intervals.addAll(intervalPersister.readIntervals());
+		intervals.addAll(intervalManager.getOpenIntervals());
 		filterIntervals();
 		calculateStatistics();
 	}
@@ -49,13 +49,17 @@ public class IntervalStatistics extends IntervalManagerBase {
 
 		mostRecentDate = intervals.get(intervals.size() - 1).getEnd();
 		DateTime thresholdDate = new DateTime(mostRecentDate);
-		thresholdDate = thresholdDate.minusHours(1);
+		thresholdDate = thresholdDate.minusMinutes(2);
 
 		for (IntervalBase interval : intervals) {
-			if (interval.getEnd().before(thresholdDate.toDate())) {
-				intervalsToRemove.add(interval);
+			if (interval.getEnd().after(thresholdDate.toDate())) {
+				IntervalBase clonedInterval = (IntervalBase) interval.clone();
+				if (interval.getStart().before(thresholdDate.toDate())) {
+					clonedInterval.setStartTime(thresholdDate.toDate());
+				}
+				filteredIntervals.add(clonedInterval);
 			} else {
-				filteredIntervals.add(interval);
+				intervalsToRemove.add(interval);
 			}
 		}
 

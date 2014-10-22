@@ -1,11 +1,13 @@
 package nl.tudelft.watchdog.ui;
 
+import javafx.collections.ObservableList;
 import javafx.embed.swt.FXCanvas;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Series;
 import nl.tudelft.watchdog.logic.InitializationManager;
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.ui.util.UIUtils;
@@ -20,18 +22,13 @@ import org.eclipse.ui.part.ViewPart;
 
 /** A view displaying all the statistics that WatchDog has gathered. */
 public class WatchDogView extends ViewPart {
-	final static String austria = "Austria";
-	final static String brazil = "Brazil";
-	final static String france = "France";
-	final static String italy = "Italy";
-	final static String usa = "USA";
 	private Composite container;
 	private IntervalStatistics intervalStatistics;
 
 	@Override
 	public void createPartControl(Composite parent) {
 		intervalStatistics = new IntervalStatistics(InitializationManager
-				.getInstance().getIntervalsStatisticsPersister());
+				.getInstance().getIntervalManager());
 
 		ScrolledComposite scrolledComposite = new ScrolledComposite(parent,
 				SWT.H_SCROLL | SWT.V_SCROLL);
@@ -77,40 +74,29 @@ public class WatchDogView extends ViewPart {
 			}
 		};
 
-		final CategoryAxis xAxis = new CategoryAxis();
-		final NumberAxis yAxis = new NumberAxis();
-		final BarChart<String, Number> bc = new BarChart<String, Number>(xAxis,
+		final NumberAxis xAxis = new NumberAxis();
+		final CategoryAxis yAxis = new CategoryAxis();
+		final BarChart<Number, String> bc = new BarChart<Number, String>(xAxis,
 				yAxis);
-		bc.setTitle("Country Summary");
-		xAxis.setLabel("Country");
-		yAxis.setLabel("Value");
+		bc.setTitle("Reading vs. Writing");
+		xAxis.setTickLabelRotation(90);
+		Series<Number, String> series1 = new XYChart.Series<Number, String>();
+		series1.getData().add(
+				new XYChart.Data<Number, String>(intervalStatistics.eclipseOpen
+						.getStandardSeconds(), "Eclipse Open"));
+		series1.getData().add(
+				new XYChart.Data<Number, String>(intervalStatistics.userActive
+						.getStandardSeconds(), "User Activity"));
+		series1.getData().add(
+				new XYChart.Data<Number, String>(intervalStatistics.userReading
+						.getStandardSeconds(), "Reading Code"));
+		series1.getData().add(
+				new XYChart.Data<Number, String>(intervalStatistics.userTyping
+						.getStandardSeconds(), "Writing Code"));
 
-		XYChart.Series series1 = new XYChart.Series();
-		series1.setName("2003");
-		series1.getData().add(new XYChart.Data(austria, 25601.34));
-		series1.getData().add(new XYChart.Data(brazil, 20148.82));
-		series1.getData().add(new XYChart.Data(france, 10000));
-		series1.getData().add(new XYChart.Data(italy, 35407.15));
-		series1.getData().add(new XYChart.Data(usa, 12000));
-
-		XYChart.Series series2 = new XYChart.Series();
-		series2.setName("2004");
-		series2.getData().add(new XYChart.Data(austria, 57401.85));
-		series2.getData().add(new XYChart.Data(brazil, 41941.19));
-		series2.getData().add(new XYChart.Data(france, 45263.37));
-		series2.getData().add(new XYChart.Data(italy, 117320.16));
-		series2.getData().add(new XYChart.Data(usa, 14845.27));
-
-		XYChart.Series series3 = new XYChart.Series();
-		series3.setName("2005");
-		series3.getData().add(new XYChart.Data(austria, 45000.65));
-		series3.getData().add(new XYChart.Data(brazil, 44835.76));
-		series3.getData().add(new XYChart.Data(france, 18722.18));
-		series3.getData().add(new XYChart.Data(italy, 17557.31));
-		series3.getData().add(new XYChart.Data(usa, 92633.68));
-
-		Scene scene = new Scene(bc, 400, 400);
-		bc.getData().addAll(series1, series2, series3);
+		Scene scene = new Scene(bc, 400, 300);
+		ObservableList<Series<Number, String>> data = bc.getData();
+		data.add(series1);
 
 		fxCanvas.setScene(scene);
 	}

@@ -13,7 +13,7 @@ import com.google.gson.annotations.SerializedName;
 
 /** The interval base. */
 public class IntervalBase extends WatchDogTransferable implements Serializable,
-		Comparable<IntervalBase> {
+		Comparable<IntervalBase>, Cloneable {
 
 	/** The version id of this class. */
 	private static final long serialVersionUID = 2L;
@@ -74,7 +74,10 @@ public class IntervalBase extends WatchDogTransferable implements Serializable,
 	 * @return the end of the interval as a {@link Date}.
 	 */
 	public Date getEnd() {
-		return end;
+		if (end != null) {
+			return end;
+		}
+		return new Date();
 	}
 
 	/**
@@ -121,4 +124,11 @@ public class IntervalBase extends WatchDogTransferable implements Serializable,
 		return getEnd().compareTo(comparedInterval.getEnd());
 	}
 
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (Exception e) {
+			return null;
+		}
+	}
 }
