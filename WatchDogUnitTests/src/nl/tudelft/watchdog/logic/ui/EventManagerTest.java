@@ -11,6 +11,7 @@ import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.junit.Assert;
@@ -66,9 +67,9 @@ public class EventManagerTest {
 	@Test
 	public void testCreateUserActivityIntervalOnlyOnce() {
 		eventManager.update(createMockEvent(EventType.USER_ACTIVITY));
-		sleep(50);
+		WatchDogUtils.sleep(50);
 		eventManager.update(createMockEvent(EventType.USER_ACTIVITY));
-		sleep(50);
+		WatchDogUtils.sleep(50);
 		eventManager.update(createMockEvent(EventType.USER_ACTIVITY));
 		Mockito.verify(intervalManager).addInterval(
 				Mockito.isA(IntervalBase.class));
@@ -173,22 +174,22 @@ public class EventManagerTest {
 	@Test
 	public void testNoMoreAdditionalUserActivitiesShouldNotCloseReading() {
 		eventManager.update(createMockEvent(EventType.USER_ACTIVITY));
-		sleep(USER_ACTIVITY_TIMEOUT / 5);
+		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT / 5);
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
-		sleep(USER_ACTIVITY_TIMEOUT / 2);
+		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT / 2);
 		editorInterval = intervalManager.getEditorInterval();
 		interval = intervalManager.getIntervalOfType(IntervalType.USER_ACTIVE);
 
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
-		sleep(USER_ACTIVITY_TIMEOUT / 2);
+		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT / 2);
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 
 		Assert.assertFalse(editorInterval.isClosed());
 		Assert.assertFalse(interval.isClosed());
 		eventManager.update(createMockEvent(EventType.USER_ACTIVITY));
-		sleep(USER_ACTIVITY_TIMEOUT / 2);
+		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT / 2);
 
-		sleep(USER_ACTIVITY_TIMEOUT * 3);
+		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT * 3);
 		Assert.assertEquals(null, intervalManager.getEditorInterval());
 		Assert.assertEquals(null,
 				intervalManager.getIntervalOfType(IntervalType.USER_ACTIVE));
@@ -205,7 +206,7 @@ public class EventManagerTest {
 	@Test
 	public void testEndTimeStampSetAccuratelyForWritingIntervals() {
 		testNoMoreAdditionalUserActivitiesShouldNotCloseReading();
-		sleep(USER_ACTIVITY_TIMEOUT);
+		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT);
 
 		Assert.assertTrue(editorInterval.getEnd().getTime() <= interval.getEnd().getTime());
 	}
@@ -229,7 +230,7 @@ public class EventManagerTest {
 	@Test
 	public void testAUserActivityIntervalIsCreatedThroughAnEdit() {
 		eventManager.update(createMockEvent(EventType.EDIT));
-		sleep(TIMEOUT_GRACE_PERIOD / 5);
+		WatchDogUtils.sleep(TIMEOUT_GRACE_PERIOD / 5);
 		editorInterval = intervalManager.getEditorInterval();
 		interval = intervalManager.getIntervalOfType(IntervalType.USER_ACTIVE);
 		Assert.assertNotNull(interval);
@@ -252,11 +253,4 @@ public class EventManagerTest {
 		return new WatchDogEvent(mockedTextEditor, eventType);
 	}
 
-	private void sleep(long milis) {
-		try {
-			Thread.sleep(milis);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
 }

@@ -4,6 +4,7 @@ import java.util.Date;
 
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -77,10 +78,10 @@ public class InactivityNotifierTest {
 	}
 
 	@Test
-	public void testTimerExecutedRegularly() throws InterruptedException {
+	public void testTimerExecutedRegularly() {
 		for (int i = 0; i < 5; i++) {
 			inactivityNotifier.trigger();
-			Thread.sleep(HALF_TIMEOUT);
+			WatchDogUtils.sleep(HALF_TIMEOUT);
 		}
 		Mockito.verifyZeroInteractions(eventManagerMock);
 		Mockito.verify(eventManagerMock, Mockito.timeout(TIMEOUT)).update(

@@ -16,6 +16,7 @@ import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.ui.wizards.Project;
 import nl.tudelft.watchdog.ui.wizards.User;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
+import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.junit.Test;
@@ -107,13 +108,9 @@ public class JsonConverterTest {
 	}
 
 	private void sleepABit() {
-		try {
-			Thread.yield();
-			Thread.sleep(200);
-			Thread.yield();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		Thread.yield();
+		WatchDogUtils.sleep(200);
+		Thread.yield();
 	}
 
 	@Test

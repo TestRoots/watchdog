@@ -188,4 +188,13 @@ public class WatchDogUtils {
 		}
 	}
 
+	/** Sleeps for the specified amount of milliseconds. */
+	public static void sleep(long milis) {
+		try {
+			Thread.sleep(milis);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
 }
