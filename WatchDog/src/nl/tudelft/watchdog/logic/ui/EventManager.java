@@ -37,11 +37,24 @@ public class EventManager {
 	private InactivityNotifier readingInactivityNotifier;
 
 	/** Constructor. */
-	public EventManager(IntervalManager intervalManager, int userActivityTimeout) {
+	public EventManager(final IntervalManager intervalManager,
+			int userActivityTimeout) {
 		this.intervalManager = intervalManager;
 
+		// the user inactivity timer additionally calls a new user event
 		userInactivityNotifier = new InactivityNotifier(this,
-				userActivityTimeout, EventType.USER_INACTIVITY);
+				userActivityTimeout, EventType.USER_INACTIVITY) {
+			@Override
+			public void trigger() {
+				super.trigger();
+				IntervalBase interval = intervalManager
+						.getIntervalOfType(IntervalType.USER_ACTIVE);
+				if (interval == null) {
+					eventManager.update(new WatchDogEvent(this,
+							EventType.USER_ACTIVITY));
+				}
+			}
+		};
 		typingInactivityNotifier = new InactivityNotifier(this,
 				userActivityTimeout, EventType.TYPING_INACTIVITY);
 		readingInactivityNotifier = new InactivityNotifier(this,
@@ -64,8 +77,12 @@ public class EventManager {
 			break;
 
 		case ACTIVE_WINDOW:
-			intervalManager.addInterval(new IntervalBase(
-					IntervalType.ECLIPSE_ACTIVE));
+			interval = intervalManager
+					.getIntervalOfType(IntervalType.ECLIPSE_ACTIVE);
+			if (interval == null || interval.isClosed()) {
+				intervalManager.addInterval(new IntervalBase(
+						IntervalType.ECLIPSE_ACTIVE));
+			}
 			userInactivityNotifier.trigger();
 			break;
 
@@ -73,7 +90,6 @@ public class EventManager {
 			interval = intervalManager
 					.getIntervalOfType(IntervalType.ECLIPSE_ACTIVE);
 			intervalManager.closeInterval(interval);
-			userInactivityNotifier.cancelTimer();
 			break;
 
 		case START_JAVA_PERSPECTIVE:
@@ -97,13 +113,13 @@ public class EventManager {
 			break;
 
 		case USER_ACTIVITY:
-			userInactivityNotifier.trigger();
 			interval = intervalManager
 					.getIntervalOfType(IntervalType.USER_ACTIVE);
 			if (interval == null) {
 				intervalManager.addInterval(new IntervalBase(
 						IntervalType.USER_ACTIVE));
 			}
+			userInactivityNotifier.trigger();
 			break;
 
 		case START_EDIT:
@@ -154,8 +170,9 @@ public class EventManager {
 		case CARET_MOVED:
 		case ACTIVE_FOCUS:
 			editorInterval = intervalManager.getEditorInterval();
-			if (editorInterval == null || editorInterval.isClosed()) {
-				editor = (ITextEditor) event.getSource();
+			editor = (ITextEditor) event.getSource();
+			if (editorInterval == null || editorInterval.isClosed()
+					|| editorInterval.getEditor() != editor) {
 				ReadingInterval readingInterval = new ReadingInterval(editor);
 				readingInterval.setDocument(DocumentCreator
 						.createDocument(editor));

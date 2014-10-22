@@ -17,7 +17,7 @@ import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
  */
 /* package */class InactivityNotifier {
 	/** */
-	private final EventManager eventManager;
+	protected final EventManager eventManager;
 
 	private int activityTimeout;
 
@@ -43,7 +43,7 @@ import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
 	 * non is running.
 	 */
 	public void trigger() {
-		if (activityTimer == null) {
+		if (activityTimer == null || !isRunning) {
 			createNewTimer();
 		} else if (activityTimerTask.scheduledExecutionTime()
 				- System.currentTimeMillis() < 0.9 * activityTimeout) {

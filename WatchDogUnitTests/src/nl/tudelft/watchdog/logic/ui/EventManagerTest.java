@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.logic.ui;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.IntervalPersister;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
@@ -26,6 +27,7 @@ public class EventManagerTest {
 	private static final int TIMEOUT_GRACE_PERIOD = (int) (USER_ACTIVITY_TIMEOUT * 1.1);
 	private EventManager eventManager;
 	private IntervalManager intervalManager;
+	ITextEditor mockedTextEditor;
 
 	@Before
 	public void setup() {
@@ -33,6 +35,7 @@ public class EventManagerTest {
 				Mockito.mock(IntervalPersister.class),
 				Mockito.mock(IntervalPersister.class));
 		intervalManager = Mockito.spy(intervalManagerReal);
+		mockedTextEditor = Mockito.mock(ITextEditor.class);
 		eventManager = new EventManager(intervalManager, USER_ACTIVITY_TIMEOUT);
 	}
 
@@ -116,7 +119,6 @@ public class EventManagerTest {
 
 	@Test
 	public void testTimeoutWorksForWritingIntervals() {
-
 		eventManager.update(createMockEvent(EventType.EDIT));
 		// first close null interval
 		Mockito.verify(intervalManager,
@@ -146,7 +148,7 @@ public class EventManagerTest {
 
 	@Test
 	public void testUserInactiveShouldNotCloseReading() {
-		// FIXME: This test flickers! 
+		// FIXME: This test flickers!
 		eventManager.update(createMockEvent(EventType.USER_ACTIVITY));
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
 		Mockito.verify(intervalManager,
@@ -166,7 +168,23 @@ public class EventManagerTest {
 		Assert.assertEquals(null, intervalManager.getEditorInterval());
 	}
 
+	/**
+	 * This test verifies that one {@link IntervalBase} intervals is created
+	 * when a reading interval is created. This should be of type
+	 * {@link IntervalType#USER_ACTIVE}, but this is not possible to test for
+	 * due to limitations in Mockito.
+	 */
+	@Test
+	public void verifiesAtLeastOneIntervalIsCreated() {
+		eventManager.update(createMockEvent(EventType.EDIT));
+		Mockito.verify(intervalManager, Mockito.atLeast(1)).addInterval(
+				Mockito.isA(IntervalBase.class));
+		Assert.assertNotNull(intervalManager
+				.getIntervalOfType(IntervalType.USER_ACTIVE));
+
+	}
+
 	private WatchDogEvent createMockEvent(EventType eventType) {
-		return new WatchDogEvent(Mockito.mock(ITextEditor.class), eventType);
+		return new WatchDogEvent(mockedTextEditor, eventType);
 	}
 }

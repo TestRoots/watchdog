@@ -52,6 +52,8 @@ public class IntervalManager extends IntervalManagerBase {
 		if (interval.isClosed()) {
 			closeInterval(interval);
 		}
+		WatchDogLogger.getInstance().logInfo(
+				"Created interval " + interval + " " + interval.getType());
 	}
 
 	/**
@@ -93,7 +95,8 @@ public class IntervalManager extends IntervalManagerBase {
 		}
 		intervalsToTransferPersister.saveInterval(interval);
 		intervalsStatisticsPersister.saveInterval(interval);
-		WatchDogLogger.getInstance().logInfo("closed interval " + interval);
+		WatchDogLogger.getInstance().logInfo(
+				"closed interval " + interval + " " + interval.getType());
 	}
 
 	/** Closes all currently open intervals. */
@@ -121,5 +124,12 @@ public class IntervalManager extends IntervalManagerBase {
 	/** Returns an immutable list of recorded intervals. */
 	public List<IntervalBase> getOpenIntervals() {
 		return Collections.unmodifiableList(intervals);
+	}
+
+	/**
+	 * @return the statistics persister.
+	 */
+	public IntervalPersister getIntervalsStatisticsPersister() {
+		return intervalsStatisticsPersister;
 	}
 }
