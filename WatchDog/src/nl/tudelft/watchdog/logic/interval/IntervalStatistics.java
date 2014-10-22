@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
 /** Gathers and calculates statistics on interval length. */
+@SuppressWarnings("javadoc")
 public class IntervalStatistics extends IntervalManagerBase {
 	private IntervalPersister intervalPersister;
 
@@ -76,9 +77,7 @@ public class IntervalStatistics extends IntervalManagerBase {
 		return aggregatedDuration;
 	}
 
-	/**
-	 * @return the number of intervals.
-	 */
+	/** @return the number of intervals. */
 	public int getNumberOfIntervals() {
 		return intervals.size();
 	}

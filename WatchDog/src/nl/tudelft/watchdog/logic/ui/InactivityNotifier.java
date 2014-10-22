@@ -88,7 +88,7 @@ import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
 		@Override
 		public void run() {
 			Date date = forcedDate != null ? forcedDate : new Date();
-			eventManager.update(new WatchDogEvent(this, eventType), forcedDate);
+			eventManager.update(new WatchDogEvent(this, eventType), date);
 			isRunning = false;
 		}
 	}
