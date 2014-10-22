@@ -11,6 +11,7 @@ import javafx.scene.chart.XYChart.Series;
 import nl.tudelft.watchdog.logic.InitializationManager;
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.ui.util.UIUtils;
+import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -27,8 +28,6 @@ public class WatchDogView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		intervalStatistics = new IntervalStatistics(InitializationManager
-				.getInstance().getIntervalManager());
 
 		ScrolledComposite scrolledComposite = new ScrolledComposite(parent,
 				SWT.H_SCROLL | SWT.V_SCROLL);
@@ -45,17 +44,29 @@ public class WatchDogView extends ViewPart {
 		// .applyTo(text);
 		container.setLayout(new GridLayout(1, false));
 
-		UIUtils.createLabel(
-				"Statistics on your last hour of development, starting at "
-						+ intervalStatistics.mostRecentDate + " and comprise "
-						+ intervalStatistics.getNumberOfIntervals()
-						+ " recorded intervals.", container);
+		if (!WatchDogGlobals.isActive) {
+			UIUtils.createBoldLabel(
+					"WatchDog is not active in this workspace! \n", container);
+			UIUtils.createLabel(
+					"Therefore we cannot show you any cool test statistics. \nTo get them, click the WatchDog icon and enable WatchDog.",
+					container);
+		} else {
+			intervalStatistics = new IntervalStatistics(InitializationManager
+					.getInstance().getIntervalManager());
 
-		Composite statisticsContainer = UIUtils
-				.createZeroMarginGridedComposite(container, 2);
+			UIUtils.createLabel(
+					"Statistics on your last hour of development, starting at "
+							+ intervalStatistics.mostRecentDate
+							+ " and comprise "
+							+ intervalStatistics.getNumberOfIntervals()
+							+ " recorded intervals.", container);
 
-		createGraph(statisticsContainer);
-		createGraph(statisticsContainer);
+			Composite statisticsContainer = UIUtils
+					.createZeroMarginGridedComposite(container, 2);
+
+			createGraph(statisticsContainer);
+			createGraph(statisticsContainer);
+		}
 
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
