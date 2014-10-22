@@ -42,26 +42,26 @@ public class EventManagerTest {
 	@Test
 	public void testCreateReadInterval() {
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
-		Mockito.verify(intervalManager).addEditorInterval(
+		Mockito.verify(intervalManager).addInterval(
 				Mockito.isA(ReadingInterval.class));
 	}
 
 	@Test
 	public void testCreateReadIntervalOnlyOnce() {
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
-		Mockito.verify(intervalManager).addEditorInterval(
+		Mockito.verify(intervalManager).addInterval(
 				Mockito.isA(ReadingInterval.class));
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 		eventManager.update(createMockEvent(EventType.PAINT));
-		Mockito.verify(intervalManager).addEditorInterval(
+		Mockito.verify(intervalManager).addInterval(
 				Mockito.isA(ReadingInterval.class));
 	}
 
 	@Test
 	public void testReadIntervalIsClosed() {
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
-		Mockito.verify(intervalManager).addEditorInterval(
+		Mockito.verify(intervalManager).addInterval(
 				Mockito.isA(ReadingInterval.class));
 		eventManager.update(createMockEvent(EventType.INACTIVE_FOCUS));
 		Mockito.verify(intervalManager, Mockito.atLeastOnce()).closeInterval(
@@ -72,7 +72,7 @@ public class EventManagerTest {
 	@Test
 	public void testCreateWriteInterval() {
 		eventManager.update(createMockEvent(EventType.EDIT));
-		Mockito.verify(intervalManager).addEditorInterval(
+		Mockito.verify(intervalManager).addInterval(
 				Mockito.isA(TypingInterval.class));
 	}
 
@@ -80,14 +80,14 @@ public class EventManagerTest {
 	public void testCreateWriteIntervalAndNotAReadInterval() {
 		eventManager.update(createMockEvent(EventType.START_EDIT));
 		eventManager.update(createMockEvent(EventType.EDIT));
-		Mockito.verify(intervalManager, Mockito.atLeast(1)).addEditorInterval(
+		Mockito.verify(intervalManager, Mockito.atLeast(1)).addInterval(
 				Mockito.isA(TypingInterval.class));
-		Mockito.verify(intervalManager, Mockito.never()).addEditorInterval(
+		Mockito.verify(intervalManager, Mockito.never()).addInterval(
 				Mockito.isA(ReadingInterval.class));
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 		eventManager.update(createMockEvent(EventType.EDIT));
 		eventManager.update(createMockEvent(EventType.PAINT));
-		Mockito.verify(intervalManager, Mockito.atLeast(1)).addEditorInterval(
+		Mockito.verify(intervalManager, Mockito.atLeast(1)).addInterval(
 				Mockito.isA(TypingInterval.class));
 	}
 

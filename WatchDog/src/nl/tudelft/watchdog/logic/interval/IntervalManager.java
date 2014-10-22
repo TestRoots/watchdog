@@ -37,40 +37,48 @@ public class IntervalManager extends IntervalManagerBase {
 	/**
 	 * Adds the supplied interval to the list of intervals. New intervals must
 	 * use this method to be registered properly. Handles the addition of
-	 * already closed intervals properly.
+	 * already closed intervals properly. Delegates to the correct adding
+	 * mechansim.
 	 */
 	public void addInterval(IntervalBase interval) {
-		if (intervals.size() > 20) {
+		interval.setSessionSeed(sessionSeed);
+		if (interval instanceof EditorIntervalBase) {
+			EditorIntervalBase editorInterval = (EditorIntervalBase) interval;
+			addEditorInterval(editorInterval);
+		} else {
+			addRegularIntervalBase(interval);
+		}
+
+		WatchDogLogger.getInstance().logInfo(
+				"Created interval " + interval + " " + interval.getType());
+		if (interval.isClosed()) {
+			closeInterval(interval);
+		}
+	}
+
+	private void addRegularIntervalBase(IntervalBase interval) {
+		if (intervals.size() > 30) {
 			WatchDogLogger
 					.getInstance()
 					.logSevere(
 							"Too many open intervals. Something fishy is going on here! Cannot add more intervals.");
 			return;
 		}
-		interval.setSessionSeed(sessionSeed);
 		intervals.add(interval);
-		if (interval.isClosed()) {
-			closeInterval(interval);
-		}
-		WatchDogLogger.getInstance().logInfo(
-				"Created interval " + interval + " " + interval.getType());
 	}
 
 	/**
 	 * Adds the given EditorIntervalBase, if the existing editorInterval is
 	 * closed.
 	 */
-	public void addEditorInterval(EditorIntervalBase editorInterval) {
+	private void addEditorInterval(EditorIntervalBase editorInterval) {
 		if (!(this.editorInterval == null || this.editorInterval.isClosed())) {
 			WatchDogLogger.getInstance().logSevere(
 					"Failure: Unclosed editor interval! " + editorInterval);
 			closeInterval(this.editorInterval);
 		}
 
-		editorInterval.setSessionSeed(sessionSeed);
 		this.editorInterval = editorInterval;
-		WatchDogLogger.getInstance().logInfo(
-				"created new editor interval " + editorInterval);
 	}
 
 	/**

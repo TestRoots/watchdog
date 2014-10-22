@@ -1,5 +1,7 @@
 package nl.tudelft.watchdog.logic.ui;
 
+import java.util.Date;
+
 import nl.tudelft.watchdog.logic.InitializationManager;
 import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentCreator;
@@ -61,8 +63,19 @@ public class EventManager {
 				userActivityTimeout, EventType.READING_INACTIVITY);
 	}
 
-	/** Introduces the supplied editorEvent */
+	/**
+	 * Simple proxy for {@link #update(WatchDogEvent, Date)}, calling it with
+	 * the forcedDate set to now.
+	 */
 	public void update(WatchDogEvent event) {
+		update(event, new Date());
+	}
+
+	/**
+	 * Introduces the supplied editorEvent, and sets the forcedDate to the
+	 * interval that is being created or closed.
+	 */
+	public void update(WatchDogEvent event, Date forcedDate) {
 		IntervalBase interval;
 		switch (event.getType()) {
 		case START_ECLIPSE:
@@ -144,7 +157,7 @@ public class EventManager {
 				document = DocumentCreator.createDocument(editor);
 			}
 			typingInterval.setDocument(document);
-			intervalManager.addEditorInterval(typingInterval);
+			intervalManager.addInterval(typingInterval);
 
 			typingInactivityNotifier.trigger();
 			userInactivityNotifier.trigger();
@@ -176,7 +189,7 @@ public class EventManager {
 				ReadingInterval readingInterval = new ReadingInterval(editor);
 				readingInterval.setDocument(DocumentCreator
 						.createDocument(editor));
-				intervalManager.addEditorInterval(readingInterval);
+				intervalManager.addInterval(readingInterval);
 			}
 			readingInactivityNotifier.trigger();
 			userInactivityNotifier.trigger();
