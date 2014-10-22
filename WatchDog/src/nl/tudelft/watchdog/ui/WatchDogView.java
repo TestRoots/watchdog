@@ -28,7 +28,6 @@ public class WatchDogView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-
 		ScrolledComposite scrolledComposite = new ScrolledComposite(parent,
 				SWT.H_SCROLL | SWT.V_SCROLL);
 
