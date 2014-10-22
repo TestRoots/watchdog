@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.logic.network;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.Pattern;
 
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
@@ -55,9 +56,32 @@ public class ClientVersionChecker {
 				} else {
 					preferences.setIsOldVersion(false);
 				}
+
+				preferences.setBigUpdateAvailable(hasMajorOrMinorVersionGap(
+						currentServerVersion, WatchDogGlobals.CLIENT_VERSION));
+
 				UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);
 			} catch (ServerCommunicationException exception) {
 			}
 		}
+	}
+
+	/**
+	 * @return <code>true</code> if the two supplied strings have a difference
+	 *         in their major or minor version. <code>false</code> otherwise.
+	 */
+	protected static boolean hasMajorOrMinorVersionGap(String version1,
+			String version2) {
+		String regEx = Pattern.quote(".");
+		String[] majorMinorPatchVersionServer = version1.split(regEx);
+		String[] majorMinorPatchVersionLocal = version2.split(regEx);
+
+		if (!majorMinorPatchVersionLocal[0]
+				.equals(majorMinorPatchVersionServer[0])
+				|| !majorMinorPatchVersionLocal[1]
+						.equals(majorMinorPatchVersionServer[1])) {
+			return true;
+		}
+		return false;
 	}
 }

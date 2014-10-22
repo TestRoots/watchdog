@@ -39,8 +39,6 @@ public class WatchDogView extends ViewPart {
 		container.setBackgroundMode(SWT.INHERIT_FORCE);
 		scrolledComposite.setContent(container);
 
-		// GridDataFactory.fillDefaults().grab(true, true).hint(400, 400)
-		// .applyTo(text);
 		container.setLayout(new GridLayout(1, false));
 
 		if (!WatchDogGlobals.isActive) {
@@ -71,7 +69,6 @@ public class WatchDogView extends ViewPart {
 		scrolledComposite.setExpandVertical(true);
 		scrolledComposite.setMinSize(container.computeSize(SWT.DEFAULT,
 				SWT.DEFAULT));
-
 	}
 
 	private void createGraph(Composite container) {

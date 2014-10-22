@@ -12,7 +12,7 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="nl.tudelft.watchdog.ui.handlers.InfoStatisticsDialogHandler"
+            defaultHandler="nl.tudelft.watchdog.ui.handlers.InfoHandler"
             id="nl.tudelft.watchdog.commands.showWatchDogInfo"
             name="Display WatchDogInfo">
       </command>

@@ -159,4 +159,10 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				| GridData.GRAB_HORIZONTAL));
 		return group;
 	}
+
+	@Override
+	protected void performDefaults() {
+		super.performDefaults();
+		preferences.setDefaults();
+	}
 }

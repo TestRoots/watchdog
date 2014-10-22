@@ -30,14 +30,14 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 /**
  * A dialog displaying statistics about the health and status quo of WatchDog.
  */
-public class InfoStatisticsDialog extends Dialog {
+public class InfoDialog extends Dialog {
 
 	private Color colorRed;
 	private Color colorGreen;
 	private Composite parentContainer;
 
 	/** Constructor. */
-	public InfoStatisticsDialog(Shell parentShell) {
+	public InfoDialog(Shell parentShell) {
 		super(parentShell);
 	}
 
@@ -115,7 +115,7 @@ public class InfoStatisticsDialog extends Dialog {
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					UIUtils.invokeCommand("org.eclipse.equinox.p2.ui.sdk.update");
+					UIUtils.updateWatchDog();
 				}
 			});
 		} else {

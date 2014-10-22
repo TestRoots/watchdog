@@ -40,6 +40,12 @@ public class Preferences {
 	/** Flag denoting whether the WatchDog plugin is outdated. */
 	public final static String IS_OLD_VERSION = "OLD_VERSION";
 
+	/** Flag denoting whether there's a big update for WatchDog. */
+	public final static String IS_BIG_UPDATE_AVAILABLE = "BIG_UPDATE";
+
+	/** Flag denoting whether the user already answer the update question. */
+	public final static String IS_BIG_UPDATE_ANSWERED = "BIG_UPDATE_ANSWERED";
+
 	/** Flag denoting whether WatchDog plugin should do authentication or not. */
 	public final static String AUTHENTICATION_ENABLED_KEY = "ENABLE_AUTH";
 
@@ -77,6 +83,8 @@ public class Preferences {
 		store.setDefault(TRANSFERED_INTERVALS_KEY, 0);
 		store.setDefault(LAST_TRANSFERED_INTERVALS_KEY, "never");
 		store.setDefault(IS_OLD_VERSION, false);
+		store.setDefault(IS_BIG_UPDATE_ANSWERED, false);
+		store.setDefault(IS_BIG_UPDATE_AVAILABLE, false);
 
 		workspaceSettings = readSerializedWorkspaceSettings(WORKSPACES_KEY);
 	}
@@ -136,9 +144,29 @@ public class Preferences {
 		return store.getBoolean(IS_OLD_VERSION);
 	}
 
-	/** Sets Whether this client version is outdated. */
+	/** Sets whether this client version is outdated. */
 	public void setIsOldVersion(Boolean outdated) {
 		store.setValue(IS_OLD_VERSION, outdated);
+	}
+
+	/** @return Whether this client version is outdated. */
+	public Boolean isBigUpdateAvailable() {
+		return store.getBoolean(IS_BIG_UPDATE_AVAILABLE);
+	}
+
+	/** Sets whether this client version has a big update available. */
+	public void setBigUpdateAvailable(Boolean available) {
+		store.setValue(IS_BIG_UPDATE_AVAILABLE, available);
+	}
+
+	/** @return Whether the user answered to the big update question. */
+	public Boolean isBigUpdateAnswered() {
+		return store.getBoolean(IS_BIG_UPDATE_ANSWERED);
+	}
+
+	/** Sets whether this client version has a big update available. */
+	public void setBigUpdateAnswered(Boolean answered) {
+		store.setValue(IS_BIG_UPDATE_ANSWERED, answered);
 	}
 
 	/** @return The number of successfully transfered intervals. */
@@ -247,4 +275,16 @@ public class Preferences {
 		return workspaceSettings;
 	}
 
+	/**
+	 * Resets certain WatchDog values to the default which are only used
+	 * internally.
+	 */
+	public void setDefaults() {
+		store.setValue(WORKSPACES_KEY, "");
+		store.setValue(TRANSFERED_INTERVALS_KEY, 0);
+		store.setValue(LAST_TRANSFERED_INTERVALS_KEY, "never");
+		store.setValue(IS_OLD_VERSION, false);
+		store.setValue(IS_BIG_UPDATE_ANSWERED, false);
+		store.setValue(IS_BIG_UPDATE_AVAILABLE, false);
+	}
 }

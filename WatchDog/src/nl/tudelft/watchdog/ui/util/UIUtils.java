@@ -249,4 +249,9 @@ public class UIUtils {
 		new CommandRefresher(command).execute();
 	}
 
+	/** Updates WatchDog. */
+	public static void updateWatchDog() {
+		invokeCommand("org.eclipse.equinox.p2.ui.sdk.update");
+	}
+
 }
