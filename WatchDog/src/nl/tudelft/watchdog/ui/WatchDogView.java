@@ -11,6 +11,7 @@ import javafx.scene.chart.XYChart.Series;
 import nl.tudelft.watchdog.logic.InitializationManager;
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.ui.util.UIUtils;
+import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -27,6 +28,9 @@ public class WatchDogView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		if (!WatchDogGlobals.isActive) {
+			return;
+		}
 		intervalStatistics = new IntervalStatistics(InitializationManager
 				.getInstance().getIntervalManager());
 
