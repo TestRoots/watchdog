@@ -24,6 +24,7 @@ public class IntervalStatistics extends IntervalManagerBase {
 	public Duration userTesting;
 
 	public Date mostRecentDate;
+	public Date oldestDate;
 
 	/** Constructor. */
 	public IntervalStatistics(IntervalManager intervalManager) {
@@ -64,6 +65,7 @@ public class IntervalStatistics extends IntervalManagerBase {
 			}
 		}
 
+		oldestDate = filteredIntervals.get(0).getStart();
 		intervalPersister.removeIntervals(intervalsToRemove);
 		intervals = filteredIntervals;
 	}

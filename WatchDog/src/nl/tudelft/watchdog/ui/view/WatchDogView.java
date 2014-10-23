@@ -15,6 +15,8 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -58,6 +60,21 @@ public class WatchDogView extends ViewPart {
 		container.setBackground(white);
 		container.setBackgroundMode(SWT.INHERIT_FORCE);
 		scrolledComposite.setContent(container);
+		container.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseUp(MouseEvent e) {
+				update();
+			}
+
+			@Override
+			public void mouseDown(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+			}
+		});
 
 		container.setLayout(new GridLayout(1, false));
 
@@ -76,12 +93,11 @@ public class WatchDogView extends ViewPart {
 			userReading = intervalStatistics.userReading.getStandardSeconds();
 			userTyping = intervalStatistics.userTyping.getStandardSeconds();
 
-			UIUtils.createLabel(
-					"Statistics on your last hour of development, starting at "
-							+ intervalStatistics.mostRecentDate
-							+ " and comprise "
-							+ intervalStatistics.getNumberOfIntervals()
-							+ " recorded intervals.", container);
+			UIUtils.createLabel("Statistics from "
+					+ intervalStatistics.oldestDate + " to "
+					+ intervalStatistics.mostRecentDate + " and comprise "
+					+ intervalStatistics.getNumberOfIntervals()
+					+ " recorded intervals.", container);
 
 			Composite chartsContainer = UIUtils
 					.createZeroMarginGridedComposite(container, 2);
@@ -112,8 +128,7 @@ public class WatchDogView extends ViewPart {
 					new XYChart.Data<Number, String>(eclipseOpen,
 							"Eclipse Open"));
 			series1.getData().add(
-					new XYChart.Data<Number, String>(userActive,
-							"User Activity"));
+					new XYChart.Data<Number, String>(userActive, "Activity"));
 			series1.getData().add(
 					new XYChart.Data<Number, String>(userReading,
 							"Reading Code"));
@@ -186,8 +201,8 @@ public class WatchDogView extends ViewPart {
 			xAxis.setTickLabelRotation(90);
 			ObservableList<PieChart.Data> pieChartData = FXCollections
 					.observableArrayList(new PieChart.Data("Test Code",
-							userReading), new PieChart.Data("Production Code",
-							userTyping));
+							userProduction), new PieChart.Data(
+							"Production Code", userTesting));
 			final PieChart chart = new PieChart(pieChartData);
 			chart.setTitle("Effort On Test vs. Production Code");
 

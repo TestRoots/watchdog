@@ -25,6 +25,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
 /**
@@ -188,9 +190,8 @@ public class InfoDialog extends Dialog {
 				parentContainer, 4);
 		container.setData(new GridData(SWT.CENTER, SWT.NONE, true, false));
 
-		createProblemLink(container, new BrowserOpenerSelection(),
-				"Show view.", "https://github.com/TestRoots/watchdog/issues")
-				.setLayoutData(UIUtils.createFullGridUsageData());
+		createProblemLink(container, new WatchDogViewListener(), "Open View.",
+				"");
 		createProblemLink(container, new BrowserOpenerSelection(),
 				"Report bug.", "https://github.com/TestRoots/watchdog/issues")
 				.setLayoutData(UIUtils.createFullGridUsageData());
@@ -236,11 +237,22 @@ public class InfoDialog extends Dialog {
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 450);
+		return new Point(450, 470);
+	}
+
+	private class WatchDogViewListener extends DefaultSelectionListener {
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			try {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+						.getActivePage().showView("WatchDog.view");
+			} catch (PartInitException exception) {
+			}
+			super.widgetSelected(e);
+		}
 	}
 
 	private class PreferenceListener extends DefaultSelectionListener {
-
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			PreferencesUtil.createPreferenceDialogOn(null, PreferencePage.ID,
