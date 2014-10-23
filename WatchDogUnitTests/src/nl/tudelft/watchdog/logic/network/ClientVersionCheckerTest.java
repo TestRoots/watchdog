@@ -16,7 +16,7 @@ public class ClientVersionCheckerTest {
 		assertFalse(ClientVersionChecker.hasMajorOrMinorVersionGap(version1,
 				"1.0.1"));
 		assertTrue(ClientVersionChecker.hasMajorOrMinorVersionGap(version1,
-				"1.1.0"));
+				"1.1.0-SNAPSHOT"));
 		assertTrue(ClientVersionChecker.hasMajorOrMinorVersionGap(version1,
 				"1.1.1"));
 		assertTrue(ClientVersionChecker.hasMajorOrMinorVersionGap(version1,

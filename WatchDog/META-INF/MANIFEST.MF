@@ -2,7 +2,7 @@ Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Manifest-Version: 1.0
 Bundle-Activator: nl.tudelft.watchdog.Activator
-Bundle-Version: 1.1.0
+Bundle-Version: 1.1.0-SNAPSHOT
 Bundle-SymbolicName: nl.tudelft.WatchDog;singleton:=true
 Import-Package: javafx.animation;version="2.0.0",
  javafx.application;version="2.0.0",
