@@ -15,8 +15,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 /**
- * The UI Thread in which all the registration process on startup of
- * WatchDog is executed.
+ * The UI Thread in which all the registration process on startup of WatchDog is
+ * executed.
  */
 public class StartupUIThread implements Runnable {
 
@@ -28,7 +28,8 @@ public class StartupUIThread implements Runnable {
 	private Preferences preferences;
 
 	/** Constructor. */
-	public StartupUIThread(StartUpHandler startUpHandler, Preferences preferences) {
+	public StartupUIThread(StartUpHandler startUpHandler,
+			Preferences preferences) {
 		this.startUpHandler = startUpHandler;
 		this.preferences = preferences;
 	}
@@ -70,8 +71,8 @@ public class StartupUIThread implements Runnable {
 	}
 
 	/**
-	 * Checks whether this workspace is registered, and if not, asks the
-	 * user whether WatchDog should be active.
+	 * Checks whether this workspace is registered, and if not, asks the user
+	 * whether WatchDog should be active.
 	 */
 	private void checkWorkspaceRegistration() {
 		String workspaceName = UIUtils.getWorkspaceName();
@@ -81,11 +82,10 @@ public class StartupUIThread implements Runnable {
 
 	private void checkIsWorkspaceAlreadyRegistered(String workspace) {
 		if (!preferences.isWorkspaceRegistered(workspace)) {
-			boolean useWatchDogInThisWorkspace = MessageDialog
-					.openQuestion(null, "WatchDog Workspace Registration",
-							"Should WatchDog be active in this workspace?");
-			WatchDogLogger.getInstance()
-					.logInfo("Registering workspace...");
+			boolean useWatchDogInThisWorkspace = MessageDialog.openQuestion(
+					null, "WatchDog Workspace Registration",
+					"Should WatchDog be active in this workspace?");
+			WatchDogLogger.getInstance().logInfo("Registering workspace...");
 			preferences.registerWorkspaceUse(workspace,
 					useWatchDogInThisWorkspace);
 		}
@@ -101,8 +101,7 @@ public class StartupUIThread implements Runnable {
 			savePreferenceStoreIfNeeded();
 
 			// reload setting from preferences
-			setting = preferences
-					.getOrCreateWorkspaceSetting(workspaceName);
+			setting = preferences.getOrCreateWorkspaceSetting(workspaceName);
 			if (!WatchDogUtils.isEmpty(setting.projectId)) {
 				this.startUpHandler.startWatchDog();
 			}

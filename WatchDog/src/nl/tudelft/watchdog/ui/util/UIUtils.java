@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.ui.util;
 import nl.tudelft.watchdog.Activator;
 import nl.tudelft.watchdog.ui.util.CommandExecuterBase.CommandExecuter;
 import nl.tudelft.watchdog.ui.util.CommandExecuterBase.CommandRefresher;
+import nl.tudelft.watchdog.ui.view.WatchDogView;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -18,6 +19,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 
 /** Utility methods for the UI. */
 public class UIUtils {
@@ -252,6 +254,13 @@ public class UIUtils {
 	/** Updates WatchDog. */
 	public static void updateWatchDog() {
 		invokeCommand("org.eclipse.equinox.p2.ui.sdk.update");
+	}
+
+	/** Returns the WatchDog view */
+	public static WatchDogView getWatchDogView() {
+		return (WatchDogView) PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow().getActivePage()
+				.findViewReference("WatchDog.view").getView(false);
 	}
 
 }
