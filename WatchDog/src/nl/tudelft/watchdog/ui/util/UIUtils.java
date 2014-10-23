@@ -11,6 +11,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -18,6 +19,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
@@ -260,7 +262,16 @@ public class UIUtils {
 	public static WatchDogView getWatchDogView() {
 		return (WatchDogView) PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow().getActivePage()
-				.findViewReference("WatchDog.view").getView(false);
+				.findViewReference(WatchDogView.ID).getView(false);
+	}
+
+	/** Creates a clickable link with the given description text. */
+	public static Link createLinkedLabel(Composite parent,
+			SelectionListener listener, String description, String url) {
+		Link link = new Link(parent, SWT.WRAP);
+		link.setText("<a href=\"" + url + "\">" + description + "</a>");
+		link.addSelectionListener(listener);
+		return link;
 	}
 
 }

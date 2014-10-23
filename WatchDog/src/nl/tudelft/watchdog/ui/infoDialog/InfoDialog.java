@@ -7,6 +7,7 @@ import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.preferences.WorkspacePreferenceSetting;
 import nl.tudelft.watchdog.ui.util.BrowserOpenerSelection;
 import nl.tudelft.watchdog.ui.util.UIUtils;
+import nl.tudelft.watchdog.ui.view.WatchDogView;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 import nl.tudelft.watchdog.util.WatchDogLogger;
 
@@ -23,7 +24,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -190,31 +190,23 @@ public class InfoDialog extends Dialog {
 				parentContainer, 4);
 		container.setData(new GridData(SWT.CENTER, SWT.NONE, true, false));
 
-		createProblemLink(container, new WatchDogViewListener(), "Open View.",
-				"");
-		createProblemLink(container, new BrowserOpenerSelection(),
+		UIUtils.createLinkedLabel(container, new WatchDogViewListener(),
+				"Open View.", "");
+		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
 				"Report bug.", "https://github.com/TestRoots/watchdog/issues")
 				.setLayoutData(UIUtils.createFullGridUsageData());
-		createProblemLink(container, new BrowserOpenerSelection(),
+		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
 				"Open logs.",
 				"file://" + WatchDogLogger.getInstance().getLogDirectoryPath())
 				.setLayoutData(UIUtils.createFullGridUsageData());
-		createProblemLink(container, new PreferenceListener(),
+		UIUtils.createLinkedLabel(container, new PreferenceListener(),
 				"Open Preferences.", "").setLayoutData(
 				UIUtils.createFullGridUsageData());
 	}
 
 	private void createFixThisProblemLink(Composite localGrid,
 			SelectionListener listener) {
-		createProblemLink(localGrid, listener, "Fix this.", "");
-	}
-
-	private Link createProblemLink(Composite localGrid,
-			SelectionListener listener, String description, String url) {
-		Link link = new Link(localGrid, SWT.WRAP);
-		link.setText("<a href=\"" + url + "\">" + description + "</a>");
-		link.addSelectionListener(listener);
-		return link;
+		UIUtils.createLinkedLabel(localGrid, listener, "Fix this.", "");
 	}
 
 	/** {@inheritDoc} Disables the creation of a cancel button in the dialog */
@@ -245,7 +237,7 @@ public class InfoDialog extends Dialog {
 		public void widgetSelected(SelectionEvent e) {
 			try {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-						.getActivePage().showView("WatchDog.view");
+						.getActivePage().showView(WatchDogView.ID);
 			} catch (PartInitException exception) {
 			}
 			super.widgetSelected(e);
