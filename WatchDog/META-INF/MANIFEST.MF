@@ -63,4 +63,5 @@ Bundle-ClassPath: .,
  libs/commons-validator-1.4.0.jar,
  libs/mapdb-1.0.5.jar,
  libs/java-util-1.12.0.jar,
- libs/org.swtchart_0.9.0.v20140219.jar
+ libs/org.swtchart_0.9.0.v20140219.jar,
+ libs/org.swtchart.ext_0.9.0.v20140219.jar
