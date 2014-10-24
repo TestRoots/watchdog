@@ -24,5 +24,4 @@ public class ClientVersionCheckerTest {
 		assertTrue(ClientVersionChecker.hasMajorOrMinorVersionGap(version1,
 				"2.0.0"));
 	}
-
 }

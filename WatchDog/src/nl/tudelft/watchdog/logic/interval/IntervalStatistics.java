@@ -14,6 +14,8 @@ import org.joda.time.Duration;
 /** Gathers and calculates statistics on interval length. */
 @SuppressWarnings("javadoc")
 public class IntervalStatistics extends IntervalManagerBase {
+	private static final int FILTERED_INTERVALS_IN_MINUTES = 60;
+
 	private IntervalPersister intervalPersister;
 
 	public Duration eclipseOpen;
@@ -21,7 +23,7 @@ public class IntervalStatistics extends IntervalManagerBase {
 	public Duration userReading;
 	public Duration userTyping;
 	public Duration userProduction;
-	public Duration userTesting;
+	public Duration userTest;
 
 	public Date mostRecentDate;
 	public Date oldestDate;
@@ -35,15 +37,6 @@ public class IntervalStatistics extends IntervalManagerBase {
 		calculateStatistics();
 	}
 
-	private void calculateStatistics() {
-		eclipseOpen = aggregateDurations(getIntervalsOfType(IntervalType.ECLIPSE_OPEN));
-		userActive = aggregateDurations(getIntervalsOfType(IntervalType.USER_ACTIVE));
-		userReading = aggregateDurations(getIntervalsOfType(IntervalType.READING));
-		userTyping = aggregateDurations(getIntervalsOfType(IntervalType.TYPING));
-		userTesting = aggregateDurations(getEditorIntervalsOfDocType(DocumentType.TEST));
-		userProduction = aggregateDurations(getEditorIntervalsOfDocType(DocumentType.PRODUCTION));
-	}
-
 	/** Filters out and removes intervals which are older than one hour. */
 	private void filterIntervals() {
 		ArrayList<IntervalBase> filteredIntervals = new ArrayList<IntervalBase>();
@@ -51,7 +44,8 @@ public class IntervalStatistics extends IntervalManagerBase {
 
 		mostRecentDate = intervals.get(intervals.size() - 1).getEnd();
 		DateTime thresholdDate = new DateTime(mostRecentDate);
-		thresholdDate = thresholdDate.minusMinutes(2);
+		thresholdDate = thresholdDate
+				.minusMinutes(FILTERED_INTERVALS_IN_MINUTES);
 
 		for (IntervalBase interval : intervals) {
 			if (interval.getEnd().after(thresholdDate.toDate())) {
@@ -70,6 +64,26 @@ public class IntervalStatistics extends IntervalManagerBase {
 		intervals = filteredIntervals;
 	}
 
+	private void calculateStatistics() {
+		eclipseOpen = aggregateDurations(getIntervalsOfType(IntervalType.ECLIPSE_OPEN));
+		userActive = aggregateDurations(getIntervalsOfType(IntervalType.USER_ACTIVE));
+		userReading = aggregateDurations(getIntervalsOfType(IntervalType.READING));
+		userTyping = aggregateDurations(getIntervalsOfType(IntervalType.TYPING));
+		userTest = aggregateDurations(getEditorIntervalsOfDocType(DocumentType.TEST));
+		userProduction = aggregateDurations(getEditorIntervalsOfDocType(DocumentType.PRODUCTION));
+		performDataSanitation();
+	}
+
+	private void performDataSanitation() {
+		Duration summarizedUserActivity = userReading.plus(userTyping);
+		if (userActive.isShorterThan(summarizedUserActivity)) {
+			userActive = summarizedUserActivity;
+		}
+		if (eclipseOpen.isShorterThan(userActive)) {
+			eclipseOpen = userActive;
+		}
+	}
+
 	private Duration aggregateDurations(List<IntervalBase> intervals) {
 		Duration aggregatedDuration = new Duration(0);
 		for (IntervalBase interval : intervals) {
@@ -82,5 +96,10 @@ public class IntervalStatistics extends IntervalManagerBase {
 	/** @return the number of intervals. */
 	public int getNumberOfIntervals() {
 		return intervals.size();
+	}
+
+	public double getPreciseTime(Duration duration) {
+		return duration.getStandardMinutes() + duration.getStandardSeconds()
+				/ 60;
 	}
 }

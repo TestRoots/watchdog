@@ -191,7 +191,8 @@ public class InfoDialog extends Dialog {
 		container.setData(new GridData(SWT.CENTER, SWT.NONE, true, false));
 
 		UIUtils.createLinkedLabel(container, new WatchDogViewListener(),
-				"Open View.", "");
+				"Open View.", "").setLayoutData(
+				UIUtils.createFullGridUsageData());
 		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
 				"Report bug.", "https://github.com/TestRoots/watchdog/issues")
 				.setLayoutData(UIUtils.createFullGridUsageData());
@@ -200,7 +201,7 @@ public class InfoDialog extends Dialog {
 				"file://" + WatchDogLogger.getInstance().getLogDirectoryPath())
 				.setLayoutData(UIUtils.createFullGridUsageData());
 		UIUtils.createLinkedLabel(container, new PreferenceListener(),
-				"Open Preferences.", "").setLayoutData(
+				"Open Prefs.", "").setLayoutData(
 				UIUtils.createFullGridUsageData());
 	}
 

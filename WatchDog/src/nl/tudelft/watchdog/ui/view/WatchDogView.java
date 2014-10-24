@@ -6,30 +6,38 @@ import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
-import org.swtchart.Chart;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
+import org.jfree.experimental.chart.swt.ChartComposite;
+import org.jfree.util.Rotation;
 
 /** A view displaying all the statistics that WatchDog has gathered. */
 public class WatchDogView extends ViewPart {
 	/** The Id of the view. */
 	public static final String ID = "WatchDog.view";
 
-	private Composite container;
 	private IntervalStatistics intervalStatistics;
+
+	private Composite container;
 	private Composite parent;
-	private ScrolledComposite scrolledComposite;
-	private long eclipseOpen;
-	private long userActive;
-	private long userReading;
-	private long userTyping;
-	private long userProduction;
-	private long userTesting;
-	private long userActiveRest;
+
+	private double eclipseOpen;
+	private double userActive;
+	private double userReading;
+	private double userTyping;
+	private double userProduction;
+	private double userTest;
+	private double userActiveRest;
 
 	private Composite oneColumn;
 
@@ -46,22 +54,6 @@ public class WatchDogView extends ViewPart {
 		this.parent = parent;
 
 		oneColumn = UIUtils.createGridedComposite(parent, 1);
-
-		// container =
-		// UIUtils.createZeroMarginGridedComposite(scrolledComposite,
-		// 1);
-		// container.setBackground(white);
-		// container.setBackgroundMode(SWT.INHERIT_FORCE);
-		// scrolledComposite.setContent(container);
-		// scrolledComposite.setLayout(new FillLayout());
-		// scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
-		// true,
-		// true));
-		//
-		// container.setLayout(new GridLayout(1, false));
-		// container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-		// true));
-		//
 		if (!WatchDogGlobals.isActive) {
 			UIUtils.createBoldLabel(
 					"WatchDog is not active in this workspace! \n", oneColumn);
@@ -70,22 +62,32 @@ public class WatchDogView extends ViewPart {
 					oneColumn);
 			createRefreshLink();
 		} else {
-			intervalStatistics = new IntervalStatistics(InitializationManager
-					.getInstance().getIntervalManager());
-
-			eclipseOpen = intervalStatistics.eclipseOpen.getStandardSeconds();
-			userActive = intervalStatistics.userActive.getStandardSeconds();
-			userReading = intervalStatistics.userReading.getStandardSeconds();
-			userTyping = intervalStatistics.userTyping.getStandardSeconds();
+			setTimes();
 
 			container = UIUtils.createGridedComposite(oneColumn, 2);
 			container
 					.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-			createChartExample(container);
-			createChartExample(container);
-			createChartExample(container);
-			createChartExample(container);
+			createSWTChart(
+					container,
+					createBarChart(createDevelopmentBarDataset(),
+							"Your Development Activity"));
+			createSWTChart(
+					container,
+					createPieChart(createDevelopmentPieDataset(),
+							"Your Development Activity"));
+
+			UIUtils.createLabel("", container);
+			UIUtils.createLabel("", container);
+
+			createSWTChart(
+					container,
+					createBarChart(createProductionVSTestBarDataset(),
+							"Your Production vs. Test Activity"));
+			createSWTChart(
+					container,
+					createPieChart(createProductionVSTestPieDataset(),
+							"Your Production vs. Test Activity"));
 
 			UIUtils.createLabel("From " + intervalStatistics.oldestDate
 					+ " to " + intervalStatistics.mostRecentDate + ".",
@@ -96,6 +98,35 @@ public class WatchDogView extends ViewPart {
 			createRefreshLink();
 		}
 
+	}
+
+	private void setTimes() {
+		intervalStatistics = new IntervalStatistics(InitializationManager
+				.getInstance().getIntervalManager());
+
+		eclipseOpen = intervalStatistics
+				.getPreciseTime(intervalStatistics.eclipseOpen);
+		userActive = intervalStatistics
+				.getPreciseTime(intervalStatistics.userActive);
+		userReading = intervalStatistics
+				.getPreciseTime(intervalStatistics.userReading);
+		userTyping = intervalStatistics
+				.getPreciseTime(intervalStatistics.userTyping);
+		userProduction = intervalStatistics
+				.getPreciseTime(intervalStatistics.userProduction);
+		userTest = intervalStatistics
+				.getPreciseTime(intervalStatistics.userTest);
+		userActiveRest = userActive - userReading - userTyping;
+	}
+
+	private void createSWTChart(Composite container, JFreeChart chart) {
+		ChartComposite chartComposite = new ChartComposite(container, SWT.NONE,
+				chart, true);
+		chartComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				true));
+		Rectangle bounds = chartComposite.getBounds();
+		bounds.height = bounds.width;
+		chartComposite.setBounds(bounds);
 	}
 
 	private void createRefreshLink() {
@@ -112,129 +143,68 @@ public class WatchDogView extends ViewPart {
 		}, "Refresh.", "");
 	}
 
-	private Chart createChartExample(Composite parent) {
-		// create a chart
-		Chart chart = new Chart(parent, SWT.NONE);
-		chart.getTitle().setText("Development Activity");
-		chart.getAxisSet().getYAxis(0).getTick().setVisible(false);
-		chart.getAxisSet().getYAxis(0).getTitle().setVisible(false);
+	private DefaultCategoryDataset createDevelopmentBarDataset() {
+		final DefaultCategoryDataset result = new DefaultCategoryDataset();
+		result.setValue(userReading, "1", "Reading");
+		result.setValue(userTyping, "1", "Writing");
+		result.setValue(userActive, "1", "User Active");
+		result.setValue(eclipseOpen, "1", "Eclipse Open");
+		return result;
+	}
 
-		chart.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+	private PieDataset createDevelopmentPieDataset() {
+		double divisor = userReading + userTyping + userActiveRest;
+		final DefaultPieDataset result = new DefaultPieDataset();
+		result.setValue("Reading" + printPercent(userReading, divisor),
+				userReading);
+		result.setValue("Writing" + printPercent(userTyping, divisor),
+				userTyping);
+		result.setValue(
+				"Other activities" + printPercent(userActiveRest, divisor),
+				userActiveRest);
+		return result;
+	}
 
+	private DefaultCategoryDataset createProductionVSTestBarDataset() {
+		final DefaultCategoryDataset result = new DefaultCategoryDataset();
+		result.setValue(userProduction, "1", "Production Code");
+		result.setValue(userTest, "1", "Test Code");
+		return result;
+	}
+
+	private PieDataset createProductionVSTestPieDataset() {
+		double divisor = userProduction + userTest;
+		final DefaultPieDataset result = new DefaultPieDataset();
+		result.setValue(
+				"Production Code" + printPercent(userProduction, divisor),
+				userProduction);
+		result.setValue("Test Code" + printPercent(userTest, divisor), userTest);
+		return result;
+	}
+
+	private JFreeChart createPieChart(final PieDataset dataset,
+			final String title) {
+		final JFreeChart chart = ChartFactory.createPieChart3D(title, dataset,
+				true, true, false);
+		final PiePlot3D plot = (PiePlot3D) chart.getPlot();
+		plot.setDirection(Rotation.CLOCKWISE);
+		plot.setForegroundAlpha(0.8f);
 		return chart;
 	}
 
-	// private class UserActivityGeneralBarChart extends EmbeddableJavaFXChart {
-	//
-	// protected BarChart<Number, String> generateChart() {
-	// final NumberAxis xAxis = new NumberAxis();
-	// final CategoryAxis yAxis = new CategoryAxis();
-	// final BarChart<Number, String> chart = new BarChart<Number, String>(
-	// xAxis, yAxis);
-	// chart.setTitle("Your General Development Activity");
-	// xAxis.setTickLabelRotation(90);
-	// xAxis.setLabel("minutes");
-	// Series<Number, String> series1 = new XYChart.Series<Number, String>();
-	// series1.getData().add(
-	// new XYChart.Data<Number, String>(eclipseOpen,
-	// "Eclipse Open"));
-	// series1.getData().add(
-	// new XYChart.Data<Number, String>(userActive, "Activity"));
-	// series1.getData().add(
-	// new XYChart.Data<Number, String>(userReading,
-	// "Reading Code"));
-	// series1.getData()
-	// .add(new XYChart.Data<Number, String>(userTyping,
-	// "Writing Code"));
-	//
-	// chart.setLegendVisible(false);
-	// ObservableList<Series<Number, String>> data = chart.getData();
-	// data.add(series1);
-	//
-	// return chart;
-	// }
-	// }
-	//
-	// private class UserActivityGeneralPieChart extends EmbeddableJavaFXChart {
-	//
-	// protected PieChart generateChart() {
-	// userActiveRest = userActive - userReading - userTyping;
-	// final NumberAxis xAxis = new NumberAxis();
-	//
-	// long divisor = userReading + userTyping + userActiveRest;
-	//
-	// xAxis.setTickLabelRotation(90);
-	// ObservableList<PieChart.Data> pieChartData = FXCollections
-	// .observableArrayList(
-	// new PieChart.Data("Reading"
-	// + printPercent(userReading, divisor),
-	// userReading),
-	// new PieChart.Data("Writing"
-	// + printPercent(userTyping, divisor),
-	// userTyping),
-	// new PieChart.Data("Other activities"
-	// + printPercent(userActiveRest, divisor),
-	// userActiveRest));
-	// final PieChart chart = new PieChart(pieChartData);
-	// chart.setTitle("Your General Development Activity");
-	//
-	// return chart;
-	// }
-	// }
-	//
-	// private class ProductionVsTestingBarChart extends EmbeddableJavaFXChart {
-	//
-	// protected BarChart<Number, String> generateChart() {
-	// final NumberAxis xAxis = new NumberAxis();
-	// final CategoryAxis yAxis = new CategoryAxis();
-	// final BarChart<Number, String> chart = new BarChart<Number, String>(
-	// xAxis, yAxis);
-	//
-	// userProduction = intervalStatistics.userProduction
-	// .getStandardSeconds();
-	// userTesting = intervalStatistics.userTesting.getStandardSeconds();
-	//
-	// chart.setTitle("Effort On Production Vs. Test Code");
-	// xAxis.setTickLabelRotation(90);
-	// xAxis.setLabel("minutes");
-	// Series<Number, String> series1 = new XYChart.Series<Number, String>();
-	// series1.getData().add(
-	// new XYChart.Data<Number, String>(userTesting, "Test Code"));
-	// series1.getData().add(
-	// new XYChart.Data<Number, String>(userProduction,
-	// "Production Code"));
-	// chart.setLegendVisible(false);
-	// ObservableList<Series<Number, String>> data = chart.getData();
-	// data.add(series1);
-	//
-	// return chart;
-	// }
-	// }
-	//
-	// private class ProductionVsTestingPieChart extends EmbeddableJavaFXChart {
-	//
-	// protected PieChart generateChart() {
-	// final NumberAxis xAxis = new NumberAxis();
-	// xAxis.setTickLabelRotation(90);
-	//
-	// long divisor = userProduction + userTesting;
-	// ObservableList<PieChart.Data> pieChartData = FXCollections
-	// .observableArrayList(new PieChart.Data("Production Code"
-	// + printPercent(userProduction, divisor),
-	// userProduction), new PieChart.Data("Test Code"
-	// + printPercent(userTesting, divisor), userTesting));
-	// final PieChart chart = new PieChart(pieChartData);
-	// chart.setTitle("Effort On Production Vs. Test Code");
-	//
-	// return chart;
-	// }
-	// }
+	private JFreeChart createBarChart(final DefaultCategoryDataset dataset,
+			final String title) {
+		final JFreeChart chart = ChartFactory.createBarChart3D(title, "",
+				"minutes", dataset);
+		chart.getLegend().setVisible(false);
+		return chart;
+	}
 
-	private String printPercent(long dividend, long divisor) {
+	private String printPercent(double dividend, double divisor) {
 		if (divisor == 0) {
 			return " (--)";
 		}
-		return " (" + dividend / divisor * 100 + "%)";
+		return " (" + dividend * 100 / divisor + "%)";
 	}
 
 	@Override
