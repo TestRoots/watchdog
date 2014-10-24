@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.ui.view;
 
+import nl.tudelft.watchdog.logic.InitializationManager;
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
@@ -67,48 +68,38 @@ public class WatchDogView extends ViewPart {
 			UIUtils.createLabel(
 					"Therefore we cannot show you any cool test statistics. \nTo get them, click the WatchDog icon and enable WatchDog.",
 					oneColumn);
-			// createRefreshLink();
-		}
-		// } else {
-		// intervalStatistics = new IntervalStatistics(InitializationManager
-		// .getInstance().getIntervalManager());
-		//
-		// eclipseOpen = intervalStatistics.eclipseOpen.getStandardSeconds();
-		// userActive = intervalStatistics.userActive.getStandardSeconds();
-		// userReading = intervalStatistics.userReading.getStandardSeconds();
-		// userTyping = intervalStatistics.userTyping.getStandardSeconds();
-		//
-		// UIUtils.createLabel("Statistics from "
-		// + intervalStatistics.oldestDate + " to "
-		// + intervalStatistics.mostRecentDate + " and comprise "
-		// + intervalStatistics.getNumberOfIntervals()
-		// + " recorded intervals.", container);
-		// createRefreshLink();
-		// UIUtils.createLabel("", container);
-		//
-		// // Composite chartsContainer = UIUtils
-		// // .createZeroMarginGridedComposite(container, 2);
-		// createChartExample(scrolledComposite);
-		// // new UserActivityGeneralBarChart().createGraph(chartsContainer);
-		// // new UserActivityGeneralPieChart().createGraph(chartsContainer);
-		// // new ProductionVsTestingBarChart().createGraph(chartsContainer);
-		// // new ProductionVsTestingPieChart().createGraph(chartsContainer);
-		// }
-		else {
+			createRefreshLink();
+		} else {
+			intervalStatistics = new IntervalStatistics(InitializationManager
+					.getInstance().getIntervalManager());
+
+			eclipseOpen = intervalStatistics.eclipseOpen.getStandardSeconds();
+			userActive = intervalStatistics.userActive.getStandardSeconds();
+			userReading = intervalStatistics.userReading.getStandardSeconds();
+			userTyping = intervalStatistics.userTyping.getStandardSeconds();
+
 			container = UIUtils.createGridedComposite(oneColumn, 2);
 			container
 					.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-			createChartExample(container);
-			createChartExample(container);
 
 			createChartExample(container);
 			createChartExample(container);
+			createChartExample(container);
+			createChartExample(container);
+
+			UIUtils.createLabel("From " + intervalStatistics.oldestDate
+					+ " to " + intervalStatistics.mostRecentDate + ".",
+					oneColumn);
+			UIUtils.createLabel(
+					"(Including " + intervalStatistics.getNumberOfIntervals()
+							+ " intervals.)", oneColumn);
+			createRefreshLink();
 		}
 
 	}
 
 	private void createRefreshLink() {
-		UIUtils.createLinkedLabel(container, new SelectionListener() {
+		UIUtils.createLinkedLabel(oneColumn, new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -124,6 +115,10 @@ public class WatchDogView extends ViewPart {
 	private Chart createChartExample(Composite parent) {
 		// create a chart
 		Chart chart = new Chart(parent, SWT.NONE);
+		chart.getTitle().setText("Development Activity");
+		chart.getAxisSet().getYAxis(0).getTick().setVisible(false);
+		chart.getAxisSet().getYAxis(0).getTitle().setVisible(false);
+
 		chart.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		return chart;
