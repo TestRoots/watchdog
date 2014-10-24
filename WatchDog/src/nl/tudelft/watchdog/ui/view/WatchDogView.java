@@ -2,11 +2,13 @@ package nl.tudelft.watchdog.ui.view;
 
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.ui.util.UIUtils;
+import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.swtchart.Chart;
@@ -28,11 +30,11 @@ public class WatchDogView extends ViewPart {
 	private long userTesting;
 	private long userActiveRest;
 
+	private Composite oneColumn;
+
 	/** Updates the view by completely repainting it. */
 	public void update() {
-		scrolledComposite.dispose();
-		parent.update();
-		parent.layout();
+		oneColumn.dispose();
 		createPartControl(parent);
 		parent.update();
 		parent.layout();
@@ -41,30 +43,32 @@ public class WatchDogView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		this.parent = parent;
-		container = UIUtils.createFullGridedComposite(parent, 2);
-		createChartExample(container);
 
-		// scrolledComposite = new ScrolledComposite(parent, SWT.H_SCROLL
-		// | SWT.V_SCROLL);
-		//
-		// Color white = new Color(this.getViewSite().getShell().getDisplay(),
-		// 255, 255, 255);
+		oneColumn = UIUtils.createGridedComposite(parent, 1);
+
 		// container =
 		// UIUtils.createZeroMarginGridedComposite(scrolledComposite,
 		// 1);
 		// container.setBackground(white);
 		// container.setBackgroundMode(SWT.INHERIT_FORCE);
 		// scrolledComposite.setContent(container);
+		// scrolledComposite.setLayout(new FillLayout());
+		// scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
+		// true,
+		// true));
 		//
 		// container.setLayout(new GridLayout(1, false));
+		// container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+		// true));
 		//
-		// if (!WatchDogGlobals.isActive) {
-		// UIUtils.createBoldLabel(
-		// "WatchDog is not active in this workspace! \n", container);
-		// UIUtils.createLabel(
-		// "Therefore we cannot show you any cool test statistics. \nTo get them, click the WatchDog icon and enable WatchDog.",
-		// container);
-		// createRefreshLink();
+		if (!WatchDogGlobals.isActive) {
+			UIUtils.createBoldLabel(
+					"WatchDog is not active in this workspace! \n", oneColumn);
+			UIUtils.createLabel(
+					"Therefore we cannot show you any cool test statistics. \nTo get them, click the WatchDog icon and enable WatchDog.",
+					oneColumn);
+			// createRefreshLink();
+		}
 		// } else {
 		// intervalStatistics = new IntervalStatistics(InitializationManager
 		// .getInstance().getIntervalManager());
@@ -82,19 +86,25 @@ public class WatchDogView extends ViewPart {
 		// createRefreshLink();
 		// UIUtils.createLabel("", container);
 		//
-		// Composite chartsContainer = UIUtils
-		// .createZeroMarginGridedComposite(container, 2);
-		// createChartExample(chartsContainer);
+		// // Composite chartsContainer = UIUtils
+		// // .createZeroMarginGridedComposite(container, 2);
+		// createChartExample(scrolledComposite);
 		// // new UserActivityGeneralBarChart().createGraph(chartsContainer);
 		// // new UserActivityGeneralPieChart().createGraph(chartsContainer);
 		// // new ProductionVsTestingBarChart().createGraph(chartsContainer);
 		// // new ProductionVsTestingPieChart().createGraph(chartsContainer);
 		// }
-		//
-		// scrolledComposite.setExpandHorizontal(true);
-		// scrolledComposite.setExpandVertical(true);
-		// scrolledComposite.setMinSize(container.computeSize(SWT.DEFAULT,
-		// SWT.DEFAULT));
+		else {
+			container = UIUtils.createGridedComposite(oneColumn, 2);
+			container
+					.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			createChartExample(container);
+			createChartExample(container);
+
+			createChartExample(container);
+			createChartExample(container);
+		}
+
 	}
 
 	private void createRefreshLink() {
@@ -114,7 +124,7 @@ public class WatchDogView extends ViewPart {
 	private Chart createChartExample(Composite parent) {
 		// create a chart
 		Chart chart = new Chart(parent, SWT.NONE);
-		chart.setVisible(true);
+		chart.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		return chart;
 	}
@@ -234,7 +244,7 @@ public class WatchDogView extends ViewPart {
 
 	@Override
 	public void setFocus() {
-		container.setFocus();
+		parent.setFocus();
 	}
 
 }
