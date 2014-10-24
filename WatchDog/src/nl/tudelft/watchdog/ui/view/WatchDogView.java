@@ -204,7 +204,7 @@ public class WatchDogView extends ViewPart {
 		if (divisor == 0) {
 			return " (--)";
 		}
-		return " (" + dividend * 100 / divisor + "%)";
+		return " (" + String.format("%.1f", dividend * 100 / divisor) + "%)";
 	}
 
 	@Override

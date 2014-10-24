@@ -53,6 +53,7 @@ public class IntervalStatistics extends IntervalManagerBase {
 				if (interval.getStart().before(thresholdDate.toDate())) {
 					clonedInterval.setStartTime(thresholdDate.toDate());
 				}
+				clonedInterval.setEndTime(new Date());
 				filteredIntervals.add(clonedInterval);
 			} else {
 				intervalsToRemove.add(interval);
@@ -99,7 +100,6 @@ public class IntervalStatistics extends IntervalManagerBase {
 	}
 
 	public double getPreciseTime(Duration duration) {
-		return duration.getStandardMinutes() + duration.getStandardSeconds()
-				/ 60;
+		return ((double) duration.getStandardSeconds() / 60);
 	}
 }
