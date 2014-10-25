@@ -54,7 +54,11 @@ public class IntervalStatistics extends IntervalManagerBase {
 					clonedInterval.setStartTime(thresholdDate.toDate());
 				}
 				if (!clonedInterval.isClosed()) {
-					clonedInterval.setEndTime(new Date());
+					clonedInterval.setEndTime(mostRecentDate);
+				}
+				if (clonedInterval.getDuration().isLongerThan(
+						new Duration(1000 * 60 * 10))) {
+					System.out.println("problem!");
 				}
 				filteredIntervals.add(clonedInterval);
 			} else {

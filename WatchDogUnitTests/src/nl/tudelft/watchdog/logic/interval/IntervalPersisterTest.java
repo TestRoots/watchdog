@@ -45,13 +45,24 @@ public class IntervalPersisterTest {
 		persister.closeDatabase();
 	}
 
+	
 	@Test
-	public void test0DatabaseEmpty() {
-		assertEquals(0, persister.getSize());
+	public void test1IsIntervalCorrectlyPersisted() {
+		IntervalBase interval = createRandomInterval();
+		interval.close();
+		persister.saveInterval(interval);
+		IntervalBase savedInterval = new ArrayList<>(persister.readIntervals())
+				.get(0);
+		assertEquals(interval, savedInterval);
+		assertEquals(interval.getType(), savedInterval.getType());
+		assertEquals(interval.getStart(), savedInterval.getStart());
+		assertEquals(interval.getEnd(), savedInterval.getEnd());
+		assertEquals(interval.isClosed(), savedInterval.isClosed());
+		assertEquals(interval.getDuration(), savedInterval.getDuration());
 	}
 
 	@Test
-	public void test1Interaction100() {
+	public void test2Interaction100() {
 		testInteraction(100);
 	}
 
@@ -85,7 +96,8 @@ public class IntervalPersisterTest {
 	}
 
 	public static IntervalBase createRandomInterval() {
-		IntervalBase interval = new IntervalBase(IntervalType.ECLIPSE_OPEN, new Date());
+		IntervalBase interval = new IntervalBase(IntervalType.ECLIPSE_OPEN,
+				new Date());
 		interval.setSessionSeed(444);
 		interval.setStartTime(new Date(interval.getStart().getTime()
 				+ (new Random()).nextInt(100000)));
@@ -95,12 +107,12 @@ public class IntervalPersisterTest {
 	}
 
 	@Test
-	public void test2DatabasePersisted() {
-		assertEquals(100, persister.getSize());
+	public void test3DatabasePersisted() {
+		assertEquals(101, persister.getSize());
 	}
 
 	@Test
-	public void test3RemoveFirstInterval() {
+	public void test4RemoveFirstInterval() {
 		assertEquals(100, persister.getSize());
 		Iterator<IntervalBase> readIntervals = persister.readIntervals()
 				.iterator();
@@ -111,7 +123,7 @@ public class IntervalPersisterTest {
 	}
 
 	@Test
-	public void test4DatabaseCleared() {
+	public void test5DatabaseCleared() {
 		persister.clearAndResetMap();
 		assertEquals(0, persister.getSize());
 	}
