@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nl.tudelft</groupId>
 	<artifactId>parent</artifactId>
-	<version>1.1.0-SNAPSHOT</version>
+	<version>1.1.0</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>WatchDog</module>
@@ -22,11 +22,6 @@
 	</properties>
 
 	<repositories>
-		<repository>
-			<id>javafx-juno</id>
-			<url>http://download.eclipse.org/efxclipse/runtime-released/1.0.0/site</url>
-			<layout>p2</layout>
-		</repository>
 		<repository>
 			<id>kepler</id>
 			<url>${kepler-repo.url}</url>
@@ -89,19 +84,6 @@
 				<version>${tycho.version}</version>
 				<configuration>
 					<compilerArgument>-warn:+discouraged,forbidden</compilerArgument>
-		<source>1.7</source>
-		<target>1.7</target>
-		<!-- add JavaFX to classpath -->
-
-		<extraClasspathElements>
-			<extraClasspathElement>
-				<groupId>com.oracle</groupId>
-				<artifactId>javafx</artifactId>
-				<version>2.2.0-SNAPSHOT</version>
-				<systemPath>${java.home}/lib/jfxrt.jar</systemPath>
-				<scope>system</scope>
-			</extraClasspathElement>
-		</extraClasspathElements>
 	</configuration>
 			</plugin>
 
