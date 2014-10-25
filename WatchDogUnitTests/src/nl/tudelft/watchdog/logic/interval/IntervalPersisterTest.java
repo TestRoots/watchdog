@@ -45,24 +45,8 @@ public class IntervalPersisterTest {
 		persister.closeDatabase();
 	}
 
-	
 	@Test
-	public void test1IsIntervalCorrectlyPersisted() {
-		IntervalBase interval = createRandomInterval();
-		interval.close();
-		persister.saveInterval(interval);
-		IntervalBase savedInterval = new ArrayList<>(persister.readIntervals())
-				.get(0);
-		assertEquals(interval, savedInterval);
-		assertEquals(interval.getType(), savedInterval.getType());
-		assertEquals(interval.getStart(), savedInterval.getStart());
-		assertEquals(interval.getEnd(), savedInterval.getEnd());
-		assertEquals(interval.isClosed(), savedInterval.isClosed());
-		assertEquals(interval.getDuration(), savedInterval.getDuration());
-	}
-
-	@Test
-	public void test2Interaction100() {
+	public void test1Interaction100() {
 		testInteraction(100);
 	}
 
@@ -107,12 +91,12 @@ public class IntervalPersisterTest {
 	}
 
 	@Test
-	public void test3DatabasePersisted() {
-		assertEquals(101, persister.getSize());
+	public void test2DatabasePersisted() {
+		assertEquals(100, persister.getSize());
 	}
 
 	@Test
-	public void test4RemoveFirstInterval() {
+	public void test3RemoveFirstInterval() {
 		assertEquals(100, persister.getSize());
 		Iterator<IntervalBase> readIntervals = persister.readIntervals()
 				.iterator();
@@ -123,7 +107,7 @@ public class IntervalPersisterTest {
 	}
 
 	@Test
-	public void test5DatabaseCleared() {
+	public void test4DatabaseCleared() {
 		persister.clearAndResetMap();
 		assertEquals(0, persister.getSize());
 	}
