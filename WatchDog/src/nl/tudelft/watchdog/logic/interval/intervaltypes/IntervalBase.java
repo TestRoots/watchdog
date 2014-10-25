@@ -126,6 +126,14 @@ public class IntervalBase extends WatchDogTransferable implements Serializable,
 		return getEnd().compareTo(comparedInterval.getEnd());
 	}
 
+	/**
+	 * Manually sets this interval to closed, without closing it. Users of this
+	 * class most likely want to invoke {@link #close()} in most cases.
+	 */
+	public void setClosed() {
+		this.isClosed = true;
+	}
+
 	public Object clone() {
 		try {
 			return super.clone();

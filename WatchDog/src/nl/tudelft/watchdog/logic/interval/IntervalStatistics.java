@@ -31,16 +31,27 @@ public class IntervalStatistics extends IntervalManagerBase {
 	/** Constructor. */
 	public IntervalStatistics(IntervalManager intervalManager) {
 		intervalPersister = intervalManager.getIntervalsStatisticsPersister();
-		intervals.addAll(intervalPersister.readIntervals());
-		intervals.addAll(intervalManager.getOpenIntervals());
+		addIntervals(intervalManager);
 		filterIntervals();
 		calculateStatistics();
+	}
+
+	private void addIntervals(IntervalManager intervalManager) {
+		for (IntervalBase interval : intervalPersister.readIntervals()) {
+			interval.setClosed();
+			intervals.add(interval);
+		}
+		intervals.addAll(intervalManager.getOpenIntervals());
 	}
 
 	/** Filters out and removes intervals which are older than one hour. */
 	private void filterIntervals() {
 		ArrayList<IntervalBase> filteredIntervals = new ArrayList<IntervalBase>();
 		ArrayList<IntervalBase> intervalsToRemove = new ArrayList<IntervalBase>();
+
+		if (intervals.size() == 0) {
+			return;
+		}
 
 		mostRecentDate = intervals.get(intervals.size() - 1).getEnd();
 		DateTime thresholdDate = new DateTime(mostRecentDate);
@@ -55,10 +66,6 @@ public class IntervalStatistics extends IntervalManagerBase {
 				}
 				if (!clonedInterval.isClosed()) {
 					clonedInterval.setEndTime(mostRecentDate);
-				}
-				if (clonedInterval.getDuration().isLongerThan(
-						new Duration(1000 * 60 * 10))) {
-					System.out.println("problem!");
 				}
 				filteredIntervals.add(clonedInterval);
 			} else {

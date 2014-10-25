@@ -62,7 +62,7 @@ public class WatchDogView extends ViewPart {
 					oneColumn);
 			createRefreshLink();
 		} else {
-			setTimes();
+			calculateTimes();
 
 			container = UIUtils.createGridedComposite(oneColumn, 2);
 			container
@@ -100,7 +100,7 @@ public class WatchDogView extends ViewPart {
 
 	}
 
-	private void setTimes() {
+	private void calculateTimes() {
 		intervalStatistics = new IntervalStatistics(InitializationManager
 				.getInstance().getIntervalManager());
 
