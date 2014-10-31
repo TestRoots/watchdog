@@ -230,7 +230,7 @@ public class InfoDialog extends Dialog {
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 470);
+		return new Point(450, 485);
 	}
 
 	private class WatchDogViewListener extends DefaultSelectionListener {
