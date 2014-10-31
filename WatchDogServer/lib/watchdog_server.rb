@@ -21,8 +21,10 @@ class WatchDogServer < Sinatra::Base
   before  do
     mongo
     @db = mongo.db(@serverconfig['mongo_db'])
-    @db.authenticate(@serverconfig['mongo_username'],
-                     @serverconfig['mongo_password'])
+    unless @serverconfig['mongo_username'].nil? or @serverconfig['mongo_username'].empty? 
+      @db.authenticate(@serverconfig['mongo_username'],
+                       @serverconfig['mongo_password'])
+    end
   end
 
   after do
@@ -86,10 +88,17 @@ class WatchDogServer < Sinatra::Base
 
     user['id'] = sha
 
-    user['postCode'] = request.location.postal_code
-    user['city'] = request.location.city
-    user['country'] = request.location.country
-
+    begin
+      user['postCode'] = request.location.postal_code
+      user['city'] = request.location.city
+      user['country'] = request.location.country
+    rescue e
+      user['postCode'] = 'NA' 
+      user['city'] = 'NA' 
+      user['country'] = 'NA' 
+      logger.warn user
+    end
+    
     add_ip_timestamp(user, request)
 
     users.save(user)
