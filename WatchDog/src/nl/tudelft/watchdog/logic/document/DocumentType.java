@@ -4,9 +4,13 @@ import com.google.gson.annotations.SerializedName;
 
 /** The different types a document may have. */
 public enum DocumentType {
-	/** A Unit test document */
+	/** A test document */
 	@SerializedName("te")
 	TEST,
+
+	/** Likely a test document */
+	@SerializedName("lt")
+	LIKELY_TEST,
 
 	/** A Production code document. */
 	@SerializedName("pr")
@@ -14,5 +18,9 @@ public enum DocumentType {
 
 	/** Unknown document type. */
 	@SerializedName("un")
-	UNDEFINED
+	UNDEFINED,
+
+	/** Test Framework like Mockito or Powermock. */
+	@SerializedName("tf")
+	TEST_FRAMEWORK
 }

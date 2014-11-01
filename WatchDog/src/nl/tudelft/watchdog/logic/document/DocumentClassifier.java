@@ -10,6 +10,7 @@ public class DocumentClassifier {
 	 */
 	public static DocumentType classifyDocument(String fileName,
 			String fileContents) {
+		fileName = fileName.toLowerCase();
 		// Collapse multiple spaces in a row to one
 		String preparedContents = fileContents.replaceAll("\\s+", " ");
 
@@ -17,11 +18,27 @@ public class DocumentClassifier {
 			if (containsJUnitImports(preparedContents)
 					&& containsTestAnnotation(preparedContents)) {
 				return DocumentType.TEST;
-			} else {
-				return DocumentType.PRODUCTION;
 			}
+			if (containsTestingFramework(preparedContents)) {
+				return DocumentType.TEST_FRAMEWORK;
+			}
+			if (fileName.contains("test")) {
+				return DocumentType.LIKELY_TEST;
+			}
+			return DocumentType.PRODUCTION;
+		}
+
+		return DocumentType.UNDEFINED;
+	}
+
+	private static boolean containsTestingFramework(String preparedContents) {
+		if (preparedContents.contains("import org.mockito")) {
+			return true;
+		} else if (preparedContents.contains("import org.powermock")
+				|| preparedContents.contains("import static org.powermock")) {
+			return true;
 		} else {
-			return DocumentType.UNDEFINED;
+			return false;
 		}
 	}
 
@@ -37,10 +54,15 @@ public class DocumentClassifier {
 	}
 
 	/**
-	 * @return <code>true</code> if there's an import for org.junit
+	 * @return <code>true</code> if there's an import for org.junit or
+	 *         org.testng
 	 */
 	private static boolean containsJUnitImports(String fileContents) {
-		if (fileContents.contains("import org.junit")) {
+		if (fileContents.contains("import org.junit")
+				|| fileContents.contains("import static org.junit")) {
+			return true;
+		} else if (fileContents.contains("import org.testng")
+				|| fileContents.contains("import static org.testng")) {
 			return true;
 		} else {
 			return false;
