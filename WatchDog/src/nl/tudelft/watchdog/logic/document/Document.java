@@ -35,12 +35,16 @@ public class Document implements Serializable {
 	@SerializedName("dt")
 	private DocumentType docType;
 
+	private transient String filePath;
+
 	private transient String content;
 
 	/** Constructor. */
-	public Document(String projectName, String fileName, String content) {
+	public Document(String projectName, String fileName, String filePath,
+			String content) {
 		this.projectName = projectName;
 		this.name = fileName;
+		this.filePath = filePath;
 		this.content = content;
 	}
 
@@ -87,7 +91,8 @@ public class Document implements Serializable {
 		}
 		if (name != null && content != null) {
 			this.sloc = WatchDogUtils.countSLOC(content);
-			this.docType = DocumentClassifier.classifyDocument(name, content);
+			this.docType = DocumentClassifier.classifyDocument(name, filePath,
+					content);
 		}
 	}
 }

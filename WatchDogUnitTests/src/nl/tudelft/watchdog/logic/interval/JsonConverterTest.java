@@ -64,9 +64,9 @@ public class JsonConverterTest {
 	public void testJsonTypingIntervalTwoSameIntervalsRepresentation() {
 		ITextEditor editor = Mockito.mock(ITextEditor.class);
 		TypingInterval interval = new TypingInterval(editor, new Date());
-		interval.setDocument(new Document("Project", "Production.java",
+		interval.setDocument(new Document("Project", "filepath", "Production.java",
 				"blah-document"));
-		interval.setEndingDocument(new Document("Project", "Production.java",
+		interval.setEndingDocument(new Document("Project", "Production.java", "filepath",
 				"blah-document"));
 
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
@@ -91,7 +91,7 @@ public class JsonConverterTest {
 
 	private ArrayList<IntervalBase> createSampleIntervals(
 			EditorIntervalBase interval) {
-		interval.setDocument(new Document("Project", "Production.java",
+		interval.setDocument(new Document("Project", "Production.java", "filepath",
 				"blah-document"));
 		ArrayList<IntervalBase> intervals = createSampleIntervals((IntervalBase) interval);
 		return intervals;

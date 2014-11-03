@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.util.Random;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
@@ -91,24 +92,31 @@ public class WatchDogUtils {
 	 * trying to access the file from the disk.
 	 */
 	public static String getContentForEditorFromDisk(ITextEditor editor) {
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					getFile(editor).getContents(), "UTF-8"));
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+			}
+			reader.close();
+			return sb.toString();
+		} catch (Exception e) {
+			throw new IllegalArgumentException("can't read resource file");
+		}
+
+	}
+
+	/**
+	 * @return The underlying file of the given editor.
+	 */
+	public static IFile getFile(ITextEditor editor)
+			throws IllegalArgumentException {
 		if (editor.getEditorInput() instanceof FileEditorInput) {
 			IFileEditorInput fileEditorInput = (IFileEditorInput) editor
 					.getEditorInput();
-
-			BufferedReader reader;
-			try {
-				reader = new BufferedReader(new InputStreamReader(
-						fileEditorInput.getFile().getContents(), "UTF-8"));
-				StringBuilder sb = new StringBuilder();
-				String line;
-				while ((line = reader.readLine()) != null) {
-					sb.append(line);
-				}
-				reader.close();
-				return sb.toString();
-			} catch (Exception e) {
-				throw new IllegalArgumentException("can't read resource file");
-			}
+			return fileEditorInput.getFile();
 		} else {
 			throw new IllegalArgumentException("can't read resource file");
 		}
@@ -135,7 +143,7 @@ public class WatchDogUtils {
 	}
 
 	/**
-	 * @return Whether the string with whitespaces trimmed is empty.
+	 * @return Whether the string with white spaces trimmed is empty.
 	 */
 	public static boolean isEmptyOrHasOnlyWhitespaces(String string) {
 		return isEmpty(string) ? true : string.trim().isEmpty();

@@ -10,7 +10,7 @@ public enum DocumentType {
 
 	/** Likely a test document */
 	@SerializedName("lt")
-	LIKELY_TEST,
+	FILENAME_TEST,
 
 	/** A Production code document. */
 	@SerializedName("pr")
@@ -22,5 +22,9 @@ public enum DocumentType {
 
 	/** Test Framework like Mockito or Powermock. */
 	@SerializedName("tf")
-	TEST_FRAMEWORK
+	TEST_FRAMEWORK,
+
+	/** File name includes test in path. */
+	@SerializedName("pf")
+	PATHNAMME_TEST
 }

@@ -108,5 +108,5 @@ public class WatchDogUtilsTest {
 		assertEquals(expectedHash + "Test",
 				WatchDogUtils.createFileNameHash("AClassTest.java"));
 	}
-
+	
 }

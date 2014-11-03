@@ -9,7 +9,7 @@ public class DocumentClassifier {
 	 * filename and its contents.
 	 */
 	public static DocumentType classifyDocument(String fileName,
-			String fileContents) {
+			String filePath, String fileContents) {
 		fileName = fileName.toLowerCase();
 		// Collapse multiple spaces in a row to one
 		String preparedContents = fileContents.replaceAll("\\s+", " ");
@@ -23,7 +23,10 @@ public class DocumentClassifier {
 				return DocumentType.TEST_FRAMEWORK;
 			}
 			if (fileName.contains("test")) {
-				return DocumentType.LIKELY_TEST;
+				return DocumentType.FILENAME_TEST;
+			}
+			if (filePath.contains("test")) {
+				return DocumentType.PATHNAMME_TEST;
 			}
 			return DocumentType.PRODUCTION;
 		}

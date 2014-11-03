@@ -24,9 +24,10 @@ public class IntervalPersisterBug101Test {
 
 	@BeforeClass
 	public static void setUp() throws IOException {
-		File directoryToCopy = new File("resources/IntervalPersisterBug101Test");
-		copiedDirectory = new File(
-				"resources/IntervalPersisterBug101Test-Temp");
+		File directoryToCopy = new File("resources",
+				"IntervalPersisterBug101Test");
+		copiedDirectory = new File("resources",
+				"IntervalPersisterBug101Test-Temp");
 		FileUtils.copyDirectory(directoryToCopy, copiedDirectory);
 		copiedDatabase = new File(copiedDirectory, "intervals.mapdb");
 	}
@@ -36,18 +37,18 @@ public class IntervalPersisterBug101Test {
 		persister.closeDatabase();
 		FileUtils.deleteDirectory(copiedDirectory);
 	}
-	
-	@Test 
+
+	@Test
 	public void test0IfDirectoryCopied() {
 		assertTrue(copiedDirectory.exists());
 		assertTrue(copiedDatabase.exists());
 	}
-	
-	@Test 
+
+	@Test
 	public void test1IfDatabaseStartsUpFine() {
 		persister = new IntervalPersister(copiedDatabase);
 	}
-	
+
 	@Test
 	public void test2DatabaseEmpty() {
 		assertEquals(0, persister.getSize());

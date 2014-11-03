@@ -21,7 +21,7 @@ public class DocumentClassifierTest {
 		String contents = "public class ProductionClass{"
 				+ "	public ProductionClass{" + "		//do something" + "	}" + "}";
 		DocumentType type = DocumentClassifier.classifyDocument(
-				"ProductionClass.java", contents);
+				"ProductionClass.java", "filepath", contents);
 		assertEquals(DocumentType.PRODUCTION, type);
 	}
 
@@ -35,13 +35,13 @@ public class DocumentClassifierTest {
 				+ "public class TestClass{" + "	@Test"
 				+ "	public testSomething{" + "		//do something" + "	}" + "}";
 		DocumentType type = DocumentClassifier.classifyDocument(
-				"TestClass.java", contents);
+				"TestClass.java", "filepath", contents);
 		assertEquals(DocumentType.TEST, type);
 	}
-	
+
 	/**
 	 * Tests the recognition of a normal JUnit test file as
-	 * {@link DocumentType#LIKELY_TEST}.
+	 * {@link DocumentType#FILENAME_TEST}.
 	 */
 	@Test
 	public void testNotReallyATestDocumentClassification() {
@@ -49,8 +49,8 @@ public class DocumentClassifierTest {
 				+ "public class TestClass{" + "	@NotATest"
 				+ "	public testSomething{" + "		//do something" + "	}" + "}";
 		DocumentType type = DocumentClassifier.classifyDocument(
-				"TestClass.java", contents);
-		assertEquals(DocumentType.LIKELY_TEST, type);
+				"TestClass.java", "filepath", contents);
+		assertEquals(DocumentType.FILENAME_TEST, type);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class DocumentClassifierTest {
 				+ "public class TestClass{" + "	@Test"
 				+ "	public testSomething{" + "		//do something" + "	}" + "}";
 		DocumentType type = DocumentClassifier.classifyDocument(
-				"TestClass.java", contents);
+				"TestClass.java", "", contents);
 		assertEquals(DocumentType.TEST, type);
 	}
 
@@ -77,7 +77,7 @@ public class DocumentClassifierTest {
 				+ "public class TestClass{" + "	@Test"
 				+ "	public testSomething{" + "		//do something" + "	}" + "}";
 		DocumentType type = DocumentClassifier.classifyDocument(
-				"TestClass.java", contents);
+				"TestClass.java", "", contents);
 		assertEquals(DocumentType.TEST, type);
 	}
 
@@ -91,7 +91,7 @@ public class DocumentClassifierTest {
 				+ "public class TestClass{" + "	@Test"
 				+ "	public testSomething{" + "		//do something" + "	}" + "}";
 		DocumentType type = DocumentClassifier.classifyDocument(
-				"TestClass.java", contents);
+				"TestClass.java", "", contents);
 		assertEquals(DocumentType.TEST_FRAMEWORK, type);
 	}
 
@@ -106,21 +106,21 @@ public class DocumentClassifierTest {
 				+ "public class TestClass{" + "//	@Test"
 				+ "	public testSomething{" + "		//do something" + "	}" + "}";
 		DocumentType type = DocumentClassifier.classifyDocument(
-				"TestClass.java", contents);
+				"TestClass.java", "", contents);
 		assertEquals(DocumentType.PRODUCTION, type);
 	}
 
 	/**
 	 * A class called "TestClass.java", which is not importing Junit, is
-	 * considered {@link DocumentType#LIKELY_TEST}.
+	 * considered {@link DocumentType#FILENAME_TEST}.
 	 */
 	@Test
 	public void testTestDocumentClassificationWithoutJUnitImports() {
 		String contents = "public class TestClass{" + "	@Test"
 				+ "	public testSomething{" + "		//do something" + "	}" + "}";
 		DocumentType type = DocumentClassifier.classifyDocument(
-				"TestClass.java", contents);
-		assertEquals(DocumentType.LIKELY_TEST, type);
+				"TestClass.java", "", contents);
+		assertEquals(DocumentType.FILENAME_TEST, type);
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class DocumentClassifierTest {
 	public void testUndefinedDocumentClassification() {
 		String contents = "The quick brown fox... etc";
 		DocumentType type = DocumentClassifier.classifyDocument("somefile.txt",
-				contents);
+				"", contents);
 		assertEquals(DocumentType.UNDEFINED, type);
 	}
 
@@ -143,8 +143,8 @@ public class DocumentClassifierTest {
 	public void testLikelyTestClassification() {
 		String contents = "The quick brown fox... etc";
 		DocumentType type = DocumentClassifier.classifyDocument(
-				"someTestfile.java", contents);
-		assertEquals(DocumentType.LIKELY_TEST, type);
+				"someTestfile.java", "", contents);
+		assertEquals(DocumentType.FILENAME_TEST, type);
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class DocumentClassifierTest {
 	public void testNotLikelyTestClassification() {
 		String contents = "The quick brown fox... etc";
 		DocumentType type = DocumentClassifier.classifyDocument(
-				"someTestfile.txt", contents);
+				"someTestfile.txt", "", contents);
 		assertEquals(DocumentType.UNDEFINED, type);
 	}
 
@@ -169,7 +169,7 @@ public class DocumentClassifierTest {
 		String contents = "public class TestClass{" + "	@Test"
 				+ "	public testSomething{" + "		//do something" + "	}" + "}";
 		DocumentType type = DocumentClassifier.classifyDocument(
-				"TestClass.txt", contents);
+				"TestClass.txt", "", contents);
 		assertEquals(DocumentType.UNDEFINED, type);
 	}
 

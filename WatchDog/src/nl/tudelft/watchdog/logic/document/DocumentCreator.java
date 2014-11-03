@@ -4,12 +4,10 @@ import nl.tudelft.watchdog.util.ContentReaderException;
 import nl.tudelft.watchdog.util.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
-
-import com.cedarsoftware.util.StringUtilities;
 
 /**
  * A factory for creating {@link Document}s from a supplied {@link ITextEditor}.
@@ -22,23 +20,25 @@ public class DocumentCreator {
 	 */
 	public static Document createDocument(ITextEditor editor) {
 		String activeProjectName = null;
-		if (editor.getEditorInput() instanceof IFileEditorInput) {
-			IFileEditorInput input = (IFileEditorInput) editor.getEditorInput();
-			IProject activeProject = input.getFile().getProject();
-			activeProjectName = activeProject.getName();
-		}
-		String title = null;
-		if (!StringUtilities.isEmpty(editor.getTitle())) {
+		String filePath = "";
+		String title = "";
+		try {
 			title = editor.getTitle();
+			IFile file = WatchDogUtils.getFile(editor);
+			IProject activeProject = file.getProject();
+			activeProjectName = activeProject.getName();
+			filePath = file.getProjectRelativePath().toString();
+		} catch (IllegalArgumentException ex) {
+			// Intentionally left empty
 		}
 
 		try {
-			return new Document(activeProjectName, title,
+			return new Document(activeProjectName, title, filePath,
 					getEditorOrFileContent(editor));
 		} catch (IllegalArgumentException exception) {
 			WatchDogLogger.getInstance().logSevere(exception);
 		}
-		return new Document(activeProjectName, title, null);
+		return new Document(activeProjectName, title, filePath, null);
 	}
 
 	/**
