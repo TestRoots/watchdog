@@ -2,12 +2,12 @@ package nl.tudelft.watchdog.logic.interval;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 import java.util.TimerTask;
 
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
+import nl.tudelft.watchdog.logic.ui.RegularCheckerBase;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
@@ -20,13 +20,9 @@ import nl.tudelft.watchdog.util.WatchDogLogger;
  * immediate execution of this regularly scheduled task, e.g. when it is needed
  * on exiting.
  */
-public class IntervalTransferManager {
+public class IntervalTransferManager extends RegularCheckerBase {
 
 	private static final int UPDATE_RATE = 3 * 60 * 1000;
-
-	private Timer timer;
-
-	private IntervalsTransferTimerTask task;
 
 	/**
 	 * Constructor. Tries to immediately transfer all remaining intervals, and
@@ -34,10 +30,9 @@ public class IntervalTransferManager {
 	 * milliseconds.
 	 */
 	public IntervalTransferManager(final IntervalPersister intervalPersister) {
+		super(UPDATE_RATE);
 		task = new IntervalsTransferTimerTask(intervalPersister);
-		task.run();
-		timer = new Timer(true);
-		timer.scheduleAtFixedRate(task, 0, UPDATE_RATE);
+		setupAndStartTimeChecker();
 	}
 
 	/** Immediately synchronizes the intervals with the server. */

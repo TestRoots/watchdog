@@ -1,9 +1,9 @@
 package nl.tudelft.watchdog.logic.network;
 
-import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Pattern;
 
+import nl.tudelft.watchdog.logic.ui.RegularCheckerBase;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
@@ -13,13 +13,9 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
  * version of the WatchDog client is available and sets the preferences
  * accordingly.
  */
-public class ClientVersionChecker {
+public class ClientVersionChecker extends RegularCheckerBase {
 
 	private static int UPDATE_RATE = 15 * 60 * 1000;
-
-	private Timer timer;
-
-	private ClientVersionCheckerTimerTask task;
 
 	/**
 	 * Constructor. Tries to immediately transfer all remaining intervals, and
@@ -27,10 +23,9 @@ public class ClientVersionChecker {
 	 * milliseconds.
 	 */
 	public ClientVersionChecker() {
+		super(UPDATE_RATE);
 		task = new ClientVersionCheckerTimerTask();
-		task.run();
-		timer = new Timer(true);
-		timer.scheduleAtFixedRate(task, 0, UPDATE_RATE);
+		setupAndStartTimeChecker();
 	}
 
 	private static class ClientVersionCheckerTimerTask extends TimerTask {

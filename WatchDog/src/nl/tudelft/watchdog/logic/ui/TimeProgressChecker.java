@@ -1,7 +1,6 @@
 package nl.tudelft.watchdog.logic.ui;
 
 import java.util.Date;
-import java.util.Timer;
 import java.util.TimerTask;
 
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
@@ -17,35 +16,29 @@ import nl.tudelft.watchdog.util.WatchDogLogger;
  * recorded time and starts completely fresh intervals. Used to detect a system
  * suspend.
  */
-public class TimeProgressChecker {
+public class TimeProgressChecker extends RegularCheckerBase {
 
 	private static int UPDATE_RATE = 1 * 60 * 1000;
 
-	private Timer timer;
+	private static IntervalManager intervalManager;
 
-	private TimeProgressTimerTask task;
+	private static EventManager eventManager;
 
 	/** Constructor. */
 	public TimeProgressChecker(IntervalManager intervalManager,
 			EventManager eventManager) {
-		task = new TimeProgressTimerTask(intervalManager, eventManager);
-		task.run();
-		timer = new Timer(true);
-		timer.scheduleAtFixedRate(task, 0, UPDATE_RATE);
+		super(UPDATE_RATE);
+		this.task = new TimeProgressTimerTask();
+		TimeProgressChecker.intervalManager = intervalManager;
+		TimeProgressChecker.eventManager = eventManager;
+		setupAndStartTimeChecker();
 	}
 
 	private static class TimeProgressTimerTask extends TimerTask {
 
 		long previousExecutionDate;
 
-		private final IntervalManager intervalManager;
-
-		private EventManager eventManager;
-
-		private TimeProgressTimerTask(IntervalManager intervalManager,
-				EventManager eventManager) {
-			this.intervalManager = intervalManager;
-			this.eventManager = eventManager;
+		private TimeProgressTimerTask() {
 			previousExecutionDate = System.currentTimeMillis();
 		}
 
@@ -53,9 +46,9 @@ public class TimeProgressChecker {
 		public void run() {
 			long executionDate = System.currentTimeMillis();
 			long delta = executionDate - previousExecutionDate;
-			boolean deltaWithinReasonableBoundaries = delta >= UPDATE_RATE
+			boolean deltaIsWithinReasonableBoundaries = delta >= UPDATE_RATE
 					&& delta <= UPDATE_RATE * 1.16;
-			if (!deltaWithinReasonableBoundaries) {
+			if (!deltaIsWithinReasonableBoundaries) {
 				WatchDogLogger.getInstance()
 						.logInfo("System suspend detected!");
 				Perspective openedPerspective = intervalManager
