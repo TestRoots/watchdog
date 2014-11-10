@@ -122,6 +122,11 @@ public class IntervalManager extends IntervalManagerBase {
 	/** Closes all currently open intervals. */
 	public void closeAllIntervals() {
 		Date closingDate = new Date();
+		closeAllIntervals(closingDate);
+	}
+
+	/** Closes all currently open intervals with the supplied closing date. */
+	public void closeAllIntervals(Date closingDate) {
 		closeInterval(editorInterval, closingDate);
 		Iterator<IntervalBase> iterator = intervals.listIterator();
 		while (iterator.hasNext()) {

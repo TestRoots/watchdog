@@ -94,18 +94,9 @@ public class EventManager {
 			intervalManager.closeInterval(interval, forcedDate);
 			break;
 
-		case START_JAVA_PERSPECTIVE:
-			createNewPerspectiveInterval(Perspective.JAVA, forcedDate);
-			userInactivityNotifier.trigger(forcedDate);
-			break;
-
-		case START_DEBUG_PERSPECTIVE:
-			createNewPerspectiveInterval(Perspective.DEBUG, forcedDate);
-			userInactivityNotifier.trigger(forcedDate);
-			break;
-
-		case START_UNKNOWN_PERSPECTIVE:
-			createNewPerspectiveInterval(Perspective.OTHER, forcedDate);
+		case START_PERSPECTIVE:
+			Perspective perspecitve = (Perspective) event.getSource();
+			createNewPerspectiveInterval(perspecitve, forcedDate);
 			userInactivityNotifier.trigger(forcedDate);
 			break;
 
