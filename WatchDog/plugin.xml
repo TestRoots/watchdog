@@ -55,7 +55,7 @@
          point="org.eclipse.ui.views">
       <view
             allowMultiple="false"
-            class="nl.tudelft.watchdog.ui.view.WatchDogView"
+            class="nl.tudelft.watchdog.ui.WatchDogView"
             icon="resources/images/watchdog_icon.png"
             id="WatchDog.view"
             name="WatchDog Statistics"

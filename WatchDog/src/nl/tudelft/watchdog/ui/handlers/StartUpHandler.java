@@ -1,9 +1,9 @@
 package nl.tudelft.watchdog.ui.handlers;
 
 import nl.tudelft.watchdog.logic.InitializationManager;
+import nl.tudelft.watchdog.ui.WatchDogView;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
-import nl.tudelft.watchdog.ui.view.WatchDogView;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 import nl.tudelft.watchdog.util.WatchDogLogger;
 

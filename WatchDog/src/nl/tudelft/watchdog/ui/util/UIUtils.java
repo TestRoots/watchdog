@@ -1,9 +1,9 @@
 package nl.tudelft.watchdog.ui.util;
 
 import nl.tudelft.watchdog.Activator;
+import nl.tudelft.watchdog.ui.WatchDogView;
 import nl.tudelft.watchdog.ui.util.CommandExecuterBase.CommandExecuter;
 import nl.tudelft.watchdog.ui.util.CommandExecuterBase.CommandRefresher;
-import nl.tudelft.watchdog.ui.view.WatchDogView;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
