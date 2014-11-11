@@ -92,13 +92,13 @@ class WatchDogServer < Sinatra::Base
       user['postCode'] = request.location.postal_code
       user['city'] = request.location.city
       user['country'] = request.location.country
-    rescue e
+    rescue 
       user['postCode'] = 'NA' 
       user['city'] = 'NA' 
       user['country'] = 'NA' 
-      logger.warn user
     end
-    
+    logger.warn user
+
     add_ip_timestamp(user, request)
 
     users.save(user)
