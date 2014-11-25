@@ -32,7 +32,7 @@ public class IntervalTransferManager extends RegularCheckerBase {
 	public IntervalTransferManager(final IntervalPersister intervalPersister) {
 		super(UPDATE_RATE);
 		task = new IntervalsTransferTimerTask(intervalPersister);
-		setupAndStartTimeChecker();
+		runSetupAndStartTimeChecker();
 	}
 
 	/** Immediately synchronizes the intervals with the server. */

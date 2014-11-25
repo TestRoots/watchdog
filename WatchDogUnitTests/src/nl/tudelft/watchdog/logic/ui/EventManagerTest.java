@@ -207,6 +207,7 @@ public class EventManagerTest {
 	public void testEndTimeStampSetAccuratelyForWritingIntervals() {
 		testNoMoreAdditionalUserActivitiesShouldNotCloseReading();
 		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT);
+		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT);
 
 		Assert.assertTrue(editorInterval.getEnd().getTime() <= interval.getEnd().getTime());
 	}

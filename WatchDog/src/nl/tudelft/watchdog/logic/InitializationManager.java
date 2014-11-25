@@ -8,7 +8,7 @@ import nl.tudelft.watchdog.logic.interval.IntervalPersister;
 import nl.tudelft.watchdog.logic.interval.IntervalTransferManager;
 import nl.tudelft.watchdog.logic.network.ClientVersionChecker;
 import nl.tudelft.watchdog.logic.ui.EventManager;
-import nl.tudelft.watchdog.logic.ui.TimeProgressChecker;
+import nl.tudelft.watchdog.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.logic.ui.listeners.WorkbenchListener;
 
 /**
@@ -46,7 +46,7 @@ public class InitializationManager {
 				intervalsStatisticsPersister);
 		EventManager eventManager = new EventManager(intervalManager,
 				USER_ACTIVITY_TIMEOUT);
-		new TimeProgressChecker(intervalManager, eventManager);
+		new TimeSynchronityChecker(intervalManager, eventManager);
 
 		WorkbenchListener workbenchListener = new WorkbenchListener(
 				eventManager, new IntervalTransferManager(

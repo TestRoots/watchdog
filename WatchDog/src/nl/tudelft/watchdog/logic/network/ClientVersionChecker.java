@@ -25,7 +25,7 @@ public class ClientVersionChecker extends RegularCheckerBase {
 	public ClientVersionChecker() {
 		super(UPDATE_RATE);
 		task = new ClientVersionCheckerTimerTask();
-		setupAndStartTimeChecker();
+		runSetupAndStartTimeChecker();
 	}
 
 	private static class ClientVersionCheckerTimerTask extends TimerTask {

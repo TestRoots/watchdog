@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.logic.interval;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -128,7 +129,8 @@ public class IntervalManager extends IntervalManagerBase {
 	/** Closes all currently open intervals with the supplied closing date. */
 	public void closeAllIntervals(Date closingDate) {
 		closeInterval(editorInterval, closingDate);
-		Iterator<IntervalBase> iterator = intervals.listIterator();
+		ArrayList<IntervalBase> copiedIntervals = new ArrayList<>(intervals);
+		Iterator<IntervalBase> iterator = copiedIntervals.listIterator();
 		while (iterator.hasNext()) {
 			// we need to remove the interval first from the list in order to
 			// avoid ConcurrentListModification Exceptions.
@@ -136,6 +138,7 @@ public class IntervalManager extends IntervalManagerBase {
 			iterator.remove();
 			closeInterval(interval, closingDate);
 		}
+		intervals.clear();
 	}
 
 	/**

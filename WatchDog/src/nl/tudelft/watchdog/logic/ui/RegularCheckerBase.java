@@ -11,7 +11,8 @@ public abstract class RegularCheckerBase {
 	 */
 	protected int updateRate;
 
-	private Timer timer;
+	/** The timer */
+	protected Timer timer;
 
 	/** The actual task to be run. Needs to be set by subclasses. */
 	protected TimerTask task;
@@ -22,9 +23,9 @@ public abstract class RegularCheckerBase {
 	}
 
 	/** Subclasses call this method from their constructor. */
-	protected void setupAndStartTimeChecker() {
+	protected void runSetupAndStartTimeChecker() {
 		task.run();
 		timer = new Timer(true);
-		timer.scheduleAtFixedRate(task, 0, updateRate);
+		timer.scheduleAtFixedRate(task, updateRate, updateRate);
 	}
 }
