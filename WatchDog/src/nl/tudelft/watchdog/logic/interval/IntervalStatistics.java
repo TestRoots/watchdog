@@ -83,7 +83,11 @@ public class IntervalStatistics extends IntervalManagerBase {
 		userActive = aggregateDurations(getIntervalsOfType(IntervalType.USER_ACTIVE));
 		userReading = aggregateDurations(getIntervalsOfType(IntervalType.READING));
 		userTyping = aggregateDurations(getIntervalsOfType(IntervalType.TYPING));
-		userTest = aggregateDurations(getEditorIntervalsOfDocType(DocumentType.TEST));
+		userTest = aggregateDurations(
+				getEditorIntervalsOfDocType(DocumentType.TEST))
+				.plus(aggregateDurations(getEditorIntervalsOfDocType(DocumentType.TEST_FRAMEWORK)))
+				.plus(aggregateDurations(getEditorIntervalsOfDocType(DocumentType.FILENAME_TEST)))
+				.plus(aggregateDurations(getEditorIntervalsOfDocType(DocumentType.PATHNAMME_TEST)));
 		userProduction = aggregateDurations(getEditorIntervalsOfDocType(DocumentType.PRODUCTION));
 		performDataSanitation();
 	}
