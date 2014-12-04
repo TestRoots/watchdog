@@ -55,26 +55,26 @@ public class TimeSynchronityChecker extends RegularCheckerBase {
 
 		@Override
 		public void run() {
-			if (!WatchDogGlobals.isActive) {
+			if (WatchDogGlobals.isActive) {
 				// do not execute this task unless WatchDog has properly boot-up
-				return;
-			}
-			long executionDate = System.currentTimeMillis();
-			long delta = executionDate - previousExecutionDate;
-			boolean deltaIsWithinReasonableBoundaries = delta >= UPDATE_RATE
-					&& delta <= UPDATE_RATE * 1.16;
-			if (!deltaIsWithinReasonableBoundaries) {
-				WatchDogLogger.getInstance()
-						.logInfo("System suspend detected!");
-				Perspective openedPerspective = intervalManager
-						.getIntervalOfClass(PerspectiveInterval.class)
-						.getPerspectiveType();
-				intervalManager.closeAllIntervals(new Date(
-						previousExecutionDate + UPDATE_RATE));
-				eventManager.update(new WatchDogEvent(this,
-						EventType.START_ECLIPSE));
-				eventManager.update(new WatchDogEvent(openedPerspective,
-						EventType.START_PERSPECTIVE));
+
+				long executionDate = System.currentTimeMillis();
+				long delta = executionDate - previousExecutionDate;
+				boolean deltaIsWithinReasonableBoundaries = delta >= UPDATE_RATE
+						&& delta <= UPDATE_RATE * 1.16;
+				if (!deltaIsWithinReasonableBoundaries) {
+					WatchDogLogger.getInstance().logInfo(
+							"System suspend detected!");
+					Perspective openedPerspective = intervalManager
+							.getIntervalOfClass(PerspectiveInterval.class)
+							.getPerspectiveType();
+					intervalManager.closeAllIntervals(new Date(
+							previousExecutionDate + UPDATE_RATE));
+					eventManager.update(new WatchDogEvent(this,
+							EventType.START_ECLIPSE));
+					eventManager.update(new WatchDogEvent(openedPerspective,
+							EventType.START_PERSPECTIVE));
+				}
 			}
 
 			startTimeCheckerOnce();
