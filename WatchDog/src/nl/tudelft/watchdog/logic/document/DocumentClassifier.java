@@ -57,10 +57,19 @@ public class DocumentClassifier {
 	}
 
 	/**
+	 * @return <code>true</code> if JUnit3 or 4 is being used,
+	 *         <code>false</code> otherwise.
+	 */
+	private static boolean containsJUnitImports(String fileContents) {
+		return containsJUnit4Imports(fileContents)
+				| containsJunit3Import(fileContents);
+	}
+
+	/**
 	 * @return <code>true</code> if there's an import for org.junit or
 	 *         org.testng
 	 */
-	private static boolean containsJUnitImports(String fileContents) {
+	private static boolean containsJUnit4Imports(String fileContents) {
 		if (fileContents.contains("import org.junit")
 				|| fileContents.contains("import static org.junit")) {
 			return true;
@@ -72,12 +81,23 @@ public class DocumentClassifier {
 		}
 	}
 
+	private static boolean containsJunit3Import(String fileContents) {
+		if (fileContents.contains("import junit.framework")) {
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	 * @return <code>true</code> if the editor contains (at least one) @Test
 	 *         annotation.
 	 */
 	private static boolean containsTestAnnotation(String contents) {
 		if (contents.contains("@Test")) {
+			// Junit4
+			return true;
+		} else if (contents.contains("extends TestCase")) {
+			// Junit3
 			return true;
 		} else {
 			return false;

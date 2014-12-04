@@ -26,13 +26,28 @@ public class DocumentClassifierTest {
 	}
 
 	/**
-	 * Tests the recognition of a normal JUnit test file as
+	 * Tests the recognition of a normal JUnit4 test file as
 	 * {@link DocumentType#TEST}.
 	 */
 	@Test
 	public void testRealJunitTestDocumentClassification() {
 		String contents = "import org.junit.assert;"
 				+ "public class TestClass{" + "	@Test"
+				+ "	public testSomething{" + "		//do something" + "	}" + "}";
+		DocumentType type = DocumentClassifier.classifyDocument(
+				"TestClass.java", "filepath", contents);
+		assertEquals(DocumentType.TEST, type);
+	}
+	
+
+	/**
+	 * Tests the recognition of a normal JUnit3 test file as
+	 * {@link DocumentType#TEST}.
+	 */
+	@Test
+	public void testRealJunit3TestDocumentClassification() {
+		String contents = "import junit.framework.TestCase;"
+				+ "public class TestClass extends TestCase {" + "	"
 				+ "	public testSomething{" + "		//do something" + "	}" + "}";
 		DocumentType type = DocumentClassifier.classifyDocument(
 				"TestClass.java", "filepath", contents);
