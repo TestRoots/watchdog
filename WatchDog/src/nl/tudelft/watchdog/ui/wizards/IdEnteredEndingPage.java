@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 public abstract class IdEnteredEndingPage extends FinishableWizardPage {
 
 	/** An encouraging message for the end of a sentence. */
-	public static final String encouragingEndMessage = "\n\nHappy hours-collecting and prize-winning with WatchDog! \nThe longer you use WatchDog, the higher your chances of winning!";
+	public static final String ENCOURAGING_END_MESSAGE = "\n\nHappy hours-collecting and prize-winning with WatchDog! \nThe longer you use WatchDog, the higher your chances of winning!";
 
 	/** The top-level composite. */
 	private Composite topComposite;
@@ -111,7 +111,7 @@ public abstract class IdEnteredEndingPage extends FinishableWizardPage {
 						+ " id  "
 						+ id
 						+ "  has been registered with this Eclipse installation. You can change the id and other WatchDog settings in the Eclipse preferences."
-						+ encouragingEndMessage, composite);
+						+ ENCOURAGING_END_MESSAGE, composite);
 		return composite;
 	}
 

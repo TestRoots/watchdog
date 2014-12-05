@@ -33,7 +33,7 @@ public class IntervalManager extends IntervalManagerBase {
 			IntervalPersister intervalsStatisticsPersister) {
 		this.intervalsToTransferPersister = intervalsToTransferPersister;
 		this.intervalsStatisticsPersister = intervalsStatisticsPersister;
-		this.sessionSeed = WatchDogUtils.randomObject.nextLong();
+		this.sessionSeed = WatchDogUtils.RANDOM_OBJECT.nextLong();
 	}
 
 	/**

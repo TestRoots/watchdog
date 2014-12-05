@@ -20,7 +20,7 @@ import org.joda.time.format.PeriodFormatterBuilder;
 public class WatchDogUtils {
 
 	/** A random (generator) object. */
-	public static final Random randomObject = new Random();
+	public static final Random RANDOM_OBJECT = new Random();
 
 	/** Formatter for a {@link Period}. */
 	private static PeriodFormatter periodFormatter = new PeriodFormatterBuilder()

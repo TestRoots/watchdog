@@ -15,7 +15,7 @@ import nl.tudelft.watchdog.util.WatchDogGlobals;
  */
 public class ClientVersionChecker extends RegularCheckerBase {
 
-	private static int UPDATE_RATE = 15 * 60 * 1000;
+	private static final int UPDATE_RATE = 15 * 60 * 1000;
 
 	/**
 	 * Constructor. Tries to immediately transfer all remaining intervals, and
@@ -57,6 +57,7 @@ public class ClientVersionChecker extends RegularCheckerBase {
 
 				UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);
 			} catch (ServerCommunicationException exception) {
+				// intentionally empty
 			}
 		}
 	}

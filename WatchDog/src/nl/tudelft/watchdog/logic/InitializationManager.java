@@ -23,11 +23,11 @@ public class InitializationManager {
 	/** The singleton instance of the interval manager. */
 	private static volatile InitializationManager instance = null;
 
-	private IntervalManager intervalManager;
+	private final IntervalManager intervalManager;
 
-	private IntervalPersister intervalsToTransferPersister;
+	private final IntervalPersister intervalsToTransferPersister;
 
-	private IntervalPersister intervalsStatisticsPersister;
+	private final IntervalPersister intervalsStatisticsPersister;
 
 	/** Private constructor. */
 	private InitializationManager() {

@@ -80,12 +80,12 @@ public class InfoDialog extends Dialog {
 		colorGreen = new Color(getShell().getDisplay(), 0, 150, 0);
 		UIUtils.createLabel("WatchDog Status: ", container);
 		if (WatchDogGlobals.isActive) {
-			UIUtils.createLabel(WatchDogGlobals.activeWatchDogUIText,
+			UIUtils.createLabel(WatchDogGlobals.ACTIVE_WATCHDOG_TEXT,
 					container, colorGreen);
 		} else {
 			Composite localGrid = UIUtils.createZeroMarginGridedComposite(
 					container, 2);
-			UIUtils.createLabel(WatchDogGlobals.inactiveWatchDogUIText,
+			UIUtils.createLabel(WatchDogGlobals.INACTIVE_WATCHDOG_TEXT,
 					localGrid, colorRed);
 			createFixThisProblemLink(localGrid, new PreferenceListener());
 
@@ -239,6 +239,7 @@ public class InfoDialog extends Dialog {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 						.getActivePage().showView(WatchDogView.ID);
 			} catch (PartInitException exception) {
+				// intentionally empty
 			}
 			super.widgetSelected(e);
 		}

@@ -205,17 +205,17 @@ public class UIUtils {
 					"resources/images/tudelft_with_frame.png");
 
 	/** The WatchDog Icon. */
-	public static final ImageDescriptor watchDogIcon = Activator
+	public static final ImageDescriptor WATCHDOG_ICON = Activator
 			.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
 					"resources/images/watchdog_icon.png");
 
 	/** The WatchDog Icon Disabled. */
-	public static final ImageDescriptor watchDogIconDisabled = Activator
+	public static final ImageDescriptor WATCHDOG_ICON_DISABLED = Activator
 			.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
 					"resources/images/watchdog_icon_disabled.png");
 
 	/** The WatchDog Icon Warning. */
-	public static final ImageDescriptor watchDogIconWarning = Activator
+	public static final ImageDescriptor WATCHDOG_ICON_WARNING = Activator
 			.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
 					"resources/images/watchdog_icon_warning.png");
 

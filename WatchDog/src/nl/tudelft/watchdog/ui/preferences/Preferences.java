@@ -54,10 +54,11 @@ public class Preferences {
 
 	/** The type of a list of {@link WorkspacePreferenceSetting}s for Gson. */
 	private final static Type TYPE_WORKSPACE_SETTINGS = new TypeToken<List<WorkspacePreferenceSetting>>() {
+		// intentionally empty class
 	}.getType();
 
 	/** The Gson object. */
-	private final static Gson gson = new Gson();
+	private final static Gson GSON = new Gson();
 
 	/** The preference store. */
 	private ScopedPreferenceStore store;
@@ -94,13 +95,13 @@ public class Preferences {
 	 * key.
 	 */
 	private List<WorkspacePreferenceSetting> readSerializedWorkspaceSettings(
-			String KEY) {
-		String serializedWorksapceSettings = store.getString(KEY);
+			String key) {
+		String serializedWorksapceSettings = store.getString(key);
 		if (WatchDogUtils.isEmpty(serializedWorksapceSettings)) {
 			return new ArrayList<WorkspacePreferenceSetting>();
 		}
 
-		return gson.fromJson(serializedWorksapceSettings,
+		return GSON.fromJson(serializedWorksapceSettings,
 				TYPE_WORKSPACE_SETTINGS);
 	}
 
@@ -255,7 +256,7 @@ public class Preferences {
 	/** Updates the serialized workspace settings in the preference store. */
 	private void storeWorkspaceSettings() {
 		store.setValue(WORKSPACES_KEY,
-				gson.toJson(workspaceSettings, TYPE_WORKSPACE_SETTINGS));
+				GSON.toJson(workspaceSettings, TYPE_WORKSPACE_SETTINGS));
 		try {
 			store.save();
 		} catch (IOException exception) {

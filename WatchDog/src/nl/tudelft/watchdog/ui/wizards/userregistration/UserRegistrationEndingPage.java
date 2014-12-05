@@ -37,6 +37,6 @@ class UserRegistrationEndingPage extends RegistrationEndingPage {
 		messageBody = "Your new user id "
 				+ id
 				+ " is registered.\nYou can change it and other WatchDog settings in the Eclipse preferences."
-				+ UserIdEnteredEndingPage.encouragingEndMessage;
+				+ UserIdEnteredEndingPage.ENCOURAGING_END_MESSAGE;
 	}
 }

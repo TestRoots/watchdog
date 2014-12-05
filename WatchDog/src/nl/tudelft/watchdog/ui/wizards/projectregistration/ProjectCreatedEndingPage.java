@@ -63,6 +63,6 @@ class ProjectCreatedEndingPage extends RegistrationEndingPage {
 		messageBody = "Your new project id "
 				+ id
 				+ " is registered.\nYou can change it and other WatchDog settings in the Eclipse preferences."
-				+ ProjectIdEnteredEndingPage.encouragingEndMessage;
+				+ ProjectIdEnteredEndingPage.ENCOURAGING_END_MESSAGE;
 	}
 }

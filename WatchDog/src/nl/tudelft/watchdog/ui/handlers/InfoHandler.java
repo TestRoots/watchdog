@@ -39,16 +39,16 @@ public class InfoHandler extends AbstractHandler implements IElementUpdater {
 
 			if (WatchDogGlobals.lastTransactionFailed
 					|| preferences.isOldVersion()) {
-				element.setTooltip(WatchDogGlobals.activeWatchDogUIText);
-				element.setIcon(UIUtils.watchDogIconWarning);
+				element.setTooltip(WatchDogGlobals.ACTIVE_WATCHDOG_TEXT);
+				element.setIcon(UIUtils.WATCHDOG_ICON_WARNING);
 			} else {
-				element.setTooltip(WatchDogGlobals.activeWatchDogUIText);
-				element.setIcon(UIUtils.watchDogIcon);
+				element.setTooltip(WatchDogGlobals.ACTIVE_WATCHDOG_TEXT);
+				element.setIcon(UIUtils.WATCHDOG_ICON);
 			}
 
 		} else {
-			element.setTooltip(WatchDogGlobals.inactiveWatchDogUIText);
-			element.setIcon(UIUtils.watchDogIconDisabled);
+			element.setTooltip(WatchDogGlobals.INACTIVE_WATCHDOG_TEXT);
+			element.setIcon(UIUtils.WATCHDOG_ICON_DISABLED);
 		}
 
 	}

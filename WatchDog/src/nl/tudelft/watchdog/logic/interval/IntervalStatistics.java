@@ -16,7 +16,7 @@ import org.joda.time.Duration;
 public class IntervalStatistics extends IntervalManagerBase {
 	private static final int FILTERED_INTERVALS_IN_MINUTES = 60;
 
-	private IntervalPersister intervalPersister;
+	private final IntervalPersister intervalPersister;
 
 	public Duration eclipseOpen;
 	public Duration userActive;

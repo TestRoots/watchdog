@@ -20,7 +20,7 @@ import nl.tudelft.watchdog.util.WatchDogLogger;
  */
 public class TimeSynchronityChecker extends RegularCheckerBase {
 
-	private static int UPDATE_RATE = 1 * 60 * 1000;
+	private static final int UPDATE_RATE = 1 * 60 * 1000;
 
 	private static IntervalManager intervalManager;
 

@@ -6,10 +6,10 @@ package nl.tudelft.watchdog.util;
 public class WatchDogGlobals {
 
 	/** A text used in the UI if WatchDog is running. */
-	public final static String activeWatchDogUIText = "WatchDog is active and recording ...";
+	public final static String ACTIVE_WATCHDOG_TEXT = "WatchDog is active and recording ...";
 
 	/** A text used in the UI if WatchDog is not running. */
-	public final static String inactiveWatchDogUIText = "WatchDog is inactive!";
+	public final static String INACTIVE_WATCHDOG_TEXT = "WatchDog is inactive!";
 
 	/** The default URI of the WatchDogServer. */
 	public final static String DEFAULT_SERVER_URI = "http://watchdog.testroots.org/";

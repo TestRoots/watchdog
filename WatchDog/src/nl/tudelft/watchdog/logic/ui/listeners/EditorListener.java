@@ -21,8 +21,9 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 /** Enriches an {@link IEditorPart} for all user-triggered events. */
 public class EditorListener {
-	private ITextEditor editor;
-	private EventManager eventManager;
+	private final ITextEditor editor;
+	private final EventManager eventManager;
+
 	private IDocument document;
 	private IDocumentListener documentListener;
 	private CaretListener caretListener;
@@ -93,8 +94,6 @@ public class EditorListener {
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				// eventManager.update(new EditorEvent(editor,
-				// EventType.INACTIVE_FOCUS));
 			}
 
 			@Override
