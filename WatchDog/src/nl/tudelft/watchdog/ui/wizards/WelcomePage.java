@@ -48,7 +48,7 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	private String title;
 
 	/** The length (in characters) of the WatchDog id. */
-	private static final int idLength = 40;
+	private static final int ID_LENGTH = 40;
 
 	/**
 	 * The Composite which holds the text field for the new user welcome or
@@ -165,12 +165,12 @@ abstract public class WelcomePage extends FinishableWizardPage {
 
 		userInput = UIUtils.createLinkedFieldInput(labelText, inputToolTip,
 				composite);
-		userInput.setTextLimit(idLength);
+		userInput.setTextLimit(ID_LENGTH);
 		userInput.addModifyListener(new ModifyListener() {
 
 			@Override
 			public void modifyText(ModifyEvent e) {
-				if (userInput.getText().length() == idLength) {
+				if (userInput.getText().length() == ID_LENGTH) {
 					setErrorMessageAndPageComplete(null);
 				} else {
 					setErrorMessageAndPageComplete("Not a valid id.");

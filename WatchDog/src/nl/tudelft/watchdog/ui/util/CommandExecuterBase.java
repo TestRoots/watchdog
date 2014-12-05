@@ -36,6 +36,7 @@ public abstract class CommandExecuterBase implements Runnable {
 				doCommand();
 			} catch (ExecutionException | NotDefinedException
 					| NotEnabledException | NotHandledException exception) {
+				// intentionally empty
 			}
 		}
 	}

@@ -55,49 +55,53 @@ public class WatchDogView extends ViewPart {
 
 		oneColumn = UIUtils.createGridedComposite(parent, 1);
 		if (!WatchDogGlobals.isActive) {
-			UIUtils.createBoldLabel(
-					"WatchDog is not active in this workspace! \n", oneColumn);
-			UIUtils.createLabel(
-					"Therefore we cannot show you any cool test statistics. \nTo get them, click the WatchDog icon and enable WatchDog.",
-					oneColumn);
-			createRefreshLink();
+			createInactiveViewContent();
 		} else {
 			calculateTimes();
-
-			container = UIUtils.createGridedComposite(oneColumn, 2);
-			container
-					.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-			createSWTChart(
-					container,
-					createBarChart(createDevelopmentBarDataset(),
-							"Your Development Activity"));
-			createSWTChart(
-					container,
-					createPieChart(createDevelopmentPieDataset(),
-							"Your Development Activity"));
-
-			UIUtils.createLabel("", container);
-			UIUtils.createLabel("", container);
-
-			createSWTChart(
-					container,
-					createBarChart(createProductionVSTestBarDataset(),
-							"Your Production vs. Test Activity"));
-			createSWTChart(
-					container,
-					createPieChart(createProductionVSTestPieDataset(),
-							"Your Production vs. Test Activity"));
-
-			UIUtils.createLabel("From " + intervalStatistics.oldestDate
-					+ " to " + intervalStatistics.mostRecentDate + ".",
-					oneColumn);
-			UIUtils.createLabel(
-					"(Including " + intervalStatistics.getNumberOfIntervals()
-							+ " intervals.)", oneColumn);
-			createRefreshLink();
+			createActiveView();
 		}
 
+		createRefreshLink();
+	}
+
+	private void createInactiveViewContent() {
+		UIUtils.createBoldLabel("WatchDog is not active in this workspace! \n",
+				oneColumn);
+		UIUtils.createLabel(
+				"Therefore we cannot show you any cool test statistics. \nTo get them, click the WatchDog icon and enable WatchDog.",
+				oneColumn);
+	}
+
+	private void createActiveView() {
+		container = UIUtils.createGridedComposite(oneColumn, 2);
+		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		createSWTChart(
+				container,
+				createBarChart(createDevelopmentBarDataset(),
+						"Your Development Activity"));
+		createSWTChart(
+				container,
+				createPieChart(createDevelopmentPieDataset(),
+						"Your Development Activity"));
+
+		UIUtils.createLabel("", container);
+		UIUtils.createLabel("", container);
+
+		createSWTChart(
+				container,
+				createBarChart(createProductionVSTestBarDataset(),
+						"Your Production vs. Test Activity"));
+		createSWTChart(
+				container,
+				createPieChart(createProductionVSTestPieDataset(),
+						"Your Production vs. Test Activity"));
+
+		UIUtils.createLabel("From " + intervalStatistics.oldestDate + " to "
+				+ intervalStatistics.mostRecentDate + ".", oneColumn);
+		UIUtils.createLabel(
+				"(Including " + intervalStatistics.getNumberOfIntervals()
+						+ " intervals.)", oneColumn);
 	}
 
 	private void calculateTimes() {
