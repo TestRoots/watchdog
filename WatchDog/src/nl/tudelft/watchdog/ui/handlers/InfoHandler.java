@@ -18,6 +18,8 @@ import org.eclipse.ui.menus.UIElement;
 /** Handler for displaying an {@link InfoDialog}. */
 public class InfoHandler extends AbstractHandler implements IElementUpdater {
 
+	private boolean updateQuestionAsked = false;
+
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		InfoDialog infoDialog = new InfoDialog(
@@ -53,8 +55,9 @@ public class InfoHandler extends AbstractHandler implements IElementUpdater {
 
 	private void displayUpdateQuestionDialog(Preferences preferences) {
 		if (preferences.isBigUpdateAvailable()
-				&& !preferences.isBigUpdateAnswered()) {
+				&& !preferences.isBigUpdateAnswered() && !updateQuestionAsked) {
 			preferences.setBigUpdateAnswered(true);
+			updateQuestionAsked = true;
 			boolean wantsToUpdate = MessageDialog.openQuestion(null,
 					"Major WatchDog Update Available!",
 					"We improved WatchDog a lot for you! Update?");

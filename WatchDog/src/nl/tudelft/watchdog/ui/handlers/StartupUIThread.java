@@ -20,10 +20,8 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
  */
 public class StartupUIThread implements Runnable {
 
-	/**
-	 * 
-	 */
 	private final StartUpHandler startUpHandler;
+
 	/** The preferences. */
 	private Preferences preferences;
 
