@@ -8,5 +8,5 @@ import com.google.gson.annotations.SerializedName;
 public abstract class WatchDogTransferable {
 
 	@SerializedName("wdv")
-	private String watchDogClientVersion = WatchDogGlobals.CLIENT_VERSION;
+	private final String watchDogClientVersion = WatchDogGlobals.CLIENT_VERSION;
 }
