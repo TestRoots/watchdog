@@ -22,16 +22,16 @@ public class TimeSynchronityChecker extends RegularCheckerBase {
 
 	private static final int UPDATE_RATE = 1 * 60 * 1000;
 
-	private static IntervalManager intervalManager;
+	private final IntervalManager intervalManager;
 
-	private static EventManager eventManager;
+	private final EventManager eventManager;
 
 	/** Constructor. */
 	public TimeSynchronityChecker(IntervalManager intervalManager,
 			EventManager eventManager) {
 		super(UPDATE_RATE);
-		TimeSynchronityChecker.intervalManager = intervalManager;
-		TimeSynchronityChecker.eventManager = eventManager;
+		this.intervalManager = intervalManager;
+		this.eventManager = eventManager;
 		timer = new Timer(true);
 		startTimeCheckerOnce();
 	}
