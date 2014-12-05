@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Text;
 /** The Page on which new users can register themselves. */
 class UserRegistrationPage extends FinishableWizardPage {
 
-	private static final String userRegistration = "User Registration (3/3)";
+	private static final String USER_REGISTRATION_TEXT = "User Registration (3/3)";
 
 	/** The email address entered by the user. */
 	private Text emailInput;
@@ -33,8 +33,8 @@ class UserRegistrationPage extends FinishableWizardPage {
 
 	/** Constructor. */
 	protected UserRegistrationPage() {
-		super(userRegistration);
-		setTitle(userRegistration);
+		super(USER_REGISTRATION_TEXT);
+		setTitle(USER_REGISTRATION_TEXT);
 		setDescription("Only if you participate, can you win.");
 	}
 
