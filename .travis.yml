@@ -1,4 +1,4 @@
 language: java
 jdk:
   - oraclejdk7
-script: cd WatchDogEclipsePlugin/
+before_install: cd WatchDogEclipsePlugin/
