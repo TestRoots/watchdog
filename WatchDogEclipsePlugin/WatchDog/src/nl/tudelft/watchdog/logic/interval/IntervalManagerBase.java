@@ -7,6 +7,8 @@ import nl.tudelft.watchdog.logic.document.DocumentType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
 
 /**
  * Base class for managing intervals. Provides basic functionality for getting
@@ -67,6 +69,23 @@ public class IntervalManagerBase {
 			if (interval instanceof EditorIntervalBase) {
 				EditorIntervalBase editorInterval = (EditorIntervalBase) interval;
 				if (editorInterval.getDocument().getDocumentType() == type) {
+					collectedIntervals.add(interval);
+				}
+			}
+		}
+		return collectedIntervals;
+	}
+
+	/**
+	 * @return An {@link ArrayList} of intervals of the specified Perspective
+	 *         type.
+	 */
+	protected List<IntervalBase> getPerspectiveIntervalsOfType(Perspective type) {
+		List<IntervalBase> collectedIntervals = new ArrayList<IntervalBase>();
+		for (IntervalBase interval : intervals) {
+			if (interval instanceof PerspectiveInterval) {
+				PerspectiveInterval perspectiveInterval = (PerspectiveInterval) interval;
+				if (perspectiveInterval.getPerspectiveType() == type) {
 					collectedIntervals.add(interval);
 				}
 			}

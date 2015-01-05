@@ -38,6 +38,9 @@ public class WatchDogView extends ViewPart {
 	private double userProduction;
 	private double userTest;
 	private double userActiveRest;
+	private double perspectiveDebug;
+	private double perspectiveJava;
+	private double perspectiveOther;
 
 	private Composite oneColumn;
 
@@ -97,6 +100,19 @@ public class WatchDogView extends ViewPart {
 				createPieChart(createProductionVSTestPieDataset(),
 						"Your Production vs. Test Activity"));
 
+		UIUtils.createLabel("", container);
+		UIUtils.createLabel("", container);
+
+		createSWTChart(
+				container,
+				createPieChart(createPerspectiveViewPieDataset(),
+						"Your Perspective View Activity"));
+		// TODO
+		// createSWTChart(
+		// container,
+		// createBarChart(,
+		// "Your Number of Junit Executions"));
+
 		UIUtils.createLabel("From " + intervalStatistics.oldestDate + " to "
 				+ intervalStatistics.mostRecentDate + ".", oneColumn);
 		UIUtils.createLabel(
@@ -121,6 +137,12 @@ public class WatchDogView extends ViewPart {
 		userTest = intervalStatistics
 				.getPreciseTime(intervalStatistics.userTest);
 		userActiveRest = userActive - userReading - userTyping;
+		perspectiveDebug = intervalStatistics
+				.getPreciseTime(intervalStatistics.perspectiveDebug);
+		perspectiveJava = intervalStatistics
+				.getPreciseTime(intervalStatistics.perspectiveJava);
+		perspectiveOther = intervalStatistics
+				.getPreciseTime(intervalStatistics.perspectiveOther);
 	}
 
 	private void createSWTChart(Composite container, JFreeChart chart) {
@@ -214,6 +236,18 @@ public class WatchDogView extends ViewPart {
 	@Override
 	public void setFocus() {
 		parent.setFocus();
+	}
+
+	private PieDataset createPerspectiveViewPieDataset() {
+		double divisor = perspectiveDebug + perspectiveJava + perspectiveOther;
+		final DefaultPieDataset result = new DefaultPieDataset();
+		result.setValue("Java" + printPercent(perspectiveJava, divisor),
+				perspectiveJava);
+		result.setValue("Debug" + printPercent(perspectiveDebug, divisor),
+				perspectiveDebug);
+		result.setValue("Other" + printPercent(perspectiveOther, divisor),
+				perspectiveOther);
+		return result;
 	}
 
 }

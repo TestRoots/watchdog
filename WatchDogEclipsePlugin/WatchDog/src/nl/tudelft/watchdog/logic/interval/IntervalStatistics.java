@@ -7,6 +7,7 @@ import java.util.List;
 import nl.tudelft.watchdog.logic.document.DocumentType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -24,6 +25,9 @@ public class IntervalStatistics extends IntervalManagerBase {
 	public Duration userTyping;
 	public Duration userProduction;
 	public Duration userTest;
+	public Duration perspectiveDebug;
+	public Duration perspectiveJava;
+	public Duration perspectiveOther;
 
 	public Date mostRecentDate;
 	public Date oldestDate;
@@ -90,6 +94,9 @@ public class IntervalStatistics extends IntervalManagerBase {
 				.plus(aggregateDurations(getEditorIntervalsOfDocType(DocumentType.PATHNAMME_TEST)));
 		userProduction = aggregateDurations(getEditorIntervalsOfDocType(DocumentType.PRODUCTION));
 		performDataSanitation();
+		perspectiveDebug = aggregateDurations(getPerspectiveIntervalsOfType(Perspective.DEBUG));
+		perspectiveJava = aggregateDurations(getPerspectiveIntervalsOfType(Perspective.JAVA));
+		perspectiveOther = aggregateDurations(getPerspectiveIntervalsOfType(Perspective.OTHER));
 	}
 
 	private void performDataSanitation() {
