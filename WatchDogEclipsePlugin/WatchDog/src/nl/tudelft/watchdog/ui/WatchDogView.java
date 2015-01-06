@@ -42,6 +42,8 @@ public class WatchDogView extends ViewPart {
 	private double perspectiveJava;
 	private double perspectiveOther;
 
+	private int junitRunsCount;
+
 	private Composite oneColumn;
 
 	/** Updates the view by completely repainting it. */
@@ -82,7 +84,7 @@ public class WatchDogView extends ViewPart {
 		createSWTChart(
 				container,
 				createBarChart(createDevelopmentBarDataset(),
-						"Your Development Activity"));
+						"Your Development Activity", "", "minutes"));
 		createSWTChart(
 				container,
 				createPieChart(createDevelopmentPieDataset(),
@@ -94,7 +96,7 @@ public class WatchDogView extends ViewPart {
 		createSWTChart(
 				container,
 				createBarChart(createProductionVSTestBarDataset(),
-						"Your Production vs. Test Activity"));
+						"Your Production vs. Test Activity", "", "minutes"));
 		createSWTChart(
 				container,
 				createPieChart(createProductionVSTestPieDataset(),
@@ -107,11 +109,10 @@ public class WatchDogView extends ViewPart {
 				container,
 				createPieChart(createPerspectiveViewPieDataset(),
 						"Your Perspective View Activity"));
-		// TODO
-		// createSWTChart(
-		// container,
-		// createBarChart(,
-		// "Your Number of Junit Executions"));
+		createSWTChart(
+				container,
+				createBarChart(createJunitExecutionBarDataset(),
+						"Your Number of Junit Executions", "", ""));
 
 		UIUtils.createLabel("From " + intervalStatistics.oldestDate + " to "
 				+ intervalStatistics.mostRecentDate + ".", oneColumn);
@@ -143,6 +144,8 @@ public class WatchDogView extends ViewPart {
 				.getPreciseTime(intervalStatistics.perspectiveJava);
 		perspectiveOther = intervalStatistics
 				.getPreciseTime(intervalStatistics.perspectiveOther);
+
+		junitRunsCount = intervalStatistics.junitRunsCount;
 	}
 
 	private void createSWTChart(Composite container, JFreeChart chart) {
@@ -219,9 +222,9 @@ public class WatchDogView extends ViewPart {
 	}
 
 	private JFreeChart createBarChart(final DefaultCategoryDataset dataset,
-			final String title) {
-		final JFreeChart chart = ChartFactory.createBarChart3D(title, "",
-				"minutes", dataset);
+			final String title, final String xAxisName, final String yAxisName) {
+		final JFreeChart chart = ChartFactory.createBarChart3D(title,
+				xAxisName, yAxisName, dataset);
 		chart.getLegend().setVisible(false);
 		return chart;
 	}
@@ -247,6 +250,12 @@ public class WatchDogView extends ViewPart {
 				perspectiveDebug);
 		result.setValue("Other" + printPercent(perspectiveOther, divisor),
 				perspectiveOther);
+		return result;
+	}
+
+	private DefaultCategoryDataset createJunitExecutionBarDataset() {
+		final DefaultCategoryDataset result = new DefaultCategoryDataset();
+		result.setValue(junitRunsCount, "1", "Number of JUnit executions");
 		return result;
 	}
 

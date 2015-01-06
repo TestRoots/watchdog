@@ -32,6 +32,8 @@ public class IntervalStatistics extends IntervalManagerBase {
 	public Date mostRecentDate;
 	public Date oldestDate;
 
+	public int junitRunsCount;
+
 	/** Constructor. */
 	public IntervalStatistics(IntervalManager intervalManager) {
 		intervalPersister = intervalManager.getIntervalsStatisticsPersister();
@@ -97,6 +99,8 @@ public class IntervalStatistics extends IntervalManagerBase {
 		perspectiveDebug = aggregateDurations(getPerspectiveIntervalsOfType(Perspective.DEBUG));
 		perspectiveJava = aggregateDurations(getPerspectiveIntervalsOfType(Perspective.JAVA));
 		perspectiveOther = aggregateDurations(getPerspectiveIntervalsOfType(Perspective.OTHER));
+
+		junitRunsCount = getIntervalsOfType(IntervalType.JUNIT).size();
 	}
 
 	private void performDataSanitation() {
