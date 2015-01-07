@@ -41,7 +41,8 @@ public class WatchDogView extends ViewPart {
 	private double perspectiveDebug;
 	private double perspectiveJava;
 	private double perspectiveOther;
-	private double averageTestDuration;
+	private double averageTestDurationMinutes;
+	private double averageTestDurationSeconds;
 
 	private int junitRunsCount;
 
@@ -145,7 +146,8 @@ public class WatchDogView extends ViewPart {
 				.getPreciseTime(intervalStatistics.perspectiveJava);
 		perspectiveOther = intervalStatistics
 				.getPreciseTime(intervalStatistics.perspectiveOther);
-		averageTestDuration = intervalStatistics.averageTestDuration;
+		averageTestDurationMinutes = intervalStatistics.averageTestDuration;
+		averageTestDurationSeconds = averageTestDurationMinutes * 60;
 
 		junitRunsCount = intervalStatistics.junitRunsCount;
 	}
@@ -256,9 +258,19 @@ public class WatchDogView extends ViewPart {
 	}
 
 	private DefaultCategoryDataset createJunitExecutionBarDataset() {
+		double diffSeconds = Math.abs(averageTestDurationSeconds
+				- junitRunsCount);
+		double diffMinutes = Math.abs(averageTestDurationMinutes
+				- junitRunsCount);
 		final DefaultCategoryDataset result = new DefaultCategoryDataset();
 		result.setValue(junitRunsCount, "1", "Number of Test Runs");
-		result.setValue(averageTestDuration, "1", "Test Run Average Duration");
+		if (diffSeconds < diffMinutes)
+			result.setValue(averageTestDurationSeconds, "1",
+					"Test Run Average Duration (in seconds)");
+		else
+			result.setValue(averageTestDurationMinutes, "1",
+					"Test Run Average Duration (in minutes)");
+
 		return result;
 	}
 

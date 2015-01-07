@@ -28,12 +28,12 @@ public class IntervalStatistics extends IntervalManagerBase {
 	public Duration perspectiveDebug;
 	public Duration perspectiveJava;
 	public Duration perspectiveOther;
+	public double averageTestDuration;
 
 	public Date mostRecentDate;
 	public Date oldestDate;
 
 	public int junitRunsCount;
-	public double averageTestDuration;
 
 	/** Constructor. */
 	public IntervalStatistics(IntervalManager intervalManager) {
