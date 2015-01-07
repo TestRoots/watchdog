@@ -33,6 +33,7 @@ public class IntervalStatistics extends IntervalManagerBase {
 	public Date oldestDate;
 
 	public int junitRunsCount;
+	public double averageTestDuration;
 
 	/** Constructor. */
 	public IntervalStatistics(IntervalManager intervalManager) {
@@ -99,6 +100,8 @@ public class IntervalStatistics extends IntervalManagerBase {
 		perspectiveDebug = aggregateDurations(getPerspectiveIntervalsOfType(Perspective.DEBUG));
 		perspectiveJava = aggregateDurations(getPerspectiveIntervalsOfType(Perspective.JAVA));
 		perspectiveOther = aggregateDurations(getPerspectiveIntervalsOfType(Perspective.OTHER));
+		averageTestDuration = getPreciseTime(aggregateDurations(getIntervalsOfType(IntervalType.JUNIT)))
+				/ getIntervalsOfType(IntervalType.JUNIT).size();
 
 		junitRunsCount = getIntervalsOfType(IntervalType.JUNIT).size();
 	}

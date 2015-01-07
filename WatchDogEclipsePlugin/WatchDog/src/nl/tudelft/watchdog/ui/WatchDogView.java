@@ -41,6 +41,7 @@ public class WatchDogView extends ViewPart {
 	private double perspectiveDebug;
 	private double perspectiveJava;
 	private double perspectiveOther;
+	private double averageTestDuration;
 
 	private int junitRunsCount;
 
@@ -108,11 +109,11 @@ public class WatchDogView extends ViewPart {
 		createSWTChart(
 				container,
 				createPieChart(createPerspectiveViewPieDataset(),
-						"Your Perspective View Activity"));
+						"Your Perspective Activity"));
 		createSWTChart(
 				container,
 				createBarChart(createJunitExecutionBarDataset(),
-						"Your Number of Junit Executions", "", ""));
+						"Your Test Run Activity", "", ""));
 
 		UIUtils.createLabel("From " + intervalStatistics.oldestDate + " to "
 				+ intervalStatistics.mostRecentDate + ".", oneColumn);
@@ -144,6 +145,7 @@ public class WatchDogView extends ViewPart {
 				.getPreciseTime(intervalStatistics.perspectiveJava);
 		perspectiveOther = intervalStatistics
 				.getPreciseTime(intervalStatistics.perspectiveOther);
+		averageTestDuration = intervalStatistics.averageTestDuration;
 
 		junitRunsCount = intervalStatistics.junitRunsCount;
 	}
@@ -255,7 +257,8 @@ public class WatchDogView extends ViewPart {
 
 	private DefaultCategoryDataset createJunitExecutionBarDataset() {
 		final DefaultCategoryDataset result = new DefaultCategoryDataset();
-		result.setValue(junitRunsCount, "1", "Number of JUnit executions");
+		result.setValue(junitRunsCount, "1", "Number of Test Runs");
+		result.setValue(averageTestDuration, "1", "Test Run Average Duration");
 		return result;
 	}
 
