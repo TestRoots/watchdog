@@ -177,7 +177,7 @@ public class WatchDogView extends ViewPart {
 	}
 
 	private DefaultCategoryDataset createDevelopmentBarDataset() {
-		final DefaultCategoryDataset result = new DefaultCategoryDataset();
+		DefaultCategoryDataset result = new DefaultCategoryDataset();
 		result.setValue(userReading, "1", "Reading");
 		result.setValue(userTyping, "1", "Writing");
 		result.setValue(userActive, "1", "User Active");
@@ -187,7 +187,7 @@ public class WatchDogView extends ViewPart {
 
 	private PieDataset createDevelopmentPieDataset() {
 		double divisor = userReading + userTyping + userActiveRest;
-		final DefaultPieDataset result = new DefaultPieDataset();
+		DefaultPieDataset result = new DefaultPieDataset();
 		result.setValue("Reading" + printPercent(userReading, divisor),
 				userReading);
 		result.setValue("Writing" + printPercent(userTyping, divisor),
@@ -199,7 +199,7 @@ public class WatchDogView extends ViewPart {
 	}
 
 	private DefaultCategoryDataset createProductionVSTestBarDataset() {
-		final DefaultCategoryDataset result = new DefaultCategoryDataset();
+		DefaultCategoryDataset result = new DefaultCategoryDataset();
 		result.setValue(userProduction, "1", "Production Code");
 		result.setValue(userTest, "1", "Test Code");
 		return result;
@@ -207,7 +207,7 @@ public class WatchDogView extends ViewPart {
 
 	private PieDataset createProductionVSTestPieDataset() {
 		double divisor = userProduction + userTest;
-		final DefaultPieDataset result = new DefaultPieDataset();
+		DefaultPieDataset result = new DefaultPieDataset();
 		result.setValue(
 				"Production Code" + printPercent(userProduction, divisor),
 				userProduction);
@@ -215,20 +215,19 @@ public class WatchDogView extends ViewPart {
 		return result;
 	}
 
-	private JFreeChart createPieChart(final PieDataset dataset,
-			final String title) {
-		final JFreeChart chart = ChartFactory.createPieChart3D(title, dataset,
-				true, true, false);
-		final PiePlot3D plot = (PiePlot3D) chart.getPlot();
+	private JFreeChart createPieChart(final PieDataset dataset, String title) {
+		JFreeChart chart = ChartFactory.createPieChart3D(title, dataset, true,
+				true, false);
+		PiePlot3D plot = (PiePlot3D) chart.getPlot();
 		plot.setDirection(Rotation.CLOCKWISE);
 		plot.setForegroundAlpha(0.8f);
 		return chart;
 	}
 
 	private JFreeChart createBarChart(final DefaultCategoryDataset dataset,
-			final String title, final String xAxisName, final String yAxisName) {
-		final JFreeChart chart = ChartFactory.createBarChart3D(title,
-				xAxisName, yAxisName, dataset);
+			String title, String xAxisName, String yAxisName) {
+		JFreeChart chart = ChartFactory.createBarChart3D(title, xAxisName,
+				yAxisName, dataset);
 		chart.getLegend().setVisible(false);
 		return chart;
 	}
@@ -247,7 +246,7 @@ public class WatchDogView extends ViewPart {
 
 	private PieDataset createPerspectiveViewPieDataset() {
 		double divisor = perspectiveDebug + perspectiveJava + perspectiveOther;
-		final DefaultPieDataset result = new DefaultPieDataset();
+		DefaultPieDataset result = new DefaultPieDataset();
 		result.setValue("Java" + printPercent(perspectiveJava, divisor),
 				perspectiveJava);
 		result.setValue("Debug" + printPercent(perspectiveDebug, divisor),
@@ -262,14 +261,16 @@ public class WatchDogView extends ViewPart {
 				- junitRunsCount);
 		double diffMinutes = Math.abs(averageTestDurationMinutes
 				- junitRunsCount);
-		final DefaultCategoryDataset result = new DefaultCategoryDataset();
+		DefaultCategoryDataset result = new DefaultCategoryDataset();
 		result.setValue(junitRunsCount, "1", "Number of Test Runs");
-		if (diffSeconds < diffMinutes)
-			result.setValue(averageTestDurationSeconds, "1",
-					"Test Run Average Duration (in seconds)");
-		else
-			result.setValue(averageTestDurationMinutes, "1",
-					"Test Run Average Duration (in minutes)");
+		String TestDuration = "Test Run Average Duration";
+		if (diffSeconds < diffMinutes) {
+			result.setValue(averageTestDurationSeconds, "1", TestDuration
+					+ " (in seconds)");
+		} else {
+			result.setValue(averageTestDurationMinutes, "1", TestDuration
+					+ " (in minutes)");
+		}
 
 		return result;
 	}
