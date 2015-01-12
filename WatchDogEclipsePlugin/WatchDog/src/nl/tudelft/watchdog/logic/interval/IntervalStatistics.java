@@ -97,6 +97,7 @@ public class IntervalStatistics extends IntervalManagerBase {
 				.plus(aggregateDurations(getEditorIntervalsOfDocType(DocumentType.PATHNAMME_TEST)));
 		userProduction = aggregateDurations(getEditorIntervalsOfDocType(DocumentType.PRODUCTION));
 		performDataSanitation();
+
 		perspectiveDebug = aggregateDurations(getPerspectiveIntervalsOfType(Perspective.DEBUG));
 		perspectiveJava = aggregateDurations(getPerspectiveIntervalsOfType(Perspective.JAVA));
 		perspectiveOther = aggregateDurations(getPerspectiveIntervalsOfType(Perspective.OTHER));

@@ -257,14 +257,14 @@ public class WatchDogView extends ViewPart {
 	}
 
 	private DefaultCategoryDataset createJunitExecutionBarDataset() {
-		double diffSeconds = Math.abs(averageTestDurationSeconds
+		double differenceSeconds = Math.abs(averageTestDurationSeconds
 				- junitRunsCount);
-		double diffMinutes = Math.abs(averageTestDurationMinutes
+		double differenceMinutes = Math.abs(averageTestDurationMinutes
 				- junitRunsCount);
 		DefaultCategoryDataset result = new DefaultCategoryDataset();
 		result.setValue(junitRunsCount, "1", "Number of Test Runs");
-		String TestDuration = "Test Run Average Duration";
-		if (diffSeconds < diffMinutes) {
+		String TestDuration = "Average Test Run Duration";
+		if (differenceSeconds < differenceMinutes) {
 			result.setValue(averageTestDurationSeconds, "1", TestDuration
 					+ " (in seconds)");
 		} else {
