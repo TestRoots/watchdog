@@ -17,6 +17,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
@@ -272,6 +273,16 @@ public class UIUtils {
 		link.setText("<a href=\"" + url + "\">" + description + "</a>");
 		link.addSelectionListener(listener);
 		return link;
+	}
+
+	/** Creates a Combo List if String items. */
+	public static Combo createComboList(Composite parent,
+			SelectionListener listener, String[] items, int defaultSelection) {
+		Combo comboList = new Combo(parent, SWT.READ_ONLY);
+		comboList.setItems(items);
+		comboList.select(defaultSelection);
+		comboList.addSelectionListener(listener);
+		return comboList;
 	}
 
 }

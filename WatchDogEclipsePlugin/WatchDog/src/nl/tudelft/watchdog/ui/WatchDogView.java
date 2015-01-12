@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.ui;
 
 import nl.tudelft.watchdog.logic.InitializationManager;
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics;
+import nl.tudelft.watchdog.logic.interval.IntervalStatistics.StatInterval;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
@@ -10,6 +11,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.jfree.chart.ChartFactory;
@@ -45,6 +47,7 @@ public class WatchDogView extends ViewPart {
 	private double averageTestDurationSeconds;
 
 	private int junitRunsCount;
+	private StatInterval selectedInterval = StatInterval.HOUR_1;
 
 	private Composite oneColumn;
 
@@ -121,11 +124,13 @@ public class WatchDogView extends ViewPart {
 		UIUtils.createLabel(
 				"(Including " + intervalStatistics.getNumberOfIntervals()
 						+ " intervals.)", oneColumn);
+
+		createIntervalsList();
 	}
 
 	private void calculateTimes() {
 		intervalStatistics = new IntervalStatistics(InitializationManager
-				.getInstance().getIntervalManager());
+				.getInstance().getIntervalManager(), selectedInterval);
 
 		eclipseOpen = intervalStatistics
 				.getPreciseTime(intervalStatistics.eclipseOpen);
@@ -174,6 +179,28 @@ public class WatchDogView extends ViewPart {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		}, "Refresh.", "");
+	}
+
+	private void createIntervalsList() {
+		UIUtils.createComboList(oneColumn, new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// Selecting an item in list initiate the change of
+				// corresponding selectedInterval
+				Combo widget = (Combo) e.getSource();
+				selectedInterval = StatInterval.values()[widget
+						.getSelectionIndex()];
+				update();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+
+		}, new String[] { "10 minutes", "30 minutes", "1 hour", "2 hours",
+				"5 hours", "8 hours", "10 hours" }, selectedInterval.id);
+
 	}
 
 	private DefaultCategoryDataset createDevelopmentBarDataset() {
@@ -257,21 +284,20 @@ public class WatchDogView extends ViewPart {
 	}
 
 	private DefaultCategoryDataset createJunitExecutionBarDataset() {
-		double diffSeconds = Math.abs(averageTestDurationSeconds
+		double differenceSeconds = Math.abs(averageTestDurationSeconds
 				- junitRunsCount);
-		double diffMinutes = Math.abs(averageTestDurationMinutes
+		double differenceMinutes = Math.abs(averageTestDurationMinutes
 				- junitRunsCount);
 		DefaultCategoryDataset result = new DefaultCategoryDataset();
 		result.setValue(junitRunsCount, "1", "Number of Test Runs");
-		String TestDuration = "Test Run Average Duration";
-		if (diffSeconds < diffMinutes) {
+		String TestDuration = "Average Test Run Duration";
+		if (differenceSeconds < differenceMinutes) {
 			result.setValue(averageTestDurationSeconds, "1", TestDuration
 					+ " (in seconds)");
 		} else {
 			result.setValue(averageTestDurationMinutes, "1", TestDuration
 					+ " (in minutes)");
 		}
-
 		return result;
 	}
 

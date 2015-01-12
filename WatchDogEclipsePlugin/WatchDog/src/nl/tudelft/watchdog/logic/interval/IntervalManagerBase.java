@@ -75,10 +75,9 @@ public class IntervalManagerBase {
 		}
 		return collectedIntervals;
 	}
-
+	
 	/**
-	 * @return An {@link ArrayList} of intervals of the specified Perspective
-	 *         type.
+	 * @return An {@link ArrayList} of intervals of the specified Perspective type.
 	 */
 	protected List<IntervalBase> getPerspectiveIntervalsOfType(Perspective type) {
 		List<IntervalBase> collectedIntervals = new ArrayList<IntervalBase>();
