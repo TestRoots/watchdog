@@ -18,31 +18,16 @@ public class IntervalManagerBase {
 	protected List<IntervalBase> intervals = new ArrayList<IntervalBase>();
 
 	/**
-	 * @return Returns an interval of the given class, if there is any such
-	 *         open. If not, returns null.
-	 */
-	@SuppressWarnings("unchecked")
-	public <T extends IntervalBase> T getIntervalOfClass(Class<T> clazz) {
-		for (IntervalBase interval : intervals) {
-			if (clazz.isAssignableFrom(interval.getClass())
-					&& !interval.isClosed()) {
-				return (T) interval;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * @return An interval of the specified type, or <code>null</code> if no
 	 *         such interval is currently open.
 	 */
 	public IntervalBase getIntervalOfType(IntervalType type) {
-		for (IntervalBase interval : intervals) {
-			if (interval.getType() == type && !interval.isClosed()) {
-				return interval;
-			}
+		// TODO (MMB) leaves out is !closed check currently
+		try {
+			return getIntervalsOfType(type).get(0);
+		} catch (RuntimeException exceptioin) {
+			return null;
 		}
-		return null;
 	}
 
 	/**
