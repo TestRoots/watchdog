@@ -8,6 +8,9 @@ import nl.tudelft.watchdog.logic.document.DocumentType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EclipseOpenInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.JUnitInterval;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActiveInterval;
@@ -100,13 +103,13 @@ public class IntervalStatistics extends IntervalManagerBase {
 		userProduction = aggregateDurations(getEditorIntervals(DocumentType.PRODUCTION));
 		performDataSanitation();
 
-		perspectiveDebug = aggregateDurations(getPerspectiveIntervalsOfType(Perspective.DEBUG));
-		perspectiveJava = aggregateDurations(getPerspectiveIntervalsOfType(Perspective.JAVA));
-		perspectiveOther = aggregateDurations(getPerspectiveIntervalsOfType(Perspective.OTHER));
-		averageTestDuration = getPreciseTime(aggregateDurations(getIntervalsOfType(IntervalType.JUNIT)))
-				/ getIntervalsOfType(IntervalType.JUNIT).size();
+		perspectiveDebug = aggregateDurations(getPerspectiveIntervals(Perspective.DEBUG));
+		perspectiveJava = aggregateDurations(getPerspectiveIntervals(Perspective.JAVA));
+		perspectiveOther = aggregateDurations(getPerspectiveIntervals(Perspective.OTHER));
+		averageTestDuration = getPreciseTime(aggregateDurations(getIntervals(JUnitInterval.class)))
+				/ getIntervals(JUnitInterval.class).size();
 
-		junitRunsCount = getIntervalsOfType(IntervalType.JUNIT).size();
+		junitRunsCount = getIntervals(JUnitInterval.class).size();
 	}
 
 	/**
@@ -120,6 +123,23 @@ public class IntervalStatistics extends IntervalManagerBase {
 			}
 		}
 
+		return collectedIntervals;
+	}
+
+	/**
+	 * @return An {@link ArrayList} of intervals of the specified Perspective
+	 *         type.
+	 */
+	protected List<IntervalBase> getPerspectiveIntervals(Perspective type) {
+		List<IntervalBase> collectedIntervals = new ArrayList<IntervalBase>();
+		for (IntervalBase interval : intervals) {
+			if (interval instanceof PerspectiveInterval) {
+				PerspectiveInterval perspectiveInterval = (PerspectiveInterval) interval;
+				if (perspectiveInterval.getPerspectiveType() == type) {
+					collectedIntervals.add(interval);
+				}
+			}
+		}
 		return collectedIntervals;
 	}
 
