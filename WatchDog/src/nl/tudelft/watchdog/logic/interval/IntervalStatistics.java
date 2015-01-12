@@ -88,18 +88,18 @@ public class IntervalStatistics extends IntervalManagerBase {
 		userReading = aggregateDurations(getIntervals(ReadingInterval.class));
 		userTyping = aggregateDurations(getIntervals(TypingInterval.class));
 		userTest = aggregateDurations(
-				getEditorIntervalsOfDocType(DocumentType.TEST))
-				.plus(aggregateDurations(getEditorIntervalsOfDocType(DocumentType.TEST_FRAMEWORK)))
-				.plus(aggregateDurations(getEditorIntervalsOfDocType(DocumentType.FILENAME_TEST)))
-				.plus(aggregateDurations(getEditorIntervalsOfDocType(DocumentType.PATHNAMME_TEST)));
-		userProduction = aggregateDurations(getEditorIntervalsOfDocType(DocumentType.PRODUCTION));
+				getEditorIntervals(DocumentType.TEST))
+				.plus(aggregateDurations(getEditorIntervals(DocumentType.TEST_FRAMEWORK)))
+				.plus(aggregateDurations(getEditorIntervals(DocumentType.FILENAME_TEST)))
+				.plus(aggregateDurations(getEditorIntervals(DocumentType.PATHNAMME_TEST)));
+		userProduction = aggregateDurations(getEditorIntervals(DocumentType.PRODUCTION));
 		performDataSanitation();
 	}
 
 	/**
 	 * @return An {@link ArrayList} of intervals of the specified document type.
 	 */
-	protected List<EditorIntervalBase> getEditorIntervalsOfDocType(
+	protected List<EditorIntervalBase> getEditorIntervals(
 			DocumentType type) {
 		List<EditorIntervalBase> collectedIntervals = getIntervals(EditorIntervalBase.class);
 		for (EditorIntervalBase interval : collectedIntervals) {
