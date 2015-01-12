@@ -275,7 +275,7 @@ public class UIUtils {
 		return link;
 	}
 
-	/** Creates a Combo List if String items. */
+	/** Creates a Combo List of String items. */
 	public static Combo createComboList(Composite parent,
 			SelectionListener listener, String[] items, int defaultSelection) {
 		Combo comboList = new Combo(parent, SWT.READ_ONLY);

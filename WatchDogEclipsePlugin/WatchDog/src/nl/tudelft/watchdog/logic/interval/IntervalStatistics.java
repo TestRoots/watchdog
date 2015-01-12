@@ -15,7 +15,7 @@ import org.joda.time.Duration;
 /** Gathers and calculates statistics on interval length. */
 @SuppressWarnings("javadoc")
 public class IntervalStatistics extends IntervalManagerBase {
-	private static int FILTERED_INTERVALS_IN_MINUTES = 600;
+	private static final int FILTERED_INTERVALS_IN_MINUTES = 600;
 
 	private final IntervalPersister intervalPersister;
 
@@ -35,22 +35,22 @@ public class IntervalStatistics extends IntervalManagerBase {
 
 	public int junitRunsCount;
 
-	/** Different length intervals for statistic display */
-	public enum StatInterval {
+	/** Different length intervals for statistics display */
+	public enum StatisticsInterval {
 		MINUTES_10(0), MINUTES_30(1), HOUR_1(2), HOURS_2(3), HOURS_5(4), HOURS_8(
 				5), HOURS_10(6);
 		public final int id;
 
-		StatInterval(int id) {
+		StatisticsInterval(int id) {
 			this.id = id;
 		}
 	}
 
-	private StatInterval selectedInterval;
+	private StatisticsInterval selectedInterval;
 
 	/** Constructor. */
 	public IntervalStatistics(IntervalManager intervalManager,
-			StatInterval selectedInterval) {
+			StatisticsInterval selectedInterval) {
 		this.selectedInterval = selectedInterval;
 		intervalPersister = intervalManager.getIntervalsStatisticsPersister();
 		addIntervals(intervalManager);
@@ -68,7 +68,7 @@ public class IntervalStatistics extends IntervalManagerBase {
 
 	/**
 	 * Filters out and removes intervals which are older than 10 hours from
-	 * Database. Filters intervals for selected time.
+	 * Database. Filters intervals for selected time span.
 	 */
 	private void filterIntervals() {
 		int numberOfMinutes = 600;
