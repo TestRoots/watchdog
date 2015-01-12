@@ -6,12 +6,12 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.Date;
 
+import nl.tudelft.watchdog.logic.interval.intervaltypes.EclipseOpenInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.logic.network.NetworkUtils;
-import nl.tudelft.watchdog.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
+import nl.tudelft.watchdog.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.logic.network.ServerReturnCodeException;
 
 import org.junit.Ignore;
@@ -47,13 +47,13 @@ public class NetworkUtilsTest {
 	@Ignore
 	public void testIntervalTransfer() {
 		JsonTransferer it = new JsonTransferer();
-		IntervalBase interval = new IntervalBase(IntervalType.ECLIPSE_OPEN, new Date());
+		IntervalBase interval = new EclipseOpenInterval(new Date());
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 		String json = it.toJson(intervals);
 
 		try {
-			NetworkUtils.transferJsonAndGetResponse(NetworkUtils.buildIntervalsPostURL(
-					fooBarUser, fooBarProject), json);
+			NetworkUtils.transferJsonAndGetResponse(NetworkUtils
+					.buildIntervalsPostURL(fooBarUser, fooBarProject), json);
 		} catch (ServerCommunicationException | ServerReturnCodeException e) {
 			fail(e.getMessage());
 		}

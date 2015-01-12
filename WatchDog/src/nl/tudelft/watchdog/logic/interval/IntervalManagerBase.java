@@ -6,7 +6,6 @@ import java.util.List;
 import nl.tudelft.watchdog.logic.document.DocumentType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 
 /**
  * Base class for managing intervals. Provides basic functionality for getting
@@ -18,29 +17,36 @@ public class IntervalManagerBase {
 	protected List<IntervalBase> intervals = new ArrayList<IntervalBase>();
 
 	/**
-	 * @return An interval of the specified type, or <code>null</code> if no
-	 *         such interval is currently open.
+	 * @return Returns a list of intervals of the given class, if there is any
+	 *         such open. If not, returns the empty list.
 	 */
-	public IntervalBase getIntervalOfType(IntervalType type) {
-		// TODO (MMB) leaves out is !closed check currently
-		try {
-			return getIntervalsOfType(type).get(0);
-		} catch (RuntimeException exceptioin) {
-			return null;
+	@SuppressWarnings("unchecked")
+	public <T extends IntervalBase> List<T> getIntervals(Class<T> clazz) {
+		List<T> collectedIntervals = new ArrayList<T>();
+		for (IntervalBase interval : intervals) {
+			// if (clazz.isAssignableFrom(interval.getClass())) {
+			if (clazz.isInstance(interval)) {
+				collectedIntervals.add((T) interval);
+			}
 		}
+
+		return collectedIntervals;
 	}
 
 	/**
-	 * @return An {@link ArrayList} of intervals of the specified type.
+	 * @return Returns an interval of the given class, if there is any such
+	 *         open. If not, returns null.
 	 */
-	protected List<IntervalBase> getIntervalsOfType(IntervalType type) {
-		List<IntervalBase> collectedIntervals = new ArrayList<IntervalBase>();
+	@SuppressWarnings("unchecked")
+	public <T extends IntervalBase> T getInterval(Class<T> clazz) {
 		for (IntervalBase interval : intervals) {
-			if (interval.getType() == type) {
-				collectedIntervals.add(interval);
+			// if (clazz.isAssignableFrom(interval.getClass())) {
+			if (clazz.isInstance(interval)) {
+				return (T) interval;
 			}
 		}
-		return collectedIntervals;
+
+		return null;
 	}
 
 	/**

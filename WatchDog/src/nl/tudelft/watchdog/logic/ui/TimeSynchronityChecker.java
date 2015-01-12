@@ -5,7 +5,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
@@ -66,8 +65,8 @@ public class TimeSynchronityChecker extends RegularCheckerBase {
 				if (!deltaIsWithinReasonableBoundaries) {
 					WatchDogLogger.getInstance().logInfo(
 							"System suspend detected!");
-					Perspective openedPerspective = ((PerspectiveInterval) intervalManager
-							.getIntervalOfType(IntervalType.PERSPECTIVE))
+					Perspective openedPerspective = intervalManager
+							.getInterval(PerspectiveInterval.class)
 							.getPerspectiveType();
 					intervalManager.closeAllIntervals(new Date(
 							previousExecutionDate + UPDATE_RATE));

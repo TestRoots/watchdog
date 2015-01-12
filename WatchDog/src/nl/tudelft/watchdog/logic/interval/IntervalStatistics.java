@@ -5,8 +5,11 @@ import java.util.Date;
 import java.util.List;
 
 import nl.tudelft.watchdog.logic.document.DocumentType;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.EclipseOpenInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActiveInterval;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -79,10 +82,10 @@ public class IntervalStatistics extends IntervalManagerBase {
 	}
 
 	private void calculateStatistics() {
-		eclipseOpen = aggregateDurations(getIntervalsOfType(IntervalType.ECLIPSE_OPEN));
-		userActive = aggregateDurations(getIntervalsOfType(IntervalType.USER_ACTIVE));
-		userReading = aggregateDurations(getIntervalsOfType(IntervalType.READING));
-		userTyping = aggregateDurations(getIntervalsOfType(IntervalType.TYPING));
+		eclipseOpen = aggregateDurations(getIntervals(EclipseOpenInterval.class));
+		userActive = aggregateDurations(getIntervals(UserActiveInterval.class));
+		userReading = aggregateDurations(getIntervals(ReadingInterval.class));
+		userTyping = aggregateDurations(getIntervals(TypingInterval.class));
 		userTest = aggregateDurations(
 				getEditorIntervalsOfDocType(DocumentType.TEST))
 				.plus(aggregateDurations(getEditorIntervalsOfDocType(DocumentType.TEST_FRAMEWORK)))
@@ -102,7 +105,7 @@ public class IntervalStatistics extends IntervalManagerBase {
 		}
 	}
 
-	private Duration aggregateDurations(List<IntervalBase> intervals) {
+	private Duration aggregateDurations(List<? extends IntervalBase> intervals) {
 		Duration aggregatedDuration = new Duration(0);
 		for (IntervalBase interval : intervals) {
 			aggregatedDuration = aggregatedDuration
