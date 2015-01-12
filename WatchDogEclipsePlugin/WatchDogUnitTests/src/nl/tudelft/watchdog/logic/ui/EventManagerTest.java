@@ -9,6 +9,7 @@ import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActiveInterval;
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.util.WatchDogUtils;
@@ -178,7 +179,7 @@ public class EventManagerTest {
 		eventManager.update(createMockEvent(EventType.ACTIVE_FOCUS));
 		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT / 2);
 		editorInterval = intervalManager.getEditorInterval();
-		interval = intervalManager.getIntervalOfType(IntervalType.USER_ACTIVE);
+		interval = intervalManager.getInterval(UserActiveInterval.class);
 
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
 		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT / 2);
@@ -192,7 +193,7 @@ public class EventManagerTest {
 		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT * 3);
 		Assert.assertEquals(null, intervalManager.getEditorInterval());
 		Assert.assertEquals(null,
-				intervalManager.getIntervalOfType(IntervalType.USER_ACTIVE));
+				intervalManager.getInterval(UserActiveInterval.class));
 		Assert.assertTrue(editorInterval.isClosed());
 		Assert.assertTrue(interval.isClosed());
 	}
@@ -209,7 +210,8 @@ public class EventManagerTest {
 		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT);
 		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT);
 
-		Assert.assertTrue(editorInterval.getEnd().getTime() <= interval.getEnd().getTime());
+		Assert.assertTrue(editorInterval.getEnd().getTime() <= interval
+				.getEnd().getTime());
 	}
 
 	/**
@@ -233,7 +235,7 @@ public class EventManagerTest {
 		eventManager.update(createMockEvent(EventType.EDIT));
 		WatchDogUtils.sleep(TIMEOUT_GRACE_PERIOD / 5);
 		editorInterval = intervalManager.getEditorInterval();
-		interval = intervalManager.getIntervalOfType(IntervalType.USER_ACTIVE);
+		interval = intervalManager.getInterval(UserActiveInterval.class);
 		Assert.assertNotNull(interval);
 	}
 

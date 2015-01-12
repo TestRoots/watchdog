@@ -6,11 +6,14 @@ import nl.tudelft.watchdog.logic.InitializationManager;
 import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.EclipseActiveInterval;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.EclipseOpenInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.JUnitInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActiveInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
@@ -68,8 +71,7 @@ public class EventManager {
 		IntervalBase interval;
 		switch (event.getType()) {
 		case START_ECLIPSE:
-			intervalManager.addInterval(new IntervalBase(
-					IntervalType.ECLIPSE_OPEN, forcedDate));
+			intervalManager.addInterval(new EclipseOpenInterval(forcedDate));
 			userInactivityNotifier.trigger(forcedDate);
 			break;
 
@@ -79,18 +81,16 @@ public class EventManager {
 			break;
 
 		case ACTIVE_WINDOW:
-			interval = intervalManager
-					.getIntervalOfType(IntervalType.ECLIPSE_ACTIVE);
+			interval = intervalManager.getInterval(EclipseActiveInterval.class);
 			if (intervalIsClosed(interval)) {
-				intervalManager.addInterval(new IntervalBase(
-						IntervalType.ECLIPSE_ACTIVE, forcedDate));
+				intervalManager.addInterval(new EclipseActiveInterval(
+						forcedDate));
 			}
 			userInactivityNotifier.trigger(forcedDate);
 			break;
 
 		case INACTIVE_WINDOW:
-			interval = intervalManager
-					.getIntervalOfType(IntervalType.ECLIPSE_ACTIVE);
+			interval = intervalManager.getInterval(EclipseActiveInterval.class);
 			intervalManager.closeInterval(interval, forcedDate);
 			break;
 
@@ -106,11 +106,9 @@ public class EventManager {
 			break;
 
 		case USER_ACTIVITY:
-			interval = intervalManager
-					.getIntervalOfType(IntervalType.USER_ACTIVE);
+			interval = intervalManager.getInterval(UserActiveInterval.class);
 			if (intervalIsClosed(interval)) {
-				intervalManager.addInterval(new IntervalBase(
-						IntervalType.USER_ACTIVE, forcedDate));
+				intervalManager.addInterval(new UserActiveInterval(forcedDate));
 			}
 			userInactivityNotifier.trigger();
 			break;
@@ -185,8 +183,7 @@ public class EventManager {
 			break;
 
 		case USER_INACTIVITY:
-			interval = intervalManager
-					.getIntervalOfType(IntervalType.USER_ACTIVE);
+			interval = intervalManager.getInterval(UserActiveInterval.class);
 			intervalManager.closeInterval(interval, forcedDate);
 			typingInactivityNotifier.cancelTimer(forcedDate);
 			readingInactivityNotifier.cancelTimer(forcedDate);
@@ -223,7 +220,7 @@ public class EventManager {
 	private void createNewPerspectiveInterval(
 			PerspectiveInterval.Perspective perspecitveType, Date forcedDate) {
 		PerspectiveInterval perspectiveInterval = intervalManager
-				.getIntervalOfClass(PerspectiveInterval.class);
+				.getInterval(PerspectiveInterval.class);
 		if (perspectiveInterval != null
 				&& perspectiveInterval.getPerspectiveType() == perspecitveType) {
 			// abort if such an interval is already open.

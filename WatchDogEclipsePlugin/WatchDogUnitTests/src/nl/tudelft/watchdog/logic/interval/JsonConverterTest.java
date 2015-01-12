@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import nl.tudelft.watchdog.logic.document.Document;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.EclipseOpenInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
@@ -80,7 +80,7 @@ public class JsonConverterTest {
 	/** Tests the format of the returned Json representation. */
 	@Test
 	public void testJsonSessionIntervalRepresentation() {
-		IntervalBase interval = new IntervalBase(IntervalType.ECLIPSE_OPEN, new Date());
+		IntervalBase interval = new EclipseOpenInterval(new Date());
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals(

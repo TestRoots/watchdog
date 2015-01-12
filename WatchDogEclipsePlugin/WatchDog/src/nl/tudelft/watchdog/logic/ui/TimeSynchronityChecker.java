@@ -66,7 +66,7 @@ public class TimeSynchronityChecker extends RegularCheckerBase {
 					WatchDogLogger.getInstance().logInfo(
 							"System suspend detected!");
 					Perspective openedPerspective = intervalManager
-							.getIntervalOfClass(PerspectiveInterval.class)
+							.getInterval(PerspectiveInterval.class)
 							.getPerspectiveType();
 					intervalManager.closeAllIntervals(new Date(
 							previousExecutionDate + UPDATE_RATE));
