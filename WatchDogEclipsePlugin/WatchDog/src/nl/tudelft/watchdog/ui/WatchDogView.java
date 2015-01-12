@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.ui;
 
 import nl.tudelft.watchdog.logic.InitializationManager;
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics;
-import nl.tudelft.watchdog.logic.interval.IntervalStatistics.StatInterval;
+import nl.tudelft.watchdog.logic.interval.IntervalStatistics.StatisticsInterval;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
@@ -47,7 +47,7 @@ public class WatchDogView extends ViewPart {
 	private double averageTestDurationSeconds;
 
 	private int junitRunsCount;
-	private StatInterval selectedInterval = StatInterval.HOUR_1;
+	private StatisticsInterval selectedInterval = StatisticsInterval.HOUR_1;
 
 	private Composite oneColumn;
 
@@ -189,7 +189,7 @@ public class WatchDogView extends ViewPart {
 				// Selecting an item in list initiate the change of
 				// corresponding selectedInterval
 				Combo widget = (Combo) e.getSource();
-				selectedInterval = StatInterval.values()[widget
+				selectedInterval = StatisticsInterval.values()[widget
 						.getSelectionIndex()];
 				update();
 			}
