@@ -6,6 +6,7 @@ import java.util.List;
 
 import nl.tudelft.watchdog.logic.document.DocumentType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EclipseOpenInterval;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
@@ -93,6 +94,21 @@ public class IntervalStatistics extends IntervalManagerBase {
 				.plus(aggregateDurations(getEditorIntervalsOfDocType(DocumentType.PATHNAMME_TEST)));
 		userProduction = aggregateDurations(getEditorIntervalsOfDocType(DocumentType.PRODUCTION));
 		performDataSanitation();
+	}
+
+	/**
+	 * @return An {@link ArrayList} of intervals of the specified document type.
+	 */
+	protected List<EditorIntervalBase> getEditorIntervalsOfDocType(
+			DocumentType type) {
+		List<EditorIntervalBase> collectedIntervals = getIntervals(EditorIntervalBase.class);
+		for (EditorIntervalBase interval : collectedIntervals) {
+			if (interval.getDocument().getDocumentType() == type) {
+				collectedIntervals.add(interval);
+			}
+		}
+
+		return collectedIntervals;
 	}
 
 	private void performDataSanitation() {
