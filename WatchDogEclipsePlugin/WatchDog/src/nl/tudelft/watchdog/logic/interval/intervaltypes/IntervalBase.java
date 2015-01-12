@@ -12,8 +12,8 @@ import org.joda.time.format.PeriodFormat;
 import com.google.gson.annotations.SerializedName;
 
 /** The interval base. */
-public class IntervalBase extends WatchDogTransferable implements Serializable,
-		Comparable<IntervalBase>, Cloneable {
+abstract public class IntervalBase extends WatchDogTransferable implements
+		Serializable, Comparable<IntervalBase>, Cloneable {
 
 	/** The version id of this class. */
 	private static final long serialVersionUID = 2L;
