@@ -50,6 +50,7 @@ public class WatchDogView extends ViewPart {
 	private StatisticsInterval selectedInterval = StatisticsInterval.HOUR_1;
 
 	private Composite oneColumn;
+	private Composite intervalSelection;
 
 	/** Updates the view by completely repainting it. */
 	public void update() {
@@ -71,6 +72,9 @@ public class WatchDogView extends ViewPart {
 			createActiveView();
 		}
 
+		intervalSelection = UIUtils.createZeroMarginGridedComposite(oneColumn,
+				3);
+		createIntervalsList();
 		createRefreshLink();
 	}
 
@@ -119,13 +123,12 @@ public class WatchDogView extends ViewPart {
 				createBarChart(createJunitExecutionBarDataset(),
 						"Your Test Run Activity", "", ""));
 
-		UIUtils.createLabel("From " + intervalStatistics.oldestDate + " to "
-				+ intervalStatistics.mostRecentDate + ".", oneColumn);
 		UIUtils.createLabel(
-				"(Including " + intervalStatistics.getNumberOfIntervals()
-						+ " intervals.)", oneColumn);
+				"Showing statistics from " + intervalStatistics.oldestDate
+						+ " to " + intervalStatistics.mostRecentDate + " ("
+						+ intervalStatistics.getNumberOfIntervals()
+						+ " intervals).", oneColumn);
 
-		createIntervalsList();
 	}
 
 	private void calculateTimes() {
@@ -168,7 +171,7 @@ public class WatchDogView extends ViewPart {
 	}
 
 	private void createRefreshLink() {
-		UIUtils.createLinkedLabel(oneColumn, new SelectionListener() {
+		UIUtils.createLinkedLabel(intervalSelection, new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -182,7 +185,8 @@ public class WatchDogView extends ViewPart {
 	}
 
 	private void createIntervalsList() {
-		UIUtils.createComboList(oneColumn, new SelectionListener() {
+		UIUtils.createLabel("Show statistics of the past ", intervalSelection);
+		UIUtils.createComboList(intervalSelection, new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -198,8 +202,9 @@ public class WatchDogView extends ViewPart {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 
-		}, new String[] { "10 minutes", "30 minutes", "1 hour", "2 hours",
-				"5 hours", "8 hours", "10 hours" }, selectedInterval.id);
+		}, new String[] { "10 minutes.", "30 minutes.", "1 hour.", "2 hours.",
+				"5 hours.", "8 hours.", "10 hours." }, selectedInterval.id);
+		// UIUtils.createLabel(". ", intervalSelection);
 
 	}
 
