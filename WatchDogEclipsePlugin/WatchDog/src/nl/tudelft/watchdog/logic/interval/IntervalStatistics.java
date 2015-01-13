@@ -130,14 +130,11 @@ public class IntervalStatistics extends IntervalManagerBase {
 	 * @return An {@link ArrayList} of intervals of the specified Perspective
 	 *         type.
 	 */
-	protected List<IntervalBase> getPerspectiveIntervals(Perspective type) {
-		List<IntervalBase> collectedIntervals = new ArrayList<IntervalBase>();
-		for (IntervalBase interval : intervals) {
-			if (interval instanceof PerspectiveInterval) {
-				PerspectiveInterval perspectiveInterval = (PerspectiveInterval) interval;
-				if (perspectiveInterval.getPerspectiveType() == type) {
-					collectedIntervals.add(interval);
-				}
+	protected List<PerspectiveInterval> getPerspectiveIntervals(Perspective type) {
+		List<PerspectiveInterval> collectedIntervals = new ArrayList<PerspectiveInterval>();
+		for (PerspectiveInterval interval : getIntervals(PerspectiveInterval.class)) {
+			if (interval.getPerspectiveType() == type) {
+				collectedIntervals.add(interval);
 			}
 		}
 		return collectedIntervals;
