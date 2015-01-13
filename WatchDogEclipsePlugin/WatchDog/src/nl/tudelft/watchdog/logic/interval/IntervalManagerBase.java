@@ -44,20 +44,4 @@ public class IntervalManagerBase {
 
 		return null;
 	}
-	
-	/**
-	 * @return An {@link ArrayList} of intervals of the specified Perspective type.
-	 */
-	protected List<IntervalBase> getPerspectiveIntervalsOfType(Perspective type) {
-		List<IntervalBase> collectedIntervals = new ArrayList<IntervalBase>();
-		for (IntervalBase interval : intervals) {
-			if (interval instanceof PerspectiveInterval) {
-				PerspectiveInterval perspectiveInterval = (PerspectiveInterval) interval;
-				if (perspectiveInterval.getPerspectiveType() == type) {
-					collectedIntervals.add(interval);
-				}
-			}
-		}
-		return collectedIntervals;
-	}
 }

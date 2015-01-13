@@ -3,7 +3,7 @@
 .idea
 Gemfile.lock
 *~
-WatchDog/bundledLibs.jar
+WatchDogEclipsePlugin/WatchDog/bundledLibs.jar
+WatchDogEclipsePlugin/WatchDogUnitTests/test.mapdb*
+WatchDogEclipsePlugin/WatchDogUnitTests/invalidtest.mapdb*
 WatchDogServer/logfile.log
-WatchDogUnitTests/test.mapdb*
-WatchDogUnitTests/invalidtest.mapdb*
