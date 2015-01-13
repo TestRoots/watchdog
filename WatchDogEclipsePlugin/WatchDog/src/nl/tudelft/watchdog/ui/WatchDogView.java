@@ -190,12 +190,11 @@ public class WatchDogView extends ViewPart {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				// Selecting an item in list initiate the change of
+				// Selecting an item in the list initiate the change of
 				// corresponding selectedInterval
 				Combo widget = (Combo) e.getSource();
 				selectedInterval = StatisticsInterval.values()[widget
 						.getSelectionIndex()];
-				update();
 			}
 
 			@Override
@@ -204,8 +203,6 @@ public class WatchDogView extends ViewPart {
 
 		}, new String[] { "10 minutes.", "30 minutes.", "1 hour.", "2 hours.",
 				"5 hours.", "8 hours.", "10 hours." }, selectedInterval.id);
-		// UIUtils.createLabel(". ", intervalSelection);
-
 	}
 
 	private DefaultCategoryDataset createDevelopmentBarDataset() {
