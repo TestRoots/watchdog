@@ -201,8 +201,7 @@ public class WatchDogView extends ViewPart {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 
-		}, new String[] { "10 minutes.", "30 minutes.", "1 hour.", "2 hours.",
-				"5 hours.", "8 hours.", "10 hours." }, selectedInterval.id);
+		}, StatisticsInterval.names(), selectedInterval.id);
 	}
 
 	private DefaultCategoryDataset createDevelopmentBarDataset() {

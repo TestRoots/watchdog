@@ -278,7 +278,8 @@ public class UIUtils {
 	/** Creates a Combo List of String items. */
 	public static Combo createComboList(Composite parent,
 			SelectionListener listener, String[] items, int defaultSelection) {
-		Combo comboList = new Combo(parent, SWT.READ_ONLY);
+		Combo comboList = new Combo(parent, SWT.DROP_DOWN | SWT.BORDER
+				| SWT.READ_ONLY);
 		comboList.setItems(items);
 		comboList.select(defaultSelection);
 		comboList.addSelectionListener(listener);

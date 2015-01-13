@@ -21,6 +21,7 @@ import org.joda.time.Duration;
 /** Gathers and calculates statistics on interval length. */
 @SuppressWarnings("javadoc")
 public class IntervalStatistics extends IntervalManagerBase {
+	// Intervals are stored in Database for 10 hours (=600 minutes)
 	private static final int FILTERED_INTERVALS_IN_MINUTES = 600;
 
 	private final IntervalPersister intervalPersister;
@@ -43,12 +44,26 @@ public class IntervalStatistics extends IntervalManagerBase {
 
 	/** Different length intervals for statistics display */
 	public enum StatisticsInterval {
-		MINUTES_10(0), MINUTES_30(1), HOUR_1(2), HOURS_2(3), HOURS_5(4), HOURS_8(
-				5), HOURS_10(6);
+		MINUTES_10(0, 10, "10 minutes."), MINUTES_30(1, 30, "30 minutes."), HOUR_1(
+				2, 60, "1 hour."), HOURS_2(3, 120, "2 hours."), HOURS_5(4, 300,
+				"5 hours."), HOURS_8(5, 480, "8 hours."), HOURS_10(6, 600,
+				"10 hours.");
 		public final int id;
+		public final int numberOfMinutes;
+		private final String name;
 
-		StatisticsInterval(int id) {
+		StatisticsInterval(int id, int minutes, String name) {
 			this.id = id;
+			this.numberOfMinutes = minutes;
+			this.name = name;
+		}
+
+		public static String[] names() {
+			String[] result = new String[values().length];
+			for (StatisticsInterval interval : values()) {
+				result[interval.id] = interval.name;
+			}
+			return result;
 		}
 	}
 
@@ -57,8 +72,8 @@ public class IntervalStatistics extends IntervalManagerBase {
 	/** Constructor. */
 	public IntervalStatistics(IntervalManager intervalManager,
 			StatisticsInterval selectedInterval) {
-		this.selectedInterval = selectedInterval;
 		intervalPersister = intervalManager.getIntervalsStatisticsPersister();
+		this.selectedInterval = selectedInterval;
 		addIntervals(intervalManager);
 		filterIntervals();
 		calculateStatistics();
@@ -77,36 +92,6 @@ public class IntervalStatistics extends IntervalManagerBase {
 	 * Database. Filters intervals for selected time span.
 	 */
 	private void filterIntervals() {
-		int numberOfMinutes = 600;
-
-		switch (selectedInterval) {
-		case MINUTES_10:
-			numberOfMinutes = 10;
-			break;
-
-		case MINUTES_30:
-			numberOfMinutes = 30;
-			break;
-
-		case HOUR_1:
-			numberOfMinutes = 60;
-			break;
-
-		case HOURS_2:
-			numberOfMinutes = 120;
-			break;
-
-		case HOURS_5:
-			numberOfMinutes = 300;
-			break;
-
-		case HOURS_8:
-			numberOfMinutes = 480;
-			break;
-
-		case HOURS_10:
-			numberOfMinutes = 600;
-		}
 
 		ArrayList<IntervalBase> filteredIntervals = new ArrayList<IntervalBase>();
 		ArrayList<IntervalBase> intervalsToRemove = new ArrayList<IntervalBase>();
@@ -121,10 +106,11 @@ public class IntervalStatistics extends IntervalManagerBase {
 				.minusMinutes(FILTERED_INTERVALS_IN_MINUTES);
 
 		DateTime thresholdDateView = new DateTime(mostRecentDate);
-		thresholdDateView = thresholdDateView.minusMinutes(numberOfMinutes);
+		thresholdDateView = thresholdDateView
+				.minusMinutes(selectedInterval.numberOfMinutes);
 
 		for (IntervalBase interval : intervals) {
-			// Filtering intervals from the last 10 hours
+			// Filtering intervals from the Database
 			if (interval.getEnd().after(thresholdDateDatabase.toDate())) {
 				// Filtering intervals for selected time span
 				if (interval.getEnd().after(thresholdDateView.toDate())) {
@@ -139,7 +125,7 @@ public class IntervalStatistics extends IntervalManagerBase {
 					filteredIntervals.add(clonedInterval);
 				}
 			} else {
-				// Remove from Database intervals older than 10 hours
+				// Removing intervals from the Database
 				intervalsToRemove.add(interval);
 			}
 		}

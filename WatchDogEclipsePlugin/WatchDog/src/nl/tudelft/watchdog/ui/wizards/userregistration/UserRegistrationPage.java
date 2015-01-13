@@ -77,14 +77,9 @@ class UserRegistrationPage extends FinishableWizardPage {
 		emailInput.addModifyListener(formValidator);
 
 		UIUtils.createLabel("Your Programming Experience: ", composite);
-		experienceDropDown = new Combo(composite, SWT.DROP_DOWN | SWT.BORDER
-				| SWT.READ_ONLY);
-		experienceDropDown.add("< 1 year");
-		experienceDropDown.add("1-2 years");
-		experienceDropDown.add("3-6 years");
-		experienceDropDown.add("7-10 years");
-		experienceDropDown.add("> 10 years");
-		experienceDropDown.addModifyListener(formValidator);
+		experienceDropDown = UIUtils.createComboList(composite, formValidator,
+				new String[] { "< 1 year", "1-2 years", "3-6 years",
+						"7-10 years", "> 10 years" }, 0);
 
 		mayContactButton = new Button(innerParent, SWT.CHECK);
 		mayContactButton
