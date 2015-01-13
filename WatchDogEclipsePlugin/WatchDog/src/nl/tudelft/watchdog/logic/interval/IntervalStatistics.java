@@ -116,8 +116,8 @@ public class IntervalStatistics extends IntervalManagerBase {
 	 * @return An {@link ArrayList} of intervals of the specified document type.
 	 */
 	protected List<EditorIntervalBase> getEditorIntervals(DocumentType type) {
-		List<EditorIntervalBase> collectedIntervals = getIntervals(EditorIntervalBase.class);
-		for (EditorIntervalBase interval : collectedIntervals) {
+		List<EditorIntervalBase> collectedIntervals = new ArrayList<EditorIntervalBase>();
+		for (EditorIntervalBase interval : getIntervals(EditorIntervalBase.class)) {
 			if (interval.getDocument().getDocumentType() == type) {
 				collectedIntervals.add(interval);
 			}
