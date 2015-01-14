@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.ui;
 
 import nl.tudelft.watchdog.logic.InitializationManager;
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics;
-import nl.tudelft.watchdog.logic.interval.IntervalStatistics.StatisticsInterval;
+import nl.tudelft.watchdog.logic.interval.IntervalStatistics.StatisticsTimePeriod;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
@@ -47,7 +47,7 @@ public class WatchDogView extends ViewPart {
 	private double averageTestDurationSeconds;
 
 	private int junitRunsCount;
-	private StatisticsInterval selectedInterval = StatisticsInterval.HOUR_1;
+	private StatisticsTimePeriod selectedInterval = StatisticsTimePeriod.HOUR_1;
 
 	private Composite oneColumn;
 	private Composite intervalSelection;
@@ -72,9 +72,6 @@ public class WatchDogView extends ViewPart {
 			createActiveView();
 		}
 
-		intervalSelection = UIUtils.createZeroMarginGridedComposite(oneColumn,
-				3);
-		createIntervalsList();
 		createRefreshLink();
 	}
 
@@ -84,6 +81,8 @@ public class WatchDogView extends ViewPart {
 		UIUtils.createLabel(
 				"Therefore we cannot show you any cool test statistics. \nTo get them, click the WatchDog icon and enable WatchDog.",
 				oneColumn);
+		intervalSelection = UIUtils.createZeroMarginGridedComposite(oneColumn,
+				3);
 	}
 
 	private void createActiveView() {
@@ -129,6 +128,9 @@ public class WatchDogView extends ViewPart {
 						+ intervalStatistics.getNumberOfIntervals()
 						+ " intervals).", oneColumn);
 
+		intervalSelection = UIUtils.createZeroMarginGridedComposite(oneColumn,
+				3);
+		createIntervalsList();
 	}
 
 	private void calculateTimes() {
@@ -170,6 +172,24 @@ public class WatchDogView extends ViewPart {
 		chartComposite.setBounds(bounds);
 	}
 
+	private void createIntervalsList() {
+		UIUtils.createLabel("Show statistics of the past ", intervalSelection);
+		UIUtils.createComboList(intervalSelection, new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Combo widget = (Combo) e.getSource();
+				selectedInterval = StatisticsTimePeriod.values()[widget
+						.getSelectionIndex()];
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+
+		}, StatisticsTimePeriod.names(), StatisticsTimePeriod.HOUR_1.ordinal());
+	}
+
 	private void createRefreshLink() {
 		UIUtils.createLinkedLabel(intervalSelection, new SelectionListener() {
 
@@ -182,26 +202,6 @@ public class WatchDogView extends ViewPart {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		}, "Refresh.", "");
-	}
-
-	private void createIntervalsList() {
-		UIUtils.createLabel("Show statistics of the past ", intervalSelection);
-		UIUtils.createComboList(intervalSelection, new SelectionListener() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				// Selecting an item in the list initiate the change of
-				// corresponding selectedInterval
-				Combo widget = (Combo) e.getSource();
-				selectedInterval = StatisticsInterval.values()[widget
-						.getSelectionIndex()];
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-
-		}, StatisticsInterval.names(), selectedInterval.id);
 	}
 
 	private DefaultCategoryDataset createDevelopmentBarDataset() {

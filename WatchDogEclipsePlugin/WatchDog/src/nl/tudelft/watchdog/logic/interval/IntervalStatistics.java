@@ -21,7 +21,7 @@ import org.joda.time.Duration;
 /** Gathers and calculates statistics on interval length. */
 @SuppressWarnings("javadoc")
 public class IntervalStatistics extends IntervalManagerBase {
-	// Intervals are stored in Database for 10 hours (=600 minutes)
+	// Intervals are stored in the database for 10 hours (equals 600 minutes)
 	private static final int FILTERED_INTERVALS_IN_MINUTES = 600;
 
 	private final IntervalPersister intervalPersister;
@@ -43,36 +43,43 @@ public class IntervalStatistics extends IntervalManagerBase {
 	public int junitRunsCount;
 
 	/** Different length intervals for statistics display */
-	public enum StatisticsInterval {
-		MINUTES_10(0, 10, "10 minutes."), MINUTES_30(1, 30, "30 minutes."), HOUR_1(
-				2, 60, "1 hour."), HOURS_2(3, 120, "2 hours."), HOURS_5(4, 300,
-				"5 hours."), HOURS_8(5, 480, "8 hours."), HOURS_10(6, 600,
+	public enum StatisticsTimePeriod {
+		MINUTES_10(10, "10 minutes."), MINUTES_30(30, "30 minutes."), HOUR_1(
+				60, "1 hour."), HOURS_2(120, "2 hours."), HOURS_5(300,
+				"5 hours."), HOURS_8(480, "8 hours."), HOURS_10(600,
 				"10 hours.");
-		public final int id;
-		public final int numberOfMinutes;
+
+		private final int minutes;
 		private final String name;
 
-		StatisticsInterval(int id, int minutes, String name) {
-			this.id = id;
-			this.numberOfMinutes = minutes;
+		StatisticsTimePeriod(int minutes, String name) {
+			this.minutes = minutes;
 			this.name = name;
 		}
 
-		public static String[] names() {
-			String[] result = new String[values().length];
-			for (StatisticsInterval interval : values()) {
-				result[interval.id] = interval.name;
-			}
-			return result;
+		@Override
+		public String toString() {
+			return name;
 		}
+
+		public static String[] names() {
+			StatisticsTimePeriod[] values = values();
+			String names[] = new String[values.length];
+			for (int i = 0; i < values.length; i++) {
+				names[i] = values[i].toString();
+			}
+			return names;
+		}
+
 	}
 
-	private StatisticsInterval selectedInterval;
+	private StatisticsTimePeriod selectedInterval;
 
 	/** Constructor. */
 	public IntervalStatistics(IntervalManager intervalManager,
-			StatisticsInterval selectedInterval) {
-		intervalPersister = intervalManager.getIntervalsStatisticsPersister();
+			StatisticsTimePeriod selectedInterval) {
+		this.intervalPersister = intervalManager
+				.getIntervalsStatisticsPersister();
 		this.selectedInterval = selectedInterval;
 		addIntervals(intervalManager);
 		filterIntervals();
@@ -92,7 +99,6 @@ public class IntervalStatistics extends IntervalManagerBase {
 	 * Database. Filters intervals for selected time span.
 	 */
 	private void filterIntervals() {
-
 		ArrayList<IntervalBase> filteredIntervals = new ArrayList<IntervalBase>();
 		ArrayList<IntervalBase> intervalsToRemove = new ArrayList<IntervalBase>();
 
@@ -107,32 +113,42 @@ public class IntervalStatistics extends IntervalManagerBase {
 
 		DateTime thresholdDateView = new DateTime(mostRecentDate);
 		thresholdDateView = thresholdDateView
-				.minusMinutes(selectedInterval.numberOfMinutes);
+				.minusMinutes(selectedInterval.minutes);
 
 		for (IntervalBase interval : intervals) {
-			// Filtering intervals from the Database
-			if (interval.getEnd().after(thresholdDateDatabase.toDate())) {
-				// Filtering intervals for selected time span
-				if (interval.getEnd().after(thresholdDateView.toDate())) {
-					IntervalBase clonedInterval = (IntervalBase) interval
-							.clone();
-					if (interval.getStart().before(thresholdDateView.toDate())) {
-						clonedInterval.setStartTime(thresholdDateView.toDate());
-					}
-					if (!clonedInterval.isClosed()) {
-						clonedInterval.setEndTime(mostRecentDate);
-					}
-					filteredIntervals.add(clonedInterval);
-				}
-			} else {
-				// Removing intervals from the Database
+			if (intervalIsOlderThanThreshold(thresholdDateDatabase, interval)) {
 				intervalsToRemove.add(interval);
+				continue;
+			}
+
+			if (!intervalIsOlderThanThreshold(thresholdDateView, interval)) {
+				IntervalBase clonedInterval = (IntervalBase) interval.clone();
+				adjustIntervalStartAndEndDate(thresholdDateView, interval,
+						clonedInterval);
+				filteredIntervals.add(clonedInterval);
 			}
 		}
 
 		oldestDate = filteredIntervals.get(0).getStart();
 		intervalPersister.removeIntervals(intervalsToRemove);
 		intervals = filteredIntervals;
+	}
+
+	private void adjustIntervalStartAndEndDate(DateTime thresholdDateView,
+			IntervalBase interval, IntervalBase clonedInterval) {
+		if (interval.getStart().before(thresholdDateView.toDate())) {
+			// Set start of the interval to threshold if the start is
+			// before the threshold.
+			clonedInterval.setStartTime(thresholdDateView.toDate());
+		}
+		if (!clonedInterval.isClosed()) {
+			clonedInterval.setEndTime(mostRecentDate);
+		}
+	}
+
+	private boolean intervalIsOlderThanThreshold(
+			DateTime thresholdDateDatabase, IntervalBase interval) {
+		return interval.getEnd().before(thresholdDateDatabase.toDate());
 	}
 
 	private void calculateStatistics() {
