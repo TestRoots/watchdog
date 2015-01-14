@@ -42,7 +42,7 @@ public class IntervalStatistics extends IntervalManagerBase {
 
 	public int junitRunsCount;
 
-	/** Different length intervals for statistics display */
+	/** Pre-defined time periods for statistics display. */
 	public enum StatisticsTimePeriod {
 		MINUTES_10(10, "10 minutes."), MINUTES_30(30, "30 minutes."), HOUR_1(
 				60, "1 hour."), HOURS_2(120, "2 hours."), HOURS_5(300,
@@ -57,7 +57,6 @@ public class IntervalStatistics extends IntervalManagerBase {
 			this.name = name;
 		}
 
-		@Override
 		public String toString() {
 			return name;
 		}
@@ -70,7 +69,6 @@ public class IntervalStatistics extends IntervalManagerBase {
 			}
 			return names;
 		}
-
 	}
 
 	private StatisticsTimePeriod selectedInterval;

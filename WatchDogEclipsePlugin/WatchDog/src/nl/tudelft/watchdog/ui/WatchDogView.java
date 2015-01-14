@@ -47,7 +47,7 @@ public class WatchDogView extends ViewPart {
 	private double averageTestDurationSeconds;
 
 	private int junitRunsCount;
-	private StatisticsTimePeriod selectedInterval = StatisticsTimePeriod.HOUR_1;
+	private StatisticsTimePeriod selectedTimePeriod = StatisticsTimePeriod.HOUR_1;
 
 	private Composite oneColumn;
 	private Composite intervalSelection;
@@ -135,7 +135,7 @@ public class WatchDogView extends ViewPart {
 
 	private void calculateTimes() {
 		intervalStatistics = new IntervalStatistics(InitializationManager
-				.getInstance().getIntervalManager(), selectedInterval);
+				.getInstance().getIntervalManager(), selectedTimePeriod);
 
 		eclipseOpen = intervalStatistics
 				.getPreciseTime(intervalStatistics.eclipseOpen);
@@ -179,7 +179,7 @@ public class WatchDogView extends ViewPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Combo widget = (Combo) e.getSource();
-				selectedInterval = StatisticsTimePeriod.values()[widget
+				selectedTimePeriod = StatisticsTimePeriod.values()[widget
 						.getSelectionIndex()];
 			}
 
@@ -187,7 +187,7 @@ public class WatchDogView extends ViewPart {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 
-		}, StatisticsTimePeriod.names(), StatisticsTimePeriod.HOUR_1.ordinal());
+		}, StatisticsTimePeriod.names(), selectedTimePeriod.ordinal());
 	}
 
 	private void createRefreshLink() {
