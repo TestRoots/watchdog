@@ -19,7 +19,7 @@ public enum IntervalType {
 	@SerializedName("eo")
 	ECLIPSE_OPEN,
 
-	/** EclipseOpen. */
+	/** EclipseActive. */
 	@SerializedName("ea")
 	ECLIPSE_ACTIVE,
 
