@@ -1,5 +1,5 @@
 eclipse.preferences.version=1
-prefixMappings=<list>\n  <com.teamscale.ide.client.PrefixMapping>\n    <localPrefix></localPrefix>\n    <teamscalePrefix>WatchDog</teamscalePrefix>\n  </com.teamscale.ide.client.PrefixMapping>\n</list>
+prefixMappings=<list>\n  <com.teamscale.ide.client.PrefixMapping>\n    <localPrefix></localPrefix>\n    <teamscalePrefix>WatchDogEclipsePlugin/WatchDog</teamscalePrefix>\n  </com.teamscale.ide.client.PrefixMapping>\n</list>
 teamscaleEnabled=true
 teamscaleProject=watchdog
 teamscaleServer=Teamscale
