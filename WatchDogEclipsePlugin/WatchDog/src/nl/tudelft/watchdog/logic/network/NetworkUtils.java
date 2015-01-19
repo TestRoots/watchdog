@@ -131,6 +131,9 @@ public class NetworkUtils {
 			// server unreachable case
 			errorMessage = "Failed to commuincate with our server. "
 					+ e.getMessage();
+		} catch (IllegalStateException e) {
+			// URL wrongly formatted (target host is null)
+			errorMessage = "URL wrongly formatted. " + e.getMessage();
 		}
 		WatchDogLogger.getInstance().logInfo(errorMessage);
 		throw new ServerCommunicationException(errorMessage);

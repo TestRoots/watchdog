@@ -1,7 +1,9 @@
 package nl.tudelft.watchdog.ui.preferences;
 
 import nl.tudelft.watchdog.ui.util.UIUtils;
+import nl.tudelft.watchdog.util.WatchDogGlobals;
 
+import org.apache.commons.validator.routines.UrlValidator;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -127,6 +129,9 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 			url = url.trim();
 			if (!url.endsWith("/")) {
 				url = url.concat("/");
+			}
+			if (!UrlValidator.getInstance().isValid(url)) {
+				url = WatchDogGlobals.DEFAULT_SERVER_URI;
 			}
 			getPreferenceStore().setValue(getPreferenceName(), url);
 			super.doLoad();
