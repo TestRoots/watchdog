@@ -133,8 +133,7 @@ public class NetworkUtils {
 					+ e.getMessage();
 		} catch (IllegalStateException e) {
 			// URL wrongly formatted (target host is null)
-			errorMessage = "URL wrongly formatted (target host is null). "
-					+ e.getMessage();
+			errorMessage = "URL wrongly formatted. " + e.getMessage();
 		}
 		WatchDogLogger.getInstance().logInfo(errorMessage);
 		throw new ServerCommunicationException(errorMessage);

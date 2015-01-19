@@ -35,6 +35,11 @@ public class NetworkUtilsTest {
 	public void testTransferToEmptyURLBug148()
 			throws ServerCommunicationException, ServerReturnCodeException {
 		NetworkUtils.transferJsonAndGetResponse("", "");
+	}
+	
+	@Test(expected = ServerCommunicationException.class)
+	public void testTransferToSlashURLBug148()
+			throws ServerCommunicationException, ServerReturnCodeException {
 		NetworkUtils.transferJsonAndGetResponse("/", "");
 	}
 
