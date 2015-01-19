@@ -20,6 +20,9 @@ public class WatchDogGlobals {
 	/** Whether the last interval transmission succeeded or failed. */
 	public static boolean lastTransactionFailed = false;
 
+	/** Whether the transfer to the server is authenticated. */
+	public static boolean isAuthenticationEnabled = true;
+
 	/** The client's version, as set in pom.xml. */
 	public final static String CLIENT_VERSION = "1.2.1";
 
