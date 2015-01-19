@@ -21,7 +21,7 @@ public class WatchDogLogger {
 
 	private File logDirectory = new File("watchdog/logs/");
 
-	/** The singleton instance of the interval manager. */
+	/** The singleton instance of the logger. */
 	private static volatile WatchDogLogger instance = null;
 
 	/** Private Constructor. */

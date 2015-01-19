@@ -1,7 +1,7 @@
-Copyright 2012-2014 Software Engineering Research Group, TU Delft
+Copyright 2012-2015 Software Engineering Research Group, TU Delft
 http://swerl.tudelft.nl/bin/view/Main/WebHome
 
-Copyright 2014 Moritz Beller, Georgios Gousios, Andy Zaidman
+Copyright 2014-2015 Moritz Beller, Georgios Gousios, Igor Levaja, Andy Zaidman
 http://www.testroots.org
 
 Copyright 2013 Wouter Willems
