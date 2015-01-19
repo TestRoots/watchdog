@@ -42,7 +42,7 @@ public class IntervalTransferManager extends RegularCheckerBase {
 
 	private static class IntervalsTransferTimerTask extends TimerTask {
 		private final IntervalPersister intervalPersister;
-		private Preferences preferences;
+		private final Preferences preferences;
 
 		private IntervalsTransferTimerTask(IntervalPersister intervalPersister) {
 			this.intervalPersister = intervalPersister;
@@ -82,6 +82,12 @@ public class IntervalTransferManager extends RegularCheckerBase {
 				break;
 
 			case NETWORK_ERROR:
+				if (WatchDogGlobals.lastTransactionFailed == true) {
+					// two transactions in a row failed. The user is likely
+					// working without internet, so do not try to re-send
+					// intervals
+					return;
+				}
 				WatchDogGlobals.lastTransactionFailed = true;
 				break;
 
