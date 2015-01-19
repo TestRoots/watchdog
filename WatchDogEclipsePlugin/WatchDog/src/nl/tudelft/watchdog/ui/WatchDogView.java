@@ -291,12 +291,12 @@ public class WatchDogView extends ViewPart {
 				- junitRunsCount);
 		DefaultCategoryDataset result = new DefaultCategoryDataset();
 		result.setValue(junitRunsCount, "1", "Number of Test Runs");
-		String TestDuration = "Average Test Run Duration";
+		String testDuration = "Average Test Run Duration";
 		if (differenceSeconds < differenceMinutes) {
-			result.setValue(averageTestDurationSeconds, "1", TestDuration
+			result.setValue(averageTestDurationSeconds, "1", testDuration
 					+ " (in seconds)");
 		} else {
-			result.setValue(averageTestDurationMinutes, "1", TestDuration
+			result.setValue(averageTestDurationMinutes, "1", testDuration
 					+ " (in minutes)");
 		}
 		return result;

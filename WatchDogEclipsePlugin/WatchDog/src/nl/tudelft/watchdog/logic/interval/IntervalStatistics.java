@@ -52,15 +52,17 @@ public class IntervalStatistics extends IntervalManagerBase {
 		private final int minutes;
 		private final String name;
 
-		StatisticsTimePeriod(int minutes, String name) {
+		private StatisticsTimePeriod(int minutes, String name) {
 			this.minutes = minutes;
 			this.name = name;
 		}
 
+		@Override
 		public String toString() {
 			return name;
 		}
 
+		/** Returns an array with the names of this enum. */
 		public static String[] names() {
 			StatisticsTimePeriod[] values = values();
 			String names[] = new String[values.length];

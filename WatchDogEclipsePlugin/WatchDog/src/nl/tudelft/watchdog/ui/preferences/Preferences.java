@@ -61,7 +61,7 @@ public class Preferences {
 	private final static Gson GSON = new Gson();
 
 	/** The preference store. */
-	private ScopedPreferenceStore store;
+	private final ScopedPreferenceStore store;
 
 	/** The map of registered workspaces. */
 	private List<WorkspacePreferenceSetting> workspaceSettings = new ArrayList<WorkspacePreferenceSetting>();
