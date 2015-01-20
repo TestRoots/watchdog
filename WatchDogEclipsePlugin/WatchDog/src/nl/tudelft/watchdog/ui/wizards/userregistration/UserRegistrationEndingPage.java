@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.ui.wizards.userregistration;
 
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.logic.network.ServerCommunicationException;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPage;
 import nl.tudelft.watchdog.ui.wizards.User;
 
@@ -38,5 +39,12 @@ class UserRegistrationEndingPage extends RegistrationEndingPage {
 				+ id
 				+ " is registered.\nYou can change it and other WatchDog settings in the Eclipse preferences."
 				+ UserIdEnteredEndingPage.ENCOURAGING_END_MESSAGE;
+
+		Preferences.getInstance().setUserid(id);
+	}
+
+	@Override
+	public boolean canFinish() {
+		return false;
 	}
 }

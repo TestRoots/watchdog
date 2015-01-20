@@ -5,13 +5,16 @@ import nl.tudelft.watchdog.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.wizards.Project;
 import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPage;
+import nl.tudelft.watchdog.ui.wizards.userregistration.UserRegistrationWizard;
 import nl.tudelft.watchdog.util.WatchDogLogger;
+
+import org.eclipse.jface.wizard.IWizard;
 
 /**
  * Possible finishing page in the wizard. If the project exists on the server,
  * or the server is not reachable, the user can exit here.
  */
-class ProjectCreatedEndingPage extends RegistrationEndingPage {
+public class ProjectCreatedEndingPage extends RegistrationEndingPage {
 
 	@Override
 	protected void makeRegistration() {
@@ -58,7 +61,13 @@ class ProjectCreatedEndingPage extends RegistrationEndingPage {
 		}
 
 		successfulRegistration = true;
-		((ProjectRegistrationWizard) getWizard()).projectId = id;
+		IWizard wizard = getWizard();
+		if (wizard instanceof ProjectRegistrationWizard) {
+			((ProjectRegistrationWizard) wizard).projectId = id;
+		} else {
+			((UserRegistrationWizard) wizard).projectId = id;
+		}
+
 		messageTitle = "New project registered!";
 		messageBody = "Your new project id "
 				+ id

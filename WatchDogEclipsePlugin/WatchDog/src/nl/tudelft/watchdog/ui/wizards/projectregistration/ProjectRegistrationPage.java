@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Text;
  * production code.
  *
  */
-class ProjectRegistrationPage extends FinishableWizardPage {
+public class ProjectRegistrationPage extends FinishableWizardPage {
 
 	private static final String TITLE = "Register a new project";
 
@@ -46,7 +46,7 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 	Button noSingleProjectButton;
 
 	/** Constructor. */
-	protected ProjectRegistrationPage() {
+	public ProjectRegistrationPage() {
 		super("Register Project");
 	}
 

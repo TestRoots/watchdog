@@ -2,15 +2,17 @@ package nl.tudelft.watchdog.ui.wizards.projectregistration;
 
 import nl.tudelft.watchdog.ui.wizards.WelcomePage;
 
+import org.eclipse.jface.wizard.IWizardPage;
+
 /**
  * The first page of the {@link ProjectRegistrationWizard}. It asks the
  * question: do you have a Project ID, yes or no? Depending on the answer, it
  * dynamically displays the information we are interested in.
  */
-class ProjectWelcomePage extends WelcomePage {
+public class ProjectWelcomePage extends WelcomePage {
 
 	/** Constructor. */
-	ProjectWelcomePage() {
+	public ProjectWelcomePage() {
 		super("Welcome to WatchDog Project Registration!");
 		setDescription("This wizard guides you through the setup of a WatchDog Project. ");
 		labelQuestion = "Have you got a WatchDog Project-ID for this workspace? ";
@@ -23,5 +25,10 @@ class ProjectWelcomePage extends WelcomePage {
 	@Override
 	protected String getIconPath() {
 		return "resources/images/project.png";
+	}
+
+	@Override
+	public IWizardPage getPreviousPage() {
+		return null;
 	}
 }

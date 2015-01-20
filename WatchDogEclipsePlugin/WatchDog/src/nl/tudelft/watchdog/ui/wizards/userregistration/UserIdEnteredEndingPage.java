@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.ui.wizards.userregistration;
 
 import nl.tudelft.watchdog.logic.network.NetworkUtils;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.wizards.IdEnteredEndingPage;
 
 /**
@@ -20,10 +21,16 @@ class UserIdEnteredEndingPage extends IdEnteredEndingPage {
 
 	protected void setId() {
 		((UserRegistrationWizard) getWizard()).userid = id;
+		Preferences.getInstance().setUserid(id);
 	}
 
 	protected String getId() {
 		return ((UserWelcomePage) getWizard().getStartingPage()).getId();
+	}
+
+	@Override
+	public boolean canFinish() {
+		return false;
 	}
 
 }

@@ -1,8 +1,14 @@
 package nl.tudelft.watchdog.ui.wizards.userregistration;
 
 import nl.tudelft.watchdog.ui.preferences.Preferences;
+import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPage;
+import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectCreatedEndingPage;
+import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectIdEnteredEndingPage;
+import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectRegistrationPage;
+import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectSliderPage;
+import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectWelcomePage;
 
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -31,6 +37,18 @@ public class UserRegistrationWizard extends Wizard {
 	 */
 	/* package */String userid;
 
+	/**
+	 * The projectid, either entered on the previous wizard pages or as
+	 * retrieved by the server.
+	 */
+	public String projectId;
+
+	private ProjectWelcomePage welcomeProjectPage;
+	private IWizardPage existingProjectIdPage;
+	private ProjectSliderPage projectSliderPage;
+	private ProjectCreatedEndingPage projectedCreatedPage;
+	private ProjectRegistrationPage projectRegistrationPage;
+
 	@Override
 	public void addPages() {
 		welcomePage = new UserWelcomePage();
@@ -42,11 +60,22 @@ public class UserRegistrationWizard extends Wizard {
 		addPage(existingUserEndingPage);
 		userCreatedEndingPage = new UserRegistrationEndingPage();
 		addPage(userCreatedEndingPage);
+		welcomeProjectPage = new ProjectWelcomePage();
+		addPage(welcomeProjectPage);
+		projectRegistrationPage = new ProjectRegistrationPage();
+		addPage(projectRegistrationPage);
+		projectSliderPage = new ProjectSliderPage();
+		addPage(projectSliderPage);
+		existingProjectIdPage = new ProjectIdEnteredEndingPage();
+		addPage(existingProjectIdPage);
+		projectedCreatedPage = new ProjectCreatedEndingPage();
+		addPage(projectedCreatedPage);
 	}
 
 	@Override
 	public boolean performFinish() {
-		Preferences.getInstance().setUserid(userid);
+		Preferences.getInstance().registerWorkspaceProject(
+				UIUtils.getWorkspaceName(), projectId);
 		return true;
 	}
 
@@ -57,10 +86,24 @@ public class UserRegistrationWizard extends Wizard {
 			return existingUserEndingPage;
 		}
 		if (currentPage == existingUserEndingPage) {
-			return null;
+			return welcomeProjectPage;
 		}
 		if (currentPage == userRegistrationPage) {
 			return userCreatedEndingPage;
+		}
+		if (currentPage == welcomeProjectPage
+				&& !welcomeProjectPage.getRegisterNewId()) {
+			return existingProjectIdPage;
+		}
+		if (currentPage == existingProjectIdPage) {
+			return null;
+		}
+		if (currentPage == projectRegistrationPage
+				&& projectRegistrationPage.shouldSkipProjectSliderPage()) {
+			return projectedCreatedPage;
+		}
+		if (currentPage == projectSliderPage) {
+			return projectedCreatedPage;
 		}
 		return super.getNextPage(page);
 	}
@@ -73,6 +116,9 @@ public class UserRegistrationWizard extends Wizard {
 			return welcomePage;
 		}
 		if (currentPage == userCreatedEndingPage) {
+			return null;
+		}
+		if (currentPage == welcomeProjectPage) {
 			return null;
 		}
 		return super.getPreviousPage(page);

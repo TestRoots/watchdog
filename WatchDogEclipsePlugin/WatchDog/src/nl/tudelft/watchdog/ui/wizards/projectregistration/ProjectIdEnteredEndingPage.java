@@ -7,7 +7,7 @@ import nl.tudelft.watchdog.ui.wizards.IdEnteredEndingPage;
  * Possible finishing page in the wizard. If the user exists on the server, or
  * the server is not reachable, the user can exit here.
  */
-class ProjectIdEnteredEndingPage extends IdEnteredEndingPage {
+public class ProjectIdEnteredEndingPage extends IdEnteredEndingPage {
 
 	/** Constructor. */
 	public ProjectIdEnteredEndingPage() {

@@ -29,7 +29,7 @@ public class ProjectSliderPage extends FinishableWizardPage {
 	protected Scale percentageProductionSlider;
 
 	/** Constructor. */
-	protected ProjectSliderPage() {
+	public ProjectSliderPage() {
 		super("Time Distrubtion");
 	}
 
