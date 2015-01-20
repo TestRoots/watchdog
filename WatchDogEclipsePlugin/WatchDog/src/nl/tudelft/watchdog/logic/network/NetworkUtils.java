@@ -58,7 +58,7 @@ public class NetworkUtils {
 			} else {
 				errorMessage = "Not received " + HttpStatus.SC_OK;
 			}
-		} catch (IllegalArgumentException | IOException exception) {
+		} catch (IllegalStateException | IllegalArgumentException | IOException exception) {
 			// intentionally empty
 		}
 		throw new ServerCommunicationException(errorMessage);
@@ -88,7 +88,7 @@ public class NetworkUtils {
 				return Connection.UNSUCCESSFUL;
 			}
 			return Connection.NETWORK_ERROR;
-		} catch (IOException exception) {
+		} catch (IllegalStateException | IOException exception) {
 			// intentionally empty
 		}
 		return Connection.NETWORK_ERROR;
