@@ -58,7 +58,7 @@ public class NetworkUtils {
 			} else {
 				errorMessage = "Not received " + HttpStatus.SC_OK;
 			}
-		} catch (IllegalArgumentException | IOException exception) {
+		} catch (IllegalStateException | IllegalArgumentException | IOException exception) {
 			// intentionally empty
 		}
 		throw new ServerCommunicationException(errorMessage);
@@ -88,7 +88,7 @@ public class NetworkUtils {
 				return Connection.UNSUCCESSFUL;
 			}
 			return Connection.NETWORK_ERROR;
-		} catch (IOException exception) {
+		} catch (IllegalStateException | IOException exception) {
 			// intentionally empty
 		}
 		return Connection.NETWORK_ERROR;
@@ -131,6 +131,9 @@ public class NetworkUtils {
 			// server unreachable case
 			errorMessage = "Failed to commuincate with our server. "
 					+ e.getMessage();
+		} catch (IllegalStateException e) {
+			// URL wrongly formatted (target host is null)
+			errorMessage = "URL wrongly formatted. " + e.getMessage();
 		}
 		WatchDogLogger.getInstance().logInfo(errorMessage);
 		throw new ServerCommunicationException(errorMessage);

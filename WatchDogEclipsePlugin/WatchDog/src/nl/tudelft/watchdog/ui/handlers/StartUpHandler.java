@@ -29,8 +29,7 @@ public class StartUpHandler implements IStartup {
 		try {
 			WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
 
-			// initializes the interval manager, and thereby, WatchDog interval
-			// recording.
+			// Initialize the interval manager, and thereby, interval recording.
 			InitializationManager.getInstance();
 			WatchDogGlobals.isActive = true;
 			// Update WatchDog icon
