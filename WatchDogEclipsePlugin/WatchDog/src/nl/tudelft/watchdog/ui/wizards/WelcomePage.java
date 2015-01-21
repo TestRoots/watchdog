@@ -89,7 +89,7 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	/**
 	 * Creates and returns the question whether WatchDog Id is already known.
 	 */
-	private Composite createQuestionComposite(final Composite parent) {
+	protected Composite createQuestionComposite(final Composite parent) {
 		final Composite composite = UIUtils.createGridedComposite(parent, 3);
 
 		Label questionIcon = new Label(composite, SWT.NONE);
