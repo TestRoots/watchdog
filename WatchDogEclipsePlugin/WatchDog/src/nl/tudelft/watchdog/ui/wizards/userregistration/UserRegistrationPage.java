@@ -1,11 +1,16 @@
 package nl.tudelft.watchdog.ui.wizards.userregistration;
 
+import nl.tudelft.watchdog.logic.network.JsonTransferer;
+import nl.tudelft.watchdog.logic.network.ServerCommunicationException;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
-import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 import nl.tudelft.watchdog.ui.wizards.FormValidationListener;
+import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPage;
+import nl.tudelft.watchdog.ui.wizards.User;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.apache.commons.validator.routines.EmailValidator;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -13,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 /** The Page on which new users can register themselves. */
-class UserRegistrationPage extends FinishableWizardPage {
+public class UserRegistrationPage extends RegistrationEndingPage {
 
 	private static final String USER_REGISTRATION_TEXT = "User Registration (3/3)";
 
@@ -78,7 +83,7 @@ class UserRegistrationPage extends FinishableWizardPage {
 
 		UIUtils.createLabel("Your Programming Experience: ", composite);
 		experienceDropDown = UIUtils.createComboList(composite, formValidator,
-				new String[] { "< 1 year", "1-2 years", "3-6 years",
+				new String[] { "", "< 1 year", "1-2 years", "3-6 years",
 						"7-10 years", "> 10 years" }, 0);
 
 		mayContactButton = new Button(innerParent, SWT.CHECK);
@@ -116,6 +121,42 @@ class UserRegistrationPage extends FinishableWizardPage {
 		}
 
 		getWizard().getContainer().updateButtons();
+	}
+
+	protected void makeRegistration() {
+		User user = new User();
+		user.email = getEmailInput().getText();
+		user.organization = getOrganizationInput().getText();
+		user.group = getGroupInput().getText();
+		user.mayContactUser = getMayContactUser();
+		user.programmingExperience = getProgrammingExperience();
+		user.operatingSystem = Platform.getOS();
+
+		try {
+			id = new JsonTransferer().registerNewUser(user);
+		} catch (ServerCommunicationException exception) {
+			successfulRegistration = false;
+			messageTitle = "Problem creating new user!";
+			messageBody = exception.getMessage();
+			return;
+		}
+
+		successfulRegistration = true;
+		((UserRegistrationWizard) getWizard()).userid = id;
+		messageTitle = "New user registered!";
+		messageBody = "Your new user id "
+				+ id
+				+ " is registered.\nYou can change it and other WatchDog settings in the Eclipse preferences.";
+
+		Preferences.getInstance().setUserid(id);
+	}
+
+	/**
+	 * Adds report of the user registration to the {@link Composite} parent.
+	 */
+	public void createRegistrationSummary(Composite parent) {
+		UIUtils.createBoldLabel(messageTitle, parent);
+		UIUtils.createLabel(messageBody, parent);
 	}
 
 	/** @return the email */
@@ -156,6 +197,8 @@ class UserRegistrationPage extends FinishableWizardPage {
 		super.setVisible(visible);
 		if (visible) {
 			validateFormInputs();
+		} else {
+			makeRegistration();
 		}
 	}
 }

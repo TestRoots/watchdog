@@ -45,6 +45,9 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	/** The label question. To be changed by subclasses. */
 	protected String labelQuestion;
 
+	/** Whether it is User or Project registration. */
+	protected String currentRegistration;
+
 	private String title;
 
 	/** The length (in characters) of the WatchDog id. */
@@ -63,7 +66,7 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	private Text userInput;
 
 	/** The no button from the question. */
-	private Button radioButtonNo;
+	private Button radioButtonYes;
 
 	/** Constructor. */
 	public WelcomePage(String title) {
@@ -102,27 +105,9 @@ abstract public class WelcomePage extends FinishableWizardPage {
 		radioButtons.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER,
 				false, true));
 		radioButtons.setLayout(new FillLayout());
-		final Button radioButtonYes = UIUtils.createRadioButton(radioButtons,
-				"Yes");
+
+		radioButtonYes = UIUtils.createRadioButton(radioButtons, "Yes");
 		radioButtonYes.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				removeDynamicContent(parent);
-				dynamicContent = createLoginComposite(parent);
-				setTitle(title + " (1/1)");
-				parent.layout();
-				parent.update();
-				setPageComplete(false);
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-
-		radioButtonNo = UIUtils.createRadioButton(radioButtons, "No");
-		radioButtonNo.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -132,6 +117,25 @@ abstract public class WelcomePage extends FinishableWizardPage {
 				setTitle(title + " (1/3)");
 				parent.layout();
 				parent.update();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		final Button radioButtonNo = UIUtils.createRadioButton(radioButtons,
+				"No");
+
+		radioButtonNo.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				removeDynamicContent(parent);
+				dynamicContent = createLoginComposite(parent);
+				setTitle(title + " (1/1)");
+				parent.layout();
+				parent.update();
+				setPageComplete(false);
 			}
 
 			@Override
@@ -225,7 +229,7 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	 *         that case, <code>false</code> otherwise).
 	 */
 	public boolean getRegisterNewId() {
-		return radioButtonNo.getSelection();
+		return radioButtonYes.getSelection();
 	}
 
 	@Override

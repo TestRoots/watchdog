@@ -13,11 +13,12 @@ class UserWelcomePage extends WelcomePage {
 	UserWelcomePage() {
 		super("Welcome to WatchDog!");
 		setDescription("This wizard guides you through the setup of a WatchDog User.");
-		welcomeTitle = "Welcome! Registering a new user takes under 1 minute!";
+		welcomeTitle = "Welcome! Registering a new user takes just 1 minute!";
 		welcomeText = "";
 		labelText = "Your WatchDog User-ID: ";
 		inputToolTip = "The User-ID we sent you upon your first WatchDog registration.";
-		labelQuestion = "Do you have a WatchDog UserId? ";
+		labelQuestion = "Do you want to register a new user? ";
+		currentRegistration = "User";
 	}
 
 	@Override

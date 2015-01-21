@@ -3,7 +3,6 @@ package nl.tudelft.watchdog.ui.wizards.userregistration;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
-import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPage;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectCreatedEndingPage;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectIdEnteredEndingPage;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectRegistrationPage;
@@ -20,8 +19,6 @@ import org.eclipse.jface.wizard.Wizard;
  */
 public class UserRegistrationWizard extends Wizard {
 
-	private RegistrationEndingPage userCreatedEndingPage;
-
 	/** The first page in the wizard. */
 	/* package */UserWelcomePage welcomePage;
 
@@ -29,11 +26,10 @@ public class UserRegistrationWizard extends Wizard {
 	/* package */UserIdEnteredEndingPage existingUserEndingPage;
 
 	/** The page with all the actual user info (name, email, etc.) on it. */
-	/* package */UserRegistrationPage userRegistrationPage;
+	public UserRegistrationPage userRegistrationPage;
 
 	/**
-	 * The userid, either entered on the previous wizard pages or as retrieved
-	 * by the server.
+	 * The userid, either entered on this page or as retrieved by the server.
 	 */
 	/* package */String userid;
 
@@ -58,8 +54,6 @@ public class UserRegistrationWizard extends Wizard {
 		addPage(userRegistrationPage);
 		existingUserEndingPage = new UserIdEnteredEndingPage();
 		addPage(existingUserEndingPage);
-		userCreatedEndingPage = new UserRegistrationEndingPage();
-		addPage(userCreatedEndingPage);
 		welcomeProjectPage = new ProjectWelcomePage();
 		addPage(welcomeProjectPage);
 		projectRegistrationPage = new ProjectRegistrationPage();
@@ -89,7 +83,7 @@ public class UserRegistrationWizard extends Wizard {
 			return welcomeProjectPage;
 		}
 		if (currentPage == userRegistrationPage) {
-			return userCreatedEndingPage;
+			return welcomeProjectPage;
 		}
 		if (currentPage == welcomeProjectPage
 				&& !welcomeProjectPage.getRegisterNewId()) {
@@ -114,9 +108,6 @@ public class UserRegistrationWizard extends Wizard {
 		if (currentPage == existingUserEndingPage
 				&& !welcomePage.getRegisterNewId()) {
 			return welcomePage;
-		}
-		if (currentPage == userCreatedEndingPage) {
-			return null;
 		}
 		if (currentPage == welcomeProjectPage) {
 			return null;
