@@ -100,8 +100,8 @@ abstract public class WelcomePage extends FinishableWizardPage {
 
 		UIUtils.createLabel("   " + labelQuestion, composite);
 
-		final Composite radioButtons = UIUtils.createFullGridedComposite(
-				composite, 1);
+		final Composite radioButtons = UIUtils.createGridedComposite(composite,
+				1);
 		radioButtons.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER,
 				false, true));
 		radioButtons.setLayout(new FillLayout());
@@ -124,7 +124,7 @@ abstract public class WelcomePage extends FinishableWizardPage {
 			}
 		});
 		final Button radioButtonNo = UIUtils.createRadioButton(radioButtons,
-				"No");
+				"No, I already have an " + currentRegistration + "-ID");
 
 		radioButtonNo.addSelectionListener(new SelectionListener() {
 

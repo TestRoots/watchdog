@@ -88,6 +88,15 @@ public class UIUtils {
 		return text;
 	}
 
+	/** Creates uneditable text field. */
+	public static Text createTextField(Composite parent, String content) {
+		Text text = new Text(parent, SWT.SINGLE | SWT.BORDER);
+		text.setLayoutData(new GridData(SWT.BOTTOM, SWT.BEGINNING, true, false));
+		text.setText(content);
+		text.setEditable(false);
+		return text;
+	}
+
 	/** Creates and returns a radio button with the given text. */
 	public static Button createRadioButton(Composite parent, String text) {
 		Button button = new Button(parent, SWT.RADIO);

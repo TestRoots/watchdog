@@ -15,7 +15,7 @@ public class ProjectWelcomePage extends WelcomePage {
 	public ProjectWelcomePage() {
 		super("Welcome to WatchDog Project Registration!");
 		setDescription("This wizard guides you through the setup of a WatchDog Project. ");
-		labelQuestion = "Do you want to make a new registration of this workspace? ";
+		labelQuestion = "Do you want to make a new registration of this Project? ";
 		welcomeTitle = "Registering a new project takes just 2 minutes, and you are done. ";
 		welcomeText = "";
 		labelText = "Your WatchDog Project ID: ";

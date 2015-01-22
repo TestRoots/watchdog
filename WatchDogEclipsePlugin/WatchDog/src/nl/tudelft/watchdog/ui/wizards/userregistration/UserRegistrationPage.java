@@ -144,9 +144,7 @@ public class UserRegistrationPage extends RegistrationEndingPage {
 		successfulRegistration = true;
 		((UserRegistrationWizard) getWizard()).userid = id;
 		messageTitle = "New user registered!";
-		messageBody = "Your new user id "
-				+ id
-				+ " is registered.\nYou can change it and other WatchDog settings in the Eclipse preferences.";
+		messageBody = "Your new user id is registered: ";
 
 		Preferences.getInstance().setUserid(id);
 	}
@@ -154,9 +152,19 @@ public class UserRegistrationPage extends RegistrationEndingPage {
 	/**
 	 * Adds report of the user registration to the {@link Composite} parent.
 	 */
-	public void createRegistrationSummary(Composite parent) {
+	public void createUserRegistrationSummary(Composite parent) {
 		UIUtils.createBoldLabel(messageTitle, parent);
-		UIUtils.createLabel(messageBody, parent);
+		Composite innerParent = UIUtils.createZeroMarginGridedComposite(parent,
+				2);
+		Composite displayInformation = UIUtils.createZeroMarginGridedComposite(
+				innerParent, 2);
+		UIUtils.createLabel(messageBody, displayInformation);
+		if (successfulRegistration) {
+			UIUtils.createTextField(displayInformation, id);
+			UIUtils.createLogo(innerParent, "resources/images/checkmark.png");
+		} else {
+			UIUtils.createLogo(innerParent, "resources/images/error.png");
+		}
 	}
 
 	/** @return the email */

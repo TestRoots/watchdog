@@ -24,9 +24,13 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPage {
 
 	private Composite dynamicComposite;
 
+	private String concludingMessage;
+
 	/** Constructor. */
 	public ProjectCreatedEndingPage() {
 		super("Project-ID created.");
+		concludingMessage = "You can change it and other WatchDog settings in the Eclipse preferences."
+				+ ProjectIdEnteredEndingPage.ENCOURAGING_END_MESSAGE;
 	}
 
 	@Override
@@ -74,18 +78,14 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPage {
 		}
 
 		successfulRegistration = true;
-		IWizard wizard = getWizard();
-		if (wizard instanceof ProjectRegistrationWizard) {
-			((ProjectRegistrationWizard) wizard).projectId = id;
+		if (isThisProjectWizzard()) {
+			((ProjectRegistrationWizard) getWizard()).projectId = id;
 		} else {
-			((UserRegistrationWizard) wizard).projectId = id;
+			((UserRegistrationWizard) getWizard()).projectId = id;
 		}
 
 		messageTitle = "New project registered!";
-		messageBody = "Your new project id "
-				+ id
-				+ " is registered.\nYou can change it and other WatchDog settings in the Eclipse preferences."
-				+ ProjectIdEnteredEndingPage.ENCOURAGING_END_MESSAGE;
+		messageBody = "Your new project id is registered: ";
 	}
 
 	@Override
@@ -103,28 +103,42 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPage {
 	}
 
 	private void createPageContent() {
-		IWizard wizard = getWizard();
-		if (wizard instanceof ProjectRegistrationWizard) {
+		if (isThisProjectWizzard()) {
 			dynamicComposite = UIUtils.createGridedComposite(topComposite, 1);
 			dynamicComposite.setLayoutData(UIUtils.createFullGridUsageData());
-
-			UIUtils.createBoldLabel(messageTitle, dynamicComposite);
-			setTitle(windowTitle);
-			UIUtils.createLabel(messageBody, dynamicComposite);
+			createProjectRegistrationSummary();
 			return;
 		} else {
-			UserRegistrationPage userRegistrationPage = ((UserRegistrationWizard) wizard).userRegistrationPage;
-
+			UserRegistrationPage userRegistrationPage = ((UserRegistrationWizard) getWizard()).userRegistrationPage;
 			dynamicComposite = UIUtils.createGridedComposite(topComposite, 1);
 			dynamicComposite.setLayoutData(UIUtils.createFullGridUsageData());
-
-			userRegistrationPage.createRegistrationSummary(dynamicComposite);
-
-			UIUtils.createBoldLabel(messageTitle, dynamicComposite);
-			setTitle(windowTitle);
-			UIUtils.createLabel(messageBody, dynamicComposite);
+			userRegistrationPage
+					.createUserRegistrationSummary(dynamicComposite);
+			createProjectRegistrationSummary();
 			return;
 		}
+	}
+
+	private void createProjectRegistrationSummary() {
+		UIUtils.createBoldLabel(messageTitle, dynamicComposite);
+		setTitle(windowTitle);
+		Composite innerParent = UIUtils.createZeroMarginGridedComposite(
+				dynamicComposite, 2);
+		Composite displayInformation = UIUtils.createZeroMarginGridedComposite(
+				innerParent, 2);
+		UIUtils.createLabel(messageBody, displayInformation);
+		if (successfulRegistration) {
+			UIUtils.createTextField(displayInformation, id);
+			UIUtils.createLabel(concludingMessage, dynamicComposite);
+			UIUtils.createLogo(innerParent, "resources/images/checkmark.png");
+		} else {
+			UIUtils.createLogo(innerParent, "resources/images/error.png");
+		}
+	}
+
+	private boolean isThisProjectWizzard() {
+		IWizard wizard = getWizard();
+		return wizard instanceof ProjectRegistrationWizard;
 	}
 
 	@Override
