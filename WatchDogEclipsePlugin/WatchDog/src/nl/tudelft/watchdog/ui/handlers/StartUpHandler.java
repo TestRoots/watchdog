@@ -19,13 +19,13 @@ public class StartUpHandler implements IStartup {
 	/** {@inheritDoc} Starts the WatchDog plugin. */
 	@Override
 	public void earlyStartup() {
-		StartupUIThread watchDogUiThread = new StartupUIThread(this,
+		StartupUIThread watchDogUiThread = new StartupUIThread(
 				Preferences.getInstance());
 		Display.getDefault().asyncExec(watchDogUiThread);
 	}
 
 	/** Starts WatchDog. */
-	/* package */void startWatchDog() {
+	public static void startWatchDog() {
 		try {
 			WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
 
@@ -42,7 +42,7 @@ public class StartUpHandler implements IStartup {
 		}
 	}
 
-	private void updateView() {
+	private static void updateView() {
 		WatchDogView view = UIUtils.getWatchDogView();
 		if (view != null) {
 			view.update();

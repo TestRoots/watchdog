@@ -111,6 +111,10 @@ public class UserRegistrationWizard extends Wizard {
 		if (currentPage == welcomeProjectPage) {
 			return null;
 		}
+		if (currentPage == existingProjectIdPage
+				&& !welcomeProjectPage.getRegisterNewId()) {
+			return welcomeProjectPage;
+		}
 		return super.getPreviousPage(page);
 	}
 

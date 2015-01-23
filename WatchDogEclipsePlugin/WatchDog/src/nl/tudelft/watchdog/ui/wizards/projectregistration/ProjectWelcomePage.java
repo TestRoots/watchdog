@@ -21,6 +21,7 @@ public class ProjectWelcomePage extends WelcomePage {
 		labelText = "Your WatchDog Project ID: ";
 		inputToolTip = "The Project ID we sent you upon your Project registration.";
 		currentRegistration = "Project";
+		pageNumber = getWizard() instanceof ProjectRegistrationWizard ? 1 : 3;
 	}
 
 	@Override

@@ -13,6 +13,7 @@ class UserIdEnteredEndingPage extends IdEnteredEndingPage {
 	/** Constructor. */
 	public UserIdEnteredEndingPage() {
 		super("user");
+		pageNumber = 2;
 	}
 
 	protected String buildTransferURLforId() {

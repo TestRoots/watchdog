@@ -20,23 +20,20 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
  */
 public class StartupUIThread implements Runnable {
 
-	private final StartUpHandler startUpHandler;
-
 	/** The preferences. */
 	private Preferences preferences;
 
 	/** Constructor. */
-	public StartupUIThread(StartUpHandler startUpHandler,
-			Preferences preferences) {
-		this.startUpHandler = startUpHandler;
+	public StartupUIThread(Preferences preferences) {
 		this.preferences = preferences;
 	}
 
 	@Override
 	public void run() {
 		// the execution strategy is:
-		// (1) check user registration (2) wait until 1 is complete, or 1
-		// can be skipped (3) show workspace registration
+		// (1) check user registration (2) wait until user+project registration
+		// is completed, or 1 can be skipped (3) if user is already registered,
+		// check for workspace registration
 		if (WatchDogUtils.isEmpty(preferences.getUserid())) {
 			displayUserRegistrationWizard();
 		}
@@ -101,7 +98,7 @@ public class StartupUIThread implements Runnable {
 			// reload setting from preferences
 			setting = preferences.getOrCreateWorkspaceSetting(workspaceName);
 			if (!WatchDogUtils.isEmpty(setting.projectId)) {
-				this.startUpHandler.startWatchDog();
+				StartUpHandler.startWatchDog();
 			}
 		}
 	}

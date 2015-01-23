@@ -48,11 +48,12 @@ public class ProjectRegistrationPage extends FinishableWizardPage {
 	/** Constructor. */
 	public ProjectRegistrationPage() {
 		super("Register Project");
+		pageNumber = getWizard() instanceof ProjectRegistrationWizard ? 2 : 4;
 	}
 
 	@Override
 	public void createControl(Composite parent) {
-		setTitle(TITLE + " (2/3)");
+		setTitle(TITLE + " (" + pageNumber + "/6)");
 		setDescription("Create a new WatchDog Project for this workspace!");
 		Composite topComposite = createComposite(parent);
 		setControl(topComposite);
@@ -139,9 +140,9 @@ public class ProjectRegistrationPage extends FinishableWizardPage {
 			setErrorMessageAndPageComplete(null);
 		}
 
-		setTitle(TITLE + " (2/3)");
+		setTitle(TITLE + " (" + pageNumber + "/6)");
 		if (shouldSkipProjectSliderPage()) {
-			setTitle(TITLE + " (2/2)");
+			setTitle(TITLE + " (" + pageNumber + "/5)");
 		}
 		getWizard().getContainer().updateButtons();
 	}

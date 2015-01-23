@@ -47,7 +47,7 @@ public abstract class IdEnteredEndingPage extends FinishableWizardPage {
 		case SUCCESSFUL:
 			setId();
 			setTitle("Welcome back!");
-			setDescription("Thanks for using your existing " + idType + "!");
+			setDescription("Thanks for using your existing " + idType + "-ID!");
 			setPageComplete(true);
 			dynamicComposite = createSuccessWizzard(topComposite);
 			break;

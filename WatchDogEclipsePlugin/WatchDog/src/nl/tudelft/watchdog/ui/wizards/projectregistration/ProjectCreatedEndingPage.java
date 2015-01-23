@@ -29,7 +29,7 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPage {
 	/** Constructor. */
 	public ProjectCreatedEndingPage() {
 		super("Project-ID created.");
-		concludingMessage = "You can change it and other WatchDog settings in the Eclipse preferences."
+		concludingMessage = "You can change these and other WatchDog settings in the Eclipse preferences."
 				+ ProjectIdEnteredEndingPage.ENCOURAGING_END_MESSAGE;
 	}
 
@@ -63,7 +63,7 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPage {
 				.usesOtherTestingFrameworks();
 		project.usesOtherTestingForms = projectPage.usesOtherTestingForms();
 
-		windowTitle = "Project Registration";
+		windowTitle = "Registration Summary";
 
 		try {
 			id = new JsonTransferer().registerNewProject(project);
@@ -124,15 +124,16 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPage {
 		setTitle(windowTitle);
 		Composite innerParent = UIUtils.createZeroMarginGridedComposite(
 				dynamicComposite, 2);
-		Composite displayInformation = UIUtils.createZeroMarginGridedComposite(
-				innerParent, 2);
-		UIUtils.createLabel(messageBody, displayInformation);
 		if (successfulRegistration) {
+			UIUtils.createLogo(innerParent, "resources/images/checkmark.png");
+			Composite displayInformation = UIUtils
+					.createZeroMarginGridedComposite(innerParent, 2);
+			UIUtils.createLabel(messageBody, displayInformation);
 			UIUtils.createTextField(displayInformation, id);
 			UIUtils.createLabel(concludingMessage, dynamicComposite);
-			UIUtils.createLogo(innerParent, "resources/images/checkmark.png");
 		} else {
 			UIUtils.createLogo(innerParent, "resources/images/error.png");
+			UIUtils.createLabel(messageBody, innerParent);
 		}
 	}
 

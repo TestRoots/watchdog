@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Text;
 /** The Page on which new users can register themselves. */
 public class UserRegistrationPage extends RegistrationEndingPage {
 
-	private static final String USER_REGISTRATION_TEXT = "User Registration (3/3)";
+	private static final String USER_REGISTRATION_TEXT = "User Registration (2/6)";
 
 	/** The email address entered by the user. */
 	private Text emailInput;
@@ -150,20 +150,21 @@ public class UserRegistrationPage extends RegistrationEndingPage {
 	}
 
 	/**
-	 * Adds report of the user registration to the {@link Composite} parent.
+	 * Creates report of the user registration to the {@link Composite} parent.
 	 */
 	public void createUserRegistrationSummary(Composite parent) {
 		UIUtils.createBoldLabel(messageTitle, parent);
 		Composite innerParent = UIUtils.createZeroMarginGridedComposite(parent,
 				2);
-		Composite displayInformation = UIUtils.createZeroMarginGridedComposite(
-				innerParent, 2);
-		UIUtils.createLabel(messageBody, displayInformation);
 		if (successfulRegistration) {
-			UIUtils.createTextField(displayInformation, id);
 			UIUtils.createLogo(innerParent, "resources/images/checkmark.png");
+			Composite displayInformation = UIUtils
+					.createZeroMarginGridedComposite(innerParent, 2);
+			UIUtils.createLabel(messageBody, displayInformation);
+			UIUtils.createTextField(displayInformation, id);
 		} else {
 			UIUtils.createLogo(innerParent, "resources/images/error.png");
+			UIUtils.createLabel(messageBody, innerParent);
 		}
 	}
 

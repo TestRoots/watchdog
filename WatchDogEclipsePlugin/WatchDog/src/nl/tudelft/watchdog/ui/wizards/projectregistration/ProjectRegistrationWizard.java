@@ -1,8 +1,10 @@
 package nl.tudelft.watchdog.ui.wizards.projectregistration;
 
+import nl.tudelft.watchdog.ui.handlers.StartUpHandler;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
+import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -66,6 +68,9 @@ public class ProjectRegistrationWizard extends Wizard {
 	public boolean performFinish() {
 		Preferences.getInstance().registerWorkspaceProject(
 				UIUtils.getWorkspaceName(), projectId);
+		if (!WatchDogGlobals.isActive) {
+			StartUpHandler.startWatchDog();
+		}
 		return true;
 	}
 }

@@ -18,6 +18,9 @@ import org.eclipse.swt.widgets.Control;
  */
 public abstract class FinishableWizardPage extends WizardPage {
 
+	/** Number of the page in Wizard */
+	protected int pageNumber;
+
 	/** Constructor. */
 	protected FinishableWizardPage(String pageName) {
 		super(pageName);
@@ -111,8 +114,7 @@ public abstract class FinishableWizardPage extends WizardPage {
 
 	/** Creates a a new composite with the TestRoots and WatchDog logo. */
 	protected void createLogoRow(Composite composite) {
-		Composite logoContainer = UIUtils.createFullGridedComposite(composite,
-				2);
+		Composite logoContainer = UIUtils.createGridedComposite(composite, 2);
 		logoContainer
 				.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 

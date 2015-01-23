@@ -31,11 +31,12 @@ public class ProjectSliderPage extends FinishableWizardPage {
 	/** Constructor. */
 	public ProjectSliderPage() {
 		super("Time Distrubtion");
+		pageNumber = getWizard() instanceof ProjectRegistrationWizard ? 3 : 5;
 	}
 
 	@Override
 	public void createControl(Composite parent) {
-		setTitle("Register a new project (3/3)");
+		setTitle("Register a new project (" + pageNumber + "/6)");
 		setDescription("You nearly made it! Only this page left.");
 
 		Composite topComposite = UIUtils.createFullGridedComposite(parent, 1);

@@ -30,6 +30,7 @@ class UserWelcomePage extends WelcomePage {
 		inputToolTip = "The User-ID we sent you upon your first WatchDog registration.";
 		labelQuestion = "Do you want to register a new user? ";
 		currentRegistration = "User";
+		pageNumber = 1;
 	}
 
 	@Override
@@ -43,7 +44,6 @@ class UserWelcomePage extends WelcomePage {
 
 		createWatchDogDescription(topContainer);
 		createLogoRow(topContainer);
-
 		createQuestionComposite(topContainer);
 
 		setControl(topContainer);
@@ -68,13 +68,13 @@ class UserWelcomePage extends WelcomePage {
 		super.setVisible(visible);
 		if (visible) {
 			welcomeTextLabel
-					.setText("WatchDog is a free, non-commercial Eclipse plugin from TU Delft that assesses how developers make software.");
+					.setText("WatchDog is a free, open-source plugin that tells how you code your software.");
 			welcomeTextLabel.setLayoutData(new GridData(
 					GridData.FILL_HORIZONTAL));
 			welcomeTextLabel.getParent().layout();
 			welcomeTextLabel.getParent().update();
 
-			String descriptionText = "\nIt measures how you write code and tests, but never what you write! And when you run tests. Our promise: <a href=\"http://www.testroots.org/testroots_watchdog.html#details\">Your data</a> is strictly numerical, and we never do anything bad with it.\n\nWhat's in it for you? Super-amazing <a href=\"http://www.testroots.org/testroots_watchdog.html#prizes\">prizes,</a> a report on your personal development behaviour and a truly appreciated contribution to science! :-).\n";
+			String descriptionText = "It measures how you write Java code and tests. We never do anything bad with <a href=\"http://www.testroots.org/testroots_watchdog.html#details\">your purely numerical data</a>.\nYou can win amazing <a href=\"http://www.testroots.org/testroots_watchdog.html#prizes\">prizes,</a> a detailed report and our eternal gratitude! :-)\n";
 
 			linkedTextLink.setText(descriptionText);
 			linkedTextLink

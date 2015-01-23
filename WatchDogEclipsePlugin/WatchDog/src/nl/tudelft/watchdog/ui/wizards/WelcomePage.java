@@ -14,7 +14,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -90,7 +89,7 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	 * Creates and returns the question whether WatchDog Id is already known.
 	 */
 	protected Composite createQuestionComposite(final Composite parent) {
-		final Composite composite = UIUtils.createGridedComposite(parent, 3);
+		final Composite composite = UIUtils.createGridedComposite(parent, 4);
 
 		Label questionIcon = new Label(composite, SWT.NONE);
 		ImageDescriptor questionIconImageDescriptor = Activator
@@ -100,13 +99,7 @@ abstract public class WelcomePage extends FinishableWizardPage {
 
 		UIUtils.createLabel("   " + labelQuestion, composite);
 
-		final Composite radioButtons = UIUtils.createGridedComposite(composite,
-				1);
-		radioButtons.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER,
-				false, true));
-		radioButtons.setLayout(new FillLayout());
-
-		radioButtonYes = UIUtils.createRadioButton(radioButtons, "Yes");
+		radioButtonYes = UIUtils.createRadioButton(composite, "Yes");
 		radioButtonYes.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -114,7 +107,8 @@ abstract public class WelcomePage extends FinishableWizardPage {
 				setErrorMessageAndPageComplete(null);
 				removeDynamicContent(parent);
 				dynamicContent = createWelcomeComposite(parent);
-				setTitle(title + " (1/3)");
+				setTitle(title + " (" + pageNumber + "/"
+						+ (getWizard().getPageCount() - 2) + ")");
 				parent.layout();
 				parent.update();
 			}
@@ -123,8 +117,8 @@ abstract public class WelcomePage extends FinishableWizardPage {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
-		final Button radioButtonNo = UIUtils.createRadioButton(radioButtons,
-				"No, I already have an " + currentRegistration + "-ID");
+		final Button radioButtonNo = UIUtils.createRadioButton(composite,
+				"No, I have a " + currentRegistration + "-ID");
 
 		radioButtonNo.addSelectionListener(new SelectionListener() {
 
@@ -132,7 +126,8 @@ abstract public class WelcomePage extends FinishableWizardPage {
 			public void widgetSelected(SelectionEvent e) {
 				removeDynamicContent(parent);
 				dynamicContent = createLoginComposite(parent);
-				setTitle(title + " (1/1)");
+				setTitle(title + " (" + pageNumber + "/"
+						+ (getWizard().getPageCount() - 2) + ")");
 				parent.layout();
 				parent.update();
 				setPageComplete(false);
