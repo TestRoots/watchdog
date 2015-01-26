@@ -18,12 +18,13 @@ import org.eclipse.swt.widgets.Control;
  */
 public abstract class FinishableWizardPage extends WizardPage {
 
-	/** Number of the page in Wizard */
-	protected int pageNumber;
+	/** Number of the current page. */
+	protected int currentPageNumber;
 
 	/** Constructor. */
-	protected FinishableWizardPage(String pageName) {
+	protected FinishableWizardPage(String pageName, int pageNumber) {
 		super(pageName);
+		currentPageNumber = pageNumber;
 		this.setImageDescriptor(UIUtils.TU_DELFT_LOGO);
 	}
 
@@ -137,5 +138,4 @@ public abstract class FinishableWizardPage extends WizardPage {
 		}
 		return YesNoDontKnowChoice.DontKnow;
 	}
-
 }

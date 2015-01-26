@@ -253,6 +253,22 @@ public class UIUtils {
 		return watchdogLogo;
 	}
 
+	/** Creates message on success. */
+	public static void createSuccessMessage(Composite parent, String message,
+			String id) {
+		UIUtils.createLogo(parent, "resources/images/checkmark.png");
+		Composite displayInformation = createZeroMarginGridedComposite(parent,
+				2);
+		UIUtils.createLabel(message, displayInformation);
+		UIUtils.createTextField(displayInformation, id);
+	}
+
+	/** Creates message on failure. */
+	public static void createFailureMessage(Composite parent, String message) {
+		UIUtils.createLogo(parent, "resources/images/errormark.png");
+		UIUtils.createLabel(message, parent);
+	}
+
 	/** Invokes the supplied command. */
 	public static void invokeCommand(final String command) {
 		new CommandExecuter(command).execute();

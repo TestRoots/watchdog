@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Text;
 /** The Page on which new users can register themselves. */
 public class UserRegistrationPage extends RegistrationEndingPage {
 
-	private static final String USER_REGISTRATION_TEXT = "User Registration (2/6)";
+	private static final String USER_REGISTRATION_TEXT = "User Registration (2/5)";
 
 	/** The email address entered by the user. */
 	private Text emailInput;
@@ -37,8 +37,8 @@ public class UserRegistrationPage extends RegistrationEndingPage {
 	private Combo experienceDropDown;
 
 	/** Constructor. */
-	protected UserRegistrationPage() {
-		super(USER_REGISTRATION_TEXT);
+	protected UserRegistrationPage(int pageNumber) {
+		super(USER_REGISTRATION_TEXT, pageNumber);
 		setTitle(USER_REGISTRATION_TEXT);
 		setDescription("Only if you participate, can you win.");
 	}
@@ -157,14 +157,9 @@ public class UserRegistrationPage extends RegistrationEndingPage {
 		Composite innerParent = UIUtils.createZeroMarginGridedComposite(parent,
 				2);
 		if (successfulRegistration) {
-			UIUtils.createLogo(innerParent, "resources/images/checkmark.png");
-			Composite displayInformation = UIUtils
-					.createZeroMarginGridedComposite(innerParent, 2);
-			UIUtils.createLabel(messageBody, displayInformation);
-			UIUtils.createTextField(displayInformation, id);
+			UIUtils.createSuccessMessage(innerParent, messageBody, id);
 		} else {
-			UIUtils.createLogo(innerParent, "resources/images/error.png");
-			UIUtils.createLabel(messageBody, innerParent);
+			UIUtils.createFailureMessage(innerParent, messageBody);
 		}
 	}
 

@@ -1,8 +1,6 @@
 package nl.tudelft.watchdog.ui.wizards.userregistration;
 
-import nl.tudelft.watchdog.ui.preferences.Preferences;
-import nl.tudelft.watchdog.ui.util.UIUtils;
-import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
+import nl.tudelft.watchdog.ui.wizards.RegistrationWizard;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectCreatedEndingPage;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectIdEnteredEndingPage;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectRegistrationPage;
@@ -10,82 +8,64 @@ import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectSliderPage;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectWelcomePage;
 
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.jface.wizard.Wizard;
 
 /**
  * A wizard that allows to register a new user or set an existing user. Does
  * some magic tricks to enable skipping of pages and recalculation of Finish
  * button.
  */
-public class UserRegistrationWizard extends Wizard {
+public class UserRegistrationWizard extends RegistrationWizard {
 
 	/** The first page in the wizard. */
-	/* package */UserWelcomePage welcomePage;
-
-	/** When a user already exists ... */
-	/* package */UserIdEnteredEndingPage existingUserEndingPage;
+	public UserWelcomePage userWelcomePage;
 
 	/** The page with all the actual user info (name, email, etc.) on it. */
 	public UserRegistrationPage userRegistrationPage;
+
+	/** When a user already exists ... */
+	/* package */UserIdEnteredEndingPage existingUserEndingPage;
 
 	/**
 	 * The userid, either entered on this page or as retrieved by the server.
 	 */
 	/* package */String userid;
 
-	/**
-	 * The projectid, either entered on the previous wizard pages or as
-	 * retrieved by the server.
-	 */
-	public String projectId;
-
-	private ProjectWelcomePage welcomeProjectPage;
-	private IWizardPage existingProjectIdPage;
-	private ProjectSliderPage projectSliderPage;
-	private ProjectCreatedEndingPage projectedCreatedPage;
-	private ProjectRegistrationPage projectRegistrationPage;
-
 	@Override
 	public void addPages() {
-		welcomePage = new UserWelcomePage();
-		addPage(welcomePage);
-		userRegistrationPage = new UserRegistrationPage();
+		userWelcomePage = new UserWelcomePage(1);
+		addPage(userWelcomePage);
+		userRegistrationPage = new UserRegistrationPage(2);
 		addPage(userRegistrationPage);
-		existingUserEndingPage = new UserIdEnteredEndingPage();
+		existingUserEndingPage = new UserIdEnteredEndingPage(2);
 		addPage(existingUserEndingPage);
-		welcomeProjectPage = new ProjectWelcomePage();
-		addPage(welcomeProjectPage);
-		projectRegistrationPage = new ProjectRegistrationPage();
-		addPage(projectRegistrationPage);
-		projectSliderPage = new ProjectSliderPage();
-		addPage(projectSliderPage);
-		existingProjectIdPage = new ProjectIdEnteredEndingPage();
+		projectWelcomePage = new ProjectWelcomePage(2);
+		addPage(projectWelcomePage);
+		existingProjectIdPage = new ProjectIdEnteredEndingPage(3);
 		addPage(existingProjectIdPage);
-		projectedCreatedPage = new ProjectCreatedEndingPage();
+		projectRegistrationPage = new ProjectRegistrationPage(3);
+		addPage(projectRegistrationPage);
+		projectSliderPage = new ProjectSliderPage(4);
+		addPage(projectSliderPage);
+		projectedCreatedPage = new ProjectCreatedEndingPage(5);
 		addPage(projectedCreatedPage);
-	}
-
-	@Override
-	public boolean performFinish() {
-		Preferences.getInstance().registerWorkspaceProject(
-				UIUtils.getWorkspaceName(), projectId);
-		return true;
+		this.totalPageNumber = 5;
 	}
 
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		IWizardPage currentPage = getContainer().getCurrentPage();
-		if (currentPage == welcomePage && !welcomePage.getRegisterNewId()) {
+		if (currentPage == userWelcomePage
+				&& !userWelcomePage.getRegisterNewId()) {
 			return existingUserEndingPage;
 		}
 		if (currentPage == existingUserEndingPage) {
-			return welcomeProjectPage;
+			return projectWelcomePage;
 		}
 		if (currentPage == userRegistrationPage) {
-			return welcomeProjectPage;
+			return projectRegistrationPage;
 		}
-		if (currentPage == welcomeProjectPage
-				&& !welcomeProjectPage.getRegisterNewId()) {
+		if (currentPage == projectWelcomePage
+				&& !projectWelcomePage.getRegisterNewId()) {
 			return existingProjectIdPage;
 		}
 		if (currentPage == existingProjectIdPage) {
@@ -105,24 +85,21 @@ public class UserRegistrationWizard extends Wizard {
 	public IWizardPage getPreviousPage(IWizardPage page) {
 		IWizardPage currentPage = getContainer().getCurrentPage();
 		if (currentPage == existingUserEndingPage
-				&& !welcomePage.getRegisterNewId()) {
-			return welcomePage;
+				&& !userWelcomePage.getRegisterNewId()) {
+			return userWelcomePage;
 		}
-		if (currentPage == welcomeProjectPage) {
-			return null;
+		if (currentPage == projectWelcomePage) {
+			return existingUserEndingPage;
 		}
 		if (currentPage == existingProjectIdPage
-				&& !welcomeProjectPage.getRegisterNewId()) {
-			return welcomeProjectPage;
+				&& !projectWelcomePage.getRegisterNewId()) {
+			return projectWelcomePage;
+		}
+		if (currentPage == projectRegistrationPage) {
+			return projectWelcomePage.getRegisterNewId() ? projectWelcomePage
+					: null;
 		}
 		return super.getPreviousPage(page);
-	}
-
-	@Override
-	public boolean canFinish() {
-		FinishableWizardPage currentPage = (FinishableWizardPage) getContainer()
-				.getCurrentPage();
-		return currentPage.canFinish();
 	}
 
 }

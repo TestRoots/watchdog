@@ -27,7 +27,7 @@ import org.eclipse.ui.PlatformUI;
  * The first page of a Wizard. It asks an initial yes-or no question. Depending
  * on the answer, it dynamically display an input field or an introduction page.
  */
-abstract public class WelcomePage extends FinishableWizardPage {
+public abstract class WelcomePage extends FinishableWizardPage {
 
 	/** The welcome title. To be changed by subclasses. */
 	protected String welcomeTitle;
@@ -64,12 +64,12 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	 */
 	private Text userInput;
 
-	/** The no button from the question. */
+	/** The yes button from the question. */
 	private Button radioButtonYes;
 
 	/** Constructor. */
-	public WelcomePage(String title) {
-		super(title);
+	public WelcomePage(String title, int pageNumber) {
+		super(title, pageNumber);
 		setTitle(title);
 		this.title = title;
 	}
@@ -97,7 +97,7 @@ abstract public class WelcomePage extends FinishableWizardPage {
 		Image questionIconImage = questionIconImageDescriptor.createImage();
 		questionIcon.setImage(questionIconImage);
 
-		UIUtils.createLabel("   " + labelQuestion, composite);
+		UIUtils.createBoldLabel("   " + labelQuestion, composite);
 
 		radioButtonYes = UIUtils.createRadioButton(composite, "Yes");
 		radioButtonYes.addSelectionListener(new SelectionListener() {
@@ -107,8 +107,12 @@ abstract public class WelcomePage extends FinishableWizardPage {
 				setErrorMessageAndPageComplete(null);
 				removeDynamicContent(parent);
 				dynamicContent = createWelcomeComposite(parent);
-				setTitle(title + " (" + pageNumber + "/"
-						+ (getWizard().getPageCount() - 2) + ")");
+				setTitle(title
+						+ " ("
+						+ currentPageNumber
+						+ "/"
+						+ ((RegistrationWizard) getWizard())
+								.getTotalPageNumber() + ")");
 				parent.layout();
 				parent.update();
 			}
@@ -126,8 +130,11 @@ abstract public class WelcomePage extends FinishableWizardPage {
 			public void widgetSelected(SelectionEvent e) {
 				removeDynamicContent(parent);
 				dynamicContent = createLoginComposite(parent);
-				setTitle(title + " (" + pageNumber + "/"
-						+ (getWizard().getPageCount() - 2) + ")");
+				int total = currentRegistration.equals("User") ? ((RegistrationWizard) getWizard())
+						.getTotalPageNumber()
+						: ((RegistrationWizard) getWizard())
+								.getTotalPageNumber() - 2;
+				setTitle(title + " (" + currentPageNumber + "/" + total + ")");
 				parent.layout();
 				parent.update();
 				setPageComplete(false);
@@ -215,7 +222,7 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	}
 
 	/** @return The id entered by the user. */
-	public/* package */String getId() {
+	public String getId() {
 		return userInput.getText();
 	}
 

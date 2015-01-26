@@ -25,8 +25,8 @@ public abstract class RegistrationEndingPage extends FinishableWizardPage {
 	protected String messageBody;
 
 	/** Constructor. */
-	protected RegistrationEndingPage(String pageName) {
-		super(pageName);
+	protected RegistrationEndingPage(String pageName, int pageNumber) {
+		super(pageName, pageNumber);
 	}
 
 	/** Template method that performs the registration. */

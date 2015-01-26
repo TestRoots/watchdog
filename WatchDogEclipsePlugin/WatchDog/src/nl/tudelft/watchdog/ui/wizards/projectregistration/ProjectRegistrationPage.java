@@ -3,9 +3,11 @@ package nl.tudelft.watchdog.ui.wizards.projectregistration;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 import nl.tudelft.watchdog.ui.wizards.FormValidationListener;
+import nl.tudelft.watchdog.ui.wizards.RegistrationWizard;
 import nl.tudelft.watchdog.ui.wizards.YesNoDontKnowChoice;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
@@ -46,14 +48,14 @@ public class ProjectRegistrationPage extends FinishableWizardPage {
 	Button noSingleProjectButton;
 
 	/** Constructor. */
-	public ProjectRegistrationPage() {
-		super("Register Project");
-		pageNumber = getWizard() instanceof ProjectRegistrationWizard ? 2 : 4;
+	public ProjectRegistrationPage(int pageNumber) {
+		super("Register Project", pageNumber);
 	}
 
 	@Override
 	public void createControl(Composite parent) {
-		setTitle(TITLE + " (" + pageNumber + "/6)");
+		setTitle(TITLE + " (" + currentPageNumber + "/"
+				+ ((RegistrationWizard) getWizard()).getTotalPageNumber() + ")");
 		setDescription("Create a new WatchDog Project for this workspace!");
 		Composite topComposite = createComposite(parent);
 		setControl(topComposite);
@@ -140,9 +142,15 @@ public class ProjectRegistrationPage extends FinishableWizardPage {
 			setErrorMessageAndPageComplete(null);
 		}
 
-		setTitle(TITLE + " (" + pageNumber + "/6)");
+		setTitle(TITLE + " (" + currentPageNumber + "/"
+				+ ((RegistrationWizard) getWizard()).getTotalPageNumber() + ")");
 		if (shouldSkipProjectSliderPage()) {
-			setTitle(TITLE + " (" + pageNumber + "/5)");
+			setTitle(TITLE
+					+ " ("
+					+ currentPageNumber
+					+ "/"
+					+ (((RegistrationWizard) getWizard()).getTotalPageNumber() - 1)
+					+ ")");
 		}
 		getWizard().getContainer().updateButtons();
 	}
@@ -150,6 +158,11 @@ public class ProjectRegistrationPage extends FinishableWizardPage {
 	private boolean inputFieldDoesNotHaveMinimumSensibleInput(Text input) {
 		return WatchDogUtils.isEmptyOrHasOnlyWhitespaces(input.getText())
 				|| input.getText().length() < 3;
+	}
+
+	@Override
+	public IWizardPage getPreviousPage() {
+		return getWizard().getPreviousPage(this);
 	}
 
 	@Override

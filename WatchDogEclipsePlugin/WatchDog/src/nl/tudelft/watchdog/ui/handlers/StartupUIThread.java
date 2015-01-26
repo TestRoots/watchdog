@@ -23,6 +23,9 @@ public class StartupUIThread implements Runnable {
 	/** The preferences. */
 	private Preferences preferences;
 
+	/** Whether user has cancelled first registration. */
+	private boolean userRegistrationCancelled = false;
+
 	/** Constructor. */
 	public StartupUIThread(Preferences preferences) {
 		this.preferences = preferences;
@@ -38,8 +41,9 @@ public class StartupUIThread implements Runnable {
 			displayUserRegistrationWizard();
 		}
 
-		if (!WatchDogUtils.isEmpty(preferences.getUserid())) {
-			// In case the user aborted the preference dialog with cancel,
+		if (!WatchDogUtils.isEmpty(preferences.getUserid())
+				&& !userRegistrationCancelled) {
+			// In case the user aborted the user registration with cancel,
 			// we don't want him to have to answer whether he wants WatchDog
 			// to be active for this workspace -- it's obvious that he does
 			// not want to be bothered for the moment.
@@ -57,6 +61,7 @@ public class StartupUIThread implements Runnable {
 			if (statusCode == Window.CANCEL) {
 				MessageDialog.openWarning(null, "WatchDog not active!",
 						UIUtils.WATCHDOG_WARNING);
+				userRegistrationCancelled = true;
 			}
 		} catch (ExecutionException exception) {
 			// when the new user wizard cannot be displayed, new

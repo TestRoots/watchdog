@@ -11,22 +11,24 @@ import nl.tudelft.watchdog.ui.wizards.IdEnteredEndingPage;
 class UserIdEnteredEndingPage extends IdEnteredEndingPage {
 
 	/** Constructor. */
-	public UserIdEnteredEndingPage() {
-		super("user");
-		pageNumber = 2;
+	public UserIdEnteredEndingPage(int pageNumber) {
+		super("user", pageNumber);
 	}
 
+	@Override
 	protected String buildTransferURLforId() {
 		return NetworkUtils.buildExistingUserURL(id);
 	}
 
+	@Override
+	protected String getId() {
+		return ((UserRegistrationWizard) getWizard()).userWelcomePage.getId();
+	}
+
+	@Override
 	protected void setId() {
 		((UserRegistrationWizard) getWizard()).userid = id;
 		Preferences.getInstance().setUserid(id);
-	}
-
-	protected String getId() {
-		return ((UserWelcomePage) getWizard().getStartingPage()).getId();
 	}
 
 	@Override

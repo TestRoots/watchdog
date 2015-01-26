@@ -6,6 +6,7 @@ import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.Project;
 import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPage;
+import nl.tudelft.watchdog.ui.wizards.RegistrationWizard;
 import nl.tudelft.watchdog.ui.wizards.userregistration.UserRegistrationPage;
 import nl.tudelft.watchdog.ui.wizards.userregistration.UserRegistrationWizard;
 import nl.tudelft.watchdog.util.WatchDogLogger;
@@ -27,8 +28,8 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPage {
 	private String concludingMessage;
 
 	/** Constructor. */
-	public ProjectCreatedEndingPage() {
-		super("Project-ID created.");
+	public ProjectCreatedEndingPage(int pageNumber) {
+		super("Project-ID created.", pageNumber);
 		concludingMessage = "You can change these and other WatchDog settings in the Eclipse preferences."
 				+ ProjectIdEnteredEndingPage.ENCOURAGING_END_MESSAGE;
 	}
@@ -78,11 +79,8 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPage {
 		}
 
 		successfulRegistration = true;
-		if (isThisProjectWizzard()) {
-			((ProjectRegistrationWizard) getWizard()).projectId = id;
-		} else {
-			((UserRegistrationWizard) getWizard()).projectId = id;
-		}
+
+		((RegistrationWizard) getWizard()).setProjectId(id);
 
 		messageTitle = "New project registered!";
 		messageBody = "Your new project id is registered: ";
@@ -109,11 +107,14 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPage {
 			createProjectRegistrationSummary();
 			return;
 		} else {
-			UserRegistrationPage userRegistrationPage = ((UserRegistrationWizard) getWizard()).userRegistrationPage;
+			UserRegistrationWizard wizard = (UserRegistrationWizard) getWizard();
+			UserRegistrationPage userRegistrationPage = wizard.userRegistrationPage;
 			dynamicComposite = UIUtils.createGridedComposite(topComposite, 1);
 			dynamicComposite.setLayoutData(UIUtils.createFullGridUsageData());
-			userRegistrationPage
-					.createUserRegistrationSummary(dynamicComposite);
+			if (wizard.userWelcomePage.getRegisterNewId()) {
+				userRegistrationPage
+						.createUserRegistrationSummary(dynamicComposite);
+			}
 			createProjectRegistrationSummary();
 			return;
 		}
@@ -125,15 +126,10 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPage {
 		Composite innerParent = UIUtils.createZeroMarginGridedComposite(
 				dynamicComposite, 2);
 		if (successfulRegistration) {
-			UIUtils.createLogo(innerParent, "resources/images/checkmark.png");
-			Composite displayInformation = UIUtils
-					.createZeroMarginGridedComposite(innerParent, 2);
-			UIUtils.createLabel(messageBody, displayInformation);
-			UIUtils.createTextField(displayInformation, id);
+			UIUtils.createSuccessMessage(innerParent, messageBody, id);
 			UIUtils.createLabel(concludingMessage, dynamicComposite);
 		} else {
-			UIUtils.createLogo(innerParent, "resources/images/error.png");
-			UIUtils.createLabel(messageBody, innerParent);
+			UIUtils.createFailureMessage(innerParent, messageBody);
 		}
 	}
 

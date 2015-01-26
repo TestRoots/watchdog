@@ -2,8 +2,7 @@ package nl.tudelft.watchdog.ui.wizards.projectregistration;
 
 import nl.tudelft.watchdog.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.ui.wizards.IdEnteredEndingPage;
-import nl.tudelft.watchdog.ui.wizards.WelcomePage;
-import nl.tudelft.watchdog.ui.wizards.userregistration.UserRegistrationWizard;
+import nl.tudelft.watchdog.ui.wizards.RegistrationWizard;
 
 /**
  * Possible finishing page in the wizard. If the user exists on the server, or
@@ -12,18 +11,8 @@ import nl.tudelft.watchdog.ui.wizards.userregistration.UserRegistrationWizard;
 public class ProjectIdEnteredEndingPage extends IdEnteredEndingPage {
 
 	/** Constructor. */
-	public ProjectIdEnteredEndingPage() {
-		super("project");
-		pageNumber = getWizard() instanceof ProjectRegistrationWizard ? 2 : 4;
-	}
-
-	@Override
-	protected String getId() {
-		if (getWizard() instanceof ProjectRegistrationWizard) {
-			return ((ProjectWelcomePage) getWizard().getStartingPage()).getId();
-		} else {
-			return ((WelcomePage) getWizard().getPreviousPage(this)).getId();
-		}
+	public ProjectIdEnteredEndingPage(int pageNumber) {
+		super("project", pageNumber);
 	}
 
 	@Override
@@ -32,12 +21,13 @@ public class ProjectIdEnteredEndingPage extends IdEnteredEndingPage {
 	}
 
 	@Override
+	protected String getId() {
+		return ((RegistrationWizard) getWizard()).projectWelcomePage.getId();
+	}
+
+	@Override
 	protected void setId() {
-		if (getWizard() instanceof ProjectRegistrationWizard) {
-			((ProjectRegistrationWizard) getWizard()).projectId = id;
-		} else {
-			((UserRegistrationWizard) getWizard()).projectId = id;
-		}
+		((RegistrationWizard) getWizard()).setProjectId(id);
 	}
 
 }

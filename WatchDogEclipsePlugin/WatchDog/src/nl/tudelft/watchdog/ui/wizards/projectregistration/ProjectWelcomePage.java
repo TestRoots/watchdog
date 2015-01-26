@@ -12,8 +12,8 @@ import org.eclipse.jface.wizard.IWizardPage;
 public class ProjectWelcomePage extends WelcomePage {
 
 	/** Constructor. */
-	public ProjectWelcomePage() {
-		super("Welcome to WatchDog Project Registration!");
+	public ProjectWelcomePage(int pageNumber) {
+		super("Welcome to WatchDog Project Registration!", pageNumber);
 		setDescription("This wizard guides you through the setup of a WatchDog Project. ");
 		labelQuestion = "Do you want to make a new registration of this Project? ";
 		welcomeTitle = "Registering a new project takes just 2 minutes, and you are done. ";
@@ -21,7 +21,6 @@ public class ProjectWelcomePage extends WelcomePage {
 		labelText = "Your WatchDog Project ID: ";
 		inputToolTip = "The Project ID we sent you upon your Project registration.";
 		currentRegistration = "Project";
-		pageNumber = getWizard() instanceof ProjectRegistrationWizard ? 1 : 3;
 	}
 
 	@Override
@@ -31,6 +30,6 @@ public class ProjectWelcomePage extends WelcomePage {
 
 	@Override
 	public IWizardPage getPreviousPage() {
-		return null;
+		return getWizard().getPreviousPage(this);
 	}
 }
