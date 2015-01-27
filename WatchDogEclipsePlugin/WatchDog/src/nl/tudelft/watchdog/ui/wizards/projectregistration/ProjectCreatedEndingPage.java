@@ -121,15 +121,13 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPage {
 	}
 
 	private void createProjectRegistrationSummary() {
-		UIUtils.createBoldLabel(messageTitle, dynamicComposite);
-		setTitle(windowTitle);
-		Composite innerParent = UIUtils.createZeroMarginGridedComposite(
-				dynamicComposite, 2);
 		if (successfulRegistration) {
-			UIUtils.createSuccessMessage(innerParent, messageBody, id);
+			UIUtils.createSuccessMessage(dynamicComposite, messageTitle,
+					messageBody, id);
 			UIUtils.createLabel(concludingMessage, dynamicComposite);
 		} else {
-			UIUtils.createFailureMessage(innerParent, messageBody);
+			UIUtils.createFailureMessage(dynamicComposite, messageTitle,
+					messageBody);
 		}
 	}
 

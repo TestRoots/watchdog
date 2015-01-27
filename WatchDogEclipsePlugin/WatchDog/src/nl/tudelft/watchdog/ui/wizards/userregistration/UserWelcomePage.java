@@ -24,7 +24,7 @@ public class UserWelcomePage extends WelcomePage {
 	UserWelcomePage(int pageNumber) {
 		super("Welcome to WatchDog!", pageNumber);
 		setDescription("This wizard guides you through the setup of a WatchDog User.");
-		welcomeTitle = "Welcome! This registrations takes just 3 minutes!";
+		welcomeTitle = "Welcome! Registration is fun and takes just 3 minutes!";
 		welcomeText = "";
 		labelText = "Your WatchDog User-ID: ";
 		inputToolTip = "The User-ID we sent you upon your first WatchDog registration.";
@@ -73,7 +73,7 @@ public class UserWelcomePage extends WelcomePage {
 			welcomeTextLabel.getParent().layout();
 			welcomeTextLabel.getParent().update();
 
-			String descriptionText = "It measures how you write Java code and tests. We never do anything bad with <a href=\"http://www.testroots.org/testroots_watchdog.html#details\">your purely numerical data</a>.\nYou can win amazing <a href=\"http://www.testroots.org/testroots_watchdog.html#prizes\">prizes,</a> a detailed report and our eternal gratitude! :-)\n";
+			String descriptionText = "It measures how you write Java code and tests. We never do anything bad with <a href=\"http://www.testroots.org/testroots_watchdog.html#details\">your purely numerical data</a>.\nYou can win <a href=\"http://www.testroots.org/testroots_watchdog.html#prizes\">amazing prizes</a>, <a href=\"http://www.testroots.org/reports/sample_watchdog_report.pdf\">a detailed report on your development behaviour</a> and our eternal gratitude! :-)\n";
 
 			linkedTextLink.setText(descriptionText);
 			linkedTextLink

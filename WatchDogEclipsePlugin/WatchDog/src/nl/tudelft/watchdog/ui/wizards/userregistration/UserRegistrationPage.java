@@ -153,13 +153,10 @@ public class UserRegistrationPage extends RegistrationEndingPage {
 	 * Creates report of the user registration to the {@link Composite} parent.
 	 */
 	public void createUserRegistrationSummary(Composite parent) {
-		UIUtils.createBoldLabel(messageTitle, parent);
-		Composite innerParent = UIUtils.createZeroMarginGridedComposite(parent,
-				2);
 		if (successfulRegistration) {
-			UIUtils.createSuccessMessage(innerParent, messageBody, id);
+			UIUtils.createSuccessMessage(parent, messageTitle, messageBody, id);
 		} else {
-			UIUtils.createFailureMessage(innerParent, messageBody);
+			UIUtils.createFailureMessage(parent, messageTitle, messageBody);
 		}
 	}
 

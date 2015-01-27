@@ -104,11 +104,9 @@ public abstract class IdEnteredEndingPage extends FinishableWizardPage {
 	private Composite createSuccessWizzard(Composite parent) {
 		Composite composite = UIUtils.createGridedComposite(parent, 1);
 		composite.setLayoutData(UIUtils.createFullGridUsageData());
-		UIUtils.createBoldLabel("Everything worked perfectly.", composite);
+		String title = "Everything worked perfectly.";
 		String message = "You are using an existing " + idType + " id: ";
-		Composite innerParent = UIUtils.createZeroMarginGridedComposite(
-				composite, 2);
-		UIUtils.createSuccessMessage(innerParent, message, id);
+		UIUtils.createSuccessMessage(composite, title, message, id);
 		UIUtils.createWrappingLabel(
 				"Your "
 						+ idType
@@ -121,12 +119,11 @@ public abstract class IdEnteredEndingPage extends FinishableWizardPage {
 	private Composite createIdNotFoundComposite(Composite parent) {
 		Composite composite = UIUtils.createGridedComposite(parent, 1);
 		composite.setLayoutData(UIUtils.createFullGridUsageData());
+		String title = "Problem registering existing user!";
 		String message = idType.substring(0, 1).toUpperCase()
 				.concat(idType.substring(1))
 				+ " not found!";
-		Composite innerParent = UIUtils.createZeroMarginGridedComposite(
-				composite, 2);
-		UIUtils.createFailureMessage(innerParent, message);
+		UIUtils.createFailureMessage(composite, title, message);
 		UIUtils.createWrappingLabel(
 				"We could not find the "
 						+ idType

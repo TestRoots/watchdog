@@ -254,19 +254,26 @@ public class UIUtils {
 	}
 
 	/** Creates message on success. */
-	public static void createSuccessMessage(Composite parent, String message,
-			String id) {
-		UIUtils.createLogo(parent, "resources/images/checkmark.png");
-		Composite displayInformation = createZeroMarginGridedComposite(parent,
+	public static void createSuccessMessage(Composite parent, String title,
+			String message, String id) {
+		UIUtils.createBoldLabel(title, parent);
+		Composite innerParent = UIUtils.createZeroMarginGridedComposite(parent,
 				2);
+		UIUtils.createLogo(innerParent, "resources/images/checkmark.png");
+		Composite displayInformation = createZeroMarginGridedComposite(
+				innerParent, 2);
 		UIUtils.createLabel(message, displayInformation);
 		UIUtils.createTextField(displayInformation, id);
 	}
 
 	/** Creates message on failure. */
-	public static void createFailureMessage(Composite parent, String message) {
-		UIUtils.createLogo(parent, "resources/images/errormark.png");
-		UIUtils.createLabel(message, parent);
+	public static void createFailureMessage(Composite parent, String title,
+			String message) {
+		UIUtils.createBoldLabel(title, parent);
+		Composite innerParent = UIUtils.createZeroMarginGridedComposite(parent,
+				2);
+		UIUtils.createLogo(innerParent, "resources/images/errormark.png");
+		UIUtils.createLabel(message, innerParent);
 	}
 
 	/** Invokes the supplied command. */

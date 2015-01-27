@@ -72,7 +72,7 @@ public class ProjectRegistrationPage extends FinishableWizardPage {
 		Composite composite = UIUtils.createGridedComposite(topComposite, 2);
 		composite.setLayoutData(UIUtils.createFullGridUsageData());
 		noSingleProjectComposite = createSimpleYesNoQuestion(
-				"All projects in this workspace belong to one ('larger') project? ",
+				"Do all Eclipse projects in this workspace belong to one 'larger' project? ",
 				composite);
 		noSingleProjectButton = (Button) noSingleProjectComposite.getChildren()[1];
 		final Button yesSingleProjectButton = (Button) noSingleProjectComposite

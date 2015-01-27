@@ -41,6 +41,8 @@ public abstract class RegistrationWizard extends Wizard {
 	public boolean performFinish() {
 		Preferences.getInstance().registerWorkspaceProject(
 				UIUtils.getWorkspaceName(), projectId);
+		Preferences.getInstance().registerWorkspaceUse(
+				UIUtils.getWorkspaceName(), true);
 		return true;
 	}
 
