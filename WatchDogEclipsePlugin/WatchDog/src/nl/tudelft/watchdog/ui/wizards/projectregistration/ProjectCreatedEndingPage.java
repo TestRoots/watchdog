@@ -129,6 +129,7 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPage {
 		} else {
 			UIUtils.createFailureMessage(dynamicComposite, messageTitle,
 					messageBody);
+			setPageComplete(false);
 		}
 	}
 
