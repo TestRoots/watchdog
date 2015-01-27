@@ -101,6 +101,7 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPage {
 	}
 
 	private void createPageContent() {
+		setTitle(windowTitle);
 		if (isThisProjectWizzard()) {
 			dynamicComposite = UIUtils.createGridedComposite(topComposite, 1);
 			dynamicComposite.setLayoutData(UIUtils.createFullGridUsageData());
