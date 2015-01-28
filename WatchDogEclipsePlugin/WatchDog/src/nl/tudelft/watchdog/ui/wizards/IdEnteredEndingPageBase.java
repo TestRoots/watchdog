@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Composite;
  * server is not reachable, the user can exit here. Can be subclassed with the
  * particular type of id.
  */
-public abstract class IdEnteredEndingPage extends FinishableWizardPage {
+public abstract class IdEnteredEndingPageBase extends FinishableWizardPage {
 
 	/** An encouraging message for the end of a sentence. */
 	public static final String ENCOURAGING_END_MESSAGE = "\n\nHappy hours-collecting and prize-winning with WatchDog! \nThe longer you use WatchDog, the higher your chances of winning!";
@@ -30,8 +30,8 @@ public abstract class IdEnteredEndingPage extends FinishableWizardPage {
 	private String idType;
 
 	/** Constructor. */
-	protected IdEnteredEndingPage(String idType) {
-		super("Existing " + idType + " page");
+	protected IdEnteredEndingPageBase(String idType, int pageNumber) {
+		super("Existing " + idType + " page", pageNumber);
 		this.idType = idType;
 	}
 
@@ -47,9 +47,9 @@ public abstract class IdEnteredEndingPage extends FinishableWizardPage {
 		case SUCCESSFUL:
 			setId();
 			setTitle("Welcome back!");
-			setDescription("Thanks for using your existing " + idType + "!");
+			setDescription("Thanks for using your existing " + idType + "-ID!");
 			setPageComplete(true);
-			dynamicComposite = createSuccessWizzard(topComposite);
+			dynamicComposite = createSuccessfulExistingID(topComposite);
 			break;
 		case UNSUCCESSFUL:
 		case NETWORK_ERROR:
@@ -101,17 +101,17 @@ public abstract class IdEnteredEndingPage extends FinishableWizardPage {
 	 * Creates and returns a composite in case of successful verification of
 	 * user existence.
 	 */
-	private Composite createSuccessWizzard(Composite parent) {
+	private Composite createSuccessfulExistingID(Composite parent) {
 		Composite composite = UIUtils.createGridedComposite(parent, 1);
 		composite.setLayoutData(UIUtils.createFullGridUsageData());
-		UIUtils.createBoldLabel("Everything worked perfectly.", composite);
+		String title = "Everything worked perfectly.";
+		String message = "You are using an existing " + idType + " id: ";
+		FinishableWizardPage.createSuccessMessage(composite, title, message, id);
 		UIUtils.createWrappingLabel(
 				"Your "
 						+ idType
-						+ " id  "
-						+ id
-						+ "  has been registered with this Eclipse installation. You can change the id and other WatchDog settings in the Eclipse preferences."
-						+ ENCOURAGING_END_MESSAGE, composite);
+						+ " id has been registered with this Eclipse installation. You can change the id and other WatchDog settings in the Eclipse preferences.",
+				composite);
 		return composite;
 	}
 
@@ -119,16 +119,15 @@ public abstract class IdEnteredEndingPage extends FinishableWizardPage {
 	private Composite createIdNotFoundComposite(Composite parent) {
 		Composite composite = UIUtils.createGridedComposite(parent, 1);
 		composite.setLayoutData(UIUtils.createFullGridUsageData());
-		UIUtils.createBoldLabel(
-				idType.substring(0, 1).toUpperCase()
-						.concat(idType.substring(1))
-						+ " not found!", composite);
+		String title = "Problem registering existing user!";
+		String message = idType.substring(0, 1).toUpperCase()
+				.concat(idType.substring(1))
+				+ " not found!";
+		FinishableWizardPage.createFailureMessage(composite, title, message);
 		UIUtils.createWrappingLabel(
 				"We could not find the "
 						+ idType
-						+ " id  "
-						+ id
-						+ "  on our server. Did you miss-type the id? Or did something go wrong while copy-and-pasting your user id? Please, go back and correct it or retry.",
+						+ " id on our server. Did you miss-type the id? Or did something go wrong while copy-and-pasting your user id? Please, go back and correct it or retry.",
 				composite);
 		return composite;
 	}

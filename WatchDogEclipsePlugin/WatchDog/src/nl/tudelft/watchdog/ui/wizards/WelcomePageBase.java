@@ -14,7 +14,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -28,7 +27,7 @@ import org.eclipse.ui.PlatformUI;
  * The first page of a Wizard. It asks an initial yes-or no question. Depending
  * on the answer, it dynamically display an input field or an introduction page.
  */
-abstract public class WelcomePage extends FinishableWizardPage {
+public abstract class WelcomePageBase extends FinishableWizardPage {
 
 	/** The welcome title. To be changed by subclasses. */
 	protected String welcomeTitle;
@@ -44,6 +43,9 @@ abstract public class WelcomePage extends FinishableWizardPage {
 
 	/** The label question. To be changed by subclasses. */
 	protected String labelQuestion;
+
+	/** Whether it is User or Project registration. */
+	protected String currentRegistration;
 
 	private String title;
 
@@ -62,12 +64,12 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	 */
 	private Text userInput;
 
-	/** The no button from the question. */
-	private Button radioButtonNo;
+	/** The yes button from the question. */
+	private Button radioButtonYes;
 
 	/** Constructor. */
-	public WelcomePage(String title) {
-		super(title);
+	public WelcomePageBase(String title, int pageNumber) {
+		super(title, pageNumber);
 		setTitle(title);
 		this.title = title;
 	}
@@ -86,8 +88,8 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	/**
 	 * Creates and returns the question whether WatchDog Id is already known.
 	 */
-	private Composite createQuestionComposite(final Composite parent) {
-		final Composite composite = UIUtils.createGridedComposite(parent, 3);
+	protected Composite createQuestionComposite(final Composite parent) {
+		final Composite composite = UIUtils.createGridedComposite(parent, 4);
 
 		Label questionIcon = new Label(composite, SWT.NONE);
 		ImageDescriptor questionIconImageDescriptor = Activator
@@ -95,43 +97,47 @@ abstract public class WelcomePage extends FinishableWizardPage {
 		Image questionIconImage = questionIconImageDescriptor.createImage();
 		questionIcon.setImage(questionIconImage);
 
-		UIUtils.createLabel("   " + labelQuestion, composite);
+		UIUtils.createBoldLabel("   " + labelQuestion, composite);
 
-		final Composite radioButtons = UIUtils.createFullGridedComposite(
-				composite, 1);
-		radioButtons.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER,
-				false, true));
-		radioButtons.setLayout(new FillLayout());
-		final Button radioButtonYes = UIUtils.createRadioButton(radioButtons,
-				"Yes");
+		radioButtonYes = UIUtils.createRadioButton(composite, "Yes");
 		radioButtonYes.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				removeDynamicContent(parent);
-				dynamicContent = createLoginComposite(parent);
-				setTitle(title + " (1/1)");
-				parent.layout();
-				parent.update();
-				setPageComplete(false);
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-
-		radioButtonNo = UIUtils.createRadioButton(radioButtons, "No");
-		radioButtonNo.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setErrorMessageAndPageComplete(null);
 				removeDynamicContent(parent);
 				dynamicContent = createWelcomeComposite(parent);
-				setTitle(title + " (1/3)");
+				setTitle(title
+						+ " ("
+						+ currentPageNumber
+						+ "/"
+						+ ((RegistrationWizardBase) getWizard())
+								.getTotalPages() + ")");
 				parent.layout();
 				parent.update();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		final Button radioButtonNo = UIUtils.createRadioButton(composite,
+				"No, I have a " + currentRegistration + "-ID");
+
+		radioButtonNo.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				removeDynamicContent(parent);
+				dynamicContent = createLoginComposite(parent);
+				int total = currentRegistration.equals("User") ? ((RegistrationWizardBase) getWizard())
+						.getTotalPages()
+						: ((RegistrationWizardBase) getWizard())
+								.getTotalPages() - 2;
+				setTitle(title + " (" + currentPageNumber + "/" + total + ")");
+				parent.layout();
+				parent.update();
+				setPageComplete(false);
 			}
 
 			@Override
@@ -216,7 +222,7 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	}
 
 	/** @return The id entered by the user. */
-	public/* package */String getId() {
+	public String getId() {
 		return userInput.getText();
 	}
 
@@ -225,7 +231,7 @@ abstract public class WelcomePage extends FinishableWizardPage {
 	 *         that case, <code>false</code> otherwise).
 	 */
 	public boolean getRegisterNewId() {
-		return radioButtonNo.getSelection();
+		return radioButtonYes.getSelection();
 	}
 
 	@Override

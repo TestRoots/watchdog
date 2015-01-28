@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.ui.wizards.projectregistration;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 import nl.tudelft.watchdog.ui.wizards.FormValidationListener;
+import nl.tudelft.watchdog.ui.wizards.RegistrationWizardBase;
 import nl.tudelft.watchdog.ui.wizards.YesNoDontKnowChoice;
 
 import org.eclipse.swt.SWT;
@@ -29,13 +30,14 @@ public class ProjectSliderPage extends FinishableWizardPage {
 	protected Scale percentageProductionSlider;
 
 	/** Constructor. */
-	protected ProjectSliderPage() {
-		super("Time Distrubtion");
+	public ProjectSliderPage(int pageNumber) {
+		super("Time Distrubtion", pageNumber);
 	}
 
 	@Override
 	public void createControl(Composite parent) {
-		setTitle("Register a new project (3/3)");
+		setTitle("Register a new project (" + currentPageNumber + "/"
+				+ ((RegistrationWizardBase) getWizard()).getTotalPages() + ")");
 		setDescription("You nearly made it! Only this page left.");
 
 		Composite topComposite = UIUtils.createFullGridedComposite(parent, 1);
