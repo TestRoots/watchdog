@@ -1,8 +1,6 @@
 package nl.tudelft.watchdog.ui.wizards.projectregistration;
 
-import nl.tudelft.watchdog.ui.handlers.StartUpHandler;
 import nl.tudelft.watchdog.ui.wizards.RegistrationWizardBase;
-import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.jface.wizard.IWizardPage;
 
@@ -42,14 +40,5 @@ public class ProjectRegistrationWizard extends RegistrationWizardBase {
 			return projectedCreatedPage;
 		}
 		return super.getNextPage(page);
-	}
-
-	@Override
-	public boolean performFinish() {
-		boolean result = super.performFinish();
-		if (!WatchDogGlobals.isActive) {
-			StartUpHandler.startWatchDog();
-		}
-		return result;
 	}
 }
