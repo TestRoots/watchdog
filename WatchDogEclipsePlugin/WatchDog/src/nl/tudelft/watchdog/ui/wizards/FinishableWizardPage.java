@@ -18,9 +18,13 @@ import org.eclipse.swt.widgets.Control;
  */
 public abstract class FinishableWizardPage extends WizardPage {
 
+	/** Number of the current page. */
+	protected int currentPageNumber;
+
 	/** Constructor. */
-	protected FinishableWizardPage(String pageName) {
+	protected FinishableWizardPage(String pageName, int pageNumber) {
 		super(pageName);
+		currentPageNumber = pageNumber;
 		this.setImageDescriptor(UIUtils.TU_DELFT_LOGO);
 	}
 
@@ -111,8 +115,7 @@ public abstract class FinishableWizardPage extends WizardPage {
 
 	/** Creates a a new composite with the TestRoots and WatchDog logo. */
 	protected void createLogoRow(Composite composite) {
-		Composite logoContainer = UIUtils.createFullGridedComposite(composite,
-				2);
+		Composite logoContainer = UIUtils.createGridedComposite(composite, 2);
 		logoContainer
 				.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
@@ -136,4 +139,26 @@ public abstract class FinishableWizardPage extends WizardPage {
 		return YesNoDontKnowChoice.DontKnow;
 	}
 
+	/** Creates message on failure. */
+	public static void createFailureMessage(Composite parent, String title,
+			String message) {
+		UIUtils.createBoldLabel(title, parent);
+		Composite innerParent = UIUtils.createZeroMarginGridedComposite(parent,
+				2);
+		UIUtils.createLogo(innerParent, "resources/images/errormark.png");
+		UIUtils.createLabel(message, innerParent);
+	}
+
+	/** Creates message on success. */
+	public static void createSuccessMessage(Composite parent, String title,
+			String message, String id) {
+		UIUtils.createBoldLabel(title, parent);
+		Composite innerParent = UIUtils.createZeroMarginGridedComposite(parent,
+				2);
+		UIUtils.createLogo(innerParent, "resources/images/checkmark.png");
+		Composite displayInformation = UIUtils.createZeroMarginGridedComposite(
+				innerParent, 2);
+		UIUtils.createLabel(message, displayInformation);
+		UIUtils.createTextField(displayInformation, id);
+	}
 }

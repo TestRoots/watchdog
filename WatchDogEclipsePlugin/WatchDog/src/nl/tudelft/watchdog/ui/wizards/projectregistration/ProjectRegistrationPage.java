@@ -3,9 +3,11 @@ package nl.tudelft.watchdog.ui.wizards.projectregistration;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 import nl.tudelft.watchdog.ui.wizards.FormValidationListener;
+import nl.tudelft.watchdog.ui.wizards.RegistrationWizardBase;
 import nl.tudelft.watchdog.ui.wizards.YesNoDontKnowChoice;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
@@ -18,7 +20,7 @@ import org.eclipse.swt.widgets.Text;
  * production code.
  *
  */
-class ProjectRegistrationPage extends FinishableWizardPage {
+public class ProjectRegistrationPage extends FinishableWizardPage {
 
 	private static final String TITLE = "Register a new project";
 
@@ -46,13 +48,14 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 	Button noSingleProjectButton;
 
 	/** Constructor. */
-	protected ProjectRegistrationPage() {
-		super("Register Project");
+	public ProjectRegistrationPage(int pageNumber) {
+		super("Register Project", pageNumber);
 	}
 
 	@Override
 	public void createControl(Composite parent) {
-		setTitle(TITLE + " (2/3)");
+		setTitle(TITLE + " (" + currentPageNumber + "/"
+				+ ((RegistrationWizardBase) getWizard()).getTotalPages() + ")");
 		setDescription("Create a new WatchDog Project for this workspace!");
 		Composite topComposite = createComposite(parent);
 		setControl(topComposite);
@@ -69,7 +72,7 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 		Composite composite = UIUtils.createGridedComposite(topComposite, 2);
 		composite.setLayoutData(UIUtils.createFullGridUsageData());
 		noSingleProjectComposite = createSimpleYesNoQuestion(
-				"All projects in this workspace belong to one ('larger') project? ",
+				"Do all Eclipse projects in this workspace belong to one 'larger' project? ",
 				composite);
 		noSingleProjectButton = (Button) noSingleProjectComposite.getChildren()[1];
 		final Button yesSingleProjectButton = (Button) noSingleProjectComposite
@@ -139,9 +142,15 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 			setErrorMessageAndPageComplete(null);
 		}
 
-		setTitle(TITLE + " (2/3)");
+		setTitle(TITLE + " (" + currentPageNumber + "/"
+				+ ((RegistrationWizardBase) getWizard()).getTotalPages() + ")");
 		if (shouldSkipProjectSliderPage()) {
-			setTitle(TITLE + " (2/2)");
+			setTitle(TITLE
+					+ " ("
+					+ currentPageNumber
+					+ "/"
+					+ (((RegistrationWizardBase) getWizard()).getTotalPages() - 1)
+					+ ")");
 		}
 		getWizard().getContainer().updateButtons();
 	}
@@ -149,6 +158,11 @@ class ProjectRegistrationPage extends FinishableWizardPage {
 	private boolean inputFieldDoesNotHaveMinimumSensibleInput(Text input) {
 		return WatchDogUtils.isEmptyOrHasOnlyWhitespaces(input.getText())
 				|| input.getText().length() < 3;
+	}
+
+	@Override
+	public IWizardPage getPreviousPage() {
+		return getWizard().getPreviousPage(this);
 	}
 
 	@Override

@@ -3,15 +3,37 @@ package nl.tudelft.watchdog.ui.wizards.projectregistration;
 import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
+import nl.tudelft.watchdog.ui.util.UIUtils;
+import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 import nl.tudelft.watchdog.ui.wizards.Project;
-import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPage;
+import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPageBase;
+import nl.tudelft.watchdog.ui.wizards.RegistrationWizardBase;
+import nl.tudelft.watchdog.ui.wizards.userregistration.UserRegistrationPage;
+import nl.tudelft.watchdog.ui.wizards.userregistration.UserProjectRegistrationWizard;
 import nl.tudelft.watchdog.util.WatchDogLogger;
+
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.swt.widgets.Composite;
 
 /**
  * Possible finishing page in the wizard. If the project exists on the server,
  * or the server is not reachable, the user can exit here.
  */
-class ProjectCreatedEndingPage extends RegistrationEndingPage {
+public class ProjectCreatedEndingPage extends RegistrationEndingPageBase {
+
+	/** The top-level composite. */
+	private Composite topComposite;
+
+	private Composite dynamicComposite;
+
+	private String concludingMessage;
+
+	/** Constructor. */
+	public ProjectCreatedEndingPage(int pageNumber) {
+		super("Project-ID created.", pageNumber);
+		concludingMessage = "You can change these and other WatchDog settings in the Eclipse preferences."
+				+ ProjectIdEnteredEndingPage.ENCOURAGING_END_MESSAGE;
+	}
 
 	@Override
 	protected void makeRegistration() {
@@ -43,7 +65,7 @@ class ProjectCreatedEndingPage extends RegistrationEndingPage {
 				.usesOtherTestingFrameworks();
 		project.usesOtherTestingForms = projectPage.usesOtherTestingForms();
 
-		windowTitle = "Project Registration";
+		windowTitle = "Registration Summary";
 
 		try {
 			id = new JsonTransferer().registerNewProject(project);
@@ -58,11 +80,69 @@ class ProjectCreatedEndingPage extends RegistrationEndingPage {
 		}
 
 		successfulRegistration = true;
-		((ProjectRegistrationWizard) getWizard()).projectId = id;
+
+		((RegistrationWizardBase) getWizard()).setProjectId(id);
+
 		messageTitle = "New project registered!";
-		messageBody = "Your new project id "
-				+ id
-				+ " is registered.\nYou can change it and other WatchDog settings in the Eclipse preferences."
-				+ ProjectIdEnteredEndingPage.ENCOURAGING_END_MESSAGE;
+		messageBody = "Your new project id is registered: ";
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		if (visible) {
+			if (dynamicComposite != null) {
+				dynamicComposite.dispose();
+			}
+			makeRegistration();
+			createPageContent();
+			dynamicComposite.layout(true);
+			topComposite.layout(true);
+		}
+	}
+
+	private void createPageContent() {
+		setTitle(windowTitle);
+		if (isThisProjectWizard()) {
+			dynamicComposite = UIUtils.createGridedComposite(topComposite, 1);
+			dynamicComposite.setLayoutData(UIUtils.createFullGridUsageData());
+			createProjectRegistrationSummary();
+			return;
+		} else {
+			UserProjectRegistrationWizard wizard = (UserProjectRegistrationWizard) getWizard();
+			UserRegistrationPage userRegistrationPage = wizard.userRegistrationPage;
+			dynamicComposite = UIUtils.createGridedComposite(topComposite, 1);
+			dynamicComposite.setLayoutData(UIUtils.createFullGridUsageData());
+			if (wizard.userWelcomePage.getRegisterNewId()) {
+				userRegistrationPage
+						.createUserRegistrationSummary(dynamicComposite);
+			}
+			createProjectRegistrationSummary();
+			return;
+		}
+	}
+
+	private void createProjectRegistrationSummary() {
+		if (successfulRegistration) {
+			FinishableWizardPage.createSuccessMessage(dynamicComposite, messageTitle,
+					messageBody, id);
+			UIUtils.createLabel(concludingMessage, dynamicComposite);
+		} else {
+			FinishableWizardPage.createFailureMessage(dynamicComposite, messageTitle,
+					messageBody);
+			setPageComplete(false);
+		}
+	}
+
+	private boolean isThisProjectWizard() {
+		IWizard wizard = getWizard();
+		return wizard instanceof ProjectRegistrationWizard;
+	}
+
+	@Override
+	public void createControl(Composite parent) {
+		topComposite = UIUtils.createGridedComposite(parent, 1);
+		UIUtils.createLabel("", topComposite);
+		setControl(topComposite);
 	}
 }

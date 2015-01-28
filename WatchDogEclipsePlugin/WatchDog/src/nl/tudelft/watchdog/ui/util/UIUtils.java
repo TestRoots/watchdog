@@ -27,9 +27,6 @@ import org.eclipse.ui.PlatformUI;
 /** Utility methods for the UI. */
 public class UIUtils {
 
-	/** The warning displayed when WatchDog is not active. */
-	public static final String WATCHDOG_WARNING = "WatchDog only works when you register a (possibly anonymous) user.\n\nTakes less than one minute,  and you can win prices. As a registered user, you decide where WatchDog is active.";
-
 	/** The command to show the WatchDog info. */
 	public static final String COMMAND_SHOW_INFO = "nl.tudelft.watchdog.commands.showWatchDogInfo";
 
@@ -85,6 +82,15 @@ public class UIUtils {
 	public static Text createTextInput(Composite parent) {
 		Text text = new Text(parent, SWT.SINGLE | SWT.BORDER);
 		text.setLayoutData(createFullGridUsageData());
+		return text;
+	}
+
+	/** Creates uneditable text field. */
+	public static Text createTextField(Composite parent, String content) {
+		Text text = new Text(parent, SWT.SINGLE | SWT.BORDER);
+		text.setLayoutData(new GridData(SWT.BOTTOM, SWT.BEGINNING, true, false));
+		text.setText(content);
+		text.setEditable(false);
 		return text;
 	}
 
