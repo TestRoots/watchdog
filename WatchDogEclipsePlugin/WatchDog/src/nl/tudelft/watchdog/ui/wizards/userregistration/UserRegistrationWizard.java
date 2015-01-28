@@ -38,10 +38,10 @@ public class UserRegistrationWizard extends RegistrationWizardBase {
 		addPage(userRegistrationPage);
 		existingUserEndingPage = new UserIdEnteredEndingPage(2);
 		addPage(existingUserEndingPage);
-		projectWelcomePage = new ProjectWelcomePage(2);
-		addPage(projectWelcomePage);
 		existingProjectIdPage = new ProjectIdEnteredEndingPage(3);
 		addPage(existingProjectIdPage);
+		projectWelcomePage = new ProjectWelcomePage(2);
+		addPage(projectWelcomePage);
 		projectRegistrationPage = new ProjectRegistrationPage(3);
 		addPage(projectRegistrationPage);
 		projectSliderPage = new ProjectSliderPage(4);
