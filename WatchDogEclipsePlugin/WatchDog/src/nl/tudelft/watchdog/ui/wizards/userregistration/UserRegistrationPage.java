@@ -147,7 +147,9 @@ public class UserRegistrationPage extends RegistrationEndingPageBase {
 		messageTitle = "New user registered!";
 		messageBody = "Your new user id is registered: ";
 
-		Preferences.getInstance().setUserid(id);
+		Preferences preferences = Preferences.getInstance();
+		preferences.setUserid(id);
+		preferences.registerWorkspaceProject(UIUtils.getWorkspaceName(), "");
 	}
 
 	/**
@@ -155,9 +157,11 @@ public class UserRegistrationPage extends RegistrationEndingPageBase {
 	 */
 	public void createUserRegistrationSummary(Composite parent) {
 		if (successfulRegistration) {
-			FinishableWizardPage.createSuccessMessage(parent, messageTitle, messageBody, id);
+			FinishableWizardPage.createSuccessMessage(parent, messageTitle,
+					messageBody, id);
 		} else {
-			FinishableWizardPage.createFailureMessage(parent, messageTitle, messageBody);
+			FinishableWizardPage.createFailureMessage(parent, messageTitle,
+					messageBody);
 		}
 	}
 

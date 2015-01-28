@@ -112,7 +112,7 @@ public abstract class WelcomePageBase extends FinishableWizardPage {
 						+ currentPageNumber
 						+ "/"
 						+ ((RegistrationWizardBase) getWizard())
-								.getTotalPageNumber() + ")");
+								.getTotalPages() + ")");
 				parent.layout();
 				parent.update();
 			}
@@ -131,9 +131,9 @@ public abstract class WelcomePageBase extends FinishableWizardPage {
 				removeDynamicContent(parent);
 				dynamicContent = createLoginComposite(parent);
 				int total = currentRegistration.equals("User") ? ((RegistrationWizardBase) getWizard())
-						.getTotalPageNumber()
+						.getTotalPages()
 						: ((RegistrationWizardBase) getWizard())
-								.getTotalPageNumber() - 2;
+								.getTotalPages() - 2;
 				setTitle(title + " (" + currentPageNumber + "/" + total + ")");
 				parent.layout();
 				parent.update();

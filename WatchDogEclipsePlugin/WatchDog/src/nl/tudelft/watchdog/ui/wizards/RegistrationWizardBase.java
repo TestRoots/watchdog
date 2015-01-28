@@ -66,13 +66,13 @@ public abstract class RegistrationWizardBase extends Wizard {
 	}
 
 	/** Returns total number of pages in current wizard. */
-	public int getTotalPageNumber() {
+	public int getTotalPages() {
 		return totalPages;
 	}
 
-	/** (Re)Sets total number of pages in current wizard. */
-	public void setTotalPageNumber(int totalPageNumber) {
-		this.totalPages = totalPageNumber;
+	/** (Sets total number of pages in current wizard. */
+	public void setTotalPageNumber(int totalPages) {
+		this.totalPages = totalPages;
 	}
 
 }

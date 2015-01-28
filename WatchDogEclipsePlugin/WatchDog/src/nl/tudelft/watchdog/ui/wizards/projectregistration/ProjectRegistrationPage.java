@@ -55,7 +55,7 @@ public class ProjectRegistrationPage extends FinishableWizardPage {
 	@Override
 	public void createControl(Composite parent) {
 		setTitle(TITLE + " (" + currentPageNumber + "/"
-				+ ((RegistrationWizardBase) getWizard()).getTotalPageNumber() + ")");
+				+ ((RegistrationWizardBase) getWizard()).getTotalPages() + ")");
 		setDescription("Create a new WatchDog Project for this workspace!");
 		Composite topComposite = createComposite(parent);
 		setControl(topComposite);
@@ -143,13 +143,13 @@ public class ProjectRegistrationPage extends FinishableWizardPage {
 		}
 
 		setTitle(TITLE + " (" + currentPageNumber + "/"
-				+ ((RegistrationWizardBase) getWizard()).getTotalPageNumber() + ")");
+				+ ((RegistrationWizardBase) getWizard()).getTotalPages() + ")");
 		if (shouldSkipProjectSliderPage()) {
 			setTitle(TITLE
 					+ " ("
 					+ currentPageNumber
 					+ "/"
-					+ (((RegistrationWizardBase) getWizard()).getTotalPageNumber() - 1)
+					+ (((RegistrationWizardBase) getWizard()).getTotalPages() - 1)
 					+ ")");
 		}
 		getWizard().getContainer().updateButtons();
