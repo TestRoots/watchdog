@@ -1,14 +1,14 @@
 package nl.tudelft.watchdog.ui.wizards.projectregistration;
 
 import nl.tudelft.watchdog.logic.network.NetworkUtils;
-import nl.tudelft.watchdog.ui.wizards.IdEnteredEndingPage;
-import nl.tudelft.watchdog.ui.wizards.RegistrationWizard;
+import nl.tudelft.watchdog.ui.wizards.IdEnteredEndingPageBase;
+import nl.tudelft.watchdog.ui.wizards.RegistrationWizardBase;
 
 /**
  * Possible finishing page in the wizard. If the user exists on the server, or
  * the server is not reachable, the user can exit here.
  */
-public class ProjectIdEnteredEndingPage extends IdEnteredEndingPage {
+public class ProjectIdEnteredEndingPage extends IdEnteredEndingPageBase {
 
 	/** Constructor. */
 	public ProjectIdEnteredEndingPage(int pageNumber) {
@@ -22,12 +22,12 @@ public class ProjectIdEnteredEndingPage extends IdEnteredEndingPage {
 
 	@Override
 	protected String getId() {
-		return ((RegistrationWizard) getWizard()).projectWelcomePage.getId();
+		return ((RegistrationWizardBase) getWizard()).projectWelcomePage.getId();
 	}
 
 	@Override
 	protected void setId() {
-		((RegistrationWizard) getWizard()).setProjectId(id);
+		((RegistrationWizardBase) getWizard()).setProjectId(id);
 	}
 
 }

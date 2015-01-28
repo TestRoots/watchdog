@@ -1,13 +1,13 @@
 package nl.tudelft.watchdog.ui.wizards.projectregistration;
 
 import nl.tudelft.watchdog.ui.handlers.StartUpHandler;
-import nl.tudelft.watchdog.ui.wizards.RegistrationWizard;
+import nl.tudelft.watchdog.ui.wizards.RegistrationWizardBase;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.jface.wizard.IWizardPage;
 
 /** Wizard showing the project registration for WatchDog. */
-public class ProjectRegistrationWizard extends RegistrationWizard {
+public class ProjectRegistrationWizard extends RegistrationWizardBase {
 
 	@Override
 	public void addPages() {
@@ -21,7 +21,7 @@ public class ProjectRegistrationWizard extends RegistrationWizard {
 		addPage(existingProjectIdPage);
 		projectedCreatedPage = new ProjectCreatedEndingPage(4);
 		addPage(projectedCreatedPage);
-		this.totalPageNumber = 4;
+		this.totalPages = 4;
 	}
 
 	@Override

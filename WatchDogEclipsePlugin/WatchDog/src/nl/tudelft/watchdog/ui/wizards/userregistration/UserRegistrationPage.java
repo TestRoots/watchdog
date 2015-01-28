@@ -5,7 +5,7 @@ import nl.tudelft.watchdog.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FormValidationListener;
-import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPage;
+import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPageBase;
 import nl.tudelft.watchdog.ui.wizards.User;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 /** The Page on which new users can register themselves. */
-public class UserRegistrationPage extends RegistrationEndingPage {
+public class UserRegistrationPage extends RegistrationEndingPageBase {
 
 	private static final String USER_REGISTRATION_TEXT = "User Registration (2/5)";
 

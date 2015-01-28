@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Composite;
  * server is not reachable, the user can exit here. Can be subclassed with the
  * particular type of id.
  */
-public abstract class IdEnteredEndingPage extends FinishableWizardPage {
+public abstract class IdEnteredEndingPageBase extends FinishableWizardPage {
 
 	/** An encouraging message for the end of a sentence. */
 	public static final String ENCOURAGING_END_MESSAGE = "\n\nHappy hours-collecting and prize-winning with WatchDog! \nThe longer you use WatchDog, the higher your chances of winning!";
@@ -30,7 +30,7 @@ public abstract class IdEnteredEndingPage extends FinishableWizardPage {
 	private String idType;
 
 	/** Constructor. */
-	protected IdEnteredEndingPage(String idType, int pageNumber) {
+	protected IdEnteredEndingPageBase(String idType, int pageNumber) {
 		super("Existing " + idType + " page", pageNumber);
 		this.idType = idType;
 	}

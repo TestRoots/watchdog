@@ -23,7 +23,7 @@ public class StartupUIThread implements Runnable {
 	/** The preferences. */
 	private Preferences preferences;
 
-	/** Whether user has cancelled first registration. */
+	/** Whether a user has cancelled user+project registration. */
 	private boolean userRegistrationCancelled = false;
 
 	/** Constructor. */

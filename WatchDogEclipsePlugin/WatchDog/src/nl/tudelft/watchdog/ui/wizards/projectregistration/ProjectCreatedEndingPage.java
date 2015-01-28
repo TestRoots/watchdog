@@ -5,8 +5,8 @@ import nl.tudelft.watchdog.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.Project;
-import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPage;
-import nl.tudelft.watchdog.ui.wizards.RegistrationWizard;
+import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPageBase;
+import nl.tudelft.watchdog.ui.wizards.RegistrationWizardBase;
 import nl.tudelft.watchdog.ui.wizards.userregistration.UserRegistrationPage;
 import nl.tudelft.watchdog.ui.wizards.userregistration.UserRegistrationWizard;
 import nl.tudelft.watchdog.util.WatchDogLogger;
@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
  * Possible finishing page in the wizard. If the project exists on the server,
  * or the server is not reachable, the user can exit here.
  */
-public class ProjectCreatedEndingPage extends RegistrationEndingPage {
+public class ProjectCreatedEndingPage extends RegistrationEndingPageBase {
 
 	/** The top-level composite. */
 	private Composite topComposite;
@@ -80,7 +80,7 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPage {
 
 		successfulRegistration = true;
 
-		((RegistrationWizard) getWizard()).setProjectId(id);
+		((RegistrationWizardBase) getWizard()).setProjectId(id);
 
 		messageTitle = "New project registered!";
 		messageBody = "Your new project id is registered: ";

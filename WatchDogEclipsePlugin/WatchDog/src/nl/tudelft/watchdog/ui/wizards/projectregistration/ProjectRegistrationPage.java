@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.ui.wizards.projectregistration;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 import nl.tudelft.watchdog.ui.wizards.FormValidationListener;
-import nl.tudelft.watchdog.ui.wizards.RegistrationWizard;
+import nl.tudelft.watchdog.ui.wizards.RegistrationWizardBase;
 import nl.tudelft.watchdog.ui.wizards.YesNoDontKnowChoice;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
@@ -55,7 +55,7 @@ public class ProjectRegistrationPage extends FinishableWizardPage {
 	@Override
 	public void createControl(Composite parent) {
 		setTitle(TITLE + " (" + currentPageNumber + "/"
-				+ ((RegistrationWizard) getWizard()).getTotalPageNumber() + ")");
+				+ ((RegistrationWizardBase) getWizard()).getTotalPageNumber() + ")");
 		setDescription("Create a new WatchDog Project for this workspace!");
 		Composite topComposite = createComposite(parent);
 		setControl(topComposite);
@@ -143,13 +143,13 @@ public class ProjectRegistrationPage extends FinishableWizardPage {
 		}
 
 		setTitle(TITLE + " (" + currentPageNumber + "/"
-				+ ((RegistrationWizard) getWizard()).getTotalPageNumber() + ")");
+				+ ((RegistrationWizardBase) getWizard()).getTotalPageNumber() + ")");
 		if (shouldSkipProjectSliderPage()) {
 			setTitle(TITLE
 					+ " ("
 					+ currentPageNumber
 					+ "/"
-					+ (((RegistrationWizard) getWizard()).getTotalPageNumber() - 1)
+					+ (((RegistrationWizardBase) getWizard()).getTotalPageNumber() - 1)
 					+ ")");
 		}
 		getWizard().getContainer().updateButtons();

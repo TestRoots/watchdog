@@ -4,7 +4,7 @@ package nl.tudelft.watchdog.ui.wizards;
  * Possible finishing page in the wizard. If the user exists on the server, or
  * the server is not reachable, the user can exit here.
  */
-public abstract class RegistrationEndingPage extends FinishableWizardPage {
+public abstract class RegistrationEndingPageBase extends FinishableWizardPage {
 
 	/**
 	 * The user id (either as retrieved from the previous page or as freshly
@@ -25,7 +25,7 @@ public abstract class RegistrationEndingPage extends FinishableWizardPage {
 	protected String messageBody;
 
 	/** Constructor. */
-	protected RegistrationEndingPage(String pageName, int pageNumber) {
+	protected RegistrationEndingPageBase(String pageName, int pageNumber) {
 		super(pageName, pageNumber);
 	}
 

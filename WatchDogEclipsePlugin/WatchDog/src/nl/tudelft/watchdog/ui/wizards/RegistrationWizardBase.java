@@ -10,8 +10,8 @@ import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectWelcomePage;
 
 import org.eclipse.jface.wizard.Wizard;
 
-/** Parent class for User and Project registration wizards. */
-public abstract class RegistrationWizard extends Wizard {
+/** Base class for User and Project registration wizards. */
+public abstract class RegistrationWizardBase extends Wizard {
 
 	/**
 	 * The project-id, either entered on the previous wizard pages or as
@@ -20,7 +20,7 @@ public abstract class RegistrationWizard extends Wizard {
 	protected String projectId;
 
 	/** Maximum number of pages in the current wizard. */
-	protected int totalPageNumber;
+	protected int totalPages;
 
 	/** Page with Yes/No question about registering new project ID. */
 	public ProjectWelcomePage projectWelcomePage;
@@ -39,10 +39,10 @@ public abstract class RegistrationWizard extends Wizard {
 
 	@Override
 	public boolean performFinish() {
-		Preferences.getInstance().registerWorkspaceProject(
-				UIUtils.getWorkspaceName(), projectId);
-		Preferences.getInstance().registerWorkspaceUse(
-				UIUtils.getWorkspaceName(), true);
+		Preferences preferences = Preferences.getInstance();
+		preferences.registerWorkspaceProject(UIUtils.getWorkspaceName(),
+				projectId);
+		preferences.registerWorkspaceUse(UIUtils.getWorkspaceName(), true);
 		return true;
 	}
 
@@ -53,24 +53,24 @@ public abstract class RegistrationWizard extends Wizard {
 		return currentPage.canFinish();
 	}
 
-	/** Getting project-ID. */
+	/** Returns project-ID. */
 	public String getProjectId() {
 		return projectId;
 	}
 
-	/** Setting up projectId field. */
+	/** Sets projectId. */
 	public void setProjectId(String projectId) {
 		this.projectId = projectId;
 	}
 
-	/** Getting total number of pages in current wizard. */
+	/** Returns total number of pages in current wizard. */
 	public int getTotalPageNumber() {
-		return totalPageNumber;
+		return totalPages;
 	}
 
-	/** (Re)Setting up total number of pages in current wizard. */
+	/** (Re)Sets total number of pages in current wizard. */
 	public void setTotalPageNumber(int totalPageNumber) {
-		this.totalPageNumber = totalPageNumber;
+		this.totalPages = totalPageNumber;
 	}
 
 }

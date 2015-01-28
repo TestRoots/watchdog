@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.ui.wizards.projectregistration;
 
-import nl.tudelft.watchdog.ui.wizards.WelcomePage;
+import nl.tudelft.watchdog.ui.wizards.WelcomePageBase;
 
 import org.eclipse.jface.wizard.IWizardPage;
 
@@ -9,7 +9,7 @@ import org.eclipse.jface.wizard.IWizardPage;
  * question: do you have a Project ID, yes or no? Depending on the answer, it
  * dynamically displays the information we are interested in.
  */
-public class ProjectWelcomePage extends WelcomePage {
+public class ProjectWelcomePage extends WelcomePageBase {
 
 	/** Constructor. */
 	public ProjectWelcomePage(int pageNumber) {

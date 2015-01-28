@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.ui.wizards.userregistration;
 
 import nl.tudelft.watchdog.ui.util.BrowserOpenerSelection;
 import nl.tudelft.watchdog.ui.util.UIUtils;
-import nl.tudelft.watchdog.ui.wizards.WelcomePage;
+import nl.tudelft.watchdog.ui.wizards.WelcomePageBase;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Link;
  * Are you a new WatchDog user, yes or no? Depending on the answer, it
  * dynamically displays the information we are interested in.
  */
-public class UserWelcomePage extends WelcomePage {
+public class UserWelcomePage extends WelcomePageBase {
 
 	private Link linkedTextLink;
 	private Label welcomeTextLabel;
@@ -73,7 +73,7 @@ public class UserWelcomePage extends WelcomePage {
 			welcomeTextLabel.getParent().layout();
 			welcomeTextLabel.getParent().update();
 
-			String descriptionText = "It measures how you write Java code and tests. We never do anything bad with <a href=\"http://www.testroots.org/testroots_watchdog.html#details\">your purely numerical data</a>.\nYou can win <a href=\"http://www.testroots.org/testroots_watchdog.html#prizes\">amazing prizes</a>, <a href=\"http://www.testroots.org/reports/sample_watchdog_report.pdf\">a detailed report on your development behaviour</a> and our eternal gratitude! :-)\n";
+			String descriptionText = "It measures how you write Java code and tests. We never do anything bad with <a href=\"http://www.testroots.org/testroots_watchdog.html#details\">your purely numerical data</a>.\nYou can win <a href=\"http://www.testroots.org/testroots_watchdog.html#prizes\">amazing prizes</a>, a <a href=\"http://www.testroots.org/reports/sample_watchdog_report.pdf\">detailed report</a> on your development behaviour and our eternal gratitude! :-)\n";
 
 			linkedTextLink.setText(descriptionText);
 			linkedTextLink

@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.ui.wizards.userregistration;
 
-import nl.tudelft.watchdog.ui.wizards.RegistrationWizard;
+import nl.tudelft.watchdog.ui.wizards.RegistrationWizardBase;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectCreatedEndingPage;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectIdEnteredEndingPage;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectRegistrationPage;
@@ -14,7 +14,7 @@ import org.eclipse.jface.wizard.IWizardPage;
  * some magic tricks to enable skipping of pages and recalculation of Finish
  * button.
  */
-public class UserRegistrationWizard extends RegistrationWizard {
+public class UserRegistrationWizard extends RegistrationWizardBase {
 
 	/** The first page in the wizard. */
 	public UserWelcomePage userWelcomePage;
@@ -48,7 +48,7 @@ public class UserRegistrationWizard extends RegistrationWizard {
 		addPage(projectSliderPage);
 		projectedCreatedPage = new ProjectCreatedEndingPage(5);
 		addPage(projectedCreatedPage);
-		this.totalPageNumber = 5;
+		this.totalPages = 5;
 	}
 
 	@Override

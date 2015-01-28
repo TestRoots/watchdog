@@ -27,7 +27,7 @@ import org.eclipse.ui.PlatformUI;
  * The first page of a Wizard. It asks an initial yes-or no question. Depending
  * on the answer, it dynamically display an input field or an introduction page.
  */
-public abstract class WelcomePage extends FinishableWizardPage {
+public abstract class WelcomePageBase extends FinishableWizardPage {
 
 	/** The welcome title. To be changed by subclasses. */
 	protected String welcomeTitle;
@@ -68,7 +68,7 @@ public abstract class WelcomePage extends FinishableWizardPage {
 	private Button radioButtonYes;
 
 	/** Constructor. */
-	public WelcomePage(String title, int pageNumber) {
+	public WelcomePageBase(String title, int pageNumber) {
 		super(title, pageNumber);
 		setTitle(title);
 		this.title = title;
@@ -111,7 +111,7 @@ public abstract class WelcomePage extends FinishableWizardPage {
 						+ " ("
 						+ currentPageNumber
 						+ "/"
-						+ ((RegistrationWizard) getWizard())
+						+ ((RegistrationWizardBase) getWizard())
 								.getTotalPageNumber() + ")");
 				parent.layout();
 				parent.update();
@@ -130,9 +130,9 @@ public abstract class WelcomePage extends FinishableWizardPage {
 			public void widgetSelected(SelectionEvent e) {
 				removeDynamicContent(parent);
 				dynamicContent = createLoginComposite(parent);
-				int total = currentRegistration.equals("User") ? ((RegistrationWizard) getWizard())
+				int total = currentRegistration.equals("User") ? ((RegistrationWizardBase) getWizard())
 						.getTotalPageNumber()
-						: ((RegistrationWizard) getWizard())
+						: ((RegistrationWizardBase) getWizard())
 								.getTotalPageNumber() - 2;
 				setTitle(title + " (" + currentPageNumber + "/" + total + ")");
 				parent.layout();
