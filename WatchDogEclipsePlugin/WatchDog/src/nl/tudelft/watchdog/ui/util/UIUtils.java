@@ -27,9 +27,6 @@ import org.eclipse.ui.PlatformUI;
 /** Utility methods for the UI. */
 public class UIUtils {
 
-	/** The warning displayed when WatchDog is not active. */
-	public static final String WATCHDOG_WARNING = "WatchDog only works when you register a (possibly anonymous) user.\n\nTakes less than one minute,  and you can win prices. As a registered user, you decide where WatchDog is active.";
-
 	/** The command to show the WatchDog info. */
 	public static final String COMMAND_SHOW_INFO = "nl.tudelft.watchdog.commands.showWatchDogInfo";
 
@@ -251,29 +248,6 @@ public class UIUtils {
 		watchdogLogo.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING,
 				true, false));
 		return watchdogLogo;
-	}
-
-	/** Creates message on success. */
-	public static void createSuccessMessage(Composite parent, String title,
-			String message, String id) {
-		UIUtils.createBoldLabel(title, parent);
-		Composite innerParent = UIUtils.createZeroMarginGridedComposite(parent,
-				2);
-		UIUtils.createLogo(innerParent, "resources/images/checkmark.png");
-		Composite displayInformation = createZeroMarginGridedComposite(
-				innerParent, 2);
-		UIUtils.createLabel(message, displayInformation);
-		UIUtils.createTextField(displayInformation, id);
-	}
-
-	/** Creates message on failure. */
-	public static void createFailureMessage(Composite parent, String title,
-			String message) {
-		UIUtils.createBoldLabel(title, parent);
-		Composite innerParent = UIUtils.createZeroMarginGridedComposite(parent,
-				2);
-		UIUtils.createLogo(innerParent, "resources/images/errormark.png");
-		UIUtils.createLabel(message, innerParent);
 	}
 
 	/** Invokes the supplied command. */

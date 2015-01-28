@@ -4,11 +4,12 @@ import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
+import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 import nl.tudelft.watchdog.ui.wizards.Project;
 import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPageBase;
 import nl.tudelft.watchdog.ui.wizards.RegistrationWizardBase;
 import nl.tudelft.watchdog.ui.wizards.userregistration.UserRegistrationPage;
-import nl.tudelft.watchdog.ui.wizards.userregistration.UserRegistrationWizard;
+import nl.tudelft.watchdog.ui.wizards.userregistration.UserProjectRegistrationWizard;
 import nl.tudelft.watchdog.util.WatchDogLogger;
 
 import org.eclipse.jface.wizard.IWizard;
@@ -102,13 +103,13 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPageBase {
 
 	private void createPageContent() {
 		setTitle(windowTitle);
-		if (isThisProjectWizzard()) {
+		if (isThisProjectWizard()) {
 			dynamicComposite = UIUtils.createGridedComposite(topComposite, 1);
 			dynamicComposite.setLayoutData(UIUtils.createFullGridUsageData());
 			createProjectRegistrationSummary();
 			return;
 		} else {
-			UserRegistrationWizard wizard = (UserRegistrationWizard) getWizard();
+			UserProjectRegistrationWizard wizard = (UserProjectRegistrationWizard) getWizard();
 			UserRegistrationPage userRegistrationPage = wizard.userRegistrationPage;
 			dynamicComposite = UIUtils.createGridedComposite(topComposite, 1);
 			dynamicComposite.setLayoutData(UIUtils.createFullGridUsageData());
@@ -123,17 +124,17 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPageBase {
 
 	private void createProjectRegistrationSummary() {
 		if (successfulRegistration) {
-			UIUtils.createSuccessMessage(dynamicComposite, messageTitle,
+			FinishableWizardPage.createSuccessMessage(dynamicComposite, messageTitle,
 					messageBody, id);
 			UIUtils.createLabel(concludingMessage, dynamicComposite);
 		} else {
-			UIUtils.createFailureMessage(dynamicComposite, messageTitle,
+			FinishableWizardPage.createFailureMessage(dynamicComposite, messageTitle,
 					messageBody);
 			setPageComplete(false);
 		}
 	}
 
-	private boolean isThisProjectWizzard() {
+	private boolean isThisProjectWizard() {
 		IWizard wizard = getWizard();
 		return wizard instanceof ProjectRegistrationWizard;
 	}

@@ -22,12 +22,12 @@ class UserIdEnteredEndingPage extends IdEnteredEndingPageBase {
 
 	@Override
 	protected String getId() {
-		return ((UserRegistrationWizard) getWizard()).userWelcomePage.getId();
+		return ((UserProjectRegistrationWizard) getWizard()).userWelcomePage.getId();
 	}
 
 	@Override
 	protected void setId() {
-		((UserRegistrationWizard) getWizard()).userid = id;
+		((UserProjectRegistrationWizard) getWizard()).userid = id;
 		Preferences.getInstance().setUserid(id);
 	}
 

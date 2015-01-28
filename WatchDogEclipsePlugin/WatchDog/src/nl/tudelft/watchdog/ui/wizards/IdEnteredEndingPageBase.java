@@ -49,7 +49,7 @@ public abstract class IdEnteredEndingPageBase extends FinishableWizardPage {
 			setTitle("Welcome back!");
 			setDescription("Thanks for using your existing " + idType + "-ID!");
 			setPageComplete(true);
-			dynamicComposite = createSuccessWizzard(topComposite);
+			dynamicComposite = createSuccessfulExistingID(topComposite);
 			break;
 		case UNSUCCESSFUL:
 		case NETWORK_ERROR:
@@ -101,12 +101,12 @@ public abstract class IdEnteredEndingPageBase extends FinishableWizardPage {
 	 * Creates and returns a composite in case of successful verification of
 	 * user existence.
 	 */
-	private Composite createSuccessWizzard(Composite parent) {
+	private Composite createSuccessfulExistingID(Composite parent) {
 		Composite composite = UIUtils.createGridedComposite(parent, 1);
 		composite.setLayoutData(UIUtils.createFullGridUsageData());
 		String title = "Everything worked perfectly.";
 		String message = "You are using an existing " + idType + " id: ";
-		UIUtils.createSuccessMessage(composite, title, message, id);
+		FinishableWizardPage.createSuccessMessage(composite, title, message, id);
 		UIUtils.createWrappingLabel(
 				"Your "
 						+ idType
@@ -123,7 +123,7 @@ public abstract class IdEnteredEndingPageBase extends FinishableWizardPage {
 		String message = idType.substring(0, 1).toUpperCase()
 				.concat(idType.substring(1))
 				+ " not found!";
-		UIUtils.createFailureMessage(composite, title, message);
+		FinishableWizardPage.createFailureMessage(composite, title, message);
 		UIUtils.createWrappingLabel(
 				"We could not find the "
 						+ idType

@@ -11,8 +11,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 
 /**
- * The first page of the {@link UserRegistrationWizard}. It asks the question:
- * Are you a new WatchDog user, yes or no? Depending on the answer, it
+ * The first page of the {@link UserProjectRegistrationWizard}. It asks the
+ * question: Are you a new WatchDog user, yes or no? Depending on the answer, it
  * dynamically displays the information we are interested in.
  */
 public class UserWelcomePage extends WelcomePageBase {
@@ -21,8 +21,8 @@ public class UserWelcomePage extends WelcomePageBase {
 	private Label welcomeTextLabel;
 
 	/** Constructor. */
-	UserWelcomePage(int pageNumber) {
-		super("Welcome to WatchDog!", pageNumber);
+	UserWelcomePage() {
+		super("Welcome to WatchDog!", 1);
 		setDescription("This wizard guides you through the setup of a WatchDog User.");
 		welcomeTitle = "Welcome! Registration is fun and takes just 3 minutes!";
 		welcomeText = "";

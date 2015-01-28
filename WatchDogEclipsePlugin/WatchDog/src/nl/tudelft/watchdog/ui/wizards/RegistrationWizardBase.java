@@ -28,7 +28,7 @@ public abstract class RegistrationWizardBase extends Wizard {
 	/** Page after existing project ID has been entered. */
 	protected ProjectIdEnteredEndingPage existingProjectIdPage;
 
-	/** First part of project registration. */
+	/** First page of project registration. */
 	protected ProjectRegistrationPage projectRegistrationPage;
 
 	/** Second part of project registration. */

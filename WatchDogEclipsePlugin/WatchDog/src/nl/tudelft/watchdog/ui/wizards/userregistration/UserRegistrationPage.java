@@ -4,6 +4,7 @@ import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
+import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 import nl.tudelft.watchdog.ui.wizards.FormValidationListener;
 import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPageBase;
 import nl.tudelft.watchdog.ui.wizards.User;
@@ -142,7 +143,7 @@ public class UserRegistrationPage extends RegistrationEndingPageBase {
 		}
 
 		successfulRegistration = true;
-		((UserRegistrationWizard) getWizard()).userid = id;
+		((UserProjectRegistrationWizard) getWizard()).userid = id;
 		messageTitle = "New user registered!";
 		messageBody = "Your new user id is registered: ";
 
@@ -154,9 +155,9 @@ public class UserRegistrationPage extends RegistrationEndingPageBase {
 	 */
 	public void createUserRegistrationSummary(Composite parent) {
 		if (successfulRegistration) {
-			UIUtils.createSuccessMessage(parent, messageTitle, messageBody, id);
+			FinishableWizardPage.createSuccessMessage(parent, messageTitle, messageBody, id);
 		} else {
-			UIUtils.createFailureMessage(parent, messageTitle, messageBody);
+			FinishableWizardPage.createFailureMessage(parent, messageTitle, messageBody);
 		}
 	}
 

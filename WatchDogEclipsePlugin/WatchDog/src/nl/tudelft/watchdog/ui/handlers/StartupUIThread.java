@@ -20,48 +20,51 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
  */
 public class StartupUIThread implements Runnable {
 
+	/** The warning displayed when WatchDog is not active. */
+	public static final String WATCHDOG_INACTIVE_WARNING = "WatchDog only works when you register a (possibly anonymous) user and project.\n\nTakes less than one minute,  and you can win prices. As a registered user, you decide where WatchDog is active.";
+
 	/** The preferences. */
 	private Preferences preferences;
 
-	/** Whether a user has cancelled user+project registration. */
-	private boolean userRegistrationCancelled = false;
+	/** Whether the user has cancelled the user project registration wizard. */
+	private boolean userProjectRegistrationCancelled = false;
+
+	private String workspaceName;
 
 	/** Constructor. */
 	public StartupUIThread(Preferences preferences) {
 		this.preferences = preferences;
+		this.workspaceName = UIUtils.getWorkspaceName();
 	}
 
 	@Override
 	public void run() {
-		// the execution strategy is:
-		// (1) check user registration (2) wait until user+project registration
-		// is completed, or 1 can be skipped (3) if user is already registered,
-		// check for workspace registration
-		if (WatchDogUtils.isEmpty(preferences.getUserid())) {
-			displayUserRegistrationWizard();
+		checkWhetherToDisplayUserProjectRegistrationWizard();
+		savePreferenceStoreIfNeeded();
+
+		if (WatchDogUtils.isEmpty(preferences.getUserid())
+				|| userProjectRegistrationCancelled) {
+			return;
 		}
 
-		if (!WatchDogUtils.isEmpty(preferences.getUserid())
-				&& !userRegistrationCancelled) {
-			// In case the user aborted the user registration with cancel,
-			// we don't want him to have to answer whether he wants WatchDog
-			// to be active for this workspace -- it's obvious that he does
-			// not want to be bothered for the moment.
-			checkWorkspaceRegistration();
-			savePreferenceStoreIfNeeded();
-		}
+		checkIsWorkspaceAlreadyRegistered();
+		checkWhetherToDisplayProjectWizard();
+		checkWhetherToStartWatchDog();
 	}
 
 	/** Checks whether there is a registered WatchDog user */
-	private void displayUserRegistrationWizard() {
+	private void checkWhetherToDisplayUserProjectRegistrationWizard() {
+		if (!WatchDogUtils.isEmpty(preferences.getUserid()))
+			return;
+
 		UserRegistrationWizardDialogHandler newUserWizardHandler = new UserRegistrationWizardDialogHandler();
 		try {
 			int statusCode = (int) newUserWizardHandler
 					.execute(new ExecutionEvent());
 			if (statusCode == Window.CANCEL) {
 				MessageDialog.openWarning(null, "WatchDog not active!",
-						UIUtils.WATCHDOG_WARNING);
-				userRegistrationCancelled = true;
+						WATCHDOG_INACTIVE_WARNING);
+				userProjectRegistrationCancelled = true;
 			}
 		} catch (ExecutionException exception) {
 			// when the new user wizard cannot be displayed, new
@@ -70,41 +73,32 @@ public class StartupUIThread implements Runnable {
 		}
 	}
 
-	/**
-	 * Checks whether this workspace is registered, and if not, asks the user
-	 * whether WatchDog should be active.
-	 */
-	private void checkWorkspaceRegistration() {
-		String workspaceName = UIUtils.getWorkspaceName();
-		checkIsWorkspaceAlreadyRegistered(workspaceName);
-		checkWhetherToStartWatchDog(workspaceName);
-	}
-
-	private void checkIsWorkspaceAlreadyRegistered(String workspace) {
-		if (!preferences.isWorkspaceRegistered(workspace)) {
+	private void checkIsWorkspaceAlreadyRegistered() {
+		if (!preferences.isWorkspaceRegistered(workspaceName)) {
 			boolean useWatchDogInThisWorkspace = MessageDialog.openQuestion(
 					null, "WatchDog Workspace Registration",
 					"Should WatchDog be active in this workspace?");
 			WatchDogLogger.getInstance().logInfo("Registering workspace...");
-			preferences.registerWorkspaceUse(workspace,
+			preferences.registerWorkspaceUse(workspaceName,
 					useWatchDogInThisWorkspace);
 		}
 	}
 
-	private void checkWhetherToStartWatchDog(String workspaceName) {
+	private void checkWhetherToDisplayProjectWizard() {
+		WorkspacePreferenceSetting setting = preferences
+				.getOrCreateWorkspaceSetting(workspaceName);
+		if (setting.enableWatchdog && WatchDogUtils.isEmpty(setting.projectId)) {
+			displayProjectWizard();
+			savePreferenceStoreIfNeeded();
+		}
+	}
+
+	private void checkWhetherToStartWatchDog() {
+		// reload setting from preferences
 		WorkspacePreferenceSetting setting = preferences
 				.getOrCreateWorkspaceSetting(workspaceName);
 		if (setting.enableWatchdog) {
-			if (WatchDogUtils.isEmpty(setting.projectId)) {
-				displayProjectWizard();
-			}
-			savePreferenceStoreIfNeeded();
-
-			// reload setting from preferences
-			setting = preferences.getOrCreateWorkspaceSetting(workspaceName);
-			if (!WatchDogUtils.isEmpty(setting.projectId)) {
-				StartUpHandler.startWatchDog();
-			}
+			StartUpHandler.startWatchDog();
 		}
 	}
 

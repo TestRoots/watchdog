@@ -138,4 +138,27 @@ public abstract class FinishableWizardPage extends WizardPage {
 		}
 		return YesNoDontKnowChoice.DontKnow;
 	}
+
+	/** Creates message on failure. */
+	public static void createFailureMessage(Composite parent, String title,
+			String message) {
+		UIUtils.createBoldLabel(title, parent);
+		Composite innerParent = UIUtils.createZeroMarginGridedComposite(parent,
+				2);
+		UIUtils.createLogo(innerParent, "resources/images/errormark.png");
+		UIUtils.createLabel(message, innerParent);
+	}
+
+	/** Creates message on success. */
+	public static void createSuccessMessage(Composite parent, String title,
+			String message, String id) {
+		UIUtils.createBoldLabel(title, parent);
+		Composite innerParent = UIUtils.createZeroMarginGridedComposite(parent,
+				2);
+		UIUtils.createLogo(innerParent, "resources/images/checkmark.png");
+		Composite displayInformation = UIUtils.createZeroMarginGridedComposite(
+				innerParent, 2);
+		UIUtils.createLabel(message, displayInformation);
+		UIUtils.createTextField(displayInformation, id);
+	}
 }
