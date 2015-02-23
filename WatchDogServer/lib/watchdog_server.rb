@@ -89,15 +89,21 @@ class WatchDogServer < Sinatra::Base
     user['id'] = sha
 
     begin
-      user['postCode'] = request.location.postal_code
-      user['city'] = request.location.city
       user['country'] = request.location.country
+    rescue
+      user['country'] = 'NA' 
+      logger.warn user
+    end
+    begin
+      user['city'] = request.location.city
+    rescue
+      user['city'] = 'NA' 
+    end
+    begin
+      user['postCode'] = request.location.postal_code
     rescue 
       user['postCode'] = 'NA' 
-      user['city'] = 'NA' 
-      user['country'] = 'NA' 
     end
-    logger.warn user
 
     add_ip_timestamp(user, request)
 
