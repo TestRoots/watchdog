@@ -204,7 +204,11 @@ public class UserRegistrationPage extends RegistrationEndingPageBase {
 		if (visible) {
 			validateFormInputs();
 		} else {
-			makeRegistration();
+			if (isPageComplete()
+					&& getWizard().getStartingPage() != getWizard()
+							.getContainer().getCurrentPage()) {
+				makeRegistration();
+			}
 		}
 	}
 }
