@@ -83,6 +83,11 @@ class WatchDogServer < Sinatra::Base
   # Create a new user and return unique SHA1
   post '/user' do
     user = create_json_object(request)
+	
+	if user['programmingExperience'].nil? or user['programmingExperience'].empty?
+	  halt 404, "Missing programming experience in user registration"
+	end
+	
     sha = create_40_char_SHA
     logger.info user
 
