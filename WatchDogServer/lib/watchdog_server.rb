@@ -85,7 +85,7 @@ class WatchDogServer < Sinatra::Base
     user = create_json_object(request)
 	
 	if user['programmingExperience'].nil? or user['programmingExperience'].empty?
-	  halt 404, "Wrong user registration"
+	  halt 404, "Missing programming experience in user registration"
 	end
 	
     sha = create_40_char_SHA

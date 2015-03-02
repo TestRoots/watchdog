@@ -16,6 +16,12 @@ def test_user
   user
 end
 
+def empty_user
+  user = Hash.new
+  user['programmingExperience'] = nil
+  user
+end
+
 existing_user = nil
 existing_project = nil
 
@@ -136,6 +142,11 @@ describe 'The WatchDog Server' do
     post '/user/' + existing_user + '/intervals', intervals.to_json
     last_response.status.should eql(404)
   end
+  
+  it 'should return 404 when trying to register a user with missing programming experience' do
+    post '/user', empty_user.to_json
+	last_response.status.should eql(404)
+  end  
 
   it 'should return the number of stored intervals on successful insert' do
     intervals = (1..10).map{|x| test_interval(x, x + 1)}
