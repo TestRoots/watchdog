@@ -8,11 +8,12 @@ end
 
 def test_user
   user = Hash.new
-  user['email']       = 'foo@bar.gr'
-  user['name']        = 'Foo Bar'
-  user['org']         = 'Baz B.V.'
-  user['org_website'] = 'http://baz.nl'
-  user['prize']       = false
+  user['email']                 = 'foo@bar.gr'
+  user['name']                  = 'Foo Bar'
+  user['org']                   = 'Baz B.V.'
+  user['org_website']           = 'http://baz.nl'
+  user['prize']                 = false
+  user['programmingExperience'] = '1-2 years'
   user
 end
 
