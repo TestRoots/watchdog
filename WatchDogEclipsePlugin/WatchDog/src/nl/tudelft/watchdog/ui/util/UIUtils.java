@@ -2,6 +2,8 @@ package nl.tudelft.watchdog.ui.util;
 
 import nl.tudelft.watchdog.Activator;
 import nl.tudelft.watchdog.ui.WatchDogView;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
+import nl.tudelft.watchdog.ui.preferences.WorkspacePreferenceSetting;
 import nl.tudelft.watchdog.ui.util.CommandExecuterBase.CommandExecuter;
 import nl.tudelft.watchdog.ui.util.CommandExecuterBase.CommandRefresher;
 
@@ -204,6 +206,15 @@ public class UIUtils {
 	public static String getWorkspaceName() {
 		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile()
 				.toString();
+	}
+
+	/**
+	 * Returns the {@link WorkspacePreferenceSetting} of the currently active
+	 * workspace.
+	 */
+	public static WorkspacePreferenceSetting getWorkspaceSetting() {
+		return Preferences.getInstance().getOrCreateWorkspaceSetting(
+				UIUtils.getWorkspaceName());
 	}
 
 	/** The TU Logo. */

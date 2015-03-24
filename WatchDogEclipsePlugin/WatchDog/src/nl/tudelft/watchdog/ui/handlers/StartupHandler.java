@@ -14,7 +14,7 @@ import org.eclipse.ui.IStartup;
  * Handler called when an Eclipse instance with the WatchDog plugin installed
  * gets opened and activated.
  */
-public class StartUpHandler implements IStartup {
+public class StartupHandler implements IStartup {
 
 	/** {@inheritDoc} Starts the WatchDog plugin. */
 	@Override

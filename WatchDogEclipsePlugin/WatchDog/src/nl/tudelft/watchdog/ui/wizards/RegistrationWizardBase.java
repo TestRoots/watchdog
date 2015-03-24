@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.ui.wizards;
 
-import nl.tudelft.watchdog.ui.handlers.StartUpHandler;
+import nl.tudelft.watchdog.ui.handlers.StartupHandler;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectCreatedEndingPage;
@@ -44,7 +44,7 @@ public abstract class RegistrationWizardBase extends Wizard {
 		preferences.registerWorkspaceProject(UIUtils.getWorkspaceName(),
 				projectId);
 		preferences.registerWorkspaceUse(UIUtils.getWorkspaceName(), true);
-		StartUpHandler.startWatchDog();
+		StartupHandler.startWatchDog();
 		return true;
 	}
 
