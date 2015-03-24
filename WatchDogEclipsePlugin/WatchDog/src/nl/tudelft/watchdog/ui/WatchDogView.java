@@ -72,6 +72,7 @@ public class WatchDogView extends ViewPart {
 			createActiveView();
 		}
 
+		// Always create refresh link
 		createRefreshLink();
 	}
 
@@ -97,7 +98,6 @@ public class WatchDogView extends ViewPart {
 				container,
 				createPieChart(createDevelopmentPieDataset(),
 						"Your Development Activity"));
-
 		UIUtils.createLabel("", container);
 		UIUtils.createLabel("", container);
 
@@ -122,15 +122,55 @@ public class WatchDogView extends ViewPart {
 				createBarChart(createJunitExecutionBarDataset(),
 						"Your Test Run Activity", "", ""));
 
+		createShowingStatisticsLine();
+		createTimeSpanSelectionList();
+	}
+
+	private void createShowingStatisticsLine() {
+		Composite lineComposite = UIUtils.createZeroMarginGridedComposite(
+				oneColumn, 3);
 		UIUtils.createLabel(
 				"Showing statistics from " + intervalStatistics.oldestDate
 						+ " to " + intervalStatistics.mostRecentDate + " ("
 						+ intervalStatistics.getNumberOfIntervals()
-						+ " intervals).", oneColumn);
+						+ " intervals).", lineComposite);
 
+		UIUtils.createLabel("Not enough statistics for you?", lineComposite);
+		UIUtils.createOpenReportLink(lineComposite);
+	}
+
+	private void createTimeSpanSelectionList() {
 		intervalSelection = UIUtils.createZeroMarginGridedComposite(oneColumn,
 				3);
-		createIntervalsList();
+		UIUtils.createLabel("Show statistics of the past ", intervalSelection);
+		UIUtils.createComboList(intervalSelection, new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Combo widget = (Combo) e.getSource();
+				selectedTimePeriod = StatisticsTimePeriod.values()[widget
+						.getSelectionIndex()];
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+
+		}, StatisticsTimePeriod.names(), selectedTimePeriod.ordinal());
+	}
+
+	private void createRefreshLink() {
+		UIUtils.createLinkedLabel(intervalSelection, new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				update();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		}, "Refresh.", "");
 	}
 
 	private void calculateTimes() {
@@ -170,38 +210,6 @@ public class WatchDogView extends ViewPart {
 		Rectangle bounds = chartComposite.getBounds();
 		bounds.height = bounds.width;
 		chartComposite.setBounds(bounds);
-	}
-
-	private void createIntervalsList() {
-		UIUtils.createLabel("Show statistics of the past ", intervalSelection);
-		UIUtils.createComboList(intervalSelection, new SelectionListener() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Combo widget = (Combo) e.getSource();
-				selectedTimePeriod = StatisticsTimePeriod.values()[widget
-						.getSelectionIndex()];
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-
-		}, StatisticsTimePeriod.names(), selectedTimePeriod.ordinal());
-	}
-
-	private void createRefreshLink() {
-		UIUtils.createLinkedLabel(intervalSelection, new SelectionListener() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				update();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		}, "Refresh.", "");
 	}
 
 	private DefaultCategoryDataset createDevelopmentBarDataset() {
@@ -260,18 +268,6 @@ public class WatchDogView extends ViewPart {
 		return chart;
 	}
 
-	private String printPercent(double dividend, double divisor) {
-		if (divisor == 0) {
-			return " (--)";
-		}
-		return " (" + String.format("%.1f", dividend * 100 / divisor) + "%)";
-	}
-
-	@Override
-	public void setFocus() {
-		parent.setFocus();
-	}
-
 	private PieDataset createPerspectiveViewPieDataset() {
 		double divisor = perspectiveDebug + perspectiveJava + perspectiveOther;
 		DefaultPieDataset result = new DefaultPieDataset();
@@ -302,4 +298,15 @@ public class WatchDogView extends ViewPart {
 		return result;
 	}
 
+	private String printPercent(double dividend, double divisor) {
+		if (divisor == 0) {
+			return " (--)";
+		}
+		return " (" + String.format("%.1f", dividend * 100 / divisor) + "%)";
+	}
+
+	@Override
+	public void setFocus() {
+		parent.setFocus();
+	}
 }

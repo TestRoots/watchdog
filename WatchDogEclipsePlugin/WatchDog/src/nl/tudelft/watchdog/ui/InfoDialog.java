@@ -191,15 +191,11 @@ public class InfoDialog extends Dialog {
 		Composite container = UIUtils.createFullGridedComposite(
 				parentContainer, 3);
 		container.setData(new GridData(SWT.CENTER, SWT.NONE, true, false));
-		String projectReport = "http://www.testroots.org/reports/"
-				+ UIUtils.getWorkspaceSetting().projectId + ".pdf";
 
 		UIUtils.createLinkedLabel(container, new WatchDogViewListener(),
 				"Open View.", "").setLayoutData(
 				UIUtils.createFullGridUsageData());
-		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
-				"Open Report.", projectReport).setLayoutData(
-				UIUtils.createFullGridUsageData());
+		UIUtils.createOpenReportLink(container);
 		UIUtils.createLabel("", container);
 		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
 				"Open logs.",

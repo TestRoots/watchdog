@@ -303,4 +303,11 @@ public class UIUtils {
 		return comboList;
 	}
 
+	/** Creates a linked label that opens the project report in a browser. */
+	public static void createOpenReportLink(Composite container) {
+		String projectReport = "http://www.testroots.org/reports/"
+				+ UIUtils.getWorkspaceSetting().projectId + ".pdf";
+		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
+				"Open Report.", projectReport);
+	}
 }
