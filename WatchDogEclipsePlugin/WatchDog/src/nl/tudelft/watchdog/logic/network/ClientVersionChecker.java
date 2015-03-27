@@ -29,17 +29,14 @@ public class ClientVersionChecker extends RegularCheckerBase {
 	}
 
 	private static class ClientVersionCheckerTimerTask extends TimerTask {
-		private Preferences preferences;
-		private JsonTransferer jsonTransferer = new JsonTransferer();
+		private final Preferences preferences;
+		private final JsonTransferer jsonTransferer = new JsonTransferer();
 
 		private ClientVersionCheckerTimerTask() {
 			this.preferences = Preferences.getInstance();
 		}
 
-		/**
-		 * Transfers all intervals from the persistence storage that are not yet
-		 * on the server, to the server.
-		 */
+		/** Performs version comparison. */
 		@Override
 		public void run() {
 			try {
