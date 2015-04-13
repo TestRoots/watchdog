@@ -27,6 +27,10 @@ public class JUnitExecution implements Serializable {
 	@SerializedName("t")
 	private String testClassHash;
 
+	/** The test method on which the JUnit test was executed. */
+	@SerializedName("m")
+	private String testMethodHash;
+
 	/** Result of the test run. When aborted duration is NaN. */
 	@SerializedName("r")
 	private String result;
@@ -53,7 +57,10 @@ public class JUnitExecution implements Serializable {
 
 		if (test instanceof ITestCaseElement) {
 			ITestCaseElement testElement = (ITestCaseElement) test;
-			setClassNameHash(testElement.getTestClassName());
+			testMethodHash = WatchDogUtils.createHash(testElement
+					.getTestMethodName());
+			testMethodHash = WatchDogUtils.createHash(testElement
+					.getTestMethodName());
 			parent.setClassNameHash(testElement.getTestClassName());
 		} else if (test instanceof ITestElementContainer) {
 			ITestElementContainer testContainer = (ITestElementContainer) test;

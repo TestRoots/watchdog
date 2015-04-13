@@ -115,6 +115,14 @@ public class WatchDogUtilsTest {
 	}
 
 	@Test
+	public void testMavenTestFileNotation() {
+		String fileName = "ATestClass";
+		String expected = WatchDogUtils.createFileNameHash("org.some.package."
+				+ fileName);
+		assertEquals(expected, WatchDogUtils.createFileNameHash(fileName));
+	}
+
+	@Test
 	public void testBugReplaceWithinStringDoesNotOccur() {
 		String unexpectedHash = WatchDogUtils
 				.createFileNameHash("AClassTest.java");
