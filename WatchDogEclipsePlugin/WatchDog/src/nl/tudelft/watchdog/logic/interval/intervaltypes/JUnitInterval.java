@@ -1,6 +1,9 @@
 package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
+import java.util.ArrayList;
 import java.util.Date;
+
+import nl.tudelft.watchdog.logic.network.JsonTransferer;
 
 import org.eclipse.jdt.junit.model.ITestElement;
 
@@ -35,6 +38,10 @@ public class JUnitInterval extends IntervalBase {
 					- roundElapsedTime(duration)));
 		}
 		testExecution = new JUnitExecution(test, null);
+
+		ArrayList<IntervalBase> interval = new ArrayList<IntervalBase>();
+		interval.add(this);
+		System.out.println(new JsonTransferer().toJson(interval));
 	}
 
 	private long roundElapsedTime(double duration) {

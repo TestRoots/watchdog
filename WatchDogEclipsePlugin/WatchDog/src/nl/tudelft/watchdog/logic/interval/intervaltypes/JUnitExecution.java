@@ -53,10 +53,11 @@ public class JUnitExecution implements Serializable {
 
 		if (test instanceof ITestCaseElement) {
 			ITestCaseElement testElement = (ITestCaseElement) test;
+			setClassNameHash(testElement.getTestClassName());
 			parent.setClassNameHash(testElement.getTestClassName());
 		} else if (test instanceof ITestElementContainer) {
 			ITestElementContainer testContainer = (ITestElementContainer) test;
-			createTree(testContainer);
+			childrenExecutions = createTree(testContainer);
 		}
 	}
 
@@ -74,10 +75,11 @@ public class JUnitExecution implements Serializable {
 		this.projectHash = WatchDogUtils.createHash(projectName);
 	}
 
-	private void createTree(ITestElementContainer session) {
-		childrenExecutions = new ArrayList<JUnitExecution>();
+	private ArrayList<JUnitExecution> createTree(ITestElementContainer session) {
+		ArrayList<JUnitExecution> children = new ArrayList<JUnitExecution>();
 		for (ITestElement testChild : session.getChildren()) {
-			childrenExecutions.add(new JUnitExecution(testChild, this));
+			children.add(new JUnitExecution(testChild, this));
 		}
+		return children;
 	}
 }

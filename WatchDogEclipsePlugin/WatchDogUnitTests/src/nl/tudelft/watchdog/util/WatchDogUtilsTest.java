@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.joda.time.Duration;
 import org.junit.Test;
@@ -67,17 +68,17 @@ public class WatchDogUtilsTest {
 		assertEquals(false,
 				WatchDogUtils.isEmptyOrHasOnlyWhitespaces("   f   "));
 	}
-	
+
 	@Test
 	public void testIsEmptySansWhitespace() {
 		assertEquals(true, WatchDogUtils.isEmptyOrHasOnlyWhitespaces(""));
 		assertEquals(true, WatchDogUtils.isEmptyOrHasOnlyWhitespaces(null));
-		
+
 		assertEquals(true, WatchDogUtils.isEmptyOrHasOnlyWhitespaces(" "));
 		assertEquals(true, WatchDogUtils.isEmptyOrHasOnlyWhitespaces("  "));
 		assertEquals(true, WatchDogUtils.isEmptyOrHasOnlyWhitespaces("   "));
 		assertEquals(true, WatchDogUtils.isEmptyOrHasOnlyWhitespaces("  \n "));
-		
+
 		assertEquals(false, WatchDogUtils.isEmptyOrHasOnlyWhitespaces("  f "));
 	}
 
@@ -100,6 +101,28 @@ public class WatchDogUtilsTest {
 	}
 
 	@Test
+	public void testHashFileNameEmpty() {
+		String expectedHash = "";
+		assertEquals(expectedHash, WatchDogUtils.createFileNameHash(""));
+		assertEquals(expectedHash, WatchDogUtils.createFileNameHash(null));
+	}
+
+	@Test
+	public void testFileExtensionReplace() {
+		String fileName = "ATestClass";
+		String expected = WatchDogUtils.createFileNameHash(fileName + ".java");
+		assertEquals(expected, WatchDogUtils.createFileNameHash(fileName));
+	}
+
+	@Test
+	public void testBugReplaceWithinStringDoesNotOccur() {
+		String unexpectedHash = WatchDogUtils
+				.createFileNameHash("AClassTest.java");
+		assertTrue(!WatchDogUtils.createFileNameHash("ATestClassTest.java")
+				.equals(unexpectedHash));
+	}
+
+	@Test
 	public void testHashFileName() {
 		String expectedHash = "a6bb3545c5d1424e8bb6e95aceb1c734535e7ca3";
 		assertEquals(expectedHash, WatchDogUtils.createFileNameHash("AClass"));
@@ -108,5 +131,5 @@ public class WatchDogUtilsTest {
 		assertEquals(expectedHash + "Test",
 				WatchDogUtils.createFileNameHash("AClassTest.java"));
 	}
-	
+
 }
