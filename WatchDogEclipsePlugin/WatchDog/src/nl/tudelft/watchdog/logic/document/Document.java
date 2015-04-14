@@ -75,17 +75,7 @@ public class Document implements Serializable {
 
 	/** Prepares this document to extract statistics out of it. */
 	public void prepareDocument() {
-		if (name != null) {
-			String shortenedName = name.toLowerCase().replace(".java", "");
-			if (shortenedName.startsWith("test")
-					|| shortenedName.endsWith("test")) {
-				shortenedName = shortenedName.replace("test", "");
-				this.nameHash = WatchDogUtils.createHash(shortenedName)
-						+ "Test";
-			} else {
-				this.nameHash = WatchDogUtils.createHash(shortenedName);
-			}
-		}
+		this.nameHash = WatchDogUtils.createFileNameHash(name);
 		if (projectName != null) {
 			this.projectNameHash = WatchDogUtils.createHash(projectName);
 		}
