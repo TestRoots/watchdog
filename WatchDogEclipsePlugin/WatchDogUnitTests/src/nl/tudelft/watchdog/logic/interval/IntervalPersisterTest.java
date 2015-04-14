@@ -56,7 +56,7 @@ public class IntervalPersisterTest extends PersisterTestBase {
 
 	public static IntervalBase createRandomInterval() {
 		IntervalBase interval = new EclipseOpenInterval(new Date());
-		interval.setSessionSeed(444);
+		interval.setSessionSeed("444");
 		interval.setStartTime(new Date(interval.getStart().getTime()
 				+ (new Random()).nextInt(100000)));
 		interval.setEndTime(new Date(interval.getStart().getTime()

@@ -70,6 +70,7 @@ public class TimeSynchronityChecker extends RegularCheckerBase {
 							.getPerspectiveType();
 					intervalManager.closeAllIntervals(new Date(
 							previousExecutionDate + UPDATE_RATE));
+					intervalManager.generateAndSetSessionSeed();
 					eventManager.update(new WatchDogEvent(this,
 							EventType.START_ECLIPSE));
 					eventManager.update(new WatchDogEvent(openedPerspective,

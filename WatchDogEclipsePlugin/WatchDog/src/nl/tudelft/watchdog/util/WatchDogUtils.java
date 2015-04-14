@@ -2,7 +2,6 @@ package nl.tudelft.watchdog.util;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Random;
 import java.util.regex.Pattern;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -19,9 +18,6 @@ import org.joda.time.format.PeriodFormatterBuilder;
 
 /** Utilities for watchDog. */
 public class WatchDogUtils {
-
-	/** A random (generator) object. */
-	public static final Random RANDOM_OBJECT = new Random();
 
 	/** Formatter for a {@link Period}. */
 	private static PeriodFormatter periodFormatter = new PeriodFormatterBuilder()

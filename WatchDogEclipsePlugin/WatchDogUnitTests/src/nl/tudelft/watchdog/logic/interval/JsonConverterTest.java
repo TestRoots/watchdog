@@ -38,7 +38,7 @@ public class JsonConverterTest {
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"re\",\"ts\":1,\"te\":2,\"ss\":0,\"wdv\":\""
+				"[{\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"re\",\"ts\":1,\"te\":2,\"ss\":\"\",\"wdv\":\""
 						+ WatchDogGlobals.CLIENT_VERSION + "\"}]",
 				transferer.toJson(intervals));
 	}
@@ -54,7 +54,7 @@ public class JsonConverterTest {
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"wdv\":\""
+				"[{\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":\"\",\"wdv\":\""
 						+ WatchDogGlobals.CLIENT_VERSION + "\"}]",
 				transferer.toJson(intervals));
 	}
@@ -64,15 +64,15 @@ public class JsonConverterTest {
 	public void testJsonTypingIntervalTwoSameIntervalsRepresentation() {
 		ITextEditor editor = Mockito.mock(ITextEditor.class);
 		TypingInterval interval = new TypingInterval(editor, new Date());
-		interval.setDocument(new Document("Project", "filepath", "Production.java",
-				"blah-document"));
-		interval.setEndingDocument(new Document("Project", "Production.java", "filepath",
-				"blah-document"));
+		interval.setDocument(new Document("Project", "filepath",
+				"Production.java", "blah-document"));
+		interval.setEndingDocument(new Document("Project", "Production.java",
+				"filepath", "blah-document"));
 
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals(
-				"[{\"endingDocument\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"diff\":0,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":0,\"wdv\":\""
+				"[{\"endingDocument\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"diff\":0,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":\"\",\"wdv\":\""
 						+ WatchDogGlobals.CLIENT_VERSION + "\"}]",
 				transferer.toJson(intervals));
 	}
@@ -83,16 +83,15 @@ public class JsonConverterTest {
 		IntervalBase interval = new EclipseOpenInterval(new Date());
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
-		assertEquals(
-				"[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":0,\"wdv\":\""
-						+ WatchDogGlobals.CLIENT_VERSION + "\"}]",
+		assertEquals("[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":\"\",\"wdv\":\""
+				+ WatchDogGlobals.CLIENT_VERSION + "\"}]",
 				transferer.toJson(intervals));
 	}
 
 	private ArrayList<IntervalBase> createSampleIntervals(
 			EditorIntervalBase interval) {
-		interval.setDocument(new Document("Project", "Production.java", "filepath",
-				"blah-document"));
+		interval.setDocument(new Document("Project", "Production.java",
+				"filepath", "blah-document"));
 		ArrayList<IntervalBase> intervals = createSampleIntervals((IntervalBase) interval);
 		return intervals;
 	}
@@ -103,6 +102,7 @@ public class JsonConverterTest {
 		sleepABit();
 		interval.setStartTime(new Date(1));
 		interval.setEndTime(new Date(2));
+		interval.setSessionSeed("");
 		intervals.add(interval);
 		return intervals;
 	}

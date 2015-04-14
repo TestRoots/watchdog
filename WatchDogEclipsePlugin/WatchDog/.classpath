@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/commons-lang-2.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jcommon-1.0.23.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jfreechart-1.0.19-swt.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jfreechart-1.0.19.jar"/>
