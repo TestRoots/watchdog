@@ -27,6 +27,10 @@ public class JUnitExecution implements Serializable {
 	@SerializedName("t")
 	private String testClassHash;
 
+	/** The test method on which the JUnit test was executed. */
+	@SerializedName("m")
+	private String testMethodHash;
+
 	/** Result of the test run. When aborted duration is NaN. */
 	@SerializedName("r")
 	private String result;
@@ -53,10 +57,14 @@ public class JUnitExecution implements Serializable {
 
 		if (test instanceof ITestCaseElement) {
 			ITestCaseElement testElement = (ITestCaseElement) test;
+			testMethodHash = WatchDogUtils.createHash(testElement
+					.getTestMethodName());
+			testMethodHash = WatchDogUtils.createHash(testElement
+					.getTestMethodName());
 			parent.setClassNameHash(testElement.getTestClassName());
 		} else if (test instanceof ITestElementContainer) {
 			ITestElementContainer testContainer = (ITestElementContainer) test;
-			createTree(testContainer);
+			childrenExecutions = createTree(testContainer);
 		}
 	}
 
@@ -74,10 +82,11 @@ public class JUnitExecution implements Serializable {
 		this.projectHash = WatchDogUtils.createHash(projectName);
 	}
 
-	private void createTree(ITestElementContainer session) {
-		childrenExecutions = new ArrayList<JUnitExecution>();
+	private ArrayList<JUnitExecution> createTree(ITestElementContainer session) {
+		ArrayList<JUnitExecution> children = new ArrayList<JUnitExecution>();
 		for (ITestElement testChild : session.getChildren()) {
-			childrenExecutions.add(new JUnitExecution(testChild, this));
+			children.add(new JUnitExecution(testChild, this));
 		}
+		return children;
 	}
 }
