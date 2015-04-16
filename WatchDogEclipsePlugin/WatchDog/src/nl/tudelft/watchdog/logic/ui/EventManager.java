@@ -13,10 +13,10 @@ import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.JUnitInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActiveInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActiveInterval;
 import nl.tudelft.watchdog.logic.ui.events.EditorEvent;
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
@@ -82,7 +82,7 @@ public class EventManager {
 
 		case ACTIVE_WINDOW:
 			interval = intervalManager.getInterval(EclipseActiveInterval.class);
-			if (intervalIsClosed(interval)) {
+			if (isClosed(interval)) {
 				intervalManager.addInterval(new EclipseActiveInterval(
 						forcedDate));
 			}
@@ -107,7 +107,7 @@ public class EventManager {
 
 		case USER_ACTIVITY:
 			interval = intervalManager.getInterval(UserActiveInterval.class);
-			if (intervalIsClosed(interval)) {
+			if (isClosed(interval)) {
 				intervalManager.addInterval(new UserActiveInterval(forcedDate));
 			}
 			userInactivityNotifier.trigger();
@@ -141,13 +141,13 @@ public class EventManager {
 			userInactivityNotifier.trigger(forcedDate);
 			break;
 
-		case EDIT:
+		case SUBSEQUENT_EDIT:
 			editorInterval = intervalManager.getEditorInterval();
 			editor = (ITextEditor) event.getSource();
 
-			if (intervalIsClosed(editorInterval)
+			if (isClosed(editorInterval)
 					|| !intervalIsOfType(editorInterval, IntervalType.TYPING)
-					|| editorInterval.getEditor() != editor) {
+					|| isDifferentEditor(editorInterval, editor)) {
 				update(new WatchDogEvent(event.getSource(),
 						EventType.START_EDIT));
 				break;
@@ -162,8 +162,11 @@ public class EventManager {
 		case ACTIVE_FOCUS:
 			editorInterval = intervalManager.getEditorInterval();
 			editor = (ITextEditor) event.getSource();
-			if (intervalIsClosed(editorInterval)
-					|| editorInterval.getEditor() != editor) {
+			if (needToCreateNewReadingInterval(editorInterval, editor)) {
+				if (!isClosed(editorInterval)) {
+					intervalManager.closeInterval(editorInterval, forcedDate);
+				}
+
 				ReadingInterval readingInterval = new ReadingInterval(editor,
 						forcedDate);
 				readingInterval.setDocument(DocumentCreator
@@ -208,11 +211,22 @@ public class EventManager {
 		}
 	}
 
+	private boolean needToCreateNewReadingInterval(
+			EditorIntervalBase editorInterval, ITextEditor editor) {
+		return isClosed(editorInterval)
+				|| isDifferentEditor(editorInterval, editor);
+	}
+
+	private boolean isDifferentEditor(EditorIntervalBase editorInterval,
+			ITextEditor editor) {
+		return editorInterval.getEditor() != editor;
+	}
+
 	private boolean intervalIsOfType(IntervalBase interval, IntervalType type) {
 		return interval != null && interval.getType() == type;
 	}
 
-	private boolean intervalIsClosed(IntervalBase interval) {
+	private boolean isClosed(IntervalBase interval) {
 		return interval == null || interval.isClosed();
 	}
 

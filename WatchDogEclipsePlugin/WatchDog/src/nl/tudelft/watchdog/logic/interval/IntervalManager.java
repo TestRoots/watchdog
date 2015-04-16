@@ -76,16 +76,9 @@ public class IntervalManager extends IntervalManagerBase {
 	}
 
 	/**
-	 * Adds the given EditorIntervalBase, if the existing editorInterval is
-	 * closed.
+	 * Updates the given EditorIntervalBase.
 	 */
 	private void addEditorInterval(EditorIntervalBase editorInterval) {
-		if (!(this.editorInterval == null || this.editorInterval.isClosed())) {
-			WatchDogLogger.getInstance().logSevere(
-					"Failure: Unclosed editor interval! " + editorInterval);
-			closeInterval(this.editorInterval, editorInterval.getStart());
-		}
-
 		this.editorInterval = editorInterval;
 	}
 

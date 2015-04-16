@@ -32,7 +32,7 @@ public class EventManagerTest {
 	private static final int TIMEOUT_GRACE_PERIOD = (int) (USER_ACTIVITY_TIMEOUT * 1.1);
 	private EventManager eventManager;
 	private IntervalManager intervalManager;
-	ITextEditor mockedTextEditor;
+	private ITextEditor mockedTextEditor;
 	private EditorIntervalBase editorInterval;
 	private IntervalBase interval;
 
@@ -89,7 +89,7 @@ public class EventManagerTest {
 
 	@Test
 	public void testCreateWriteInterval() {
-		eventManager.update(createMockEvent(EventType.EDIT));
+		eventManager.update(createMockEvent(EventType.SUBSEQUENT_EDIT));
 		Mockito.verify(intervalManager).addInterval(
 				Mockito.isA(TypingInterval.class));
 	}
@@ -97,13 +97,13 @@ public class EventManagerTest {
 	@Test
 	public void testCreateWriteIntervalAndNotAReadInterval() {
 		eventManager.update(createMockEvent(EventType.START_EDIT));
-		eventManager.update(createMockEvent(EventType.EDIT));
+		eventManager.update(createMockEvent(EventType.SUBSEQUENT_EDIT));
 		Mockito.verify(intervalManager, Mockito.atLeast(1)).addInterval(
 				Mockito.isA(TypingInterval.class));
 		Mockito.verify(intervalManager, Mockito.never()).addInterval(
 				Mockito.isA(ReadingInterval.class));
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
-		eventManager.update(createMockEvent(EventType.EDIT));
+		eventManager.update(createMockEvent(EventType.SUBSEQUENT_EDIT));
 		eventManager.update(createMockEvent(EventType.PAINT));
 		Mockito.verify(intervalManager, Mockito.atLeast(1)).addInterval(
 				Mockito.isA(TypingInterval.class));
@@ -113,7 +113,7 @@ public class EventManagerTest {
 
 	@Test
 	public void testWritingIntervalsGetClosedOnHigherCancel() {
-		eventManager.update(createMockEvent(EventType.EDIT));
+		eventManager.update(createMockEvent(EventType.SUBSEQUENT_EDIT));
 		eventManager.update(createMockEvent(EventType.END_ECLIPSE));
 		Mockito.verify(intervalManager, Mockito.atLeastOnce()).closeInterval(
 				Mockito.isA(TypingInterval.class), Mockito.isA(Date.class));
@@ -141,7 +141,7 @@ public class EventManagerTest {
 
 	@Test
 	public void testTimeoutWorksForWritingIntervals() {
-		eventManager.update(createMockEvent(EventType.EDIT));
+		eventManager.update(createMockEvent(EventType.SUBSEQUENT_EDIT));
 		// first close null interval
 		Mockito.verify(intervalManager,
 				Mockito.timeout(TIMEOUT_GRACE_PERIOD).atLeast(1))
@@ -232,7 +232,7 @@ public class EventManagerTest {
 	 */
 	@Test
 	public void testAUserActivityIntervalIsCreatedThroughAnEdit() {
-		eventManager.update(createMockEvent(EventType.EDIT));
+		eventManager.update(createMockEvent(EventType.SUBSEQUENT_EDIT));
 		WatchDogUtils.sleep(TIMEOUT_GRACE_PERIOD / 5);
 		editorInterval = intervalManager.getEditorInterval();
 		interval = intervalManager.getInterval(UserActiveInterval.class);
