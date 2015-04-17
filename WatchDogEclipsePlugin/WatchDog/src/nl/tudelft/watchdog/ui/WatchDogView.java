@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.ui;
 import nl.tudelft.watchdog.logic.InitializationManager;
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics.StatisticsTimePeriod;
+import nl.tudelft.watchdog.logic.ui.listeners.WatchDogViewListener;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
@@ -13,9 +14,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IPartService;
-import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.part.ViewPart;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -27,7 +26,7 @@ import org.jfree.experimental.chart.swt.ChartComposite;
 import org.jfree.util.Rotation;
 
 /** A view displaying all the statistics that WatchDog has gathered. */
-public class WatchDogView extends ViewPart implements IPartListener2 {
+public class WatchDogView extends ViewPart {
 	/** The Id of the view. */
 	public static final String ID = "WatchDog.view";
 
@@ -57,6 +56,8 @@ public class WatchDogView extends ViewPart implements IPartListener2 {
 
 	private IPartService partService;
 
+	private WatchDogViewListener watchDogViewListener;
+
 	/** Updates the view by completely repainting it. */
 	public void update() {
 		oneColumn.dispose();
@@ -68,7 +69,8 @@ public class WatchDogView extends ViewPart implements IPartListener2 {
 	@Override
 	public void createPartControl(Composite parent) {
 		partService = (IPartService) getSite().getService(IPartService.class);
-		partService.addPartListener(this);
+		watchDogViewListener = new WatchDogViewListener(this);
+		partService.addPartListener(watchDogViewListener);
 
 		this.parent = parent;
 
@@ -321,41 +323,6 @@ public class WatchDogView extends ViewPart implements IPartListener2 {
 	@Override
 	public void dispose() {
 		super.dispose();
-		partService.removePartListener(this);
+		partService.removePartListener(watchDogViewListener);
 	}
-
-	@Override
-	public void partActivated(IWorkbenchPartReference partRef) {
-	}
-
-	@Override
-	public void partBroughtToTop(IWorkbenchPartReference partRef) {
-	}
-
-	@Override
-	public void partClosed(IWorkbenchPartReference partRef) {
-	}
-
-	@Override
-	public void partDeactivated(IWorkbenchPartReference partRef) {
-	}
-
-	@Override
-	public void partOpened(IWorkbenchPartReference partRef) {
-	}
-
-	@Override
-	public void partHidden(IWorkbenchPartReference partRef) {
-		// TODO (MMB) add call to eventManager
-	}
-
-	@Override
-	public void partVisible(IWorkbenchPartReference partRef) {
-		// TODO (MMB) add call to eventManager
-	}
-
-	@Override
-	public void partInputChanged(IWorkbenchPartReference partRef) {
-	}
-
 }

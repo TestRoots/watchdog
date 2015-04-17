@@ -57,7 +57,7 @@ public class EventManager {
 
 	/**
 	 * Simple proxy for {@link #update(WatchDogEvent, Date)}, calling it with
-	 * the forcedDate set to now.
+	 * the forcedDate set to "now".
 	 */
 	public void update(WatchDogEvent event) {
 		update(event, new Date());
