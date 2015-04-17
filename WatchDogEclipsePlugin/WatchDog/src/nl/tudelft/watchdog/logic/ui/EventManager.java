@@ -206,6 +206,11 @@ public class EventManager {
 			}
 			break;
 
+		case START_WATCHDOGVIEW:
+			break;
+		case END_WATCHDOGVIEW:
+			break;
+
 		default:
 			break;
 		}
