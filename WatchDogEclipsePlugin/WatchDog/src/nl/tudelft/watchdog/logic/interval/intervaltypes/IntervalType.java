@@ -37,6 +37,6 @@ public enum IntervalType {
 
 	/** The WatchDogView is open. */
 	@SerializedName("wo")
-	WATCHDOGVIEW_OPEN;
+	WATCHDOGVIEW;
 
 }

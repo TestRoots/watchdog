@@ -1,6 +1,3 @@
-/**
- * 
- */
 package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
 import java.util.Date;
@@ -8,11 +5,11 @@ import java.util.Date;
 import nl.tudelft.watchdog.ui.WatchDogView;
 
 /** When the {@link WatchDogView} is open. */
-public class WatchDogViewOpenInterval extends IntervalBase {
+public class WatchDogViewInterval extends IntervalBase {
 
 	/** Constructor. */
-	public WatchDogViewOpenInterval(Date start) {
-		super(IntervalType.WATCHDOGVIEW_OPEN, start);
+	public WatchDogViewInterval(Date start) {
+		super(IntervalType.WATCHDOGVIEW, start);
 	}
 
 	/** Class version. */

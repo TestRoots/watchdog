@@ -10,6 +10,7 @@ import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActiveInterval;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.WatchDogViewInterval;
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.util.WatchDogUtils;
@@ -251,6 +252,18 @@ public class EventManagerTest {
 
 		Assert.assertEquals(editorInterval.getStart(), interval.getStart());
 	}
+
+	@Test
+	public void testCreateWatchDogViewInterval() {
+		eventManager.update(createMockEvent(EventType.START_WATCHDOGVIEW));
+		Mockito.verify(intervalManager).addInterval(
+				Mockito.isA(WatchDogViewInterval.class));
+		eventManager.update(createMockEvent(EventType.END_WATCHDOGVIEW));
+		Mockito.verify(intervalManager, Mockito.atLeastOnce()).closeInterval(
+				Mockito.isA(WatchDogViewInterval.class), Mockito.isA(Date.class));
+
+	}
+	
 
 	private WatchDogEvent createMockEvent(EventType eventType) {
 		return new WatchDogEvent(mockedTextEditor, eventType);

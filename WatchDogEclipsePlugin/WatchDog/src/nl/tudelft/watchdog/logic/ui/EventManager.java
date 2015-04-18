@@ -17,6 +17,7 @@ import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval.Pers
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActiveInterval;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.WatchDogViewInterval;
 import nl.tudelft.watchdog.logic.ui.events.EditorEvent;
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
@@ -33,13 +34,13 @@ import org.eclipse.ui.texteditor.ITextEditor;
 public class EventManager {
 
 	/** The {@link InitializationManager} this observer is working with. */
-	private IntervalManager intervalManager;
+	private final IntervalManager intervalManager;
 
-	private UserInactivityNotifier userInactivityNotifier;
+	private final UserInactivityNotifier userInactivityNotifier;
 
-	private InactivityNotifier typingInactivityNotifier;
+	private final InactivityNotifier typingInactivityNotifier;
 
-	private InactivityNotifier readingInactivityNotifier;
+	private final InactivityNotifier readingInactivityNotifier;
 
 	/** Constructor. */
 	public EventManager(final IntervalManager intervalManager,
@@ -207,8 +208,19 @@ public class EventManager {
 			break;
 
 		case START_WATCHDOGVIEW:
+			interval = intervalManager.getInterval(WatchDogViewInterval.class);
+			if (!intervalIsOfType(interval, IntervalType.WATCHDOGVIEW)) {
+				intervalManager
+						.addInterval(new WatchDogViewInterval(forcedDate));
+			}
+			userInactivityNotifier.trigger(forcedDate);
 			break;
+
 		case END_WATCHDOGVIEW:
+			interval = intervalManager.getInterval(WatchDogViewInterval.class);
+			if (intervalIsOfType(interval, IntervalType.WATCHDOGVIEW)) {
+				intervalManager.closeInterval(interval, forcedDate);
+			}
 			break;
 
 		default:

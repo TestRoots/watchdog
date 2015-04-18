@@ -29,6 +29,8 @@ public class InitializationManager {
 
 	private final IntervalPersister intervalsStatisticsPersister;
 
+	private EventManager eventManager;
+
 	/** Private constructor. */
 	private InitializationManager() {
 		File baseFolder = Activator.getDefault().getStateLocation().toFile();
@@ -44,8 +46,7 @@ public class InitializationManager {
 		new ClientVersionChecker();
 		intervalManager = new IntervalManager(intervalsToTransferPersister,
 				intervalsStatisticsPersister);
-		EventManager eventManager = new EventManager(intervalManager,
-				USER_ACTIVITY_TIMEOUT);
+		eventManager = new EventManager(intervalManager, USER_ACTIVITY_TIMEOUT);
 		new TimeSynchronityChecker(intervalManager, eventManager);
 
 		WorkbenchListener workbenchListener = new WorkbenchListener(
@@ -73,6 +74,11 @@ public class InitializationManager {
 	/** @return the statistics interval persisters. */
 	public IntervalPersister getIntervalsStatisticsPersister() {
 		return intervalsStatisticsPersister;
+	}
+
+	/** @return the event Manager. */
+	public EventManager getEventManager() {
+		return eventManager;
 	}
 
 	/**

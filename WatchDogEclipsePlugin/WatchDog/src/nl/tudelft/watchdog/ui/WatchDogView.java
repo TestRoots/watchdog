@@ -82,7 +82,7 @@ public class WatchDogView extends ViewPart {
 			createActiveView();
 		}
 
-		// Always create refresh link
+		// Always create refresh link, even when statistics are not shown
 		createRefreshLink();
 	}
 
