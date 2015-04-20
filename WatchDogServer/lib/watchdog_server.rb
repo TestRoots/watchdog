@@ -50,7 +50,7 @@ class WatchDogServer < Sinatra::Base
 
   # Get info about stored user
   get '/client' do
-    client_version = "1.4.0"
+    client_version = "1.4.1"
 
     status 200
     body client_version.to_json
