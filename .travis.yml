@@ -3,3 +3,19 @@ jdk:
   - oraclejdk7
 before_install: cd WatchDogEclipsePlugin/
 script: mvn integration-test -B
+
+## covertiy analysis
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "HyKFEGGp6NhTlgnu2oxdEJG77D/7qqv++7tUk8H2UhLZsOrNiD9PeeSx3PskEz+DWS8dR/haL3TwX/K/4L3BoZHhMA1xnrIUXD0GoULJ9bzJK+tiAhBiqyPnPFF7+xPelnAqGT+8q321sVtmKzBNhEk9gBf5P2oFI5JBhdndy8Y="
+
+addons:
+  coverity_scan:
+    project:
+      name: "TestRoots/watchdog"
+    notification_email: moritzbeller@gmx.de
+    build_command_prepend: "cd WatchDogEclipsePlugin/ && mvn clean"
+    build_command:   "mvn -B -DskipTests=true compile"
+    branch_pattern: coverity_scan
