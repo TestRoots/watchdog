@@ -16,6 +16,6 @@ addons:
     project:
       name: "TestRoots/watchdog"
     notification_email: moritzbeller@gmx.de
-    build_command_prepend: "cd WatchDogEclipsePlugin/ && mvn clean"
+    build_command_prepend: "mvn clean"
     build_command:   "mvn -B -DskipTests=true compile"
     branch_pattern: coverity_scan
