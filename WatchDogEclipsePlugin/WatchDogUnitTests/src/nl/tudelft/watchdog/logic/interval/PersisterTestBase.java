@@ -8,10 +8,9 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.ClassRule;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.junit.runners.MethodSorters;
+import org.junit.runner.RunWith;
 
 /**
  * Base class for persistence tests. The convention for this IntervalPersister
@@ -20,7 +19,7 @@ import org.junit.runners.MethodSorters;
  * Subclasses should, instead of using the @BeforeClass annotation, call such
  * classes from within their constructor.
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@RunWith(LexicographicalTestOrderRunner.class)
 public abstract class PersisterTestBase {
 	protected static IntervalPersister persister;
 
