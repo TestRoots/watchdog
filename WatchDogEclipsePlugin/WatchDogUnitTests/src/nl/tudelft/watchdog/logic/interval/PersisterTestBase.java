@@ -30,7 +30,7 @@ public abstract class PersisterTestBase {
 	protected static String databaseName;
 
 	@ClassRule
-	public static TemporaryFolder copiedDirectory = new TemporaryFolder();
+	public static final TemporaryFolder copiedDirectory = new TemporaryFolder();
 
 	protected static void setUpSuperClass() {
 		databaseDirectory = new File(new File("resources",
