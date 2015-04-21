@@ -7,7 +7,11 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
+import org.junit.ClassRule;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runners.MethodSorters;
 
 /**
  * Base class for persistence tests. The convention for this IntervalPersister
@@ -16,6 +20,7 @@ import org.junit.Test;
  * Subclasses should, instead of using the @BeforeClass annotation, call such
  * classes from within their constructor.
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public abstract class PersisterTestBase {
 	protected static IntervalPersister persister;
 
@@ -25,30 +30,26 @@ public abstract class PersisterTestBase {
 
 	protected static String databaseName;
 
-	private static File copiedDirectory;
+	@ClassRule
+	public static TemporaryFolder copiedDirectory = new TemporaryFolder();
 
 	protected static void setUpSuperClass() {
 		databaseDirectory = new File(new File("resources",
 				"IntervalPersisterTests"), databaseName);
-		PersisterTestBase.copiedDirectory = new File(databaseDirectory
-				+ "-Temp");
-		if (copiedDirectory.exists() && copiedDirectory.canWrite()) {
-			copiedDirectory.delete();
-		}
-
 		try {
-			FileUtils.copyDirectory(databaseDirectory, copiedDirectory);
+			FileUtils.copyDirectory(databaseDirectory,
+					copiedDirectory.getRoot());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		copiedDatabase = new File(copiedDirectory, databaseName + ".map");
+		copiedDatabase = new File(copiedDirectory.getRoot(), databaseName
+				+ ".map");
 		persister = new IntervalPersister(copiedDatabase);
 	}
 
 	@AfterClass
 	public static void tearDown() throws IOException {
 		persister.closeDatabase();
-		FileUtils.deleteDirectory(copiedDirectory);
 	}
 
 	@Test
