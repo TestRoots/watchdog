@@ -3,8 +3,6 @@ package nl.tudelft.watchdog.logic.interval.intervaltypes;
 import java.util.ArrayList;
 import java.util.Date;
 
-import nl.tudelft.watchdog.logic.network.JsonTransferer;
-
 import org.eclipse.jdt.junit.model.ITestElement;
 
 import com.google.gson.annotations.SerializedName;
@@ -18,10 +16,10 @@ import com.google.gson.annotations.SerializedName;
 public class JUnitInterval extends IntervalBase {
 
 	/** Class version. */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	@SerializedName("je")
-	private JUnitExecution testExecution;
+	private final JUnitExecution testExecution;
 
 	/**
 	 * Constructor. JUnit intervals are by definition closed (or non-existent
@@ -41,10 +39,30 @@ public class JUnitInterval extends IntervalBase {
 
 		ArrayList<IntervalBase> interval = new ArrayList<IntervalBase>();
 		interval.add(this);
-		System.out.println(new JsonTransferer().toJson(interval));
 	}
 
 	private long roundElapsedTime(double duration) {
 		return Math.round(duration * 1000);
+	}
+
+	/**
+	 * @return The aggregated execution result of this Junit execution.
+	 */
+	public ExecutionResult getExecutionResult() {
+		switch (testExecution.getResult()) {
+		case "O":
+			return ExecutionResult.OK;
+		default:
+			return ExecutionResult.FAILURE;
+		}
+	}
+
+	/** Denotes the execution result. */
+	public enum ExecutionResult {
+		/** Test passed */
+		OK,
+
+		/** Test failed */
+		FAILURE
 	}
 }

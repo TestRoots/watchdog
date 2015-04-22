@@ -1,5 +1,7 @@
 package nl.tudelft.watchdog.ui;
 
+import java.awt.Color;
+
 import nl.tudelft.watchdog.logic.InitializationManager;
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics.StatisticsTimePeriod;
@@ -18,8 +20,13 @@ import org.eclipse.ui.IPartService;
 import org.eclipse.ui.part.ViewPart;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.chart.plot.Plot;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
+import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DatasetUtilities;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
@@ -27,6 +34,8 @@ import org.jfree.util.Rotation;
 
 /** A view displaying all the statistics that WatchDog has gathered. */
 public class WatchDogView extends ViewPart {
+	private static final float FOREGROUND_TRANSPARENCY = 0.8f;
+
 	/** The Id of the view. */
 	public static final String ID = "WatchDog.view";
 
@@ -49,6 +58,9 @@ public class WatchDogView extends ViewPart {
 	private double averageTestDurationSeconds;
 
 	private int junitRunsCount;
+	private int junitFailuresCount;
+	private int junitSuccessCount;
+
 	private StatisticsTimePeriod selectedTimePeriod = StatisticsTimePeriod.HOUR_1;
 
 	private Composite oneColumn;
@@ -129,7 +141,7 @@ public class WatchDogView extends ViewPart {
 						"Your Perspective Activity"));
 		createSWTChart(
 				container,
-				createBarChart(createJunitExecutionBarDataset(),
+				createStackedBarChart(createJunitExecutionBarDataset(),
 						"Your Test Run Activity", "", ""));
 
 		createShowingStatisticsLine();
@@ -210,6 +222,8 @@ public class WatchDogView extends ViewPart {
 		averageTestDurationSeconds = averageTestDurationMinutes * 60;
 
 		junitRunsCount = intervalStatistics.junitRunsCount;
+		junitSuccessCount = intervalStatistics.junitSuccessfulRunsCount;
+		junitFailuresCount = intervalStatistics.junitFailedRunsCount;
 	}
 
 	private void createSWTChart(Composite container, JFreeChart chart) {
@@ -266,7 +280,7 @@ public class WatchDogView extends ViewPart {
 				true, false);
 		PiePlot3D plot = (PiePlot3D) chart.getPlot();
 		plot.setDirection(Rotation.CLOCKWISE);
-		plot.setForegroundAlpha(0.8f);
+		plot.setForegroundAlpha(FOREGROUND_TRANSPARENCY);
 		return chart;
 	}
 
@@ -276,6 +290,33 @@ public class WatchDogView extends ViewPart {
 				yAxisName, dataset);
 		chart.getLegend().setVisible(false);
 		return chart;
+	}
+
+	private JFreeChart createStackedBarChart(CategoryDataset dataset,
+			String title, String xAxisName, String yAxisName) {
+		JFreeChart chart = ChartFactory.createStackedBarChart3D(title,
+				xAxisName, yAxisName, dataset);
+		chart.getLegend().setVisible(false);
+
+		CategoryPlot plot = chart.getCategoryPlot();
+		CategoryItemRenderer renderer = plot.getRenderer();
+		renderer.setSeriesPaint(0, makeColorTransparent(Color.green));
+		renderer.setSeriesPaint(1, makeColorTransparent(Color.red));
+		renderer.setSeriesPaint(2, makeColorTransparent(Color.gray));
+		return chart;
+	}
+
+	/**
+	 * Takes a color and modifies its alpha channel to give it (roughly) the
+	 * same transparency level that other JFreeCharts have per default, or that
+	 * can be set using {@link Plot#setForegroundAlpha(float)}. Workaround for
+	 * StackedBarCharts, where the above mentioned does not work.
+	 */
+	private Color makeColorTransparent(Color color) {
+		int adjustedTransparency = (int) Math
+				.round(FOREGROUND_TRANSPARENCY * 0.6 * 255);
+		return new Color(color.getRed(), color.getGreen(), color.getBlue(),
+				adjustedTransparency);
 	}
 
 	private PieDataset createPerspectiveViewPieDataset() {
@@ -290,22 +331,30 @@ public class WatchDogView extends ViewPart {
 		return result;
 	}
 
-	private DefaultCategoryDataset createJunitExecutionBarDataset() {
+	private CategoryDataset createJunitExecutionBarDataset() {
 		double differenceSeconds = Math.abs(averageTestDurationSeconds
 				- junitRunsCount);
 		double differenceMinutes = Math.abs(averageTestDurationMinutes
 				- junitRunsCount);
-		DefaultCategoryDataset result = new DefaultCategoryDataset();
-		result.setValue(junitRunsCount, "1", "Number of Test Runs");
-		String testDuration = "Average Test Run Duration";
+
+		String testDurationTitle = "Test Run Duration";
+		double testDuration;
 		if (differenceSeconds < differenceMinutes) {
-			result.setValue(averageTestDurationSeconds, "1", testDuration
-					+ " (in seconds)");
+			testDuration = averageTestDurationSeconds;
+			testDurationTitle += " (in seconds)";
 		} else {
-			result.setValue(averageTestDurationMinutes, "1", testDuration
-					+ " (in minutes)");
+			testDuration = averageTestDurationMinutes;
+			testDurationTitle += " (in minutes)";
 		}
-		return result;
+
+		String[] columns = new String[] { "Successful", "Failed", "Both" };
+		String[] rows = new String[] { "Test Runs", testDurationTitle };
+		double[][] data = new double[][] { { junitSuccessCount, 0 },
+				{ junitFailuresCount, 0 }, { 0, testDuration } };
+		CategoryDataset dataSet = DatasetUtilities.createCategoryDataset(
+				columns, rows, data);
+
+		return dataSet;
 	}
 
 	private String printPercent(double dividend, double divisor) {
