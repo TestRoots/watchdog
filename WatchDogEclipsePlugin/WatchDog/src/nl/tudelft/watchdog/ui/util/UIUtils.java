@@ -305,8 +305,8 @@ public class UIUtils {
 
 	/** Creates a linked label that opens the project report in a browser. */
 	public static void createOpenReportLink(Composite container) {
-		String projectReport = "http://www.testroots.org/reports/"
-				+ UIUtils.getWorkspaceSetting().projectId + ".pdf";
+		String projectReport = "http://www.testroots.org/reports/project/"
+				+ UIUtils.getWorkspaceSetting().projectId + ".html";
 		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
 				"Open Report.", projectReport);
 	}
