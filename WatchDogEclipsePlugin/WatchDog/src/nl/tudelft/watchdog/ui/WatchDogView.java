@@ -302,7 +302,7 @@ public class WatchDogView extends ViewPart {
 		CategoryItemRenderer renderer = plot.getRenderer();
 		renderer.setSeriesPaint(0, makeColorTransparent(Color.green));
 		renderer.setSeriesPaint(1, makeColorTransparent(Color.red));
-		renderer.setSeriesPaint(2, makeColorTransparent(Color.gray));
+		renderer.setSeriesPaint(2, makeColorTransparent(Color.blue));
 		return chart;
 	}
 
