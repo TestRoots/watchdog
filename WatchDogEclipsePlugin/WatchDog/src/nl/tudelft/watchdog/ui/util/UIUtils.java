@@ -6,6 +6,7 @@ import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.preferences.WorkspacePreferenceSetting;
 import nl.tudelft.watchdog.ui.util.CommandExecuterBase.CommandExecuter;
 import nl.tudelft.watchdog.ui.util.CommandExecuterBase.CommandRefresher;
+import nl.tudelft.watchdog.util.WatchDogLogger;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -276,11 +277,19 @@ public class UIUtils {
 		invokeCommand("org.eclipse.equinox.p2.ui.sdk.update");
 	}
 
-	/** Returns the WatchDog view */
+	/**
+	 * Returns the WatchDog view, or <code>null</code> if it cannot launch or
+	 * find it.
+	 */
 	public static WatchDogView getWatchDogView() {
-		return (WatchDogView) PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage()
-				.findViewReference(WatchDogView.ID).getView(false);
+		try {
+			return (WatchDogView) PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getActivePage()
+					.findViewReference(WatchDogView.ID).getView(false);
+		} catch (NullPointerException npe) {
+			WatchDogLogger.getInstance().logSevere(npe);
+			return null;
+		}
 	}
 
 	/** Creates a clickable link with the given description text. */
@@ -305,8 +314,8 @@ public class UIUtils {
 
 	/** Creates a linked label that opens the project report in a browser. */
 	public static void createOpenReportLink(Composite container) {
-		String projectReport = "http://www.testroots.org/reports/"
-				+ UIUtils.getWorkspaceSetting().projectId + ".pdf";
+		String projectReport = "http://www.testroots.org/reports/project/"
+				+ UIUtils.getWorkspaceSetting().projectId + ".html";
 		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
 				"Open Report.", projectReport);
 	}
