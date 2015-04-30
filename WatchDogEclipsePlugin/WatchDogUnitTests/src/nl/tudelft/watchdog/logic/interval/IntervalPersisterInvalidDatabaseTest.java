@@ -23,6 +23,11 @@ public class IntervalPersisterInvalidDatabaseTest extends PersisterTestBase {
 		writer.close();
 	}
 
+	/**
+	 * Re-read the entire (saved) database before every single test case again.
+	 * This is to make sure that the invalid database gets overriden, hence it
+	 * must be re-read after its first opened in {@link #setUpSuperClass()}.
+	 */
 	@Before
 	public void setUpBeforeMethod() {
 		persister = new IntervalPersister(copiedDatabase);
