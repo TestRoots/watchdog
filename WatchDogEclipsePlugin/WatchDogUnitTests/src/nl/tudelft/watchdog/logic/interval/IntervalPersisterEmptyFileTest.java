@@ -10,26 +10,25 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class IntervalPersisterInvalidDatabaseTest extends PersisterTestBase {
+public class IntervalPersisterEmptyFileTest extends PersisterTestBase {
 
 	@BeforeClass
-	public static void setUpBeforeClass() throws FileNotFoundException,
-			UnsupportedEncodingException {
-		databaseName = "InvalidTestDB";
+	public static void setUpBeforeClass() {
+		databaseName = "EmptyTestDB";
 		setUpSuperClass();
-
-		PrintWriter writer = new PrintWriter(copiedDatabase, "UTF-8");
-		writer.println("Not a MapDB");
-		writer.close();
 	}
 
 	/**
-	 * Re-read the entire (saved) database before every single test case again.
-	 * This is to make sure that the invalid database gets overriden, hence it
-	 * must be re-read after its first opened in {@link #setUpSuperClass()}.
+	 * A database from an empty file is created before every test execution to
+	 * ensure that the database is initialised correctly.
 	 */
 	@Before
-	public void setUpBeforeMethod() {
+	public void setUpBeforeMethod() throws FileNotFoundException,
+			UnsupportedEncodingException {
+		PrintWriter writer = new PrintWriter(copiedDatabase, "UTF-8");
+		writer.println("");
+		writer.close();
+
 		persister = new IntervalPersister(copiedDatabase);
 	}
 
