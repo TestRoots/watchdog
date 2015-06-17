@@ -17,7 +17,7 @@ import com.google.gson.annotations.SerializedName;
 public class JUnitExecution implements Serializable {
 
 	/** JUnitExecution */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	/** The project on which the JUnit test was executed. */
 	@SerializedName("p")
@@ -44,6 +44,12 @@ public class JUnitExecution implements Serializable {
 	/** Constructor. */
 	public JUnitExecution(ITestElement test, JUnitExecution parent) {
 		double elapsedTime = test.getElapsedTimeInSeconds();
+		if (parent == null) {
+			// Avoids potential NPE by making this JUnitExecution its own parent
+			// for the scope of the constructor.
+			parent = this;
+		}
+
 		if (elapsedTime > 0.0) {
 			duration = new JsonifiedDouble(elapsedTime);
 		}
@@ -59,13 +65,19 @@ public class JUnitExecution implements Serializable {
 			ITestCaseElement testElement = (ITestCaseElement) test;
 			testMethodHash = WatchDogUtils.createHash(testElement
 					.getTestMethodName());
-			testMethodHash = WatchDogUtils.createHash(testElement
-					.getTestMethodName());
 			parent.setClassNameHash(testElement.getTestClassName());
 		} else if (test instanceof ITestElementContainer) {
 			ITestElementContainer testContainer = (ITestElementContainer) test;
 			childrenExecutions = createTree(testContainer);
 		}
+	}
+
+	/**
+	 * @return The result in a string form. O stands for OK, everything else is
+	 *         a failed test result.
+	 */
+	public String getResult() {
+		return result;
 	}
 
 	/** Sets the result. */

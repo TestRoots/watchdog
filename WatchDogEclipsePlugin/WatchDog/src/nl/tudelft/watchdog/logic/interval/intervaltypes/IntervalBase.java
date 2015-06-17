@@ -134,11 +134,9 @@ abstract public class IntervalBase extends WatchDogTransferable implements
 		this.isClosed = true;
 	}
 
-	public Object clone() {
-		try {
-			return super.clone();
-		} catch (Exception e) {
-			return null;
-		}
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
+
 }

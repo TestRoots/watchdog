@@ -40,6 +40,8 @@ public class IntervalStatistics extends IntervalManagerBase {
 	public Date mostRecentDate;
 	public Date oldestDate;
 
+	public int junitSuccessfulRunsCount;
+	public int junitFailedRunsCount;
 	public int junitRunsCount;
 
 	/** Pre-defined time periods for statistics display. */
@@ -122,10 +124,15 @@ public class IntervalStatistics extends IntervalManagerBase {
 			}
 
 			if (!intervalIsOlderThanThreshold(thresholdDateView, interval)) {
-				IntervalBase clonedInterval = (IntervalBase) interval.clone();
-				adjustIntervalStartAndEndDate(thresholdDateView, interval,
-						clonedInterval);
-				filteredIntervals.add(clonedInterval);
+				IntervalBase clonedInterval;
+				try {
+					clonedInterval = (IntervalBase) interval.clone();
+					adjustIntervalStartAndEndDate(thresholdDateView, interval,
+							clonedInterval);
+					filteredIntervals.add(clonedInterval);
+				} catch (CloneNotSupportedException exception) {
+					// intentionally empty
+				}
 			}
 		}
 
@@ -166,10 +173,23 @@ public class IntervalStatistics extends IntervalManagerBase {
 		perspectiveDebug = aggregateDurations(getPerspectiveIntervals(Perspective.DEBUG));
 		perspectiveJava = aggregateDurations(getPerspectiveIntervals(Perspective.JAVA));
 		perspectiveOther = aggregateDurations(getPerspectiveIntervals(Perspective.OTHER));
-		averageTestDuration = getPreciseTime(aggregateDurations(getIntervals(JUnitInterval.class)))
-				/ getIntervals(JUnitInterval.class).size();
 
-		junitRunsCount = getIntervals(JUnitInterval.class).size();
+		List<JUnitInterval> junitIntervals = getIntervals(JUnitInterval.class);
+		junitRunsCount = junitIntervals.size();
+		averageTestDuration = getPreciseTime(aggregateDurations(junitIntervals))
+				/ junitRunsCount;
+		junitSuccessfulRunsCount = 0;
+		junitFailedRunsCount = 0;
+
+		for (JUnitInterval jUnitInterval : junitIntervals) {
+			switch (jUnitInterval.getExecutionResult()) {
+			case OK:
+				junitSuccessfulRunsCount++;
+				break;
+			case FAILURE:
+				junitFailedRunsCount++;
+			}
+		}
 	}
 
 	/**

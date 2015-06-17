@@ -13,12 +13,12 @@ import org.apache.http.ParseException;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
@@ -45,7 +45,7 @@ public class NetworkUtils {
 	 */
 	public static HttpEntity getURLAndGetResponse(String url)
 			throws ServerCommunicationException {
-		HttpClient client = createHTTPClient();
+		CloseableHttpClient client = createHTTPClient();
 		HttpGet get;
 		String errorMessage = "";
 
@@ -60,6 +60,8 @@ public class NetworkUtils {
 			}
 		} catch (IllegalStateException | IllegalArgumentException | IOException exception) {
 			// intentionally empty
+		} finally {
+			closeHttpClientGracefully(client);
 		}
 		throw new ServerCommunicationException(errorMessage);
 	}
@@ -71,7 +73,7 @@ public class NetworkUtils {
 	 * @return a {@link Connection} object depicting how the connection went.
 	 */
 	public static Connection urlExistsAndReturnsStatus200(String url) {
-		HttpClient client = createHTTPClient();
+		CloseableHttpClient client = createHTTPClient();
 		HttpGet get;
 
 		try {
@@ -79,6 +81,7 @@ public class NetworkUtils {
 		} catch (IllegalArgumentException e) {
 			return Connection.UNSUCCESSFUL;
 		}
+
 		try {
 			HttpResponse response = client.execute(get);
 			int statusCode = response.getStatusLine().getStatusCode();
@@ -90,8 +93,18 @@ public class NetworkUtils {
 			return Connection.NETWORK_ERROR;
 		} catch (IllegalStateException | IOException exception) {
 			// intentionally empty
+		} finally {
+			closeHttpClientGracefully(client);
 		}
 		return Connection.NETWORK_ERROR;
+	}
+
+	private static void closeHttpClientGracefully(CloseableHttpClient client) {
+		try {
+			client.close();
+		} catch (IOException exception) {
+			// intentionally empty
+		}
 	}
 
 	/**
@@ -105,7 +118,7 @@ public class NetworkUtils {
 	public static HttpEntity transferJsonAndGetResponse(String url,
 			String jsonData) throws ServerCommunicationException,
 			ServerReturnCodeException {
-		HttpClient client = createHTTPClient();
+		CloseableHttpClient client = createHTTPClient();
 		HttpPost post = new HttpPost(url);
 		String errorMessage = "";
 
@@ -134,6 +147,8 @@ public class NetworkUtils {
 		} catch (IllegalStateException e) {
 			// URL wrongly formatted (target host is null)
 			errorMessage = "URL wrongly formatted. " + e.getMessage();
+		} finally {
+			closeHttpClientGracefully(client);
 		}
 		WatchDogLogger.getInstance().logInfo(errorMessage);
 		throw new ServerCommunicationException(errorMessage);
@@ -187,7 +202,7 @@ public class NetworkUtils {
 	}
 
 	/** Builds the correct HTTPClient according to the Preferences. */
-	private static HttpClient createHTTPClient() {
+	private static CloseableHttpClient createHTTPClient() {
 		if (Preferences.getInstance().isAuthenticationEnabled()) {
 			return createAuthenticatedHttpClient();
 		}
@@ -195,7 +210,7 @@ public class NetworkUtils {
 	}
 
 	/** Creates an HTTP client that uses a normal connection. */
-	private static HttpClient createNormalHttpClient() {
+	private static CloseableHttpClient createNormalHttpClient() {
 		return createPlainHttpClientBuilder().build();
 	}
 
@@ -206,13 +221,11 @@ public class NetworkUtils {
 				.setConnectionRequestTimeout(connectionTimeout)
 				.setConnectTimeout(connectionTimeout)
 				.setSocketTimeout(connectionTimeout).build();
-		HttpClientBuilder client = HttpClientBuilder.create()
-				.setDefaultRequestConfig(config);
-		return client;
+		return HttpClientBuilder.create().setDefaultRequestConfig(config);
 	}
 
 	/** Creates an HTTP client that uses an authenticated connection. */
-	private static HttpClient createAuthenticatedHttpClient() {
+	private static CloseableHttpClient createAuthenticatedHttpClient() {
 		CredentialsProvider provider = new BasicCredentialsProvider();
 		byte[] providerInfo = { 104, 110, 115, 112, 113, 115, 122, 110, 112,
 				113 };
@@ -220,9 +233,8 @@ public class NetworkUtils {
 				"watchdogplugin", new String(providerInfo,
 						Charset.defaultCharset()));
 		provider.setCredentials(AuthScope.ANY, credentials);
-		HttpClient client = createPlainHttpClientBuilder()
-				.setDefaultCredentialsProvider(provider).build();
-		return client;
+		return createPlainHttpClientBuilder().setDefaultCredentialsProvider(
+				provider).build();
 	}
 
 }
