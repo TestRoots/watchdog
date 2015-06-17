@@ -24,6 +24,7 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.chart.plot.Plot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DatasetUtilities;
@@ -288,7 +289,10 @@ public class WatchDogView extends ViewPart {
 			String title, String xAxisName, String yAxisName) {
 		JFreeChart chart = ChartFactory.createBarChart3D(title, xAxisName,
 				yAxisName, dataset);
-		chart.getLegend().setVisible(false);
+		LegendTitle legend = chart.getLegend();
+		if (legend != null) {
+			legend.setVisible(false);
+		}
 		return chart;
 	}
 

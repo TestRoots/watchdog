@@ -44,6 +44,12 @@ public class JUnitExecution implements Serializable {
 	/** Constructor. */
 	public JUnitExecution(ITestElement test, JUnitExecution parent) {
 		double elapsedTime = test.getElapsedTimeInSeconds();
+		if (parent == null) {
+			// Avoids potential NPE by making this JUnitExecution its own parent
+			// for the scope of the constructor.
+			parent = this;
+		}
+
 		if (elapsedTime > 0.0) {
 			duration = new JsonifiedDouble(elapsedTime);
 		}

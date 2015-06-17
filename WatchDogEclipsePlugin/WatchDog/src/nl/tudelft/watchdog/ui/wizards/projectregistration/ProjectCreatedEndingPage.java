@@ -8,8 +8,8 @@ import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 import nl.tudelft.watchdog.ui.wizards.Project;
 import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPageBase;
 import nl.tudelft.watchdog.ui.wizards.RegistrationWizardBase;
-import nl.tudelft.watchdog.ui.wizards.userregistration.UserRegistrationPage;
 import nl.tudelft.watchdog.ui.wizards.userregistration.UserProjectRegistrationWizard;
+import nl.tudelft.watchdog.ui.wizards.userregistration.UserRegistrationPage;
 import nl.tudelft.watchdog.util.WatchDogLogger;
 
 import org.eclipse.jface.wizard.IWizard;
@@ -53,6 +53,14 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPageBase {
 			project.useJunitOnlyForUnitTesting = sliderPage
 					.usesJunitForUnitTestingOnly();
 			project.followTestDrivenDesign = sliderPage.usesTestDrivenDesing();
+		}
+
+		if (projectPage == null) {
+			messageTitle = "How did you get here?";
+			messageBody = "We couldn't figure out which wizard page\n";
+			messageBody += "you came from. Please restart the registration.";
+			WatchDogLogger.getInstance().logSevere("Unknown previous page");
+			return;
 		}
 
 		// initialize from projectPage
@@ -124,12 +132,12 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPageBase {
 
 	private void createProjectRegistrationSummary() {
 		if (successfulRegistration) {
-			FinishableWizardPage.createSuccessMessage(dynamicComposite, messageTitle,
-					messageBody, id);
+			FinishableWizardPage.createSuccessMessage(dynamicComposite,
+					messageTitle, messageBody, id);
 			UIUtils.createLabel(concludingMessage, dynamicComposite);
 		} else {
-			FinishableWizardPage.createFailureMessage(dynamicComposite, messageTitle,
-					messageBody);
+			FinishableWizardPage.createFailureMessage(dynamicComposite,
+					messageTitle, messageBody);
 			setPageComplete(false);
 		}
 	}
