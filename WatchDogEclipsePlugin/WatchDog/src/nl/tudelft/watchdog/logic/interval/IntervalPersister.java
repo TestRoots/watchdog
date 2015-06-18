@@ -93,13 +93,18 @@ public class IntervalPersister {
 		}
 
 		if (!auxiliaryFile.delete()) {
+			FileOutputStream fileOutputStream = null;
 			try {
-				FileOutputStream fileOutputStream = new FileOutputStream(
-						databaseFile);
+				fileOutputStream = new FileOutputStream(databaseFile);
 				fileOutputStream.write(new byte[] {});
-				fileOutputStream.close();
 			} catch (IOException exception) {
 				WatchDogLogger.getInstance().logSevere(exception);
+			} finally {
+				try {
+					fileOutputStream.close();
+				} catch (IOException exception) {
+					// intentionally empty
+				}
 			}
 		}
 	}
