@@ -58,18 +58,18 @@ class WatchDogServer < Sinatra::Base
 
   # Get info about stored user
   get '/user/:id' do
-    get_entity_info(method(:get_user_by_id), params[:'id'])
+    get_entity_info('get_user_by_id', params[:'id'])
   end
 
   # Get info about stored project
   get '/project/:id' do
-    get_entity_info(method(:get_project_by_id), params[:'id'])
+    get_entity_info('get_project_by_id', params[:'id'])
   end
 
   
   # Return info about stored entity
   def get_entity_info(info_function, id) 
-    stored_entity = info_function.call(id)
+    stored_entity = self.send(info_function, id)
     
     if stored_entity.nil?
       halt 404, "Entity does not exist"
