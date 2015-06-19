@@ -1,5 +1,7 @@
 package nl.tudelft.watchdog.util;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Globals for the current WatchDog instance.
  */
@@ -23,4 +25,17 @@ public class WatchDogGlobals {
 	/** The client's version, as set in pom.xml. */
 	public final static String CLIENT_VERSION = "1.4.2";
 
+	/** The host ide this plugin is running on. */
+	public static IDE hostIDE;
+
+	/** Describes the different supported IDE plugin hosts. */
+	public enum IDE {
+		/** Eclipse-IDE */
+		@SerializedName("ec")
+		ECLIPSE,
+
+		/** IntelliJ-IDE */
+		@SerializedName("ij")
+		INTELLIJ
+	}
 }
