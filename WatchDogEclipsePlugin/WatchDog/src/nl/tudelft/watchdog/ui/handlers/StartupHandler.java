@@ -5,6 +5,7 @@ import nl.tudelft.watchdog.ui.WatchDogView;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
+import nl.tudelft.watchdog.util.WatchDogGlobals.IDE;
 import nl.tudelft.watchdog.util.WatchDogLogger;
 
 import org.eclipse.swt.widgets.Display;
@@ -32,6 +33,7 @@ public class StartupHandler implements IStartup {
 			// Initialize the interval manager, and thereby, interval recording.
 			InitializationManager.getInstance();
 			WatchDogGlobals.isActive = true;
+			WatchDogGlobals.hostIDE = IDE.ECLIPSE;
 			// Update WatchDog icon
 			UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);
 			updateView();

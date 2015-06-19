@@ -1,5 +1,12 @@
 language: java
 jdk:
   - oraclejdk7
-before_install: cd WatchDogEclipsePlugin/
-script: mvn integration-test -B
+before_install:  
+ - sudo apt-get update  
+ - sudo apt-get install ruby
+ - sudo apt-get install rubygems
+ - sudo gem install bundler
+services:
+  - mongodb
+  
+script: ./travis_build.sh

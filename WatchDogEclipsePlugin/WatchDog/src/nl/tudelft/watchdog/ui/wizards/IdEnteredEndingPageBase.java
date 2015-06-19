@@ -48,7 +48,7 @@ public abstract class IdEnteredEndingPageBase extends FinishableWizardPage {
 			setId();
 			setTitle("Welcome back!");
 			setDescription("Thanks for using your existing " + idType + "-ID!");
-			setPageComplete(true);
+			setErrorMessageAndPageComplete(null);
 			dynamicComposite = createSuccessfulExistingID(topComposite);
 			break;
 		case UNSUCCESSFUL:
@@ -106,7 +106,8 @@ public abstract class IdEnteredEndingPageBase extends FinishableWizardPage {
 		composite.setLayoutData(UIUtils.createFullGridUsageData());
 		String title = "Everything worked perfectly.";
 		String message = "You are using an existing " + idType + " id: ";
-		FinishableWizardPage.createSuccessMessage(composite, title, message, id);
+		FinishableWizardPage
+				.createSuccessMessage(composite, title, message, id);
 		UIUtils.createWrappingLabel(
 				"Your "
 						+ idType

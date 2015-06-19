@@ -24,6 +24,7 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.chart.plot.Plot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DatasetUtilities;
@@ -288,15 +289,22 @@ public class WatchDogView extends ViewPart {
 			String title, String xAxisName, String yAxisName) {
 		JFreeChart chart = ChartFactory.createBarChart3D(title, xAxisName,
 				yAxisName, dataset);
-		chart.getLegend().setVisible(false);
+		setLegendInvisible(chart);
 		return chart;
+	}
+
+	private void setLegendInvisible(JFreeChart chart) {
+		LegendTitle legend = chart.getLegend();
+		if (legend != null) {
+			legend.setVisible(false);
+		}
 	}
 
 	private JFreeChart createStackedBarChart(CategoryDataset dataset,
 			String title, String xAxisName, String yAxisName) {
 		JFreeChart chart = ChartFactory.createStackedBarChart3D(title,
 				xAxisName, yAxisName, dataset);
-		chart.getLegend().setVisible(false);
+		setLegendInvisible(chart);
 
 		CategoryPlot plot = chart.getCategoryPlot();
 		CategoryItemRenderer renderer = plot.getRenderer();
@@ -347,12 +355,12 @@ public class WatchDogView extends ViewPart {
 			testDurationTitle += " (in minutes)";
 		}
 
-		String[] columns = new String[] { "Successful", "Failed", "Both" };
-		String[] rows = new String[] { "Test Runs", testDurationTitle };
+		String[] rows = new String[] { "Successful", "Failed", "Both" };
+		String[] columns = new String[] { "Test Runs", testDurationTitle };
 		double[][] data = new double[][] { { junitSuccessCount, 0 },
 				{ junitFailuresCount, 0 }, { 0, testDuration } };
-		CategoryDataset dataSet = DatasetUtilities.createCategoryDataset(
-				columns, rows, data);
+		CategoryDataset dataSet = DatasetUtilities.createCategoryDataset(rows,
+				columns, data);
 
 		return dataSet;
 	}

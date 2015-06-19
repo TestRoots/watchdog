@@ -251,6 +251,9 @@ class WatchDogServer < Sinatra::Base
         logger.error e.backtrace.join("\n")
       end
     end
+   rescue Errno::ECONNREFUSED => e
+        logger.error "NET::SMTP.start failure"
+        logger.error e.backtrace.join("\n")
   end
 
 
