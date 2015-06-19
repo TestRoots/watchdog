@@ -16,9 +16,11 @@ import nl.tudelft.watchdog.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.ui.wizards.Project;
 import nl.tudelft.watchdog.ui.wizards.User;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
+import nl.tudelft.watchdog.util.WatchDogGlobals.IDE;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -31,6 +33,16 @@ public class JsonConverterTest {
 
 	private JsonTransferer transferer = new JsonTransferer();
 
+	@BeforeClass
+	public static void setUp() {
+		WatchDogGlobals.hostIDE = IDE.ECLIPSE;
+	}
+
+	public String pasteWDVAndClient() {
+		return "\"wdv\":\"" + WatchDogGlobals.CLIENT_VERSION
+				+ "\",\"ide\":\"ec\"";
+	}
+
 	/** Tests the format of the returned Json representation. */
 	@Test
 	public void testJsonReadingIntervalRepresentation() {
@@ -38,8 +50,8 @@ public class JsonConverterTest {
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"re\",\"ts\":1,\"te\":2,\"ss\":\"\",\"wdv\":\""
-						+ WatchDogGlobals.CLIENT_VERSION + "\"}]",
+				"[{\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"re\",\"ts\":1,\"te\":2,\"ss\":\"\","
+						+ pasteWDVAndClient() + "}]",
 				transferer.toJson(intervals));
 	}
 
@@ -54,8 +66,8 @@ public class JsonConverterTest {
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals(
-				"[{\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":\"\",\"wdv\":\""
-						+ WatchDogGlobals.CLIENT_VERSION + "\"}]",
+				"[{\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":\"\","
+						+ pasteWDVAndClient() + "}]",
 				transferer.toJson(intervals));
 	}
 
@@ -72,8 +84,8 @@ public class JsonConverterTest {
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals(
-				"[{\"endingDocument\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"diff\":0,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":\"\",\"wdv\":\""
-						+ WatchDogGlobals.CLIENT_VERSION + "\"}]",
+				"[{\"endingDocument\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"diff\":0,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":\"\","
+						+ pasteWDVAndClient() + "}]",
 				transferer.toJson(intervals));
 	}
 
@@ -83,9 +95,21 @@ public class JsonConverterTest {
 		IntervalBase interval = new EclipseOpenInterval(new Date());
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
-		assertEquals("[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":\"\",\"wdv\":\""
-				+ WatchDogGlobals.CLIENT_VERSION + "\"}]",
-				transferer.toJson(intervals));
+		assertEquals("[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":\"\","
+				+ pasteWDVAndClient() + "}]", transferer.toJson(intervals));
+	}
+
+	/**
+	 * Tests the format of the returned Json representation, manually setting an
+	 * IDE host.
+	 */
+	@Test
+	public void testContainsIDEHost() {
+		IntervalBase interval = new EclipseOpenInterval(new Date());
+		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
+
+		assertEquals("[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":\"\","
+				+ pasteWDVAndClient() + "}]", transferer.toJson(intervals));
 	}
 
 	private ArrayList<IntervalBase> createSampleIntervals(
@@ -117,7 +141,7 @@ public class JsonConverterTest {
 	public void testUserHasWatchDogVersion() {
 		String gsonRepresentation = new Gson().toJson(new User());
 		boolean containsWDVersion = gsonRepresentation.contains("\"wdv\":\""
-				+ WatchDogGlobals.CLIENT_VERSION + "\"}");
+				+ WatchDogGlobals.CLIENT_VERSION + "\"");
 		assertTrue(containsWDVersion);
 	}
 
@@ -125,7 +149,7 @@ public class JsonConverterTest {
 	public void testProjectHasWatchDogVersion() {
 		String gsonRepresentation = new Gson().toJson(new Project(""));
 		boolean containsWDVersion = gsonRepresentation.contains("\"wdv\":\""
-				+ WatchDogGlobals.CLIENT_VERSION + "\"}");
+				+ WatchDogGlobals.CLIENT_VERSION + "\"");
 		assertTrue(containsWDVersion);
 	}
 
