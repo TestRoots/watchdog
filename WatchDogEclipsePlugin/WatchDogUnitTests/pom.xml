@@ -7,9 +7,34 @@
     <relativePath>../pom.xml</relativePath>
     <groupId>nl.tudelft</groupId>
     <artifactId>parent</artifactId>
-    <version>1.3.0</version>
+    <version>1.4.2</version>
   </parent>
 
   <artifactId>WatchDogUnitTests</artifactId>
   <packaging>eclipse-test-plugin</packaging>
+<build>
+<plugins>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<effort>Max</effort>
+					<threshold>High</threshold>
+					<xmlOutput>true</xmlOutput>
+					<findbugsXmlOutputDirectory>${project.build.directory}/findbugs</findbugsXmlOutputDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>analyze-compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+</plugins>
+</build>
 </project> 

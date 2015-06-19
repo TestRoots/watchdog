@@ -31,11 +31,11 @@ abstract public class IntervalBase extends WatchDogTransferable implements
 	private Date end;
 
 	/**
-	 * The session seed, a random number generated on each start of Eclipse to
+	 * The session seed, a random string generated on each start of Eclipse to
 	 * be able to tell running Eclipse instances apart.
 	 */
 	@SerializedName("ss")
-	protected long sessionSeed;
+	protected String sessionSeed;
 
 	/** Whether this interval is closed, or still recording. */
 	protected transient boolean isClosed;
@@ -111,7 +111,7 @@ abstract public class IntervalBase extends WatchDogTransferable implements
 	}
 
 	/** Sets the projectId. */
-	public void setSessionSeed(long sessionSeed) {
+	public void setSessionSeed(String sessionSeed) {
 		this.sessionSeed = sessionSeed;
 	}
 

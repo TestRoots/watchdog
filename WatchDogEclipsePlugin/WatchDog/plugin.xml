@@ -48,7 +48,7 @@
    <extension
          point="org.eclipse.ui.startup">
       <startup
-            class="nl.tudelft.watchdog.ui.handlers.StartUpHandler">
+            class="nl.tudelft.watchdog.ui.handlers.StartupHandler">
       </startup>
    </extension>
    <extension

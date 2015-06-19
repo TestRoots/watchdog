@@ -1,8 +1,11 @@
 package nl.tudelft.watchdog.ui;
 
+import java.awt.Color;
+
 import nl.tudelft.watchdog.logic.InitializationManager;
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics.StatisticsTimePeriod;
+import nl.tudelft.watchdog.logic.ui.listeners.WatchDogViewListener;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.util.WatchDogGlobals;
 
@@ -13,11 +16,17 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IPartService;
 import org.eclipse.ui.part.ViewPart;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.chart.plot.Plot;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
+import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DatasetUtilities;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
@@ -25,6 +34,8 @@ import org.jfree.util.Rotation;
 
 /** A view displaying all the statistics that WatchDog has gathered. */
 public class WatchDogView extends ViewPart {
+	private static final float FOREGROUND_TRANSPARENCY = 0.8f;
+
 	/** The Id of the view. */
 	public static final String ID = "WatchDog.view";
 
@@ -47,10 +58,17 @@ public class WatchDogView extends ViewPart {
 	private double averageTestDurationSeconds;
 
 	private int junitRunsCount;
+	private int junitFailuresCount;
+	private int junitSuccessCount;
+
 	private StatisticsTimePeriod selectedTimePeriod = StatisticsTimePeriod.HOUR_1;
 
 	private Composite oneColumn;
 	private Composite intervalSelection;
+
+	private IPartService partService;
+
+	private WatchDogViewListener watchDogViewListener;
 
 	/** Updates the view by completely repainting it. */
 	public void update() {
@@ -62,6 +80,10 @@ public class WatchDogView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		partService = (IPartService) getSite().getService(IPartService.class);
+		watchDogViewListener = new WatchDogViewListener(this);
+		partService.addPartListener(watchDogViewListener);
+
 		this.parent = parent;
 
 		oneColumn = UIUtils.createGridedComposite(parent, 1);
@@ -72,6 +94,7 @@ public class WatchDogView extends ViewPart {
 			createActiveView();
 		}
 
+		// Always create refresh link, even when statistics are not shown
 		createRefreshLink();
 	}
 
@@ -97,7 +120,6 @@ public class WatchDogView extends ViewPart {
 				container,
 				createPieChart(createDevelopmentPieDataset(),
 						"Your Development Activity"));
-
 		UIUtils.createLabel("", container);
 		UIUtils.createLabel("", container);
 
@@ -119,60 +141,29 @@ public class WatchDogView extends ViewPart {
 						"Your Perspective Activity"));
 		createSWTChart(
 				container,
-				createBarChart(createJunitExecutionBarDataset(),
+				createStackedBarChart(createJunitExecutionBarDataset(),
 						"Your Test Run Activity", "", ""));
 
+		createShowingStatisticsLine();
+		createTimeSpanSelectionList();
+	}
+
+	private void createShowingStatisticsLine() {
+		Composite lineComposite = UIUtils.createZeroMarginGridedComposite(
+				oneColumn, 3);
 		UIUtils.createLabel(
 				"Showing statistics from " + intervalStatistics.oldestDate
 						+ " to " + intervalStatistics.mostRecentDate + " ("
 						+ intervalStatistics.getNumberOfIntervals()
-						+ " intervals).", oneColumn);
+						+ " intervals).", lineComposite);
 
+		UIUtils.createLabel("Not enough statistics for you?", lineComposite);
+		UIUtils.createOpenReportLink(lineComposite);
+	}
+
+	private void createTimeSpanSelectionList() {
 		intervalSelection = UIUtils.createZeroMarginGridedComposite(oneColumn,
 				3);
-		createIntervalsList();
-	}
-
-	private void calculateTimes() {
-		intervalStatistics = new IntervalStatistics(InitializationManager
-				.getInstance().getIntervalManager(), selectedTimePeriod);
-
-		eclipseOpen = intervalStatistics
-				.getPreciseTime(intervalStatistics.eclipseOpen);
-		userActive = intervalStatistics
-				.getPreciseTime(intervalStatistics.userActive);
-		userReading = intervalStatistics
-				.getPreciseTime(intervalStatistics.userReading);
-		userTyping = intervalStatistics
-				.getPreciseTime(intervalStatistics.userTyping);
-		userProduction = intervalStatistics
-				.getPreciseTime(intervalStatistics.userProduction);
-		userTest = intervalStatistics
-				.getPreciseTime(intervalStatistics.userTest);
-		userActiveRest = userActive - userReading - userTyping;
-		perspectiveDebug = intervalStatistics
-				.getPreciseTime(intervalStatistics.perspectiveDebug);
-		perspectiveJava = intervalStatistics
-				.getPreciseTime(intervalStatistics.perspectiveJava);
-		perspectiveOther = intervalStatistics
-				.getPreciseTime(intervalStatistics.perspectiveOther);
-		averageTestDurationMinutes = intervalStatistics.averageTestDuration;
-		averageTestDurationSeconds = averageTestDurationMinutes * 60;
-
-		junitRunsCount = intervalStatistics.junitRunsCount;
-	}
-
-	private void createSWTChart(Composite container, JFreeChart chart) {
-		ChartComposite chartComposite = new ChartComposite(container, SWT.NONE,
-				chart, true);
-		chartComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				true));
-		Rectangle bounds = chartComposite.getBounds();
-		bounds.height = bounds.width;
-		chartComposite.setBounds(bounds);
-	}
-
-	private void createIntervalsList() {
 		UIUtils.createLabel("Show statistics of the past ", intervalSelection);
 		UIUtils.createComboList(intervalSelection, new SelectionListener() {
 
@@ -202,6 +193,47 @@ public class WatchDogView extends ViewPart {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		}, "Refresh.", "");
+	}
+
+	private void calculateTimes() {
+		intervalStatistics = new IntervalStatistics(InitializationManager
+				.getInstance().getIntervalManager(), selectedTimePeriod);
+
+		eclipseOpen = intervalStatistics
+				.getPreciseTime(intervalStatistics.eclipseOpen);
+		userActive = intervalStatistics
+				.getPreciseTime(intervalStatistics.userActive);
+		userReading = intervalStatistics
+				.getPreciseTime(intervalStatistics.userReading);
+		userTyping = intervalStatistics
+				.getPreciseTime(intervalStatistics.userTyping);
+		userProduction = intervalStatistics
+				.getPreciseTime(intervalStatistics.userProduction);
+		userTest = intervalStatistics
+				.getPreciseTime(intervalStatistics.userTest);
+		userActiveRest = userActive - userReading - userTyping;
+		perspectiveDebug = intervalStatistics
+				.getPreciseTime(intervalStatistics.perspectiveDebug);
+		perspectiveJava = intervalStatistics
+				.getPreciseTime(intervalStatistics.perspectiveJava);
+		perspectiveOther = intervalStatistics
+				.getPreciseTime(intervalStatistics.perspectiveOther);
+		averageTestDurationMinutes = intervalStatistics.averageTestDuration;
+		averageTestDurationSeconds = averageTestDurationMinutes * 60;
+
+		junitRunsCount = intervalStatistics.junitRunsCount;
+		junitSuccessCount = intervalStatistics.junitSuccessfulRunsCount;
+		junitFailuresCount = intervalStatistics.junitFailedRunsCount;
+	}
+
+	private void createSWTChart(Composite container, JFreeChart chart) {
+		ChartComposite chartComposite = new ChartComposite(container, SWT.NONE,
+				chart, true);
+		chartComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				true));
+		Rectangle bounds = chartComposite.getBounds();
+		bounds.height = bounds.width;
+		chartComposite.setBounds(bounds);
 	}
 
 	private DefaultCategoryDataset createDevelopmentBarDataset() {
@@ -248,7 +280,7 @@ public class WatchDogView extends ViewPart {
 				true, false);
 		PiePlot3D plot = (PiePlot3D) chart.getPlot();
 		plot.setDirection(Rotation.CLOCKWISE);
-		plot.setForegroundAlpha(0.8f);
+		plot.setForegroundAlpha(FOREGROUND_TRANSPARENCY);
 		return chart;
 	}
 
@@ -260,16 +292,31 @@ public class WatchDogView extends ViewPart {
 		return chart;
 	}
 
-	private String printPercent(double dividend, double divisor) {
-		if (divisor == 0) {
-			return " (--)";
-		}
-		return " (" + String.format("%.1f", dividend * 100 / divisor) + "%)";
+	private JFreeChart createStackedBarChart(CategoryDataset dataset,
+			String title, String xAxisName, String yAxisName) {
+		JFreeChart chart = ChartFactory.createStackedBarChart3D(title,
+				xAxisName, yAxisName, dataset);
+		chart.getLegend().setVisible(false);
+
+		CategoryPlot plot = chart.getCategoryPlot();
+		CategoryItemRenderer renderer = plot.getRenderer();
+		renderer.setSeriesPaint(0, makeColorTransparent(Color.green));
+		renderer.setSeriesPaint(1, makeColorTransparent(Color.red));
+		renderer.setSeriesPaint(2, makeColorTransparent(Color.blue));
+		return chart;
 	}
 
-	@Override
-	public void setFocus() {
-		parent.setFocus();
+	/**
+	 * Takes a color and modifies its alpha channel to give it (roughly) the
+	 * same transparency level that other JFreeCharts have per default, or that
+	 * can be set using {@link Plot#setForegroundAlpha(float)}. Workaround for
+	 * StackedBarCharts, where the above mentioned does not work.
+	 */
+	private Color makeColorTransparent(Color color) {
+		int adjustedTransparency = (int) Math
+				.round(FOREGROUND_TRANSPARENCY * 0.6 * 255);
+		return new Color(color.getRed(), color.getGreen(), color.getBlue(),
+				adjustedTransparency);
 	}
 
 	private PieDataset createPerspectiveViewPieDataset() {
@@ -284,22 +331,47 @@ public class WatchDogView extends ViewPart {
 		return result;
 	}
 
-	private DefaultCategoryDataset createJunitExecutionBarDataset() {
+	private CategoryDataset createJunitExecutionBarDataset() {
 		double differenceSeconds = Math.abs(averageTestDurationSeconds
 				- junitRunsCount);
 		double differenceMinutes = Math.abs(averageTestDurationMinutes
 				- junitRunsCount);
-		DefaultCategoryDataset result = new DefaultCategoryDataset();
-		result.setValue(junitRunsCount, "1", "Number of Test Runs");
-		String testDuration = "Average Test Run Duration";
+
+		String testDurationTitle = "Test Run Duration";
+		double testDuration;
 		if (differenceSeconds < differenceMinutes) {
-			result.setValue(averageTestDurationSeconds, "1", testDuration
-					+ " (in seconds)");
+			testDuration = averageTestDurationSeconds;
+			testDurationTitle += " (in seconds)";
 		} else {
-			result.setValue(averageTestDurationMinutes, "1", testDuration
-					+ " (in minutes)");
+			testDuration = averageTestDurationMinutes;
+			testDurationTitle += " (in minutes)";
 		}
-		return result;
+
+		String[] columns = new String[] { "Successful", "Failed", "Both" };
+		String[] rows = new String[] { "Test Runs", testDurationTitle };
+		double[][] data = new double[][] { { junitSuccessCount, 0 },
+				{ junitFailuresCount, 0 }, { 0, testDuration } };
+		CategoryDataset dataSet = DatasetUtilities.createCategoryDataset(
+				columns, rows, data);
+
+		return dataSet;
 	}
 
+	private String printPercent(double dividend, double divisor) {
+		if (divisor == 0) {
+			return " (--)";
+		}
+		return " (" + String.format("%.1f", dividend * 100 / divisor) + "%)";
+	}
+
+	@Override
+	public void setFocus() {
+		parent.setFocus();
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		partService.removePartListener(watchDogViewListener);
+	}
 }

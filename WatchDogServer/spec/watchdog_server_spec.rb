@@ -63,7 +63,7 @@ describe 'The WatchDog Server' do
   it 'should get client version' do
     get '/client'
     expect(last_response).to be_ok
-    expect(last_response.body).to eq('"1.3.0"')
+    expect(last_response.body).to eq('"1.4.2"')
   end
 
   it 'should create a user when the details are correct' do

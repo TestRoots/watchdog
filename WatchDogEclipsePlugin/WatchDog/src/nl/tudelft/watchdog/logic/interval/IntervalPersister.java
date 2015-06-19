@@ -1,6 +1,8 @@
 package nl.tudelft.watchdog.logic.interval;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -24,14 +26,14 @@ public class IntervalPersister {
 	/** In memory representation of the interval store */
 	private Set<IntervalBase> set;
 
-	private File file;
+	private File databaseFile;
 
 	/**
 	 * Create a new interval persister. If file points to an existing database
 	 * of intervals, it will be reused.
 	 */
 	public IntervalPersister(final File file) {
-		this.file = file;
+		this.databaseFile = file;
 		try {
 			initalizeDatabase(file);
 		} catch (Error e) {
@@ -79,11 +81,27 @@ public class IntervalPersister {
 	}
 
 	private void deleteDatabaseFile() {
-		file.delete();
-		File axuiliaryDatabaseFile = new File(file + ".p");
-		axuiliaryDatabaseFile.delete();
-		axuiliaryDatabaseFile = new File(file + ".t");
-		axuiliaryDatabaseFile.delete();
+		deleteOrOverwriteFileEmpty(null);
+		deleteOrOverwriteFileEmpty(".p");
+		deleteOrOverwriteFileEmpty(".t");
+	}
+
+	private void deleteOrOverwriteFileEmpty(String extension) {
+		File auxiliaryFile = databaseFile;
+		if (extension != null) {
+			auxiliaryFile = new File(databaseFile + extension);
+		}
+
+		if (!auxiliaryFile.delete()) {
+			try {
+				FileOutputStream fileOutputStream = new FileOutputStream(
+						databaseFile);
+				fileOutputStream.write(new byte[] {});
+				fileOutputStream.close();
+			} catch (IOException exception) {
+				WatchDogLogger.getInstance().logSevere(exception);
+			}
+		}
 	}
 
 	/** Reads all intervals and returns them as a List. */
@@ -99,7 +117,7 @@ public class IntervalPersister {
 			database.commit();
 		} catch (Error error) {
 			try {
-				recreateDatabase(file);
+				recreateDatabase(databaseFile);
 			} catch (Error innerError) {
 				WatchDogLogger.getInstance().logSevere(innerError);
 			}

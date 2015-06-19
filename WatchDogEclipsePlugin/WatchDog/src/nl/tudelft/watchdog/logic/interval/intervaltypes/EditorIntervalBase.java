@@ -69,12 +69,12 @@ public abstract class EditorIntervalBase extends IntervalBase {
 		return new EditorIntervalCloser();
 	}
 
-	/** @return The {@link ITextEditor} associated with this interval. */
+	/** @return The {@link IWorkbenchPart} associated with this interval. */
 	public IWorkbenchPart getPart() {
 		return part;
 	}
 
-	/** @return The {@link IWorkbenchPart} associated with this interval. */
+	/** @return The {@link ITextEditor} associated with this interval. */
 	public ITextEditor getEditor() {
 		return editor;
 	}

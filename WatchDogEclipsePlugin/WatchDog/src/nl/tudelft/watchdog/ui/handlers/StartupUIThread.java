@@ -98,7 +98,7 @@ public class StartupUIThread implements Runnable {
 		WorkspacePreferenceSetting setting = preferences
 				.getOrCreateWorkspaceSetting(workspaceName);
 		if (setting.enableWatchdog) {
-			StartUpHandler.startWatchDog();
+			StartupHandler.startWatchDog();
 		}
 	}
 

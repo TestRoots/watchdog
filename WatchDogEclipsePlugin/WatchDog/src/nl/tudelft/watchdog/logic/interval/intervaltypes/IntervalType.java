@@ -33,6 +33,10 @@ public enum IntervalType {
 
 	/** The user is active */
 	@SerializedName("ua")
-	USER_ACTIVE;
+	USER_ACTIVE,
+
+	/** The WatchDogView is open. */
+	@SerializedName("wo")
+	WATCHDOGVIEW;
 
 }

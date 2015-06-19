@@ -17,7 +17,7 @@ import com.google.gson.annotations.SerializedName;
 public class JUnitExecution implements Serializable {
 
 	/** JUnitExecution */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	/** The project on which the JUnit test was executed. */
 	@SerializedName("p")
@@ -26,6 +26,10 @@ public class JUnitExecution implements Serializable {
 	/** The test class on which the JUnit test was executed. */
 	@SerializedName("t")
 	private String testClassHash;
+
+	/** The test method on which the JUnit test was executed. */
+	@SerializedName("m")
+	private String testMethodHash;
 
 	/** Result of the test run. When aborted duration is NaN. */
 	@SerializedName("r")
@@ -53,11 +57,21 @@ public class JUnitExecution implements Serializable {
 
 		if (test instanceof ITestCaseElement) {
 			ITestCaseElement testElement = (ITestCaseElement) test;
+			testMethodHash = WatchDogUtils.createHash(testElement
+					.getTestMethodName());
 			parent.setClassNameHash(testElement.getTestClassName());
 		} else if (test instanceof ITestElementContainer) {
 			ITestElementContainer testContainer = (ITestElementContainer) test;
-			createTree(testContainer);
+			childrenExecutions = createTree(testContainer);
 		}
+	}
+
+	/**
+	 * @return The result in a string form. O stands for OK, everything else is
+	 *         a failed test result.
+	 */
+	public String getResult() {
+		return result;
 	}
 
 	/** Sets the result. */
@@ -74,10 +88,11 @@ public class JUnitExecution implements Serializable {
 		this.projectHash = WatchDogUtils.createHash(projectName);
 	}
 
-	private void createTree(ITestElementContainer session) {
-		childrenExecutions = new ArrayList<JUnitExecution>();
+	private ArrayList<JUnitExecution> createTree(ITestElementContainer session) {
+		ArrayList<JUnitExecution> children = new ArrayList<JUnitExecution>();
 		for (ITestElement testChild : session.getChildren()) {
-			childrenExecutions.add(new JUnitExecution(testChild, this));
+			children.add(new JUnitExecution(testChild, this));
 		}
+		return children;
 	}
 }

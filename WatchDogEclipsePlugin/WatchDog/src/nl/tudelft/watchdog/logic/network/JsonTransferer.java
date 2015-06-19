@@ -48,8 +48,7 @@ public class JsonTransferer {
 	 */
 	public Connection sendIntervals(List<IntervalBase> recordedIntervals) {
 		String userid = Preferences.getInstance().getUserid();
-		String projectid = Preferences.getInstance()
-				.getOrCreateWorkspaceSetting(UIUtils.getWorkspaceName()).projectId;
+		String projectid = UIUtils.getWorkspaceSetting().projectId;
 		String json = toJson(recordedIntervals);
 		try {
 			NetworkUtils

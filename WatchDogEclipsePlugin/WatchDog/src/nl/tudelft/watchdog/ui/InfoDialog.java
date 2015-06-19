@@ -36,10 +36,12 @@ public class InfoDialog extends Dialog {
 	private Color colorRed;
 	private Color colorGreen;
 	private Composite parentContainer;
+	private Preferences preferences;
 
 	/** Constructor. */
 	public InfoDialog(Shell parentShell) {
 		super(parentShell);
+		preferences = Preferences.getInstance();
 	}
 
 	@Override
@@ -90,8 +92,11 @@ public class InfoDialog extends Dialog {
 			createFixThisProblemLink(localGrid, new PreferenceListener());
 
 		}
-		Preferences preferences = Preferences.getInstance();
+		createDataInfoLabels(container);
+		UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);
+	}
 
+	private void createDataInfoLabels(Composite container) {
 		createCheckIdsOnServer(container, preferences);
 
 		UIUtils.createLabel(" ", container);
@@ -121,9 +126,7 @@ public class InfoDialog extends Dialog {
 			});
 		} else {
 			UIUtils.createLabel(" ", container);
-
 		}
-		UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);
 	}
 
 	private void createCheckIdsOnServer(Composite container,
@@ -186,15 +189,14 @@ public class InfoDialog extends Dialog {
 	private void createStaticLinks(Composite parentContainer) {
 		UIUtils.createLabel("", parentContainer);
 		Composite container = UIUtils.createFullGridedComposite(
-				parentContainer, 4);
+				parentContainer, 3);
 		container.setData(new GridData(SWT.CENTER, SWT.NONE, true, false));
 
 		UIUtils.createLinkedLabel(container, new WatchDogViewListener(),
 				"Open View.", "").setLayoutData(
 				UIUtils.createFullGridUsageData());
-		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
-				"Report bug.", "https://github.com/TestRoots/watchdog/issues")
-				.setLayoutData(UIUtils.createFullGridUsageData());
+		UIUtils.createOpenReportLink(container);
+		UIUtils.createLabel("", container);
 		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
 				"Open logs.",
 				"file://" + WatchDogLogger.getInstance().getLogDirectoryPath())
@@ -202,6 +204,9 @@ public class InfoDialog extends Dialog {
 		UIUtils.createLinkedLabel(container, new PreferenceListener(),
 				"Open Prefs.", "").setLayoutData(
 				UIUtils.createFullGridUsageData());
+		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
+				"Report bug.", "https://github.com/TestRoots/watchdog/issues")
+				.setLayoutData(UIUtils.createFullGridUsageData());
 	}
 
 	private void createFixThisProblemLink(Composite localGrid,

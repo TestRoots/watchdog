@@ -50,7 +50,7 @@ class WatchDogServer < Sinatra::Base
 
   # Get info about stored user
   get '/client' do
-    client_version = "1.3.0"
+    client_version = "1.4.2"
 
     status 200
     body client_version.to_json
@@ -58,25 +58,24 @@ class WatchDogServer < Sinatra::Base
 
   # Get info about stored user
   get '/user/:id' do
-    stored_user = get_user_by_id(params[:'id'])
-
-    if stored_user.nil?
-      halt 404, "User does not exist"
-    else
-      status 200
-      body stored_user['id'].to_json
-    end
+    get_entity_info('get_user_by_id', params[:'id'])
   end
 
-  # Get info about stored user
+  # Get info about stored project
   get '/project/:id' do
-    stored_project = get_project_by_id(params[:'id'])
+    get_entity_info('get_project_by_id', params[:'id'])
+  end
 
-    if stored_project.nil?
-      halt 404, "Project does not exist"
+  
+  # Return info about stored entity
+  def get_entity_info(info_function, id) 
+    stored_entity = self.send(info_function, id)
+    
+    if stored_entity.nil?
+      halt 404, "Entity does not exist"
     else
       status 200
-      body stored_project['id'].to_json
+      body stored_entity['id'].to_json
     end
   end
 

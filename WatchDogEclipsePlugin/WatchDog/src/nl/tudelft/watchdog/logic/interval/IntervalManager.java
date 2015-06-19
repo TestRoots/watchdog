@@ -11,7 +11,8 @@ import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.util.WatchDogLogger;
-import nl.tudelft.watchdog.util.WatchDogUtils;
+
+import org.apache.commons.lang.RandomStringUtils;
 
 /** The interval manager handles the addition and removal */
 public class IntervalManager extends IntervalManagerBase {
@@ -22,7 +23,7 @@ public class IntervalManager extends IntervalManagerBase {
 	 * The session seed, a random number generated on each instantiation of the
 	 * IntervalManager to be able to tell running Eclipse instances apart.
 	 */
-	private long sessionSeed;
+	private String sessionSeed;
 
 	private IntervalPersister intervalsToTransferPersister;
 
@@ -33,7 +34,12 @@ public class IntervalManager extends IntervalManagerBase {
 			IntervalPersister intervalsStatisticsPersister) {
 		this.intervalsToTransferPersister = intervalsToTransferPersister;
 		this.intervalsStatisticsPersister = intervalsStatisticsPersister;
-		this.sessionSeed = WatchDogUtils.RANDOM_OBJECT.nextLong();
+		generateAndSetSessionSeed();
+	}
+
+	/** Generates and sets a new random session seed. */
+	public void generateAndSetSessionSeed() {
+		this.sessionSeed = RandomStringUtils.randomAlphabetic(40);
 	}
 
 	/**
@@ -70,16 +76,9 @@ public class IntervalManager extends IntervalManagerBase {
 	}
 
 	/**
-	 * Adds the given EditorIntervalBase, if the existing editorInterval is
-	 * closed.
+	 * Updates the given EditorIntervalBase.
 	 */
 	private void addEditorInterval(EditorIntervalBase editorInterval) {
-		if (!(this.editorInterval == null || this.editorInterval.isClosed())) {
-			WatchDogLogger.getInstance().logSevere(
-					"Failure: Unclosed editor interval! " + editorInterval);
-			closeInterval(this.editorInterval, editorInterval.getStart());
-		}
-
 		this.editorInterval = editorInterval;
 	}
 

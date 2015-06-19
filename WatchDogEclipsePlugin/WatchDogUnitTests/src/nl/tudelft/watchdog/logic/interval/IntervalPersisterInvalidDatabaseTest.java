@@ -2,51 +2,46 @@ package nl.tudelft.watchdog.logic.interval;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class IntervalPersisterInvalidDatabaseTest {
-
-	private IntervalPersister persister;
-
-	private static File databaseFile = new File("invalidtest.mapdb");
+public class IntervalPersisterInvalidDatabaseTest extends PersisterTestBase {
 
 	@BeforeClass
-	public static void beforeClass() throws FileNotFoundException, UnsupportedEncodingException {
-		PrintWriter writer = new PrintWriter(databaseFile, "UTF-8");
+	public static void setUpBeforeClass() throws FileNotFoundException,
+			UnsupportedEncodingException {
+		databaseName = "InvalidTestDB";
+		setUpSuperClass();
+
+		PrintWriter writer = new PrintWriter(copiedDatabase, "UTF-8");
 		writer.println("Not a MapDB");
 		writer.close();
 	}
 
+	/**
+	 * Re-read the entire (saved) database before every single test case again.
+	 * This is to make sure that the invalid database gets overriden, hence it
+	 * must be re-read after its first opened in {@link #setUpSuperClass()}.
+	 */
 	@Before
-	public void setUp() {
-		persister = new IntervalPersister(databaseFile);
-	}
-
-	@After
-	public void tearDown() {
-		persister.closeDatabase();
+	public void setUpBeforeMethod() {
+		persister = new IntervalPersister(copiedDatabase);
 	}
 
 	@Test
-	public void test0DatabaseEmpty() {
+	public void test1DatabaseEmpty() {
 		assertEquals(0, persister.getSize());
 	}
-	
+
 	@Test
-	public void test1CreateInterval() {
+	public void test2CreateInterval() {
 		persister.saveInterval(IntervalPersisterTest.createRandomInterval());
 		assertEquals(1, persister.getSize());
 	}
-	
+
 }

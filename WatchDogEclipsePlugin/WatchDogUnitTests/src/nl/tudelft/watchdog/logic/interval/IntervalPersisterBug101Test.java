@@ -1,49 +1,18 @@
 package nl.tudelft.watchdog.logic.interval;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class IntervalPersisterBug101Test {
-
-	private static IntervalPersister persister;
-
-	private static File copiedDirectory;
-
-	private static File copiedDatabase;
+public class IntervalPersisterBug101Test extends PersisterTestBase {
 
 	@BeforeClass
-	public static void setUp() throws IOException {
-		File directoryToCopy = new File("resources",
-				"IntervalPersisterBug101Test");
-		copiedDirectory = new File("resources",
-				"IntervalPersisterBug101Test-Temp");
-		FileUtils.copyDirectory(directoryToCopy, copiedDirectory);
-		copiedDatabase = new File(copiedDirectory, "intervals.mapdb");
+	public static void setUpBeforeClass() {
+		databaseName = "IntervalPersisterBug101Test";
+		setUpSuperClass();
 	}
-
-	@AfterClass
-	public static void tearDown() throws IOException {
-		persister.closeDatabase();
-		FileUtils.deleteDirectory(copiedDirectory);
-	}
-
-	@Test
-	public void test0IfDirectoryCopied() {
-		assertTrue(copiedDirectory.exists());
-		assertTrue(copiedDatabase.exists());
-	}
-
+	
 	@Test
 	public void test1IfDatabaseStartsUpFine() {
 		persister = new IntervalPersister(copiedDatabase);
