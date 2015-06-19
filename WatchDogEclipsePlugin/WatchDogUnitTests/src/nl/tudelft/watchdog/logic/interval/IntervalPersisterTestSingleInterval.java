@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class IntervalPersisterTestSingleInterval extends PersisterTestBase {
@@ -44,7 +43,6 @@ public class IntervalPersisterTestSingleInterval extends PersisterTestBase {
 		assertEquals(interval.getEnd(), savedInterval.getEnd());
 	}
 
-	@Ignore
 	@Test
 	public void test3CompareIntervalAfterWriteDemonstratesCloseIsNotPersisted() {
 		IntervalBase savedInterval = new ArrayList<>(persister.readIntervals())
