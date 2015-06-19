@@ -222,7 +222,7 @@ class WatchDogServer < Sinatra::Base
   def create_json_object(request)
      begin
       object = JSON.parse(request.body.read)
-    rescue Exception => e
+    rescue
       logger.error e
       halt 400, "Wrong JSON object #{request.body.read}"
     end
@@ -247,7 +247,7 @@ class WatchDogServer < Sinatra::Base
     Net::SMTP.start('localhost', 25, 'testroots.org') do |smtp|
       begin
         smtp.send_message(text, 'info@testroots.org', email)
-      rescue Exception => e
+      rescue
         logger.error "Failed to send email to #{email}: #{e.message}"
         logger.error e.backtrace.join("\n")
       end
