@@ -19,6 +19,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.google.gson.JsonSyntaxException;
 
 /**
  * Transmits WatchDog data objects in a Json format to the WatchDog server.
@@ -100,7 +101,7 @@ public class JsonTransferer {
 	}
 
 	/**
-	 * Queries the get URL and reads the response from the server.
+	 * Queries the URL via GET, reads and returns the response from the server.
 	 * 
 	 * @throws ServerCommunicationException
 	 */
@@ -108,7 +109,18 @@ public class JsonTransferer {
 			throws ServerCommunicationException {
 		HttpEntity inputStream = NetworkUtils.getURLAndGetResponse(getURL);
 		String jsonResponse = NetworkUtils.readResponse(inputStream);
-		return gson.fromJson(jsonResponse, String.class);
+		try {
+			String response = gson.fromJson(jsonResponse, String.class);
+
+			if (response == null) {
+				throw new ServerCommunicationException(
+						"Got a null reply from the server.");
+			}
+
+			return response;
+		} catch (JsonSyntaxException ex) {
+			throw new ServerCommunicationException(ex.getMessage());
+		}
 	}
 
 	/** Converts the intervals to Json. */
