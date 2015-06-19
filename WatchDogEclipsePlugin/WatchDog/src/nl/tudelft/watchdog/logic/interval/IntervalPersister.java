@@ -102,7 +102,7 @@ public class IntervalPersister {
 			} finally {
 				try {
 					fileOutputStream.close();
-				} catch (IOException exception) {
+				} catch (IOException | NullPointerException exception) {
 					// intentionally empty
 				}
 			}
