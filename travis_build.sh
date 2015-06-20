@@ -4,7 +4,7 @@ echo Build WatchDogServer
 echo 
 cd WatchDogServer
 bundler
-./run_tests.sh
+rake
 SERVER_STATUS=$?
 cd ..
 
