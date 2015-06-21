@@ -213,10 +213,6 @@ class WatchDogServer < Sinatra::Base
     projects.find_one({'id' => id})
   end
 
-  def get_user_by_unq(unq)
-    users.find_one({'unq' => unq})
-  end
-
   # creates a json object from a http request
   def create_json_object(request)
      begin
