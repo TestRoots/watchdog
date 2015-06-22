@@ -1,0 +1,51 @@
+<idea-plugin version="2">
+    <id>nl.tudelft.watchdog</id>
+    <name>WatchDog</name>
+    <version>0.9</version>
+    <vendor email="I.Levaja@student.tudelft.nl" url="http://www.testroots.org">TestRoots, TU Delft</vendor>
+
+    <description><![CDATA[
+      WatchDog is an IntlliJ IDEA plugin that monitors how you test, and it respects your privacy (and your company's policy).<br>
+    ]]></description>
+
+    <change-notes><![CDATA[
+      Change notes will be added here.<br>
+      Thank you for using the very first version of WatchDog!
+    ]]>
+    </change-notes>
+
+    <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
+    <idea-version since-build="131"/>
+
+    <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <!--depends optional="false">JUnit</depends-->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <testStatusListener implementation="nl.tudelft.watchdog.logic.ui.listeners.JUnitListener"></testStatusListener>
+        <applicationConfigurable instance="nl.tudelft.watchdog.ui.preferences.PreferencePage"></applicationConfigurable>
+        <toolWindow id="WatchDog" anchor="right" icon="/images/watchdog_icon.png"
+                    factoryClass="nl.tudelft.watchdog.ui.WatchDogToolWindowFactory"
+                    conditionClass="nl.tudelft.watchdog.ui.WatchDogToolWindowFactoryCondition"/>
+    </extensions>
+
+    <application-components>
+        <!-- Add your application components here -->
+    </application-components>
+
+    <project-components>
+        <!-- Add your project components here -->
+        <component>
+            <implementation-class>nl.tudelft.watchdog.WatchDog</implementation-class>
+        </component>
+    </project-components>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+
+</idea-plugin>
