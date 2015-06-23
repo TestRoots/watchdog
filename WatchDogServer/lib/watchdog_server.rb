@@ -237,7 +237,7 @@ class WatchDogServer < Sinatra::Base
 
   # sends a registration mail
   def send_registration_email(mailtext, email, id, projectname)
-    text = sprintf(mailtext, Time.now.rfc2822, id, projectname)
+    text = sprintf(mailtext, Time.now.rfc2822, id, projectname, id)
 
     Net::SMTP.start('localhost', 25, 'testroots.org') do |smtp|
       begin
@@ -254,20 +254,20 @@ class WatchDogServer < Sinatra::Base
 
 
   USER_REGISTERED = <<-END_EMAIL
-Subject: Your new Watchdog user id
+Subject: Your new WatchDog user id
 Date: %s
 
-Dear Watchdog user,
+Dear WatchDog user,
 
-You recently registered with Watchdog.
+You recently registered with WatchDog.
 
 Your user id is: %s
 
-You can use this id to link other Watchdog installations to your user.
+You can use this id to link other WatchDog installations to your user.
 
-Thank you for contributing to science -- with Watchdog!
+Thank you for contributing to science -- with WatchDog!
 
-Moritz, Georgios and Andy
+Moritz, Georgios, Annibale, Igor and Andy
 --
 The TestRoots team
 http://www.testroots.org - http://www.tudelft.nl
@@ -275,23 +275,28 @@ http://www.testroots.org - http://www.tudelft.nl
 
 
   PROJECT_REGISTERED = <<-END_EMAIL
-Subject: Your new Watchdog project id
+Subject: Your new WatchDog project id
 Date: %s
 
-Dear Watchdog user,
+Dear WatchDog user,
 
-You recently registered a new project with Watchdog.
+You recently registered a new project with WatchDog.
 
-Your new project-id is: %s
-Your project name: %s
+Your new project id is: %s
+Your project name is: %s
 
 You can use this id for other workspaces where you work on the same project.
 If your colleagues work on the same project, please ask them to create new
-project-ids, but with the same project name.
+project ids, but with the same project name.
 
-Thank you for contributing to science -- with Watchdog!
+You will be able to access your custom-generated project report under:
+http://www.testroots.org/reports/project/%s.html
 
-Moritz, Georgios and Andy
+Please give us a time frame of 24 hours to create your report.
+
+Thank you for contributing to science -- with WatchDog!
+
+Moritz, Georgios, Annibale, Igor and Andy
 --
 The TestRoots team
 http://www.testroots.org - http://www.tudelft.nl
