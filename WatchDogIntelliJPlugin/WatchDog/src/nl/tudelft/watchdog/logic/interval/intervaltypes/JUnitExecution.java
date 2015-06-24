@@ -54,7 +54,9 @@ public class JUnitExecution implements Serializable {
     @SerializedName("t")
     private String testClassHash;
 
-    /** The test method on which the JUnit test was executed. */
+    /**
+     * The test method on which the JUnit test was executed.
+     */
     @SerializedName("m")
     private String testMethodHash;
 
@@ -84,6 +86,13 @@ public class JUnitExecution implements Serializable {
         if (parent == null) {
             // Test run session
             setProjectNameHash(testProxy.getName());
+
+            if (!testProxy.getChildren().isEmpty() && testProxy.getChildren().get(0).isLeaf()) {
+                childrenExecutions = createTree(testProxy.getParent());
+            } else {
+                childrenExecutions = createTree(testProxy);
+            }
+            return;
         }
 
         if (testProxy.isLeaf()) {
@@ -114,7 +123,7 @@ public class JUnitExecution implements Serializable {
 
     /**
      * @return The result in a string form. O stands for OK, everything else is
-     *         a failed test result.
+     * a failed test result.
      */
     public String getResult() {
         return result;

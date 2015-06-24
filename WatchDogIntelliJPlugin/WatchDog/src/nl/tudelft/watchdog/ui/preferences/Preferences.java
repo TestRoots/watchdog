@@ -74,7 +74,7 @@ public class Preferences {
 		properties = PropertiesComponent.getInstance();
         properties.getOrInit(AUTHENTICATION_ENABLED_KEY, "true");
         properties.getOrInit(SERVER_KEY, WatchDogGlobals.DEFAULT_SERVER_URI);
-        properties.getOrInit(LOGGING_ENABLED_KEY, "true");
+        properties.getOrInit(LOGGING_ENABLED_KEY, "false");
         properties.getOrInit(TRANSFERED_INTERVALS_KEY, "0");
         properties.getOrInit(LAST_TRANSFERED_INTERVALS_KEY, "never");
         properties.getOrInit(IS_OLD_VERSION, "false");

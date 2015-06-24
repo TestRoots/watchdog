@@ -4,8 +4,6 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.*;
 
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import nl.tudelft.watchdog.logic.ui.EventManager;
 import nl.tudelft.watchdog.logic.ui.events.EditorEvent;
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
@@ -14,11 +12,10 @@ import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
 public class EditorListener {
 	private final Editor editor;
 	private final EventManager eventManager;
+	private final Document document;
 
-	private Document document;
 	private DocumentListener documentListener;
 	private CaretListener caretListener;
-	private FocusListener focusListener;
 	private VisibleAreaListener  visibleAreaListener;
 
 	/** Enriches the supplied editor with all suitable listeners. */
@@ -85,29 +82,15 @@ public class EditorListener {
         };
 		editor.getScrollingModel().addVisibleAreaListener(visibleAreaListener);
 
-		focusListener = new FocusListener() {
-
-            @Override
-            public void focusGained(FocusEvent e) {
-                eventManager.update(new EditorEvent(editor, EventType.ACTIVE_FOCUS));
-            }
-
-            @Override
-			public void focusLost(FocusEvent e) {
-			}
-
-		};
-		editor.getContentComponent().addFocusListener(focusListener);
 	}
 
 	/** Removes all listeners registered with this editor. */
 	public void removeListeners() {
-		document.removeDocumentListener(documentListener);
+        document.removeDocumentListener(documentListener);
 		if (editor == null) {
 			return;
 		}
 		editor.getCaretModel().removeCaretListener(caretListener);
         editor.getScrollingModel().removeVisibleAreaListener(visibleAreaListener);
-        editor.getContentComponent().removeFocusListener(focusListener);
 	}
 }

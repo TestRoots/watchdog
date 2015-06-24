@@ -1,16 +1,24 @@
 <idea-plugin version="2">
     <id>nl.tudelft.watchdog</id>
     <name>WatchDog</name>
-    <version>0.9</version>
-    <vendor email="I.Levaja@student.tudelft.nl" url="http://www.testroots.org">TestRoots, TU Delft</vendor>
+    <version>0.9.1</version>
+    <vendor email="igor.levaja@testroots.org" url="http://www.testroots.org">TestRoots, TU Delft</vendor>
 
     <description><![CDATA[
-      WatchDog is an IntlliJ IDEA plugin that monitors how you test, and it respects your privacy (and your company's policy).<br>
+    Do you as a Java developer know, how much time you spent on testing your application? Do you know how much time you actually write new code, and how long you browse through existing code? Do you want to win amazing prizes?
+    <br>
+    Then install TestRoots WatchDog!<br>
+    WatchDog assess your development behavior, which tests you write (Junit, Mockito, Powermock and others) and gives you answers to the above questions. WatchDog comes with the "WatchDog Statistics" view that displays the answers in easy-to-understand diagrams and immediate statistics on your development habits.<br>
+    <br>
+    We support all current versions of Junit (Junit3 and Junit4), and we measure developer testing, system testing and integration testing time (so long as you name your Test classes ending in Test, or have includes to Junit, Mockito or Powermock in them).
     ]]></description>
 
     <change-notes><![CDATA[
       Change notes will be added here.<br>
-      Thank you for using the very first version of WatchDog!
+      0.9.1<br>
+      Few minor issues fixed:<br>
+        - JUnit interval format unified;<br>
+        - Removed unused listeners.
     ]]>
     </change-notes>
 
