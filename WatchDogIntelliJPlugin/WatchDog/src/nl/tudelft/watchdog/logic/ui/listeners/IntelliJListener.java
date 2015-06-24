@@ -1,6 +1,5 @@
 package nl.tudelft.watchdog.logic.ui.listeners;
 
-import com.intellij.execution.console.RunIdeConsoleAction;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.application.ApplicationManager;
@@ -10,8 +9,6 @@ import com.intellij.util.messages.MessageBusConnection;
 import nl.tudelft.watchdog.logic.ui.EventManager;
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
-
-import java.awt.*;
 
 /**
  * Sets up the listeners for IntelliJ UI events and registers the shutdown
@@ -27,7 +24,7 @@ public class IntelliJListener {
 
     private final MessageBusConnection connection;
 
-    private EditorWindowListener editorListener;
+    private EditorWindowListener editorWindowListener;
     private GeneralActivityListener activityListener;
 
     /**
@@ -43,7 +40,7 @@ public class IntelliJListener {
             }
         };
 
-        editorListener = new EditorWindowListener(eventManager);
+        editorWindowListener = new EditorWindowListener(eventManager);
 
         final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
         connection = messageBus.connect();
@@ -60,7 +57,7 @@ public class IntelliJListener {
                 new IntelliJActivationListener(eventManager));
         activityListener = new GeneralActivityListener(eventManager);
 
-        EditorFactory.getInstance().addEditorFactoryListener(editorListener, parent);
+        EditorFactory.getInstance().addEditorFactoryListener(editorWindowListener, parent);
     }
 
     public void removeListeners() {
@@ -68,6 +65,6 @@ public class IntelliJListener {
         connection.disconnect();
         activityListener.removeListeners();
         parent.dispose(); // removing EditorFactoryListener
-        EditorFactory.getInstance().removeEditorFactoryListener(editorListener);
+        EditorFactory.getInstance().removeEditorFactoryListener(editorWindowListener);
     }
 }

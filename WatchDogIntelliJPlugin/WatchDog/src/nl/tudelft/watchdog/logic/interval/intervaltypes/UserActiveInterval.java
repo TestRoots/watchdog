@@ -1,9 +1,5 @@
 package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
-/**
- * Created by Igor on 15/01/2015.
- */
-
 import java.util.Date;
 
 /** Interval in which the user is active. */

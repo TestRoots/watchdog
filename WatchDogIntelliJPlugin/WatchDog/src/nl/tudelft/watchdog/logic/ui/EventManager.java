@@ -69,7 +69,6 @@ public class EventManager {
 
             case END_INTELLIJ:
                 userInactivityNotifier.cancelTimer(forcedDate);
-                intervalManager.closeAllIntervals();
                 break;
 
             case ACTIVE_WINDOW:

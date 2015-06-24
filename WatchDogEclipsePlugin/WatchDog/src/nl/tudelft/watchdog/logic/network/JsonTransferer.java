@@ -11,8 +11,6 @@ import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.Project;
 import nl.tudelft.watchdog.ui.wizards.User;
 
-import org.apache.http.HttpEntity;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -91,9 +89,8 @@ public class JsonTransferer {
 	public String registerNew(String postURL, String json)
 			throws ServerCommunicationException {
 		try {
-			HttpEntity inputStream = NetworkUtils.transferJsonAndGetResponse(
+			String jsonResponse = NetworkUtils.transferJsonAndGetResponse(
 					postURL, json);
-			String jsonResponse = NetworkUtils.readResponse(inputStream);
 			return gson.fromJson(jsonResponse, String.class);
 		} catch (ServerReturnCodeException exception) {
 			throw new ServerCommunicationException(exception.getMessage());
@@ -107,8 +104,7 @@ public class JsonTransferer {
 	 */
 	public String queryGetURL(String getURL)
 			throws ServerCommunicationException {
-		HttpEntity inputStream = NetworkUtils.getURLAndGetResponse(getURL);
-		String jsonResponse = NetworkUtils.readResponse(inputStream);
+		String jsonResponse = NetworkUtils.getURLAndGetResponse(getURL);
 		try {
 			String response = gson.fromJson(jsonResponse, String.class);
 
