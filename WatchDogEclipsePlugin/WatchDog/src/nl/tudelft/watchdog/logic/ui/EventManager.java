@@ -78,7 +78,6 @@ public class EventManager {
 
 		case END_ECLIPSE:
 			userInactivityNotifier.cancelTimer(forcedDate);
-			intervalManager.closeAllIntervals();
 			break;
 
 		case ACTIVE_WINDOW:

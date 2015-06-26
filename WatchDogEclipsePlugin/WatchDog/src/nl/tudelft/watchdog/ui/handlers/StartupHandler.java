@@ -30,10 +30,10 @@ public class StartupHandler implements IStartup {
 		try {
 			WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
 
+			WatchDogGlobals.hostIDE = IDE.ECLIPSE;
 			// Initialize the interval manager, and thereby, interval recording.
 			InitializationManager.getInstance();
 			WatchDogGlobals.isActive = true;
-			WatchDogGlobals.hostIDE = IDE.ECLIPSE;
 			// Update WatchDog icon
 			UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);
 			updateView();

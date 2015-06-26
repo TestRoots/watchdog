@@ -39,11 +39,11 @@ public class NetworkUtils {
 	};
 
 	/**
-	 * Returns the content at the given URL.
+	 * Returns the String content at the given URL.
 	 * 
 	 * @throws ServerCommunicationException
 	 */
-	public static HttpEntity getURLAndGetResponse(String url)
+	public static String getURLAndGetResponse(String url)
 			throws ServerCommunicationException {
 		CloseableHttpClient client = createHTTPClient();
 		HttpGet get;
@@ -54,7 +54,8 @@ public class NetworkUtils {
 			HttpResponse response = client.execute(get);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == HttpStatus.SC_OK) {
-				return response.getEntity();
+				String jsonResponse = readResponse(response.getEntity());
+				return jsonResponse;
 			} else {
 				errorMessage = "Not received " + HttpStatus.SC_OK;
 			}
@@ -111,13 +112,12 @@ public class NetworkUtils {
 	 * Opens an HTTP connection to the server, and transmits the supplied json
 	 * data to the server. In case of error, the exact problem is logged.
 	 * 
-	 * @return The InputStream from the response.
+	 * @return The json string from the response.
 	 * @throws ServerCommunicationException
 	 * @throws ServerReturnCodeException
 	 */
-	public static HttpEntity transferJsonAndGetResponse(String url,
-			String jsonData) throws ServerCommunicationException,
-			ServerReturnCodeException {
+	public static String transferJsonAndGetResponse(String url, String jsonData)
+			throws ServerCommunicationException, ServerReturnCodeException {
 		CloseableHttpClient client = createHTTPClient();
 		HttpPost post = new HttpPost(url);
 		String errorMessage = "";
@@ -132,7 +132,8 @@ public class NetworkUtils {
 
 			HttpResponse response = client.execute(post);
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED) {
-				return response.getEntity();
+				String jsonResponse = readResponse(response.getEntity());
+				return jsonResponse;
 			} else {
 				// server returns not created
 				throw new ServerReturnCodeException(
