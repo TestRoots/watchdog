@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.ui.events;
+package nl.tudelft.watchdog.core.logic.ui.events;
 
 import java.util.EventObject;
 
@@ -15,14 +15,14 @@ public class WatchDogEvent extends EventObject {
 	}
 
 	/** The type of the event. */
-	private EventType type;
+	private final EventType type;
 
 	/** The different type of events. */
 	@SuppressWarnings("javadoc")
 	public enum EventType {
 		ACTIVE_FOCUS, INACTIVE_FOCUS, SUBSEQUENT_EDIT, START_EDIT, CARET_MOVED, PAINT,
 
-		ACTIVE_WINDOW, INACTIVE_WINDOW, START_ECLIPSE, END_ECLIPSE,
+		ACTIVE_WINDOW, INACTIVE_WINDOW, START_IDE, END_IDE,
 
 		START_PERSPECTIVE, JUNIT,
 
@@ -31,7 +31,7 @@ public class WatchDogEvent extends EventObject {
 		START_WATCHDOGVIEW, END_WATCHDOGVIEW
 	}
 
-	/** @return the {@link EventType} of this event. */
+	/** @return the {@link WatchDogEvent.EventType} of this event. */
 	public EventType getType() {
 		return type;
 	}
