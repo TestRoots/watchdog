@@ -1,11 +1,10 @@
 package nl.tudelft.watchdog.ui.wizards.projectregistration;
 
-import com.intellij.ide.wizard.CommitStepException;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FormValidationListener;
 import nl.tudelft.watchdog.ui.wizards.RegistrationWizardBase;
 import nl.tudelft.watchdog.ui.wizards.WizardStep;
-import nl.tudelft.watchdog.ui.wizards.YesNoDontKnowChoice;
+import nl.tudelft.watchdog.core.ui.wizards.YesNoDontKnowChoice;
 
 
 import javax.swing.*;

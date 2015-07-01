@@ -2,10 +2,10 @@ package nl.tudelft.watchdog.ui.handlers;
 
 import java.util.Map;
 
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.ui.InfoDialog;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
-import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;

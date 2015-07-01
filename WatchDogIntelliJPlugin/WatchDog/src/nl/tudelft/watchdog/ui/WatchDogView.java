@@ -13,7 +13,7 @@ import nl.tudelft.watchdog.logic.InitializationManager;
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics.StatisticsTimePeriod;
 import nl.tudelft.watchdog.ui.util.UIUtils;
-import nl.tudelft.watchdog.util.WatchDogGlobals;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;

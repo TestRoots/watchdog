@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.document.DocumentType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.IntelliJOpenInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.JUnitInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
@@ -119,10 +119,15 @@ public class IntervalStatistics extends IntervalManagerBase {
 			}
 
 			if (!intervalIsOlderThanThreshold(thresholdDateView, interval)) {
-				IntervalBase clonedInterval = (IntervalBase) interval.clone();
-				adjustIntervalStartAndEndDate(thresholdDateView, interval,
-						clonedInterval);
-				filteredIntervals.add(clonedInterval);
+                IntervalBase clonedInterval = null;
+                try {
+                    clonedInterval = (IntervalBase) interval.clone();
+                    adjustIntervalStartAndEndDate(thresholdDateView, interval,
+                            clonedInterval);
+                    filteredIntervals.add(clonedInterval);
+                } catch (CloneNotSupportedException e) {
+                    // intentionally empty
+                }
 			}
 		}
 

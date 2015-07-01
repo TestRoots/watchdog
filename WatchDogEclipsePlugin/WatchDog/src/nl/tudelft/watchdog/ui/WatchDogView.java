@@ -2,12 +2,12 @@ package nl.tudelft.watchdog.ui;
 
 import java.awt.Color;
 
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.logic.InitializationManager;
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.logic.interval.IntervalStatistics.StatisticsTimePeriod;
 import nl.tudelft.watchdog.logic.ui.listeners.WatchDogViewListener;
 import nl.tudelft.watchdog.ui.util.UIUtils;
-import nl.tudelft.watchdog.util.WatchDogGlobals;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;

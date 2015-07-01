@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.logic.ui.listeners;
 import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.wm.IdeFrame;
 import nl.tudelft.watchdog.logic.ui.EventManager;
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 
 public class IntelliJActivationListener implements ApplicationActivationListener {
 

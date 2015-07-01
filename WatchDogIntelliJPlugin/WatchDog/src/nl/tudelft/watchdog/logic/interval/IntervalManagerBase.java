@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.logic.interval;
 
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 
 import java.util.ArrayList;
 import java.util.List;

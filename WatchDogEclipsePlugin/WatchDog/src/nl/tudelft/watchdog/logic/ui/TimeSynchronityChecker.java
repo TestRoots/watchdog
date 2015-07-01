@@ -4,13 +4,14 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.util.WatchDogGlobals;
-import nl.tudelft.watchdog.util.WatchDogLogger;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
 
 /**
  * Checks whether the time progress according to the system's time is in
@@ -63,8 +64,9 @@ public class TimeSynchronityChecker extends RegularCheckerBase {
 				boolean deltaIsWithinReasonableBoundaries = delta >= UPDATE_RATE
 						&& delta <= UPDATE_RATE * 1.16;
 				if (!deltaIsWithinReasonableBoundaries) {
-					WatchDogLogger.getInstance().logInfo(
-							"System suspend detected!");
+					WatchDogLogger.getInstance(
+							Preferences.getInstance().isLoggingEnabled())
+							.logInfo("System suspend detected!");
 					Perspective openedPerspective = intervalManager
 							.getInterval(PerspectiveInterval.class)
 							.getPerspectiveType();
@@ -72,7 +74,7 @@ public class TimeSynchronityChecker extends RegularCheckerBase {
 							previousExecutionDate + UPDATE_RATE));
 					intervalManager.generateAndSetSessionSeed();
 					eventManager.update(new WatchDogEvent(this,
-							EventType.START_ECLIPSE));
+							EventType.START_IDE));
 					eventManager.update(new WatchDogEvent(openedPerspective,
 							EventType.START_PERSPECTIVE));
 				}

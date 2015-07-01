@@ -1,6 +1,8 @@
 package nl.tudelft.watchdog.ui.preferences;
 
+import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
 import nl.tudelft.watchdog.ui.util.UIUtils;
+import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.apache.commons.validator.routines.UrlValidator;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -38,7 +40,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 	private Preferences preferences = Preferences.getInstance();
 
 	/** This workspace. */
-	private String workspace = UIUtils.getWorkspaceName();
+	private String workspace = WatchDogUtils.getWorkspaceName();
 
 	/** The Id of this preference page as set in plugin.xml */
 	public final static String ID = "WatchDog.PreferencePage";
@@ -70,8 +72,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 		enableWatchdogInput = new Button(localGroup, SWT.CHECK);
 		enableWatchdogInput.setText("Monitor this workspace with WatchDog ");
 
-		WorkspacePreferenceSetting workspaceSetting = preferences
-				.getOrCreateWorkspaceSetting(workspace);
+		ProjectPreferenceSetting workspaceSetting = preferences
+				.getOrCreateProjectSetting(workspace);
 		projectIDInput.setText(workspaceSetting.projectId);
 		enableWatchdogInput.setSelection(workspaceSetting.enableWatchdog);
 
@@ -89,9 +91,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	public boolean performOk() {
 		boolean returnStatus = super.performOk();
-		preferences.registerWorkspaceProject(workspace,
-				projectIDInput.getText());
-		preferences.registerWorkspaceUse(workspace,
+		preferences.registerProjectId(workspace, projectIDInput.getText());
+		preferences.registerProjectUse(workspace,
 				enableWatchdogInput.getSelection());
 		return returnStatus;
 	}

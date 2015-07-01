@@ -1,10 +1,11 @@
-package nl.tudelft.watchdog.logic.network;
+package nl.tudelft.watchdog.core.logic.network;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import nl.tudelft.watchdog.ui.preferences.Preferences;
-import nl.tudelft.watchdog.util.WatchDogLogger;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
+import nl.tudelft.watchdog.core.ui.preferences.PreferencesBase;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -24,6 +25,8 @@ import org.apache.http.util.EntityUtils;
 
 /** Utility functions for accessing the network. */
 public class NetworkUtils {
+	
+	private final PreferencesBase preferences = WatchDogGlobals.preferences;
 
 	/**
 	 * An enum denoting the three possible different connection outcomes:
@@ -124,7 +127,8 @@ public class NetworkUtils {
 
 		try {
 			StringEntity input = new StringEntity(jsonData);
-			WatchDogLogger.getInstance().logInfo(
+			WatchDogLogger.getInstance(
+					WatchDogGlobals.preferences.isLoggingEnabled()).logInfo(
 					"Data length: " + ((double) input.getContentLength())
 							/ 1024 + " kB");
 			input.setContentType("application/json");
@@ -151,7 +155,9 @@ public class NetworkUtils {
 		} finally {
 			closeHttpClientGracefully(client);
 		}
-		WatchDogLogger.getInstance().logInfo(errorMessage);
+		WatchDogLogger
+				.getInstance(WatchDogGlobals.preferences.isLoggingEnabled())
+				.logInfo(errorMessage);
 		throw new ServerCommunicationException(errorMessage);
 	}
 
@@ -193,18 +199,20 @@ public class NetworkUtils {
 		try {
 			return EntityUtils.toString(entity);
 		} catch (ParseException | IOException exception) {
-			WatchDogLogger.getInstance().logSevere(exception);
+			WatchDogLogger.getInstance(
+					WatchDogGlobals.preferences.isLoggingEnabled()).logSevere(
+					exception);
 		}
 		return "";
 	}
 
 	private static String getServerURI() {
-		return Preferences.getInstance().getServerURI();
+		return WatchDogGlobals.preferences.getServerURI();
 	}
 
 	/** Builds the correct HTTPClient according to the Preferences. */
 	private static CloseableHttpClient createHTTPClient() {
-		if (Preferences.getInstance().isAuthenticationEnabled()) {
+		if (WatchDogGlobals.preferences.isAuthenticationEnabled()) {
 			return createAuthenticatedHttpClient();
 		}
 		return createNormalHttpClient();

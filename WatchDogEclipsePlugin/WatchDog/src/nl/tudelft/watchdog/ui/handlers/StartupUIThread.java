@@ -2,10 +2,9 @@ package nl.tudelft.watchdog.ui.handlers;
 
 import java.io.IOException;
 
+import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
-import nl.tudelft.watchdog.ui.preferences.WorkspacePreferenceSetting;
-import nl.tudelft.watchdog.ui.util.UIUtils;
-import nl.tudelft.watchdog.util.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.core.commands.ExecutionEvent;
@@ -34,7 +33,7 @@ public class StartupUIThread implements Runnable {
 	/** Constructor. */
 	public StartupUIThread(Preferences preferences) {
 		this.preferences = preferences;
-		this.workspaceName = UIUtils.getWorkspaceName();
+		this.workspaceName = WatchDogUtils.getWorkspaceName();
 	}
 
 	@Override
@@ -69,24 +68,28 @@ public class StartupUIThread implements Runnable {
 		} catch (ExecutionException exception) {
 			// when the new user wizard cannot be displayed, new
 			// users cannot register with WatchDog.
-			WatchDogLogger.getInstance().logSevere(exception);
+			WatchDogLogger.getInstance(
+					Preferences.getInstance().isLoggingEnabled()).logSevere(
+					exception);
 		}
 	}
 
 	private void checkIsWorkspaceAlreadyRegistered() {
-		if (!preferences.isWorkspaceRegistered(workspaceName)) {
+		if (!preferences.isProjectRegistered(workspaceName)) {
 			boolean useWatchDogInThisWorkspace = MessageDialog.openQuestion(
 					null, "WatchDog Workspace Registration",
 					"Should WatchDog be active in this workspace?");
-			WatchDogLogger.getInstance().logInfo("Registering workspace...");
-			preferences.registerWorkspaceUse(workspaceName,
+			WatchDogLogger.getInstance(
+					Preferences.getInstance().isLoggingEnabled()).logInfo(
+					"Registering workspace...");
+			preferences.registerProjectUse(workspaceName,
 					useWatchDogInThisWorkspace);
 		}
 	}
 
 	private void checkWhetherToDisplayProjectWizard() {
-		WorkspacePreferenceSetting setting = preferences
-				.getOrCreateWorkspaceSetting(workspaceName);
+		ProjectPreferenceSetting setting = preferences
+				.getOrCreateProjectSetting(workspaceName);
 		if (setting.enableWatchdog && WatchDogUtils.isEmpty(setting.projectId)) {
 			displayProjectWizard();
 			savePreferenceStoreIfNeeded();
@@ -95,8 +98,8 @@ public class StartupUIThread implements Runnable {
 
 	private void checkWhetherToStartWatchDog() {
 		// reload setting from preferences
-		WorkspacePreferenceSetting setting = preferences
-				.getOrCreateWorkspaceSetting(workspaceName);
+		ProjectPreferenceSetting setting = preferences
+				.getOrCreateProjectSetting(workspaceName);
 		if (setting.enableWatchdog) {
 			StartupHandler.startWatchDog();
 		}
@@ -109,7 +112,9 @@ public class StartupUIThread implements Runnable {
 		} catch (ExecutionException exception) {
 			// when the new project wizard cannot be displayed, new
 			// users cannot register with WatchDog.
-			WatchDogLogger.getInstance().logSevere(exception);
+			WatchDogLogger.getInstance(
+					Preferences.getInstance().isLoggingEnabled()).logSevere(
+					exception);
 		}
 	}
 
@@ -118,7 +123,9 @@ public class StartupUIThread implements Runnable {
 			try {
 				((ScopedPreferenceStore) preferences.getStore()).save();
 			} catch (IOException exception) {
-				WatchDogLogger.getInstance().logSevere(exception);
+				WatchDogLogger.getInstance(
+						Preferences.getInstance().isLoggingEnabled())
+						.logSevere(exception);
 			}
 		}
 	}

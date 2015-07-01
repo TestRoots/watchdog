@@ -6,11 +6,12 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
-import nl.tudelft.watchdog.util.WatchDogLogger;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
 
 import org.apache.commons.lang.RandomStringUtils;
 
@@ -57,8 +58,11 @@ public class IntervalManager extends IntervalManagerBase {
 			addRegularIntervalBase(interval);
 		}
 
-		WatchDogLogger.getInstance().logInfo(
-				"Created interval " + interval + " " + interval.getType());
+		WatchDogLogger
+				.getInstance(Preferences.getInstance().isLoggingEnabled())
+				.logInfo(
+						"Created interval " + interval + " "
+								+ interval.getType());
 		if (interval.isClosed()) {
 			closeInterval(interval);
 		}
@@ -67,7 +71,7 @@ public class IntervalManager extends IntervalManagerBase {
 	private void addRegularIntervalBase(IntervalBase interval) {
 		if (intervals.size() > 30) {
 			WatchDogLogger
-					.getInstance()
+					.getInstance(Preferences.getInstance().isLoggingEnabled())
 					.logSevere(
 							"Too many open intervals. Something fishy is going on here! Cannot add more intervals.");
 			return;
@@ -115,8 +119,11 @@ public class IntervalManager extends IntervalManagerBase {
 		}
 		intervalsToTransferPersister.saveInterval(interval);
 		intervalsStatisticsPersister.saveInterval(interval);
-		WatchDogLogger.getInstance().logInfo(
-				"closed interval " + interval + " " + interval.getType());
+		WatchDogLogger
+				.getInstance(Preferences.getInstance().isLoggingEnabled())
+				.logInfo(
+						"closed interval " + interval + " "
+								+ interval.getType());
 	}
 
 	/** Closes all currently open intervals. */

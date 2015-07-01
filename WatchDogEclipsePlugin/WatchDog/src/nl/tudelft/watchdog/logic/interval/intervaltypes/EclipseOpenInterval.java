@@ -2,6 +2,9 @@ package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
 import java.util.Date;
 
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
+
 /** Interval for open Eclipse sessions. */
 public class EclipseOpenInterval extends IntervalBase {
 
@@ -10,6 +13,6 @@ public class EclipseOpenInterval extends IntervalBase {
 
 	/** Constructor. */
 	public EclipseOpenInterval(Date start) {
-		super(IntervalType.ECLIPSE_OPEN, start);
+		super(IntervalType.IDE_OPEN, start);
 	}
 }

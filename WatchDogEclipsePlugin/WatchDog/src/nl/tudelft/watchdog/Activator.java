@@ -2,8 +2,9 @@ package nl.tudelft.watchdog;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import nl.tudelft.watchdog.util.WatchDogGlobals;
-import nl.tudelft.watchdog.util.WatchDogLogger;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
 
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -32,14 +33,18 @@ public class Activator extends AbstractUIPlugin {
 		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 			@Override
 			public void uncaughtException(Thread t, Throwable e) {
-				WatchDogLogger.getInstance().logSevere(e);
+				WatchDogLogger.getInstance(
+						Preferences.getInstance().isLoggingEnabled())
+						.logSevere(e);
 			}
 		});
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		WatchDogLogger.getInstance().logInfo("Shutting down Plugin...");
+		WatchDogLogger
+				.getInstance(Preferences.getInstance().isLoggingEnabled())
+				.logInfo("Shutting down Plugin...");
 		plugin = null;
 		WatchDogGlobals.isActive = false;
 		preferenceStore.save();

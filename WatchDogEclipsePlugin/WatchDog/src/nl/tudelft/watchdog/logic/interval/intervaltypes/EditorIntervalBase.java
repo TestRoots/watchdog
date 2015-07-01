@@ -2,6 +2,8 @@ package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
 import java.util.Date;
 
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.document.Document;
 
 import org.eclipse.ui.IWorkbenchPart;

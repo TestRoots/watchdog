@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.util;
+package nl.tudelft.watchdog.core.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,8 +7,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
-
-import nl.tudelft.watchdog.ui.preferences.Preferences;
 
 /** Wrapper class for providing logging capability. */
 public class WatchDogLogger {
@@ -19,15 +17,15 @@ public class WatchDogLogger {
 	/** Determines whether the logger is setup. */
 	private boolean isLoggerSetup = false;
 
-	private File logDirectory = new File("watchdog/logs/");
+	private File logDirectory = new File(WatchDogGlobals.logDirectory); 
 
 	/** The singleton instance of the logger. */
 	private static volatile WatchDogLogger instance = null;
 
 	/** Private Constructor. */
-	private WatchDogLogger() {
+	private WatchDogLogger(boolean isLoggingEnabled) {
 		try {
-			if (!Preferences.getInstance().isLoggingEnabled()) {
+			if (!isLoggingEnabled) {
 				// If logging is not enabled in the preferences: Abort setting
 				// up the logger
 				return;
@@ -57,11 +55,13 @@ public class WatchDogLogger {
 	}
 
 	/**
+	 * When this method is called, it's necessary to provide boolean value from local preferences.
+	 * @param Whether or not logging is enabled.
 	 * @return The instance of the single WatchDogLogger.
 	 */
-	public static WatchDogLogger getInstance() {
+	public static WatchDogLogger getInstance(boolean isLoggingEnabled) {
 		if (instance == null) {
-			instance = new WatchDogLogger();
+			instance = new WatchDogLogger(isLoggingEnabled);
 		}
 		return instance;
 	}

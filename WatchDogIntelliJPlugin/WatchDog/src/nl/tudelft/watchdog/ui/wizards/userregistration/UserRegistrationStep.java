@@ -2,8 +2,9 @@ package nl.tudelft.watchdog.ui.wizards.userregistration;
 
 import com.intellij.ide.wizard.CommitStepException;
 import com.intellij.openapi.ui.ComboBox;
-import nl.tudelft.watchdog.logic.network.JsonTransferer;
-import nl.tudelft.watchdog.logic.network.ServerCommunicationException;
+import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
+import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
+import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.*;

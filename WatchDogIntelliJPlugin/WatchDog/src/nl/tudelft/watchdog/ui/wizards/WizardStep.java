@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.ui.wizards;
 
 import com.intellij.ide.wizard.CommitStepException;
 import com.intellij.ide.wizard.Step;
+import nl.tudelft.watchdog.core.ui.wizards.YesNoDontKnowChoice;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 
 import javax.swing.*;

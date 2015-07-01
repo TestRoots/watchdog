@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.network;
+package nl.tudelft.watchdog.core.logic.network;
 
 /**
  * Exceptiont to document that the server did not send the expected HTTP return

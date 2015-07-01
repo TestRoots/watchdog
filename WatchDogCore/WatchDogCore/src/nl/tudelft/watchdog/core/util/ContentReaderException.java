@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.util;
+package nl.tudelft.watchdog.core.util;
 
 /** Exception thrown if the contents of an editor could not be read. */
 public class ContentReaderException extends Exception {

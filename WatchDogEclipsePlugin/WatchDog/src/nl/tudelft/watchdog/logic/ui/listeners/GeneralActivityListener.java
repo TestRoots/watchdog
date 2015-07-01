@@ -1,8 +1,8 @@
 package nl.tudelft.watchdog.logic.ui.listeners;
 
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.logic.ui.EventManager;
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -23,8 +23,8 @@ public class GeneralActivityListener {
 
 			@Override
 			public void handleEvent(Event event) {
-				eventManager
-						.update(new WatchDogEvent(event, EventType.USER_ACTIVITY));
+				eventManager.update(new WatchDogEvent(event,
+						EventType.USER_ACTIVITY));
 			}
 		});
 	}

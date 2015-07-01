@@ -1,16 +1,16 @@
 package nl.tudelft.watchdog.ui.wizards.projectregistration;
 
-import nl.tudelft.watchdog.logic.network.JsonTransferer;
-import nl.tudelft.watchdog.logic.network.ServerCommunicationException;
+import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
+import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
+import nl.tudelft.watchdog.core.ui.wizards.Project;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
-import nl.tudelft.watchdog.ui.wizards.Project;
 import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPageBase;
 import nl.tudelft.watchdog.ui.wizards.RegistrationWizardBase;
 import nl.tudelft.watchdog.ui.wizards.userregistration.UserProjectRegistrationWizard;
 import nl.tudelft.watchdog.ui.wizards.userregistration.UserRegistrationPage;
-import nl.tudelft.watchdog.util.WatchDogLogger;
 
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Composite;
@@ -59,7 +59,9 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPageBase {
 			messageTitle = "How did you get here?";
 			messageBody = "We couldn't figure out which wizard page\n";
 			messageBody += "you came from. Please restart the registration.";
-			WatchDogLogger.getInstance().logSevere("Unknown previous page");
+			WatchDogLogger.getInstance(
+					Preferences.getInstance().isLoggingEnabled()).logSevere(
+					"Unknown previous page");
 			return;
 		}
 
@@ -83,7 +85,9 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPageBase {
 			messageBody = exception.getMessage();
 			messageBody += "\nAre you connected to the internet, and is port 80 open?";
 			messageBody += "\nPlease contact us via www.testroots.org. \nWe'll troubleshoot the issue!";
-			WatchDogLogger.getInstance().logSevere(exception);
+			WatchDogLogger.getInstance(
+					Preferences.getInstance().isLoggingEnabled()).logSevere(
+					exception);
 			return;
 		}
 

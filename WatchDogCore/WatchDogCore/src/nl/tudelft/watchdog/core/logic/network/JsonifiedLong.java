@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.network;
+package nl.tudelft.watchdog.core.logic.network;
 
 import java.io.Serializable;
 

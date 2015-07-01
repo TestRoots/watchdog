@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
 
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.logic.network.JsonTransferer;
-import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
+import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.logic.ui.RegularCheckerBase;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
-import nl.tudelft.watchdog.util.WatchDogGlobals;
-import nl.tudelft.watchdog.util.WatchDogLogger;
 
 /**
  * This manager takes care of the repeated transferal of all closed intervals to
@@ -97,7 +97,9 @@ public class IntervalTransferManager extends RegularCheckerBase {
 
 				if (intervals == 1) {
 					WatchDogLogger
-							.getInstance()
+							.getInstance(
+									Preferences.getInstance()
+											.isLoggingEnabled())
 							.logSevere(
 									"Could not transfer interval and removed permanently!");
 					intervalPersister.removeIntervals(intervalsToTransfer);

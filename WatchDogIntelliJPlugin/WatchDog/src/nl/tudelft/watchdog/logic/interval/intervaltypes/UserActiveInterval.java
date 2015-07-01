@@ -1,5 +1,8 @@
 package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
+
 import java.util.Date;
 
 /** Interval in which the user is active. */

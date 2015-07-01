@@ -1,13 +1,13 @@
 package nl.tudelft.watchdog.ui.wizards.userregistration;
 
-import nl.tudelft.watchdog.logic.network.JsonTransferer;
-import nl.tudelft.watchdog.logic.network.ServerCommunicationException;
+import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
+import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
+import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 import nl.tudelft.watchdog.ui.wizards.FormValidationListener;
 import nl.tudelft.watchdog.ui.wizards.RegistrationEndingPageBase;
-import nl.tudelft.watchdog.ui.wizards.User;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.apache.commons.validator.routines.EmailValidator;
@@ -149,7 +149,7 @@ public class UserRegistrationPage extends RegistrationEndingPageBase {
 
 		Preferences preferences = Preferences.getInstance();
 		preferences.setUserid(id);
-		preferences.registerWorkspaceProject(UIUtils.getWorkspaceName(), "");
+		preferences.registerProjectId(WatchDogUtils.getWorkspaceName(), "");
 	}
 
 	/**

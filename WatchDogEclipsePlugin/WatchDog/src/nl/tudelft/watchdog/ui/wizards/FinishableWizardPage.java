@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.ui.wizards;
 
+import nl.tudelft.watchdog.core.ui.wizards.YesNoDontKnowChoice;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 
 import org.eclipse.jface.wizard.IWizardPage;

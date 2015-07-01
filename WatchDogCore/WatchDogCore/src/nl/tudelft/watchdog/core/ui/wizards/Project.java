@@ -1,8 +1,8 @@
-package nl.tudelft.watchdog.ui.wizards;
+package nl.tudelft.watchdog.core.ui.wizards;
 
 import java.util.Date;
 
-import nl.tudelft.watchdog.logic.network.WatchDogTransferable;
+import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
 
 /**
  * The concept of a project comprises all information entered about the project

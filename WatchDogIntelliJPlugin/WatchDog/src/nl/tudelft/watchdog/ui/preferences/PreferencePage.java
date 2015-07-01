@@ -8,11 +8,12 @@ import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.DocumentAdapter;
 import nl.tudelft.watchdog.WatchDog;
+import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
 import nl.tudelft.watchdog.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectRegistrationWizard;
-import nl.tudelft.watchdog.util.WatchDogGlobals;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.jetbrains.annotations.Nls;

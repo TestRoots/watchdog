@@ -5,10 +5,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.util.WatchDogGlobals;
-import nl.tudelft.watchdog.util.WatchDogLogger;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
 
 /**
  * Checks whether the time progress according to the system's time is in
@@ -61,14 +62,14 @@ public class TimeSynchronityChecker extends RegularCheckerBase {
 				boolean deltaIsWithinReasonableBoundaries = delta >= UPDATE_RATE
 						&& delta <= UPDATE_RATE * 1.16;
 				if (!deltaIsWithinReasonableBoundaries) {
-					WatchDogLogger.getInstance().logInfo(
+					WatchDogLogger.getInstance(Preferences.getInstance().isLoggingEnabled()).logInfo(
 							"System suspend detected!");
 
 					intervalManager.closeAllIntervals(new Date(
 							previousExecutionDate + UPDATE_RATE));
 					intervalManager.generateAndSetSessionSeed();
 					eventManager.update(new WatchDogEvent(this,
-							EventType.START_INTELLIJ));
+							EventType.START_IDE));
 
 				}
 			}

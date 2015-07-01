@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://C:/GitHub/WatchDogIntelliJPlugin/WatchDog/WatchDog.iml" filepath="C:/GitHub/WatchDogIntelliJPlugin/WatchDog/WatchDog.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WatchDog.iml" filepath="$PROJECT_DIR$/WatchDog.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../watchdog/WatchDogCore/parent.iml" filepath="$PROJECT_DIR$/../../watchdog/WatchDogCore/parent.iml" />
     </modules>
   </component>
 </project>

@@ -4,7 +4,7 @@ import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.FinishableWizardPage;
 import nl.tudelft.watchdog.ui.wizards.FormValidationListener;
 import nl.tudelft.watchdog.ui.wizards.RegistrationWizardBase;
-import nl.tudelft.watchdog.ui.wizards.YesNoDontKnowChoice;
+import nl.tudelft.watchdog.core.ui.wizards.YesNoDontKnowChoice;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;

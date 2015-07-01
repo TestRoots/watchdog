@@ -1,8 +1,8 @@
 package nl.tudelft.watchdog.logic.ui.listeners;
 
+import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.logic.ui.EventManager;
-import nl.tudelft.watchdog.logic.ui.events.EditorEvent;
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
 
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -53,7 +53,8 @@ public class EditorListener {
 
 			@Override
 			public void documentChanged(DocumentEvent event) {
-				eventManager.update(new EditorEvent(editor, EventType.SUBSEQUENT_EDIT));
+				eventManager.update(new EditorEvent(editor,
+						EventType.SUBSEQUENT_EDIT));
 			}
 
 			@Override

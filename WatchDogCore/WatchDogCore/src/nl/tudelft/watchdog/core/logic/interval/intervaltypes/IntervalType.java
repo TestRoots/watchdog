@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.interval.intervaltypes;
+package nl.tudelft.watchdog.core.logic.interval.intervaltypes;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -15,13 +15,13 @@ public enum IntervalType {
 	@SerializedName("re")
 	READING,
 
-	/** EclipseOpen. */
+	/** IDEOpen. */
 	@SerializedName("eo")
-	ECLIPSE_OPEN,
+	IDE_OPEN,
 
-	/** EclipseActive. */
+	/** IDEActive. */
 	@SerializedName("ea")
-	ECLIPSE_ACTIVE,
+	IDE_ACTIVE,
 
 	/** A Perspective interval. */
 	@SerializedName("pe")

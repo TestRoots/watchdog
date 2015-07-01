@@ -1,15 +1,15 @@
-package nl.tudelft.watchdog.logic.network;
+package nl.tudelft.watchdog.core.logic.network;
 
 import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
-import nl.tudelft.watchdog.ui.preferences.Preferences;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
 import nl.tudelft.watchdog.ui.util.UIUtils;
-import nl.tudelft.watchdog.ui.wizards.Project;
-import nl.tudelft.watchdog.ui.wizards.User;
+import nl.tudelft.watchdog.core.ui.wizards.Project;
+import nl.tudelft.watchdog.core.ui.wizards.User;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -46,7 +46,7 @@ public class JsonTransferer {
 	 * successful transfer, <code>false</code> otherwise.
 	 */
 	public Connection sendIntervals(List<IntervalBase> recordedIntervals) {
-		String userid = Preferences.getInstance().getUserid();
+		String userid = WatchDogGlobals.preferences.getUserid();
 		String projectid = UIUtils.getWorkspaceSetting().projectId;
 		String json = toJson(recordedIntervals);
 		try {

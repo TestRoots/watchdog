@@ -1,7 +1,7 @@
-package nl.tudelft.watchdog.logic.network;
+package nl.tudelft.watchdog.core.logic.network;
 
-import nl.tudelft.watchdog.util.WatchDogGlobals;
-import nl.tudelft.watchdog.util.WatchDogGlobals.IDE;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals.IDE;
 
 import com.google.gson.annotations.SerializedName;
 

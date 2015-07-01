@@ -11,7 +11,7 @@ import nl.tudelft.watchdog.ui.wizards.RegistrationWizardBase;
 import nl.tudelft.watchdog.ui.wizards.WizardStep;
 import nl.tudelft.watchdog.ui.wizards.userregistration.UserRegistrationStep;
 import nl.tudelft.watchdog.ui.wizards.userregistration.UserProjectRegistrationWizard;
-import nl.tudelft.watchdog.util.WatchDogLogger;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
 
 
 import javax.swing.*;
@@ -67,7 +67,7 @@ public class ProjectCreatedEndingStep extends RegistrationEndingStepBase {
             messageBody = "<html>" + exception.getMessage();
             messageBody += "<br>Are you connected to the internet, and is port 80 open?";
             messageBody += "<br>Please contact us via www.testroots.org. <br>We'll troubleshoot the issue!";
-            WatchDogLogger.getInstance().logSevere(exception);
+            WatchDogLogger.getInstance(Preferences.getInstance().isLoggingEnabled()).logSevere(exception);
             return;
         }
 
@@ -82,7 +82,6 @@ public class ProjectCreatedEndingStep extends RegistrationEndingStepBase {
     private void createPageContent(JPanel parent) {
         if (isThisProjectWizard()) {
             createProjectRegistrationSummary(parent);
-            return;
         } else {
             UserProjectRegistrationWizard wizard = (UserProjectRegistrationWizard) getWizard();
             UserRegistrationStep userRegistrationStep = wizard.userRegistrationStep;
@@ -90,7 +89,6 @@ public class ProjectCreatedEndingStep extends RegistrationEndingStepBase {
                 userRegistrationStep.createUserRegistrationSummary(parent);
             }
             createProjectRegistrationSummary(parent);
-            return;
         }
     }
 

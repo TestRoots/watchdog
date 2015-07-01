@@ -1,9 +1,9 @@
-package nl.tudelft.watchdog.logic.interval.intervaltypes;
+package nl.tudelft.watchdog.core.logic.interval.intervaltypes;
 
 import java.io.Serializable;
 import java.util.Date;
 
-import nl.tudelft.watchdog.logic.network.WatchDogTransferable;
+import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
 
 import org.joda.time.Duration;
 import org.joda.time.Period;
@@ -120,7 +120,6 @@ abstract public class IntervalBase extends WatchDogTransferable implements
 		return intervalType;
 	}
 
-	@Override
 	/** Necessary for storage of Intervals. */
 	public int compareTo(IntervalBase comparedInterval) {
 		return getEnd().compareTo(comparedInterval.getEnd());

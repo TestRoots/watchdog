@@ -1,6 +1,10 @@
-package nl.tudelft.watchdog.util;
+package nl.tudelft.watchdog.core.util;
 
 import com.google.gson.annotations.SerializedName;
+
+import java.io.File;
+
+import nl.tudelft.watchdog.core.ui.preferences.PreferencesBase;
 
 /**
  * Globals for the current WatchDog instance.
@@ -23,10 +27,14 @@ public class WatchDogGlobals {
 	public static boolean lastTransactionFailed = false;
 
 	/** The client's version, as set in pom.xml. */
-	public final static String CLIENT_VERSION = "1.4.2";
+	public final static String CLIENT_VERSION = "1.5.0";
 
 	/** The host ide this plugin is running on. */
 	public static IDE hostIDE;
+
+    public static String logDirectory;
+    
+    public static PreferencesBase preferences;
 
 	/** Describes the different supported IDE plugin hosts. */
 	public enum IDE {

@@ -1,14 +1,13 @@
 package nl.tudelft.watchdog.ui.util;
 
 import nl.tudelft.watchdog.Activator;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.ui.WatchDogView;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
-import nl.tudelft.watchdog.ui.preferences.WorkspacePreferenceSetting;
 import nl.tudelft.watchdog.ui.util.CommandExecuterBase.CommandExecuter;
 import nl.tudelft.watchdog.ui.util.CommandExecuterBase.CommandRefresher;
-import nl.tudelft.watchdog.util.WatchDogLogger;
+import nl.tudelft.watchdog.util.WatchDogUtils;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -203,21 +202,6 @@ public class UIUtils {
 
 	}
 
-	/** Returns the workspace name. */
-	public static String getWorkspaceName() {
-		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile()
-				.toString();
-	}
-
-	/**
-	 * Returns the {@link WorkspacePreferenceSetting} of the currently active
-	 * workspace.
-	 */
-	public static WorkspacePreferenceSetting getWorkspaceSetting() {
-		return Preferences.getInstance().getOrCreateWorkspaceSetting(
-				UIUtils.getWorkspaceName());
-	}
-
 	/** The TU Logo. */
 	public static final ImageDescriptor TU_DELFT_LOGO = Activator
 			.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
@@ -287,7 +271,9 @@ public class UIUtils {
 					.getActiveWorkbenchWindow().getActivePage()
 					.findViewReference(WatchDogView.ID).getView(false);
 		} catch (NullPointerException npe) {
-			WatchDogLogger.getInstance().logSevere(npe);
+			WatchDogLogger.getInstance(
+					Preferences.getInstance().isLoggingEnabled())
+					.logSevere(npe);
 			return null;
 		}
 	}
@@ -315,7 +301,7 @@ public class UIUtils {
 	/** Creates a linked label that opens the project report in a browser. */
 	public static void createOpenReportLink(Composite container) {
 		String projectReport = "http://www.testroots.org/reports/project/"
-				+ UIUtils.getWorkspaceSetting().projectId + ".html";
+				+ WatchDogUtils.getProjectSetting().projectId + ".html";
 		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
 				"Open Report.", projectReport);
 	}

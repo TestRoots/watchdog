@@ -3,6 +3,8 @@ package nl.tudelft.watchdog.logic.interval.intervaltypes;
 import java.util.Date;
 
 import com.intellij.openapi.editor.Editor;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.document.Document;
 import com.google.gson.annotations.SerializedName;
 

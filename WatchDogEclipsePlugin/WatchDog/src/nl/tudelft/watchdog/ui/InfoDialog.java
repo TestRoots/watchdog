@@ -1,14 +1,15 @@
 package nl.tudelft.watchdog.ui;
 
-import nl.tudelft.watchdog.logic.network.NetworkUtils;
-import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
+import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
+import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
+import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.ui.preferences.PreferencePage;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
-import nl.tudelft.watchdog.ui.preferences.WorkspacePreferenceSetting;
 import nl.tudelft.watchdog.ui.util.BrowserOpenerSelection;
 import nl.tudelft.watchdog.ui.util.UIUtils;
-import nl.tudelft.watchdog.util.WatchDogGlobals;
-import nl.tudelft.watchdog.util.WatchDogLogger;
+import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -141,8 +142,8 @@ public class InfoDialog extends Dialog {
 				new UserButtonListener());
 
 		Connection projectConnection = Connection.UNSUCCESSFUL;
-		WorkspacePreferenceSetting workspaceSettings = preferences
-				.getOrCreateWorkspaceSetting(UIUtils.getWorkspaceName());
+		ProjectPreferenceSetting workspaceSettings = preferences
+				.getOrCreateProjectSetting(WatchDogUtils.getWorkspaceName());
 		boolean projectIdHasProblem = false;
 		if (userConnection == Connection.SUCCESSFUL
 				&& workspaceSettings.enableWatchdog) {
@@ -197,10 +198,15 @@ public class InfoDialog extends Dialog {
 				UIUtils.createFullGridUsageData());
 		UIUtils.createOpenReportLink(container);
 		UIUtils.createLabel("", container);
-		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
+		UIUtils.createLinkedLabel(
+				container,
+				new BrowserOpenerSelection(),
 				"Open logs.",
-				"file://" + WatchDogLogger.getInstance().getLogDirectoryPath())
-				.setLayoutData(UIUtils.createFullGridUsageData());
+				"file://"
+						+ WatchDogLogger.getInstance(
+								Preferences.getInstance().isLoggingEnabled())
+								.getLogDirectoryPath()).setLayoutData(
+				UIUtils.createFullGridUsageData());
 		UIUtils.createLinkedLabel(container, new PreferenceListener(),
 				"Open Prefs.", "").setLayoutData(
 				UIUtils.createFullGridUsageData());

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.intellij.rt.execution.junit.states.PoolOfTestStates;
-import nl.tudelft.watchdog.logic.network.JsonifiedDouble;
+import nl.tudelft.watchdog.core.logic.network.JsonifiedDouble;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import com.intellij.execution.testframework.AbstractTestProxy;

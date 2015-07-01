@@ -8,6 +8,8 @@ WatchDogEclipsePlugin/WatchDogFeature/target/
 WatchDogEclipsePlugin/WatchDogUnitTests/target/
 WatchDogEclipsePlugin/p2updatesite/target/
 WatchDogIntelliJPlugin/WatchDog/out/production/
+WatchDogCore/target/
+WatchDogCore/WatchDogCore/target/
 
 # Ignore passwords/config
 WatchDogServer/config.yaml

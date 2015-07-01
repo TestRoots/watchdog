@@ -4,8 +4,14 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.regex.Pattern;
 
+import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
+import nl.tudelft.watchdog.core.util.ContentReaderException;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
@@ -16,7 +22,7 @@ import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
-/** Utilities for watchDog. */
+/** Utilities for WatchDog. */
 public class WatchDogUtils {
 
 	/** Formatter for a {@link Period}. */
@@ -79,7 +85,9 @@ public class WatchDogUtils {
 		try {
 			return extractDocument(editor1) == extractDocument(editor2);
 		} catch (ContentReaderException exception) {
-			WatchDogLogger.getInstance().logSevere(exception);
+			WatchDogLogger.getInstance(
+					Preferences.getInstance().isLoggingEnabled()).logSevere(
+					exception);
 		}
 		return false;
 	}
@@ -212,6 +220,21 @@ public class WatchDogUtils {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/** Returns the workspace name. */
+	public static String getWorkspaceName() {
+		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile()
+				.toString();
+	}
+
+	/**
+	 * Returns the {@link ProjectPreferenceSetting} of the currently active
+	 * workspace.
+	 */
+	public static ProjectPreferenceSetting getProjectSetting() {
+		return Preferences.getInstance().getOrCreateProjectSetting(
+				getWorkspaceName());
 	}
 
 }

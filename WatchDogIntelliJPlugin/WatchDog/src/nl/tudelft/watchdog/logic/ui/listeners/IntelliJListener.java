@@ -7,8 +7,8 @@ import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import nl.tudelft.watchdog.logic.ui.EventManager;
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 
 /**
  * Sets up the listeners for IntelliJ UI events and registers the shutdown
@@ -51,7 +51,7 @@ public class IntelliJListener {
      * registers shutdown listeners.
      */
     public void attachListeners() {
-        eventManager.update(new WatchDogEvent(this, EventType.START_INTELLIJ));
+        eventManager.update(new WatchDogEvent(this, EventType.START_IDE));
 
         connection.subscribe(ApplicationActivationListener.TOPIC,
                 new IntelliJActivationListener(eventManager));

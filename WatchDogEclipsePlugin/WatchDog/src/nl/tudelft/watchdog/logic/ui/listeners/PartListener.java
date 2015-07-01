@@ -1,8 +1,8 @@
 package nl.tudelft.watchdog.logic.ui.listeners;
 
+import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.logic.ui.EventManager;
-import nl.tudelft.watchdog.logic.ui.events.EditorEvent;
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
 
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;

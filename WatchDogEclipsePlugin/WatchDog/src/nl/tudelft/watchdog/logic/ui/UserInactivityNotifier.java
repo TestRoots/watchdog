@@ -2,8 +2,8 @@ package nl.tudelft.watchdog.logic.ui;
 
 import java.util.Date;
 
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 
 /**
  * A Special InactivityNotifier that makes sure a wrapping

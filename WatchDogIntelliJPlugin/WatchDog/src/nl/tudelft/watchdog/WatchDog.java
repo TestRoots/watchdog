@@ -2,18 +2,20 @@ package nl.tudelft.watchdog;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.actions.ViewToolWindowButtonsAction;
+import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.components.ProjectComponent;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import nl.tudelft.watchdog.logic.InitializationManager;
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
-import nl.tudelft.watchdog.ui.preferences.ProjectPreferenceSetting;
+import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectRegistrationWizard;
 import nl.tudelft.watchdog.ui.wizards.userregistration.UserProjectRegistrationWizard;
-import nl.tudelft.watchdog.util.WatchDogGlobals;
-import nl.tudelft.watchdog.util.WatchDogLogger;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,6 +37,7 @@ public class WatchDog implements ProjectComponent {
     }
 
     public void initComponent() {
+        WatchDogGlobals.logDirectory = PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog")).getPath().toString() + "/logs/";
         preferences = Preferences.getInstance();
     }
 
@@ -56,7 +59,6 @@ public class WatchDog implements ProjectComponent {
                 || userProjectRegistrationCancelled) {
             return;
         }
-
         checkIsProjectAlreadyRegistered();
         checkWhetherToDisplayProjectWizard();
         checkWhetherToStartWatchDog();
@@ -65,7 +67,7 @@ public class WatchDog implements ProjectComponent {
         // called when project is being closed
         InitializationManager intervalInitializationManager = InitializationManager
                 .getInstance();
-        intervalInitializationManager.getEventManager().update(new WatchDogEvent(this, WatchDogEvent.EventType.END_INTELLIJ));
+        intervalInitializationManager.getEventManager().update(new WatchDogEvent(this, WatchDogEvent.EventType.END_IDE));
         intervalInitializationManager.getIntervalManager().closeAllIntervals();
         intervalInitializationManager.getTransferManager().sendIntervalsImmediately();
         intervalInitializationManager.shutdown();
@@ -88,7 +90,7 @@ public class WatchDog implements ProjectComponent {
         if (!preferences.isProjectRegistered(project.getName())) {
             boolean useWatchDogInThisWorkspace = Messages.YES ==
                     Messages.showYesNoDialog("Should WatchDog be active in this workspace?", "WatchDog Workspace Registration", AllIcons.General.QuestionDialog);
-            WatchDogLogger.getInstance().logInfo("Registering workspace...");
+            WatchDogLogger.getInstance(Preferences.getInstance().isLoggingEnabled()).logInfo("Registering workspace...");
             preferences.registerProjectUse(project.getName(), useWatchDogInThisWorkspace);
        }
     }
@@ -106,7 +108,8 @@ public class WatchDog implements ProjectComponent {
         ProjectPreferenceSetting setting = preferences
                 .getOrCreateProjectSetting(project.getName());
         if (setting.enableWatchdog) {
-            WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
+            WatchDogLogger.getInstance(Preferences.getInstance().isLoggingEnabled()).logInfo("Starting WatchDog ...");
+            WatchDogGlobals.hostIDE = WatchDogGlobals.IDE.INTELLIJ;
             InitializationManager.getInstance();
             WatchDogGlobals.isActive = true;
             new ViewToolWindowButtonsAction().setSelected(null, true);

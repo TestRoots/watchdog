@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.network;
+package nl.tudelft.watchdog.core.logic.network;
 
 /**
  * Default exception for server communication problems. Normally represents a

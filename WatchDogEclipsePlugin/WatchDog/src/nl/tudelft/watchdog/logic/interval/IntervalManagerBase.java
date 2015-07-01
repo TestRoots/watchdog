@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.logic.interval;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 
 /**
  * Base class for managing intervals. Provides basic functionality for getting

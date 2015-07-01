@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.document.DocumentType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EclipseOpenInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.JUnitInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval.Perspective;

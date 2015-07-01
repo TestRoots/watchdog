@@ -3,16 +3,18 @@ package nl.tudelft.watchdog.logic.ui;
 import java.util.Date;
 
 import com.intellij.openapi.editor.Editor;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.*;
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 
 
 /**
- * Manager for {@link nl.tudelft.watchdog.logic.ui.events.EditorEvent}s. Links such events to actions in the
+ * Manager for {@link nl.tudelft.watchdog.core.logic.ui.events.EditorEvent}s. Links such events to actions in the
  * IntervalManager, i.e. manages the creation and deletion of intervals based on
  * the incoming events. This class therefore contains the logic of when and how
  * new intervals are created, and how WatchDog reacts to incoming events
@@ -48,7 +50,7 @@ public class EventManager {
     }
 
     /**
-     * Simple proxy for {@link #update(nl.tudelft.watchdog.logic.ui.events.WatchDogEvent, java.util.Date)}, calling it with
+     * Simple proxy for {@link #update(nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent, java.util.Date)}, calling it with
      * the forcedDate set to "now".
      */
     public void update(WatchDogEvent event) {
@@ -62,26 +64,26 @@ public class EventManager {
     public void update(WatchDogEvent event, Date forcedDate) {
         IntervalBase interval;
         switch (event.getType()) {
-            case START_INTELLIJ:
+            case START_IDE:
                 intervalManager.addInterval(new IntelliJOpenInterval(forcedDate));
                 userInactivityNotifier.trigger(forcedDate);
                 break;
 
-            case END_INTELLIJ:
+            case END_IDE:
                 userInactivityNotifier.cancelTimer(forcedDate);
                 break;
 
             case ACTIVE_WINDOW:
-                interval = intervalManager.getInterval(IntelliJActiveInterval.class);
+                interval = intervalManager.getInterval(IDEActiveInterval.class);
                 if (isClosed(interval)) {
-                    intervalManager.addInterval(new IntelliJActiveInterval(
+                    intervalManager.addInterval(new IDEActiveInterval(
                             forcedDate));
                 }
                 userInactivityNotifier.trigger(forcedDate);
                 break;
 
             case INACTIVE_WINDOW:
-                interval = intervalManager.getInterval(IntelliJActiveInterval.class);
+                interval = intervalManager.getInterval(IDEActiveInterval.class);
                 intervalManager.closeInterval(interval, forcedDate);
                 break;
 

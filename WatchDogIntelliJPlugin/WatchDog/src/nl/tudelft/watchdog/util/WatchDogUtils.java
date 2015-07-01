@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.util;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.vfs.VirtualFile;
+import nl.tudelft.watchdog.core.util.ContentReaderException;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.BufferedReader;

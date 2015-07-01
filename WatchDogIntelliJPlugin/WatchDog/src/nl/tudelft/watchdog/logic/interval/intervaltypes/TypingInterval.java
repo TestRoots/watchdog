@@ -2,8 +2,9 @@ package nl.tudelft.watchdog.logic.interval.intervaltypes;
 
 import java.util.Date;
 
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.document.Document;
-import nl.tudelft.watchdog.logic.network.JsonifiedLong;
+import nl.tudelft.watchdog.core.logic.network.JsonifiedLong;
 
 
 import com.intellij.openapi.editor.Editor;
@@ -14,7 +15,7 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * An interval for when the user is currently typing, connected to the
- * {@link nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType#TYPING} activity.
+ * {@link nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType#TYPING} activity.
  */
 public class TypingInterval extends EditorIntervalBase {
 

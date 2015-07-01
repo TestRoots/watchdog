@@ -7,8 +7,10 @@ import java.util.Date;
 import java.util.List;
 
 import nl.tudelft.watchdog.Activator;
-import nl.tudelft.watchdog.util.WatchDogGlobals;
-import nl.tudelft.watchdog.util.WatchDogLogger;
+import nl.tudelft.watchdog.core.ui.preferences.PreferencesBase;
+import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -20,7 +22,7 @@ import com.google.gson.reflect.TypeToken;
 /**
  * Utilities for accessing WatchDog's Eclipse preferences.
  */
-public class Preferences {
+public class Preferences implements PreferencesBase {
 
 	/** The user's id on the WatchDog server. */
 	public final static String USERID_KEY = "USERID";
@@ -49,11 +51,11 @@ public class Preferences {
 	/** Flag denoting whether WatchDog plugin should do authentication or not. */
 	public final static String AUTHENTICATION_ENABLED_KEY = "ENABLE_AUTH";
 
-	/** A serialized List of {@link WorkspacePreferenceSetting}s. */
+	/** A serialized List of {@link ProjectPreferenceSetting}s. */
 	public final static String WORKSPACES_KEY = "WORKSPACE_SETTINGS";
 
-	/** The type of a list of {@link WorkspacePreferenceSetting}s for Gson. */
-	private final static Type TYPE_WORKSPACE_SETTINGS = new TypeToken<List<WorkspacePreferenceSetting>>() {
+	/** The type of a list of {@link ProjectPreferenceSetting}s for Gson. */
+	private final static Type TYPE_WORKSPACE_SETTINGS = new TypeToken<List<ProjectPreferenceSetting>>() {
 		// intentionally empty class
 	}.getType();
 
@@ -64,7 +66,7 @@ public class Preferences {
 	private final ScopedPreferenceStore store;
 
 	/** The map of registered workspaces. */
-	private List<WorkspacePreferenceSetting> workspaceSettings = new ArrayList<WorkspacePreferenceSetting>();
+	private List<ProjectPreferenceSetting> workspaceSettings = new ArrayList<ProjectPreferenceSetting>();
 
 	/** The WatchDog preference instance. */
 	private static volatile Preferences singletonInstance;
@@ -94,11 +96,11 @@ public class Preferences {
 	 * Reads and constructs a HashMap object from a serialized String preference
 	 * key.
 	 */
-	private List<WorkspacePreferenceSetting> readSerializedWorkspaceSettings(
+	private List<ProjectPreferenceSetting> readSerializedWorkspaceSettings(
 			String key) {
 		String serializedWorksapceSettings = store.getString(key);
 		if (WatchDogUtils.isEmpty(serializedWorksapceSettings)) {
-			return new ArrayList<WorkspacePreferenceSetting>();
+			return new ArrayList<ProjectPreferenceSetting>();
 		}
 
 		return GSON.fromJson(serializedWorksapceSettings,
@@ -201,34 +203,33 @@ public class Preferences {
 	 *         say whether WatchDog should be activated, which is returned by
 	 *         {@link #shouldWatchDogBeActive(String)}.
 	 */
-	public boolean isWorkspaceRegistered(String workspace) {
-		WorkspacePreferenceSetting workspaceSetting = getWorkspaceSetting(workspace);
+	public boolean isProjectRegistered(String workspace) {
+		ProjectPreferenceSetting workspaceSetting = getProjectSetting(workspace);
 		return (workspaceSetting != null && workspaceSetting.startupQuestionAsked) ? true
 				: false;
 	}
 
 	/**
-	 * @return The matching {@link WorkspacePreferenceSetting}, or a completely
+	 * @return The matching {@link ProjectPreferenceSetting}, or a completely
 	 *         new one in case there was no match.
 	 */
-	public WorkspacePreferenceSetting getOrCreateWorkspaceSetting(
-			String workspace) {
-		WorkspacePreferenceSetting setting = getWorkspaceSetting(workspace);
+	public ProjectPreferenceSetting getOrCreateProjectSetting(String workspace) {
+		ProjectPreferenceSetting setting = getProjectSetting(workspace);
 		if (setting == null) {
-			setting = new WorkspacePreferenceSetting();
-			setting.workspace = workspace;
+			setting = new ProjectPreferenceSetting();
+			setting.project = workspace;
 			workspaceSettings.add(setting);
 		}
 		return setting;
 	}
 
 	/**
-	 * @return The matching {@link WorkspacePreferenceSetting}, or
+	 * @return The matching {@link ProjectPreferenceSetting}, or
 	 *         <code>null</code> in case there was no match.
 	 */
-	private WorkspacePreferenceSetting getWorkspaceSetting(String workspace) {
-		for (WorkspacePreferenceSetting setting : workspaceSettings) {
-			if (setting.workspace.equals(workspace)) {
+	private ProjectPreferenceSetting getProjectSetting(String workspace) {
+		for (ProjectPreferenceSetting setting : workspaceSettings) {
+			if (setting.project.equals(workspace)) {
 				return setting;
 			}
 		}
@@ -239,22 +240,22 @@ public class Preferences {
 	 * Registers the given workspace with WatchDog. If use is <code>true</code>,
 	 * WatchDog will be used.
 	 */
-	public void registerWorkspaceUse(String workspace, boolean use) {
-		WorkspacePreferenceSetting setting = getOrCreateWorkspaceSetting(workspace);
+	public void registerProjectUse(String workspace, boolean use) {
+		ProjectPreferenceSetting setting = getOrCreateProjectSetting(workspace);
 		setting.enableWatchdog = use;
 		setting.startupQuestionAsked = true;
-		storeWorkspaceSettings();
+		storeProjectSettings();
 	}
 
 	/** Registers the given projectId with the given workspace. */
-	public void registerWorkspaceProject(String workspace, String projectId) {
-		WorkspacePreferenceSetting setting = getOrCreateWorkspaceSetting(workspace);
+	public void registerProjectId(String workspace, String projectId) {
+		ProjectPreferenceSetting setting = getOrCreateProjectSetting(workspace);
 		setting.projectId = projectId;
-		storeWorkspaceSettings();
+		storeProjectSettings();
 	}
 
 	/** Updates the serialized workspace settings in the preference store. */
-	private void storeWorkspaceSettings() {
+	private void storeProjectSettings() {
 		store.setValue(WORKSPACES_KEY,
 				GSON.toJson(workspaceSettings, TYPE_WORKSPACE_SETTINGS));
 		try {
@@ -262,7 +263,7 @@ public class Preferences {
 		} catch (IOException exception) {
 			// If this happens, our plugin is basically not functional in this
 			// client setup!
-			WatchDogLogger.getInstance().logSevere(exception);
+			WatchDogLogger.getInstance(isLoggingEnabled()).logSevere(exception);
 		}
 	}
 
@@ -272,7 +273,7 @@ public class Preferences {
 	}
 
 	/** @return a list of workspace settings. */
-	public List<WorkspacePreferenceSetting> getWorkspaceSettings() {
+	public List<ProjectPreferenceSetting> getProjectSettings() {
 		return workspaceSettings;
 	}
 

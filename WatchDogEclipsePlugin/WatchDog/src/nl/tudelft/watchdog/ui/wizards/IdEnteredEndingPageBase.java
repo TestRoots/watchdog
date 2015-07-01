@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.ui.wizards;
 
-import nl.tudelft.watchdog.logic.network.NetworkUtils;
+import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 
 import org.eclipse.swt.widgets.Composite;

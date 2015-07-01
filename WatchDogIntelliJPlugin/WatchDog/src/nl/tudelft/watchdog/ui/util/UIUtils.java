@@ -7,7 +7,7 @@ import com.intellij.openapi.ui.ComboBox;
 
 import nl.tudelft.watchdog.WatchDog;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
-import nl.tudelft.watchdog.ui.preferences.ProjectPreferenceSetting;
+import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
 
 import java.awt.*;
 import java.awt.event.*;

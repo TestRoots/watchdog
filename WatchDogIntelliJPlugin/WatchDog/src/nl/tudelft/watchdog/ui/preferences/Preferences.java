@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import nl.tudelft.watchdog.util.WatchDogGlobals;
+import nl.tudelft.watchdog.core.ui.preferences.PreferencesBase;
+import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 
@@ -15,9 +17,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * Utilities for accessing WatchDog's Eclipse preferences.
+ * Utilities for accessing WatchDog's IntelliJ's preferences.
  */
-public class Preferences {
+public class Preferences implements PreferencesBase {
 
 	/** The user's id on the WatchDog server. */
 	public final static String USERID_KEY = "WATCHDOG.USERID";
@@ -113,7 +115,8 @@ public class Preferences {
 	 * Returns whether logging is enabled (<code>true</code>) or not (
 	 * <code>false</code>).
 	 */
-	public boolean isLoggingEnabled() {
+	@Override
+    public boolean isLoggingEnabled() {
 		return properties.getBoolean(LOGGING_ENABLED_KEY, false);
 	}
 
@@ -125,7 +128,8 @@ public class Preferences {
 	 * Returns whether authentication on the url is enabled (<code>true</code>)
 	 * or not ( <code>false</code>).
 	 */
-	public boolean isAuthenticationEnabled() {
+	@Override
+    public boolean isAuthenticationEnabled() {
 		return properties.getBoolean(AUTHENTICATION_ENABLED_KEY, true);
 	}
 
@@ -134,67 +138,80 @@ public class Preferences {
     }
 
 	/** @return The userid. */
-	public String getUserid() {
+	@Override
+    public String getUserid() {
 		return properties.getValue(USERID_KEY);
 	}
 
 	/** Sets the userid for the store. */
-	public void setUserid(String userid) {
+	@Override
+    public void setUserid(String userid) {
 		properties.setValue(USERID_KEY, userid);
 	}
 
 	/** @return Whether this client version is outdated. */
-	public Boolean isOldVersion() {
+	@Override
+    public Boolean isOldVersion() {
 		return properties.getBoolean(IS_OLD_VERSION, false);
 	}
 
 	/** Sets whether this client version is outdated. */
-	public void setIsOldVersion(Boolean outdated) {
+	@Override
+    public void setIsOldVersion(Boolean outdated) {
 		properties.setValue(IS_OLD_VERSION, outdated.toString());
 	}
 
 	/** @return Whether this client version is outdated. */
-	public Boolean isBigUpdateAvailable() {
+	@Override
+    public Boolean isBigUpdateAvailable() {
 		return properties.getBoolean(IS_BIG_UPDATE_AVAILABLE, false);
 	}
 
 	/** Sets whether this client version has a big update available. */
-	public void setBigUpdateAvailable(Boolean available) {
+	@Override
+    public void setBigUpdateAvailable(Boolean available) {
 		properties.setValue(IS_BIG_UPDATE_AVAILABLE, available.toString());
 	}
 
 	/** @return Whether the user answered to the big update question. */
-	public Boolean isBigUpdateAnswered() {
+	@Override
+    public Boolean isBigUpdateAnswered() {
 		return properties.getBoolean(IS_BIG_UPDATE_ANSWERED, false);
 	}
 
 	/** Sets whether this client version has a big update available. */
-	public void setBigUpdateAnswered(Boolean answered) {
+	@Override
+    public void setBigUpdateAnswered(Boolean answered) {
 		properties.setValue(IS_BIG_UPDATE_ANSWERED, answered.toString());
 	}
 
 	/** @return The number of successfully transfered intervals. */
-	public long getIntervals() {
+	@Override
+    public long getIntervals() {
 		return properties.getOrInitLong(TRANSFERED_INTERVALS_KEY, 0);
 	}
 
 	/** Adds the number to the transfered intervals for the store. */
-	public void addTransferedIntervals(long number) {
+	@Override
+    public void addTransferedIntervals(long number) {
 		properties.setValue(TRANSFERED_INTERVALS_KEY, Long.toString(getIntervals() + number));
 	}
 
 	/** @return The number of successfully transfered intervals. */
-	public String getLastIntervalTransferDate() {
+	@Override
+    public String getLastIntervalTransferDate() {
 		return properties.getValue(LAST_TRANSFERED_INTERVALS_KEY);
 	}
 
 	/** Adds the number to the transfered intervals for the store. */
-	public void setLastTransferedInterval() {
+	@Override
+    public void setLastTransferedInterval() {
 		properties.setValue(LAST_TRANSFERED_INTERVALS_KEY, new Date().toString());
 	}
 
 	/** @return The serverURL. */
-	public String getServerURI() {
+	@Override
+    public String getServerURI() {
 		return properties.getValue(SERVER_KEY);
 	}
 
@@ -208,7 +225,8 @@ public class Preferences {
 	 *         say whether WatchDog should be activated.
 	 *         say whether WatchDog should be activated.
 	 */
-	public boolean isProjectRegistered(String project) {
+	@Override
+    public boolean isProjectRegistered(String project) {
 		ProjectPreferenceSetting projectSetting = getProjectSetting(project);
 		return (projectSetting != null && projectSetting.startupQuestionAsked) ? true
 				: false;
@@ -218,7 +236,8 @@ public class Preferences {
 	 * @return The matching {@link ProjectPreferenceSetting}, or a completely
 	 *         new one in case there was no match.
 	 */
-	public ProjectPreferenceSetting getOrCreateProjectSetting(String project) {
+	@Override
+    public ProjectPreferenceSetting getOrCreateProjectSetting(String project) {
 		ProjectPreferenceSetting setting = getProjectSetting(project);
 		if (setting == null) {
 			setting = new ProjectPreferenceSetting();
@@ -245,7 +264,8 @@ public class Preferences {
 	 * Registers the given project with WatchDog. If use is <code>true</code>,
 	 * WatchDog will be used.
 	 */
-	public void registerProjectUse(String project, boolean use) {
+	@Override
+    public void registerProjectUse(String project, boolean use) {
 		ProjectPreferenceSetting setting = getOrCreateProjectSetting(project);
 		setting.enableWatchdog = use;
 		setting.startupQuestionAsked = true;
@@ -253,7 +273,8 @@ public class Preferences {
 	}
 
 	/** Registers the given projectId with the given project. */
-	public void registerProjectId(String project, String projectId) {
+	@Override
+    public void registerProjectId(String project, String projectId) {
 		ProjectPreferenceSetting setting = getOrCreateProjectSetting(project);
 		setting.projectId = projectId;
 		storeProjectSettings();
@@ -266,7 +287,8 @@ public class Preferences {
 	}
 
 	/** @return a list of project settings. */
-	public List<ProjectPreferenceSetting> getProjectSettings() {
+	@Override
+    public List<ProjectPreferenceSetting> getProjectSettings() {
 		return projectSettings;
 	}
 
@@ -274,7 +296,8 @@ public class Preferences {
 	 * Resets certain WatchDog values to the default which are only used
 	 * internally.
 	 */
-	public void setDefaults() {
+	@Override
+    public void setDefaults() {
         properties.setValue(AUTHENTICATION_ENABLED_KEY, "true");
         properties.setValue(SERVER_KEY, WatchDogGlobals.DEFAULT_SERVER_URI);
         properties.setValue(LOGGING_ENABLED_KEY, "false");

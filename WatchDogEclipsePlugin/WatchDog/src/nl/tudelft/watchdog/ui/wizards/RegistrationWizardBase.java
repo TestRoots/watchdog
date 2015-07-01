@@ -2,12 +2,12 @@ package nl.tudelft.watchdog.ui.wizards;
 
 import nl.tudelft.watchdog.ui.handlers.StartupHandler;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
-import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectCreatedEndingPage;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectIdEnteredEndingPage;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectRegistrationPage;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectSliderPage;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectWelcomePage;
+import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.jface.wizard.Wizard;
 
@@ -41,9 +41,8 @@ public abstract class RegistrationWizardBase extends Wizard {
 	@Override
 	public boolean performFinish() {
 		Preferences preferences = Preferences.getInstance();
-		preferences.registerWorkspaceProject(UIUtils.getWorkspaceName(),
-				projectId);
-		preferences.registerWorkspaceUse(UIUtils.getWorkspaceName(), true);
+		preferences.registerProjectId(WatchDogUtils.getWorkspaceName(), projectId);
+		preferences.registerProjectUse(WatchDogUtils.getWorkspaceName(), true);
 		StartupHandler.startWatchDog();
 		return true;
 	}

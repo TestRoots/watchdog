@@ -5,8 +5,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.*;
 
 import nl.tudelft.watchdog.logic.ui.EventManager;
-import nl.tudelft.watchdog.logic.ui.events.EditorEvent;
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 
 /** Editor listener for all user-triggered events. */
 public class EditorListener {

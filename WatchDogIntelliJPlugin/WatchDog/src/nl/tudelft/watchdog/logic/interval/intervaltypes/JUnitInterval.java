@@ -5,6 +5,8 @@ import java.util.Date;
 import com.intellij.execution.testframework.AbstractTestProxy;
 
 import com.google.gson.annotations.SerializedName;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
 
 /**
  * Data object containing information on JUnit test runs. Contains a

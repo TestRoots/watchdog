@@ -1,7 +1,8 @@
 package nl.tudelft.watchdog.logic.document;
 
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import nl.tudelft.watchdog.util.WatchDogLogger;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import com.intellij.openapi.vfs.VirtualFile;
@@ -36,7 +37,7 @@ public class DocumentCreator {
             return new Document(activeProjectName, title, filePath,
                     getEditorOrFileContent(editor));
         } catch (IllegalArgumentException exception) {
-            WatchDogLogger.getInstance().logSevere(exception);
+            WatchDogLogger.getInstance(Preferences.getInstance().isLoggingEnabled()).logSevere(exception);
         }
         return new Document(activeProjectName, title, filePath, null);
     }
@@ -49,16 +50,16 @@ public class DocumentCreator {
         try {
             return WatchDogUtils.getEditorContent(editor);
         } catch (Exception exception) {
-            WatchDogLogger.getInstance().logSevere(exception);
+            WatchDogLogger.getInstance(Preferences.getInstance().isLoggingEnabled()).logSevere(exception);
             WatchDogLogger
-                    .getInstance()
+                    .getInstance(Preferences.getInstance().isLoggingEnabled())
                     .logInfo(
                             "Document was null, trying to read resource file contents.");
             try {
                 VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(editor.getDocument());
                 return WatchDogUtils.getContentForEditorFromDisk(virtualFile);
             } catch (IllegalArgumentException ex) {
-                WatchDogLogger.getInstance().logInfo(
+                WatchDogLogger.getInstance(Preferences.getInstance().isLoggingEnabled()).logInfo(
                         "File does not exist anymore." );
             }
         }
