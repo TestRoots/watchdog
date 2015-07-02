@@ -2,8 +2,6 @@ package nl.tudelft.watchdog.core.util;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.File;
-
 import nl.tudelft.watchdog.core.ui.preferences.PreferencesBase;
 
 /**
@@ -33,7 +31,8 @@ public class WatchDogGlobals {
 	public static IDE hostIDE;
 
     public static String logDirectory;
-    
+
+    /** Preferences for this instance of IDE */
     public static PreferencesBase preferences;
 
 	/** Describes the different supported IDE plugin hosts. */

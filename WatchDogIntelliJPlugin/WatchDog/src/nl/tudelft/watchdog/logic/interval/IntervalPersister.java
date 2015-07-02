@@ -3,7 +3,6 @@ package nl.tudelft.watchdog.logic.interval;
 
 import nl.tudelft.watchdog.WatchDog;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.*;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import org.mapdb.DB;

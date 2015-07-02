@@ -3,21 +3,21 @@ package nl.tudelft.watchdog.logic.ui;
 import java.util.Date;
 
 import nl.tudelft.watchdog.logic.InitializationManager;
-import nl.tudelft.watchdog.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.EclipseOpenInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.JUnitInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActiveInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.WatchDogViewInterval;
+import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEActiveInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.PerspectiveInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.UserActiveInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.WatchDogViewInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
 import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
@@ -72,7 +72,7 @@ public class EventManager {
 		IntervalBase interval;
 		switch (event.getType()) {
 		case START_IDE:
-			intervalManager.addInterval(new EclipseOpenInterval(forcedDate));
+			intervalManager.addInterval(new IDEOpenInterval(forcedDate));
 			userInactivityNotifier.trigger(forcedDate);
 			break;
 

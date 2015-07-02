@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.logic.interval.intervaltypes;
 import java.util.Date;
 
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
-import nl.tudelft.watchdog.logic.document.Document;
+import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.network.JsonifiedLong;
 
 

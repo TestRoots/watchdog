@@ -1,8 +1,8 @@
 package nl.tudelft.watchdog.logic.ui.listeners;
 
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
 import nl.tudelft.watchdog.logic.ui.EventManager;
 
 import org.eclipse.debug.ui.IDebugUIConstants;

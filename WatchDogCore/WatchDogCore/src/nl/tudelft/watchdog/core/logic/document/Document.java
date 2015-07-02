@@ -1,8 +1,8 @@
-package nl.tudelft.watchdog.logic.document;
+package nl.tudelft.watchdog.core.logic.document;
 
 import java.io.Serializable;
 
-import nl.tudelft.watchdog.util.WatchDogUtils;
+import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -75,12 +75,12 @@ public class Document implements Serializable {
 
 	/** Prepares this document to extract statistics out of it. */
 	public void prepareDocument() {
-		this.nameHash = WatchDogUtils.createFileNameHash(name);
+		this.nameHash = WatchDogUtilsBase.createFileNameHash(name);
 		if (projectName != null) {
-			this.projectNameHash = WatchDogUtils.createHash(projectName);
+			this.projectNameHash = WatchDogUtilsBase.createHash(projectName);
 		}
 		if (name != null && content != null) {
-			this.sloc = WatchDogUtils.countSLOC(content);
+			this.sloc = WatchDogUtilsBase.countSLOC(content);
 			this.docType = DocumentClassifier.classifyDocument(name, filePath,
 					content);
 		}

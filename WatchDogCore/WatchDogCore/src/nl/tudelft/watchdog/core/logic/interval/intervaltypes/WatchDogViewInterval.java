@@ -1,10 +1,7 @@
-package nl.tudelft.watchdog.logic.interval.intervaltypes;
-
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
+package nl.tudelft.watchdog.core.logic.interval.intervaltypes;
 
 import java.util.Date;
-// TODO implement listener
+
 /** When the WatchDogView is open. */
 public class WatchDogViewInterval extends IntervalBase {
 

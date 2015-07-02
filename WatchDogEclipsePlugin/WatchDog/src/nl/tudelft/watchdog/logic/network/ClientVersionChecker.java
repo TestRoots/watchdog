@@ -6,8 +6,8 @@ import java.util.regex.Pattern;
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
+import nl.tudelft.watchdog.core.logic.ui.RegularCheckerBase;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
-import nl.tudelft.watchdog.logic.ui.RegularCheckerBase;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 

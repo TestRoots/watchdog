@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.document;
+package nl.tudelft.watchdog.core.logic.document;
 
 import com.google.gson.annotations.SerializedName;
 

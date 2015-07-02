@@ -1,4 +1,5 @@
-package nl.tudelft.watchdog.logic.document;
+package nl.tudelft.watchdog.core.logic.document;
+
 
 /**
  * Estimates the nature of a document into one of {@link DocumentType}.

@@ -7,10 +7,11 @@ import java.util.TimerTask;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
-import nl.tudelft.watchdog.logic.ui.RegularCheckerBase;
+import nl.tudelft.watchdog.core.logic.ui.RegularCheckerBase;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
+import nl.tudelft.watchdog.util.WatchDogUtils;
 
 /**
  * This manager takes care of the repeated transferal of all closed intervals to
@@ -70,7 +71,7 @@ public class IntervalTransferManager extends RegularCheckerBase {
 			JsonTransferer intervalTransferer = new JsonTransferer();
 
 			Connection connection = intervalTransferer
-					.sendIntervals(intervalsToTransfer);
+					.sendIntervals(intervalsToTransfer, WatchDogUtils.getProjectName());
 			switch (connection) {
 			case SUCCESSFUL:
 				intervalPersister.removeIntervals(intervalsToTransfer);

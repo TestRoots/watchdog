@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.ui;
+package nl.tudelft.watchdog.core.logic.ui;
 
 import java.util.Timer;
 import java.util.TimerTask;

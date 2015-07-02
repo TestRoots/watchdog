@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.logic.document;
 
+import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.util.ContentReaderException;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.ui.preferences.Preferences;

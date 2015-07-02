@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.logic.document;
 
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.util.WatchDogUtils;
@@ -10,11 +11,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.editor.Editor;
 
 /**
- * A factory for creating {@link nl.tudelft.watchdog.logic.document.Document}s from a supplied {@link Editor}.
+ * A factory for creating {@link nl.tudelft.watchdog.core.logic.document.Document}s from a supplied {@link Editor}.
  */
 public class DocumentCreator {
     /**
-     * Factory method that creates and returns a {@link nl.tudelft.watchdog.logic.document.Document} from a given
+     * Factory method that creates and returns a {@link nl.tudelft.watchdog.core.logic.document.Document} from a given
      * {@link Editor}. For this to succeed, it is necessary that the the
      * supplied part is Project.
      */

@@ -8,6 +8,7 @@ import com.intellij.openapi.ui.ComboBox;
 import nl.tudelft.watchdog.WatchDog;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
+import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -223,21 +224,6 @@ public class UIUtils {
     }
 
     /**
-     * Returns the Project's name.
-     */
-    public static String getProjectName() {
-        return WatchDog.project.getName();
-    }
-
-    /**
-     * Returns the {@link ProjectPreferenceSetting} of the currently active
-     * project.
-     */
-    public static ProjectPreferenceSetting getProjectSetting() {
-        return Preferences.getInstance().getOrCreateProjectSetting(UIUtils.getProjectName());
-    }
-
-    /**
      * The WatchDog Icon.
      */
     public static final Icon WATCHDOG_ICON = IconLoader.getIcon("/images/watchdog_icon.png");
@@ -352,7 +338,7 @@ public class UIUtils {
      */
     public static void createOpenReportLink(JComponent parent) {
         String projectReport = "http://www.testroots.org/reports/project/"
-                + UIUtils.getProjectSetting().projectId + ".html";
+                + WatchDogUtils.getProjectSetting().projectId + ".html";
         UIUtils.createHyperLinkLabel(parent, "Open Report.", projectReport);
     }
 

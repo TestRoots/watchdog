@@ -6,7 +6,6 @@ import java.util.List;
 
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
-import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.core.ui.wizards.Project;
 import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
@@ -18,6 +17,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
+import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
 
 /**
  * Transmits WatchDog data objects in a Json format to the WatchDog server.
@@ -45,9 +45,9 @@ public class JsonTransferer {
 	 * Sends the recorded intervals to the server. Returns <code>true</code> on
 	 * successful transfer, <code>false</code> otherwise.
 	 */
-	public Connection sendIntervals(List<IntervalBase> recordedIntervals) {
+	public Connection sendIntervals(List<IntervalBase> recordedIntervals, String projectName) {
 		String userid = WatchDogGlobals.preferences.getUserid();
-		String projectid = UIUtils.getWorkspaceSetting().projectId;
+		String projectid = WatchDogGlobals.preferences.getOrCreateProjectSetting(projectName).projectId;
 		String json = toJson(recordedIntervals);
 		try {
 			NetworkUtils

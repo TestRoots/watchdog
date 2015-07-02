@@ -142,7 +142,7 @@ public class UserRegistrationStep extends RegistrationEndingStepBase {
 
         Preferences preferences = Preferences.getInstance();
         preferences.setUserid(id);
-        preferences.registerProjectId(UIUtils.getProjectName(), "");
+        preferences.registerProjectId(WatchDogUtils.getProjectName(), "");
     }
 
     /**

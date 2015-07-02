@@ -9,7 +9,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.DocumentAdapter;
 import nl.tudelft.watchdog.WatchDog;
 import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
-import nl.tudelft.watchdog.logic.network.NetworkUtils;
+import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectRegistrationWizard;
@@ -74,7 +74,7 @@ public class PreferencePage implements SearchableConfigurable, Configurable.NoSc
     /**
      * This project's name.
      */
-    private String project = UIUtils.getProjectName();
+    private String project = WatchDogUtils.getProjectName();
 
     /**
      * The name of this preference page.

@@ -66,7 +66,7 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPageBase {
 		}
 
 		// initialize from projectPage
-		project.belongToASingleSofware = !projectPage.noSingleProjectButton
+		project.belongToASingleSoftware = !projectPage.noSingleProjectButton
 				.getSelection();
 		project.name = projectPage.projectNameInput.getText();
 		project.website = projectPage.projectWebsite.getText();

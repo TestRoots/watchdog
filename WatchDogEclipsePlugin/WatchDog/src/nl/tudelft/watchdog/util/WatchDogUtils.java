@@ -2,14 +2,13 @@ package nl.tudelft.watchdog.util;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.regex.Pattern;
 
 import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
 import nl.tudelft.watchdog.core.util.ContentReaderException;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
+import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.text.IDocument;
@@ -23,7 +22,7 @@ import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
 /** Utilities for WatchDog. */
-public class WatchDogUtils {
+public class WatchDogUtils extends WatchDogUtilsBase {
 
 	/** Formatter for a {@link Period}. */
 	private static PeriodFormatter periodFormatter = new PeriodFormatterBuilder()
@@ -134,83 +133,6 @@ public class WatchDogUtils {
 	public static String makeDurationHumanReadable(Duration duration) {
 		return periodFormatter.print(duration.toPeriod().withMillis(0)
 				.normalizedStandard());
-	}
-
-	/**
-	 * @return <code>true</code> when the given string is either
-	 *         <code>null</code> or empty. <code>false</code> otherwise.
-	 */
-	public static boolean isEmpty(String string) {
-		if (string == null || string.isEmpty()) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * @return Whether the string with white spaces trimmed is empty.
-	 */
-	public static boolean isEmptyOrHasOnlyWhitespaces(String string) {
-		return isEmpty(string) ? true : string.trim().isEmpty();
-	}
-
-	/**
-	 * @return the number of source lines of code in the given string.
-	 */
-	public static long countSLOC(String text) {
-		String[] lines = text.split("\r\n|\r|\n");
-		long sloc = 0;
-		for (String line : lines) {
-			if (!isEmptyOrHasOnlyWhitespaces(line)) {
-				sloc++;
-			}
-		}
-		return sloc;
-	}
-
-	/**
-	 * @return A hash code for the given String, so that it is completely
-	 *         anonymous.
-	 */
-	public static String createHash(String name) {
-		return DigestUtils.shaHex(name);
-	}
-
-	/**
-	 * Generates an intelligent hash code of the supplied fileName, removing
-	 * .java file endings and shortening fully-qualified filenames.
-	 * 
-	 * <br>
-	 * Example 1: Generates a hash code <code>a</code> for input "AClass.java"
-	 * and <code>aTest</code> for "AClassTest.java". <br>
-	 * <br>
-	 * Example 2: Takes <code>package.for.a</code> and returns the same file
-	 * hash as <code>a</code>.
-	 * 
-	 * @return A hash for the given filename.
-	 */
-	public static String createFileNameHash(String fileName) {
-		String hashedName = "";
-		if (isEmpty(fileName)) {
-			return hashedName;
-		}
-		String lowerCaseFileName = fileName.toLowerCase().replaceFirst(
-				Pattern.quote(".") + "java$", "");
-
-		// Strip-away fully-qualified path from filename (necessary when project
-		// has Maven nature)
-		String[] fileNameParts = lowerCaseFileName.split(Pattern.quote("."));
-		lowerCaseFileName = fileNameParts[fileNameParts.length - 1];
-
-		if (lowerCaseFileName.startsWith("test")
-				|| lowerCaseFileName.endsWith("test")) {
-			lowerCaseFileName = lowerCaseFileName.replaceFirst("^test", "");
-			lowerCaseFileName = lowerCaseFileName.replaceFirst("test$", "");
-			hashedName = createHash(lowerCaseFileName) + "Test";
-		} else {
-			hashedName = createHash(lowerCaseFileName);
-		}
-		return hashedName;
 	}
 
 	/** Sleeps for the specified amount of milliseconds. */

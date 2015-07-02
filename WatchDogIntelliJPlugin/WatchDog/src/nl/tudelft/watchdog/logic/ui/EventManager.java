@@ -3,9 +3,8 @@ package nl.tudelft.watchdog.logic.ui;
 import java.util.Date;
 
 import com.intellij.openapi.editor.Editor;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
-import nl.tudelft.watchdog.logic.document.Document;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.*;
+import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.*;
@@ -65,7 +64,7 @@ public class EventManager {
         IntervalBase interval;
         switch (event.getType()) {
             case START_IDE:
-                intervalManager.addInterval(new IntelliJOpenInterval(forcedDate));
+                intervalManager.addInterval(new IDEOpenInterval(forcedDate));
                 userInactivityNotifier.trigger(forcedDate);
                 break;
 

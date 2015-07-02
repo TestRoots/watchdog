@@ -23,7 +23,7 @@ public class Project extends WatchDogTransferable {
 	 * Does the registered WatchDog project belong to a single software project
 	 * (<code>true</code> if it does)
 	 */
-	public boolean belongToASingleSofware;
+	public boolean belongToASingleSoftware;
 
 	/** Do you use Junit? */
 	public YesNoDontKnowChoice usesJunit;

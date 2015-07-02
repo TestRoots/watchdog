@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.interval;
+package nl.tudelft.watchdog.core.logic.interval;
 
 import java.util.ArrayList;
 import java.util.List;

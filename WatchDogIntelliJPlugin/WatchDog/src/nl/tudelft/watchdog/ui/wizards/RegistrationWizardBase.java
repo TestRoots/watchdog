@@ -12,6 +12,7 @@ import javax.swing.*;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.*;
+import nl.tudelft.watchdog.util.WatchDogUtils;
 
 
 /**
@@ -106,8 +107,8 @@ public abstract class RegistrationWizardBase extends AbstractWizard<WizardStep> 
 
     public void performFinish() {
         Preferences preferences = Preferences.getInstance();
-        preferences.registerProjectId(UIUtils.getProjectName(), projectId);
-        preferences.registerProjectUse(UIUtils.getProjectName(), true);
+        preferences.registerProjectId(WatchDogUtils.getProjectName(), projectId);
+        preferences.registerProjectUse(WatchDogUtils.getProjectName(), true);
         return;
     }
 

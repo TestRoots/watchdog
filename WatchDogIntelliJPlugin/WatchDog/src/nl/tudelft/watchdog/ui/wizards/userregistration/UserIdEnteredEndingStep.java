@@ -1,7 +1,7 @@
 package nl.tudelft.watchdog.ui.wizards.userregistration;
 
 import com.intellij.ide.wizard.CommitStepException;
-import nl.tudelft.watchdog.logic.network.NetworkUtils;
+import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.wizards.IdEnteredEndingStepBase;
 import nl.tudelft.watchdog.ui.wizards.RegistrationWizardBase;

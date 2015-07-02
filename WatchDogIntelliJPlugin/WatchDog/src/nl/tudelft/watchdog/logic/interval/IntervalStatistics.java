@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import nl.tudelft.watchdog.core.logic.interval.IntervalManagerBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.logic.document.DocumentType;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntelliJOpenInterval;
+import nl.tudelft.watchdog.core.logic.document.DocumentType;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.JUnitInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActiveInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.UserActiveInterval;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -154,7 +155,7 @@ public class IntervalStatistics extends IntervalManagerBase {
 	}
 
 	private void calculateStatistics() {
-		intelliJOpen = aggregateDurations(getIntervals(IntelliJOpenInterval.class));
+		intelliJOpen = aggregateDurations(getIntervals(IDEOpenInterval.class));
 		userActive = aggregateDurations(getIntervals(UserActiveInterval.class));
 		userReading = aggregateDurations(getIntervals(ReadingInterval.class));
 		userTyping = aggregateDurations(getIntervals(TypingInterval.class));
