@@ -33,8 +33,8 @@
     <!--depends optional="false">JUnit</depends-->
 
     <extensions defaultExtensionNs="com.intellij">
-        <testStatusListener implementation="JUnitListener"></testStatusListener>
-        <applicationConfigurable instance="PreferencePage"></applicationConfigurable>
+        <testStatusListener implementation="nl.tudelft.watchdog.logic.ui.listeners.JUnitListener"></testStatusListener>
+        <applicationConfigurable instance="nl.tudelft.watchdog.ui.preferences.PreferencePage"></applicationConfigurable>
         <toolWindow id="WatchDog" anchor="right" icon="/images/watchdog_icon.png"
                     factoryClass="nl.tudelft.watchdog.ui.WatchDogToolWindowFactory"
                     conditionClass="nl.tudelft.watchdog.ui.WatchDogToolWindowFactoryCondition"/>

@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.logic;
 import java.io.File;
 
 import nl.tudelft.watchdog.Activator;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.IntervalPersister;
 import nl.tudelft.watchdog.logic.interval.IntervalTransferManager;
@@ -10,6 +11,7 @@ import nl.tudelft.watchdog.logic.network.ClientVersionChecker;
 import nl.tudelft.watchdog.logic.ui.EventManager;
 import nl.tudelft.watchdog.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.logic.ui.listeners.WorkbenchListener;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
 
 /**
  * Manages the setup process of the interval recording infrastructure. Is a
@@ -33,6 +35,8 @@ public class InitializationManager {
 
 	/** Private constructor. */
 	private InitializationManager() {
+		WatchDogGlobals.logDirectory = "watchdog/logs/";
+		WatchDogGlobals.preferences = Preferences.getInstance();
 		File baseFolder = Activator.getDefault().getStateLocation().toFile();
 		File toTransferDatabaseFile = new File(baseFolder, "intervals.mapdb");
 		File statisticsDatabaseFile = new File(baseFolder,

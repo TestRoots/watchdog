@@ -20,6 +20,7 @@ import java.util.Set;
  * instance can record before the database breaks is {@link Long#MAX_VALUE}.
  */
 public class IntervalPersister {
+
     private static final String INTERVALS = "intervals";
 
     private DB database;

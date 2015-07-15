@@ -19,7 +19,7 @@ import com.google.gson.reflect.TypeToken;
 /**
  * Utilities for accessing WatchDog's IntelliJ's preferences.
  */
-public class Preferences implements PreferencesBase {
+public class Preferences extends PreferencesBase {
 
 	/** The user's id on the WatchDog server. */
 	public final static String USERID_KEY = "WATCHDOG.USERID";

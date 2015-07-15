@@ -12,6 +12,7 @@ import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.ui.util.UIUtils;
+import nl.tudelft.watchdog.util.WatchDogUtils;
 
 /**
  * This manager takes care of the repeated transferal of all closed intervals to
@@ -71,8 +72,8 @@ public class IntervalTransferManager extends RegularCheckerBase {
 		private void transferIntervals(List<IntervalBase> intervalsToTransfer) {
 			JsonTransferer intervalTransferer = new JsonTransferer();
 
-			Connection connection = intervalTransferer
-					.sendIntervals(intervalsToTransfer);
+			Connection connection = intervalTransferer.sendIntervals(
+					intervalsToTransfer, WatchDogUtils.getWorkspaceName());
 			switch (connection) {
 			case SUCCESSFUL:
 				intervalPersister.removeIntervals(intervalsToTransfer);

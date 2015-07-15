@@ -25,9 +25,6 @@ public class WatchDog implements ProjectComponent {
     /** The warning displayed when WatchDog is not active. */
     public static final String WATCHDOG_INACTIVE_WARNING = "<html>WatchDog only works when you register a (possibly anonymous) user and project.<br><br>Takes less than one minute,  and you can win prices. As a registered user, you decide where WatchDog is active.";
 
-    /** The preferences. */
-    private Preferences preferences;
-
     /** Whether the user has cancelled the user project registration wizard. */
     private boolean userProjectRegistrationCancelled = false;
 
@@ -38,7 +35,7 @@ public class WatchDog implements ProjectComponent {
 
     public void initComponent() {
         WatchDogGlobals.logDirectory = PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog")).getPath().toString() + "/logs/";
-        preferences = Preferences.getInstance();
+        WatchDogGlobals.preferences = Preferences.getInstance();
     }
 
     public void disposeComponent() {
@@ -55,7 +52,7 @@ public class WatchDog implements ProjectComponent {
 
         checkWhetherToDisplayUserProjectRegistrationWizard();
 
-        if (WatchDogUtils.isEmpty(preferences.getUserid())
+        if (WatchDogUtils.isEmpty(WatchDogGlobals.preferences.getUserid())
                 || userProjectRegistrationCancelled) {
             return;
         }
@@ -75,7 +72,7 @@ public class WatchDog implements ProjectComponent {
 
     /** Checks whether there is a registered WatchDog user */
     private void checkWhetherToDisplayUserProjectRegistrationWizard() {
-        if (!WatchDogUtils.isEmpty(preferences.getUserid()))
+        if (!WatchDogUtils.isEmpty(WatchDogGlobals.preferences.getUserid()))
             return;
         UserProjectRegistrationWizard wizard = new UserProjectRegistrationWizard("User and Project Registration", project);
         wizard.setCrossClosesWindow(false);
@@ -87,16 +84,16 @@ public class WatchDog implements ProjectComponent {
     }
 
     private void checkIsProjectAlreadyRegistered() {
-        if (!preferences.isProjectRegistered(project.getName())) {
+        if (!WatchDogGlobals.preferences.isProjectRegistered(project.getName())) {
             boolean useWatchDogInThisWorkspace = Messages.YES ==
                     Messages.showYesNoDialog("Should WatchDog be active in this workspace?", "WatchDog Workspace Registration", AllIcons.General.QuestionDialog);
             WatchDogLogger.getInstance(Preferences.getInstance().isLoggingEnabled()).logInfo("Registering workspace...");
-            preferences.registerProjectUse(project.getName(), useWatchDogInThisWorkspace);
+            WatchDogGlobals.preferences.registerProjectUse(project.getName(), useWatchDogInThisWorkspace);
        }
     }
 
     private void checkWhetherToDisplayProjectWizard() {
-        ProjectPreferenceSetting setting = preferences
+        ProjectPreferenceSetting setting = WatchDogGlobals.preferences
                 .getOrCreateProjectSetting(project.getName());
         if (setting.enableWatchdog && WatchDogUtils.isEmpty(setting.projectId)) {
             new ProjectRegistrationWizard("Project Registration", project).show();
@@ -105,7 +102,7 @@ public class WatchDog implements ProjectComponent {
 
     private void checkWhetherToStartWatchDog() {
         // reload setting from preferences
-        ProjectPreferenceSetting setting = preferences
+        ProjectPreferenceSetting setting = WatchDogGlobals.preferences
                 .getOrCreateProjectSetting(project.getName());
         if (setting.enableWatchdog) {
             WatchDogLogger.getInstance(Preferences.getInstance().isLoggingEnabled()).logInfo("Starting WatchDog ...");
