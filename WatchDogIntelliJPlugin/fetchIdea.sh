@@ -20,7 +20,9 @@ if [ ! -d ./idea-IC ]; then
     mv  ${ideaPath} ./idea-IC
 	
 	# Compress to ZIP file
-	zip -r ideaIC-${ideaVersion}.zip idea-IC
+	cd idea-IC
+	zip -r ../ideaIC-${ideaVersion}.zip *
+	cd ..
 	rm -rf idea-IC
 fi
 

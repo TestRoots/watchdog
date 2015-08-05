@@ -16,6 +16,14 @@
 	<dependencies>
 
 		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>org.jetbrains.intellij-ce</artifactId>
+			<version>14.1</version>
+			<type>zip</type>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>nl.tudelft</groupId>
 			<artifactId>nl.tudelft.WatchDogCore</artifactId>
 			<version>1.5.0</version>
@@ -85,6 +93,25 @@
 			</resource>
 		</resources>
 		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<id>unpack-intellij</id>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<configuration>
+							<includeArtifactIds>org.jetbrains.intellij-ce</includeArtifactIds>
+							<outputDirectory>${project.build.directory}/IntelliJ-IDEA-CE</outputDirectory>
+							<includes>**/*.jar</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
