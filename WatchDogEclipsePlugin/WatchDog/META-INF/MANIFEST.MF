@@ -2,7 +2,7 @@ Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Manifest-Version: 1.0
 Bundle-Activator: nl.tudelft.watchdog.Activator
-Bundle-Version: 1.5.0
+Bundle-Version: 1.4.2
 Bundle-SymbolicName: nl.tudelft.WatchDog;singleton:=true
 Import-Package: junit.runner,
  org.eclipse.core.commands,
@@ -66,4 +66,4 @@ Bundle-ClassPath: .,
  lib/jfreechart-1.0.19-swt.jar,
  lib/jfreechart-1.0.19.jar,
  lib/mapdb-1.0.5.jar
-Require-Bundle: nl.tudelft.WatchDogCore
+Require-Bundle: nl.tudelft.WatchDogCore;bundle-version="1.5.0"

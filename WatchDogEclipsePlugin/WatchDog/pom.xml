@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <relativePath>../pom.xml</relativePath>
-    <groupId>nl.tudelft</groupId>
-    <artifactId>parent</artifactId>
-    <version>1.4.2</version>
-  </parent>
+	<parent>
+		<relativePath>../pom.xml</relativePath>
+		<groupId>nl.tudelft</groupId>
+		<artifactId>parent</artifactId>
+		<version>1.4.2</version>
+	</parent>
 
-  <artifactId>nl.tudelft.WatchDog</artifactId>
-  <packaging>eclipse-plugin</packaging>
+	<artifactId>nl.tudelft.WatchDog</artifactId>
+	<packaging>eclipse-plugin</packaging>
 
-<build>
-<plugins>
-			<plugin>
+	<build>
+		<plugins>
+			<!--plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
 				<version>3.0.0</version>
@@ -34,9 +34,9 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-</plugins>
-</build>
+			</plugin-->
+		</plugins>
+	</build>
 
 </project> 
 
