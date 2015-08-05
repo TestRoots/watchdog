@@ -17,7 +17,7 @@ if [ ! -d ./idea-IC ]; then
 
     # Move the versioned IDEA folder to a known location
     ideaPath=$(find . -name 'idea-IC*' | head -n 1)
-    mv ${-IC} ./idea-IC
+    mv  ${ideaPath} ./idea-IC
 	
 	# Compress to ZIP file
 	zip -r ideaIC-${ideaVersion}.zip idea-IC
