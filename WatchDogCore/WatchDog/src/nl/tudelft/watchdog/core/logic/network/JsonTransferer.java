@@ -17,7 +17,6 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
-import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
 
 /**
  * Transmits WatchDog data objects in a Json format to the WatchDog server.

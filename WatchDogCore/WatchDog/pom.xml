@@ -9,7 +9,6 @@
 
 	<packaging>eclipse-plugin</packaging>
 	<artifactId>nl.tudelft.WatchDogCore</artifactId>	
-	<version>1.5.0</version>
 
 	<properties>
 		<tycho.version>0.22.0</tycho.version>

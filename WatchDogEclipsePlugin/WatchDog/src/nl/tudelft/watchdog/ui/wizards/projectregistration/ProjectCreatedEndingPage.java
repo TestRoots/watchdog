@@ -70,6 +70,8 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPageBase {
 				.getSelection();
 		project.name = projectPage.projectNameInput.getText();
 		project.website = projectPage.projectWebsite.getText();
+		project.usesContinuousIntegration = projectPage
+				.usesContinuousIntegration();
 		project.usesJunit = projectPage.usesJunit();
 		project.usesOtherTestingFrameworks = projectPage
 				.usesOtherTestingFrameworks();

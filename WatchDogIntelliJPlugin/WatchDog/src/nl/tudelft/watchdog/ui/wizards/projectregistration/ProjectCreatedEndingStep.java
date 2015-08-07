@@ -52,6 +52,7 @@ public class ProjectCreatedEndingStep extends RegistrationEndingStepBase {
         project.belongToASingleSoftware = !projectStep.noSingleProjectCheck.isSelected();
         project.name = projectStep.projectNameInput.getText();
         project.website = projectStep.projectWebsite.getText();
+        project.usesContinuousIntegration = projectStep.usesContinuousIntegration();
         project.usesJunit = projectStep.usesJunit();
         project.usesOtherTestingFrameworks = projectStep
                 .usesOtherTestingFrameworks();

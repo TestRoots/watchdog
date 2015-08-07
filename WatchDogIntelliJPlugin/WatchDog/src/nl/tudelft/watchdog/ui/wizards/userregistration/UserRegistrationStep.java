@@ -32,11 +32,6 @@ public class UserRegistrationStep extends RegistrationEndingStepBase {
     private JTextField organizationInput;
 
     /**
-     * The group entered by the user.
-     */
-    private JTextField groupInput;
-
-    /**
      * User may be contacted.
      */
     private JCheckBox mayContactButton;
@@ -74,9 +69,6 @@ public class UserRegistrationStep extends RegistrationEndingStepBase {
         organizationInput = UIUtils.createLinkedFieldInput(
                 middlePanel, "Your Organization/Company: ",
                 20, "You can include your organization's website here.");
-        groupInput = UIUtils.createLinkedFieldInput(middlePanel, "Your Group (if any): ",
-                20,
-                "If you are not part of a group, please leave this empty.");
         FormValidationListener formValidator = new FormValidationListener(this);
         emailInput.getDocument().addDocumentListener(formValidator);
 
@@ -121,7 +113,6 @@ public class UserRegistrationStep extends RegistrationEndingStepBase {
         User user = new User();
         user.email = getEmailInput().getText();
         user.organization = getOrganizationInput().getText();
-        user.group = getGroupInput().getText();
         user.mayContactUser = getMayContactUser();
         user.programmingExperience = getProgrammingExperience();
         user.operatingSystem = System.getProperty("os.name");
@@ -168,13 +159,6 @@ public class UserRegistrationStep extends RegistrationEndingStepBase {
      */
     public JTextField getOrganizationInput() {
         return organizationInput;
-    }
-
-    /**
-     * @return the group
-     */
-    public JTextField getGroupInput() {
-        return groupInput;
     }
 
     /**

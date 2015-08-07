@@ -21,9 +21,6 @@ public class User extends WatchDogTransferable {
 	/** Organization. */
 	public String organization;
 
-	/** Group. */
-	public String group;
-
 	/** The programming experience. */
 	public String programmingExperience;
 

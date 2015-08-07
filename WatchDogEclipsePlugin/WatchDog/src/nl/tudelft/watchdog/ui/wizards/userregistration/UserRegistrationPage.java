@@ -29,9 +29,6 @@ public class UserRegistrationPage extends RegistrationEndingPageBase {
 	/** The organization entered by the user. */
 	private Text organizationInput;
 
-	/** The group entered by the user. */
-	private Text groupInput;
-
 	/** User may be contacted. */
 	private Button mayContactButton;
 
@@ -76,9 +73,7 @@ public class UserRegistrationPage extends RegistrationEndingPageBase {
 		organizationInput = UIUtils.createLinkedFieldInput(
 				"Your Organization/Company: ",
 				"You can include your organization's website here.", composite);
-		groupInput = UIUtils.createLinkedFieldInput("Your Group (if any): ",
-				"If you are not part of a group, please leave this empty.",
-				composite);
+
 		FormValidationListener formValidator = new FormValidationListener(this);
 		emailInput.addModifyListener(formValidator);
 
@@ -128,7 +123,6 @@ public class UserRegistrationPage extends RegistrationEndingPageBase {
 		User user = new User();
 		user.email = getEmailInput().getText();
 		user.organization = getOrganizationInput().getText();
-		user.group = getGroupInput().getText();
 		user.mayContactUser = getMayContactUser();
 		user.programmingExperience = getProgrammingExperience();
 		user.operatingSystem = Platform.getOS();
@@ -173,11 +167,6 @@ public class UserRegistrationPage extends RegistrationEndingPageBase {
 	/** @return the organization */
 	public Text getOrganizationInput() {
 		return organizationInput;
-	}
-
-	/** @return the group */
-	public Text getGroupInput() {
-		return groupInput;
 	}
 
 	/** @return the programming experience in years. */

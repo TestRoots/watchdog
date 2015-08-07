@@ -24,6 +24,9 @@ public class Project extends WatchDogTransferable {
 	 * (<code>true</code> if it does)
 	 */
 	public boolean belongToASingleSoftware;
+	
+	/** Do you use ContinuousIntegration? */
+	public YesNoDontKnowChoice usesContinuousIntegration;
 
 	/** Do you use Junit? */
 	public YesNoDontKnowChoice usesJunit;

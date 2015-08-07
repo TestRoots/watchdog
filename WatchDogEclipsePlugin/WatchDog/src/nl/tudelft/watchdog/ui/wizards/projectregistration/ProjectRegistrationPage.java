@@ -38,6 +38,8 @@ public class ProjectRegistrationPage extends FinishableWizardPage {
 
 	private Composite noSingleProjectComposite;
 
+	private Composite useContinuousIntegration;
+
 	private Composite useJunit;
 
 	private Composite otherTestingFrameworks;
@@ -104,6 +106,14 @@ public class ProjectRegistrationPage extends FinishableWizardPage {
 
 		UIUtils.createLabel("", questionComposite);
 		UIUtils.createLabel("", questionComposite);
+
+		useContinuousIntegration = createSimpleYesNoDontKnowQuestion(
+				"Does your project use Continuous Integration (Travis, Jenkins, etc.)?",
+				questionComposite);
+
+		UIUtils.createLabel("", questionComposite);
+		UIUtils.createLabel("", questionComposite);
+
 		multipleProjectLabel = UIUtils.createLabel(DOES_YOUR_PROJECT,
 				questionComposite);
 		UIUtils.createLabel("", questionComposite);
@@ -112,12 +122,12 @@ public class ProjectRegistrationPage extends FinishableWizardPage {
 		otherTestingFrameworks = createSimpleYesNoDontKnowQuestion(
 				"  ... other testing frameworks (e.g. Mockito)? ",
 				questionComposite);
-		addValidationListenerToAllChildren(useJunit, formValidationListener);
-		addValidationListenerToAllChildren(otherTestingFrameworks,
-				formValidationListener);
 		otherTestingForms = createSimpleYesNoDontKnowQuestion(
 				"  ... other testing forms (e.g. manual testing)? ",
 				questionComposite);
+
+		addValidationListenerToAllChildren(useContinuousIntegration,
+				formValidationListener);
 		addValidationListenerToAllChildren(useJunit, formValidationListener);
 		addValidationListenerToAllChildren(otherTestingFrameworks,
 				formValidationListener);
@@ -134,7 +144,8 @@ public class ProjectRegistrationPage extends FinishableWizardPage {
 		} else if (inputFieldDoesNotHaveMinimumSensibleInput(projectNameInput)
 				&& projectNameInput.getEnabled()) {
 			setErrorMessageAndPageComplete("You must enter a project name longer than 2 chars.");
-		} else if (!hasOneSelection(useJunit)
+		} else if (!hasOneSelection(useContinuousIntegration)
+				|| !hasOneSelection(useJunit)
 				|| !hasOneSelection(otherTestingFrameworks)
 				|| !hasOneSelection(otherTestingForms)) {
 			setErrorMessageAndPageComplete("Please answer all yes/no/don't know questions!");
@@ -168,6 +179,13 @@ public class ProjectRegistrationPage extends FinishableWizardPage {
 	@Override
 	public boolean canFinish() {
 		return false;
+	}
+
+	/**
+	 * @return Whether or not this project uses Continuous Integration tools.
+	 */
+	/* package */YesNoDontKnowChoice usesContinuousIntegration() {
+		return evaluateWhichSelection(useContinuousIntegration);
 	}
 
 	/**
