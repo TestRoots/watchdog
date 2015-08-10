@@ -21,8 +21,8 @@ cd ..
 echo
 echo Build WatchDogIntelliJPlugin
 echo
+sh WatchDogIntelliJPlugin/fetchIdea.sh
 cd WatchDogIntelliJPlugin/
-./fetchIdea.sh
 mvn clean verify
 INTELLIJ_CLIENT_STATUS=$?
 cd ..
