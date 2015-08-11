@@ -23,7 +23,7 @@ public class UserWelcomePage extends WelcomePageBase {
 	/** Constructor. */
 	UserWelcomePage() {
 		super("Welcome to WatchDog!", 1);
-		setDescription("This wizard guides you through the setup of a WatchDog User.");
+		setDescription("This wizard guides you through the setup of a WatchDog.\nPlease register, if you want to get your online report.");
 		welcomeTitle = "Welcome! Registration is fun and takes just 3 minutes!";
 		welcomeText = "";
 		labelText = "Your WatchDog User-ID: ";

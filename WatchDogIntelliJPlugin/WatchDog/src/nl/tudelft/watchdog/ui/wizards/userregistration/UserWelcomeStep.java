@@ -19,7 +19,7 @@ public class UserWelcomeStep extends WelcomeStepBase {
     public UserWelcomeStep(int stepNumber, RegistrationWizardBase wizard) {
 		super("Welcome to WatchDog!", stepNumber, wizard);
         myIcon = IconLoader.getIcon("/images/user.png");
-		descriptionText = "This wizard guides you through the setup of a WatchDog User.";
+		descriptionText = "<html>This wizard guides you through the setup of WatchDog.<br>Please register, if you want to get your online report.";
 		welcomeDisplay = "Welcome! Registration is fun and takes just 3 minutes!";
 		welcomeText = "WatchDog is a free, open-source plugin that tells how you code your software.";
 		labelText = "Your WatchDog User-ID: ";

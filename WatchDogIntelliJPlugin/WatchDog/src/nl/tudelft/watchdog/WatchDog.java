@@ -8,11 +8,16 @@ import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
+import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
+import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
+import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.logic.InitializationManager;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
+import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectRegistrationStep;
 import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectRegistrationWizard;
+import nl.tudelft.watchdog.ui.wizards.projectregistration.ProjectSliderStep;
 import nl.tudelft.watchdog.ui.wizards.userregistration.UserProjectRegistrationWizard;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
@@ -22,10 +27,14 @@ import org.jetbrains.annotations.NotNull;
 public class WatchDog implements ProjectComponent {
     public static Project project;
 
-    /** The warning displayed when WatchDog is not active. */
-    public static final String WATCHDOG_INACTIVE_WARNING = "<html>WatchDog only works when you register a (possibly anonymous) user and project.<br><br>Takes less than one minute,  and you can win prices. As a registered user, you decide where WatchDog is active.";
+    /**
+     * The warning displayed when WatchDog is not registered.
+     */
+    public static final String WATCHDOG_UNREGISTERED_WARNING = "<html>WatchDog only works when you register a (possibly anonymous) user and project.<br><br>It's fast, and you can get your own report! As a registered user, you decide where WatchDog is active. <br><br>Would you still like to use WatchDog anonymously?";
 
-    /** Whether the user has cancelled the user project registration wizard. */
+    /**
+     * Whether the user has cancelled the user project registration wizard.
+     */
     private boolean userProjectRegistrationCancelled = false;
 
 
@@ -60,6 +69,7 @@ public class WatchDog implements ProjectComponent {
         checkWhetherToDisplayProjectWizard();
         checkWhetherToStartWatchDog();
     }
+
     public void projectClosed() {
         // called when project is being closed
         InitializationManager intervalInitializationManager = InitializationManager
@@ -70,7 +80,9 @@ public class WatchDog implements ProjectComponent {
         intervalInitializationManager.shutdown();
     }
 
-    /** Checks whether there is a registered WatchDog user */
+    /**
+     * Checks whether there is a registered WatchDog user
+     */
     private void checkWhetherToDisplayUserProjectRegistrationWizard() {
         if (!WatchDogUtils.isEmpty(WatchDogGlobals.preferences.getUserid()))
             return;
@@ -78,9 +90,37 @@ public class WatchDog implements ProjectComponent {
         wizard.setCrossClosesWindow(false);
         wizard.show();
         if (wizard.getExitCode() == DialogWrapper.CANCEL_EXIT_CODE) {
-            Messages.showWarningDialog(WATCHDOG_INACTIVE_WARNING, "WatchDog not active!");
+            if (Messages.YES == Messages.showYesNoDialog(WATCHDOG_UNREGISTERED_WARNING, "WatchDog is not registered!", null)) {
+                makeSilentRegistration();
+            } else {
                 userProjectRegistrationCancelled = true;
             }
+        }
+    }
+
+    private void makeSilentRegistration() {
+        String userId = null;
+        String projectId;
+        Preferences preferences = Preferences.getInstance();
+        if (preferences.getUserid() == null || preferences.getUserid().isEmpty()) {
+            User user = new User();
+            user.programmingExperience = "NA";
+            try {
+                userId = new JsonTransferer().registerNewUser(user);
+            } catch (ServerCommunicationException exception) {
+                WatchDogLogger.getInstance(Preferences.getInstance().isLoggingEnabled()).logSevere(exception);
+            }
+            preferences.setUserid(userId);
+            preferences.registerProjectId(WatchDogUtils.getProjectName(), "");
+        }
+        try {
+            projectId = new JsonTransferer().registerNewProject(new nl.tudelft.watchdog.core.ui.wizards.Project(preferences.getUserid()));
+        } catch (ServerCommunicationException exception) {
+            WatchDogLogger.getInstance(Preferences.getInstance().isLoggingEnabled()).logSevere(exception);
+            return;
+        }
+        preferences.registerProjectId(WatchDogUtils.getProjectName(), projectId);
+        preferences.registerProjectUse(WatchDogUtils.getProjectName(), true);
     }
 
     private void checkIsProjectAlreadyRegistered() {
@@ -89,7 +129,7 @@ public class WatchDog implements ProjectComponent {
                     Messages.showYesNoDialog("Should WatchDog be active in this workspace?", "WatchDog Workspace Registration", AllIcons.General.QuestionDialog);
             WatchDogLogger.getInstance(Preferences.getInstance().isLoggingEnabled()).logInfo("Registering workspace...");
             WatchDogGlobals.preferences.registerProjectUse(project.getName(), useWatchDogInThisWorkspace);
-       }
+        }
     }
 
     private void checkWhetherToDisplayProjectWizard() {

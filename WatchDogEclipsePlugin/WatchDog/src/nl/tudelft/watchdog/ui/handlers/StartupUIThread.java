@@ -2,7 +2,10 @@ package nl.tudelft.watchdog.ui.handlers;
 
 import java.io.IOException;
 
+import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
+import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
+import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.util.WatchDogUtils;
@@ -20,7 +23,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 public class StartupUIThread implements Runnable {
 
 	/** The warning displayed when WatchDog is not active. */
-	public static final String WATCHDOG_INACTIVE_WARNING = "WatchDog only works when you register a (possibly anonymous) user and project.\n\nTakes less than one minute,  and you can win prices. As a registered user, you decide where WatchDog is active.";
+	public static final String WATCHDOG_INACTIVE_WARNING = "WatchDog only works when you register a (possibly anonymous) user and project.\n\nIt's fast, and you can get your own report! As a registered user, you decide where WatchDog is active.\n\nWould you still like to use WatchDog anonymously?";;
 
 	/** The preferences. */
 	private Preferences preferences;
@@ -61,9 +64,12 @@ public class StartupUIThread implements Runnable {
 			int statusCode = (int) newUserWizardHandler
 					.execute(new ExecutionEvent());
 			if (statusCode == Window.CANCEL) {
-				MessageDialog.openWarning(null, "WatchDog not active!",
-						WATCHDOG_INACTIVE_WARNING);
-				userProjectRegistrationCancelled = true;
+				if (MessageDialog.openQuestion(null, "WatchDog not active!",
+						WATCHDOG_INACTIVE_WARNING)) {
+					makeSilentRegistration();
+				} else {
+					userProjectRegistrationCancelled = true;
+				}
 			}
 		} catch (ExecutionException exception) {
 			// when the new user wizard cannot be displayed, new
@@ -72,6 +78,39 @@ public class StartupUIThread implements Runnable {
 					Preferences.getInstance().isLoggingEnabled()).logSevere(
 					exception);
 		}
+	}
+
+	private void makeSilentRegistration() {
+		String userId = null;
+		String projectId;
+		Preferences preferences = Preferences.getInstance();
+		if (preferences.getUserid() == null
+				|| preferences.getUserid().isEmpty()) {
+			User user = new User();
+			user.programmingExperience = "NA";
+			try {
+				userId = new JsonTransferer().registerNewUser(user);
+			} catch (ServerCommunicationException exception) {
+				WatchDogLogger.getInstance(
+						Preferences.getInstance().isLoggingEnabled())
+						.logSevere(exception);
+			}
+			preferences.setUserid(userId);
+			preferences.registerProjectId(WatchDogUtils.getWorkspaceName(), "");
+		}
+		try {
+			projectId = new JsonTransferer()
+					.registerNewProject(new nl.tudelft.watchdog.core.ui.wizards.Project(
+							userId));
+		} catch (ServerCommunicationException exception) {
+			WatchDogLogger.getInstance(
+					Preferences.getInstance().isLoggingEnabled()).logSevere(
+					exception);
+			return;
+		}
+		preferences.registerProjectId(WatchDogUtils.getWorkspaceName(),
+				projectId);
+		preferences.registerProjectUse(WatchDogUtils.getWorkspaceName(), true);
 	}
 
 	private void checkIsWorkspaceAlreadyRegistered() {
