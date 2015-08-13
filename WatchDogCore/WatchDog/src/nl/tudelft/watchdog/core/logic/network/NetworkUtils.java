@@ -26,7 +26,7 @@ import org.apache.http.util.EntityUtils;
 /** Utility functions for accessing the network. */
 public class NetworkUtils {
 	
-	private final PreferencesBase preferences = WatchDogGlobals.preferences;
+	private final PreferencesBase preferences = WatchDogGlobals.getPreferences();
 
 	/**
 	 * An enum denoting the three possible different connection outcomes:
@@ -134,7 +134,7 @@ public class NetworkUtils {
 		try {
 			StringEntity input = new StringEntity(jsonData);
 			WatchDogLogger.getInstance(
-					WatchDogGlobals.preferences.isLoggingEnabled()).logInfo(
+					WatchDogGlobals.getPreferences().isLoggingEnabled()).logInfo(
 					"Data length: " + ((double) input.getContentLength())
 							/ 1024 + " kB");
 			input.setContentType("application/json");
@@ -162,7 +162,7 @@ public class NetworkUtils {
 			closeHttpClientGracefully(client);
 		}
 		WatchDogLogger
-				.getInstance(WatchDogGlobals.preferences.isLoggingEnabled())
+				.getInstance(WatchDogGlobals.getPreferences().isLoggingEnabled())
 				.logInfo(errorMessage);
 		throw new ServerCommunicationException(errorMessage);
 	}
@@ -206,23 +206,23 @@ public class NetworkUtils {
 			return EntityUtils.toString(entity);
 		} catch (ParseException exception) {
 			WatchDogLogger.getInstance(
-					WatchDogGlobals.preferences.isLoggingEnabled()).logSevere(
+					WatchDogGlobals.getPreferences().isLoggingEnabled()).logSevere(
 					exception);
 		} catch (IOException exception) {
 			WatchDogLogger.getInstance(
-					WatchDogGlobals.preferences.isLoggingEnabled()).logSevere(
+					WatchDogGlobals.getPreferences().isLoggingEnabled()).logSevere(
 					exception);
 		}
         return "";
 	}
 
 	private static String getServerURI() {
-		return WatchDogGlobals.preferences.getServerURI();
+		return WatchDogGlobals.getPreferences().getServerURI();
 	}
 
 	/** Builds the correct HTTPClient according to the Preferences. */
 	private static CloseableHttpClient createHTTPClient() {
-		if (WatchDogGlobals.preferences.isAuthenticationEnabled()) {
+		if (WatchDogGlobals.getPreferences().isAuthenticationEnabled()) {
 			return createAuthenticatedHttpClient();
 		}
 		return createNormalHttpClient();

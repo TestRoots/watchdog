@@ -17,7 +17,7 @@ public class WatchDogLogger {
 	/** Determines whether the logger is setup. */
 	private boolean isLoggerSetup = false;
 
-	private File logDirectory = new File(WatchDogGlobals.logDirectory); 
+	private File logDirectory = new File(WatchDogGlobals.getLogDirectory()); 
 
 	/** The singleton instance of the logger. */
 	private static volatile WatchDogLogger instance = null;

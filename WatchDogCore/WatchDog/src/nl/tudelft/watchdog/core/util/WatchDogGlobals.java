@@ -30,10 +30,30 @@ public class WatchDogGlobals {
 	/** The host ide this plugin is running on. */
 	public static IDE hostIDE;
 
-    public static String logDirectory;
+    private static String logDirectory;
 
     /** Preferences for this instance of IDE */
-    public static PreferencesBase preferences;
+    private static PreferencesBase preferences;
+    
+    /** Get WatchDog Preferences. */
+	public static PreferencesBase getPreferences() {
+		return preferences;
+	}
+	
+	/** Set WatchDog Preferences. */
+	public static void setPreferences(PreferencesBase preferences) {
+		WatchDogGlobals.preferences = preferences;
+	}
+
+	/** Get WatchDog Log directory. */
+	public static String getLogDirectory() {
+		return logDirectory;
+	}
+
+	/** Set WatchDog Log directory. */
+	public static void setLogDirectory(String logDirectory) {
+		WatchDogGlobals.logDirectory = logDirectory;
+	}
 
 	/** Describes the different supported IDE plugin hosts. */
 	public enum IDE {

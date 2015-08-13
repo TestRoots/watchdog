@@ -35,8 +35,8 @@ public class InitializationManager {
 
 	/** Private constructor. */
 	private InitializationManager() {
-		WatchDogGlobals.logDirectory = "watchdog/logs/";
-		WatchDogGlobals.preferences = Preferences.getInstance();
+		WatchDogGlobals.setLogDirectory("watchdog/logs/");
+		WatchDogGlobals.setPreferences(Preferences.getInstance());
 		File baseFolder = Activator.getDefault().getStateLocation().toFile();
 		File toTransferDatabaseFile = new File(baseFolder, "intervals.mapdb");
 		File statisticsDatabaseFile = new File(baseFolder,

@@ -20,8 +20,8 @@ public class StartupHandler implements IStartup {
 	/** {@inheritDoc} Starts the WatchDog plugin. */
 	@Override
 	public void earlyStartup() {
-		WatchDogGlobals.logDirectory = "watchdog/logs/";
-		WatchDogGlobals.preferences = Preferences.getInstance();
+		WatchDogGlobals.setLogDirectory("watchdog/logs/");
+		WatchDogGlobals.setPreferences(Preferences.getInstance());
 		StartupUIThread watchDogUiThread = new StartupUIThread(
 				Preferences.getInstance());
 		Display.getDefault().asyncExec(watchDogUiThread);

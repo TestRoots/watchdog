@@ -10,8 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import nl.tudelft.watchdog.logic.interval.intervaltypes.EclipseOpenInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -59,7 +59,7 @@ public class IntervalPersisterTest extends PersisterTestBase {
 	}
 
 	public static IntervalBase createRandomInterval() {
-		IntervalBase interval = new EclipseOpenInterval(new Date());
+		IntervalBase interval = new IDEOpenInterval(new Date());
 		interval.setSessionSeed("444");
 		interval.setStartTime(new Date(interval.getStart().getTime()
 				+ (new Random()).nextInt(100000)));

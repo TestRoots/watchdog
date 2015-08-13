@@ -18,7 +18,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="org.osgi.core-6.0.0" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -32,15 +31,6 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/WatchDog/lib/commons-logging-1.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/WatchDog/lib/gson-2.3.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -85,7 +75,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/WatchDog/lib/org.osgi.core-6.0.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/WatchDog/lib/gson-2.2.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

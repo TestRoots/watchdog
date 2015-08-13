@@ -5,14 +5,14 @@ import java.util.Date;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.IntervalPersister;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalType;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.UserActiveInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.WatchDogViewInterval;
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.UserActiveInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.WatchDogViewInterval;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -115,7 +115,7 @@ public class EventManagerTest {
 	@Test
 	public void testWritingIntervalsGetClosedOnHigherCancel() {
 		eventManager.update(createMockEvent(EventType.SUBSEQUENT_EDIT));
-		eventManager.update(createMockEvent(EventType.END_ECLIPSE));
+		eventManager.update(createMockEvent(EventType.END_IDE));
 		Mockito.verify(intervalManager, Mockito.atLeastOnce()).closeInterval(
 				Mockito.isA(TypingInterval.class), Mockito.isA(Date.class));
 	}

@@ -45,8 +45,8 @@ public class JsonTransferer {
 	 * successful transfer, <code>false</code> otherwise.
 	 */
 	public Connection sendIntervals(List<IntervalBase> recordedIntervals, String projectName) {
-		String userid = WatchDogGlobals.preferences.getUserid();
-		String projectid = WatchDogGlobals.preferences.getOrCreateProjectSetting(projectName).projectId;
+		String userid = WatchDogGlobals.getPreferences().getUserid();
+		String projectid = WatchDogGlobals.getPreferences().getOrCreateProjectSetting(projectName).projectId;
 		String json = toJson(recordedIntervals);
 		try {
 			NetworkUtils

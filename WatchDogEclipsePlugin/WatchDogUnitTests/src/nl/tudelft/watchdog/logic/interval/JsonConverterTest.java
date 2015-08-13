@@ -6,17 +6,17 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Date;
 
-import nl.tudelft.watchdog.logic.document.Document;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.EclipseOpenInterval;
+import nl.tudelft.watchdog.core.logic.document.Document;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
-import nl.tudelft.watchdog.logic.network.JsonTransferer;
-import nl.tudelft.watchdog.ui.wizards.Project;
-import nl.tudelft.watchdog.ui.wizards.User;
-import nl.tudelft.watchdog.util.WatchDogGlobals;
-import nl.tudelft.watchdog.util.WatchDogGlobals.IDE;
+import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
+import nl.tudelft.watchdog.core.ui.wizards.Project;
+import nl.tudelft.watchdog.core.ui.wizards.User;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals.IDE;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -92,7 +92,7 @@ public class JsonConverterTest {
 	/** Tests the format of the returned Json representation. */
 	@Test
 	public void testJsonSessionIntervalRepresentation() {
-		IntervalBase interval = new EclipseOpenInterval(new Date());
+		IntervalBase interval = new IDEOpenInterval(new Date());
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals("[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":\"\","
@@ -105,7 +105,7 @@ public class JsonConverterTest {
 	 */
 	@Test
 	public void testContainsIDEHost() {
-		IntervalBase interval = new EclipseOpenInterval(new Date());
+		IntervalBase interval = new IDEOpenInterval(new Date());
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals("[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":\"\","

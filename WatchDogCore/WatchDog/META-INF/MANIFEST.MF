@@ -5,7 +5,7 @@ Bundle-Version: 1.5.0
 Bundle-SymbolicName: nl.tudelft.WatchDogCore;singleton:=true
 Bundle-Name: WatchDog
 Bundle-ClassPath: .,
- lib/gson-2.3.1.jar,
+ lib/gson-2.2.4.jar,
  lib/httpclient-4.5.jar,
  lib/httpcore-4.4.1.jar,
  lib/httpmime-4.5.jar,
