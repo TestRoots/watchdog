@@ -26,11 +26,11 @@ touch /var/lock/watchdog
 case "$1" in
   start)
     echo "Starting watchdog server with supervise"
-    sudo -u testroots bash --login supervise /home/testroots/watchdog/WatchDogServer
+    sudo -u testroots bash --login -c 'cd /home/testroots/watchdog/WatchDogServer && supervise .' &
     ;;
   stop)
     echo "Stopping watchdog server"
-    sudo -u testroots bash --login svc -d /home/testroots/watchdog/WatchDogServer
+    sudo -u testroots bash --login -c 'cd /home/testroots/watchdog/WatchDogServer && svc -dx . && ./stop' 
      ;;
   *)
     echo "Usage: /etc/init.d/watchdog {start|stop}"
