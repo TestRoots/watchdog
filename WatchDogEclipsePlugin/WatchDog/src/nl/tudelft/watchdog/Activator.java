@@ -42,9 +42,9 @@ public class Activator extends AbstractUIPlugin {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		WatchDogLogger
-				.getInstance(Preferences.getInstance().isLoggingEnabled())
-				.logInfo("Shutting down Plugin...");
+		WatchDogLogger.getInstance(
+				WatchDogGlobals.getPreferences().isLoggingEnabled()).logInfo(
+				"Shutting down Plugin...");
 		plugin = null;
 		WatchDogGlobals.isActive = false;
 		preferenceStore.save();

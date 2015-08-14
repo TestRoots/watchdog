@@ -2,8 +2,8 @@ package nl.tudelft.watchdog.logic.document;
 
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.util.ContentReaderException;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
-import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.core.resources.IFile;
@@ -39,8 +39,8 @@ public class DocumentCreator {
 					getEditorOrFileContent(editor));
 		} catch (IllegalArgumentException exception) {
 			WatchDogLogger.getInstance(
-					Preferences.getInstance().isLoggingEnabled()).logSevere(
-					exception);
+					WatchDogGlobals.getPreferences().isLoggingEnabled())
+					.logSevere(exception);
 		}
 		return new Document(activeProjectName, title, filePath, null);
 	}
@@ -56,18 +56,21 @@ public class DocumentCreator {
 			// Editor was null, there is nothing we can do to get the file
 			// contents.
 			WatchDogLogger.getInstance(
-					Preferences.getInstance().isLoggingEnabled()).logSevere(
-					exception);
+					WatchDogGlobals.getPreferences().isLoggingEnabled())
+					.logSevere(exception);
 			WatchDogLogger
-					.getInstance(Preferences.getInstance().isLoggingEnabled())
+					.getInstance(
+							WatchDogGlobals.getPreferences().isLoggingEnabled())
 					.logInfo(
 							"Document (provider) was null, trying to read resource file contents.");
 			try {
 				return WatchDogUtils.getContentForEditorFromDisk(editor);
 			} catch (IllegalArgumentException ex) {
 				WatchDogLogger.getInstance(
-						Preferences.getInstance().isLoggingEnabled()).logInfo(
-						"File does not exist anymore: " + editor.getTitle());
+						WatchDogGlobals.getPreferences().isLoggingEnabled())
+						.logInfo(
+								"File does not exist anymore: "
+										+ editor.getTitle());
 			}
 		}
 		return null;

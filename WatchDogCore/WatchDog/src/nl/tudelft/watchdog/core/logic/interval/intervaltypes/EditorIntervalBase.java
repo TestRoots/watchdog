@@ -1,13 +1,9 @@
-package nl.tudelft.watchdog.logic.interval.intervaltypes;
+package nl.tudelft.watchdog.core.logic.interval.intervaltypes;
 
 import java.util.Date;
 
 import nl.tudelft.watchdog.core.logic.document.Document;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
-
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.texteditor.ITextEditor;
+import nl.tudelft.watchdog.core.logic.document.EditorWrapperBase;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -24,7 +20,6 @@ public abstract class EditorIntervalBase extends IntervalBase {
 	 * class, but should first call super.run().
 	 */
 	class EditorIntervalCloser implements Runnable {
-		@Override
 		public void run() {
 			if (document != null) {
 				document.prepareDocument();
@@ -40,11 +35,8 @@ public abstract class EditorIntervalBase extends IntervalBase {
 	@SerializedName("doc")
 	private Document document;
 
-	/** The {@link ITextEditor} associated with this interval. */
-	protected transient ITextEditor editor;
-
-	/*** The {@link IWorkbenchPart} associated with this interval. */
-	protected transient IWorkbenchPart part;
+	/** The {@link EditorWrapperBase} associated with this interval. */
+	protected transient EditorWrapperBase editor;
 
 	/**
 	 * To optimize performance, closing of {@link EditorIntervalBase} intervals
@@ -53,11 +45,10 @@ public abstract class EditorIntervalBase extends IntervalBase {
 	protected transient EditorIntervalCloser editorIntervalCloser;
 
 	/** Constructor. */
-	public EditorIntervalBase(ITextEditor editor, IntervalType activity,
+	public EditorIntervalBase(EditorWrapperBase editor, IntervalType activity,
 			Date start) {
 		super(activity, start);
-		this.part = editor;
-		this.editor = (ITextEditor) editor;
+		this.editor = editor;
 		this.editorIntervalCloser = createIntervalCloser();
 	}
 
@@ -71,13 +62,8 @@ public abstract class EditorIntervalBase extends IntervalBase {
 		return new EditorIntervalCloser();
 	}
 
-	/** @return The {@link IWorkbenchPart} associated with this interval. */
-	public IWorkbenchPart getPart() {
-		return part;
-	}
-
-	/** @return The {@link ITextEditor} associated with this interval. */
-	public ITextEditor getEditor() {
+	/** @return The {@link EditorWrapperBase} associated with this interval. */
+	public EditorWrapperBase getEditorWrapper() {
 		return editor;
 	}
 

@@ -99,7 +99,7 @@ public class WatchDog implements ProjectComponent {
     }
 
     private void makeSilentRegistration() {
-        String userId = null;
+        String userId = "";
         String projectId;
         Preferences preferences = Preferences.getInstance();
         if (preferences.getUserid() == null || preferences.getUserid().isEmpty()) {

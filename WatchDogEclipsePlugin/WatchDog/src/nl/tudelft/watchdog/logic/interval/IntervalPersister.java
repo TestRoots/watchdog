@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
-import nl.tudelft.watchdog.ui.preferences.Preferences;
 
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
@@ -44,7 +44,7 @@ public class IntervalPersister {
 				recreateDatabase(file);
 			} catch (Error innerError) {
 				WatchDogLogger.getInstance(
-						Preferences.getInstance().isLoggingEnabled())
+						WatchDogGlobals.getPreferences().isLoggingEnabled())
 						.logSevere(innerError);
 			}
 		}
@@ -102,7 +102,7 @@ public class IntervalPersister {
 				fileOutputStream.write(new byte[] {});
 			} catch (IOException exception) {
 				WatchDogLogger.getInstance(
-						Preferences.getInstance().isLoggingEnabled())
+						WatchDogGlobals.getPreferences().isLoggingEnabled())
 						.logSevere(exception);
 			} finally {
 				try {
@@ -130,7 +130,7 @@ public class IntervalPersister {
 				recreateDatabase(databaseFile);
 			} catch (Error innerError) {
 				WatchDogLogger.getInstance(
-						Preferences.getInstance().isLoggingEnabled())
+						WatchDogGlobals.getPreferences().isLoggingEnabled())
 						.logSevere(innerError);
 			}
 		}

@@ -1,13 +1,10 @@
-package nl.tudelft.watchdog.logic.interval.intervaltypes;
+package nl.tudelft.watchdog.core.logic.interval.intervaltypes;
 
 import java.util.Date;
 
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.core.logic.document.Document;
+import nl.tudelft.watchdog.core.logic.document.EditorWrapperBase;
 import nl.tudelft.watchdog.core.logic.network.JsonifiedLong;
-
-
-import com.intellij.openapi.editor.Editor;
 
 
 import com.cedarsoftware.util.StringUtilities;
@@ -15,7 +12,7 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * An interval for when the user is currently typing, connected to the
- * {@link nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType#TYPING} activity.
+ * {@link IntervalType#TYPING} activity.
  */
 public class TypingInterval extends EditorIntervalBase {
 
@@ -48,7 +45,7 @@ public class TypingInterval extends EditorIntervalBase {
 	private static final long serialVersionUID = 2L;
 
 	/**
-	 * The document content associated with this {@link nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval} when it
+	 * The document content associated with this {@link TypingInterval} when it
 	 * has ended.
 	 */
 	private Document endingDocument;
@@ -61,7 +58,7 @@ public class TypingInterval extends EditorIntervalBase {
 	JsonifiedLong editDistance;
 
 	/** Constructor. */
-	public TypingInterval(Editor editor, Date start) {
+	public TypingInterval(EditorWrapperBase editor, Date start) {
 		super(editor, IntervalType.TYPING, start);
 	}
 

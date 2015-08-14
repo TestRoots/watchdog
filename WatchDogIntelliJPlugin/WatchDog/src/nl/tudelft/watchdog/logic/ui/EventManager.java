@@ -6,6 +6,7 @@ import com.intellij.openapi.editor.Editor;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.*;
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.logic.document.DocumentCreator;
+import nl.tudelft.watchdog.logic.document.EditorWrapper;
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.*;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
@@ -106,16 +107,16 @@ public class EventManager {
 
                 readingInactivityNotifier.cancelTimer(forcedDate);
                 if (intervalIsOfType(editorInterval, IntervalType.TYPING)
-                        && editorInterval.getEditor() == editor) {
+                        && ((EditorWrapper) editorInterval.getEditorWrapper()).getEditor() == editor) {
                     return;
                 }
 
                 intervalManager.closeInterval(editorInterval, forcedDate);
 
-                TypingInterval typingInterval = new TypingInterval(editor,
+                TypingInterval typingInterval = new TypingInterval(new EditorWrapper(editor),
                         forcedDate);
                 Document document = null;
-                if (editorInterval != null && editorInterval.getEditor() == editor) {
+                if (editorInterval != null && ((EditorWrapper) editorInterval.getEditorWrapper()).getEditor() == editor) {
                     document = editorInterval.getDocument();
                 } else {
                     document = DocumentCreator.createDocument(editor);
@@ -152,7 +153,7 @@ public class EventManager {
                     if (!isClosed(editorInterval)) {
                         intervalManager.closeInterval(editorInterval, forcedDate);
                     }
-                    ReadingInterval readingInterval = new ReadingInterval(editor,
+                    ReadingInterval readingInterval = new ReadingInterval(new EditorWrapper(editor),
                             forcedDate);
                     readingInterval.setDocument(DocumentCreator
                             .createDocument(editor));
@@ -220,7 +221,7 @@ public class EventManager {
 
     private boolean isDifferentEditor(EditorIntervalBase editorInterval,
                                       Editor editor) {
-        return editorInterval.getEditor() != editor;
+        return ((EditorWrapper) editorInterval.getEditorWrapper()).getEditor() != editor;
     }
 
     private boolean intervalIsOfType(IntervalBase interval, IntervalType type) {

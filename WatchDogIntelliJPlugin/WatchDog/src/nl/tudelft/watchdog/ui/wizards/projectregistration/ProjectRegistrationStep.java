@@ -94,7 +94,7 @@ public class ProjectRegistrationStep extends WizardStep {
         projectWebsite.getDocument().addDocumentListener(formValidationListener);
 
         JPanel CIQuestionPanel = UIUtils.createFlowJPanelLeft(parent);
-        UIUtils.createLabel(CIQuestionPanel, "Does your project use Continuous Integration (Travis, Jenkins, etc.)?");
+        UIUtils.createLabel(CIQuestionPanel, "Does your project use any Continuous Integration tools (Travis, Jenkins, etc.)?");
         JPanel answerPanel = UIUtils.createFlowJPanelCenter(CIQuestionPanel);
         useContinuousIntegration = createSimpleYesNoDontKnowQuestion(answerPanel);
         addValidationListenerToAllChildren(useContinuousIntegration, formValidationListener);

@@ -2,6 +2,8 @@ package nl.tudelft.watchdog.core.util;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
+import com.google.gson.Gson;
+
 import java.util.regex.Pattern;
 
 /**
@@ -80,5 +82,9 @@ public abstract class WatchDogUtilsBase {
      */
     public static boolean isEmpty(String string) {
         return string == null || string.isEmpty();
+    }
+    
+    public static String convertToJson(Object object) {
+    	return new Gson().toJson(object);
     }
 }

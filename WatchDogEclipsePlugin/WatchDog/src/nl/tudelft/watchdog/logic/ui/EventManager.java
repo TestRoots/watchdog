@@ -2,25 +2,26 @@ package nl.tudelft.watchdog.logic.ui;
 
 import java.util.Date;
 
-import nl.tudelft.watchdog.logic.InitializationManager;
-import nl.tudelft.watchdog.logic.document.DocumentCreator;
-import nl.tudelft.watchdog.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.JUnitInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.core.logic.document.Document;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEActiveInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.PerspectiveInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.ReadingInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.UserActiveInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.WatchDogViewInterval;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
 import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.logic.InitializationManager;
+import nl.tudelft.watchdog.logic.document.DocumentCreator;
+import nl.tudelft.watchdog.logic.document.EditorWrapper;
+import nl.tudelft.watchdog.logic.interval.IntervalManager;
+import nl.tudelft.watchdog.logic.interval.intervaltypes.JUnitInterval;
 
 import org.eclipse.ui.texteditor.ITextEditor;
 
@@ -83,8 +84,7 @@ public class EventManager {
 		case ACTIVE_WINDOW:
 			interval = intervalManager.getInterval(IDEActiveInterval.class);
 			if (isClosed(interval)) {
-				intervalManager.addInterval(new IDEActiveInterval(
-						forcedDate));
+				intervalManager.addInterval(new IDEActiveInterval(forcedDate));
 			}
 			userInactivityNotifier.trigger(forcedDate);
 			break;
@@ -120,16 +120,19 @@ public class EventManager {
 
 			readingInactivityNotifier.cancelTimer(forcedDate);
 			if (intervalIsOfType(editorInterval, IntervalType.TYPING)
-					&& editorInterval.getEditor() == editor) {
+					&& ((EditorWrapper) editorInterval.getEditorWrapper())
+							.getEditor() == editor) {
 				return;
 			}
 
 			intervalManager.closeInterval(editorInterval, forcedDate);
 
-			TypingInterval typingInterval = new TypingInterval(editor,
-					forcedDate);
+			TypingInterval typingInterval = new TypingInterval(
+					new EditorWrapper(editor), forcedDate);
 			Document document = null;
-			if (editorInterval != null && editorInterval.getEditor() == editor) {
+			if (editorInterval != null
+					&& ((EditorWrapper) editorInterval.getEditorWrapper())
+							.getEditor() == editor) {
 				document = editorInterval.getDocument();
 			} else {
 				document = DocumentCreator.createDocument(editor);
@@ -167,8 +170,8 @@ public class EventManager {
 					intervalManager.closeInterval(editorInterval, forcedDate);
 				}
 
-				ReadingInterval readingInterval = new ReadingInterval(editor,
-						forcedDate);
+				ReadingInterval readingInterval = new ReadingInterval(
+						new EditorWrapper(editor), forcedDate);
 				readingInterval.setDocument(DocumentCreator
 						.createDocument(editor));
 				intervalManager.addInterval(readingInterval);
@@ -235,7 +238,7 @@ public class EventManager {
 
 	private boolean isDifferentEditor(EditorIntervalBase editorInterval,
 			ITextEditor editor) {
-		return editorInterval.getEditor() != editor;
+		return ((EditorWrapper) editorInterval.getEditorWrapper()).getEditor() != editor;
 	}
 
 	private boolean intervalIsOfType(IntervalBase interval, IntervalType type) {

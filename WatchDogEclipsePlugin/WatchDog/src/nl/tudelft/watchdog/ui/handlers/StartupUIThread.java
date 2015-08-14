@@ -81,8 +81,8 @@ public class StartupUIThread implements Runnable {
 	}
 
 	private void makeSilentRegistration() {
-		String userId = null;
-		String projectId;
+		String userId = "";
+		String projectId = "";
 		Preferences preferences = Preferences.getInstance();
 		if (preferences.getUserid() == null
 				|| preferences.getUserid().isEmpty()) {

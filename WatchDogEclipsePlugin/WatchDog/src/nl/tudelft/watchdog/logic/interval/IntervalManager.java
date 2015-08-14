@@ -7,12 +7,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import nl.tudelft.watchdog.core.logic.interval.IntervalManagerBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.logic.document.DocumentCreator;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
-import nl.tudelft.watchdog.ui.preferences.Preferences;
+import nl.tudelft.watchdog.logic.document.EditorWrapper;
 
 import org.apache.commons.lang.RandomStringUtils;
 
@@ -59,11 +60,9 @@ public class IntervalManager extends IntervalManagerBase {
 			addRegularIntervalBase(interval);
 		}
 
-		WatchDogLogger
-				.getInstance(Preferences.getInstance().isLoggingEnabled())
-				.logInfo(
-						"Created interval " + interval + " "
-								+ interval.getType());
+		WatchDogLogger.getInstance(
+				WatchDogGlobals.getPreferences().isLoggingEnabled()).logInfo(
+				"Created interval " + interval + " " + interval.getType());
 		if (interval.isClosed()) {
 			closeInterval(interval);
 		}
@@ -72,7 +71,8 @@ public class IntervalManager extends IntervalManagerBase {
 	private void addRegularIntervalBase(IntervalBase interval) {
 		if (intervals.size() > 30) {
 			WatchDogLogger
-					.getInstance(Preferences.getInstance().isLoggingEnabled())
+					.getInstance(
+							WatchDogGlobals.getPreferences().isLoggingEnabled())
 					.logSevere(
 							"Too many open intervals. Something fishy is going on here! Cannot add more intervals.");
 			return;
@@ -108,7 +108,8 @@ public class IntervalManager extends IntervalManagerBase {
 		if (interval instanceof TypingInterval) {
 			TypingInterval typingInterval = (TypingInterval) interval;
 			typingInterval.setEndingDocument(DocumentCreator
-					.createDocument(typingInterval.getEditor()));
+					.createDocument(((EditorWrapper) typingInterval
+							.getEditorWrapper()).getEditor()));
 		}
 
 		interval.close();
@@ -120,11 +121,9 @@ public class IntervalManager extends IntervalManagerBase {
 		}
 		intervalsToTransferPersister.saveInterval(interval);
 		intervalsStatisticsPersister.saveInterval(interval);
-		WatchDogLogger
-				.getInstance(Preferences.getInstance().isLoggingEnabled())
-				.logInfo(
-						"closed interval " + interval + " "
-								+ interval.getType());
+		WatchDogLogger.getInstance(
+				WatchDogGlobals.getPreferences().isLoggingEnabled()).logInfo(
+				"closed interval " + interval + " " + interval.getType());
 	}
 
 	/** Closes all currently open intervals. */

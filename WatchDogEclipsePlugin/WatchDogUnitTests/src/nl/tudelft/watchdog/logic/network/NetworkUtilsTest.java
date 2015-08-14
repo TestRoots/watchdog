@@ -37,7 +37,7 @@ public class NetworkUtilsTest {
 		Mockito.when(WatchDogGlobals.getPreferences()).thenReturn(mockedPreferences);
 		Mockito.when(mockedPreferences.isAuthenticationEnabled()).thenReturn(
 				true);
-		Mockito.when(mockedPreferences.isLoggingEnabled()).thenReturn(true);
+		Mockito.when(mockedPreferences.isLoggingEnabled()).thenReturn(false);
 	}
 
 	@Test(expected = ServerCommunicationException.class)

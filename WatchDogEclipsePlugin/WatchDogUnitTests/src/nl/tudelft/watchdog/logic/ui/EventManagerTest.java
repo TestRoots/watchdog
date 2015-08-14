@@ -4,22 +4,29 @@ import java.util.Date;
 
 import nl.tudelft.watchdog.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.logic.interval.IntervalPersister;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.ReadingInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.UserActiveInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.WatchDogViewInterval;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.ui.preferences.Preferences;
 import nl.tudelft.watchdog.util.WatchDogUtils;
 
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  * Tests the {@link EventManager}. Because this creates the intervals that are
@@ -27,6 +34,9 @@ import org.mockito.Mockito;
  * WatchDog. Tests could flicker because they deal with timers (and Java gives
  * no guarantee as to when these timers will be executed).
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(WatchDogGlobals.class)
+
 public class EventManagerTest {
 
 	private static final int USER_ACTIVITY_TIMEOUT = 300;
@@ -36,15 +46,28 @@ public class EventManagerTest {
 	private ITextEditor mockedTextEditor;
 	private EditorIntervalBase editorInterval;
 	private IntervalBase interval;
+	
+	@org.mockito.Mock
+	Preferences mockedPreferences;
+	
+	@org.mockito.Mock
+	WatchDogGlobals mockedGlobals;	
 
 	@Before
 	public void setup() {
+		MockitoAnnotations.initMocks(this);
 		IntervalManager intervalManagerReal = new IntervalManager(
 				Mockito.mock(IntervalPersister.class),
 				Mockito.mock(IntervalPersister.class));
 		intervalManager = Mockito.spy(intervalManagerReal);
 		mockedTextEditor = Mockito.mock(ITextEditor.class);
 		eventManager = new EventManager(intervalManager, USER_ACTIVITY_TIMEOUT);
+		PowerMockito.mockStatic(WatchDogGlobals.class);
+		Mockito.when(WatchDogGlobals.getLogDirectory()).thenReturn("watchdog/logs/");
+		Mockito.when(WatchDogGlobals.getPreferences()).thenReturn(mockedPreferences);
+		Mockito.when(mockedPreferences.isAuthenticationEnabled()).thenReturn(
+				true);
+		Mockito.when(mockedPreferences.isLoggingEnabled()).thenReturn(false);
 	}
 
 	@Test

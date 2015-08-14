@@ -6,15 +6,15 @@ import java.util.List;
 
 import nl.tudelft.watchdog.core.logic.document.DocumentType;
 import nl.tudelft.watchdog.core.logic.interval.IntervalManagerBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.PerspectiveInterval;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.UserActiveInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.ReadingInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.UserActiveInterval;
 import nl.tudelft.watchdog.logic.interval.intervaltypes.JUnitInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
