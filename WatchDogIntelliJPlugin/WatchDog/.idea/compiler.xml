@@ -24,6 +24,7 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="nl.tudelft.WatchDogCore" />
+        <module name="WatchDogCore" />
         <module name="WatchDogCoreUnitTests" />
       </profile>
     </annotationProcessing>
@@ -31,6 +32,7 @@
       <module name="Core" target="1.5" />
       <module name="nl.tudelft.WatchDogCore" target="1.5" />
       <module name="parent" target="" />
+      <module name="WatchDogCore" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>

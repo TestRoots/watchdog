@@ -9,7 +9,7 @@
     <version>1.5.0</version>
   </parent>
 
-  <artifactId>WatchDog</artifactId>
+  <artifactId>WatchDogCore</artifactId>
   <packaging>eclipse-feature</packaging>
 
 </project> 

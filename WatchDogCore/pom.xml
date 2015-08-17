@@ -8,7 +8,35 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>WatchDog</module>
-		<!--module>WatchDogUnitTests</module-->
+		<module>WatchDogFeature</module>
 	</modules>
 
+	<properties>
+		<tycho.version>0.22.0</tycho.version>
+	</properties>
+
+	<build>
+		<sourceDirectory>src/</sourceDirectory>
+
+		<plugins>		
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<extensions>true</extensions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho.version}</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-compiler-plugin</artifactId>
+				<version>${tycho.version}</version>
+			</plugin>
+		</plugins>
+	</build>
 </project> 

@@ -12,6 +12,7 @@ WatchDogIntelliJPlugin/WatchDog/out/
 WatchDogIntelliJPlugin/WatchDog/target/
 WatchDogCore/target/
 WatchDogCore/WatchDog/target/
+WatchDogCore/WatchDogFeature/target/
 
 # Ignore passwords/config
 WatchDogServer/config.yaml
