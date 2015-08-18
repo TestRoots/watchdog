@@ -26,7 +26,7 @@ public class WatchDog implements ProjectComponent {
     public static Project project;
 
     /**
-     * The warning displayed when WatchDog is not registered.
+     * The warning displayed when WatchDog is not registered. Note: JLabel requires html tags for a new line (and other formatting).
      */
     public static final String WATCHDOG_UNREGISTERED_WARNING = "<html>WatchDog only works when you register a (possibly anonymous) user and project.<br><br>It's fast, and you can get your own report! As a registered user, you decide where WatchDog is active. <br><br>Would you still like to use WatchDog anonymously?";
 

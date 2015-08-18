@@ -14,7 +14,9 @@ ideaPath=$(find . -name 'idea-IC*' | head -n 1)
 mv  ${ideaPath} ./idea-IC
 	
 # Compress to ZIP file
-zip -r ideaIC.zip idea-IC/*
+cd idea-IC
+zip -r ../ideaIC.zip *
+cd ..
 
 # Install IDEA to Maven repo
 mvn install:install-file -Dfile=ideaIC.zip -DgroupId=org.jetbrains -DartifactId=org.jetbrains.intellij-ce -Dversion=${ideaVersion} -Dpackaging=zip
