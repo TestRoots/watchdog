@@ -2,46 +2,46 @@ package nl.tudelft.watchdog.core.ui.preferences;
 
 import java.util.List;
 
-public abstract class PreferencesBase {
-    public abstract boolean isLoggingEnabled();
+public interface  PreferencesBase {
+    boolean isLoggingEnabled();
 
-    public abstract boolean isAuthenticationEnabled();
+    boolean isAuthenticationEnabled();
 
-    public abstract String getUserid();
+    String getUserid();
 
-    public abstract void setUserid(String userid);
+    void setUserid(String userid);
 
-    public abstract Boolean isOldVersion();
+    Boolean isOldVersion();
 
-    public abstract void setIsOldVersion(Boolean outdated);
+    void setIsOldVersion(Boolean outdated);
 
-    public abstract Boolean isBigUpdateAvailable();
+    Boolean isBigUpdateAvailable();
 
-    public abstract void setBigUpdateAvailable(Boolean available);
+    void setBigUpdateAvailable(Boolean available);
 
-    public abstract Boolean isBigUpdateAnswered();
+    Boolean isBigUpdateAnswered();
 
-    public abstract void setBigUpdateAnswered(Boolean answered);
+    void setBigUpdateAnswered(Boolean answered);
 
-    public abstract long getIntervals();
+    long getIntervals();
 
-    public abstract void addTransferedIntervals(long number);
+    void addTransferedIntervals(long number);
 
-    public abstract String getLastIntervalTransferDate();
+    String getLastIntervalTransferDate();
 
-    public abstract void setLastTransferedInterval();
+    void setLastTransferedInterval();
 
-    public abstract String getServerURI();
+    String getServerURI();
 
-    public abstract boolean isProjectRegistered(String project);
+    boolean isProjectRegistered(String project);
 
-    public abstract ProjectPreferenceSetting getOrCreateProjectSetting(String project);
+    ProjectPreferenceSetting getOrCreateProjectSetting(String project);
 
-    public abstract void registerProjectUse(String project, boolean use);
+    void registerProjectUse(String project, boolean use);
 
-    public abstract void registerProjectId(String project, String projectId);
+    void registerProjectId(String project, String projectId);
 
-    public abstract List<ProjectPreferenceSetting> getProjectSettings();
+    List<ProjectPreferenceSetting> getProjectSettings();
 
-    public abstract void setDefaults();
+    void setDefaults();
 }

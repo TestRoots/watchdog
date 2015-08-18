@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.logic.interval;
 
 import static org.junit.Assert.assertEquals;
+import nl.tudelft.watchdog.eclipse.logic.interval.IntervalPersister;
 
 import org.junit.BeforeClass;
 import org.junit.Test;

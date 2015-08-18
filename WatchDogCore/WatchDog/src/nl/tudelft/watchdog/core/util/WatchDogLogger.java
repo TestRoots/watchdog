@@ -23,9 +23,9 @@ public class WatchDogLogger {
 	private static volatile WatchDogLogger instance = null;
 
 	/** Private Constructor. */
-	private WatchDogLogger(boolean isLoggingEnabled) {
+	private WatchDogLogger() {
 		try {
-			if (!isLoggingEnabled) {
+			if (!WatchDogGlobals.getPreferences().isLoggingEnabled()) {
 				// If logging is not enabled in the preferences: Abort setting
 				// up the logger
 				return;
@@ -33,11 +33,11 @@ public class WatchDogLogger {
 		} catch (NoClassDefFoundError error) {
 			// We purposefully capture an error here.
 			// There was an error in creating the preferences instance, so
-			// Eclipse is not running. In this case, always set up the logger.
+			// IDE is not running. In this case, always set up the logger.
 		} catch (NullPointerException error) {
 			// We purposefully capture an error here.
 			// There was an error in creating the preferences instance, so
-			// Eclipse is not running. In this case, always set up the logger.
+			// IDE is not running. In this case, always set up the logger.
 		}
 
         this.isLoggerSetup = true;
@@ -63,9 +63,9 @@ public class WatchDogLogger {
 	 * @param Whether or not logging is enabled.
 	 * @return The instance of the single WatchDogLogger.
 	 */
-	public static WatchDogLogger getInstance(boolean isLoggingEnabled) {
+	public static WatchDogLogger getInstance() {
 		if (instance == null) {
-			instance = new WatchDogLogger(isLoggingEnabled);
+			instance = new WatchDogLogger();
 		}
 		return instance;
 	}

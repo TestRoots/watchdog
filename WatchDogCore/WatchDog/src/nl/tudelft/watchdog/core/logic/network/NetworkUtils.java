@@ -42,7 +42,7 @@ public class NetworkUtils {
 	};
 
 	/**
-	 * Returns the String content at the given URL.
+	 * Returns the content at the given URL.
 	 * 
 	 * @throws ServerCommunicationException
 	 */
@@ -121,7 +121,7 @@ public class NetworkUtils {
 	 * Opens an HTTP connection to the server, and transmits the supplied json
 	 * data to the server. In case of error, the exact problem is logged.
 	 * 
-	 * @return The json string from the response.
+	 * @return The json from the response.
 	 * @throws ServerCommunicationException
 	 * @throws ServerReturnCodeException
 	 */
@@ -133,8 +133,7 @@ public class NetworkUtils {
 
 		try {
 			StringEntity input = new StringEntity(jsonData);
-			WatchDogLogger.getInstance(
-					WatchDogGlobals.getPreferences().isLoggingEnabled()).logInfo(
+			WatchDogLogger.getInstance().logInfo(
 					"Data length: " + ((double) input.getContentLength())
 							/ 1024 + " kB");
 			input.setContentType("application/json");
@@ -162,7 +161,7 @@ public class NetworkUtils {
 			closeHttpClientGracefully(client);
 		}
 		WatchDogLogger
-				.getInstance(WatchDogGlobals.getPreferences().isLoggingEnabled())
+				.getInstance()
 				.logInfo(errorMessage);
 		throw new ServerCommunicationException(errorMessage);
 	}
@@ -205,12 +204,10 @@ public class NetworkUtils {
 		try {
 			return EntityUtils.toString(entity);
 		} catch (ParseException exception) {
-			WatchDogLogger.getInstance(
-					WatchDogGlobals.getPreferences().isLoggingEnabled()).logSevere(
+			WatchDogLogger.getInstance().logSevere(
 					exception);
 		} catch (IOException exception) {
-			WatchDogLogger.getInstance(
-					WatchDogGlobals.getPreferences().isLoggingEnabled()).logSevere(
+			WatchDogLogger.getInstance().logSevere(
 					exception);
 		}
         return "";

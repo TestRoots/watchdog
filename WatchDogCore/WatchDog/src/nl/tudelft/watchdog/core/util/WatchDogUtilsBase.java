@@ -84,7 +84,9 @@ public abstract class WatchDogUtilsBase {
         return string == null || string.isEmpty();
     }
     
+    /** Converts given object to Json format. */
     public static String convertToJson(Object object) {
     	return new Gson().toJson(object);
     }
+        
 }

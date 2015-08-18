@@ -17,8 +17,8 @@ import nl.tudelft.watchdog.core.ui.wizards.Project;
 import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals.IDE;
-import nl.tudelft.watchdog.logic.document.EditorWrapper;
-import nl.tudelft.watchdog.util.WatchDogUtils;
+import nl.tudelft.watchdog.eclipse.logic.document.EditorWrapper;
+import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.junit.BeforeClass;

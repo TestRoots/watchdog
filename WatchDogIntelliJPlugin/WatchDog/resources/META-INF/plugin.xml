@@ -38,11 +38,11 @@
     <!--depends optional="false">JUnit</depends-->
 
     <extensions defaultExtensionNs="com.intellij">
-        <testStatusListener implementation="nl.tudelft.watchdog.logic.ui.listeners.JUnitListener"></testStatusListener>
-        <applicationConfigurable instance="nl.tudelft.watchdog.ui.preferences.PreferencePage"></applicationConfigurable>
+        <testStatusListener implementation="nl.tudelft.watchdog.intellij.logic.ui.listeners.JUnitListener"></testStatusListener>
+        <applicationConfigurable instance="nl.tudelft.watchdog.intellij.ui.preferences.PreferencePage"></applicationConfigurable>
         <toolWindow id="WatchDog" anchor="right" icon="/images/watchdog_icon.png"
-                    factoryClass="nl.tudelft.watchdog.ui.WatchDogToolWindowFactory"
-                    conditionClass="nl.tudelft.watchdog.ui.WatchDogToolWindowFactoryCondition"/>
+                    factoryClass="nl.tudelft.watchdog.intellij.ui.WatchDogToolWindowFactory"
+                    conditionClass="nl.tudelft.watchdog.intellij.ui.WatchDogToolWindowFactoryCondition"/>
     </extensions>
 
     <application-components>
@@ -52,7 +52,7 @@
     <project-components>
         <!-- Add your project components here -->
         <component>
-            <implementation-class>nl.tudelft.watchdog.WatchDog</implementation-class>
+            <implementation-class>nl.tudelft.watchdog.intellij.WatchDog</implementation-class>
         </component>
     </project-components>
 

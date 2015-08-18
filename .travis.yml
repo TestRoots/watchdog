@@ -9,6 +9,3 @@ before_install:
 services:
   - mongodb
 script: ./travis_build.sh
-cache:
-  directories:
-  - idea-IC

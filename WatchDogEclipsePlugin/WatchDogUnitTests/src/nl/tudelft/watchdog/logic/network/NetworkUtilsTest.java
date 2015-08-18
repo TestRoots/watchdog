@@ -4,7 +4,7 @@ import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.core.logic.network.ServerReturnCodeException;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
-import nl.tudelft.watchdog.ui.preferences.Preferences;
+import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(WatchDogGlobals.class)
-// Used to ignore the SSLCOntext loading problems stemming from the upstream
+// Used to ignore the SSLContext loading problems stemming from the upstream
 // class loader
 @PowerMockIgnore("javax.net.ssl.*")
 public class NetworkUtilsTest {

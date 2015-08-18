@@ -23,5 +23,10 @@ watchdoglog.log
 watchdog.err.log
 watchdog.out.log
 
+# Ignore Eclipse settings
+WatchDogEclipsePlugin/WatchDog/.settings/
+WatchDogEclipsePlugin/WatchDogUnitTests/.settings/
+WatchDogCore/WatchDog/.settings/
+
 # Ignore IntelliJ workspace file
 WatchDogIntelliJPlugin/WatchDog/.idea/workspace.xml
