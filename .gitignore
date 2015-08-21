@@ -7,7 +7,12 @@ WatchDogEclipsePlugin/WatchDog/target/
 WatchDogEclipsePlugin/WatchDogFeature/target/
 WatchDogEclipsePlugin/WatchDogUnitTests/target/
 WatchDogEclipsePlugin/p2updatesite/target/
-WatchDogIntelliJPlugin/WatchDog/out/production/
+WatchDogIntelliJPlugin/target/
+WatchDogIntelliJPlugin/WatchDog/out/
+WatchDogIntelliJPlugin/WatchDog/target/
+WatchDogCore/target/
+WatchDogCore/WatchDog/target/
+WatchDogCore/WatchDogFeature/target/
 
 # Ignore passwords/config
 WatchDogServer/config.yaml
@@ -18,6 +23,11 @@ watchdoglog.log
 watchdog.err.log
 watchdog.out.log
 
+# Ignore Eclipse settings
+WatchDogEclipsePlugin/WatchDog/.settings/
+WatchDogEclipsePlugin/WatchDogUnitTests/.settings/
+WatchDogCore/WatchDog/.settings/
+
 # Ignore IntelliJ workspace file
 WatchDogIntelliJPlugin/WatchDog/.idea/workspace.xml
-
+WatchDogIntelliJPlugin/build_cache/

@@ -1,6 +1,10 @@
 package nl.tudelft.watchdog.logic.network;
 
-import nl.tudelft.watchdog.ui.preferences.Preferences;
+import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
+import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
+import nl.tudelft.watchdog.core.logic.network.ServerReturnCodeException;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,22 +17,27 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(Preferences.class)
-// Used to ignore the SSLCOntext loading problems stemming from the upstream
+@PrepareForTest(WatchDogGlobals.class)
+// Used to ignore the SSLContext loading problems stemming from the upstream
 // class loader
 @PowerMockIgnore("javax.net.ssl.*")
 public class NetworkUtilsTest {
 
 	@org.mockito.Mock
 	Preferences mockedPreferences;
+	
+	@org.mockito.Mock
+	WatchDogGlobals mockedGlobals;
 
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		PowerMockito.mockStatic(Preferences.class);
-		Mockito.when(Preferences.getInstance()).thenReturn(mockedPreferences);
+		PowerMockito.mockStatic(WatchDogGlobals.class);
+		Mockito.when(WatchDogGlobals.getLogDirectory()).thenReturn("watchdog/logs/");
+		Mockito.when(WatchDogGlobals.getPreferences()).thenReturn(mockedPreferences);
 		Mockito.when(mockedPreferences.isAuthenticationEnabled()).thenReturn(
 				true);
+		Mockito.when(mockedPreferences.isLoggingEnabled()).thenReturn(false);
 	}
 
 	@Test(expected = ServerCommunicationException.class)

@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="nl.tudelft.watchdog.ui.preferences.PreferencePage"
+            class="nl.tudelft.watchdog.eclipse.ui.preferences.PreferencePage"
             id="WatchDog.PreferencePage"
             name="WatchDog">
       </page>
@@ -12,17 +12,17 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="nl.tudelft.watchdog.ui.handlers.InfoHandler"
+            defaultHandler="nl.tudelft.watchdog.eclipse.ui.handlers.InfoHandler"
             id="nl.tudelft.watchdog.commands.showWatchDogInfo"
             name="Display WatchDogInfo">
       </command>
             <command
-            defaultHandler="nl.tudelft.watchdog.ui.handlers.UserRegistrationWizardDialogHandler"
+            defaultHandler="nl.tudelft.watchdog.eclipse.ui.handlers.UserRegistrationWizardDialogHandler"
             id="nl.tudelft.watchdog.commands.UserWizardDialog"
             name="Start User Wizard">
       </command>
       <command
-            defaultHandler="nl.tudelft.watchdog.ui.handlers.ProjectRegistrationWizardDialogHandler"
+            defaultHandler="nl.tudelft.watchdog.eclipse.ui.handlers.ProjectRegistrationWizardDialogHandler"
             id="nl.tudelft.watchdog.commands.ProjectWizardDialog"
             name="Start Project Wizard">
       </command>
@@ -48,14 +48,14 @@
    <extension
          point="org.eclipse.ui.startup">
       <startup
-            class="nl.tudelft.watchdog.ui.handlers.StartupHandler">
+            class="nl.tudelft.watchdog.eclipse.ui.handlers.StartupHandler">
       </startup>
    </extension>
    <extension
          point="org.eclipse.ui.views">
       <view
             allowMultiple="false"
-            class="nl.tudelft.watchdog.ui.WatchDogView"
+            class="nl.tudelft.watchdog.eclipse.ui.WatchDogView"
             icon="resources/images/watchdog_icon.png"
             id="WatchDog.view"
             name="WatchDog Statistics"

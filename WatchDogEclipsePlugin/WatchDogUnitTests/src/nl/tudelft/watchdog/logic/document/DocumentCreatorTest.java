@@ -3,6 +3,9 @@ package nl.tudelft.watchdog.logic.document;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import nl.tudelft.watchdog.core.logic.document.Document;
+import nl.tudelft.watchdog.core.logic.document.DocumentType;
+import nl.tudelft.watchdog.eclipse.logic.document.DocumentCreator;
 
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;

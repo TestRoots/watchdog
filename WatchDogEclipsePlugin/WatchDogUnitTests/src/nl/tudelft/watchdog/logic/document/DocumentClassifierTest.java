@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.logic.document;
 
 import static org.junit.Assert.assertEquals;
+import nl.tudelft.watchdog.core.logic.document.*;
 
 import org.junit.Ignore;
 import org.junit.Test;

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="WatchDogCore"
+      label="WatchDogCore"
+      version="1.5.0"
+      provider-name="Software Engineering Research Group (TU Delft)">
+
+   <plugin
+         id="nl.tudelft.WatchDogCore"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

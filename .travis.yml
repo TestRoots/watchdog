@@ -8,5 +8,4 @@ before_install:
  - sudo gem install bundler
 services:
   - mongodb
-  
 script: ./travis_build.sh

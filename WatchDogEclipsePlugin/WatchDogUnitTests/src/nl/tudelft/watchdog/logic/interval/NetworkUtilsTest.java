@@ -6,13 +6,13 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.Date;
 
-import nl.tudelft.watchdog.logic.interval.intervaltypes.EclipseOpenInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.logic.network.JsonTransferer;
-import nl.tudelft.watchdog.logic.network.NetworkUtils;
-import nl.tudelft.watchdog.logic.network.NetworkUtils.Connection;
-import nl.tudelft.watchdog.logic.network.ServerCommunicationException;
-import nl.tudelft.watchdog.logic.network.ServerReturnCodeException;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
+import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
+import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
+import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
+import nl.tudelft.watchdog.core.logic.network.ServerReturnCodeException;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -47,7 +47,7 @@ public class NetworkUtilsTest {
 	@Ignore
 	public void testIntervalTransfer() {
 		JsonTransferer it = new JsonTransferer();
-		IntervalBase interval = new EclipseOpenInterval(new Date());
+		IntervalBase interval = new IDEOpenInterval(new Date());
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 		String json = it.toJson(intervals);
 

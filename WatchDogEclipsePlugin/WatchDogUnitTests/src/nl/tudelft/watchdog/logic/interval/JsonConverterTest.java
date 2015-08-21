@@ -6,25 +6,24 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Date;
 
-import nl.tudelft.watchdog.logic.document.Document;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.EclipseOpenInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.EditorIntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.ReadingInterval;
-import nl.tudelft.watchdog.logic.interval.intervaltypes.TypingInterval;
-import nl.tudelft.watchdog.logic.network.JsonTransferer;
-import nl.tudelft.watchdog.ui.wizards.Project;
-import nl.tudelft.watchdog.ui.wizards.User;
-import nl.tudelft.watchdog.util.WatchDogGlobals;
-import nl.tudelft.watchdog.util.WatchDogGlobals.IDE;
-import nl.tudelft.watchdog.util.WatchDogUtils;
+import nl.tudelft.watchdog.core.logic.document.Document;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.ReadingInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
+import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
+import nl.tudelft.watchdog.core.ui.wizards.Project;
+import nl.tudelft.watchdog.core.ui.wizards.User;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals.IDE;
+import nl.tudelft.watchdog.eclipse.logic.document.EditorWrapper;
+import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import com.google.gson.Gson;
 
 /**
  * Test the transfer from {@link IInterval}s to JSon.
@@ -62,7 +61,7 @@ public class JsonConverterTest {
 	@Test
 	public void testJsonTypingIntervalMissingDocumentRepresentation() {
 		ITextEditor editor = Mockito.mock(ITextEditor.class);
-		TypingInterval interval = new TypingInterval(editor, new Date());
+		TypingInterval interval = new TypingInterval(new EditorWrapper(editor), new Date());
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals(
@@ -75,7 +74,7 @@ public class JsonConverterTest {
 	@Test
 	public void testJsonTypingIntervalTwoSameIntervalsRepresentation() {
 		ITextEditor editor = Mockito.mock(ITextEditor.class);
-		TypingInterval interval = new TypingInterval(editor, new Date());
+		TypingInterval interval = new TypingInterval(new EditorWrapper(editor), new Date());
 		interval.setDocument(new Document("Project", "filepath",
 				"Production.java", "blah-document"));
 		interval.setEndingDocument(new Document("Project", "Production.java",
@@ -92,7 +91,7 @@ public class JsonConverterTest {
 	/** Tests the format of the returned Json representation. */
 	@Test
 	public void testJsonSessionIntervalRepresentation() {
-		IntervalBase interval = new EclipseOpenInterval(new Date());
+		IntervalBase interval = new IDEOpenInterval(new Date());
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals("[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":\"\","
@@ -105,7 +104,7 @@ public class JsonConverterTest {
 	 */
 	@Test
 	public void testContainsIDEHost() {
-		IntervalBase interval = new EclipseOpenInterval(new Date());
+		IntervalBase interval = new IDEOpenInterval(new Date());
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals("[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":\"\","
@@ -139,7 +138,7 @@ public class JsonConverterTest {
 
 	@Test
 	public void testUserHasWatchDogVersion() {
-		String gsonRepresentation = new Gson().toJson(new User());
+		String gsonRepresentation = WatchDogUtils.convertToJson(new User());
 		boolean containsWDVersion = gsonRepresentation.contains("\"wdv\":\""
 				+ WatchDogGlobals.CLIENT_VERSION + "\"");
 		assertTrue(containsWDVersion);
@@ -147,7 +146,7 @@ public class JsonConverterTest {
 
 	@Test
 	public void testProjectHasWatchDogVersion() {
-		String gsonRepresentation = new Gson().toJson(new Project(""));
+		String gsonRepresentation =  WatchDogUtils.convertToJson(new Project(""));
 		boolean containsWDVersion = gsonRepresentation.contains("\"wdv\":\""
 				+ WatchDogGlobals.CLIENT_VERSION + "\"");
 		assertTrue(containsWDVersion);

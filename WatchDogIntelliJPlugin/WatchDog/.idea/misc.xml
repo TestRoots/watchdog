@@ -4,6 +4,19 @@
     <entry_points version="2.0" />
   </component>
   <component name="IdProvider" IDEtalkID="3F6565601B76144C550CDBADAE06CC93" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/../../WatchDogCore/pom.xml" />
+      </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/../../WatchDogCore/WatchDog/pom.xml" />
+        <option value="$PROJECT_DIR$/../../WatchDogCore/WatchDogCore/pom.xml" />
+      </set>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" default="false" assert-keyword="true" jdk-15="true" project-jdk-name="IntelliJ IDEA Community Edition IC-141.1010.3" project-jdk-type="IDEA JDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
