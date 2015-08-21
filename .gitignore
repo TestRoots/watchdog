@@ -30,3 +30,4 @@ WatchDogCore/WatchDog/.settings/
 
 # Ignore IntelliJ workspace file
 WatchDogIntelliJPlugin/WatchDog/.idea/workspace.xml
+WatchDogIntelliJPlugin/build_cache/

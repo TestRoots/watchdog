@@ -1,22 +1,34 @@
 #!/bin/bash
 
-ideaVersion="14.1"
+idea_version="14.1"
+idea_zip="ideaIC-$idea_version.tar.gz"
+idea_URL="http://download.jetbrains.com/idea/$idea_zip"
+build_dir="build_cache"
 
-# Get our IDEA dependency
-wget http://download.jetbrains.com/idea/ideaIC-${ideaVersion}.tar.gz
+mkdir -p $build_dir
+cd $build_dir
+
+# Cache IntellIJ download. If not available, download anew (big!)
+if [ ! -f $idea_zip ];
+   then
+   echo "File $idea_zip not found. Loading from the Internetz ..."
+   wget http://download.jetbrains.com/idea/$idea_zip
+fi
 
 # Unzip IDEA
-tar zxf ideaIC-${ideaVersion}.tar.gz
-rm -rf ideaIC-${ideaVersion}.tar.gz
+tar zxf ideaIC-${idea_version}.tar.gz
 
-# Move the versioned IDEA folder to a known location
-ideaPath=$(find . -name 'idea-IC*' | head -n 1)
-mv  ${ideaPath} ./idea-IC
-	
-# Compress to ZIP file
-cd idea-IC
-zip -r ../ideaIC.zip *
+idea_path=$(find . -type d -name 'idea-IC*' | head -n 1)
+
+if [ ! -f ${idea_path}.zip ];
+   then
+   # Compress to ZIP file
+   cd $idea_path
+   zip -r ../${idea_path}.zip *
+   cd ..
+fi
+
 cd ..
 
 # Install IDEA to Maven repo
-mvn install:install-file -Dfile=ideaIC.zip -DgroupId=org.jetbrains -DartifactId=org.jetbrains.intellij-ce -Dversion=${ideaVersion} -Dpackaging=zip
+mvn install:install-file -Dfile=$build_dir/${idea_path}.zip -DgroupId=org.jetbrains -DartifactId=org.jetbrains.intellij-ce -Dversion=${idea_version} -Dpackaging=zip
