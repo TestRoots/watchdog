@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
+import nl.tudelft.watchdog.eclipse.logic.interval.IntervalPersister;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;

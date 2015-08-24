@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nl.tudelft</groupId>
 	<artifactId>parent</artifactId>
-	<version>1.4.2</version>
+	<version>1.5.0</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>WatchDog</module>
@@ -22,16 +22,16 @@
 	</properties>
 
 	<repositories>
-	        <repository>
+		<repository>
 			<id>indigo</id>
 			<url>${indigo-repo.url}</url>
 			<layout>p2</layout>
 		</repository>
-	 	<repository>
+		<repository>
 			<id>juno</id>
 			<url>${juno-repo.url}</url>
 			<layout>p2</layout>
-	  	</repository>
+		</repository>
 		<repository>
 			<id>kepler</id>
 			<url>${kepler-repo.url}</url>
@@ -94,7 +94,7 @@
 				<version>${tycho.version}</version>
 				<configuration>
 					<compilerArgument>-warn:+discouraged,forbidden</compilerArgument>
-	</configuration>
+				</configuration>
 			</plugin>
 
 			<plugin>

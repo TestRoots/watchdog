@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../WatchDogCore/Core.iml" filepath="$PROJECT_DIR$/../../WatchDogCore/Core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WatchDog.iml" filepath="$PROJECT_DIR$/WatchDog.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../WatchDogCore/WatchDogFeature/WatchDogCore.iml" filepath="$PROJECT_DIR$/../../WatchDogCore/WatchDogFeature/WatchDogCore.iml" />
+    </modules>
+  </component>
+</project>

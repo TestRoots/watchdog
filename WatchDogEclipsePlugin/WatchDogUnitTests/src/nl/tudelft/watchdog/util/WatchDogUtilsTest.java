@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 import org.joda.time.Duration;
 import org.junit.Test;

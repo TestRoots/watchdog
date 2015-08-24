@@ -1,0 +1,63 @@
+<idea-plugin version="2">
+    <id>nl.tudelft.watchdog</id>
+    <name>WatchDog</name>
+    <version>1.5.0</version>
+    <vendor email="igor.levaja@testroots.org" url="http://www.testroots.org">TestRoots, TU Delft</vendor>
+
+    <description><![CDATA[
+    Do you as a Java developer know, how much time you spent on testing your application? Do you know how much time you actually write new code, and how long you browse through existing code? Do you want to win amazing prizes?
+    <br>
+    Then install TestRoots WatchDog!<br>
+    WatchDog assess your development behavior, which tests you write (Junit, Mockito, Powermock and others) and gives you answers to the above questions. WatchDog comes with the "WatchDog Statistics" view that displays the answers in easy-to-understand diagrams and immediate statistics on your development habits.<br>
+    <br>
+    We support all current versions of Junit (Junit3 and Junit4), and we measure developer testing, system testing and integration testing time (so long as you name your Test classes ending in Test, or have includes to Junit, Mockito or Powermock in them).
+    ]]></description>
+
+    <change-notes><![CDATA[
+      1.5.0<br>
+      Maintenance release:<br>
+      - Refactored back-end architecture;<br>
+      - Version is now synchronized across platforms.<br><br>
+
+      0.9.1<br>
+      Few minor issues fixed:<br>
+        - JUnit interval format unified;<br>
+        - Removed unused listeners.
+    ]]>
+    </change-notes>
+
+    <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
+    <idea-version since-build="131"/>
+
+    <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <!--depends optional="false">JUnit</depends-->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <testStatusListener implementation="nl.tudelft.watchdog.intellij.logic.ui.listeners.JUnitListener"></testStatusListener>
+        <applicationConfigurable instance="nl.tudelft.watchdog.intellij.ui.preferences.PreferencePage"></applicationConfigurable>
+        <toolWindow id="WatchDog" anchor="right" icon="/images/watchdog_icon.png"
+                    factoryClass="nl.tudelft.watchdog.intellij.ui.WatchDogToolWindowFactory"
+                    conditionClass="nl.tudelft.watchdog.intellij.ui.WatchDogToolWindowFactoryCondition"/>
+    </extensions>
+
+    <application-components>
+        <!-- Add your application components here -->
+    </application-components>
+
+    <project-components>
+        <!-- Add your project components here -->
+        <component>
+            <implementation-class>nl.tudelft.watchdog.intellij.WatchDog</implementation-class>
+        </component>
+    </project-components>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+
+</idea-plugin>

@@ -5,6 +5,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
+import nl.tudelft.watchdog.eclipse.logic.interval.IntervalPersister;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.ClassRule;

@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.logic.network;
 
 import static org.junit.Assert.*;
+import nl.tudelft.watchdog.eclipse.logic.network.ClientVersionChecker;
 
 import org.junit.Test;
 
