@@ -22,6 +22,7 @@ public class StartupHandler implements IStartup {
 	public void earlyStartup() {
 		WatchDogGlobals.setLogDirectory("watchdog/logs/");
 		WatchDogGlobals.setPreferences(Preferences.getInstance());
+		WatchDogGlobals.hostIDE = IDE.ECLIPSE;
 		StartupUIThread watchDogUiThread = new StartupUIThread(
 				Preferences.getInstance());
 		Display.getDefault().asyncExec(watchDogUiThread);
@@ -32,7 +33,6 @@ public class StartupHandler implements IStartup {
 		try {
 			WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
 
-			WatchDogGlobals.hostIDE = IDE.ECLIPSE;
 			// Initialize the interval manager, and thereby, interval recording.
 			InitializationManager.getInstance();
 			WatchDogGlobals.isActive = true;

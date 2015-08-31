@@ -43,6 +43,7 @@ public class WatchDog implements ProjectComponent {
     public void initComponent() {
         WatchDogGlobals.setLogDirectory(PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog")).getPath().toString() + "/logs/");
         WatchDogGlobals.setPreferences(Preferences.getInstance());
+        WatchDogGlobals.hostIDE = WatchDogGlobals.IDE.INTELLIJ;
     }
 
     public void disposeComponent() {
@@ -144,7 +145,6 @@ public class WatchDog implements ProjectComponent {
                 .getOrCreateProjectSetting(project.getName());
         if (setting.enableWatchdog) {
             WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
-            WatchDogGlobals.hostIDE = WatchDogGlobals.IDE.INTELLIJ;
             InitializationManager.getInstance();
             WatchDogGlobals.isActive = true;
             new ViewToolWindowButtonsAction().setSelected(null, true);
