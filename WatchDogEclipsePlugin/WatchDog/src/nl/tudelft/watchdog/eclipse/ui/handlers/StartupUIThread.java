@@ -94,10 +94,11 @@ public class StartupUIThread implements Runnable {
 			preferences.setUserid(userId);
 			preferences.registerProjectId(WatchDogUtils.getWorkspaceName(), "");
 		}
+		savePreferenceStoreIfNeeded();
 		try {
 			projectId = new JsonTransferer()
 					.registerNewProject(new nl.tudelft.watchdog.core.ui.wizards.Project(
-							userId));
+							preferences.getUserid()));
 		} catch (ServerCommunicationException exception) {
 			WatchDogLogger.getInstance().logSevere(exception);
 			return;
