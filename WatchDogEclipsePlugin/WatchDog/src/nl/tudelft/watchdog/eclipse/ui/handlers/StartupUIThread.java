@@ -56,19 +56,26 @@ public class StartupUIThread implements Runnable {
 
 	/** Checks whether there is a registered WatchDog user */
 	private void checkWhetherToDisplayUserProjectRegistrationWizard() {
-		if (!WatchDogUtils.isEmpty(preferences.getUserid()))
+		ProjectPreferenceSetting projectSetting = preferences
+				.getOrCreateProjectSetting(workspaceName);
+		if (!WatchDogUtils.isEmpty(preferences.getUserid())
+				|| (projectSetting.startupQuestionAsked && !projectSetting.enableWatchdog))
 			return;
 
 		UserRegistrationWizardDialogHandler newUserWizardHandler = new UserRegistrationWizardDialogHandler();
 		try {
 			int statusCode = (int) newUserWizardHandler
 					.execute(new ExecutionEvent());
+			savePreferenceStoreIfNeeded();
 			if (statusCode == Window.CANCEL) {
 				if (MessageDialog.openQuestion(null, "WatchDog not active!",
 						WATCHDOG_INACTIVE_WARNING)) {
 					makeSilentRegistration();
 				} else {
 					userProjectRegistrationCancelled = true;
+					// user clearly does not WatchDog in this Project
+					preferences.registerProjectUse(
+							WatchDogUtils.getWorkspaceName(), false);
 				}
 			}
 		} catch (ExecutionException exception) {
@@ -81,7 +88,6 @@ public class StartupUIThread implements Runnable {
 	private void makeSilentRegistration() {
 		String userId = "";
 		String projectId = "";
-		Preferences preferences = Preferences.getInstance();
 		if (preferences.getUserid() == null
 				|| preferences.getUserid().isEmpty()) {
 			User user = new User();

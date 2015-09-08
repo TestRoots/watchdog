@@ -83,8 +83,12 @@ public class WatchDog implements ProjectComponent {
      * Checks whether there is a registered WatchDog user
      */
     private void checkWhetherToDisplayUserProjectRegistrationWizard() {
-        if (!WatchDogUtils.isEmpty(WatchDogGlobals.getPreferences().getUserid()))
+        Preferences preferences = Preferences.getInstance();
+        ProjectPreferenceSetting projectSetting = preferences.getOrCreateProjectSetting(project.getName());
+        if (!WatchDogUtils.isEmpty(WatchDogGlobals.getPreferences().getUserid())
+                || (projectSetting.startupQuestionAsked && !projectSetting.enableWatchdog))
             return;
+
         UserProjectRegistrationWizard wizard = new UserProjectRegistrationWizard("User and Project Registration", project);
         wizard.setCrossClosesWindow(false);
         wizard.show();
@@ -93,6 +97,9 @@ public class WatchDog implements ProjectComponent {
                 makeSilentRegistration();
             } else {
                 userProjectRegistrationCancelled = true;
+                // user clearly does not WatchDog in this Project
+                preferences.registerProjectUse(
+                        project.getName(), false);
             }
         }
     }
