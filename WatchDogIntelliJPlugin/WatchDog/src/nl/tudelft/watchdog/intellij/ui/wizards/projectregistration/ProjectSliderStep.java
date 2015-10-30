@@ -70,7 +70,9 @@ public class ProjectSliderStep extends WizardStep {
             public void stateChanged(ChangeEvent e) {
                 int developmentTimeValue = percentageProductionSlider
                         .getValue();
-                if(developmentTimeValue % 5 != 0) return;
+                if(developmentTimeValue % 5 != 0) {
+                    return;
+                }
                 int testingTimeValue = 100 - developmentTimeValue;
                 sliderValueText.setText(testingTimeValue
                         + "% Testing, " + developmentTimeValue

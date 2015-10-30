@@ -13,7 +13,7 @@ import nl.tudelft.watchdog.intellij.logic.InitializationManager;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalStatistics.StatisticsTimePeriod;
 import nl.tudelft.watchdog.intellij.ui.util.UIUtils;
-import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -82,7 +82,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
 	public void createWatchDogView() {
 		oneColumn = UIUtils.createVerticalBoxJPanel(parent);
 
-		if (!WatchDogGlobals.isActive) {
+		if (!WatchDogUtils.isWatchDogActive(WatchDogUtils.getProject())) {
 			createInactiveViewContent();
 		} else {
 			calculateTimes();
@@ -173,7 +173,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
 
 	private void calculateTimes() {
 		intervalStatistics = new IntervalStatistics(InitializationManager
-				.getInstance().getIntervalManager(), selectedTimePeriod);
+				.getInstance(WatchDogUtils.getProjectName()).getIntervalManager(), selectedTimePeriod);
 
 		intelliJOpen = intervalStatistics
 				.getPreciseTime(intervalStatistics.intelliJOpen);

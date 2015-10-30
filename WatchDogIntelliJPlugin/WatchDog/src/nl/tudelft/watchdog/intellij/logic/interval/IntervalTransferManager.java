@@ -55,7 +55,9 @@ public class IntervalTransferManager extends RegularCheckerBase {
 		 */
 		@Override
 		public void run() {
-            if(intervalPersister.isClosed()) return;
+            if(intervalPersister.isClosed()) {
+                return;
+            }
 			List<IntervalBase> intervalsToTransfer = new ArrayList<IntervalBase>(
 					intervalPersister.readIntervals());
 

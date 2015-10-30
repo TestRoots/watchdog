@@ -7,7 +7,6 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.DocumentAdapter;
-import nl.tudelft.watchdog.intellij.WatchDog;
 import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.intellij.ui.util.UIUtils;
@@ -72,14 +71,10 @@ public class PreferencePage implements SearchableConfigurable, Configurable.NoSc
     private Preferences preferences = Preferences.getInstance();
 
     /**
-     * This project's name.
-     */
-    private String project = WatchDogUtils.getProjectName();
-
-    /**
      * The name of this preference page.
      */
     public final static String name = "WatchDog Preferences";
+
     private boolean isModified = false;
 
     @Nls
@@ -105,7 +100,7 @@ public class PreferencePage implements SearchableConfigurable, Configurable.NoSc
         JPanel projectJPanel = UIUtils.createFlowJPanelLeft(localGroup);
         UIUtils.createLabel(projectJPanel, "Project-ID ");
         projectIDInput = UIUtils.createLimitedTextInputField(projectJPanel, ID_LENGTH);
-        ProjectPreferenceSetting projectSetting = preferences.getOrCreateProjectSetting(project);
+        ProjectPreferenceSetting projectSetting = preferences.getOrCreateProjectSetting(WatchDogUtils.getProjectName());
         projectIDInput.setText(projectSetting.projectId);
 
         enableWatchdogInput = UIUtils.createCheckBox(localGroup, "Monitor this project with WatchDog ");
@@ -204,7 +199,7 @@ public class PreferencePage implements SearchableConfigurable, Configurable.NoSc
     public void apply() throws ConfigurationException {
         isModified = false;
         preferences.setAuthenticationEnabled(enableAuthentication.isSelected());
-        preferences.registerProjectUse(project, enableWatchdogInput.isSelected());
+        preferences.registerProjectUse(WatchDogUtils.getProjectName(), enableWatchdogInput.isSelected());
         checkAndUpdateProjectID(projectIDInput.getText());
         checkAndUpdateUserID(userIDInput.getText());
         checkURLfield(serverURLInput.getText());
@@ -235,13 +230,13 @@ public class PreferencePage implements SearchableConfigurable, Configurable.NoSc
     }
 
     private void checkAndUpdateProjectID(String projectID) {
-        if (!preferences.isAuthenticationEnabled() || !preferences.getOrCreateProjectSetting(project).enableWatchdog) {
-            preferences.registerProjectId(project, projectID);
+        if (!preferences.isAuthenticationEnabled() || !preferences.getOrCreateProjectSetting(WatchDogUtils.getProjectName()).enableWatchdog) {
+            preferences.registerProjectId(WatchDogUtils.getProjectName(), projectID);
             return;
         }
         if (projectID.length() < ID_LENGTH) {
             if(enableWatchdogInput.isSelected() && WatchDogUtils.isEmpty(projectIDInput.getText())) {
-                new ProjectRegistrationWizard("Project Registration", WatchDog.project).show();
+                new ProjectRegistrationWizard("Project Registration", WatchDogUtils.getProject()).show();
                 return;
             }
             Messages.showErrorDialog("Project ID must have 40 characters!", "Invalid Input");
@@ -250,7 +245,7 @@ public class PreferencePage implements SearchableConfigurable, Configurable.NoSc
             String url = NetworkUtils.buildExistingProjectURL(projectID);
             switch (NetworkUtils.urlExistsAndReturnsStatus200(url)) {
                 case SUCCESSFUL:
-                    preferences.registerProjectId(project, projectID);
+                    preferences.registerProjectId(WatchDogUtils.getProjectName(), projectID);
                     break;
                 case UNSUCCESSFUL:
                 case NETWORK_ERROR:

@@ -2,18 +2,25 @@ package nl.tudelft.watchdog.intellij.util;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import nl.tudelft.watchdog.intellij.WatchDog;
 import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
 import nl.tudelft.watchdog.core.util.ContentReaderException;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
 import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class WatchDogUtils extends WatchDogUtilsBase {
+
+    private static Project activeProject;
+
+    private static Set<String> isWatchDogActive = new HashSet<String>();
 
     /**
      * Returns the contents of the editor.
@@ -56,7 +63,13 @@ public class WatchDogUtils extends WatchDogUtilsBase {
      * Returns the Project's name.
      */
     public static String getProjectName() {
-        return WatchDog.project.getName();
+        return getProject().getName();
+    }
+
+
+    /** Returns current Project. */
+    public static Project getProject() {
+        return activeProject;
     }
 
     /**
@@ -66,4 +79,21 @@ public class WatchDogUtils extends WatchDogUtilsBase {
     public static ProjectPreferenceSetting getProjectSetting() {
         return Preferences.getInstance().getOrCreateProjectSetting(getProjectName());
     }
+
+    /** Set if WatchDog is active for current project. */
+    public static void setWatchDogActiveForProject (Project project) {
+        isWatchDogActive.add(project.getName());
+    }
+
+    /** Whether or not WatchDog is active for current project. */
+    public static boolean isWatchDogActive(Project project) {
+        return isWatchDogActive.contains(project.getName());
+    }
+
+    /** Sets currently active project (i.e. project that has focus) */
+    public static void setActiveProject(Project activeProject) {
+        WatchDogUtils.activeProject = activeProject;
+        WatchDogGlobals.isActive = isWatchDogActive(activeProject);
+    }
+
 }

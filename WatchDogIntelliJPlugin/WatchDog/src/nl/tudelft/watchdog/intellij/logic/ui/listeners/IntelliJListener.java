@@ -20,18 +20,22 @@ public class IntelliJListener {
      */
     private EventManager eventManager;
 
+    private String projectName;
+
     private Disposable parent; //dummy disposable, needed for EditorFactory listener
 
     private final MessageBusConnection connection;
 
     private EditorWindowListener editorWindowListener;
+
     private GeneralActivityListener activityListener;
 
     /**
      * Constructor.
      */
-    public IntelliJListener(EventManager userActionManager) {
-        this.eventManager = userActionManager;
+    public IntelliJListener(EventManager eventManager, String projectName) {
+        this.eventManager = eventManager;
+        this.projectName = projectName;
 
         parent = new Disposable() {
             @Override
@@ -40,7 +44,7 @@ public class IntelliJListener {
             }
         };
 
-        editorWindowListener = new EditorWindowListener(eventManager);
+        editorWindowListener = new EditorWindowListener(eventManager, projectName);
 
         final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
         connection = messageBus.connect();
@@ -55,13 +59,12 @@ public class IntelliJListener {
 
         connection.subscribe(ApplicationActivationListener.TOPIC,
                 new IntelliJActivationListener(eventManager));
-        activityListener = new GeneralActivityListener(eventManager);
+        activityListener = new GeneralActivityListener(eventManager, projectName);
 
         EditorFactory.getInstance().addEditorFactoryListener(editorWindowListener, parent);
     }
 
     public void removeListeners() {
-
         connection.disconnect();
         activityListener.removeListeners();
         parent.dispose(); // disposing this parent should remove EditorFactory listener
