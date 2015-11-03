@@ -5,7 +5,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import nl.tudelft.watchdog.intellij.logic.ui.EventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 
-public class IntelliJActivationListener implements ApplicationActivationListener {
+public class IntelliJActivationListener extends ApplicationActivationListener.Adapter {
 
     private final EventManager eventManager;
 
