@@ -1,6 +1,5 @@
 package nl.tudelft.watchdog.eclipse.logic.interval.intervaltypes;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
@@ -39,9 +38,6 @@ public class JUnitInterval extends IntervalBase {
 					- roundElapsedTime(duration)));
 		}
 		testExecution = new JUnitExecution(test, null);
-
-		ArrayList<IntervalBase> interval = new ArrayList<IntervalBase>();
-		interval.add(this);
 	}
 
 	private long roundElapsedTime(double duration) {

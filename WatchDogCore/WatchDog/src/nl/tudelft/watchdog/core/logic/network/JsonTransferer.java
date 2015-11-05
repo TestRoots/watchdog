@@ -86,7 +86,6 @@ public class JsonTransferer {
 	 * the server.
 	 * 
 	 * @throws ServerCommunicationException
-	 * @throws
 	 */
 	public String registerNew(String postURL, String json)
 			throws ServerCommunicationException {
