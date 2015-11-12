@@ -12,7 +12,8 @@ Bundle-ClassPath: .,
  lib/commons-logging-1.2.jar,
  lib/commons-codec-1.9.jar,
  lib/joda-time-2.8.1.jar,
- lib/java-util-1.9.0.jar
+ lib/java-util-1.9.0.jar,
+ lib/mapdb-1.0.5.jar
 Export-Package: com.google.gson,
  com.google.gson.annotations,
  com.google.gson.reflect,
@@ -30,4 +31,5 @@ Export-Package: com.google.gson,
  nl.tudelft.watchdog.core.util,
  org.joda.time,
  org.joda.time.base,
- org.joda.time.format
+ org.joda.time.format,
+ org.mapdb

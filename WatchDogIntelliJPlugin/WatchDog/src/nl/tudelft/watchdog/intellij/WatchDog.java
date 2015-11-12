@@ -27,10 +27,13 @@ import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
+import java.io.File;
 
 public class WatchDog implements ProjectComponent {
 
-    /** Current Project. */
+    /**
+     * Current Project.
+     */
     private Project project;
 
     /**
@@ -52,13 +55,13 @@ public class WatchDog implements ProjectComponent {
 
     public void initComponent() {
         WatchDogUtils.setActiveProject(project);
-        WatchDogGlobals.setLogDirectory(PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog")).getPath().toString() + "/logs/");
+        WatchDogGlobals.setLogDirectory(PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog")).getPath().toString() + File.separator + "logs" + File.separator);
         WatchDogGlobals.setPreferences(Preferences.getInstance());
         WatchDogGlobals.hostIDE = WatchDogGlobals.IDE.INTELLIJ;
     }
 
     public void disposeComponent() {
-        // component disposal logic if needed
+        // intentionally left empty
     }
 
     @NotNull
@@ -67,7 +70,6 @@ public class WatchDog implements ProjectComponent {
     }
 
     public void projectOpened() {
-
         windowFocusListener = new WindowAdapter() {
             @Override
             public void windowGainedFocus(WindowEvent e) {
@@ -76,30 +78,31 @@ public class WatchDog implements ProjectComponent {
         };
         WindowManager.getInstance().getFrame(project).addWindowFocusListener(windowFocusListener);
 
-        // called when project is opened
         checkWhetherToDisplayUserProjectRegistrationWizard();
 
         if (WatchDogUtils.isEmpty(WatchDogGlobals.getPreferences().getUserid())
                 || userProjectRegistrationCancelled) {
             return;
         }
+
         checkIsProjectAlreadyRegistered();
         checkWhetherToDisplayProjectWizard();
         checkWhetherToStartWatchDog();
     }
 
     public void projectClosed() {
-        // called when project is being closed
-        if(!WatchDogUtils.isWatchDogActive(project)) {
+        if (!WatchDogUtils.isWatchDogActive(project)) {
             return;
         }
+
         InitializationManager intervalInitializationManager = InitializationManager.getInstance(project.getName());
         intervalInitializationManager.getEventManager().update(new WatchDogEvent(this, WatchDogEvent.EventType.END_IDE));
         intervalInitializationManager.getIntervalManager().closeAllIntervals();
         intervalInitializationManager.getTransferManager().sendIntervalsImmediately();
         intervalInitializationManager.shutdown(project.getName());
+
         JFrame frame = WindowManager.getInstance().getFrame(project);
-        if(frame != null) {
+        if (frame != null) {
             frame.removeWindowFocusListener(windowFocusListener);
         }
     }
@@ -123,7 +126,6 @@ public class WatchDog implements ProjectComponent {
                 makeSilentRegistration();
             } else {
                 userProjectRegistrationCancelled = true;
-                // user clearly does not WatchDog in this Project
                 preferences.registerProjectUse(
                         project.getName(), false);
             }
@@ -132,7 +134,7 @@ public class WatchDog implements ProjectComponent {
 
     private void makeSilentRegistration() {
         String userId = "";
-        String projectId;
+        String projectId = "";
         Preferences preferences = Preferences.getInstance();
         if (preferences.getUserid() == null || preferences.getUserid().isEmpty()) {
             User user = new User();
@@ -141,14 +143,48 @@ public class WatchDog implements ProjectComponent {
                 userId = new JsonTransferer().registerNewUser(user);
             } catch (ServerCommunicationException exception) {
                 WatchDogLogger.getInstance().logSevere(exception);
+                int i = 10;
+                while (i-- > 0 && WatchDogUtils.isEmptyOrHasOnlyWhitespaces(userId)) {
+                    try { //again
+                        try {
+                            Thread.sleep((int) (Math.random() * 1000));
+                        } catch (InterruptedException e) {
+                        }
+                        userId = new JsonTransferer().registerNewUser(user);
+                    } catch (ServerCommunicationException exception2) {
+                    }
+                }
+            }
+            if (WatchDogUtils.isEmptyOrHasOnlyWhitespaces(userId)) {
+                return;
             }
             preferences.setUserid(userId);
             preferences.registerProjectId(WatchDogUtils.getProjectName(), "");
         }
+
         try {
-            projectId = new JsonTransferer().registerNewProject(new nl.tudelft.watchdog.core.ui.wizards.Project(preferences.getUserid()));
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            projectId = new JsonTransferer().registerNewProject(new nl.tudelft.watchdog.core.ui.wizards.Project(userId));
         } catch (ServerCommunicationException exception) {
             WatchDogLogger.getInstance().logSevere(exception);
+            int i = 10;
+            while (i-- > 0 && WatchDogUtils.isEmptyOrHasOnlyWhitespaces(projectId)) {
+                try { //again
+                    try {
+                        Thread.sleep((int) (Math.random() * 1000));
+                    } catch (InterruptedException e) {
+                    }
+                    projectId = new JsonTransferer().registerNewProject(new nl.tudelft.watchdog.core.ui.wizards.Project(userId));
+                } catch (ServerCommunicationException exception2) {
+                }
+            }
+        }
+        if (WatchDogUtils.isEmptyOrHasOnlyWhitespaces(projectId)) {
             return;
         }
         preferences.registerProjectId(WatchDogUtils.getProjectName(), projectId);

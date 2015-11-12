@@ -6,6 +6,7 @@ import java.util.List;
 
 import nl.tudelft.watchdog.core.logic.document.DocumentType;
 import nl.tudelft.watchdog.core.logic.interval.IntervalManagerBase;
+import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
@@ -25,7 +26,7 @@ public class IntervalStatistics extends IntervalManagerBase {
 	// Intervals are stored in the database for 10 hours (equals 600 minutes)
 	private static final int FILTERED_INTERVALS_IN_MINUTES = 600;
 
-	private final IntervalPersister intervalPersister;
+	private final IntervalPersisterBase intervalPersister;
 
 	public Duration eclipseOpen;
 	public Duration userActive;

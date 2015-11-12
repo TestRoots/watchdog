@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import nl.tudelft.watchdog.core.logic.interval.IntervalManagerBase;
+import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
@@ -27,13 +28,13 @@ public class IntervalManager extends IntervalManagerBase {
 	 */
 	private String sessionSeed;
 
-	private IntervalPersister intervalsToTransferPersister;
+	private IntervalPersisterBase intervalsToTransferPersister;
 
-	private IntervalPersister intervalsStatisticsPersister;
+	private IntervalPersisterBase intervalsStatisticsPersister;
 
 	/** Constructor. */
-	public IntervalManager(IntervalPersister intervalsToTransferPersister,
-			IntervalPersister intervalsStatisticsPersister) {
+	public IntervalManager(IntervalPersisterBase intervalsToTransferPersister,
+			IntervalPersisterBase intervalsStatisticsPersister) {
 		this.intervalsToTransferPersister = intervalsToTransferPersister;
 		this.intervalsStatisticsPersister = intervalsStatisticsPersister;
 		generateAndSetSessionSeed();
@@ -160,7 +161,7 @@ public class IntervalManager extends IntervalManagerBase {
 	/**
 	 * @return the statistics persister.
 	 */
-	public IntervalPersister getIntervalsStatisticsPersister() {
+	public IntervalPersisterBase getIntervalsStatisticsPersister() {
 		return intervalsStatisticsPersister;
 	}
 }

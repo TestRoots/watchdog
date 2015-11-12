@@ -1,5 +1,7 @@
 package nl.tudelft.watchdog.eclipse.ui.handlers;
 
+import java.io.File;
+
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals.IDE;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
@@ -20,7 +22,8 @@ public class StartupHandler implements IStartup {
 	/** {@inheritDoc} Starts the WatchDog plugin. */
 	@Override
 	public void earlyStartup() {
-		WatchDogGlobals.setLogDirectory("watchdog/logs/");
+		WatchDogGlobals.setLogDirectory("watchdog" + File.separator + "logs"
+				+ File.separator);
 		WatchDogGlobals.setPreferences(Preferences.getInstance());
 		WatchDogGlobals.hostIDE = IDE.ECLIPSE;
 		StartupUIThread watchDogUiThread = new StartupUIThread(

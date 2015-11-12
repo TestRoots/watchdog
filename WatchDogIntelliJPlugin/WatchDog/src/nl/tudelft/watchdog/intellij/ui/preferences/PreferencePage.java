@@ -230,7 +230,8 @@ public class PreferencePage implements SearchableConfigurable, Configurable.NoSc
     }
 
     private void checkAndUpdateProjectID(String projectID) {
-        if (!preferences.isAuthenticationEnabled() || !preferences.getOrCreateProjectSetting(WatchDogUtils.getProjectName()).enableWatchdog) {
+        String projectName = WatchDogUtils.getProjectName();
+        if (!preferences.isAuthenticationEnabled() || !preferences.getOrCreateProjectSetting(projectName).enableWatchdog) {
             preferences.registerProjectId(WatchDogUtils.getProjectName(), projectID);
             return;
         }

@@ -27,6 +27,7 @@ public class EditorWindowListener implements EditorFactoryListener {
         if(!editorBelongsToThisProject(editorFactoryEvent)) {
             return;
         }
+
         Editor editor = editorFactoryEvent.getEditor();
         focusListener = new EditorFocusListener(eventManager, editor);
         editor.getContentComponent().addFocusListener(focusListener);
@@ -38,6 +39,7 @@ public class EditorWindowListener implements EditorFactoryListener {
         if(!editorBelongsToThisProject(editorFactoryEvent)) {
             return;
         }
+
         Editor editor = editorFactoryEvent.getEditor();
         editor.getContentComponent().removeFocusListener(focusListener);
         editorListenerMap.remove(editor).removeListeners();

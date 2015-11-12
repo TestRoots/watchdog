@@ -18,15 +18,12 @@ public class GeneralActivityListener {
     private AWTEventListener keyboardActivityListener;
 
 
-    /**
-     * Constructor.
-     */
+    /** Constructor. */
     public GeneralActivityListener(final EventManager eventManager, final String projectName) {
-        // Mouse Events
         mouseActivityListener = new AWTEventListener() {
             @Override
             public void eventDispatched(AWTEvent event) {
-                if(!WatchDogUtils.getProjectName().equals(projectName)) {
+                if (!WatchDogUtils.getProjectName().equals(projectName)) {
                     return;
                 }
                 eventManager.update(new WatchDogEvent(event, EventType.USER_ACTIVITY));
@@ -38,21 +35,22 @@ public class GeneralActivityListener {
         keyboardActivityListener = new AWTEventListener() {
             @Override
             public void eventDispatched(AWTEvent event) {
-                if(!WatchDogUtils.getProjectName().equals(projectName)) {
+                if (!WatchDogUtils.getProjectName().equals(projectName)) {
                     return;
                 }
-                if (((KeyEvent) event).getKeyCode() == KeyEvent.VK_RIGHT ||
-                        ((KeyEvent) event).getKeyCode() == KeyEvent.VK_UP ||
-                        ((KeyEvent) event).getKeyCode() == KeyEvent.VK_DOWN ||
-                        ((KeyEvent) event).getKeyCode() == KeyEvent.VK_LEFT ||
-                        ((KeyEvent) event).getKeyCode() == KeyEvent.VK_PAGE_DOWN ||
-                        ((KeyEvent) event).getKeyCode() == KeyEvent.VK_PAGE_UP
-                        ) {
-                    eventManager.update(new WatchDogEvent(event, EventType.USER_ACTIVITY));
+
+                KeyEvent keyEvent = (KeyEvent) event;
+                switch (keyEvent.getKeyCode()) {
+                    case KeyEvent.VK_RIGHT:
+                    case KeyEvent.VK_UP:
+                    case KeyEvent.VK_DOWN:
+                    case KeyEvent.VK_LEFT:
+                    case KeyEvent.VK_PAGE_DOWN:
+                    case KeyEvent.VK_PAGE_UP:
+                        eventManager.update(new WatchDogEvent(event, EventType.USER_ACTIVITY));
                 }
             }
         };
-        // Keyboard Events
         Toolkit.getDefaultToolkit().addAWTEventListener(keyboardActivityListener, AWTEvent.KEY_EVENT_MASK);
     }
 

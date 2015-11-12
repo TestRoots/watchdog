@@ -68,12 +68,13 @@ public class StartupUIThread implements Runnable {
 					.execute(new ExecutionEvent());
 			savePreferenceStoreIfNeeded();
 			if (statusCode == Window.CANCEL) {
-				if (MessageDialog.openQuestion(null, "WatchDog not active!",
-						WATCHDOG_INACTIVE_WARNING)) {
+				boolean shouldRegisterAnonymously = MessageDialog
+						.openQuestion(null, "WatchDog not active!",
+								WATCHDOG_INACTIVE_WARNING);
+				if (shouldRegisterAnonymously) {
 					makeSilentRegistration();
 				} else {
 					userProjectRegistrationCancelled = true;
-					// user clearly does not WatchDog in this Project
 					preferences.registerProjectUse(
 							WatchDogUtils.getWorkspaceName(), false);
 				}
@@ -96,17 +97,55 @@ public class StartupUIThread implements Runnable {
 				userId = new JsonTransferer().registerNewUser(user);
 			} catch (ServerCommunicationException exception) {
 				WatchDogLogger.getInstance().logSevere(exception);
+				int i = 10;
+				while (i-- > 0
+						&& WatchDogUtils.isEmptyOrHasOnlyWhitespaces(userId)) {
+					try { // again
+						try {
+							Thread.sleep((int) (Math.random() * 1000));
+						} catch (InterruptedException e) {
+						}
+						userId = new JsonTransferer().registerNewUser(user);
+					} catch (ServerCommunicationException exception2) {
+					}
+				}
+			}
+			if (WatchDogUtils.isEmptyOrHasOnlyWhitespaces(userId)) {
+				return;
 			}
 			preferences.setUserid(userId);
 			preferences.registerProjectId(WatchDogUtils.getWorkspaceName(), "");
 		}
 		savePreferenceStoreIfNeeded();
+
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		try {
 			projectId = new JsonTransferer()
 					.registerNewProject(new nl.tudelft.watchdog.core.ui.wizards.Project(
-							preferences.getUserid()));
+							userId));
 		} catch (ServerCommunicationException exception) {
 			WatchDogLogger.getInstance().logSevere(exception);
+			int i = 10;
+			while (i-- > 0
+					&& WatchDogUtils.isEmptyOrHasOnlyWhitespaces(projectId)) {
+				try { // again
+					try {
+						Thread.sleep((int) (Math.random() * 1000));
+					} catch (InterruptedException e) {
+					}
+					projectId = new JsonTransferer()
+							.registerNewProject(new nl.tudelft.watchdog.core.ui.wizards.Project(
+									userId));
+				} catch (ServerCommunicationException exception2) {
+				}
+			}
+		}
+		if (WatchDogUtils.isEmptyOrHasOnlyWhitespaces(projectId)) {
 			return;
 		}
 		preferences.registerProjectId(WatchDogUtils.getWorkspaceName(),

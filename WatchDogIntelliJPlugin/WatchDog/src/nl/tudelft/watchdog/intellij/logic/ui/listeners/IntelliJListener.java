@@ -15,14 +15,13 @@ import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
  * listeners.
  */
 public class IntelliJListener {
-    /**
-     * The editorObservable.
-     */
+    /**The editorObservable */
     private EventManager eventManager;
 
     private String projectName;
 
-    private Disposable parent; //dummy disposable, needed for EditorFactory listener
+    // Dummy disposable, needed for EditorFactory listener
+    private Disposable parent;
 
     private final MessageBusConnection connection;
 
@@ -30,9 +29,7 @@ public class IntelliJListener {
 
     private GeneralActivityListener activityListener;
 
-    /**
-     * Constructor.
-     */
+    /** Constructor. */
     public IntelliJListener(EventManager eventManager, String projectName) {
         this.eventManager = eventManager;
         this.projectName = projectName;
@@ -67,7 +64,9 @@ public class IntelliJListener {
     public void removeListeners() {
         connection.disconnect();
         activityListener.removeListeners();
-        parent.dispose(); // disposing this parent should remove EditorFactory listener
-        EditorFactory.getInstance().removeEditorFactoryListener(editorWindowListener); //deprecated, but removes listener immediately
+        // Disposing this parent should remove EditorFactory listener (with a delay)
+        parent.dispose();
+        // Deprecated, but removes listener (immediately)
+        EditorFactory.getInstance().removeEditorFactoryListener(editorWindowListener);
     }
 }

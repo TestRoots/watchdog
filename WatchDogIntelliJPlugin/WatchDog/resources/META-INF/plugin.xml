@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>nl.tudelft.watchdog</id>
     <name>WatchDog</name>
-    <version>1.5.0</version>
+    <version>1.5.0.1</version>
     <vendor email="igor.levaja@testroots.org" url="http://www.testroots.org">TestRoots, TU Delft</vendor>
 
     <description><![CDATA[
@@ -14,10 +14,17 @@
     ]]></description>
 
     <change-notes><![CDATA[
+
+      1.5.1<br>
+      Maintenance release:<br>
+      - Added support for multiple projects opened at the same time;<br>
+      - Handling unsuccessful registrations. <br><br>
+
       1.5.0<br>
       Maintenance release:<br>
       - Refactored back-end architecture;<br>
-      - Version is now synchronized across platforms.<br><br>
+      - Version is now synchronized across platforms;<br>
+      - Small bug fixes. <br><br>
 
       0.9.1<br>
       Few minor issues fixed:<br>

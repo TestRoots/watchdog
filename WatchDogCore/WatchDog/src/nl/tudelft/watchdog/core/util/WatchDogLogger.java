@@ -47,8 +47,7 @@ public class WatchDogLogger {
 		try {
 			logDirectory.mkdirs();
 
-			FileHandler fileHandler = new FileHandler(
-					"watchdog/logs/watchdoglog.log", true);
+			FileHandler fileHandler = new FileHandler(WatchDogGlobals.getLogDirectory() + "watchdoglog.log", true);
 			fileHandler.setFormatter(new SimpleFormatter());
 			addHandlerAndSetLevel(fileHandler, Level.ALL);
 		} catch (SecurityException e) {

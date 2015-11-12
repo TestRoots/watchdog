@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.intellij.logic.interval;
+package nl.tudelft.watchdog.core.logic.interval;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +8,9 @@ import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
 import nl.tudelft.watchdog.core.logic.ui.RegularCheckerBase;
-import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
+import nl.tudelft.watchdog.core.ui.preferences.PreferencesBase;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
-import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
 /**
  * This manager takes care of the repeated transferal of all closed intervals to
@@ -20,7 +19,7 @@ import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
  * immediate execution of this regularly scheduled task, e.g. when it is needed
  * on exiting.
  */
-public class IntervalTransferManager extends RegularCheckerBase {
+public class IntervalTransferManagerBase extends RegularCheckerBase {
 
 	private static final int UPDATE_RATE = 3 * 60 * 1000;
 
@@ -29,9 +28,9 @@ public class IntervalTransferManager extends RegularCheckerBase {
 	 * sets up a scheduled timer to run every {@value #UPDATE_RATE}
 	 * milliseconds.
 	 */
-	public IntervalTransferManager(final IntervalPersister intervalPersister) {
+	public IntervalTransferManagerBase(final IntervalPersisterBase intervalPersisterBase, String projectName) {
 		super(UPDATE_RATE);
-		task = new IntervalsTransferTimerTask(intervalPersister);
+		task = new IntervalsTransferTimerTask(intervalPersisterBase, projectName);
 		runSetupAndStartTimeChecker();
 	}
 
@@ -40,13 +39,17 @@ public class IntervalTransferManager extends RegularCheckerBase {
 		task.run();
 	}
 
-	private static class IntervalsTransferTimerTask extends TimerTask {
-		private final IntervalPersister intervalPersister;
-		private final Preferences preferences;
+    protected static void executeCommand() {}
 
-		private IntervalsTransferTimerTask(IntervalPersister intervalPersister) {
-			this.intervalPersister = intervalPersister;
-			this.preferences = Preferences.getInstance();
+	private static class IntervalsTransferTimerTask extends TimerTask {
+		private final IntervalPersisterBase intervalPersister;
+		private final PreferencesBase preferences;
+        private final String projectName;
+
+		private IntervalsTransferTimerTask(IntervalPersisterBase intervalPersisterBase, String projectName) {
+			this.intervalPersister = intervalPersisterBase;
+			this.preferences = WatchDogGlobals.getPreferences();
+            this.projectName = projectName;
 		}
 
 		/**
@@ -55,9 +58,10 @@ public class IntervalTransferManager extends RegularCheckerBase {
 		 */
 		@Override
 		public void run() {
-            if(intervalPersister.isClosed()) {
+            if (intervalPersister.isClosed()) {
                 return;
             }
+
 			List<IntervalBase> intervalsToTransfer = new ArrayList<IntervalBase>(
 					intervalPersister.readIntervals());
 
@@ -67,13 +71,14 @@ public class IntervalTransferManager extends RegularCheckerBase {
 
 			transferIntervals(intervalsToTransfer);
 			resetDatabase();
+            executeCommand();
 		}
 
 		private void transferIntervals(List<IntervalBase> intervalsToTransfer) {
 			JsonTransferer intervalTransferer = new JsonTransferer();
 
-			Connection connection = intervalTransferer
-					.sendIntervals(intervalsToTransfer, WatchDogUtils.getProjectName());
+			Connection connection = intervalTransferer.sendIntervals(
+					intervalsToTransfer, projectName);
 			switch (connection) {
 			case SUCCESSFUL:
 				intervalPersister.removeIntervals(intervalsToTransfer);
@@ -83,7 +88,7 @@ public class IntervalTransferManager extends RegularCheckerBase {
 				break;
 
 			case NETWORK_ERROR:
-				if (WatchDogGlobals.lastTransactionFailed == true) {
+				if (WatchDogGlobals.lastTransactionFailed) {
 					// two transactions in a row failed. The user is likely
 					// working without internet, so do not try to re-send
 					// intervals

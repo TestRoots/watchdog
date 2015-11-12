@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
-import nl.tudelft.watchdog.eclipse.logic.interval.IntervalPersister;
+import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
@@ -23,7 +23,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(LexicographicalTestOrderRunner.class)
 public abstract class PersisterTestBase {
-	protected static IntervalPersister persister;
+	protected static IntervalPersisterBase persister;
 
 	private static File databaseDirectory;
 
@@ -45,7 +45,7 @@ public abstract class PersisterTestBase {
 		}
 		copiedDatabase = new File(copiedDirectory.getRoot(), databaseName
 				+ ".map");
-		persister = new IntervalPersister(copiedDatabase);
+		persister = new IntervalPersisterBase(copiedDatabase);
 	}
 
 	@AfterClass

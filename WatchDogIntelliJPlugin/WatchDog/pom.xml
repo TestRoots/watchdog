@@ -63,15 +63,6 @@
 			<systemPath>${project.basedir}/lib/jfreechart-1.0.19.jar</systemPath>
 		</dependency>
 
-
-		<dependency>
-			<groupId>org.mapdb</groupId>
-			<artifactId>mapdb</artifactId>
-			<version>1.0.7</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/mapdb-1.0.7.jar</systemPath>
-		</dependency>
-
 	</dependencies>
 
 	<build>

@@ -5,9 +5,9 @@ import java.util.HashMap;
 
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.extensions.PluginId;
+import nl.tudelft.watchdog.core.logic.interval.IntervalTransferManagerBase;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalPersister;
-import nl.tudelft.watchdog.intellij.logic.interval.IntervalTransferManager;
 import nl.tudelft.watchdog.intellij.logic.ui.EventManager;
 import nl.tudelft.watchdog.intellij.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.intellij.logic.ui.listeners.IntelliJListener;
@@ -22,7 +22,9 @@ public class InitializationManager {
 
     private static final int USER_ACTIVITY_TIMEOUT = 16000;
 
-    /** The singleton instance of the interval manager. */
+    /**
+     * The singleton instance of the interval manager.
+     */
     private static volatile HashMap<String, InitializationManager> instances = new HashMap<String, InitializationManager>();
 
     private final IntervalManager intervalManager;
@@ -31,14 +33,17 @@ public class InitializationManager {
 
     private final IntervalPersister intervalsStatisticsPersister;
 
-    private final IntervalTransferManager transferManager;
+    private final IntervalTransferManagerBase transferManager;
 
     private final EventManager eventManager;
 
     private final IntelliJListener intelliJListener;
 
-    /** Private constructor. */
+    /**
+     * Private constructor.
+     */
     private InitializationManager() {
+        // Double getPath() because they are different methods on different objects
         File baseFolder = new File(PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog")).getPath().getPath());
 
         File toTransferDatabaseFile = new File(baseFolder, WatchDogUtils.getProjectName() + "intervals.mapdb");
@@ -56,7 +61,7 @@ public class InitializationManager {
                 USER_ACTIVITY_TIMEOUT);
         new TimeSynchronityChecker(intervalManager, eventManager);
 
-        transferManager = new IntervalTransferManager(intervalsToTransferPersister);
+        transferManager = new IntervalTransferManagerBase(intervalsToTransferPersister, WatchDogUtils.getProjectName());
 
         intelliJListener = new IntelliJListener(eventManager, WatchDogUtils.getProjectName());
         intelliJListener.attachListeners();
@@ -74,12 +79,16 @@ public class InitializationManager {
         return instance;
     }
 
-    /** @return the intervalManager. */
+    /**
+     * @return the intervalManager.
+     */
     public IntervalManager getIntervalManager() {
         return intervalManager;
     }
 
-    /** @return the statistics interval persisters. */
+    /**
+     * @return the statistics interval persisters.
+     */
     public IntervalPersister getIntervalsStatisticsPersister() {
         return intervalsStatisticsPersister;
     }
@@ -100,7 +109,7 @@ public class InitializationManager {
         return eventManager;
     }
 
-    public IntervalTransferManager getTransferManager() {
+    public IntervalTransferManagerBase getTransferManager() {
         return transferManager;
     }
 }

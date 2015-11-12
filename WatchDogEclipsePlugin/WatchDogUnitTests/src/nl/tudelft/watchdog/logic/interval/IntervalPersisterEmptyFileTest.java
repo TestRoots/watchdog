@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
-import nl.tudelft.watchdog.eclipse.logic.interval.IntervalPersister;
+import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -31,7 +31,7 @@ public class IntervalPersisterEmptyFileTest extends PersisterTestBase {
 		writer.println("");
 		writer.close();
 
-		persister = new IntervalPersister(copiedDatabase);
+		persister = new IntervalPersisterBase(copiedDatabase);
 	}
 
 	@Test

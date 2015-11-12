@@ -12,6 +12,7 @@ public class IntelliJActivationListener extends ApplicationActivationListener.Ad
     public IntelliJActivationListener(EventManager eventManager) {
         this.eventManager = eventManager;
     }
+
     @Override
     public void applicationActivated(IdeFrame ideFrame) {
         eventManager.update(new WatchDogEvent(ideFrame, WatchDogEvent.EventType.ACTIVE_WINDOW));
