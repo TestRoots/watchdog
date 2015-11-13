@@ -2,16 +2,17 @@ package nl.tudelft.watchdog.eclipse.logic;
 
 import java.io.File;
 
+import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.Activator;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.eclipse.logic.interval.IntervalPersister;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalTransferManager;
 import nl.tudelft.watchdog.eclipse.logic.network.ClientVersionChecker;
 import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
 import nl.tudelft.watchdog.eclipse.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.eclipse.logic.ui.listeners.WorkbenchListener;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
+import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /**
  * Manages the setup process of the interval recording infrastructure. Is a
@@ -27,24 +28,25 @@ public class InitializationManager {
 
 	private final IntervalManager intervalManager;
 
-	private final IntervalPersister intervalsToTransferPersister;
+	private final IntervalPersisterBase intervalsToTransferPersister;
 
-	private final IntervalPersister intervalsStatisticsPersister;
+	private final IntervalPersisterBase intervalsStatisticsPersister;
 
 	private EventManager eventManager;
 
 	/** Private constructor. */
 	private InitializationManager() {
-		WatchDogGlobals.setLogDirectory("watchdog/logs/");
+		WatchDogGlobals.setLogDirectory("watchdog" + File.separator + "logs"
+				+ File.separator);
 		WatchDogGlobals.setPreferences(Preferences.getInstance());
 		File baseFolder = Activator.getDefault().getStateLocation().toFile();
 		File toTransferDatabaseFile = new File(baseFolder, "intervals.mapdb");
 		File statisticsDatabaseFile = new File(baseFolder,
 				"intervalsStatistics.mapdb");
 
-		intervalsToTransferPersister = new IntervalPersister(
+		intervalsToTransferPersister = new IntervalPersisterBase(
 				toTransferDatabaseFile);
-		intervalsStatisticsPersister = new IntervalPersister(
+		intervalsStatisticsPersister = new IntervalPersisterBase(
 				statisticsDatabaseFile);
 
 		new ClientVersionChecker();
@@ -55,7 +57,8 @@ public class InitializationManager {
 
 		WorkbenchListener workbenchListener = new WorkbenchListener(
 				eventManager, new IntervalTransferManager(
-						intervalsToTransferPersister));
+						intervalsToTransferPersister,
+						WatchDogUtils.getWorkspaceName()));
 		workbenchListener.attachListeners();
 	}
 
@@ -76,7 +79,7 @@ public class InitializationManager {
 	}
 
 	/** @return the statistics interval persisters. */
-	public IntervalPersister getIntervalsStatisticsPersister() {
+	public IntervalPersisterBase getIntervalsStatisticsPersister() {
 		return intervalsStatisticsPersister;
 	}
 

@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 import nl.tudelft.watchdog.intellij.logic.ui.EventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -17,14 +18,14 @@ public class GeneralActivityListener {
     private AWTEventListener keyboardActivityListener;
 
 
-    /**
-     * Constructor.
-     */
-    public GeneralActivityListener(final EventManager eventManager) {
-        // Mouse Events
+    /** Constructor. */
+    public GeneralActivityListener(final EventManager eventManager, final String projectName) {
         mouseActivityListener = new AWTEventListener() {
             @Override
             public void eventDispatched(AWTEvent event) {
+                if (!WatchDogUtils.getProjectName().equals(projectName)) {
+                    return;
+                }
                 eventManager.update(new WatchDogEvent(event, EventType.USER_ACTIVITY));
             }
         };
@@ -34,18 +35,20 @@ public class GeneralActivityListener {
         keyboardActivityListener = new AWTEventListener() {
             @Override
             public void eventDispatched(AWTEvent event) {
-                if (((KeyEvent) event).getKeyCode() == KeyEvent.VK_RIGHT ||
-                        ((KeyEvent) event).getKeyCode() == KeyEvent.VK_UP ||
-                        ((KeyEvent) event).getKeyCode() == KeyEvent.VK_DOWN ||
-                        ((KeyEvent) event).getKeyCode() == KeyEvent.VK_LEFT ||
-                        ((KeyEvent) event).getKeyCode() == KeyEvent.VK_PAGE_DOWN ||
-                        ((KeyEvent) event).getKeyCode() == KeyEvent.VK_PAGE_UP
-                        ) {
-                    eventManager.update(new WatchDogEvent(event, EventType.USER_ACTIVITY));
+                if (!WatchDogUtils.getProjectName().equals(projectName)) {
+                    return;
+                }
+                switch (((KeyEvent) event).getKeyCode()) {
+                    case KeyEvent.VK_RIGHT:
+                    case KeyEvent.VK_UP:
+                    case KeyEvent.VK_DOWN:
+                    case KeyEvent.VK_LEFT:
+                    case KeyEvent.VK_PAGE_DOWN:
+                    case KeyEvent.VK_PAGE_UP:
+                        eventManager.update(new WatchDogEvent(event, EventType.USER_ACTIVITY));
                 }
             }
         };
-        // Keyboard Events
         Toolkit.getDefaultToolkit().addAWTEventListener(keyboardActivityListener, AWTEvent.KEY_EVENT_MASK);
     }
 

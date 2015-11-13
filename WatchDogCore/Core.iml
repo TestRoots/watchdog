@@ -72,7 +72,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/WatchDog/lib/gson-2.2.4.jar!/" />
@@ -85,6 +85,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/WatchDog/lib/java-util-1.9.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WatchDog/lib/mapdb-1.0.5.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -12,6 +12,7 @@ public class IntelliJActivationListener implements ApplicationActivationListener
     public IntelliJActivationListener(EventManager eventManager) {
         this.eventManager = eventManager;
     }
+
     @Override
     public void applicationActivated(IdeFrame ideFrame) {
         eventManager.update(new WatchDogEvent(ideFrame, WatchDogEvent.EventType.ACTIVE_WINDOW));
@@ -20,5 +21,10 @@ public class IntelliJActivationListener implements ApplicationActivationListener
     @Override
     public void applicationDeactivated(IdeFrame ideFrame) {
         eventManager.update(new WatchDogEvent(ideFrame, WatchDogEvent.EventType.INACTIVE_WINDOW));
+    }
+
+    @Override
+    public void delayedApplicationDeactivated(IdeFrame ideFrame) {
+        // Intentionally left empty.
     }
 }

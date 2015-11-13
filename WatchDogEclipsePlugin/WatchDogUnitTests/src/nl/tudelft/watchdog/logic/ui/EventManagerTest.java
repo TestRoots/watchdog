@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.logic.ui;
 import java.util.Date;
 
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.eclipse.logic.interval.IntervalPersister;
+import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
 import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
@@ -59,8 +59,8 @@ public class EventManagerTest {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		IntervalManager intervalManagerReal = new IntervalManager(
-				Mockito.mock(IntervalPersister.class),
-				Mockito.mock(IntervalPersister.class));
+				Mockito.mock(IntervalPersisterBase.class),
+				Mockito.mock(IntervalPersisterBase.class));
 		intervalManager = Mockito.spy(intervalManagerReal);
 		mockedTextEditor = Mockito.mock(ITextEditor.class);
 		eventManager = new EventManager(intervalManager, USER_ACTIVITY_TIMEOUT);

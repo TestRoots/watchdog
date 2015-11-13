@@ -9,6 +9,7 @@ import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
 import nl.tudelft.watchdog.core.ui.wizards.Project;
 import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -77,7 +78,7 @@ public class JsonTransferer {
 	public String registerNewProject(Project project)
 			throws ServerCommunicationException {
 		return registerNew(NetworkUtils.buildNewProjectURL(),
-				gson.toJson(project));
+				WatchDogUtilsBase.convertToJson(project));
 	}
 
 	/**
@@ -85,7 +86,6 @@ public class JsonTransferer {
 	 * the server.
 	 * 
 	 * @throws ServerCommunicationException
-	 * @throws
 	 */
 	public String registerNew(String postURL, String json)
 			throws ServerCommunicationException {

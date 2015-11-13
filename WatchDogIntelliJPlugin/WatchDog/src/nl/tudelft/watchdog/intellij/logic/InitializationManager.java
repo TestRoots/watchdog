@@ -1,16 +1,17 @@
 package nl.tudelft.watchdog.intellij.logic;
 
 import java.io.File;
+import java.util.HashMap;
 
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.extensions.PluginId;
-import nl.tudelft.watchdog.intellij.WatchDog;
+import nl.tudelft.watchdog.core.logic.interval.IntervalTransferManagerBase;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalPersister;
-import nl.tudelft.watchdog.intellij.logic.interval.IntervalTransferManager;
 import nl.tudelft.watchdog.intellij.logic.ui.EventManager;
 import nl.tudelft.watchdog.intellij.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.intellij.logic.ui.listeners.IntelliJListener;
+import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
 /**
  * Manages the setup process of the interval recording infrastructure. Is a
@@ -21,8 +22,10 @@ public class InitializationManager {
 
     private static final int USER_ACTIVITY_TIMEOUT = 16000;
 
-    /** The singleton instance of the interval manager. */
-    private static volatile InitializationManager instance = null;
+    /**
+     * The singleton instance of the interval manager.
+     */
+    private static volatile HashMap<String, InitializationManager> instances = new HashMap<String, InitializationManager>();
 
     private final IntervalManager intervalManager;
 
@@ -30,18 +33,21 @@ public class InitializationManager {
 
     private final IntervalPersister intervalsStatisticsPersister;
 
-    private final IntervalTransferManager transferManager;
+    private final IntervalTransferManagerBase transferManager;
 
     private final EventManager eventManager;
 
     private final IntelliJListener intelliJListener;
 
-    /** Private constructor. */
+    /**
+     * Private constructor.
+     */
     private InitializationManager() {
+        // Double getPath() because they are different methods on different objects
         File baseFolder = new File(PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog")).getPath().getPath());
 
-        File toTransferDatabaseFile = new File(baseFolder, WatchDog.project.getName() + "intervals.mapdb");
-        File statisticsDatabaseFile = new File(baseFolder, WatchDog.project.getName() + "intervalsStatistics.mapdb");
+        File toTransferDatabaseFile = new File(baseFolder, WatchDogUtils.getProjectName() + "intervals.mapdb");
+        File statisticsDatabaseFile = new File(baseFolder, WatchDogUtils.getProjectName() + "intervalsStatistics.mapdb");
 
         intervalsToTransferPersister = new IntervalPersister(
                 toTransferDatabaseFile);
@@ -55,30 +61,34 @@ public class InitializationManager {
                 USER_ACTIVITY_TIMEOUT);
         new TimeSynchronityChecker(intervalManager, eventManager);
 
-        transferManager = new IntervalTransferManager(intervalsToTransferPersister);
+        transferManager = new IntervalTransferManagerBase(intervalsToTransferPersister, WatchDogUtils.getProjectName());
 
-        intelliJListener = new IntelliJListener(eventManager);
+        intelliJListener = new IntelliJListener(eventManager, WatchDogUtils.getProjectName());
         intelliJListener.attachListeners();
-
     }
 
     /**
      * Returns the existing or creates and returns a new
      * {@link InitializationManager} instance.
      */
-    public static InitializationManager getInstance() {
+    public static InitializationManager getInstance(String projectName) {
+        InitializationManager instance = instances.get(projectName);
         if (instance == null) {
-            instance = new InitializationManager();
+            instances.put(projectName, new InitializationManager());
         }
         return instance;
     }
 
-    /** @return the intervalManager. */
+    /**
+     * @return the intervalManager.
+     */
     public IntervalManager getIntervalManager() {
         return intervalManager;
     }
 
-    /** @return the statistics interval persisters. */
+    /**
+     * @return the statistics interval persisters.
+     */
     public IntervalPersister getIntervalsStatisticsPersister() {
         return intervalsStatisticsPersister;
     }
@@ -87,10 +97,11 @@ public class InitializationManager {
      * Closes the database. The database can recover even if it is not closed
      * properly, but it is good practice to close it anyway.
      */
-    public void shutdown() {
+    public void shutdown(String projectName) {
         intervalsToTransferPersister.closeDatabase();
         intervalsStatisticsPersister.closeDatabase();
         intelliJListener.removeListeners();
+        instances.remove(projectName);
     }
 
 
@@ -98,7 +109,7 @@ public class InitializationManager {
         return eventManager;
     }
 
-    public IntervalTransferManager getTransferManager() {
+    public IntervalTransferManagerBase getTransferManager() {
         return transferManager;
     }
 }

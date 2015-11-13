@@ -64,7 +64,7 @@ public class ProjectCreatedEndingStep extends RegistrationEndingStepBase {
         } catch (ServerCommunicationException exception) {
             successfulRegistration = false;
             messageTitle = "Problem creating new project!";
-            messageBody = "<html>" + exception.getMessage();
+            messageBody = "<html>" + exception.getMessage().replace(". ", ". <br>");
             messageBody += "<br>Are you connected to the internet, and is port 80 open?";
             messageBody += "<br>Please contact us via www.testroots.org. <br>We'll troubleshoot the issue!";
             WatchDogLogger.getInstance().logSevere(exception);

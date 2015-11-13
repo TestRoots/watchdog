@@ -15,23 +15,24 @@ import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
  * listeners.
  */
 public class IntelliJListener {
-    /**
-     * The editorObservable.
-     */
+    /**The editorObservable */
     private EventManager eventManager;
 
-    private Disposable parent; //dummy disposable, needed for EditorFactory listener
+    private String projectName;
+
+    // Dummy disposable, needed for EditorFactory listener
+    private Disposable parent;
 
     private final MessageBusConnection connection;
 
     private EditorWindowListener editorWindowListener;
+
     private GeneralActivityListener activityListener;
 
-    /**
-     * Constructor.
-     */
-    public IntelliJListener(EventManager userActionManager) {
-        this.eventManager = userActionManager;
+    /** Constructor. */
+    public IntelliJListener(EventManager eventManager, String projectName) {
+        this.eventManager = eventManager;
+        this.projectName = projectName;
 
         parent = new Disposable() {
             @Override
@@ -40,7 +41,7 @@ public class IntelliJListener {
             }
         };
 
-        editorWindowListener = new EditorWindowListener(eventManager);
+        editorWindowListener = new EditorWindowListener(eventManager, projectName);
 
         final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
         connection = messageBus.connect();
@@ -55,16 +56,17 @@ public class IntelliJListener {
 
         connection.subscribe(ApplicationActivationListener.TOPIC,
                 new IntelliJActivationListener(eventManager));
-        activityListener = new GeneralActivityListener(eventManager);
+        activityListener = new GeneralActivityListener(eventManager, projectName);
 
         EditorFactory.getInstance().addEditorFactoryListener(editorWindowListener, parent);
     }
 
     public void removeListeners() {
-
         connection.disconnect();
         activityListener.removeListeners();
-        parent.dispose(); // disposing this parent should remove EditorFactory listener
-        EditorFactory.getInstance().removeEditorFactoryListener(editorWindowListener); //deprecated, but removes listener immediately
+        // Disposing this parent should remove EditorFactory listener (with a delay)
+        parent.dispose();
+        // Deprecated, but removes listener (immediately)
+        EditorFactory.getInstance().removeEditorFactoryListener(editorWindowListener);
     }
 }

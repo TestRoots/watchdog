@@ -15,12 +15,19 @@ public class EditorWindowListener implements EditorFactoryListener {
 
     private Map<Editor, EditorListener> editorListenerMap = new HashMap<Editor, EditorListener>();
 
-    public EditorWindowListener (EventManager eventManager) {
+    private String myProjectName;
+
+    public EditorWindowListener (EventManager eventManager, String projectName) {
         this.eventManager = eventManager;
+        myProjectName = projectName;
     }
 
     @Override
     public void editorCreated(EditorFactoryEvent editorFactoryEvent) {
+        if(!editorBelongsToThisProject(editorFactoryEvent)) {
+            return;
+        }
+
         Editor editor = editorFactoryEvent.getEditor();
         focusListener = new EditorFocusListener(eventManager, editor);
         editor.getContentComponent().addFocusListener(focusListener);
@@ -29,8 +36,16 @@ public class EditorWindowListener implements EditorFactoryListener {
 
     @Override
     public void editorReleased(EditorFactoryEvent editorFactoryEvent) {
+        if(!editorBelongsToThisProject(editorFactoryEvent)) {
+            return;
+        }
+
         Editor editor = editorFactoryEvent.getEditor();
         editor.getContentComponent().removeFocusListener(focusListener);
         editorListenerMap.remove(editor).removeListeners();
+    }
+
+    private boolean editorBelongsToThisProject(EditorFactoryEvent editorFactoryEvent) {
+        return editorFactoryEvent.getEditor().getProject().getName().equals(myProjectName);
     }
 }
