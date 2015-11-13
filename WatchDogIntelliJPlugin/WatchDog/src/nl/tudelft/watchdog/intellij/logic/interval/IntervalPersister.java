@@ -1,7 +1,7 @@
 package nl.tudelft.watchdog.intellij.logic.interval;
 
 import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
-import nl.tudelft.watchdog.intellij.WatchDog;
+import nl.tudelft.watchdog.intellij.WatchDogStartUp;
 
 import java.io.File;
 
@@ -21,7 +21,7 @@ public class IntervalPersister extends IntervalPersisterBase {
 
     protected void replaceClassLoader() {
         oldClassLoader = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(WatchDog.class.getClassLoader());
+        Thread.currentThread().setContextClassLoader(WatchDogStartUp.class.getClassLoader());
     }
 
     protected void resetOldClassLoader() {

@@ -39,7 +39,7 @@ public class IntervalTransferManagerBase extends RegularCheckerBase {
 		task.run();
 	}
 
-    protected static void executeCommand() {}
+    protected static void refreshUI() {}
 
 	private static class IntervalsTransferTimerTask extends TimerTask {
 		private final IntervalPersisterBase intervalPersister;
@@ -71,7 +71,7 @@ public class IntervalTransferManagerBase extends RegularCheckerBase {
 
 			transferIntervals(intervalsToTransfer);
 			resetDatabase();
-            executeCommand();
+			refreshUI();
 		}
 
 		private void transferIntervals(List<IntervalBase> intervalsToTransfer) {

@@ -5,7 +5,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import nl.tudelft.watchdog.intellij.logic.ui.EventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 
-public class IntelliJActivationListener extends ApplicationActivationListener.Adapter {
+public class IntelliJActivationListener implements ApplicationActivationListener {
 
     private final EventManager eventManager;
 
@@ -21,5 +21,10 @@ public class IntelliJActivationListener extends ApplicationActivationListener.Ad
     @Override
     public void applicationDeactivated(IdeFrame ideFrame) {
         eventManager.update(new WatchDogEvent(ideFrame, WatchDogEvent.EventType.INACTIVE_WINDOW));
+    }
+
+    @Override
+    public void delayedApplicationDeactivated(IdeFrame ideFrame) {
+        // Intentionally left empty.
     }
 }

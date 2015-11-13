@@ -89,5 +89,14 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: p2.eclipse-plugin:nl.tudelft.WatchDogCore:lib/mapdb-1.0.5.jar:1.5.0">
+        <CLASSES>
+          <root url="jar://$MAVEN_REPOSITORY$/.cache/tycho/nl.tudelft.WatchDogCore-1.5.0.jar/lib/mapdb-1.0.5.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

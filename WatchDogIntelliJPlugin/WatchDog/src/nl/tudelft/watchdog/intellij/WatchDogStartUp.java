@@ -29,7 +29,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.io.File;
 
-public class WatchDog implements ProjectComponent {
+public class WatchDogStartUp implements ProjectComponent {
 
     /**
      * Current Project.
@@ -49,7 +49,7 @@ public class WatchDog implements ProjectComponent {
     private WindowFocusListener windowFocusListener;
 
 
-    public WatchDog(Project project) {
+    public WatchDogStartUp(Project project) {
         this.project = project;
     }
 

@@ -34,8 +34,7 @@ public class JUnitListener extends TestStatusListener {
         for (Project openedProject : openProjects) {
             // Location is a part of IntelliJ API which is used in their representation of VirtualFileSystem.
             // In this call, we ask for a location of current test within each of the opened projects.
-            // The location variable will not be null only for one project, to which the test belongs.
-            // This project is returned..
+            // The location is different from null for exactly the one project it belongs to.
             Location location = test.getLocation(openedProject, GlobalSearchScope.allScope(openedProject));
 
             if (location != null) {
