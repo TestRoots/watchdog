@@ -38,9 +38,7 @@ public class GeneralActivityListener {
                 if (!WatchDogUtils.getProjectName().equals(projectName)) {
                     return;
                 }
-
-                KeyEvent keyEvent = (KeyEvent) event;
-                switch (keyEvent.getKeyCode()) {
+                switch (((KeyEvent) event).getKeyCode()) {
                     case KeyEvent.VK_RIGHT:
                     case KeyEvent.VK_UP:
                     case KeyEvent.VK_DOWN:

@@ -143,50 +143,26 @@ public class WatchDog implements ProjectComponent {
                 userId = new JsonTransferer().registerNewUser(user);
             } catch (ServerCommunicationException exception) {
                 WatchDogLogger.getInstance().logSevere(exception);
-                int i = 10;
-                while (i-- > 0 && WatchDogUtils.isEmptyOrHasOnlyWhitespaces(userId)) {
-                    try { //again
-                        try {
-                            Thread.sleep((int) (Math.random() * 1000));
-                        } catch (InterruptedException e) {
-                        }
-                        userId = new JsonTransferer().registerNewUser(user);
-                    } catch (ServerCommunicationException exception2) {
-                    }
-                }
             }
+
             if (WatchDogUtils.isEmptyOrHasOnlyWhitespaces(userId)) {
                 return;
             }
+
             preferences.setUserid(userId);
             preferences.registerProjectId(WatchDogUtils.getProjectName(), "");
-        }
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
 
         try {
             projectId = new JsonTransferer().registerNewProject(new nl.tudelft.watchdog.core.ui.wizards.Project(userId));
         } catch (ServerCommunicationException exception) {
             WatchDogLogger.getInstance().logSevere(exception);
-            int i = 10;
-            while (i-- > 0 && WatchDogUtils.isEmptyOrHasOnlyWhitespaces(projectId)) {
-                try { //again
-                    try {
-                        Thread.sleep((int) (Math.random() * 1000));
-                    } catch (InterruptedException e) {
-                    }
-                    projectId = new JsonTransferer().registerNewProject(new nl.tudelft.watchdog.core.ui.wizards.Project(userId));
-                } catch (ServerCommunicationException exception2) {
-                }
-            }
         }
+
         if (WatchDogUtils.isEmptyOrHasOnlyWhitespaces(projectId)) {
             return;
         }
+
         preferences.registerProjectId(WatchDogUtils.getProjectName(), projectId);
         preferences.registerProjectUse(WatchDogUtils.getProjectName(), true);
     }

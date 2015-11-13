@@ -6,15 +6,14 @@ import nl.tudelft.watchdog.intellij.WatchDog;
 import java.io.File;
 
 /**
- * IntelliJ's version of IntervalPersister which handles ClassLoaders.
+ * {@inheritDoc} IntelliJ's version of IntervalPersister which handles ClassLoaders.
  */
 public class IntervalPersister extends IntervalPersisterBase {
 
     private ClassLoader oldClassLoader = null;
 
     /**
-     * Create a new interval persister. If file points to an existing database
-     * of intervals, it will be reused.
+     * {@inheritDoc}
      */
     public IntervalPersister(final File file) {
         super(file);
