@@ -8,7 +8,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>WatchDog</module>
-		<module>WatchDogFeature</module>
+		<module>WatchDogCoreFeature</module>
 	</modules>
 
 	<properties>
