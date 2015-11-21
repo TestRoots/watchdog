@@ -88,7 +88,6 @@ public class StartupUIThread implements Runnable {
 
 	private void makeSilentRegistration() {
 		String userId = "";
-		String projectId = "";
 		if (preferences.getUserid() == null
 				|| preferences.getUserid().isEmpty()) {
 			User user = new User();
@@ -108,6 +107,11 @@ public class StartupUIThread implements Runnable {
 		}
 		savePreferenceStoreIfNeeded();
 
+		registerAnonymousProject(preferences.getUserid());
+	}
+
+	private void registerAnonymousProject(String userId) {
+		String projectId = "";
 		try {
 			projectId = new JsonTransferer()
 					.registerNewProject(new nl.tudelft.watchdog.core.ui.wizards.Project(
@@ -157,7 +161,11 @@ public class StartupUIThread implements Runnable {
 	private void displayProjectWizard() {
 		ProjectRegistrationWizardDialogHandler newProjectWizardHandler = new ProjectRegistrationWizardDialogHandler();
 		try {
-			newProjectWizardHandler.execute(new ExecutionEvent());
+			int statusCode = (int) newProjectWizardHandler
+					.execute(new ExecutionEvent());
+			if (statusCode == Window.CANCEL) {
+				registerAnonymousProject(preferences.getUserid());
+			}
 		} catch (ExecutionException exception) {
 			// when the new project wizard cannot be displayed, new
 			// users cannot register with WatchDog.
