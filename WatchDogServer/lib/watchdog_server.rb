@@ -44,6 +44,8 @@ class WatchDogServer < Sinatra::Base
   Rack::Utils.key_space_limit = 4914304
   logger.info("key_space_limit=#{Rack::Utils.key_space_limit}")
 
+  Geocoder.configure(:timeout => 3, :lookup => :google)
+
   get '/' do
     'Woof Woof'
   end
@@ -181,10 +183,18 @@ class WatchDogServer < Sinatra::Base
     end
 
     ivals.each do |i|
-      i['userId'] = user_id
-      i['projectId'] = project_id
-      add_ip_timestamp(i, request)
-      intervals.save(i)
+      begin
+        i['userId'] = user_id
+        i['projectId'] = project_id
+        add_ip_timestamp(i, request)
+        intervals.save(i)
+      rescue IndexError => e
+        log.error "IndexError occurred. Interval: #{i}"
+        log.error e.backtrace
+      rescue StandardError => e
+        log.error "Unexpected error: #{e.message}"
+        log.error e.backtrace
+      end
     end
 
     status 201

@@ -3,7 +3,7 @@ env = ENV['RACK_ENV'] || 'production'
 # 6 workers in production, 1 for development
 worker_processes (env == 'production' ? 6 : 1)
 
-timeout 15
+timeout 4 
 
 stderr_path "watchdog.err.log"
 stdout_path "watchdog.out.log"
