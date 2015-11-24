@@ -52,7 +52,7 @@ public class ProjectSliderStep extends WizardStep {
         percentageProductionSlider = new JSlider(JSlider.HORIZONTAL);
         percentageProductionSlider.setValue(50);
         percentageProductionSlider.setMinorTickSpacing(5);
-        percentageProductionSlider.setSnapToTicks(true);
+        percentageProductionSlider.setSnapToTicks(false);
         percentageProductionSlider.setMaximum(100);
         percentageProductionSlider.setMinimum(0);
         percentageProductionSlider.setSize(questionPanel.getPreferredSize());
@@ -70,9 +70,6 @@ public class ProjectSliderStep extends WizardStep {
             public void stateChanged(ChangeEvent e) {
                 int developmentTimeValue = percentageProductionSlider
                         .getValue();
-                if(developmentTimeValue % 5 != 0) {
-                    return;
-                }
 
                 int testingTimeValue = 100 - developmentTimeValue;
                 sliderValueText.setText(testingTimeValue
