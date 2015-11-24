@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../../WatchDogCore/Core.iml" filepath="$PROJECT_DIR$/../../WatchDogCore/Core.iml" />
       <module fileurl="file://$PROJECT_DIR$/WatchDog.iml" filepath="$PROJECT_DIR$/WatchDog.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../WatchDogCore/WatchDogFeature/WatchDogCore.iml" filepath="$PROJECT_DIR$/../../WatchDogCore/WatchDogFeature/WatchDogCore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../WatchDogCore/WatchDogCoreFeature/WatchDogCoreFeature.iml" filepath="$PROJECT_DIR$/../../WatchDogCore/WatchDogCoreFeature/WatchDogCoreFeature.iml" />
     </modules>
   </component>
 </project>

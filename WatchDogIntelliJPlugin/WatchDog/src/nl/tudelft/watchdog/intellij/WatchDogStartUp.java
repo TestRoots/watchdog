@@ -126,17 +126,16 @@ public class WatchDogStartUp implements ProjectComponent {
                 makeSilentRegistration();
             } else {
                 userProjectRegistrationCancelled = true;
-                preferences.registerProjectUse(
-                        project.getName(), false);
+                preferences.registerProjectUse(project.getName(), false);
             }
         }
     }
 
     private void makeSilentRegistration() {
         String userId = "";
-        String projectId = "";
         Preferences preferences = Preferences.getInstance();
         if (preferences.getUserid() == null || preferences.getUserid().isEmpty()) {
+
             User user = new User();
             user.programmingExperience = "NA";
             try {
@@ -153,6 +152,12 @@ public class WatchDogStartUp implements ProjectComponent {
             preferences.registerProjectId(WatchDogUtils.getProjectName(), "");
         }
 
+        registerAnonymousProject(preferences.getUserid());
+    }
+
+    private void registerAnonymousProject(String userId) {
+        String projectId = "";
+        Preferences preferences = Preferences.getInstance();
         try {
             projectId = new JsonTransferer().registerNewProject(new nl.tudelft.watchdog.core.ui.wizards.Project(userId));
         } catch (ServerCommunicationException exception) {
@@ -180,7 +185,12 @@ public class WatchDogStartUp implements ProjectComponent {
         ProjectPreferenceSetting setting = WatchDogGlobals.getPreferences()
                 .getOrCreateProjectSetting(project.getName());
         if (setting.enableWatchdog && WatchDogUtils.isEmpty(setting.projectId)) {
-            new ProjectRegistrationWizard("Project Registration", project).show();
+            ProjectRegistrationWizard wizard =  new ProjectRegistrationWizard("Project Registration", project);
+            wizard.setCrossClosesWindow(false);
+            wizard.show();
+            if (wizard.getExitCode() == DialogWrapper.CANCEL_EXIT_CODE) {
+                registerAnonymousProject(WatchDogGlobals.getPreferences().getUserid());
+            }
         }
     }
 
