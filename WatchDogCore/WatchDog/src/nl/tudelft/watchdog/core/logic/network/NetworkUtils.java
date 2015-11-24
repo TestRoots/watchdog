@@ -149,7 +149,7 @@ public class NetworkUtils {
 		} catch (IOException e) {
 			// server unreachable case
 			errorMessage = "Failed to commuincate with our server. "
-					+ e.getMessage();
+					+ e.getMessage() + e;
 		} catch (IllegalStateException e) {
 			// URL wrongly formatted (target host is null)
 			errorMessage = "URL wrongly formatted. " + e.getMessage();

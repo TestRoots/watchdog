@@ -108,9 +108,7 @@ public abstract class WizardStep implements Step {
 
     protected void setErrorMessage(String errorMessage) {
         getWizard().updateButtons();
-        //TODO Add error message to the panel
     }
-
 
 	/**
 	 * Validates the form inputs, and sets the error message for the wizard if

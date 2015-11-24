@@ -73,7 +73,7 @@ public class ProjectCreatedEndingStep extends RegistrationEndingStepBase {
 
         successfulRegistration = true;
 
-        (getWizard()).setProjectId(id);
+        getWizard().setProjectId(id);
 
         messageTitle = "New project registered!";
         messageBody = "Your new project id is registered: ";
@@ -96,9 +96,9 @@ public class ProjectCreatedEndingStep extends RegistrationEndingStepBase {
         if (successfulRegistration) {
             WizardStep.createSuccessMessage(parent, messageTitle, messageBody, id);
             UIUtils.createLabel(parent, concludingMessage);
+            getWizard().getCancelButton().setEnabled(false);
         } else {
             WizardStep.createFailureMessage(parent, messageTitle, messageBody);
-            setComplete(false);
         }
     }
 
