@@ -133,7 +133,7 @@ public class Preferences implements PreferencesBase {
 	}
 
 	/** @return The userid. */
-	public String getUserid() {
+	public String getUserId() {
 		return store.getString(USERID_KEY);
 	}
 

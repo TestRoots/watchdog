@@ -137,7 +137,7 @@ public class InfoDialog extends Dialog {
 		UIUtils.createLabel("User ID: ", container);
 		Connection userConnection = NetworkUtils
 				.urlExistsAndReturnsStatus200(NetworkUtils
-						.buildExistingUserURL(preferences.getUserid()));
+						.buildExistingUserURL(preferences.getUserId()));
 		reactOnConnectionStatus(container, userConnection,
 				new UserButtonListener());
 

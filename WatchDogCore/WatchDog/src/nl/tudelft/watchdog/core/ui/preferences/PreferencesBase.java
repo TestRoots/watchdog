@@ -7,7 +7,7 @@ public interface  PreferencesBase {
 
     boolean isAuthenticationEnabled();
 
-    String getUserid();
+    String getUserId();
 
     void setUserid(String userid);
 

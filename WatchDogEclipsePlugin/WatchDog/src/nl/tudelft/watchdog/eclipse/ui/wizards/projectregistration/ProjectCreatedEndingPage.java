@@ -37,7 +37,7 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPageBase {
 
 	@Override
 	protected void makeRegistration() {
-		Project project = new Project(Preferences.getInstance().getUserid());
+		Project project = new Project(Preferences.getInstance().getUserId());
 
 		ProjectSliderPage sliderPage;
 		ProjectRegistrationPage projectPage = null;

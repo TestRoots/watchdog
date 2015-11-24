@@ -44,7 +44,7 @@ public class StartupUIThread implements Runnable {
 		checkWhetherToDisplayUserProjectRegistrationWizard();
 		savePreferenceStoreIfNeeded();
 
-		if (WatchDogUtils.isEmpty(preferences.getUserid())
+		if (WatchDogUtils.isEmpty(preferences.getUserId())
 				|| userProjectRegistrationCancelled) {
 			return;
 		}
@@ -58,7 +58,7 @@ public class StartupUIThread implements Runnable {
 	private void checkWhetherToDisplayUserProjectRegistrationWizard() {
 		ProjectPreferenceSetting projectSetting = preferences
 				.getOrCreateProjectSetting(workspaceName);
-		if (!WatchDogUtils.isEmpty(preferences.getUserid())
+		if (!WatchDogUtils.isEmpty(preferences.getUserId())
 				|| (projectSetting.startupQuestionAsked && !projectSetting.enableWatchdog))
 			return;
 
@@ -88,8 +88,8 @@ public class StartupUIThread implements Runnable {
 
 	private void makeSilentRegistration() {
 		String userId = "";
-		if (preferences.getUserid() == null
-				|| preferences.getUserid().isEmpty()) {
+		if (preferences.getUserId() == null
+				|| preferences.getUserId().isEmpty()) {
 			User user = new User();
 			user.programmingExperience = "NA";
 			try {
@@ -107,7 +107,7 @@ public class StartupUIThread implements Runnable {
 		}
 		savePreferenceStoreIfNeeded();
 
-		registerAnonymousProject(preferences.getUserid());
+		registerAnonymousProject(preferences.getUserId());
 	}
 
 	private void registerAnonymousProject(String userId) {
@@ -164,7 +164,7 @@ public class StartupUIThread implements Runnable {
 			int statusCode = (int) newProjectWizardHandler
 					.execute(new ExecutionEvent());
 			if (statusCode == Window.CANCEL) {
-				registerAnonymousProject(preferences.getUserid());
+				registerAnonymousProject(preferences.getUserId());
 			}
 		} catch (ExecutionException exception) {
 			// when the new project wizard cannot be displayed, new
