@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.core.ui.preferences;
 
 /** Contains the settings for a project/workspace in the preferences. */
 public class ProjectPreferenceSetting {
+	
 	/** The project/workspace location. */
 	public String project = "";
 
