@@ -115,7 +115,7 @@ public class PreferencePage implements SearchableConfigurable, Configurable.NoSc
         JPanel userJPanel = UIUtils.createFlowJPanelLeft(globalGroup);
         UIUtils.createLabel(userJPanel, "User-ID ");
         userIDInput = UIUtils.createLimitedTextInputField(userJPanel, ID_LENGTH);
-        userIDInput.setText(preferences.getUserid());
+        userIDInput.setText(preferences.getUserId());
 
         JPanel serverJPanel = UIUtils.createFlowJPanelLeft(globalGroup);
         UIUtils.createLabel(serverJPanel, "Server-URL ");
@@ -208,7 +208,7 @@ public class PreferencePage implements SearchableConfigurable, Configurable.NoSc
 
     private void checkAndUpdateUserID(String userID) {
         if (!preferences.isAuthenticationEnabled()) {
-            preferences.setUserid(userID);
+            preferences.setUserId(userID);
             return;
         }
         if (userID.length() < ID_LENGTH) {
@@ -218,7 +218,7 @@ public class PreferencePage implements SearchableConfigurable, Configurable.NoSc
             String url = NetworkUtils.buildExistingUserURL(userID);
             switch (NetworkUtils.urlExistsAndReturnsStatus200(url)) {
                 case SUCCESSFUL:
-                    preferences.setUserid(userIDInput.getText());
+                    preferences.setUserId(userIDInput.getText());
                     break;
                 case UNSUCCESSFUL:
                 case NETWORK_ERROR:

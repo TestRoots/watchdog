@@ -131,7 +131,7 @@ public class UserRegistrationStep extends RegistrationEndingStepBase {
         messageBody = "Your new user id is registered: ";
 
         Preferences preferences = Preferences.getInstance();
-        preferences.setUserid(id);
+        preferences.setUserId(id);
         preferences.registerProjectId(WatchDogUtils.getProjectName(), "");
     }
 

@@ -130,8 +130,8 @@ public class Preferences implements PreferencesBase {
 		return store.getString(USERID_KEY);
 	}
 
-	public void setUserid(String userid) {
-		store.setValue(USERID_KEY, userid);
+	public void setUserId(String userId) {
+		store.setValue(USERID_KEY, userId);
 	}
 
 	public Boolean isOldVersion() {

@@ -20,8 +20,7 @@ public interface PreferencesBase {
     /** @return The userid. */
     String getUserId();
 
-	/** Sets the userid for the store. */
-    void setUserid(String userid);
+    void setUserId(String userid);
 
 	/** @return Whether this client version is outdated. */
     Boolean isOldVersion();
