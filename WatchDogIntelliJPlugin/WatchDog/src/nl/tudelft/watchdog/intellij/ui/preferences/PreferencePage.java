@@ -1,18 +1,15 @@
 package nl.tudelft.watchdog.intellij.ui.preferences;
 
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.Configurable;
-
-
+import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.DocumentAdapter;
-import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
-import nl.tudelft.watchdog.intellij.ui.util.UIUtils;
-
-import nl.tudelft.watchdog.intellij.ui.wizards.projectregistration.ProjectRegistrationWizard;
+import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.intellij.ui.util.UIUtils;
+import nl.tudelft.watchdog.intellij.ui.wizards.projectregistration.ProjectRegistrationWizard;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.jetbrains.annotations.Nls;
@@ -144,11 +141,11 @@ public class PreferencePage implements SearchableConfigurable, Configurable.NoSc
             url = url.concat("/");
         }
         if (!UrlValidator.getInstance().isValid(url)) {
-            Messages.showErrorDialog("<html>The URL you entered for the WatchDog server<br> seems to be invalid!", "Invalid Input");
+            Messages.showWarningDialog("<html>The URL you entered for the WatchDog server<br> seems to be invalid!", "Invalid Input");
             isModified = true;
-        } else {
-            preferences.setServerURI(url);
         }
+
+        preferences.setServerURI(url);
     }
 
     private void addModificationListeners() {
@@ -236,7 +233,7 @@ public class PreferencePage implements SearchableConfigurable, Configurable.NoSc
             return;
         }
         if (projectID.length() < ID_LENGTH) {
-            if(enableWatchdogInput.isSelected() && WatchDogUtils.isEmpty(projectIDInput.getText())) {
+            if (enableWatchdogInput.isSelected() && WatchDogUtils.isEmptyOrHasOnlyWhitespaces(projectIDInput.getText()) && !WatchDogUtils.isEmptyOrHasOnlyWhitespaces(userIDInput.getText())) {
                 new ProjectRegistrationWizard("Project Registration", WatchDogUtils.getProject()).show();
                 return;
             }

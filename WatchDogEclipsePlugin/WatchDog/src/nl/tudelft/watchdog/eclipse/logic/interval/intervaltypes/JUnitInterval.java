@@ -4,6 +4,7 @@ import java.util.Date;
 
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.JUnitExecutionBase;
 
 import org.eclipse.jdt.junit.model.ITestElement;
 
@@ -21,7 +22,7 @@ public class JUnitInterval extends IntervalBase {
 	private static final long serialVersionUID = 2L;
 
 	@SerializedName("je")
-	private final JUnitExecution testExecution;
+	private final JUnitExecutionBase testExecution;
 
 	/**
 	 * Constructor. JUnit intervals are by definition closed (or non-existent

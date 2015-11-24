@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import com.intellij.rt.execution.junit.states.PoolOfTestStates;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.JUnitExecutionBase;
 import nl.tudelft.watchdog.core.logic.network.JsonifiedDouble;
 import nl.tudelft.watchdog.intellij.logic.ui.listeners.JUnitListener;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
@@ -16,7 +17,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * JUnit execution representation in a tree-structure.
  */
-public class JUnitExecution implements Serializable {
+public class JUnitExecution extends JUnitExecutionBase {
 
     /**
      * Result states of a test.
@@ -45,36 +46,6 @@ public class JUnitExecution implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The project on which the JUnit test was executed.
-     */
-    @SerializedName("p")
-    private String projectHash;
-
-    /**
-     * The test class on which the JUnit test was executed.
-     */
-    @SerializedName("t")
-    private String testClassHash;
-
-    /**
-     * The test method on which the JUnit test was executed.
-     */
-    @SerializedName("m")
-    private String testMethodHash;
-
-    /**
-     * Result of the test run. When aborted duration is NaN.
-     */
-    @SerializedName("r")
-    private String result;
-
-    @SerializedName("d")
-    private JsonifiedDouble duration;
-
-    @SerializedName("c")
-    private ArrayList<JUnitExecution> childrenExecutions;
-
-    /**
      * Constructor.
      */
     public JUnitExecution(AbstractTestProxy testProxy, JUnitExecution parent) {
@@ -92,7 +63,7 @@ public class JUnitExecution implements Serializable {
             if (testProxy.getChildren().size() > 1 && testProxy.getChildren().get(0).isLeaf()) {
                 // If test run session is a class with more than 1 test method:
                 // Wrap that class one level below (consistent with Eclipse)
-                childrenExecutions = new ArrayList<JUnitExecution>();
+                childrenExecutions = new ArrayList<JUnitExecutionBase>();
                 childrenExecutions.add(new JUnitExecution(testProxy,this));
             } else {
                 childrenExecutions = createTree(testProxy);
@@ -128,33 +99,14 @@ public class JUnitExecution implements Serializable {
     }
 
     /**
-     * @return The result in a string form. O stands for OK, everything else is
-     * a failed test result.
-     */
-    public String getResult() {
-        return result;
-    }
-
-    /**
      * Sets the result.
      */
     public void setResult(Result result) {
         this.result = result.toString().substring(0, 1);
     }
 
-    private void setClassNameHash(String testClassName) {
-        this.testClassHash = WatchDogUtils.createFileNameHash(testClassName);
-    }
-
-    /**
-     * Sets the hashed project name the JUnit test run was executed on.
-     */
-    public void setProjectNameHash(String projectName) {
-        this.projectHash = WatchDogUtils.createHash(projectName);
-    }
-
-    private ArrayList<JUnitExecution> createTree(AbstractTestProxy session) {
-        ArrayList<JUnitExecution> children = new ArrayList<JUnitExecution>();
+    private ArrayList<JUnitExecutionBase> createTree(AbstractTestProxy session) {
+        ArrayList<JUnitExecutionBase> children = new ArrayList<JUnitExecutionBase>();
         for (AbstractTestProxy testChild : session.getChildren()) {
             children.add(new JUnitExecution(testChild, this));
         }

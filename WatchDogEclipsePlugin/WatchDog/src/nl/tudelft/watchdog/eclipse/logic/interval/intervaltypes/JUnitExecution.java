@@ -1,45 +1,21 @@
 package nl.tudelft.watchdog.eclipse.logic.interval.intervaltypes;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-
-import nl.tudelft.watchdog.core.logic.network.JsonifiedDouble;
-import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 import org.eclipse.jdt.junit.model.ITestCaseElement;
 import org.eclipse.jdt.junit.model.ITestElement;
 import org.eclipse.jdt.junit.model.ITestElementContainer;
 import org.eclipse.jdt.junit.model.ITestRunSession;
 
-import com.google.gson.annotations.SerializedName;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.JUnitExecutionBase;
+import nl.tudelft.watchdog.core.logic.network.JsonifiedDouble;
+import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
-/** JUnit execution representation in a tree-structure. */
-public class JUnitExecution implements Serializable {
+/** Eclipse-specific JUnit execution representation in a tree-structure. */
+public class JUnitExecution extends JUnitExecutionBase {
 
-	/** JUnitExecution */
-	private static final long serialVersionUID = 2L;
-
-	/** The project on which the JUnit test was executed. */
-	@SerializedName("p")
-	private String projectHash;
-
-	/** The test class on which the JUnit test was executed. */
-	@SerializedName("t")
-	private String testClassHash;
-
-	/** The test method on which the JUnit test was executed. */
-	@SerializedName("m")
-	private String testMethodHash;
-
-	/** Result of the test run. When aborted duration is NaN. */
-	@SerializedName("r")
-	private String result;
-
-	@SerializedName("d")
-	private JsonifiedDouble duration;
-
-	@SerializedName("c")
-	private ArrayList<JUnitExecution> childrenExecutions;
+	/** Class version. */
+	private static final long serialVersionUID = 1L;
 
 	/** Constructor. */
 	public JUnitExecution(ITestElement test, JUnitExecution parent) {
@@ -58,13 +34,15 @@ public class JUnitExecution implements Serializable {
 
 		if (test instanceof ITestRunSession) {
 			ITestRunSession session = (ITestRunSession) test;
+			// FIXME (MMB) is test class name, but redundant! Can be replaced by
+			// project name
 			setProjectNameHash(session.getTestRunName());
 		}
 
 		if (test instanceof ITestCaseElement) {
 			ITestCaseElement testElement = (ITestCaseElement) test;
-			testMethodHash = WatchDogUtils.createHash(testElement
-					.getTestMethodName());
+			testMethodHash = WatchDogUtils
+					.createHash(testElement.getTestMethodName());
 			parent.setClassNameHash(testElement.getTestClassName());
 		} else if (test instanceof ITestElementContainer) {
 			ITestElementContainer testContainer = (ITestElementContainer) test;
@@ -72,30 +50,14 @@ public class JUnitExecution implements Serializable {
 		}
 	}
 
-	/**
-	 * @return The result in a string form. O stands for OK, everything else is
-	 *         a failed test result.
-	 */
-	public String getResult() {
-		return result;
-	}
-
 	/** Sets the result. */
 	public void setResult(ITestElement.Result result) {
 		this.result = result.toString().substring(0, 1);
 	}
 
-	private void setClassNameHash(String testClassName) {
-		this.testClassHash = WatchDogUtils.createFileNameHash(testClassName);
-	}
-
-	/** Sets the hashed project name the JUnit test run was executed on. */
-	public void setProjectNameHash(String projectName) {
-		this.projectHash = WatchDogUtils.createHash(projectName);
-	}
-
-	private ArrayList<JUnitExecution> createTree(ITestElementContainer session) {
-		ArrayList<JUnitExecution> children = new ArrayList<JUnitExecution>();
+	private ArrayList<JUnitExecutionBase> createTree(
+			ITestElementContainer session) {
+		ArrayList<JUnitExecutionBase> children = new ArrayList<JUnitExecutionBase>();
 		for (ITestElement testChild : session.getChildren()) {
 			children.add(new JUnitExecution(testChild, this));
 		}
