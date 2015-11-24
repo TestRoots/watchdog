@@ -228,7 +228,7 @@ public class NetworkUtils {
 
 	/** Creates a vanilla HTTP client builder with some timeouts. */
 	private static HttpClientBuilder createPlainHttpClientBuilder() {
-		int connectionTimeout = 9000;
+		int connectionTimeout = 12000;
 		RequestConfig config = RequestConfig.custom()
 				.setConnectionRequestTimeout(connectionTimeout)
 				.setConnectTimeout(connectionTimeout)
