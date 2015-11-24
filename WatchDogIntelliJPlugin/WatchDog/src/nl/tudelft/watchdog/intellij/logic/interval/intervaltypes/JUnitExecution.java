@@ -2,9 +2,11 @@ package nl.tudelft.watchdog.intellij.logic.interval.intervaltypes;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import com.intellij.rt.execution.junit.states.PoolOfTestStates;
 import nl.tudelft.watchdog.core.logic.network.JsonifiedDouble;
+import nl.tudelft.watchdog.intellij.logic.ui.listeners.JUnitListener;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
 import com.intellij.execution.testframework.AbstractTestProxy;
@@ -84,11 +86,14 @@ public class JUnitExecution implements Serializable {
         setResult(determineTestResult(testProxy));
 
         if (parent == null) {
-            // Test run session
-            setProjectNameHash(testProxy.getName());
+            // Root of the test run session
+            setProjectNameHash(JUnitListener.getProject(testProxy).getName());
 
-            if (!testProxy.getChildren().isEmpty() && testProxy.getChildren().get(0).isLeaf()) {
-                childrenExecutions = createTree(testProxy.getParent());
+            if (testProxy.getChildren().size() > 1 && testProxy.getChildren().get(0).isLeaf()) {
+                // If test run session is a class with more than 1 test method:
+                // Wrap that class one level below (consistent with Eclipse)
+                childrenExecutions = new ArrayList<JUnitExecution>();
+                childrenExecutions.add(new JUnitExecution(testProxy,this));
             } else {
                 childrenExecutions = createTree(testProxy);
             }
@@ -96,11 +101,12 @@ public class JUnitExecution implements Serializable {
         }
 
         if (testProxy.isLeaf()) {
-            // Test case
-            testMethodHash = WatchDogUtils.createHash(testProxy.getName());
-            parent.setClassNameHash(testProxy.getParent().getName());
+            // Test case (test method)
+            String[] testNames = testProxy.getName().split(Pattern.quote("."));
+            parent.setClassNameHash(testNames[0]);
+            testMethodHash = WatchDogUtils.createHash(testNames[1]);
         } else {
-            // Test container (class)
+            // Test container (test class with test methods)
             childrenExecutions = createTree(testProxy);
         }
 

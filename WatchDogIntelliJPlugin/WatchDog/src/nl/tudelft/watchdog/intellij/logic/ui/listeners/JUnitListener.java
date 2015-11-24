@@ -19,28 +19,37 @@ public class JUnitListener extends TestStatusListener {
 
     @Override
     public void testSuiteFinished(AbstractTestProxy testProxy) {
-        if (!WatchDogUtils.isWatchDogActive(getProject(testProxy))) {
+        Project project = getProject(testProxy);
+        if (!WatchDogUtils.isWatchDogActive(project)) {
             return;
         }
 
-        EventManager eventManager = InitializationManager.getInstance(getProject(testProxy).getName()).getEventManager();
+        EventManager eventManager = InitializationManager.getInstance(project.getName()).getEventManager();
         JUnitInterval interval = new JUnitInterval(testProxy);
         eventManager.update(new JUnitEvent(interval));
     }
 
     /** For given AbstractTestProxy returns the Project the test belongs to. Should always return Project, never null. */
-    private Project getProject(AbstractTestProxy test) {
+    public static Project getProject(AbstractTestProxy test) {
         Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
         for (Project openedProject : openProjects) {
             // Location is a part of IntelliJ API which is used in their representation of VirtualFileSystem.
             // In this call, we ask for a location of current test within each of the opened projects.
             // The location is different from null for exactly the one project it belongs to.
-            Location location = test.getLocation(openedProject, GlobalSearchScope.allScope(openedProject));
+            Location location = getFirstLeaf(test).getLocation(openedProject, GlobalSearchScope.allScope(openedProject));
 
             if (location != null) {
                 return openedProject;
             }
+
         }
         return null;
+    }
+
+    private static AbstractTestProxy getFirstLeaf(AbstractTestProxy testProxy) {
+        if(testProxy.isLeaf()) {
+            return testProxy;
+        }
+        return getFirstLeaf(testProxy.getChildren().get(0));
     }
 }
