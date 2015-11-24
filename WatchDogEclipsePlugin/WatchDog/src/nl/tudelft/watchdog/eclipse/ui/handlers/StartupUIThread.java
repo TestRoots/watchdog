@@ -23,7 +23,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 public class StartupUIThread implements Runnable {
 
 	/** The warning displayed when WatchDog is not active. */
-	public static final String WATCHDOG_INACTIVE_WARNING = "WatchDog only works when you register a (possibly anonymous) user and project.\n\nIt's fast, and you can get your own report! As a registered user, you decide where WatchDog is active.\n\nWould you still like to use WatchDog anonymously?";;
+	public static final String WATCHDOG_INACTIVE_WARNING = "Warning: WatchDog can only work when you register it.\n\nLast chance: Register now, anonymously, without filling the survey?";
 
 	/** The preferences. */
 	private Preferences preferences;
