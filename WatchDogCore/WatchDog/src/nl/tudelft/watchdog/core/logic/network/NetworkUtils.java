@@ -3,10 +3,6 @@ package nl.tudelft.watchdog.core.logic.network;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import nl.tudelft.watchdog.core.util.WatchDogGlobals;
-import nl.tudelft.watchdog.core.util.WatchDogLogger;
-import nl.tudelft.watchdog.core.ui.preferences.PreferencesBase;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -23,11 +19,12 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
+
 /** Utility functions for accessing the network. */
 public class NetworkUtils {
 	
-	private final PreferencesBase preferences = WatchDogGlobals.getPreferences();
-
 	/**
 	 * An enum denoting the three possible different connection outcomes:
 	 * successful, unsuccessful, or a network error.
@@ -75,8 +72,7 @@ public class NetworkUtils {
 	}
 
 	/**
-	 * Checks whether the given url is reachable and exists. The connection
-	 * timeout is set to 5 seconds.
+	 * Checks whether the given url is reachable and exists. 
 	 * 
 	 * @return a {@link Connection} object depicting how the connection went.
 	 */
@@ -232,7 +228,7 @@ public class NetworkUtils {
 
 	/** Creates a vanilla HTTP client builder with some timeouts. */
 	private static HttpClientBuilder createPlainHttpClientBuilder() {
-		int connectionTimeout = 5000;
+		int connectionTimeout = 9000;
 		RequestConfig config = RequestConfig.custom()
 				.setConnectionRequestTimeout(connectionTimeout)
 				.setConnectTimeout(connectionTimeout)
