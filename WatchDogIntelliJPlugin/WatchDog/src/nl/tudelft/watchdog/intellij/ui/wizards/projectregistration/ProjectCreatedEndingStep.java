@@ -35,7 +35,7 @@ public class ProjectCreatedEndingStep extends RegistrationEndingStepBase {
 
     @Override
     protected void makeRegistration() {
-        Project project = new Project(Preferences.getInstance().getUserid());
+        Project project = new Project(Preferences.getInstance().getUserId());
 
         ProjectSliderStep sliderStep;
         ProjectRegistrationStep projectStep = getWizard().projectRegistrationStep;

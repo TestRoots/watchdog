@@ -29,7 +29,7 @@ class UserIdEnteredEndingPage extends IdEnteredEndingPageBase {
 	@Override
 	protected void setId() {
 		((UserProjectRegistrationWizard) getWizard()).userid = id;
-		Preferences.getInstance().setUserid(id);
+		Preferences.getInstance().setUserId(id);
 	}
 
 	@Override

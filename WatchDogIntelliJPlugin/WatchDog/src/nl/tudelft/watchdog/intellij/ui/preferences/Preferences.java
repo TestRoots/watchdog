@@ -139,14 +139,14 @@ public class Preferences implements PreferencesBase {
 
 	/** @return The userid. */
 	@Override
-    public String getUserid() {
+    public String getUserId() {
 		return properties.getValue(USERID_KEY);
 	}
 
 	/** Sets the userid for the store. */
 	@Override
-    public void setUserid(String userid) {
-		properties.setValue(USERID_KEY, userid);
+    public void setUserId(String userId) {
+		properties.setValue(USERID_KEY, userId);
 	}
 
 	/** @return Whether this client version is outdated. */
