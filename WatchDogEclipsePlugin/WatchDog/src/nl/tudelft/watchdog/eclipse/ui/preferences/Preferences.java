@@ -6,18 +6,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import nl.tudelft.watchdog.core.ui.preferences.PreferencesBase;
 import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.eclipse.Activator;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
-
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 /**
  * Utilities for accessing WatchDog's Eclipse preferences.
@@ -48,7 +48,9 @@ public class Preferences implements PreferencesBase {
 	/** Flag denoting whether the user already answer the update question. */
 	public final static String IS_BIG_UPDATE_ANSWERED = "BIG_UPDATE_ANSWERED";
 
-	/** Flag denoting whether WatchDog plugin should do authentication or not. */
+	/**
+	 * Flag denoting whether WatchDog plugin should do authentication or not.
+	 */
 	public final static String AUTHENTICATION_ENABLED_KEY = "ENABLE_AUTH";
 
 	/** A serialized List of {@link ProjectPreferenceSetting}s. */
@@ -116,58 +118,42 @@ public class Preferences implements PreferencesBase {
 		return singletonInstance;
 	}
 
-	/**
-	 * Returns whether logging is enabled (<code>true</code>) or not (
-	 * <code>false</code>).
-	 */
 	public boolean isLoggingEnabled() {
 		return store.getBoolean(LOGGING_ENABLED_KEY);
 	}
 
-	/**
-	 * Returns whether authentication on the url is enabled (<code>true</code>)
-	 * or not ( <code>false</code>).
-	 */
 	public boolean isAuthenticationEnabled() {
 		return store.getBoolean(AUTHENTICATION_ENABLED_KEY);
 	}
 
-	/** @return The userid. */
 	public String getUserId() {
 		return store.getString(USERID_KEY);
 	}
 
-	/** Sets the userid for the store. */
 	public void setUserid(String userid) {
 		store.setValue(USERID_KEY, userid);
 	}
 
-	/** @return Whether this client version is outdated. */
 	public Boolean isOldVersion() {
 		return store.getBoolean(IS_OLD_VERSION);
 	}
 
-	/** Sets whether this client version is outdated. */
 	public void setIsOldVersion(Boolean outdated) {
 		store.setValue(IS_OLD_VERSION, outdated);
 	}
 
-	/** @return Whether this client version is outdated. */
 	public Boolean isBigUpdateAvailable() {
 		return store.getBoolean(IS_BIG_UPDATE_AVAILABLE);
 	}
 
-	/** Sets whether this client version has a big update available. */
 	public void setBigUpdateAvailable(Boolean available) {
 		store.setValue(IS_BIG_UPDATE_AVAILABLE, available);
 	}
 
-	/** @return Whether the user answered to the big update question. */
 	public Boolean isBigUpdateAnswered() {
 		return store.getBoolean(IS_BIG_UPDATE_ANSWERED);
 	}
 
-	/** Sets whether this client version has a big update available. */
 	public void setBigUpdateAnswered(Boolean answered) {
 		store.setValue(IS_BIG_UPDATE_ANSWERED, answered);
 	}
@@ -177,43 +163,31 @@ public class Preferences implements PreferencesBase {
 		return store.getLong(TRANSFERED_INTERVALS_KEY);
 	}
 
-	/** Adds the number to the transfered intervals for the store. */
 	public void addTransferedIntervals(long number) {
 		store.setValue(TRANSFERED_INTERVALS_KEY, getIntervals() + number);
 	}
 
-	/** @return The number of successfully transfered intervals. */
 	public String getLastIntervalTransferDate() {
 		return store.getString(LAST_TRANSFERED_INTERVALS_KEY);
 	}
 
-	/** Adds the number to the transfered intervals for the store. */
 	public void setLastTransferedInterval() {
 		store.setValue(LAST_TRANSFERED_INTERVALS_KEY, new Date().toString());
 	}
 
-	/** @return The serverURL. */
 	public String getServerURI() {
 		return store.getString(SERVER_KEY);
 	}
 
-	/**
-	 * @return <code>true</code> if this workspace has already been registered
-	 *         with WatchDog, <code>false</code> otherwise. Note: This does not
-	 *         say whether WatchDog should be activated, which is returned by
-	 *         {@link #shouldWatchDogBeActive(String)}.
-	 */
 	public boolean isProjectRegistered(String workspace) {
-		ProjectPreferenceSetting workspaceSetting = getProjectSetting(workspace);
-		return (workspaceSetting != null && workspaceSetting.startupQuestionAsked) ? true
-				: false;
+		ProjectPreferenceSetting workspaceSetting = getProjectSetting(
+				workspace);
+		return (workspaceSetting != null
+				&& workspaceSetting.startupQuestionAsked) ? true : false;
 	}
 
-	/**
-	 * @return The matching {@link ProjectPreferenceSetting}, or a completely
-	 *         new one in case there was no match.
-	 */
-	public ProjectPreferenceSetting getOrCreateProjectSetting(String workspace) {
+	public ProjectPreferenceSetting getOrCreateProjectSetting(
+			String workspace) {
 		ProjectPreferenceSetting setting = getProjectSetting(workspace);
 		if (setting == null) {
 			setting = new ProjectPreferenceSetting();
@@ -236,10 +210,6 @@ public class Preferences implements PreferencesBase {
 		return null;
 	}
 
-	/**
-	 * Registers the given workspace with WatchDog. If use is <code>true</code>,
-	 * WatchDog will be used.
-	 */
 	public void registerProjectUse(String workspace, boolean use) {
 		ProjectPreferenceSetting setting = getOrCreateProjectSetting(workspace);
 		setting.enableWatchdog = use;
@@ -247,7 +217,6 @@ public class Preferences implements PreferencesBase {
 		storeProjectSettings();
 	}
 
-	/** Registers the given projectId with the given workspace. */
 	public void registerProjectId(String workspace, String projectId) {
 		ProjectPreferenceSetting setting = getOrCreateProjectSetting(workspace);
 		setting.projectId = projectId;
@@ -272,15 +241,10 @@ public class Preferences implements PreferencesBase {
 		return store;
 	}
 
-	/** @return a list of workspace settings. */
 	public List<ProjectPreferenceSetting> getProjectSettings() {
 		return workspaceSettings;
 	}
 
-	/**
-	 * Resets certain WatchDog values to the default which are only used
-	 * internally.
-	 */
 	public void setDefaults() {
 		store.setValue(WORKSPACES_KEY, "");
 		store.setValue(TRANSFERED_INTERVALS_KEY, 0);
