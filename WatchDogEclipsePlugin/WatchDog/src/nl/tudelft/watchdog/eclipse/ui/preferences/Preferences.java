@@ -138,8 +138,8 @@ public class Preferences implements PreferencesBase {
 	}
 
 	/** Sets the userid for the store. */
-	public void setUserid(String userid) {
-		store.setValue(USERID_KEY, userid);
+	public void setUserId(String userId) {
+		store.setValue(USERID_KEY, userId);
 	}
 
 	/** @return Whether this client version is outdated. */

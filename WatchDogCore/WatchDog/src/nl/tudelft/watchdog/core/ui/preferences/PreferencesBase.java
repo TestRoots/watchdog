@@ -9,7 +9,7 @@ public interface  PreferencesBase {
 
     String getUserId();
 
-    void setUserid(String userid);
+    void setUserId(String userid);
 
     Boolean isOldVersion();
 

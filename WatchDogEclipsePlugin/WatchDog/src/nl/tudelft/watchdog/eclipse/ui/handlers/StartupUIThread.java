@@ -102,7 +102,7 @@ public class StartupUIThread implements Runnable {
 				return;
 			}
 
-			preferences.setUserid(userId);
+			preferences.setUserId(userId);
 			preferences.registerProjectId(WatchDogUtils.getWorkspaceName(), "");
 		}
 		savePreferenceStoreIfNeeded();

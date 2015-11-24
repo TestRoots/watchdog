@@ -80,7 +80,7 @@ public class WatchDogStartUp implements ProjectComponent {
 
         checkWhetherToDisplayUserProjectRegistrationWizard();
 
-        if (WatchDogUtils.isEmpty(WatchDogGlobals.getPreferences().getUserid())
+        if (WatchDogUtils.isEmpty(WatchDogGlobals.getPreferences().getUserId())
                 || userProjectRegistrationCancelled) {
             return;
         }
@@ -113,7 +113,7 @@ public class WatchDogStartUp implements ProjectComponent {
     private void checkWhetherToDisplayUserProjectRegistrationWizard() {
         Preferences preferences = Preferences.getInstance();
         ProjectPreferenceSetting projectSetting = preferences.getOrCreateProjectSetting(project.getName());
-        if (!WatchDogUtils.isEmpty(WatchDogGlobals.getPreferences().getUserid())
+        if (!WatchDogUtils.isEmpty(WatchDogGlobals.getPreferences().getUserId())
                 || (projectSetting.startupQuestionAsked && !projectSetting.enableWatchdog)) {
             return;
         }
@@ -134,7 +134,7 @@ public class WatchDogStartUp implements ProjectComponent {
     private void makeSilentRegistration() {
         String userId = "";
         Preferences preferences = Preferences.getInstance();
-        if (preferences.getUserid() == null || preferences.getUserid().isEmpty()) {
+        if (preferences.getUserId() == null || preferences.getUserId().isEmpty()) {
 
             User user = new User();
             user.programmingExperience = "NA";
@@ -148,11 +148,11 @@ public class WatchDogStartUp implements ProjectComponent {
                 return;
             }
 
-            preferences.setUserid(userId);
+            preferences.setUserId(userId);
             preferences.registerProjectId(WatchDogUtils.getProjectName(), "");
         }
 
-        registerAnonymousProject(preferences.getUserid());
+        registerAnonymousProject(preferences.getUserId());
     }
 
     private void registerAnonymousProject(String userId) {
@@ -189,7 +189,7 @@ public class WatchDogStartUp implements ProjectComponent {
             wizard.setCrossClosesWindow(false);
             wizard.show();
             if (wizard.getExitCode() == DialogWrapper.CANCEL_EXIT_CODE) {
-                registerAnonymousProject(WatchDogGlobals.getPreferences().getUserid());
+                registerAnonymousProject(WatchDogGlobals.getPreferences().getUserId());
             }
         }
     }
