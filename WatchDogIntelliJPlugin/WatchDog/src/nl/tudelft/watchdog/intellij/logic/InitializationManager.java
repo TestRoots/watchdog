@@ -54,7 +54,6 @@ public class InitializationManager {
         intervalsStatisticsPersister = new IntervalPersister(
                 statisticsDatabaseFile);
 
-        //new ClientVersionChecker(); TODO implement if needed
         intervalManager = new IntervalManager(intervalsToTransferPersister,
                 intervalsStatisticsPersister);
         eventManager = new EventManager(intervalManager,
