@@ -46,6 +46,11 @@ public class EditorWindowListener implements EditorFactoryListener {
     }
 
     private boolean editorBelongsToThisProject(EditorFactoryEvent editorFactoryEvent) {
-        return editorFactoryEvent.getEditor().getProject().getName().equals(myProjectName);
+        try {
+            return editorFactoryEvent.getEditor().getProject().getName().equals(myProjectName);
+        }
+        catch(NullPointerException e) {
+            return false;
+        }
     }
 }
