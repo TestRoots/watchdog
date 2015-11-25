@@ -18,8 +18,8 @@
       1.6.0<br>
       Maintenance release:<br>
       - Added support for multiple projects opened at the same time;<br>
-      - Handling unsuccessful registrations. <br><br>
-      - Some back-end optimizations.
+      - Improved registration process (especially when unsuccessful, thanks to Alan Richardson from eviltester.com);<br>
+      - Some back-end optimizations.<br><br>
 
       1.5.0<br>
       Maintenance release:<br>
@@ -29,8 +29,8 @@
 
       0.9.1<br>
       Few minor issues fixed:<br>
-        - JUnit interval format unified;<br>
-        - Removed unused listeners.
+      - JUnit interval format unified;<br>
+      - Removed unused listeners.
     ]]>
     </change-notes>
 
