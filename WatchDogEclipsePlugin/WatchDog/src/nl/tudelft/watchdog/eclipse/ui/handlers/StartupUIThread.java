@@ -2,6 +2,12 @@ package nl.tudelft.watchdog.eclipse.ui.handlers;
 
 import java.io.IOException;
 
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
+
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
@@ -10,12 +16,6 @@ import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.window.Window;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
-
 /**
  * The UI Thread in which all the registration process on startup of WatchDog is
  * executed.
@@ -23,7 +23,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 public class StartupUIThread implements Runnable {
 
 	/** The warning displayed when WatchDog is not active. */
-	public static final String WATCHDOG_INACTIVE_WARNING = "Warning: WatchDog can only work when you register it.\n\nLast chance: Register now, anonymously, without filling the survey?";
+	public static final String WATCHDOG_INACTIVE_WARNING = "Warning: You can only use WatchDog when you register it.\n\nLast chance: Register now, anonymously, without filling the survey?";
 
 	/** The preferences. */
 	private Preferences preferences;
@@ -59,7 +59,8 @@ public class StartupUIThread implements Runnable {
 		ProjectPreferenceSetting projectSetting = preferences
 				.getOrCreateProjectSetting(workspaceName);
 		if (!WatchDogUtils.isEmpty(preferences.getUserId())
-				|| (projectSetting.startupQuestionAsked && !projectSetting.enableWatchdog))
+				|| (projectSetting.startupQuestionAsked
+						&& !projectSetting.enableWatchdog))
 			return;
 
 		UserRegistrationWizardDialogHandler newUserWizardHandler = new UserRegistrationWizardDialogHandler();
@@ -68,9 +69,9 @@ public class StartupUIThread implements Runnable {
 					.execute(new ExecutionEvent());
 			savePreferenceStoreIfNeeded();
 			if (statusCode == Window.CANCEL) {
-				boolean shouldRegisterAnonymously = MessageDialog
-						.openQuestion(null, "WatchDog not active!",
-								WATCHDOG_INACTIVE_WARNING);
+				boolean shouldRegisterAnonymously = MessageDialog.openQuestion(
+						null, "WatchDog not active!",
+						WATCHDOG_INACTIVE_WARNING);
 				if (shouldRegisterAnonymously) {
 					makeSilentRegistration();
 				} else {
@@ -113,9 +114,8 @@ public class StartupUIThread implements Runnable {
 	private void registerAnonymousProject(String userId) {
 		String projectId = "";
 		try {
-			projectId = new JsonTransferer()
-					.registerNewProject(new nl.tudelft.watchdog.core.ui.wizards.Project(
-							userId));
+			projectId = new JsonTransferer().registerNewProject(
+					new nl.tudelft.watchdog.core.ui.wizards.Project(userId));
 		} catch (ServerCommunicationException exception) {
 			WatchDogLogger.getInstance().logSevere(exception);
 		}
@@ -143,7 +143,8 @@ public class StartupUIThread implements Runnable {
 	private void checkWhetherToDisplayProjectWizard() {
 		ProjectPreferenceSetting setting = preferences
 				.getOrCreateProjectSetting(workspaceName);
-		if (setting.enableWatchdog && WatchDogUtils.isEmpty(setting.projectId)) {
+		if (setting.enableWatchdog
+				&& WatchDogUtils.isEmpty(setting.projectId)) {
 			displayProjectWizard();
 			savePreferenceStoreIfNeeded();
 		}

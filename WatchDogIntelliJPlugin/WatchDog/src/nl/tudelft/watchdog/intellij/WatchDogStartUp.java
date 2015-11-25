@@ -39,7 +39,7 @@ public class WatchDogStartUp implements ProjectComponent {
     /**
      * The warning displayed when WatchDog is not registered. Note: JLabel requires html tags for a new line (and other formatting).
      */
-    public static final String WATCHDOG_UNREGISTERED_WARNING = "<html>Warning: WatchDog can only work when you register it.<br><br>Last chance: Register now, anonymously, without filling the survey?";
+    public static final String WATCHDOG_UNREGISTERED_WARNING = "<html>Warning: You can only use WatchDog when you register it.<br><br>Last chance: Register now, anonymously, without filling the survey?";
 
     /**
      * Whether the user has cancelled the user project registration wizard.
