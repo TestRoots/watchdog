@@ -33,10 +33,7 @@ public class JUnitListener extends TestStatusListener {
     public static Project getProject(AbstractTestProxy test) {
         Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
         for (Project openedProject : openProjects) {
-            // Location is a part of IntelliJ API which is used in their representation of VirtualFileSystem.
-            // In this call, we ask for a location of current test within each of the opened projects.
-            // The location is different from null for exactly the one project it belongs to.
-            Location location = getFirstLeaf(test).getLocation(openedProject, GlobalSearchScope.allScope(openedProject));
+            Location location = getProjectLocation(test, openedProject);
 
             if (location != null) {
                 return openedProject;
@@ -44,6 +41,21 @@ public class JUnitListener extends TestStatusListener {
 
         }
         return null;
+    }
+
+    /** IntelliJ14 and IntelliJ15 compatible method for returning the location of a project */
+    private static Location getProjectLocation(AbstractTestProxy test, Project openedProject) {
+        // IntelliJ15 compatible call
+        // Location is an IntelliJ-representation of a file location in their VirtualFileSystem.
+        // In this call, we ask for a location of current test within each of the opened projects.
+        // The location is different from null for exactly the one project it belongs to.
+        Location location = getFirstLeaf(test).getLocation(openedProject, GlobalSearchScope.allScope(openedProject));
+        if(location == null) {
+            // IntelliJ14 compatible call
+            location = test.getLocation(openedProject, GlobalSearchScope.allScope(openedProject));
+        }
+
+        return location;
     }
 
     private static AbstractTestProxy getFirstLeaf(AbstractTestProxy testProxy) {
