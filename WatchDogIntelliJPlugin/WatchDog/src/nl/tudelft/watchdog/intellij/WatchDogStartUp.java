@@ -193,7 +193,6 @@ public class WatchDogStartUp implements ProjectComponent {
     }
 
     private void checkWhetherToStartWatchDog() {
-        // reload setting from preferences
         ProjectPreferenceSetting setting = WatchDogGlobals.getPreferences()
                 .getOrCreateProjectSetting(project.getName());
         if (setting.enableWatchdog) {
