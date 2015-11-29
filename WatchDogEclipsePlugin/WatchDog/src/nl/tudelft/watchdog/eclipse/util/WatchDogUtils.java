@@ -3,12 +3,6 @@ package nl.tudelft.watchdog.eclipse.util;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
-import nl.tudelft.watchdog.core.util.ContentReaderException;
-import nl.tudelft.watchdog.core.util.WatchDogLogger;
-import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
-import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.text.IDocument;
@@ -16,22 +10,15 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.joda.time.Duration;
-import org.joda.time.Period;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
+
+import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
+import nl.tudelft.watchdog.core.util.ContentReaderException;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
+import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
+import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 
 /** Utilities for WatchDog. */
 public class WatchDogUtils extends WatchDogUtilsBase {
-
-	/** Formatter for a {@link Period}. */
-	private static PeriodFormatter periodFormatter = new PeriodFormatterBuilder()
-			.printZeroRarelyLast().appendDays().appendSuffix(" day", " days")
-			.appendSeparator(", ").appendHours()
-			.appendSuffix(" hour", " hours").appendSeparator(", ")
-			.appendMinutes().appendSuffix(" minute", " minutes")
-			.appendSeparator(" and ").appendSeconds()
-			.appendSuffix(" second", " seconds").toFormatter();
 
 	/**
 	 * Returns the contents of the supplied {@link ITextEditor}.
@@ -70,8 +57,8 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 					"Editor closed: Document provider is null");
 		}
 
-		IDocument document = documentProvider.getDocument(editor
-				.getEditorInput());
+		IDocument document = documentProvider
+				.getDocument(editor.getEditorInput());
 		return document;
 	}
 
@@ -124,15 +111,6 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 		}
 	}
 
-	/**
-	 * @return the converted {@link Duration} in a human-readable String,
-	 *         discarding milliseconds.
-	 */
-	public static String makeDurationHumanReadable(Duration duration) {
-		return periodFormatter.print(duration.toPeriod().withMillis(0)
-				.normalizedStandard());
-	}
-
 	/** Sleeps for the specified amount of milliseconds. */
 	public static void sleep(long milis) {
 		try {
@@ -153,8 +131,8 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 	 * workspace.
 	 */
 	public static ProjectPreferenceSetting getProjectSetting() {
-		return Preferences.getInstance().getOrCreateProjectSetting(
-				getWorkspaceName());
+		return Preferences.getInstance()
+				.getOrCreateProjectSetting(getWorkspaceName());
 	}
 
 }
