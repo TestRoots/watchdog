@@ -74,8 +74,16 @@ public class JUnitExecution extends JUnitExecutionBase {
         if (testProxy.isLeaf()) {
             // Test case (test method)
             String[] testNames = testProxy.getName().split(Pattern.quote("."));
-            parent.setClassNameHash(testNames[0]);
-            testMethodHash = WatchDogUtils.createHash(testNames[1]);
+
+            if (testNames.length > 1) {
+                // IntelliJ15 compatible call
+                parent.setClassNameHash(testNames[0]);
+                testMethodHash = WatchDogUtils.createHash(testNames[1]);
+            } else {
+                // IntelliJ14 compatible call
+                parent.setClassNameHash(testProxy.getParent().getName());
+                testMethodHash = WatchDogUtils.createHash(testProxy.getName());
+            }
         } else {
             // Test container (test class with test methods)
             childrenExecutions = createTree(testProxy);
