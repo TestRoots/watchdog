@@ -185,6 +185,7 @@ public class WatchDogStartUp implements ProjectComponent {
                 .getOrCreateProjectSetting(project.getName());
         if (setting.enableWatchdog && WatchDogUtils.isEmpty(setting.projectId)) {
             ProjectRegistrationWizard wizard =  new ProjectRegistrationWizard("Project Registration", project);
+            wizard.setCrossClosesWindow(false);
             wizard.show();
             if (wizard.getExitCode() == DialogWrapper.CANCEL_EXIT_CODE) {
                 registerAnonymousProject(WatchDogGlobals.getPreferences().getUserId());
