@@ -4,10 +4,12 @@ echo Build WatchDogServer
 echo 
 cd WatchDogServer
 bundler
-cp config.yaml.tmpl config.yaml
+if [ ! -e config.yaml];
+then
+  cp config.yaml.tmpl config.yaml
+fi
 rake
 SERVER_STATUS=$?
-rm config.yaml
 cd ..
 
 echo
