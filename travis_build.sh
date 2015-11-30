@@ -4,7 +4,7 @@ echo Build WatchDogServer
 echo 
 cd WatchDogServer
 bundler
-if [ ! -e config.yaml];
+if [ ! -e config.yaml ];
 then
   cp config.yaml.tmpl config.yaml
 fi
