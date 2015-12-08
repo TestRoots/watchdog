@@ -134,7 +134,7 @@ public abstract class IDEIntervalManagerBase extends IntervalManagerBase {
 	/** Closes all currently open intervals with the supplied closing date. */
 	public void closeAllIntervals(Date closingDate) {
 		closeInterval(editorInterval, closingDate);
-		ArrayList<IntervalBase> copiedIntervals = new ArrayList<>(intervals);
+		ArrayList<IntervalBase> copiedIntervals = new ArrayList<IntervalBase>(intervals);
 		Iterator<IntervalBase> iterator = copiedIntervals.listIterator();
 		while (iterator.hasNext()) {
 			// we need to remove the interval first from the list in order to
