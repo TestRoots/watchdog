@@ -11,6 +11,7 @@ Bundle-ClassPath: .,
  lib/httpmime-4.5.jar,
  lib/commons-logging-1.2.jar,
  lib/commons-codec-1.9.jar,
+ lib/commons-lang-2.6.jar,
  lib/joda-time-2.8.1.jar,
  lib/java-util-1.9.0.jar,
  lib/mapdb-1.0.5.jar
@@ -33,4 +34,3 @@ Export-Package: com.google.gson,
  org.joda.time.base,
  org.joda.time.format,
  org.mapdb
-Import-Package: org.apache.commons.lang
