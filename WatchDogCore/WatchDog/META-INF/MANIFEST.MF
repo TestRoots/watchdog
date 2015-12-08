@@ -33,3 +33,4 @@ Export-Package: com.google.gson,
  org.joda.time.base,
  org.joda.time.format,
  org.mapdb
+Import-Package: org.apache.commons.lang
