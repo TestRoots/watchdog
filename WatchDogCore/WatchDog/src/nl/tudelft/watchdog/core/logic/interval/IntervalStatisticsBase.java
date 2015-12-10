@@ -124,7 +124,7 @@ public abstract class IntervalStatisticsBase extends IntervalManagerBase {
 			}
 
 			if (!intervalIsOlderThanThreshold(thresholdDateView, interval)) {
-				IntervalBase clonedInterval; // + = null;
+				IntervalBase clonedInterval = null;
 				try {
 					clonedInterval = (IntervalBase) interval.clone();
 					adjustIntervalStartAndEndDate(thresholdDateView, interval,
