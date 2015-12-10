@@ -26,6 +26,12 @@ import nl.tudelft.watchdog.core.util.WatchDogLogger;
  * Utility functions for accessing the network.
  */
 public class NetworkUtils {
+	
+	/**
+	 * Connection timeout to be used by the HttpClient.
+	 * Default timeout is 12 seconds. 
+	 */
+	private static int connectionTimeout = 12*1000;
 
 	/**
 	 * An enum denoting the three possible different connection outcomes:
@@ -45,6 +51,13 @@ public class NetworkUtils {
 		 */
 		NETWORK_ERROR
 	};
+	
+	/**
+	 * Change the default value of the connection timeout to the specified one.
+	 */
+	public static void setConnectionTimeout(int timeout) {
+		connectionTimeout = timeout;
+	}
 
 	/**
 	 * Returns the content at the given URL.
@@ -156,7 +169,7 @@ public class NetworkUtils {
 			}
 		} catch (IOException e) {
 			// server unreachable case
-			errorMessage = "Failed to commuincate with our server: " + e + " "
+			errorMessage = "Failed to communicate with our server: " + e + " "
 					+ e.getMessage();
 		} catch (IllegalStateException e) {
 			// URL wrongly formatted (target host is null)
@@ -250,7 +263,6 @@ public class NetworkUtils {
 	 * Creates a vanilla HTTP client builder with some timeouts.
 	 */
 	private static HttpClientBuilder createPlainHttpClientBuilder() {
-		int connectionTimeout = 12000;
 		RequestConfig config = RequestConfig.custom()
 				.setConnectionRequestTimeout(connectionTimeout)
 				.setConnectTimeout(connectionTimeout)
