@@ -19,7 +19,7 @@ import com.google.gson.reflect.TypeToken;
 /**
  * Utilities for accessing WatchDog's IntelliJ's preferences.
  */
-public class Preferences implements PreferencesBase {
+public class Preferences extends PreferencesBase {
 
 	/** The user's id on the WatchDog server. */
 	public final static String USERID_KEY = "WATCHDOG.USERID";
@@ -58,9 +58,6 @@ public class Preferences implements PreferencesBase {
 
 	/** The Gson object. */
 	private final static Gson GSON = new Gson();
-
-	/** The map of registered projects. */
-	private List<ProjectPreferenceSetting> projectSettings = new ArrayList<ProjectPreferenceSetting>();
 
 	/** The WatchDog preference instance. */
 	private static volatile Preferences singletonInstance;
@@ -219,77 +216,11 @@ public class Preferences implements PreferencesBase {
         properties.setValue(SERVER_KEY, url);
     }
 
-	/**
-	 * @return <code>true</code> if this project has already been registered
-	 *         with WatchDog, <code>false</code> otherwise. Note: This does not
-	 *         say whether WatchDog should be activated.
-	 *         say whether WatchDog should be activated.
-	 */
-	@Override
-    public boolean isProjectRegistered(String project) {
-		ProjectPreferenceSetting projectSetting = getProjectSetting(project);
-		return (projectSetting != null && projectSetting.startupQuestionAsked) ? true
-				: false;
-	}
-
-	/**
-	 * @return The matching {@link ProjectPreferenceSetting}, or a completely
-	 *         new one in case there was no match.
-	 */
-	@Override
-    public ProjectPreferenceSetting getOrCreateProjectSetting(String project) {
-		ProjectPreferenceSetting setting = getProjectSetting(project);
-		if (setting == null) {
-			setting = new ProjectPreferenceSetting();
-			setting.project = project;
-			projectSettings.add(setting);
-		}
-		return setting;
-	}
-
-	/**
-	 * @return The matching {@link ProjectPreferenceSetting}, or
-	 *         <code>null</code> in case there was no match.
-	 */
-	private ProjectPreferenceSetting getProjectSetting(String project) {
-		for (ProjectPreferenceSetting setting : projectSettings) {
-			if (setting.project.equals(project)) {
-				return setting;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Registers the given project with WatchDog. If use is <code>true</code>,
-	 * WatchDog will be used.
-	 */
-	@Override
-    public void registerProjectUse(String project, boolean use) {
-		ProjectPreferenceSetting setting = getOrCreateProjectSetting(project);
-		setting.enableWatchdog = use;
-		setting.startupQuestionAsked = true;
-		storeProjectSettings();
-	}
-
-	/** Registers the given projectId with the given project. */
-	@Override
-    public void registerProjectId(String project, String projectId) {
-		ProjectPreferenceSetting setting = getOrCreateProjectSetting(project);
-		setting.projectId = projectId;
-		storeProjectSettings();
-	}
-
 	/** Updates the serialized project settings in the preference store. */
-	private void storeProjectSettings() {
+	@Override
+	protected void storeProjectSettings() {
 		properties.setValue(WORKSPACES_KEY,
 				GSON.toJson(projectSettings, TYPE_WORKSPACE_SETTINGS));
-	}
-
-	/** @return a list of project settings. */
-	@Override
-    public List<ProjectPreferenceSetting> getProjectSettings() {
-		return projectSettings;
 	}
 
 	/**

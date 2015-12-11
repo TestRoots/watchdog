@@ -20,9 +20,10 @@ import nl.tudelft.watchdog.eclipse.Activator;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /**
- * Utilities for accessing WatchDog's Eclipse preferences.
+ * Utilities for accessing WatchDog's Eclipse preferences. In the case of
+ * Eclipse, a project actually corresponds to the open workspace.
  */
-public class Preferences implements PreferencesBase {
+public class Preferences extends PreferencesBase {
 
 	/** The user's id on the WatchDog server. */
 	public final static String USERID_KEY = "USERID";
@@ -67,9 +68,6 @@ public class Preferences implements PreferencesBase {
 	/** The preference store. */
 	private final ScopedPreferenceStore store;
 
-	/** The map of registered workspaces. */
-	private List<ProjectPreferenceSetting> workspaceSettings = new ArrayList<ProjectPreferenceSetting>();
-
 	/** The WatchDog preference instance. */
 	private static volatile Preferences singletonInstance;
 
@@ -91,7 +89,7 @@ public class Preferences implements PreferencesBase {
 		store.setDefault(IS_BIG_UPDATE_ANSWERED, false);
 		store.setDefault(IS_BIG_UPDATE_AVAILABLE, false);
 
-		workspaceSettings = readSerializedWorkspaceSettings(WORKSPACES_KEY);
+		projectSettings = readSerializedWorkspaceSettings(WORKSPACES_KEY);
 	}
 
 	/**
@@ -179,54 +177,10 @@ public class Preferences implements PreferencesBase {
 		return store.getString(SERVER_KEY);
 	}
 
-	public boolean isProjectRegistered(String workspace) {
-		ProjectPreferenceSetting workspaceSetting = getProjectSetting(
-				workspace);
-		return (workspaceSetting != null
-				&& workspaceSetting.startupQuestionAsked) ? true : false;
-	}
-
-	public ProjectPreferenceSetting getOrCreateProjectSetting(
-			String workspace) {
-		ProjectPreferenceSetting setting = getProjectSetting(workspace);
-		if (setting == null) {
-			setting = new ProjectPreferenceSetting();
-			setting.project = workspace;
-			workspaceSettings.add(setting);
-		}
-		return setting;
-	}
-
-	/**
-	 * @return The matching {@link ProjectPreferenceSetting}, or
-	 *         <code>null</code> in case there was no match.
-	 */
-	private ProjectPreferenceSetting getProjectSetting(String workspace) {
-		for (ProjectPreferenceSetting setting : workspaceSettings) {
-			if (setting.project.equals(workspace)) {
-				return setting;
-			}
-		}
-		return null;
-	}
-
-	public void registerProjectUse(String workspace, boolean use) {
-		ProjectPreferenceSetting setting = getOrCreateProjectSetting(workspace);
-		setting.enableWatchdog = use;
-		setting.startupQuestionAsked = true;
-		storeProjectSettings();
-	}
-
-	public void registerProjectId(String workspace, String projectId) {
-		ProjectPreferenceSetting setting = getOrCreateProjectSetting(workspace);
-		setting.projectId = projectId;
-		storeProjectSettings();
-	}
-
 	/** Updates the serialized workspace settings in the preference store. */
-	private void storeProjectSettings() {
+	protected void storeProjectSettings() {
 		store.setValue(WORKSPACES_KEY,
-				GSON.toJson(workspaceSettings, TYPE_WORKSPACE_SETTINGS));
+				GSON.toJson(projectSettings, TYPE_WORKSPACE_SETTINGS));
 		try {
 			store.save();
 		} catch (IOException exception) {
@@ -239,10 +193,6 @@ public class Preferences implements PreferencesBase {
 	/** @return The {@link IPreferenceStore} for WatchDog. */
 	public IPreferenceStore getStore() {
 		return store;
-	}
-
-	public List<ProjectPreferenceSetting> getProjectSettings() {
-		return workspaceSettings;
 	}
 
 	public void setDefaults() {
