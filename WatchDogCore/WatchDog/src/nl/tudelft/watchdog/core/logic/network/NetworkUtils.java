@@ -2,6 +2,8 @@ package nl.tudelft.watchdog.core.logic.network;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -32,6 +34,9 @@ public class NetworkUtils {
 	 * Default timeout is 12 seconds. 
 	 */
 	private static int connectionTimeout = 12*1000;
+	
+	/** A handle to the current Http client */ 
+	private static CloseableHttpClient client = null;
 
 	/**
 	 * An enum denoting the three possible different connection outcomes:
@@ -58,6 +63,21 @@ public class NetworkUtils {
 	public static void setConnectionTimeout(int timeout) {
 		connectionTimeout = timeout;
 	}
+	
+	/**
+	 * Cancels the current request after the specified duration
+	 */
+	public static void cancelTransferAfter(long milliseconds){
+		Timer timer = new Timer();
+		TimerTask task = new TimerTask() {
+			
+			@Override
+			public void run() {
+				closeHttpClientGracefully(client);
+			}
+		};
+		timer.schedule(task, milliseconds);
+	}
 
 	/**
 	 * Returns the content at the given URL.
@@ -66,7 +86,7 @@ public class NetworkUtils {
 	 */
 	public static String getURLAndGetResponse(String url)
 			throws ServerCommunicationException {
-		CloseableHttpClient client = createHTTPClient();
+		client = createHTTPClient();
 		HttpGet get;
 		String errorMessage = "";
 
@@ -98,7 +118,7 @@ public class NetworkUtils {
 	 * @return a {@link Connection} object depicting how the connection went.
 	 */
 	public static Connection urlExistsAndReturnsStatus200(String url) {
-		CloseableHttpClient client = createHTTPClient();
+		client = createHTTPClient();
 		HttpGet get;
 
 		try {
@@ -127,10 +147,12 @@ public class NetworkUtils {
 	}
 
 	private static void closeHttpClientGracefully(CloseableHttpClient client) {
-		try {
-			client.close();
-		} catch (IOException exception) {
-			// intentionally empty
+		if(client != null) {
+			try {
+				client.close();
+			} catch (IOException exception) {
+				// intentionally empty
+			}
 		}
 	}
 
@@ -144,7 +166,7 @@ public class NetworkUtils {
 	 */
 	public static String transferJsonAndGetResponse(String url, String jsonData)
 			throws ServerCommunicationException, ServerReturnCodeException {
-		CloseableHttpClient client = createHTTPClient();
+		client = createHTTPClient();
 		HttpPost post = new HttpPost(url);
 		String errorMessage = "";
 
