@@ -40,7 +40,7 @@ public class IntervalTransferManagerBase extends RegularCheckerBase {
 		NetworkUtils.setConnectionTimeout(2000);
 		NetworkUtils.cancelTransferAfter(2000);
 		task.run();
-		NetworkUtils.setConnectionTimeout(12000);
+		NetworkUtils.setConnectionTimeout(NetworkUtils.DEFAULT_TIMEOUT);
 	}
 
     protected static void refreshUI() {}

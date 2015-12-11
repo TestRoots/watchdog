@@ -32,8 +32,9 @@ public class NetworkUtils {
 	/**
 	 * Connection timeout to be used by the HttpClient.
 	 * Default timeout is 12 seconds. 
-	 */
-	private static int connectionTimeout = 12*1000;
+	 */	
+	public static final int DEFAULT_TIMEOUT = 12*1000;
+	private static int connectionTimeout = DEFAULT_TIMEOUT;
 	
 	/** A handle to the current Http client */ 
 	private static CloseableHttpClient client = null;
@@ -146,14 +147,14 @@ public class NetworkUtils {
 		return Connection.NETWORK_ERROR;
 	}
 
-	private static void closeHttpClientGracefully(CloseableHttpClient client) {
-		if(client != null) {
-			try {
-				client.close();
-			} catch (IOException exception) {
-				// intentionally empty
-			}
-		}
+	private static void closeHttpClientGracefully(CloseableHttpClient client) {		
+		if (client == null) return;
+		
+		try {
+			client.close();
+		} catch (IOException exception) {
+			// intentionally empty
+		}		
 	}
 
 	/**
