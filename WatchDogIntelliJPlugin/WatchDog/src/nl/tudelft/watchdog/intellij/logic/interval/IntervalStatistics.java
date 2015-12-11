@@ -1,21 +1,21 @@
 package nl.tudelft.watchdog.intellij.logic.interval;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import nl.tudelft.watchdog.core.logic.interval.IntervalManagerBase;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.document.DocumentType;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
+import nl.tudelft.watchdog.core.logic.interval.IntervalManagerBase;
+import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
-import nl.tudelft.watchdog.intellij.logic.interval.intervaltypes.JUnitInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.UserActiveInterval;
-
+import nl.tudelft.watchdog.intellij.logic.interval.intervaltypes.JUnitInterval;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /** Gathers and calculates statistics on interval length. */
 @SuppressWarnings("javadoc")
@@ -23,7 +23,7 @@ public class IntervalStatistics extends IntervalManagerBase {
 	// Intervals are stored in the database for 10 hours (equals 600 minutes)
 	private static final int FILTERED_INTERVALS_IN_MINUTES = 600;
 
-	private final IntervalPersister intervalPersister;
+	private final IntervalPersisterBase intervalPersister;
 
 	public Duration intelliJOpen;
 	public Duration userActive;
