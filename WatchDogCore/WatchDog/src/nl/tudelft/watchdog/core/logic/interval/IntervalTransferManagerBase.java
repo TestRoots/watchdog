@@ -35,14 +35,11 @@ public class IntervalTransferManagerBase extends RegularCheckerBase {
 		runSetupAndStartTimeChecker();
 	}
 
-	/** 
-	 * Immediately synchronizes the intervals with the server. 
-	 * This function is only called before shutting down the IDE and it first 
-	 * shortens the connection timeout to reduce the shutdown time in some cases.
-	 */
+	/** Immediately synchronizes the intervals with the server. */
 	public void sendIntervalsImmediately() {
-		NetworkUtils.setConnectionTimeout(3000);
+		NetworkUtils.setConnectionTimeout(2000);
 		task.run();
+		NetworkUtils.setConnectionTimeout(12000);
 	}
 
     protected static void refreshUI() {}
