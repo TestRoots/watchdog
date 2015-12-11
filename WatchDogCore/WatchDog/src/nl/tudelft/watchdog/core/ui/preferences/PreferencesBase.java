@@ -6,7 +6,7 @@ import java.util.List;
 /** Skeleton for which preferences each plugin must provide. */
 public abstract class PreferencesBase {
 	
-	/** The map of registered workspaces. */
+	/** The map of registered projects. */
 	protected List<ProjectPreferenceSetting> projectSettings = new ArrayList<ProjectPreferenceSetting>();
 	
 	/**
@@ -59,15 +59,15 @@ public abstract class PreferencesBase {
     public abstract String getServerURI();
 
 	/**
-	 * @return <code>true</code> if this workspace has already been registered
+	 * @return <code>true</code> if this project has already been registered
 	 *         with WatchDog, <code>false</code> otherwise. Note: This does not
 	 *         say whether WatchDog should be activated.}.
 	 */
     public boolean isProjectRegistered(String project) {
     	ProjectPreferenceSetting projectSetting = getProjectSetting(
 				project);
-		return (projectSetting != null
-				&& projectSetting.startupQuestionAsked);
+		return projectSetting != null
+				&& projectSetting.startupQuestionAsked;
     }
 
 	/**
@@ -98,7 +98,7 @@ public abstract class PreferencesBase {
 	}
 
 	/**
-	 * Registers the given workspace with WatchDog. If use is <code>true</code>,
+	 * Registers the given project with WatchDog. If use is <code>true</code>,
 	 * WatchDog will be used.
 	 */
     public void registerProjectUse(String project, boolean use) {

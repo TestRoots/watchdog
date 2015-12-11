@@ -20,7 +20,8 @@ import nl.tudelft.watchdog.eclipse.Activator;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /**
- * Utilities for accessing WatchDog's Eclipse preferences.
+ * Utilities for accessing WatchDog's Eclipse preferences. In the case of
+ * Eclipse, a project actually corresponds to the open workspace.
  */
 public class Preferences extends PreferencesBase {
 
