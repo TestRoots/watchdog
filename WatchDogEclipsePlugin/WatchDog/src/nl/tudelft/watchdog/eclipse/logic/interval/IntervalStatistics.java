@@ -2,14 +2,15 @@ package nl.tudelft.watchdog.eclipse.logic.interval;
 
 import java.util.List;
 
-import nl.tudelft.watchdog.core.logic.interval.IntervalManagerBase;
+import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
 import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase;
 import nl.tudelft.watchdog.eclipse.logic.interval.intervaltypes.JUnitInterval;
 
+@SuppressWarnings("javadoc")
 public class IntervalStatistics extends IntervalStatisticsBase {
 
-	// TODO: update constructor
-	public IntervalStatistics(IntervalManagerBase intervalManager,
+	/** Contructor */
+	public IntervalStatistics(IDEIntervalManagerBase intervalManager,
 			StatisticsTimePeriod selectedInterval) {
 		super(intervalManager, selectedInterval);
 	}

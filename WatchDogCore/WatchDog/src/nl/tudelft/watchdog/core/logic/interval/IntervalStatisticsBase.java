@@ -77,23 +77,22 @@ public abstract class IntervalStatisticsBase extends IntervalManagerBase {
 	private StatisticsTimePeriod selectedInterval;
 	
 	/** Constructor. */
-	public IntervalStatisticsBase(IntervalManagerBase intervalManager,
+	public IntervalStatisticsBase(IDEIntervalManagerBase intervalManager,
 			StatisticsTimePeriod selectedInterval) {
-		this.intervalPersister = null;
-//		TODO:this.intervalPersister = intervalManager
-//				.getIntervalsStatisticsPersister();
+		this.intervalPersister = intervalManager
+				.getIntervalsStatisticsPersister();
 		this.selectedInterval = selectedInterval;
 		addIntervals(intervalManager);
 		filterIntervals();
 		calculateStatistics();
 	}
 	
-	private void addIntervals(IntervalManagerBase intervalManager) {
+	private void addIntervals(IDEIntervalManagerBase intervalManager) {
 		for (IntervalBase interval : intervalPersister.readIntervals()) {
 			interval.setClosed();
 			intervals.add(interval);
 		}
-		//TODO:intervals.addAll(intervalManager.getOpenIntervals());
+		intervals.addAll(intervalManager.getOpenIntervals());
 	}
 
 	/**

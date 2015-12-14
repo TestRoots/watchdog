@@ -1,21 +1,15 @@
 package nl.tudelft.watchdog.intellij.logic.interval;
 
+import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
 import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase;
-import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-	private final IntervalPersister intervalPersister;
+import nl.tudelft.watchdog.intellij.logic.interval.intervaltypes.JUnitInterval;
 
 import java.util.List;
 
 public class IntervalStatistics extends IntervalStatisticsBase {
 
-    //TODO: update constructor
-    public IntervalStatistics(IntervalManagerBase intervalManager, StatisticsTimePeriod selectedInterval) {
+    /** Constructor */
+    public IntervalStatistics(IDEIntervalManagerBase intervalManager, StatisticsTimePeriod selectedInterval) {
         super(intervalManager, selectedInterval);
     }
 
