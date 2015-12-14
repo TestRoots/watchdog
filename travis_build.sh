@@ -1,5 +1,6 @@
 #!/bin/bash
 echo
+pwd
 echo Build WatchDogServer
 echo 
 cd WatchDogServer
@@ -35,5 +36,8 @@ echo
 cd WatchDogEclipsePlugin/
 mvn integration-test -B
 ECLIPSE_CLIENT_STATUS=$?
+cd ..
+
+git ls-files -o
 
 exit $(($SERVER_STATUS + $CORE_STATUS + $INTELLIJ_CLIENT_STATUS + $ECLIPSE_CLIENT_STATUS))
