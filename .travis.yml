@@ -9,3 +9,16 @@ before_install:
 services:
   - mongodb
 script: ./travis_build.sh
+addons:
+  s3_region: "eu-central-1"
+  artifacts:
+    debug: true
+    paths:
+      - WatchDogCore-1.6.0.jar
+      - WatchDogIntelliJPlugin-1.6.0.jar
+      - WatchDogIntelliJPlugin-1.6.0.zip
+      - WatchDogEclipsePlugin-1.6.0.jar
+      - /home/travis/build/mjduijn/watchdog/WatchDogCore/WatchDog/target/nl.tudelft.WatchDogCore-1.6.0.jar
+      - /home/travis/build/mjduijn/watchdog/WatchDogIntelliJPlugin/WatchDog/target/lib/nl.tudelft.WatchDog-1.6.0.jar
+      - /home/travis/build/mjduijn/watchdog/WatchDogIntelliJPlugin/WatchDog/target/nl.tudelft.WatchDog-1.6.0-plugin.zip
+      - /home/travis/build/mjduijn/watchdog/WatchDogEclipsePlugin/WatchDog/target/nl.tudelft.WatchDog-1.6.0.jar
