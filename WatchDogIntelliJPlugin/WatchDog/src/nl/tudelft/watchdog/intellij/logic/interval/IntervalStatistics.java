@@ -1,8 +1,14 @@
 package nl.tudelft.watchdog.intellij.logic.interval;
 
-import nl.tudelft.watchdog.core.logic.interval.IntervalManagerBase;
 import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase;
-import nl.tudelft.watchdog.intellij.logic.interval.intervaltypes.JUnitInterval;
+import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+	private final IntervalPersister intervalPersister;
 
 import java.util.List;
 
