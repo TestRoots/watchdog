@@ -10,7 +10,7 @@ services:
   - mongodb
 script: ./travis_build.sh
 addons:
-  artifacts: true
+  artifacts:
     debug: true
     paths:
       - /home/travis/build/mjduijn/watchdog/WatchDogCore/WatchDog/target/nl.tudelft.WatchDogCore-1.6.0.jar
