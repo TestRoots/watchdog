@@ -12,9 +12,9 @@ script: ./travis_build.sh
 addons:
   artifacts: true
     debug: true
+    paths:
+      - /home/travis/build/mjduijn/watchdog/WatchDogCore/WatchDog/target/nl.tudelft.WatchDogCore-1.6.0.jar
+      - /home/travis/build/mjduijn/watchdog/WatchDogIntelliJPlugin/WatchDog/target/lib/nl.tudelft.WatchDog-1.6.0.jar
+      - /home/travis/build/mjduijn/watchdog/WatchDogIntelliJPlugin/WatchDog/target/nl.tudelft.WatchDog-1.6.0-plugin.zip
+      - /home/travis/build/mjduijn/watchdog/WatchDogEclipsePlugin/WatchDog/target/nl.tudelft.WatchDog-1.6.0.jar
   s3_region: "eu-central-1"
-  paths:
-    - /home/travis/build/mjduijn/watchdog/WatchDogCore/WatchDog/target/nl.tudelft.WatchDogCore-1.6.0.jar
-    - /home/travis/build/mjduijn/watchdog/WatchDogIntelliJPlugin/WatchDog/target/lib/nl.tudelft.WatchDog-1.6.0.jar
-    - /home/travis/build/mjduijn/watchdog/WatchDogIntelliJPlugin/WatchDog/target/nl.tudelft.WatchDog-1.6.0-plugin.zip
-    - /home/travis/build/mjduijn/watchdog/WatchDogEclipsePlugin/WatchDog/target/nl.tudelft.WatchDog-1.6.0.jar
