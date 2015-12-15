@@ -1,17 +1,17 @@
 package nl.tudelft.watchdog.intellij.logic;
 
-import java.io.File;
-import java.util.HashMap;
-
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.extensions.PluginId;
 import nl.tudelft.watchdog.core.logic.interval.IntervalTransferManagerBase;
+import nl.tudelft.watchdog.core.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalPersister;
 import nl.tudelft.watchdog.intellij.logic.ui.EventManager;
-import nl.tudelft.watchdog.intellij.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.intellij.logic.ui.listeners.IntelliJListener;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
+
+import java.io.File;
+import java.util.HashMap;
 
 /**
  * Manages the setup process of the interval recording infrastructure. Is a
