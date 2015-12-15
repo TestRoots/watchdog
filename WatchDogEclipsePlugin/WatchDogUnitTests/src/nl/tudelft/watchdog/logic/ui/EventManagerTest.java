@@ -2,22 +2,6 @@ package nl.tudelft.watchdog.logic.ui;
 
 import java.util.Date;
 
-import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
-import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.ReadingInterval;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.UserActiveInterval;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.WatchDogViewInterval;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.core.util.WatchDogGlobals;
-import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
-import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
-
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,6 +13,23 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
+import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.ReadingInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.UserActiveInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.WatchDogViewInterval;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
+import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
+import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
+import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /**
  * Tests the {@link EventManager}. Because this creates the intervals that are
@@ -44,7 +45,7 @@ public class EventManagerTest {
 	private static final int USER_ACTIVITY_TIMEOUT = 300;
 	private static final int TIMEOUT_GRACE_PERIOD = (int) (USER_ACTIVITY_TIMEOUT * 1.1);
 	private EventManager eventManager;
-	private IntervalManager intervalManager;
+	private IDEIntervalManagerBase intervalManager;
 	private ITextEditor mockedTextEditor;
 	private EditorIntervalBase editorInterval;
 	private IntervalBase interval;
@@ -58,7 +59,7 @@ public class EventManagerTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		IntervalManager intervalManagerReal = new IntervalManager(
+		IDEIntervalManagerBase intervalManagerReal = new IntervalManager(
 				Mockito.mock(IntervalPersisterBase.class),
 				Mockito.mock(IntervalPersisterBase.class));
 		intervalManager = Mockito.spy(intervalManagerReal);
