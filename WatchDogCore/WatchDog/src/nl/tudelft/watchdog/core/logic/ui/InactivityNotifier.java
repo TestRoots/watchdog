@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.eclipse.logic.ui;
+package nl.tudelft.watchdog.core.logic.ui;
 
 import java.util.Date;
 import java.util.Timer;
@@ -18,7 +18,7 @@ import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
  */
 public class InactivityNotifier {
 	/** */
-	protected final EventManager eventManager;
+	protected final EventManagerBase eventManager;
 
 	private int activityTimeout;
 
@@ -31,7 +31,7 @@ public class InactivityNotifier {
 	private boolean isRunning;
 
 	/** Constructor. */
-	public InactivityNotifier(EventManager eventManager, int activityTimeout,
+	public InactivityNotifier(EventManagerBase eventManager, int activityTimeout,
 			EventType type) {
 		this.eventManager = eventManager;
 		this.activityTimeout = activityTimeout;
