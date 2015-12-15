@@ -2,6 +2,8 @@ package nl.tudelft.watchdog.core.logic.network;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -26,6 +28,16 @@ import nl.tudelft.watchdog.core.util.WatchDogLogger;
  * Utility functions for accessing the network.
  */
 public class NetworkUtils {
+	
+	/**
+	 * Connection timeout to be used by the HttpClient.
+	 * Default timeout is 12 seconds. 
+	 */	
+	public static final int DEFAULT_TIMEOUT = 12*1000;
+	private static int connectionTimeout = DEFAULT_TIMEOUT;
+	
+	/** A handle to the current Http client */ 
+	private static CloseableHttpClient client = null;
 
 	/**
 	 * An enum denoting the three possible different connection outcomes:
@@ -45,6 +57,28 @@ public class NetworkUtils {
 		 */
 		NETWORK_ERROR
 	};
+	
+	/**
+	 * Change the default value of the connection timeout to the specified one.
+	 */
+	public static void setConnectionTimeout(int timeout) {
+		connectionTimeout = timeout;
+	}
+	
+	/**
+	 * Cancels the current request after the specified duration
+	 */
+	public static void cancelTransferAfter(long milliseconds){
+		Timer timer = new Timer();
+		TimerTask task = new TimerTask() {
+			
+			@Override
+			public void run() {
+				closeHttpClientGracefully(client);
+			}
+		};
+		timer.schedule(task, milliseconds);
+	}
 
 	/**
 	 * Returns the content at the given URL.
@@ -53,7 +87,7 @@ public class NetworkUtils {
 	 */
 	public static String getURLAndGetResponse(String url)
 			throws ServerCommunicationException {
-		CloseableHttpClient client = createHTTPClient();
+		client = createHTTPClient();
 		HttpGet get;
 		String errorMessage = "";
 
@@ -85,7 +119,7 @@ public class NetworkUtils {
 	 * @return a {@link Connection} object depicting how the connection went.
 	 */
 	public static Connection urlExistsAndReturnsStatus200(String url) {
-		CloseableHttpClient client = createHTTPClient();
+		client = createHTTPClient();
 		HttpGet get;
 
 		try {
@@ -113,12 +147,14 @@ public class NetworkUtils {
 		return Connection.NETWORK_ERROR;
 	}
 
-	private static void closeHttpClientGracefully(CloseableHttpClient client) {
+	private static void closeHttpClientGracefully(CloseableHttpClient client) {		
+		if (client == null) return;
+		
 		try {
 			client.close();
 		} catch (IOException exception) {
 			// intentionally empty
-		}
+		}		
 	}
 
 	/**
@@ -131,7 +167,7 @@ public class NetworkUtils {
 	 */
 	public static String transferJsonAndGetResponse(String url, String jsonData)
 			throws ServerCommunicationException, ServerReturnCodeException {
-		CloseableHttpClient client = createHTTPClient();
+		client = createHTTPClient();
 		HttpPost post = new HttpPost(url);
 		String errorMessage = "";
 
@@ -156,7 +192,7 @@ public class NetworkUtils {
 			}
 		} catch (IOException e) {
 			// server unreachable case
-			errorMessage = "Failed to commuincate with our server: " + e + " "
+			errorMessage = "Failed to communicate with our server: " + e + " "
 					+ e.getMessage();
 		} catch (IllegalStateException e) {
 			// URL wrongly formatted (target host is null)
@@ -250,7 +286,6 @@ public class NetworkUtils {
 	 * Creates a vanilla HTTP client builder with some timeouts.
 	 */
 	private static HttpClientBuilder createPlainHttpClientBuilder() {
-		int connectionTimeout = 12000;
 		RequestConfig config = RequestConfig.custom()
 				.setConnectionRequestTimeout(connectionTimeout)
 				.setConnectTimeout(connectionTimeout)

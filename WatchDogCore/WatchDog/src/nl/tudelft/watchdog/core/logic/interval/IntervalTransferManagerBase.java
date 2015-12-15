@@ -6,6 +6,7 @@ import java.util.TimerTask;
 
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
+import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
 import nl.tudelft.watchdog.core.logic.ui.RegularCheckerBase;
 import nl.tudelft.watchdog.core.ui.preferences.PreferencesBase;
@@ -36,7 +37,10 @@ public class IntervalTransferManagerBase extends RegularCheckerBase {
 
 	/** Immediately synchronizes the intervals with the server. */
 	public void sendIntervalsImmediately() {
+		NetworkUtils.setConnectionTimeout(2000);
+		NetworkUtils.cancelTransferAfter(2000);
 		task.run();
+		NetworkUtils.setConnectionTimeout(NetworkUtils.DEFAULT_TIMEOUT);
 	}
 
     protected static void refreshUI() {}
