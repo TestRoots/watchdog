@@ -17,7 +17,7 @@ import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.UserActiveInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
 
-/** Gathers and calculates statistics on interval length. */
+/** Gathers and calculates statistics on developer behavior in a variable time frame. */
 @SuppressWarnings("javadoc")
 public abstract class IntervalStatisticsBase extends IntervalManagerBase {
 	// Intervals are stored in the database for 10 hours (equals 600 minutes)

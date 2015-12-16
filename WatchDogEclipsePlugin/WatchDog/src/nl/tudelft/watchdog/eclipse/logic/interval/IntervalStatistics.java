@@ -6,7 +6,11 @@ import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
 import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase;
 import nl.tudelft.watchdog.eclipse.logic.interval.intervaltypes.JUnitInterval;
 
-@SuppressWarnings("javadoc")
+/**
+ * This class contains the Eclipse-specific code for calculating the JUnit
+ * statistics based on the Eclipse-specific {@link JUnitInterval}
+ * implementation.
+ */
 public class IntervalStatistics extends IntervalStatisticsBase {
 
 	/** Contructor */
