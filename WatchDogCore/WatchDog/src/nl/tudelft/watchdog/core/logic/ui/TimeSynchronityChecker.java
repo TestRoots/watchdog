@@ -5,7 +5,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.PerspectiveInterval;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
@@ -69,14 +68,7 @@ public class TimeSynchronityChecker extends RegularCheckerBase {
 					intervalManager.generateAndSetSessionSeed();
 					eventManager.update(new WatchDogEvent(this,
 							EventType.START_IDE));					
-
-					//Update Perspective interval if running in Eclipse 
-					PerspectiveInterval perspectiveInt = intervalManager
-							.getInterval(PerspectiveInterval.class);					
-					if(perspectiveInt != null) {
-						eventManager.update(new WatchDogEvent(perspectiveInt.getPerspectiveType(),
-							EventType.START_PERSPECTIVE));
-					}					
+					eventManager.updatePerspectiveInterval();
 				}
 			}
 

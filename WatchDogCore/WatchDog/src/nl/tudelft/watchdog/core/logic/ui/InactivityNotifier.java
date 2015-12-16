@@ -17,7 +17,7 @@ import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
  * shorter than we think he did.
  */
 public class InactivityNotifier {
-	/** */
+	
 	protected final EventManagerBase eventManager;
 
 	private int activityTimeout;

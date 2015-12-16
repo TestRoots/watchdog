@@ -5,9 +5,11 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.document.EditorWrapperBase;
 import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.PerspectiveInterval;
 import nl.tudelft.watchdog.core.logic.ui.EventManagerBase;
 import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.eclipse.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.eclipse.logic.document.EditorWrapper;
 import nl.tudelft.watchdog.eclipse.logic.interval.intervaltypes.JUnitInterval;
@@ -43,4 +45,13 @@ public class EventManager extends EventManagerBase {
 		return DocumentCreator.createDocument((ITextEditor) editor);
 	}
 
+	@Override
+	protected void updatePerspectiveInterval() {
+		PerspectiveInterval perspectiveInt = intervalManager
+				.getInterval(PerspectiveInterval.class);
+		if (perspectiveInt != null) {
+			update(new WatchDogEvent(perspectiveInt.getPerspectiveType(),
+					EventType.START_PERSPECTIVE));
+		}
+	}
 }

@@ -231,6 +231,13 @@ public abstract class EventManagerBase {
 	/** Creates a {@link Document} based on the editor contents. */
 	protected abstract Document createDocument(Object editor);
 	
+	/** Base implementation for updating the perspective interval.
+	 *  Can be extended/overriden to provide plugin specific functionality.
+	 */
+	protected void updatePerspectiveInterval() {
+		//Intentionally left empty
+	}
+	
 	private boolean needToCreateNewReadingInterval(
 			EditorIntervalBase editorInterval, Object editor) {
 		return isClosed(editorInterval)
