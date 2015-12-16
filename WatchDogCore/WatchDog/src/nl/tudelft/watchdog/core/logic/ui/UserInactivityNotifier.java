@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.intellij.logic.ui;
+package nl.tudelft.watchdog.core.logic.ui;
 
 import java.util.Date;
 
@@ -7,12 +7,12 @@ import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 
 /**
  * A Special InactivityNotifier that makes sure a wrapping
- * {@link nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType#USER_ACTIVITY} event exists if its trigger is called.
+ * {@link EventType#USER_ACTIVITY} event exists if its trigger is called.
  */
 public class UserInactivityNotifier extends InactivityNotifier {
 
 	/** Constructor. */
-	public UserInactivityNotifier(EventManager eventManager,
+	public UserInactivityNotifier(EventManagerBase eventManager,
 			int activityTimeout, EventType type) {
 		super(eventManager, activityTimeout, type);
 	}

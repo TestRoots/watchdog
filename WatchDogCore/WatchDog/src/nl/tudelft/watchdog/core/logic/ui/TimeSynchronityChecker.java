@@ -1,12 +1,10 @@
-package nl.tudelft.watchdog.intellij.logic.ui;
+package nl.tudelft.watchdog.core.logic.ui;
 
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import nl.tudelft.watchdog.core.logic.ui.RegularCheckerBase;
-import nl.tudelft.watchdog.intellij.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
+import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
@@ -22,13 +20,13 @@ public class TimeSynchronityChecker extends RegularCheckerBase {
 
 	private static final int UPDATE_RATE = 1 * 60 * 1000;
 
-	private final IntervalManager intervalManager;
+	private final IDEIntervalManagerBase intervalManager;
 
-	private final EventManager eventManager;
+	private final EventManagerBase eventManager;
 
 	/** Constructor. */
-	public TimeSynchronityChecker(IntervalManager intervalManager,
-			EventManager eventManager) {
+	public TimeSynchronityChecker(IDEIntervalManagerBase intervalManager,
+			EventManagerBase eventManager) {
 		super(UPDATE_RATE);
 		this.intervalManager = intervalManager;
 		this.eventManager = eventManager;
@@ -65,13 +63,12 @@ public class TimeSynchronityChecker extends RegularCheckerBase {
 				if (!deltaIsWithinReasonableBoundaries) {
 					WatchDogLogger.getInstance().logInfo(
 							"System suspend detected!");
-
 					intervalManager.closeAllIntervals(new Date(
 							previousExecutionDate + UPDATE_RATE));
 					intervalManager.generateAndSetSessionSeed();
 					eventManager.update(new WatchDogEvent(this,
-							EventType.START_IDE));
-
+							EventType.START_IDE));					
+					eventManager.updatePerspectiveInterval();
 				}
 			}
 

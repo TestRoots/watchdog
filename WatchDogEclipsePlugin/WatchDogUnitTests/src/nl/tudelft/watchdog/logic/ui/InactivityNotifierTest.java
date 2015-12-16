@@ -2,15 +2,15 @@ package nl.tudelft.watchdog.logic.ui;
 
 import java.util.Date;
 
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
-import nl.tudelft.watchdog.eclipse.logic.ui.InactivityNotifier;
-import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import nl.tudelft.watchdog.core.logic.ui.InactivityNotifier;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
+import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /**
  * Tests for inactivity notifier. These tests have the potential to flicker, as
