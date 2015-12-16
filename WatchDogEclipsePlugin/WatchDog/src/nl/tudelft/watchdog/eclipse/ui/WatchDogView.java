@@ -5,7 +5,7 @@ import java.awt.Color;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalStatistics;
-import nl.tudelft.watchdog.eclipse.logic.interval.IntervalStatistics.StatisticsTimePeriod;
+import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase.StatisticsTimePeriod;
 import nl.tudelft.watchdog.eclipse.logic.ui.listeners.WatchDogViewListener;
 import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
 
@@ -201,7 +201,7 @@ public class WatchDogView extends ViewPart {
 				.getInstance().getIntervalManager(), selectedTimePeriod);
 
 		eclipseOpen = intervalStatistics
-				.getPreciseTime(intervalStatistics.eclipseOpen);
+				.getPreciseTime(intervalStatistics.ideOpen);
 		userActive = intervalStatistics
 				.getPreciseTime(intervalStatistics.userActive);
 		userReading = intervalStatistics
