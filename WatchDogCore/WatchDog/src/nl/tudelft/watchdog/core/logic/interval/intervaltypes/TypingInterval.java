@@ -15,6 +15,12 @@ import nl.tudelft.watchdog.core.logic.network.JsonifiedLong;
  * {@link IntervalType#TYPING} activity.
  */
 public class TypingInterval extends EditorIntervalBase {
+	
+	/** 
+	 * The maximum product of the lengths of the starting and ending
+	 * document for which the Levenshtein distance will be calculated.
+	 */
+	private static final long LENGTH_PRODUCT_THRESHOLD = Long.MAX_VALUE;
 
 	/** The operations that need to be carried out to close this interval. */
 	private class TypingIntervalCloserBase extends EditorIntervalCloser {
@@ -32,8 +38,23 @@ public class TypingInterval extends EditorIntervalBase {
 				String startingContent = getDocument().getContent();
 				String endingContent = endingDocument.getContent();
 				if (startingContent != null && endingContent != null) {
-					editDistance = new JsonifiedLong(
+					int startLength = startingContent.length();
+					int endLength = endingContent.length();
+					charLengthDiffBetweenStartAndEndDoc = Math.abs(startLength - endLength);
+					
+					long lengthProduct = startLength*endLength;
+					if(startLength == 0) {
+						lengthProduct = endLength;
+					} 
+					else if (endLength == 0) {
+						lengthProduct = startLength;
+					}
+					
+					//only calculate Levenshtein when its impact on the usability is acceptable
+					if(lengthProduct <= LENGTH_PRODUCT_THRESHOLD) {
+						editDistance = new JsonifiedLong(
 							StringUtils.getLevenshteinDistance(startingContent, endingContent));
+					}
 				}
 			}
 			isClosed = true;
@@ -62,6 +83,13 @@ public class TypingInterval extends EditorIntervalBase {
 	 */	
 	@SerializedName("modCount")
 	private long modCount;
+	
+	/**
+	 * The difference in the number of characters between the starting and ending
+	 * document.
+	 */
+	@SerializedName("startEndDiff")
+	private int charLengthDiffBetweenStartAndEndDoc;
 
 	/** Constructor. */
 	public TypingInterval(EditorWrapperBase editor, Date start) {
