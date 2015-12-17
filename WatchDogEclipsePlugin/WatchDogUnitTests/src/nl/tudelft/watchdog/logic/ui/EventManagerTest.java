@@ -23,6 +23,7 @@ import nl.tudelft.watchdog.core.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.UserActiveInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.WatchDogViewInterval;
+import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
@@ -124,13 +125,13 @@ public class EventManagerTest {
 	@Test
 	public void testCreateWriteIntervalAndNotAReadInterval() {
 		eventManager.update(createMockEvent(EventType.START_EDIT));
-		eventManager.update(createMockEvent(EventType.SUBSEQUENT_EDIT));
+		eventManager.update(createMockEditorEvent(EventType.SUBSEQUENT_EDIT));
 		Mockito.verify(intervalManager, Mockito.atLeast(1)).addInterval(
 				Mockito.isA(TypingInterval.class));
 		Mockito.verify(intervalManager, Mockito.never()).addInterval(
 				Mockito.isA(ReadingInterval.class));
 		eventManager.update(createMockEvent(EventType.CARET_MOVED));
-		eventManager.update(createMockEvent(EventType.SUBSEQUENT_EDIT));
+		eventManager.update(createMockEditorEvent(EventType.SUBSEQUENT_EDIT));
 		eventManager.update(createMockEvent(EventType.PAINT));
 		Mockito.verify(intervalManager, Mockito.atLeast(1)).addInterval(
 				Mockito.isA(TypingInterval.class));
@@ -293,6 +294,10 @@ public class EventManagerTest {
 
 	private WatchDogEvent createMockEvent(EventType eventType) {
 		return new WatchDogEvent(mockedTextEditor, eventType);
+	}
+	
+	private WatchDogEvent createMockEditorEvent(EventType eventType) {
+		return new EditorEvent(mockedTextEditor, eventType);
 	}
 
 }
