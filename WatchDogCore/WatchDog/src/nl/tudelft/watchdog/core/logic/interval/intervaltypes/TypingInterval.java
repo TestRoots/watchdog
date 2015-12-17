@@ -55,10 +55,18 @@ public class TypingInterval extends EditorIntervalBase {
 	 */
 	@SerializedName("diff")
 	JsonifiedLong editDistance;
+	
+	/**
+	 * The number of characters that have been added, removed or modified during
+	 * this interval.
+	 */	
+	@SerializedName("modCount")
+	private long modCount;
 
 	/** Constructor. */
 	public TypingInterval(EditorWrapperBase editor, Date start) {
 		super(editor, IntervalType.TYPING, start);
+		this.modCount = 0;
 	}
 
 	@Override
@@ -69,6 +77,13 @@ public class TypingInterval extends EditorIntervalBase {
 	/** Updates the contents when ending the typing interval. */
 	public void setEndingDocument(Document endingDocument) {
 		this.endingDocument = endingDocument;
+	}
+	
+	/** Increases the number of characters modified in this interval. */
+	public void increaseModCountWith(long nrOfModifiedChars) {
+		if(nrOfModifiedChars > 0) {
+			this.modCount += nrOfModifiedChars;
+		}
 	}
 
 	@Override
