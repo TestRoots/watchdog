@@ -43,7 +43,24 @@ public class EditorListener {
 
             @Override
 			public void documentChanged(DocumentEvent event) {
-                eventManager.update(new EditorEvent(editor, EventType.SUBSEQUENT_EDIT));
+				/**
+				 * Three events exist that can influence the Levenshtein distance:
+				 * 1. Addition. In this case old_length=0 and new_length>0, therefore max(old_length,new_length)=new_length=Levenshtein distance.
+				 * 2. Removal. In this case old_length>0 and new_length=0, therefore max(old_length,new_length)=old_length=Levenshtein distance.
+				 * 3. Modification. In this case old_length>0 and new_length>0, therefore max(old_length,new_length)>=Levenshtein distance.
+				 * 
+				 * However, when you modify something by selecting it and then pressing a key, the modCount is off by 1 compared to the one computed
+				 * in Eclipse for the same changes. This is because IntelliJ generates 2 events in this particular situation (first removal, then
+				 * addition of 1 character). Unfortunately, detecting this particular situation seems to be impossible or quite difficult.
+				 *
+				 * So, in general it holds that modCount >= Levenshtein distance.
+				 */
+				int new_length = event.getNewFragment().length();
+				int old_length = event.getOldFragment().length();
+				int modCount = Math.max(old_length, new_length);
+				EditorEvent edEvent = new EditorEvent(editor, EventType.SUBSEQUENT_EDIT);
+				edEvent.setModCount(modCount);
+                eventManager.update(edEvent);
 			}
 
 		};
