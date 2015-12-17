@@ -2,13 +2,13 @@ package nl.tudelft.watchdog.core.logic.interval.intervaltypes;
 
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+
+import com.google.gson.annotations.SerializedName;
+
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.document.EditorWrapperBase;
 import nl.tudelft.watchdog.core.logic.network.JsonifiedLong;
-
-
-import com.cedarsoftware.util.StringUtilities;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * An interval for when the user is currently typing, connected to the
@@ -33,8 +33,7 @@ public class TypingInterval extends EditorIntervalBase {
 				String endingContent = endingDocument.getContent();
 				if (startingContent != null && endingContent != null) {
 					editDistance = new JsonifiedLong(
-							StringUtilities.levenshteinDistance(
-									startingContent, endingContent));
+							StringUtils.getLevenshteinDistance(startingContent, endingContent));
 				}
 			}
 			isClosed = true;
