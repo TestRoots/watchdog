@@ -20,7 +20,7 @@ public class TypingInterval extends EditorIntervalBase {
 	 * The maximum product of the lengths of the starting and ending
 	 * document for which the Levenshtein distance will be calculated.
 	 */
-	private static final long LENGTH_PRODUCT_THRESHOLD = Long.MAX_VALUE;
+	private static final long LENGTH_PRODUCT_THRESHOLD = 100000000;
 
 	/** The operations that need to be carried out to close this interval. */
 	private class TypingIntervalCloserBase extends EditorIntervalCloser {
