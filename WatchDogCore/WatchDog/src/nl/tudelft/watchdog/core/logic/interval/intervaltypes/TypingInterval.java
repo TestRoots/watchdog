@@ -40,7 +40,7 @@ public class TypingInterval extends EditorIntervalBase {
 				if (startingContent != null && endingContent != null) {
 					int startLength = startingContent.length();
 					int endLength = endingContent.length();
-					charLengthDiffBetweenStartAndEndDoc = Math.abs(startLength - endLength);
+					charLengthDiff = Math.abs(startLength - endLength);
 					
 					long lengthProduct = startLength*endLength;
 					if(startLength == 0) {
@@ -82,14 +82,14 @@ public class TypingInterval extends EditorIntervalBase {
 	 * this interval.
 	 */	
 	@SerializedName("modCount")
-	private long modCount;
+	private int modCount;
 	
 	/**
 	 * The difference in the number of characters between the starting and ending
 	 * document.
 	 */
 	@SerializedName("startEndDiff")
-	private int charLengthDiffBetweenStartAndEndDoc;
+	private int charLengthDiff;
 
 	/** Constructor. */
 	public TypingInterval(EditorWrapperBase editor, Date start) {
@@ -108,9 +108,9 @@ public class TypingInterval extends EditorIntervalBase {
 	}
 	
 	/** Increases the number of characters modified in this interval. */
-	public void increaseModCountWith(long nrOfModifiedChars) {
-		if(nrOfModifiedChars > 0) {
-			this.modCount += nrOfModifiedChars;
+	public void increaseModCountWith(int modifiedChars) {
+		if(modifiedChars > 0) {
+			this.modCount += modifiedChars;
 		}
 	}
 

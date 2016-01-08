@@ -148,10 +148,10 @@ public abstract class EventManagerBase {
 				break;
 			}
 			
-			//increase modCount for the current typing interval
-			EditorEvent edEvent = (EditorEvent) event;
-			TypingInterval currInterval = (TypingInterval) editorInterval;
-			currInterval.increaseModCountWith(edEvent.getModCount());
+			// Increase modCount for the current typing interval
+			EditorEvent editorEvent = (EditorEvent) event;
+			TypingInterval typingInt = (TypingInterval) editorInterval;
+			typingInt.increaseModCountWith(editorEvent.getModCount());
 
 			typingInactivityNotifier.trigger();
 			userInactivityNotifier.trigger(forcedDate);

@@ -53,25 +53,32 @@ public class EditorListener {
 
 			@Override
 			public void documentChanged(DocumentEvent event) {
-				/**
-				 * Three events exist that can influence the Levenshtein distance:
-				 * 1. Addition. In this case length=0 and text>0, therefore max(length,text)=text=Levenshtein distance.
-				 * 2. Removal. In this case length>0 and text=0, therefore max(length,text)=length=Levenshtein distance.
+				/*
+				 * Three events exist that can influence the Levenshtein
+				 * distance: 
+				 * 1. Addition. In this case length=0 and text>0,  therefore max(length,text)=text=Levenshtein distance. 
+				 * 2. Removal. In this case length>0 and text=0, therefore max(length,text)=length=Levenshtein distance. 
 				 * 3. Modification. In this case length>0 and text>0, therefore max(length,text)>=Levenshtein distance.
 				 * 
-				 * So, in general it holds that modCount >= Levenshtein distance.
+				 * So, in general it holds that modCount >= Levenshtein
+				 * distance.
 				 */
-				int modCount = Math.max(event.getLength(),
-						event.getText().length());
-				EditorEvent newEvent = new EditorEvent(editor, EventType.SUBSEQUENT_EDIT);
+				int textLength = 0;
+				if (event.getText() != null) {
+					textLength = event.getText().length();
+				}
+
+				int modCount = Math.max(event.getLength(), textLength);
+				EditorEvent newEvent = new EditorEvent(editor,
+						EventType.SUBSEQUENT_EDIT);
 				newEvent.setModCount(modCount);
 				eventManager.update(newEvent);
 			}
 
 			@Override
 			public void documentAboutToBeChanged(DocumentEvent event) {
-				eventManager.update(new EditorEvent(editor,
-						EventType.START_EDIT));
+				eventManager
+						.update(new EditorEvent(editor, EventType.START_EDIT));
 			}
 		};
 		document.addDocumentListener(documentListener);
@@ -86,8 +93,8 @@ public class EditorListener {
 		caretListener = new CaretListener() {
 			@Override
 			public void caretMoved(CaretEvent event) {
-				eventManager.update(new EditorEvent(editor,
-						EventType.CARET_MOVED));
+				eventManager
+						.update(new EditorEvent(editor, EventType.CARET_MOVED));
 				// cursor place changed
 			}
 		};
@@ -110,8 +117,8 @@ public class EditorListener {
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				eventManager.update(new EditorEvent(editor,
-						EventType.ACTIVE_FOCUS));
+				eventManager.update(
+						new EditorEvent(editor, EventType.ACTIVE_FOCUS));
 			}
 		};
 		styledText.addFocusListener(focusListener);
