@@ -92,6 +92,7 @@ public class JsonConverterTest {
 		interval.setDocument(new Document("Project", "filepath", "Production.java", "blah-document"));
 		interval.setEndingDocument(new Document("Project", "filepath", "Production.java", "blah-document"));
 		interval.close();
+		sleepABit();
 
 		ArrayList<IntervalBase> intervals = new ArrayList<>();
 		intervals.add(interval);
@@ -109,6 +110,7 @@ public class JsonConverterTest {
 		interval.setDocument(new Document("Project", "filepath", "Production.java", "blah-document"));
 		interval.setEndingDocument(new Document("Project", "filepath", "Production.java", "blah-document-add"));
 		interval.close();
+		sleepABit();
 
 		ArrayList<IntervalBase> intervals = new ArrayList<>();
 		intervals.add(interval);
@@ -126,6 +128,7 @@ public class JsonConverterTest {
 		interval.setDocument(new Document("Project", "filepath", "Production.java", "blah-document"));
 		interval.setEndingDocument(new Document("Project", "filepath", "Production.java", "blah-doc"));
 		interval.close();
+		sleepABit();
 
 		ArrayList<IntervalBase> intervals = new ArrayList<>();
 		intervals.add(interval);
@@ -143,6 +146,7 @@ public class JsonConverterTest {
 		interval.setDocument(new Document("Project", "filepath", "Production.java", "blah-document"));
 		interval.setEndingDocument(new Document("Project", "filepath", "Production.java", "blah-documens"));
 		interval.close();
+		sleepABit();
 
 		ArrayList<IntervalBase> intervals = new ArrayList<>();
 		intervals.add(interval);
