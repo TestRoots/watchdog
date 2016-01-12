@@ -1,9 +1,5 @@
 package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
-import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
-
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
@@ -18,6 +14,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
+
+import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
 
 /** Enriches an {@link IEditorPart} for all user-triggered events. */
 public class EditorListener {
@@ -53,14 +53,32 @@ public class EditorListener {
 
 			@Override
 			public void documentChanged(DocumentEvent event) {
-				eventManager.update(new EditorEvent(editor,
-						EventType.SUBSEQUENT_EDIT));
+				/*
+				 * Three events exist that can influence the Levenshtein
+				 * distance: 
+				 * 1. Addition. In this case length=0 and text>0,  therefore max(length,text)=text=Levenshtein distance. 
+				 * 2. Removal. In this case length>0 and text=0, therefore max(length,text)=length=Levenshtein distance. 
+				 * 3. Modification. In this case length>0 and text>0, therefore max(length,text)>=Levenshtein distance.
+				 * 
+				 * So, in general it holds that modCount >= Levenshtein
+				 * distance.
+				 */
+				int textLength = 0;
+				if (event.getText() != null) {
+					textLength = event.getText().length();
+				}
+
+				int modCount = Math.max(event.getLength(), textLength);
+				EditorEvent newEvent = new EditorEvent(editor,
+						EventType.SUBSEQUENT_EDIT);
+				newEvent.setModCount(modCount);
+				eventManager.update(newEvent);
 			}
 
 			@Override
 			public void documentAboutToBeChanged(DocumentEvent event) {
-				eventManager.update(new EditorEvent(editor,
-						EventType.START_EDIT));
+				eventManager
+						.update(new EditorEvent(editor, EventType.START_EDIT));
 			}
 		};
 		document.addDocumentListener(documentListener);
@@ -75,8 +93,8 @@ public class EditorListener {
 		caretListener = new CaretListener() {
 			@Override
 			public void caretMoved(CaretEvent event) {
-				eventManager.update(new EditorEvent(editor,
-						EventType.CARET_MOVED));
+				eventManager
+						.update(new EditorEvent(editor, EventType.CARET_MOVED));
 				// cursor place changed
 			}
 		};
@@ -99,8 +117,8 @@ public class EditorListener {
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				eventManager.update(new EditorEvent(editor,
-						EventType.ACTIVE_FOCUS));
+				eventManager.update(
+						new EditorEvent(editor, EventType.ACTIVE_FOCUS));
 			}
 		};
 		styledText.addFocusListener(focusListener);
