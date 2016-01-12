@@ -50,7 +50,7 @@ public class TypingInterval extends EditorIntervalBase {
 						lengthProduct = startLength;
 					}
 					
-					//only calculate Levenshtein when its impact on the usability is acceptable
+					// Only calculate Levenshtein when its impact on the usability is acceptable
 					if(lengthProduct <= LENGTH_PRODUCT_THRESHOLD) {
 						editDistance = new JsonifiedLong(
 							StringUtils.getLevenshteinDistance(startingContent, endingContent));
@@ -81,14 +81,14 @@ public class TypingInterval extends EditorIntervalBase {
 	 * The number of characters that have been added, removed or modified during
 	 * this interval.
 	 */	
-	@SerializedName("modCount")
+	@SerializedName("modCountDiff")
 	private int modCount;
 	
 	/**
 	 * The difference in the number of characters between the starting and ending
 	 * document.
 	 */
-	@SerializedName("startEndDiff")
+	@SerializedName("charLengthDiff")
 	private int charLengthDiff;
 
 	/** Constructor. */

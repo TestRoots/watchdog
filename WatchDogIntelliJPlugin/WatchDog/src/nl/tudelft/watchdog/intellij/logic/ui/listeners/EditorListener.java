@@ -43,7 +43,7 @@ public class EditorListener {
 
             @Override
 			public void documentChanged(DocumentEvent event) {
-				/**
+				/*
 				 * Three events exist that can influence the Levenshtein distance:
 				 * 1. Addition. In this case old_length=0 and new_length>0, therefore max(old_length,new_length)=new_length=Levenshtein distance.
 				 * 2. Removal. In this case old_length>0 and new_length=0, therefore max(old_length,new_length)=old_length=Levenshtein distance.

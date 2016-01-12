@@ -38,8 +38,7 @@ public class JsonConverterTest {
 	}
 
 	public String pasteWDVAndClient() {
-		return "\"wdv\":\"" + WatchDogGlobals.CLIENT_VERSION
-				+ "\",\"ide\":\"ec\"";
+		return "\"wdv\":\"" + WatchDogGlobals.CLIENT_VERSION + "\",\"ide\":\"ec\"";
 	}
 
 	/** Tests the format of the returned Json representation. */
@@ -65,7 +64,7 @@ public class JsonConverterTest {
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals(
-				"[{\"modCount\":0,\"startEndDiff\":0,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":\"\","
+				"[{\"modCountDiff\":0,\"charLengthDiff\":0,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":\"\","
 						+ pasteWDVAndClient() + "}]",
 				transferer.toJson(intervals));
 	}
@@ -75,15 +74,81 @@ public class JsonConverterTest {
 	public void testJsonTypingIntervalTwoSameIntervalsRepresentation() {
 		ITextEditor editor = Mockito.mock(ITextEditor.class);
 		TypingInterval interval = new TypingInterval(new EditorWrapper(editor), new Date());
-		interval.setDocument(new Document("Project", "filepath",
-				"Production.java", "blah-document"));
-		interval.setEndingDocument(new Document("Project", "Production.java",
-				"filepath", "blah-document"));
+		interval.setDocument(new Document("Project", "filepath", "Production.java", "blah-document"));
+		interval.setEndingDocument(new Document("Project", "Production.java", "filepath", "blah-document"));
 
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals(
-				"[{\"endingDocument\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"diff\":0,\"modCount\":0,\"startEndDiff\":0,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":\"\","
+				"[{\"endingDocument\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"diff\":0,\"modCountDiff\":0,\"charLengthDiff\":0,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":\"\","
+						+ pasteWDVAndClient() + "}]",
+				transferer.toJson(intervals));
+	}
+
+	@Test
+	public void testJsonTypingIntervalDiffsNoChanges() {
+		ITextEditor editor = Mockito.mock(ITextEditor.class);
+		TypingInterval interval = new TypingInterval(new EditorWrapper(editor), new Date(1));
+		interval.setDocument(new Document("Project", "filepath", "Production.java", "blah-document"));
+		interval.setEndingDocument(new Document("Project", "filepath", "Production.java", "blah-document"));
+		interval.close();
+
+		ArrayList<IntervalBase> intervals = new ArrayList<>();
+		intervals.add(interval);
+
+		assertEquals(
+				"[{\"endingDocument\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"e4afa075bb910c8ecb427e9950426a4599b21d7e\",\"sloc\":1,\"dt\":\"un\"},\"diff\":0,\"modCountDiff\":0,\"charLengthDiff\":0,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"e4afa075bb910c8ecb427e9950426a4599b21d7e\",\"sloc\":1,\"dt\":\"un\"},\"it\":\"ty\",\"ts\":1,"
+						+ pasteWDVAndClient() + "}]",
+				transferer.toJson(intervals));
+	}
+
+	@Test
+	public void testJsonTypingIntervalDiffsAddition() {
+		ITextEditor editor = Mockito.mock(ITextEditor.class);
+		TypingInterval interval = new TypingInterval(new EditorWrapper(editor), new Date(1));
+		interval.setDocument(new Document("Project", "filepath", "Production.java", "blah-document"));
+		interval.setEndingDocument(new Document("Project", "filepath", "Production.java", "blah-document-add"));
+		interval.close();
+
+		ArrayList<IntervalBase> intervals = new ArrayList<>();
+		intervals.add(interval);
+
+		assertEquals(
+				"[{\"endingDocument\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"e4afa075bb910c8ecb427e9950426a4599b21d7e\",\"sloc\":1,\"dt\":\"un\"},\"diff\":4,\"modCountDiff\":0,\"charLengthDiff\":4,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"e4afa075bb910c8ecb427e9950426a4599b21d7e\",\"sloc\":1,\"dt\":\"un\"},\"it\":\"ty\",\"ts\":1,"
+						+ pasteWDVAndClient() + "}]",
+				transferer.toJson(intervals));
+	}
+
+	@Test
+	public void testJsonTypingIntervalDiffsRemoval() {
+		ITextEditor editor = Mockito.mock(ITextEditor.class);
+		TypingInterval interval = new TypingInterval(new EditorWrapper(editor), new Date(1));
+		interval.setDocument(new Document("Project", "filepath", "Production.java", "blah-document"));
+		interval.setEndingDocument(new Document("Project", "filepath", "Production.java", "blah-doc"));
+		interval.close();
+
+		ArrayList<IntervalBase> intervals = new ArrayList<>();
+		intervals.add(interval);
+
+		assertEquals(
+				"[{\"endingDocument\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"e4afa075bb910c8ecb427e9950426a4599b21d7e\",\"sloc\":1,\"dt\":\"un\"},\"diff\":5,\"modCountDiff\":0,\"charLengthDiff\":5,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"e4afa075bb910c8ecb427e9950426a4599b21d7e\",\"sloc\":1,\"dt\":\"un\"},\"it\":\"ty\",\"ts\":1,"
+						+ pasteWDVAndClient() + "}]",
+				transferer.toJson(intervals));
+	}
+
+	@Test
+	public void testJsonTypingIntervalDiffsModification() {
+		ITextEditor editor = Mockito.mock(ITextEditor.class);
+		TypingInterval interval = new TypingInterval(new EditorWrapper(editor), new Date(1));
+		interval.setDocument(new Document("Project", "filepath", "Production.java", "blah-document"));
+		interval.setEndingDocument(new Document("Project", "filepath", "Production.java", "blah-documens"));
+		interval.close();
+
+		ArrayList<IntervalBase> intervals = new ArrayList<>();
+		intervals.add(interval);
+
+		assertEquals(
+				"[{\"endingDocument\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"e4afa075bb910c8ecb427e9950426a4599b21d7e\",\"sloc\":1,\"dt\":\"un\"},\"diff\":1,\"modCountDiff\":0,\"charLengthDiff\":0,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"e4afa075bb910c8ecb427e9950426a4599b21d7e\",\"sloc\":1,\"dt\":\"un\"},\"it\":\"ty\",\"ts\":1,"
 						+ pasteWDVAndClient() + "}]",
 				transferer.toJson(intervals));
 	}
@@ -94,8 +159,8 @@ public class JsonConverterTest {
 		IntervalBase interval = new IDEOpenInterval(new Date());
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
-		assertEquals("[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":\"\","
-				+ pasteWDVAndClient() + "}]", transferer.toJson(intervals));
+		assertEquals("[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
+				transferer.toJson(intervals));
 	}
 
 	/**
@@ -107,14 +172,12 @@ public class JsonConverterTest {
 		IntervalBase interval = new IDEOpenInterval(new Date());
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
-		assertEquals("[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":\"\","
-				+ pasteWDVAndClient() + "}]", transferer.toJson(intervals));
+		assertEquals("[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
+				transferer.toJson(intervals));
 	}
 
-	private ArrayList<IntervalBase> createSampleIntervals(
-			EditorIntervalBase interval) {
-		interval.setDocument(new Document("Project", "Production.java",
-				"filepath", "blah-document"));
+	private ArrayList<IntervalBase> createSampleIntervals(EditorIntervalBase interval) {
+		interval.setDocument(new Document("Project", "Production.java", "filepath", "blah-document"));
 		ArrayList<IntervalBase> intervals = createSampleIntervals((IntervalBase) interval);
 		return intervals;
 	}
@@ -139,16 +202,14 @@ public class JsonConverterTest {
 	@Test
 	public void testUserHasWatchDogVersion() {
 		String gsonRepresentation = WatchDogUtils.convertToJson(new User());
-		boolean containsWDVersion = gsonRepresentation.contains("\"wdv\":\""
-				+ WatchDogGlobals.CLIENT_VERSION + "\"");
+		boolean containsWDVersion = gsonRepresentation.contains("\"wdv\":\"" + WatchDogGlobals.CLIENT_VERSION + "\"");
 		assertTrue(containsWDVersion);
 	}
 
 	@Test
 	public void testProjectHasWatchDogVersion() {
-		String gsonRepresentation =  WatchDogUtils.convertToJson(new Project(""));
-		boolean containsWDVersion = gsonRepresentation.contains("\"wdv\":\""
-				+ WatchDogGlobals.CLIENT_VERSION + "\"");
+		String gsonRepresentation = WatchDogUtils.convertToJson(new Project(""));
+		boolean containsWDVersion = gsonRepresentation.contains("\"wdv\":\"" + WatchDogGlobals.CLIENT_VERSION + "\"");
 		assertTrue(containsWDVersion);
 	}
 

@@ -296,7 +296,7 @@ public class EventManagerTest {
 		return new WatchDogEvent(mockedTextEditor, eventType);
 	}
 	
-	private WatchDogEvent createMockEditorEvent(EventType eventType) {
+	private EditorEvent createMockEditorEvent(EventType eventType) {
 		return new EditorEvent(mockedTextEditor, eventType);
 	}
 
