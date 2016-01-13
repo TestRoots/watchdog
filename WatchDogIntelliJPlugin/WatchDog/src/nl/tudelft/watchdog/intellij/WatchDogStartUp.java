@@ -197,7 +197,7 @@ public class WatchDogStartUp implements ProjectComponent {
                 .getOrCreateProjectSetting(project.getName());
         if (setting.enableWatchdog) {
             WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
-            InitializationManager.getInstance(project.getName());
+            InitializationManager.getInstance(project.getName()).addDebuggerListener(project);
             WatchDogUtils.setWatchDogActiveForProject(project);
             new ViewToolWindowButtonsAction().setSelected(null, true);
         }
