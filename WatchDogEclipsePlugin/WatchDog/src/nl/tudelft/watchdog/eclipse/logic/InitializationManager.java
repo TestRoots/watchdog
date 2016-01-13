@@ -2,6 +2,8 @@ package nl.tudelft.watchdog.eclipse.logic;
 
 import java.io.File;
 
+import org.eclipse.debug.core.DebugPlugin;
+
 import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
 import nl.tudelft.watchdog.core.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
@@ -10,6 +12,7 @@ import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalTransferManager;
 import nl.tudelft.watchdog.eclipse.logic.network.ClientVersionChecker;
 import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
+import nl.tudelft.watchdog.eclipse.logic.ui.listeners.DebuggerListener;
 import nl.tudelft.watchdog.eclipse.logic.ui.listeners.WorkbenchListener;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
@@ -60,6 +63,9 @@ public class InitializationManager {
 				new IntervalTransferManager(intervalsToTransferPersister,
 						WatchDogUtils.getWorkspaceName()));
 		workbenchListener.attachListeners();
+
+		DebugPlugin.getDefault()
+				.addDebugEventListener(new DebuggerListener(eventManager));
 	}
 
 	/**
