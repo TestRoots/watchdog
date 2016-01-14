@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
 import nl.tudelft.watchdog.core.logic.document.DocumentType;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
@@ -31,6 +32,7 @@ public abstract class IntervalStatisticsBase extends IntervalManagerBase {
 	public Duration userTyping;
 	public Duration userProduction;
 	public Duration userTest;
+	public Duration userDebugging;
 	public Duration perspectiveDebug;
 	public Duration perspectiveJava;
 	public Duration perspectiveOther;
@@ -162,6 +164,7 @@ public abstract class IntervalStatisticsBase extends IntervalManagerBase {
 		userActive = aggregateDurations(getIntervals(UserActiveInterval.class));
 		userReading = aggregateDurations(getIntervals(ReadingInterval.class));
 		userTyping = aggregateDurations(getIntervals(TypingInterval.class));
+		userDebugging = aggregateDurations(getIntervals(DebugInterval.class));
 		userTest = aggregateDurations(getEditorIntervals(DocumentType.TEST))
 				.plus(aggregateDurations(
 						getEditorIntervals(DocumentType.TEST_FRAMEWORK)))
