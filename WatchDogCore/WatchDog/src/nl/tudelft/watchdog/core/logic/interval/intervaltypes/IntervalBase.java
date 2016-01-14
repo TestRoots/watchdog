@@ -122,7 +122,11 @@ abstract public class IntervalBase extends WatchDogTransferable implements
 
 	/** Necessary for storage of Intervals. */
 	public int compareTo(IntervalBase comparedInterval) {
-		return getEnd().compareTo(comparedInterval.getEnd());
+		int res = getEnd().compareTo(comparedInterval.getEnd());
+		if (res == 0 && !this.equals(comparedInterval)) {
+			res = -1;
+		}
+		return res;
 	}
 
 	/**
