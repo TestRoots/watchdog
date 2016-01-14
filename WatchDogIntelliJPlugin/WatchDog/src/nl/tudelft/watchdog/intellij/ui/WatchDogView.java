@@ -1,12 +1,7 @@
 package nl.tudelft.watchdog.intellij.ui;
 
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
-
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase.StatisticsTimePeriod;
@@ -14,7 +9,6 @@ import nl.tudelft.watchdog.intellij.logic.InitializationManager;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.intellij.ui.util.UIUtils;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -31,6 +25,9 @@ import org.jfree.util.Rotation;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
 
 /** A view displaying all the statistics that WatchDog has gathered. */
 public class WatchDogView extends SimpleToolWindowPanel {
@@ -50,6 +47,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
 	private double userTyping;
 	private double userProduction;
 	private double userTest;
+	private double userDebugging;
 	private double userActiveRest;
 	private double averageTestDurationMinutes;
 	private double averageTestDurationSeconds;
@@ -187,7 +185,9 @@ public class WatchDogView extends SimpleToolWindowPanel {
 				.getPreciseTime(intervalStatistics.userProduction);
 		userTest = intervalStatistics
 				.getPreciseTime(intervalStatistics.userTest);
-		userActiveRest = userActive - userReading - userTyping;
+        userDebugging = intervalStatistics
+                .getPreciseTime(intervalStatistics.userDebugging);
+		userActiveRest = userActive - userReading - userTyping - userDebugging;
 		averageTestDurationMinutes = intervalStatistics.averageTestDuration;
 		averageTestDurationSeconds = averageTestDurationMinutes * 60;
 
@@ -205,18 +205,21 @@ public class WatchDogView extends SimpleToolWindowPanel {
 		DefaultCategoryDataset result = new DefaultCategoryDataset();
 		result.setValue(userReading, "1", "Reading");
 		result.setValue(userTyping, "1", "Writing");
+        result.setValue(userDebugging, "1", "Debugging");
 		result.setValue(userActive, "1", "User Active");
 		result.setValue(intelliJOpen, "1", "IntelliJ Open");
 		return result;
 	}
 
 	private PieDataset createDevelopmentPieDataset() {
-		double divisor = userReading + userTyping + userActiveRest;
+		double divisor = userReading + userTyping + userDebugging + userActiveRest;
 		DefaultPieDataset result = new DefaultPieDataset();
 		result.setValue("Reading" + printPercent(userReading, divisor),
 				userReading);
 		result.setValue("Writing" + printPercent(userTyping, divisor),
 				userTyping);
+        result.setValue("Debugging" + printPercent(userDebugging, divisor),
+                userDebugging);
 		result.setValue(
 				"Other activities" + printPercent(userActiveRest, divisor),
 				userActiveRest);
