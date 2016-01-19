@@ -12,8 +12,8 @@ import org.joda.time.format.PeriodFormat;
 import com.google.gson.annotations.SerializedName;
 
 /** The interval base. */
-abstract public class IntervalBase extends WatchDogTransferable implements
-		Serializable, Comparable<IntervalBase>, Cloneable {
+abstract public class IntervalBase extends WatchDogTransferable
+		implements Serializable, Comparable<IntervalBase>, Cloneable {
 
 	/** The version id of this class. */
 	private static final long serialVersionUID = 2L;
@@ -124,7 +124,10 @@ abstract public class IntervalBase extends WatchDogTransferable implements
 	public int compareTo(IntervalBase comparedInterval) {
 		int res = getEnd().compareTo(comparedInterval.getEnd());
 		if (res == 0 && !this.equals(comparedInterval)) {
-			res = -1;
+			res = getStart().compareTo(comparedInterval.getStart());
+			if (res == 0) {
+				res = getType().compareTo(comparedInterval.getType()) > 0 ? 1 : -1;
+			}
 		}
 		return res;
 	}
@@ -140,6 +143,35 @@ abstract public class IntervalBase extends WatchDogTransferable implements
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		IntervalBase other = (IntervalBase) obj;
+		if (end == null) {
+			if (other.end != null)
+				return false;
+		} else if (!end.equals(other.end))
+			return false;
+		if (intervalType != other.intervalType)
+			return false;
+		if (sessionSeed == null) {
+			if (other.sessionSeed != null)
+				return false;
+		} else if (!sessionSeed.equals(other.sessionSeed))
+			return false;
+		if (start == null) {
+			if (other.start != null)
+				return false;
+		} else if (!start.equals(other.start))
+			return false;
+		return true;
 	}
 
 }
