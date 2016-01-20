@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
 
-public class EventPersisterTestSingleInterval extends EventPersisterTestBase {
+public class EventPersisterTestSingleEvent extends EventPersisterTestBase {
 
 	@BeforeClass
 	public static void setUpBeforeClass() {
