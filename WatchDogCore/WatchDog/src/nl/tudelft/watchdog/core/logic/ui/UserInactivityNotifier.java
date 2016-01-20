@@ -12,7 +12,7 @@ import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 public class UserInactivityNotifier extends InactivityNotifier {
 
 	/** Constructor. */
-	public UserInactivityNotifier(EventManagerBase eventManager,
+	public UserInactivityNotifier(WatchDogEventManagerBase eventManager,
 			int activityTimeout, EventType type) {
 		super(eventManager, activityTimeout, type);
 	}

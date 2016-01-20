@@ -17,12 +17,12 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
+import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 
 /** Enriches an {@link IEditorPart} for all user-triggered events. */
 public class EditorListener {
 	private final ITextEditor editor;
-	private final EventManager eventManager;
+	private final WatchDogEventManager eventManager;
 
 	private IDocument document;
 	private IDocumentListener documentListener;
@@ -32,7 +32,7 @@ public class EditorListener {
 	private PaintListener paintListener;
 
 	/** Enriches the supplied editor with all suitable listeners. */
-	public EditorListener(EventManager eventManager, ITextEditor editor) {
+	public EditorListener(WatchDogEventManager eventManager, ITextEditor editor) {
 		this.eventManager = eventManager;
 		this.editor = editor;
 		listenToDocumentChanges();

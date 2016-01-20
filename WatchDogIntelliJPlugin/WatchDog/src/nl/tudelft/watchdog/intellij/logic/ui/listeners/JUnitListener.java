@@ -8,7 +8,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.psi.search.GlobalSearchScope;
 import nl.tudelft.watchdog.intellij.logic.InitializationManager;
 import nl.tudelft.watchdog.intellij.logic.interval.intervaltypes.JUnitInterval;
-import nl.tudelft.watchdog.intellij.logic.ui.EventManager;
+import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.JUnitEvent;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
@@ -24,7 +24,7 @@ public class JUnitListener extends TestStatusListener {
             return;
         }
 
-        EventManager eventManager = InitializationManager.getInstance(project.getName()).getEventManager();
+        WatchDogEventManager eventManager = InitializationManager.getInstance(project.getName()).getEventManager();
         JUnitInterval interval = new JUnitInterval(testProxy);
         eventManager.update(new JUnitEvent(interval));
     }

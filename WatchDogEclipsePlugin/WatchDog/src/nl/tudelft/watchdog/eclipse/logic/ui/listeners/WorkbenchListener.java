@@ -4,7 +4,7 @@ import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalTransferManager;
-import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
+import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
@@ -20,7 +20,7 @@ public class WorkbenchListener {
 	private IntervalTransferManager intervalTransferManager;
 
 	/** The editorObservable. */
-	private EventManager eventManager;
+	private WatchDogEventManager eventManager;
 
 	/**
 	 * The window listener. An Eclipse window is the whole Eclipse application
@@ -31,7 +31,7 @@ public class WorkbenchListener {
 	private IWorkbench workbench;
 
 	/** Constructor. */
-	public WorkbenchListener(EventManager userActionManager,
+	public WorkbenchListener(WatchDogEventManager userActionManager,
 			IntervalTransferManager intervalTransferManager) {
 		this.eventManager = userActionManager;
 		this.intervalTransferManager = intervalTransferManager;

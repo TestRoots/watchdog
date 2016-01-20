@@ -9,7 +9,7 @@ import nl.tudelft.watchdog.eclipse.Activator;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalTransferManager;
 import nl.tudelft.watchdog.eclipse.logic.network.ClientVersionChecker;
-import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
+import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.eclipse.logic.ui.listeners.WorkbenchListener;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
@@ -32,7 +32,7 @@ public class InitializationManager {
 
 	private final IntervalPersisterBase intervalsStatisticsPersister;
 
-	private EventManager eventManager;
+	private WatchDogEventManager eventManager;
 
 	/** Private constructor. */
 	private InitializationManager() {
@@ -52,7 +52,7 @@ public class InitializationManager {
 		new ClientVersionChecker();
 		intervalManager = new IntervalManager(intervalsToTransferPersister,
 				intervalsStatisticsPersister);
-		eventManager = new EventManager(intervalManager, USER_ACTIVITY_TIMEOUT);
+		eventManager = new WatchDogEventManager(intervalManager, USER_ACTIVITY_TIMEOUT);
 		new TimeSynchronityChecker(intervalManager, eventManager);
 
 		WorkbenchListener workbenchListener = new WorkbenchListener(
@@ -84,7 +84,7 @@ public class InitializationManager {
 	}
 
 	/** @return the event Manager. */
-	public EventManager getEventManager() {
+	public WatchDogEventManager getEventManager() {
 		return eventManager;
 	}
 
