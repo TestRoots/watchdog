@@ -6,7 +6,7 @@ import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class IntervalPersisterBug101Test extends PersisterTestBase {
+public class IntervalPersisterBug101Test extends IntervalPersisterTestBase {
 
 	@BeforeClass
 	public static void setUpBeforeClass() {
@@ -26,7 +26,7 @@ public class IntervalPersisterBug101Test extends PersisterTestBase {
 
 	@Test
 	public void test3CreateInterval() {
-		persister.saveInterval(IntervalPersisterTest.createRandomInterval());
+		persister.saveItem(IntervalPersisterTest.createRandomInterval());
 		assertEquals(1, persister.getSize());
 	}
 

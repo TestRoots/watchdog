@@ -115,8 +115,8 @@ public abstract class IDEIntervalManagerBase extends IntervalManagerBase {
 		} else {
 			intervals.remove(interval);
 		}
-		intervalsToTransferPersister.saveInterval(interval);
-		intervalsStatisticsPersister.saveInterval(interval);
+		intervalsToTransferPersister.saveItem(interval);
+		intervalsStatisticsPersister.saveItem(interval);
 		WatchDogLogger.getInstance().logInfo(
 				"closed interval " + interval + " " + interval.getType());
 	}

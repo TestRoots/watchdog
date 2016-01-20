@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
 
-public abstract class EventBase extends WatchDogTransferable implements Serializable {
+public abstract class EventBase extends WatchDogTransferable implements Serializable, Comparable<EventBase> {
 
 	/** Serial ID. */
 	private static final long serialVersionUID = 1L;
@@ -53,5 +53,48 @@ public abstract class EventBase extends WatchDogTransferable implements Serializ
 	/** @return the {@link EventType}. */
 	public EventType getType() {
 		return eventType;
+	}
+
+	/**
+	 * Necessary for the storage of events. The comparison is first based on the
+	 * timestamps of the two events. If these dates are equal but the events
+	 * themselves are not, the type of the events is used to produce the result
+	 * of this method. These two steps are required to ensure that events are
+	 * not lost when two or more events have the same timestamp.
+	 */
+	public int compareTo(EventBase comparedEvent) {
+		int res = getTimestamp().compareTo(comparedEvent.getTimestamp());
+		if (res == 0 && !this.equals(comparedEvent)) {
+			res = getType().compareTo(comparedEvent.getType()) > 0 ? 1 : -1;
+		}
+		return res;
+	}
+
+	/**
+	 * Checks whether the parameter is an EventBase and is equal to this by
+	 * comparing the timestamps, types and session seeds of the two events.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EventBase other = (EventBase) obj;
+		if (eventType != other.eventType)
+			return false;
+		if (sessionSeed == null) {
+			if (other.sessionSeed != null)
+				return false;
+		} else if (!sessionSeed.equals(other.sessionSeed))
+			return false;
+		if (timestamp == null) {
+			if (other.timestamp != null)
+				return false;
+		} else if (!timestamp.equals(other.timestamp))
+			return false;
+		return true;
 	}
 }

@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.logic.interval;
+package nl.tudelft.watchdog.logic.event;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,17 +6,16 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
-import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
-
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class IntervalPersisterInvalidDatabaseTest extends IntervalPersisterTestBase {
+import nl.tudelft.watchdog.core.logic.event.EventPersisterBase;
+
+public class EventPersisterInvalidDatabaseTest extends EventPersisterTestBase {
 
 	@BeforeClass
-	public static void setUpBeforeClass() throws FileNotFoundException,
-			UnsupportedEncodingException {
+	public static void setUpBeforeClass() throws FileNotFoundException, UnsupportedEncodingException {
 		databaseName = "InvalidTestDB";
 		setUpSuperClass();
 
@@ -32,7 +31,7 @@ public class IntervalPersisterInvalidDatabaseTest extends IntervalPersisterTestB
 	 */
 	@Before
 	public void setUpBeforeMethod() {
-		persister = new IntervalPersisterBase(copiedDatabase);
+		persister = new EventPersisterBase(copiedDatabase);
 	}
 
 	@Test
@@ -41,8 +40,8 @@ public class IntervalPersisterInvalidDatabaseTest extends IntervalPersisterTestB
 	}
 
 	@Test
-	public void test2CreateInterval() {
-		persister.saveItem(IntervalPersisterTest.createRandomInterval());
+	public void test2CreateEvent() {
+		persister.saveItem(EventPersisterTest.createRandomEvent());
 		assertEquals(1, persister.getSize());
 	}
 
