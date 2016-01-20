@@ -7,7 +7,6 @@ import nl.tudelft.watchdog.core.logic.document.EditorWrapperBase;
 import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.PerspectiveInterval;
 import nl.tudelft.watchdog.core.logic.ui.WatchDogEventManagerBase;
-import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.eclipse.logic.document.DocumentCreator;
@@ -15,7 +14,7 @@ import nl.tudelft.watchdog.eclipse.logic.document.EditorWrapper;
 import nl.tudelft.watchdog.eclipse.logic.interval.intervaltypes.JUnitInterval;
 
 /**
- * Manager for {@link EditorEvent}s. Links such events to actions in the
+ * Manager for {@link WatchDogEvent}s. Links such events to actions in the
  * IntervalManager, i.e. manages the creation and deletion of intervals based on
  * the incoming events. This class therefore contains the logic of when and how
  * new intervals are created, and how WatchDog reacts to incoming events
