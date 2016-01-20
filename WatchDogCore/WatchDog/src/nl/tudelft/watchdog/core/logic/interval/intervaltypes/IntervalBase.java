@@ -120,7 +120,15 @@ abstract public class IntervalBase extends WatchDogTransferable
 		return intervalType;
 	}
 
-	/** Necessary for storage of Intervals. */
+	/**
+	 * Necessary for storage of Intervals. The comparison is first based on the
+	 * end dates of the two intervals. If these dates are equal but the
+	 * intervals themselves not, the comparison is based on the start dates. If
+	 * the start dates are also equal, the type of the intervals is used to
+	 * produce the result of this method. This sequence of step is required to
+	 * ensure that intervals are not lost when two or more intervals have the
+	 * same end date.
+	 */
 	public int compareTo(IntervalBase comparedInterval) {
 		int res = getEnd().compareTo(comparedInterval.getEnd());
 		if (res == 0 && !this.equals(comparedInterval)) {
@@ -145,6 +153,11 @@ abstract public class IntervalBase extends WatchDogTransferable
 		return super.clone();
 	}
 
+	/**
+	 * Checks whether the parameter is an IntervalBase and is equal to this by
+	 * comparing the start dates, end dates, types and session seeds of the two
+	 * intervals.
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
