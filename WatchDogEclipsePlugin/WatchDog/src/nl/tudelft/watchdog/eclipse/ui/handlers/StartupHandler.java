@@ -5,7 +5,7 @@ import java.io.File;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals.IDE;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
-import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
+import nl.tudelft.watchdog.eclipse.logic.IntervalInitializationManager;
 import nl.tudelft.watchdog.eclipse.ui.WatchDogView;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
@@ -37,7 +37,7 @@ public class StartupHandler implements IStartup {
 			WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
 
 			// Initialize the interval manager, and thereby, interval recording.
-			InitializationManager.getInstance();
+			IntervalInitializationManager.getInstance();
 			WatchDogGlobals.isActive = true;
 			// Update WatchDog icon
 			UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);

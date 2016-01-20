@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
+import nl.tudelft.watchdog.eclipse.logic.IntervalInitializationManager;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalTransferManager;
 import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 
@@ -56,12 +56,12 @@ public class WorkbenchListener {
 	private void addShutdownListeners() {
 		workbench.addWorkbenchListener(new IWorkbenchListener() {
 
-			private InitializationManager intervalInitializationManager;
+			private IntervalInitializationManager intervalInitializationManager;
 
 			@Override
 			public boolean preShutdown(final IWorkbench workbench,
 					final boolean forced) {
-				intervalInitializationManager = InitializationManager
+				intervalInitializationManager = IntervalInitializationManager
 						.getInstance();
 				eventManager.update(new WatchDogEvent(workbench,
 						EventType.END_IDE));

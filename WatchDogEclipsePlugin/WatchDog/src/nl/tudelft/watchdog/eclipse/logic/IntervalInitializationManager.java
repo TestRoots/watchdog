@@ -19,12 +19,12 @@ import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
  * singleton and contains UI code. Guarantees that there is only one properly
  * initialized {@link IntervalManager} that does the real work.
  */
-public class InitializationManager {
+public class IntervalInitializationManager {
 
 	private static final int USER_ACTIVITY_TIMEOUT = 16000;
 
 	/** The singleton instance of the interval manager. */
-	private static volatile InitializationManager instance = null;
+	private static volatile IntervalInitializationManager instance = null;
 
 	private final IntervalManager intervalManager;
 
@@ -35,7 +35,7 @@ public class InitializationManager {
 	private WatchDogEventManager eventManager;
 
 	/** Private constructor. */
-	private InitializationManager() {
+	private IntervalInitializationManager() {
 		WatchDogGlobals.setLogDirectory(
 				"watchdog" + File.separator + "logs" + File.separator);
 		WatchDogGlobals.setPreferences(Preferences.getInstance());
@@ -64,11 +64,11 @@ public class InitializationManager {
 
 	/**
 	 * Returns the existing or creates and returns a new
-	 * {@link InitializationManager} instance.
+	 * {@link IntervalInitializationManager} instance.
 	 */
-	public static InitializationManager getInstance() {
+	public static IntervalInitializationManager getInstance() {
 		if (instance == null) {
-			instance = new InitializationManager();
+			instance = new IntervalInitializationManager();
 		}
 		return instance;
 	}
