@@ -41,7 +41,7 @@ public class IntervalPersisterEmptyFileTest extends PersisterTestBase {
 
 	@Test
 	public void test2CreateInterval() {
-		persister.saveInterval(IntervalPersisterTest.createRandomInterval());
+		persister.saveItem(IntervalPersisterTest.createRandomInterval());
 		assertEquals(1, persister.getSize());
 	}
 

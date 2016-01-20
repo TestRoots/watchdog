@@ -18,7 +18,7 @@ import nl.tudelft.watchdog.core.util.WatchDogLogger;
  * WatchDog instance can record before the database breaks is
  * {@link Long#MAX_VALUE}.
  */
-public class PersisterBase<T extends WatchDogTransferable> {
+public abstract class PersisterBase<T extends WatchDogTransferable> {
 
 	private boolean isClosed;
 

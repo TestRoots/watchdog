@@ -88,7 +88,7 @@ public abstract class IntervalStatisticsBase extends IntervalManagerBase {
 	}
 	
 	private void addIntervals(IDEIntervalManagerBase intervalManager) {
-		for (IntervalBase interval : intervalPersister.readIntervals()) {
+		for (IntervalBase interval : intervalPersister.readItems()) {
 			interval.setClosed();
 			intervals.add(interval);
 		}
@@ -136,7 +136,7 @@ public abstract class IntervalStatisticsBase extends IntervalManagerBase {
 		}
 
 		oldestDate = filteredIntervals.get(0).getStart();
-		intervalPersister.removeIntervals(intervalsToRemove);
+		intervalPersister.removeItems(intervalsToRemove);
 		intervals = filteredIntervals;
 	}
 

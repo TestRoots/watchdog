@@ -67,7 +67,7 @@ public class IntervalTransferManagerBase extends RegularCheckerBase {
             }
 
 			List<IntervalBase> intervalsToTransfer = new ArrayList<IntervalBase>(
-					intervalPersister.readIntervals());
+					intervalPersister.readItems());
 
 			if (intervalsToTransfer.isEmpty()) {
 				return;
@@ -85,7 +85,7 @@ public class IntervalTransferManagerBase extends RegularCheckerBase {
 					intervalsToTransfer, projectName);
 			switch (connection) {
 			case SUCCESSFUL:
-				intervalPersister.removeIntervals(intervalsToTransfer);
+				intervalPersister.removeItems(intervalsToTransfer);
 				preferences.setLastTransferedInterval();
 				preferences.addTransferedIntervals(intervalsToTransfer.size());
 				WatchDogGlobals.lastTransactionFailed = false;
@@ -110,7 +110,7 @@ public class IntervalTransferManagerBase extends RegularCheckerBase {
 							.getInstance()
 							.logSevere(
 									"Could not transfer interval and removed permanently!");
-					intervalPersister.removeIntervals(intervalsToTransfer);
+					intervalPersister.removeItems(intervalsToTransfer);
 					return;
 				}
 
