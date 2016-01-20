@@ -16,7 +16,7 @@ import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class IntervalPersisterTest extends PersisterTestBase {
+public class IntervalPersisterTest extends IntervalPersisterTestBase {
 
 	@BeforeClass
 	public static void setUpBeforeClass() {

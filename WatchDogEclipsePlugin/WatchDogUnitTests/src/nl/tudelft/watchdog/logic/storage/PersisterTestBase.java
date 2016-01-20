@@ -1,14 +1,11 @@
-package nl.tudelft.watchdog.logic.interval;
+package nl.tudelft.watchdog.logic.storage;
 
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 
-import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
-
 import org.apache.commons.io.FileUtils;
-import org.junit.AfterClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -23,7 +20,6 @@ import org.junit.runner.RunWith;
  */
 @RunWith(LexicographicalTestOrderRunner.class)
 public abstract class PersisterTestBase {
-	protected static IntervalPersisterBase persister;
 
 	private static File databaseDirectory;
 
@@ -34,23 +30,14 @@ public abstract class PersisterTestBase {
 	@ClassRule
 	public static final TemporaryFolder copiedDirectory = new TemporaryFolder();
 
-	protected static void setUpSuperClass() {
-		databaseDirectory = new File(new File("resources",
-				"IntervalPersisterTests"), databaseName);
+	protected static void setUpSuperClass(String childDirName) {
+		databaseDirectory = new File(new File("resources", childDirName), databaseName);
 		try {
-			FileUtils.copyDirectory(databaseDirectory,
-					copiedDirectory.getRoot());
+			FileUtils.copyDirectory(databaseDirectory, copiedDirectory.getRoot());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		copiedDatabase = new File(copiedDirectory.getRoot(), databaseName
-				+ ".map");
-		persister = new IntervalPersisterBase(copiedDatabase);
-	}
-
-	@AfterClass
-	public static void tearDown() throws IOException {
-		persister.closeDatabase();
+		copiedDatabase = new File(copiedDirectory.getRoot(), databaseName + ".map");
 	}
 
 	@Test

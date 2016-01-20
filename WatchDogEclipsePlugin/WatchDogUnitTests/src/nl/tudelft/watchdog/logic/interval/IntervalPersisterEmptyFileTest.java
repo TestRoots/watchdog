@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class IntervalPersisterEmptyFileTest extends PersisterTestBase {
+public class IntervalPersisterEmptyFileTest extends IntervalPersisterTestBase {
 
 	@BeforeClass
 	public static void setUpBeforeClass() {
