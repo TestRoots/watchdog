@@ -1,6 +1,5 @@
 package nl.tudelft.watchdog.logic.interval;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.junit.AfterClass;
@@ -8,20 +7,18 @@ import org.junit.AfterClass;
 import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
 import nl.tudelft.watchdog.logic.storage.PersisterTestBase;
 
-public abstract class IntervalPersisterTestBase extends PersisterTestBase {	
+public abstract class IntervalPersisterTestBase extends PersisterTestBase {
 	protected static IntervalPersisterBase persister;
-	
-	/** Initializes the variables required for the tests. */
+
+	/**
+	 * Initializes the variables required for the tests and initializes the
+	 * persister as an IntervalPersister.
+	 */
 	protected static void setUpSuperClass() {
 		PersisterTestBase.setUpSuperClass("IntervalPersisterTests");
-		createPersister(copiedDatabase);
+		persister = new IntervalPersisterBase(copiedDatabase);
 	}
 
-	/** Initializes the persister as an IntervalPersister. */
-	protected static void createPersister(final File file) {
-		persister = new IntervalPersisterBase(file);
-	}
-	
 	@AfterClass
 	public static void tearDown() throws IOException {
 		persister.closeDatabase();
