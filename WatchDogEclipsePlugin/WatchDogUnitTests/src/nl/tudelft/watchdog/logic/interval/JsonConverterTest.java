@@ -6,13 +6,18 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.eclipse.ui.texteditor.ITextEditor;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mockito.Mockito;
+
 import nl.tudelft.watchdog.core.logic.document.Document;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
+import nl.tudelft.watchdog.core.logic.interval.IntervalJsonTransferer;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
-import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.ui.wizards.Project;
 import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
@@ -20,17 +25,12 @@ import nl.tudelft.watchdog.core.util.WatchDogGlobals.IDE;
 import nl.tudelft.watchdog.eclipse.logic.document.EditorWrapper;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
-import org.eclipse.ui.texteditor.ITextEditor;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.mockito.Mockito;
-
 /**
  * Test the transfer from {@link IInterval}s to JSon.
  */
 public class JsonConverterTest {
 
-	private JsonTransferer transferer = new JsonTransferer();
+	private IntervalJsonTransferer transferer = new IntervalJsonTransferer();
 
 	@BeforeClass
 	public static void setUp() {

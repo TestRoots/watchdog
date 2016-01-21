@@ -1,7 +1,11 @@
 package nl.tudelft.watchdog.eclipse.ui.wizards.projectregistration;
 
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.swt.widgets.Composite;
+
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
+import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
 import nl.tudelft.watchdog.core.ui.wizards.Project;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
@@ -11,9 +15,6 @@ import nl.tudelft.watchdog.eclipse.ui.wizards.RegistrationEndingPageBase;
 import nl.tudelft.watchdog.eclipse.ui.wizards.RegistrationWizardBase;
 import nl.tudelft.watchdog.eclipse.ui.wizards.userregistration.UserProjectRegistrationWizard;
 import nl.tudelft.watchdog.eclipse.ui.wizards.userregistration.UserRegistrationPage;
-
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.swt.widgets.Composite;
 
 /**
  * Possible finishing page in the wizard. If the project exists on the server,
@@ -78,7 +79,8 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPageBase {
 		windowTitle = "Registration Summary";
 
 		try {
-			id = new JsonTransferer().registerNewProject(project);
+			id = new JsonTransferer<WatchDogTransferable>()
+					.registerNewProject(project);
 		} catch (ServerCommunicationException exception) {
 			successfulRegistration = false;
 			messageTitle = "Problem creating new project!";

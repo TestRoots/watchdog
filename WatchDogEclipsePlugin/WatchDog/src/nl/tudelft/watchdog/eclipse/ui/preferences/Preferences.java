@@ -37,6 +37,12 @@ public class Preferences extends PreferencesBase {
 	/** The last date of successfully transfered intervals. */
 	public final static String LAST_TRANSFERED_INTERVALS_KEY = "LAST_TRANSFERED_INTERVALS";
 
+	/** The number of successfully transfered events. */
+	public final static String TRANSFERED_EVENTS_KEY = "TRANSFERED_EVENTS";
+
+	/** The last date of successfully transfered events. */
+	public final static String LAST_TRANSFERED_EVENTS_KEY = "LAST_TRANSFERED_EVENTS";
+
 	/** Flag denoting whether WatchDog plugin should do logging or not. */
 	public final static String LOGGING_ENABLED_KEY = "ENABLE_LOGGING";
 
@@ -85,6 +91,8 @@ public class Preferences extends PreferencesBase {
 		store.setDefault(WORKSPACES_KEY, "");
 		store.setDefault(TRANSFERED_INTERVALS_KEY, 0);
 		store.setDefault(LAST_TRANSFERED_INTERVALS_KEY, "never");
+		store.setDefault(TRANSFERED_EVENTS_KEY, 0);
+		store.setDefault(LAST_TRANSFERED_EVENTS_KEY, "never");
 		store.setDefault(IS_OLD_VERSION, false);
 		store.setDefault(IS_BIG_UPDATE_ANSWERED, false);
 		store.setDefault(IS_BIG_UPDATE_AVAILABLE, false);
@@ -156,7 +164,6 @@ public class Preferences extends PreferencesBase {
 		store.setValue(IS_BIG_UPDATE_ANSWERED, answered);
 	}
 
-	/** @return The number of successfully transfered intervals. */
 	public long getIntervals() {
 		return store.getLong(TRANSFERED_INTERVALS_KEY);
 	}
@@ -171,6 +178,22 @@ public class Preferences extends PreferencesBase {
 
 	public void setLastTransferedInterval() {
 		store.setValue(LAST_TRANSFERED_INTERVALS_KEY, new Date().toString());
+	}
+
+	public long getEvents() {
+		return store.getLong(TRANSFERED_EVENTS_KEY);
+	}
+
+	public void addTransferedEvents(long number) {
+		store.setValue(TRANSFERED_EVENTS_KEY, getEvents() + number);
+	}
+
+	public String getLastEventTransferDate() {
+		return store.getString(LAST_TRANSFERED_EVENTS_KEY);
+	}
+
+	public void setLastTransferedEvent() {
+		store.setValue(LAST_TRANSFERED_EVENTS_KEY, new Date().toString());
 	}
 
 	public String getServerURI() {
@@ -199,6 +222,8 @@ public class Preferences extends PreferencesBase {
 		store.setValue(WORKSPACES_KEY, "");
 		store.setValue(TRANSFERED_INTERVALS_KEY, 0);
 		store.setValue(LAST_TRANSFERED_INTERVALS_KEY, "never");
+		store.setValue(TRANSFERED_EVENTS_KEY, 0);
+		store.setValue(LAST_TRANSFERED_EVENTS_KEY, "never");
 		store.setValue(IS_OLD_VERSION, false);
 		store.setValue(IS_BIG_UPDATE_ANSWERED, false);
 		store.setValue(IS_BIG_UPDATE_AVAILABLE, false);
