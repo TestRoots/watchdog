@@ -12,7 +12,6 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
 
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
 import nl.tudelft.watchdog.core.ui.wizards.Project;
 import nl.tudelft.watchdog.core.ui.wizards.User;
@@ -22,9 +21,9 @@ import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
 /**
  * Transmits WatchDog data objects in a Json format to the WatchDog server.
  */
-public class JsonTransferer {
+public class JsonTransferer<T extends WatchDogTransferable> {
 
-	/** The {@link GsonBuilder} for building the intervals. */
+	/** The {@link GsonBuilder} for building the T's. */
 	private GsonBuilder gsonBuilder = new GsonBuilder();
 
 	/** The Gson object for object serialization to Json. */
@@ -39,10 +38,10 @@ public class JsonTransferer {
 	}
 
 	/**
-	 * Sends the recorded intervals to the server. Returns <code>true</code> on
+	 * Sends the recorded T's to the server. Returns <code>true</code> on
 	 * successful transfer, <code>false</code> otherwise.
 	 */
-	public Connection sendIntervals(List<IntervalBase> recordedIntervals, String projectName) {
+	public Connection sendItems(List<T> recordedItems, String projectName) {
 		String userId = WatchDogGlobals.getPreferences().getUserId();
 		String projectId = WatchDogGlobals.getPreferences().getOrCreateProjectSetting(projectName).projectId;
 
@@ -52,10 +51,9 @@ public class JsonTransferer {
 			return Connection.UNSUCCESSFUL;
 		}
 
-		String serializedIntervals = toJson(recordedIntervals);
+		String serializedItems = toJson(recordedItems);
 		try {
-			NetworkUtils.transferJsonAndGetResponse(NetworkUtils.buildIntervalsPostURL(userId, projectId),
-					serializedIntervals);
+			NetworkUtils.transferJsonAndGetResponse(getPostURL(userId, projectId), serializedItems);
 			return Connection.SUCCESSFUL;
 		} catch (ServerReturnCodeException exception) {
 			return Connection.UNSUCCESSFUL;
@@ -116,13 +114,17 @@ public class JsonTransferer {
 		}
 	}
 
-	/** Converts the intervals to Json. */
-	public String toJson(List<IntervalBase> recordedIntervals) {
+	/** Converts the items to Json. */
+	public String toJson(List<T> recordedItems) {
 		try {
-			return gson.toJson(recordedIntervals);
+			return gson.toJson(recordedItems);
 		} catch (RuntimeException e) {
 			return "[]";
 		}
+	}
+	
+	protected String getPostURL(String userId, String projectId) {
+		return null;
 	}
 
 	/** A JSon Serializer for Date. */

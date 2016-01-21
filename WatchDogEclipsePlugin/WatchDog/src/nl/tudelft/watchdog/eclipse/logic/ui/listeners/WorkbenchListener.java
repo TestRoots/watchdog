@@ -68,7 +68,7 @@ public class WorkbenchListener {
 						new WatchDogEvent(workbench, EventType.END_IDE));
 				intervalInitializationManager.getIntervalManager()
 						.closeAllIntervals();
-				intervalTransferManager.sendIntervalsImmediately();
+				intervalTransferManager.sendItemsImmediately();
 				return true;
 			}
 
