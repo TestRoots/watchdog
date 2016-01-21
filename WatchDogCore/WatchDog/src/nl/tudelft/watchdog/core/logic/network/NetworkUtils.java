@@ -245,6 +245,13 @@ public class NetworkUtils {
 	public static String buildIntervalsPostURL(String userid, String projectid) {
 		return buildExistingUserURL(userid) + "/" + projectid + "/intervals";
 	}
+	
+	/**
+	 * @return the URL to post new events to the server to for this user.
+	 */
+	public static String buildEventsPostURL(String userid, String projectid) {
+		return buildExistingUserURL(userid) + "/" + projectid + "/events";
+	}
 
 	/**
 	 * Wrapper function for Appache's {@link EntityUtils#toString()}, taking

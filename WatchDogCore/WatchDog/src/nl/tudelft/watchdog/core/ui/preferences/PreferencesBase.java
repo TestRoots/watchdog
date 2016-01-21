@@ -52,8 +52,14 @@ public abstract class PreferencesBase {
 	/** @return The number of successfully transfered intervals. */
     public abstract String getLastIntervalTransferDate();
 
-	/** Adds the number to the transfered intervals for the store. */
+	/** Sets the date when the last intervals were transfered. */
     public abstract void setLastTransferedInterval();
+    
+    /** Adds the number to the transfered events for the store. */
+    public abstract void addTransferedEvents(long number);
+    
+    /** Sets the date when the last events were transfered. */
+    public abstract void setLastTransferedEvent();
 
 	/** @return The serverURL. */
     public abstract String getServerURI();
