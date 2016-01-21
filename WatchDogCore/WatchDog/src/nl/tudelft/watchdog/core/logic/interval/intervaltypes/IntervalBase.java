@@ -160,30 +160,40 @@ abstract public class IntervalBase extends WatchDogTransferable
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		IntervalBase other = (IntervalBase) obj;
 		if (end == null) {
-			if (other.end != null)
+			if (other.end != null) {
 				return false;
-		} else if (!end.equals(other.end))
+			}
+		} else if (!end.equals(other.end)) {
 			return false;
-		if (intervalType != other.intervalType)
+		}
+		if (intervalType != other.intervalType) {
 			return false;
+		}
 		if (sessionSeed == null) {
-			if (other.sessionSeed != null)
+			if (other.sessionSeed != null) {
 				return false;
-		} else if (!sessionSeed.equals(other.sessionSeed))
+			}
+		} else if (!sessionSeed.equals(other.sessionSeed)) {
 			return false;
+		}
 		if (start == null) {
-			if (other.start != null)
+			if (other.start != null) {
 				return false;
-		} else if (!start.equals(other.start))
+			}
+		} else if (!start.equals(other.start)) {
 			return false;
+		}
 		return true;
 	}
 
