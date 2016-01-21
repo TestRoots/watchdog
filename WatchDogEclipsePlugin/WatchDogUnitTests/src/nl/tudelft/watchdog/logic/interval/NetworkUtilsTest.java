@@ -6,16 +6,16 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.junit.Ignore;
+import org.junit.Test;
+
+import nl.tudelft.watchdog.core.logic.interval.IntervalJsonTransferer;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.core.logic.network.ServerReturnCodeException;
-
-import org.junit.Ignore;
-import org.junit.Test;
 
 /**
  * These tests rely on our public WatchDog service running. They are therefore
@@ -46,7 +46,7 @@ public class NetworkUtilsTest {
 	@Test
 	@Ignore
 	public void testIntervalTransfer() {
-		JsonTransferer it = new JsonTransferer();
+		IntervalJsonTransferer it = new IntervalJsonTransferer();
 		IntervalBase interval = new IDEOpenInterval(new Date());
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 		String json = it.toJson(intervals);
