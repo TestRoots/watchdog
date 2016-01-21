@@ -2,14 +2,14 @@ package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 
 import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.wm.IdeFrame;
-import nl.tudelft.watchdog.intellij.logic.ui.EventManager;
+import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 
 public class IntelliJActivationListener implements ApplicationActivationListener {
 
-    private final EventManager eventManager;
+    private final WatchDogEventManager eventManager;
 
-    public IntelliJActivationListener(EventManager eventManager) {
+    public IntelliJActivationListener(WatchDogEventManager eventManager) {
         this.eventManager = eventManager;
     }
 

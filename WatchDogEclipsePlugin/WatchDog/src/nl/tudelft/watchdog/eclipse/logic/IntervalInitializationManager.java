@@ -9,7 +9,7 @@ import nl.tudelft.watchdog.eclipse.Activator;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalTransferManager;
 import nl.tudelft.watchdog.eclipse.logic.network.ClientVersionChecker;
-import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
+import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.eclipse.logic.ui.listeners.WorkbenchListener;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
@@ -19,12 +19,12 @@ import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
  * singleton and contains UI code. Guarantees that there is only one properly
  * initialized {@link IntervalManager} that does the real work.
  */
-public class InitializationManager {
+public class IntervalInitializationManager {
 
 	private static final int USER_ACTIVITY_TIMEOUT = 16000;
 
 	/** The singleton instance of the interval manager. */
-	private static volatile InitializationManager instance = null;
+	private static volatile IntervalInitializationManager instance = null;
 
 	private final IntervalManager intervalManager;
 
@@ -32,10 +32,10 @@ public class InitializationManager {
 
 	private final IntervalPersisterBase intervalsStatisticsPersister;
 
-	private EventManager eventManager;
+	private WatchDogEventManager eventManager;
 
 	/** Private constructor. */
-	private InitializationManager() {
+	private IntervalInitializationManager() {
 		WatchDogGlobals.setLogDirectory(
 				"watchdog" + File.separator + "logs" + File.separator);
 		WatchDogGlobals.setPreferences(Preferences.getInstance());
@@ -52,7 +52,7 @@ public class InitializationManager {
 		new ClientVersionChecker();
 		intervalManager = new IntervalManager(intervalsToTransferPersister,
 				intervalsStatisticsPersister);
-		eventManager = new EventManager(intervalManager, USER_ACTIVITY_TIMEOUT);
+		eventManager = new WatchDogEventManager(intervalManager, USER_ACTIVITY_TIMEOUT);
 		new TimeSynchronityChecker(intervalManager, eventManager);
 
 		WorkbenchListener workbenchListener = new WorkbenchListener(
@@ -64,11 +64,11 @@ public class InitializationManager {
 
 	/**
 	 * Returns the existing or creates and returns a new
-	 * {@link InitializationManager} instance.
+	 * {@link IntervalInitializationManager} instance.
 	 */
-	public static InitializationManager getInstance() {
+	public static IntervalInitializationManager getInstance() {
 		if (instance == null) {
-			instance = new InitializationManager();
+			instance = new IntervalInitializationManager();
 		}
 		return instance;
 	}
@@ -84,7 +84,7 @@ public class InitializationManager {
 	}
 
 	/** @return the event Manager. */
-	public EventManager getEventManager() {
+	public WatchDogEventManager getEventManager() {
 		return eventManager;
 	}
 

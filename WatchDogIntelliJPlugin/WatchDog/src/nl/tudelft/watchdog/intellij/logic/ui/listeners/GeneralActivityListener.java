@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 
-import nl.tudelft.watchdog.intellij.logic.ui.EventManager;
+import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
@@ -19,7 +19,7 @@ public class GeneralActivityListener {
 
 
     /** Constructor. */
-    public GeneralActivityListener(final EventManager eventManager, final String projectName) {
+    public GeneralActivityListener(final WatchDogEventManager eventManager, final String projectName) {
         mouseActivityListener = new AWTEventListener() {
             @Override
             public void eventDispatched(AWTEvent event) {

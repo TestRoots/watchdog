@@ -1,15 +1,16 @@
 package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
-import nl.tudelft.watchdog.eclipse.logic.interval.IntervalTransferManager;
-import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
-
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.eclipse.logic.EventInitializationManager;
+import nl.tudelft.watchdog.eclipse.logic.IntervalInitializationManager;
+import nl.tudelft.watchdog.eclipse.logic.interval.IntervalTransferManager;
+import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 
 /**
  * Sets up the listeners for eclipse UI events and registers the shutdown
@@ -20,7 +21,7 @@ public class WorkbenchListener {
 	private IntervalTransferManager intervalTransferManager;
 
 	/** The editorObservable. */
-	private EventManager eventManager;
+	private WatchDogEventManager eventManager;
 
 	/**
 	 * The window listener. An Eclipse window is the whole Eclipse application
@@ -31,7 +32,7 @@ public class WorkbenchListener {
 	private IWorkbench workbench;
 
 	/** Constructor. */
-	public WorkbenchListener(EventManager userActionManager,
+	public WorkbenchListener(WatchDogEventManager userActionManager,
 			IntervalTransferManager intervalTransferManager) {
 		this.eventManager = userActionManager;
 		this.intervalTransferManager = intervalTransferManager;
@@ -56,15 +57,15 @@ public class WorkbenchListener {
 	private void addShutdownListeners() {
 		workbench.addWorkbenchListener(new IWorkbenchListener() {
 
-			private InitializationManager intervalInitializationManager;
+			private IntervalInitializationManager intervalInitializationManager;
 
 			@Override
 			public boolean preShutdown(final IWorkbench workbench,
 					final boolean forced) {
-				intervalInitializationManager = InitializationManager
+				intervalInitializationManager = IntervalInitializationManager
 						.getInstance();
-				eventManager.update(new WatchDogEvent(workbench,
-						EventType.END_IDE));
+				eventManager.update(
+						new WatchDogEvent(workbench, EventType.END_IDE));
 				intervalInitializationManager.getIntervalManager()
 						.closeAllIntervals();
 				intervalTransferManager.sendIntervalsImmediately();
@@ -74,6 +75,7 @@ public class WorkbenchListener {
 			@Override
 			public void postShutdown(final IWorkbench workbench) {
 				intervalInitializationManager.shutdown();
+				EventInitializationManager.getInstance().shutdown();
 			}
 		});
 	}

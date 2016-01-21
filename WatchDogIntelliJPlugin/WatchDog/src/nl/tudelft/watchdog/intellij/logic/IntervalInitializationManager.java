@@ -6,7 +6,7 @@ import nl.tudelft.watchdog.core.logic.interval.IntervalTransferManagerBase;
 import nl.tudelft.watchdog.core.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalPersister;
-import nl.tudelft.watchdog.intellij.logic.ui.EventManager;
+import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.intellij.logic.ui.listeners.IntelliJListener;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
@@ -18,14 +18,14 @@ import java.util.HashMap;
  * singleton and contains UI code. Guarantees that there is only one properly
  * initialized {@link IntervalManager} that does the real work.
  */
-public class InitializationManager {
+public class IntervalInitializationManager {
 
     private static final int USER_ACTIVITY_TIMEOUT = 16000;
 
     /**
      * The singleton instance of the interval manager.
      */
-    private static volatile HashMap<String, InitializationManager> instances = new HashMap<String, InitializationManager>();
+    private static volatile HashMap<String, IntervalInitializationManager> instances = new HashMap<String, IntervalInitializationManager>();
 
     private final IntervalManager intervalManager;
 
@@ -35,14 +35,14 @@ public class InitializationManager {
 
     private final IntervalTransferManagerBase transferManager;
 
-    private final EventManager eventManager;
+    private final WatchDogEventManager eventManager;
 
     private final IntelliJListener intelliJListener;
 
     /**
      * Private constructor.
      */
-    private InitializationManager() {
+    private IntervalInitializationManager() {
         // Double getPath() because they are different methods on different objects
         File baseFolder = new File(PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog")).getPath().getPath());
 
@@ -56,7 +56,7 @@ public class InitializationManager {
 
         intervalManager = new IntervalManager(intervalsToTransferPersister,
                 intervalsStatisticsPersister);
-        eventManager = new EventManager(intervalManager,
+        eventManager = new WatchDogEventManager(intervalManager,
                 USER_ACTIVITY_TIMEOUT);
         new TimeSynchronityChecker(intervalManager, eventManager);
 
@@ -68,12 +68,12 @@ public class InitializationManager {
 
     /**
      * Returns the existing or creates and returns a new
-     * {@link InitializationManager} instance.
+     * {@link IntervalInitializationManager} instance.
      */
-    public static InitializationManager getInstance(String projectName) {
-        InitializationManager instance = instances.get(projectName);
+    public static IntervalInitializationManager getInstance(String projectName) {
+        IntervalInitializationManager instance = instances.get(projectName);
         if (instance == null) {
-            instances.put(projectName, new InitializationManager());
+            instances.put(projectName, new IntervalInitializationManager());
         }
         return instance;
     }
@@ -104,7 +104,7 @@ public class InitializationManager {
     }
 
 
-    public EventManager getEventManager() {
+    public WatchDogEventManager getEventManager() {
         return eventManager;
     }
 

@@ -28,12 +28,12 @@ import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
+import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /**
- * Tests the {@link EventManager}. Because this creates the intervals that are
+ * Tests the {@link WatchDogEventManager}. Because this creates the intervals that are
  * eventually transfered to the server, this is one of the most crucial parts of
  * WatchDog. Tests could flicker because they deal with timers (and Java gives
  * no guarantee as to when these timers will be executed).
@@ -45,7 +45,7 @@ public class EventManagerTest {
 
 	private static final int USER_ACTIVITY_TIMEOUT = 300;
 	private static final int TIMEOUT_GRACE_PERIOD = (int) (USER_ACTIVITY_TIMEOUT * 1.1);
-	private EventManager eventManager;
+	private WatchDogEventManager eventManager;
 	private IDEIntervalManagerBase intervalManager;
 	private ITextEditor mockedTextEditor;
 	private EditorIntervalBase editorInterval;
@@ -65,7 +65,7 @@ public class EventManagerTest {
 				Mockito.mock(IntervalPersisterBase.class));
 		intervalManager = Mockito.spy(intervalManagerReal);
 		mockedTextEditor = Mockito.mock(ITextEditor.class);
-		eventManager = new EventManager(intervalManager, USER_ACTIVITY_TIMEOUT);
+		eventManager = new WatchDogEventManager(intervalManager, USER_ACTIVITY_TIMEOUT);
 		PowerMockito.mockStatic(WatchDogGlobals.class);
 		Mockito.when(WatchDogGlobals.getLogDirectory()).thenReturn("watchdog/logs/");
 		Mockito.when(WatchDogGlobals.getPreferences()).thenReturn(mockedPreferences);

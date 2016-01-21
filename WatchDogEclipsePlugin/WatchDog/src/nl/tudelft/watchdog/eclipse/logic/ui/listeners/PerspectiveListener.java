@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
+import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jdt.ui.JavaUI;
@@ -14,10 +14,10 @@ import org.eclipse.ui.IWorkbenchPage;
 /** Listener for Perspective Changes by the user. */
 public class PerspectiveListener implements IPerspectiveListener {
 	/** The eventObservable. */
-	private EventManager eventManager;
+	private WatchDogEventManager eventManager;
 
 	/** Constructor. */
-	PerspectiveListener(EventManager eventManager) {
+	PerspectiveListener(WatchDogEventManager eventManager) {
 		this.eventManager = eventManager;
 	}
 

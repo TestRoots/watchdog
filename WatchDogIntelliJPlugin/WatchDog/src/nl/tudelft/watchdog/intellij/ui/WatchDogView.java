@@ -10,7 +10,7 @@ import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase.StatisticsTimePeriod;
-import nl.tudelft.watchdog.intellij.logic.InitializationManager;
+import nl.tudelft.watchdog.intellij.logic.IntervalInitializationManager;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.intellij.ui.util.UIUtils;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
@@ -172,7 +172,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
 	}
 
 	private void calculateTimes() {
-		intervalStatistics = new IntervalStatistics(InitializationManager
+		intervalStatistics = new IntervalStatistics(IntervalInitializationManager
 				.getInstance(WatchDogUtils.getProjectName()).getIntervalManager(), selectedTimePeriod);
 
 		intelliJOpen = intervalStatistics

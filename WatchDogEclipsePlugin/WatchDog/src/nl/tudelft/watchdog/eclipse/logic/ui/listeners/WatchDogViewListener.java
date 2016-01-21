@@ -2,8 +2,8 @@ package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
-import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
+import nl.tudelft.watchdog.eclipse.logic.IntervalInitializationManager;
+import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.eclipse.ui.WatchDogView;
 
 import org.eclipse.ui.IPartListener2;
@@ -18,12 +18,12 @@ public class WatchDogViewListener implements IPartListener2 {
 	private WatchDogView watchDogView;
 
 	/** The Event Manager. */
-	private final EventManager eventManager;
+	private final WatchDogEventManager eventManager;
 
 	/** Constructor. */
 	public WatchDogViewListener(WatchDogView watchDogView) {
 		this.watchDogView = watchDogView;
-		this.eventManager = InitializationManager.getInstance()
+		this.eventManager = IntervalInitializationManager.getInstance()
 				.getEventManager();
 	}
 

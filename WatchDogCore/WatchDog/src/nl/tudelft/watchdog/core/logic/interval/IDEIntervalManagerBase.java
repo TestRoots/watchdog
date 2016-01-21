@@ -168,5 +168,12 @@ public abstract class IDEIntervalManagerBase extends IntervalManagerBase {
 	public IntervalPersisterBase getIntervalsStatisticsPersister() {
 		return intervalsStatisticsPersister;
 	}
+	
+	/**
+	 * @return the session seed used by this interval manager. 
+	 */
+	public String getSessionSeed() {
+		return sessionSeed;
+	}
 
 }
