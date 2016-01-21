@@ -12,8 +12,8 @@ import org.joda.time.format.PeriodFormat;
 import com.google.gson.annotations.SerializedName;
 
 /** The interval base. */
-abstract public class IntervalBase extends WatchDogTransferable implements
-		Serializable, Comparable<IntervalBase>, Cloneable {
+abstract public class IntervalBase extends WatchDogTransferable
+		implements Serializable, Comparable<IntervalBase>, Cloneable {
 
 	/** The version id of this class. */
 	private static final long serialVersionUID = 2L;
@@ -120,9 +120,24 @@ abstract public class IntervalBase extends WatchDogTransferable implements
 		return intervalType;
 	}
 
-	/** Necessary for storage of Intervals. */
+	/**
+	 * Necessary for storage of Intervals. The comparison is first based on the
+	 * end dates of the two intervals. If these dates are equal but the
+	 * intervals themselves not, the comparison is based on the start dates. If
+	 * the start dates are also equal, the type of the intervals is used to
+	 * produce the result of this method. This sequence of step is required to
+	 * ensure that intervals are not lost when two or more intervals have the
+	 * same end date.
+	 */
 	public int compareTo(IntervalBase comparedInterval) {
-		return getEnd().compareTo(comparedInterval.getEnd());
+		int res = getEnd().compareTo(comparedInterval.getEnd());
+		if (res == 0 && !this.equals(comparedInterval)) {
+			res = getStart().compareTo(comparedInterval.getStart());
+			if (res == 0) {
+				res = getType().compareTo(comparedInterval.getType()) > 0 ? 1 : -1;
+			}
+		}
+		return res;
 	}
 
 	/**
@@ -136,6 +151,50 @@ abstract public class IntervalBase extends WatchDogTransferable implements
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
+	}
+
+	/**
+	 * Checks whether the parameter is an IntervalBase and is equal to this by
+	 * comparing the start dates, end dates, types and session seeds of the two
+	 * intervals.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		IntervalBase other = (IntervalBase) obj;
+		if (end == null) {
+			if (other.end != null) {
+				return false;
+			}
+		} else if (!end.equals(other.end)) {
+			return false;
+		}
+		if (intervalType != other.intervalType) {
+			return false;
+		}
+		if (sessionSeed == null) {
+			if (other.sessionSeed != null) {
+				return false;
+			}
+		} else if (!sessionSeed.equals(other.sessionSeed)) {
+			return false;
+		}
+		if (start == null) {
+			if (other.start != null) {
+				return false;
+			}
+		} else if (!start.equals(other.start)) {
+			return false;
+		}
+		return true;
 	}
 
 }
