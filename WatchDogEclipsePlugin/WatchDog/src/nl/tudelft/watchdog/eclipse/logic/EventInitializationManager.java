@@ -4,7 +4,9 @@ import java.io.File;
 
 import nl.tudelft.watchdog.core.logic.event.EventManager;
 import nl.tudelft.watchdog.core.logic.event.EventPersisterBase;
+import nl.tudelft.watchdog.core.logic.event.EventTransferManagerBase;
 import nl.tudelft.watchdog.eclipse.Activator;
+import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /**
  * Manages the setup process of the event recording infrastructure. Is a
@@ -19,6 +21,7 @@ public class EventInitializationManager {
 	private final EventManager eventManager;
 	private final EventPersisterBase eventsToTransferPersister;
 	private final EventPersisterBase eventsStatisticsPersister;
+	private final EventTransferManagerBase eventTransferManager;
 
 	/** Private constructor. */
 	private EventInitializationManager() {
@@ -35,8 +38,9 @@ public class EventInitializationManager {
 				eventsStatisticsPersister);
 		eventManager.setSessionSeed(IntervalInitializationManager.getInstance()
 				.getIntervalManager().getSessionSeed());
-
-		// TODO: init listeners and transfer manager
+		eventTransferManager = new EventTransferManagerBase(
+				eventsToTransferPersister, WatchDogUtils.getWorkspaceName());
+		// TODO: init listeners
 	}
 
 	/**
@@ -57,6 +61,11 @@ public class EventInitializationManager {
 	public void shutdown() {
 		eventsToTransferPersister.closeDatabase();
 		eventsStatisticsPersister.closeDatabase();
+	}
+
+	/** @return the event transfer manager. */
+	public EventTransferManagerBase getEventTransferManager() {
+		return eventTransferManager;
 	}
 
 }

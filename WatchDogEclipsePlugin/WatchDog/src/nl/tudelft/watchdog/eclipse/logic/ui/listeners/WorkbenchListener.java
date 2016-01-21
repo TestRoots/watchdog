@@ -58,24 +58,29 @@ public class WorkbenchListener {
 		workbench.addWorkbenchListener(new IWorkbenchListener() {
 
 			private IntervalInitializationManager intervalInitializationManager;
+			private EventInitializationManager eventInitializationManager;
 
 			@Override
 			public boolean preShutdown(final IWorkbench workbench,
 					final boolean forced) {
 				intervalInitializationManager = IntervalInitializationManager
 						.getInstance();
+				eventInitializationManager = EventInitializationManager
+						.getInstance();
 				eventManager.update(
 						new WatchDogEvent(workbench, EventType.END_IDE));
 				intervalInitializationManager.getIntervalManager()
 						.closeAllIntervals();
 				intervalTransferManager.sendItemsImmediately();
+				eventInitializationManager.getEventTransferManager()
+						.sendItemsImmediately();
 				return true;
 			}
 
 			@Override
 			public void postShutdown(final IWorkbench workbench) {
 				intervalInitializationManager.shutdown();
-				EventInitializationManager.getInstance().shutdown();
+				eventInitializationManager.shutdown();
 			}
 		});
 	}
