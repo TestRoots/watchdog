@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.intellij.logic;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.extensions.PluginId;
 import nl.tudelft.watchdog.core.logic.event.EventManager;
+import nl.tudelft.watchdog.core.logic.event.EventTransferManagerBase;
 import nl.tudelft.watchdog.intellij.logic.event.EventPersister;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
@@ -25,6 +26,7 @@ public class EventInitializationManager {
     private final EventManager eventManager;
     private final EventPersister eventsToTransferPersister;
     private final EventPersister eventsStatisticsPersister;
+    private final EventTransferManagerBase eventTransferManager;
 
     /**
      * Private constructor.
@@ -42,7 +44,8 @@ public class EventInitializationManager {
         eventManager = new EventManager(eventsToTransferPersister, eventsStatisticsPersister);
         eventManager.setSessionSeed(sessionSeed);
 
-        //TODO: init listeners and transfer manager
+        eventTransferManager = new EventTransferManagerBase(eventsToTransferPersister, WatchDogUtils.getProjectName());
+        //TODO: init listeners
     }
 
     /**
@@ -68,5 +71,10 @@ public class EventInitializationManager {
         eventsStatisticsPersister.closeDatabase();
         instances.remove(projectName);
         //TODO: remove listeners
+    }
+
+    /** @return the event transfer manager. */
+    public EventTransferManagerBase getEventTransferManager() {
+        return eventTransferManager;
     }
 }

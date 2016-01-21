@@ -103,7 +103,7 @@ public class WatchDogStartUp implements ProjectComponent {
         intervalIntervalInitializationManager.shutdown(project.getName());
 
         EventInitializationManager eventInitializationManager = EventInitializationManager.getInstance(project.getName());
-        //TODO: transfer events immediately
+        eventInitializationManager.getEventTransferManager().sendItemsImmediately();
         eventInitializationManager.shutdown(project.getName());
 
         JFrame frame = WindowManager.getInstance().getFrame(project);
