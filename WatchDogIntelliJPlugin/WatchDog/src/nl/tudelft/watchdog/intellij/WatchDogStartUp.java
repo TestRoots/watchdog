@@ -11,16 +11,16 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.WindowManager;
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
-import nl.tudelft.watchdog.core.ui.wizards.User;
-import nl.tudelft.watchdog.intellij.logic.EventInitializationManager;
-import nl.tudelft.watchdog.intellij.logic.IntervalInitializationManager;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
 import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
-import nl.tudelft.watchdog.intellij.ui.wizards.projectregistration.ProjectRegistrationWizard;
-import nl.tudelft.watchdog.intellij.ui.wizards.userregistration.UserProjectRegistrationWizard;
+import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
+import nl.tudelft.watchdog.intellij.logic.EventInitializationManager;
+import nl.tudelft.watchdog.intellij.logic.IntervalInitializationManager;
+import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
+import nl.tudelft.watchdog.intellij.ui.wizards.projectregistration.ProjectRegistrationWizard;
+import nl.tudelft.watchdog.intellij.ui.wizards.userregistration.UserProjectRegistrationWizard;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -99,7 +99,7 @@ public class WatchDogStartUp implements ProjectComponent {
         IntervalInitializationManager intervalIntervalInitializationManager = IntervalInitializationManager.getInstance(project.getName());
         intervalIntervalInitializationManager.getEventManager().update(new WatchDogEvent(this, WatchDogEvent.EventType.END_IDE));
         intervalIntervalInitializationManager.getIntervalManager().closeAllIntervals();
-        intervalIntervalInitializationManager.getTransferManager().sendIntervalsImmediately();
+        intervalIntervalInitializationManager.getTransferManager().sendItemsImmediately();
         intervalIntervalInitializationManager.shutdown(project.getName());
 
         EventInitializationManager eventInitializationManager = EventInitializationManager.getInstance(project.getName());
