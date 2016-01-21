@@ -1,15 +1,5 @@
 package nl.tudelft.watchdog.eclipse.ui.wizards.userregistration;
 
-import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
-import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
-import nl.tudelft.watchdog.core.ui.wizards.User;
-import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
-import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
-import nl.tudelft.watchdog.eclipse.ui.wizards.FinishableWizardPage;
-import nl.tudelft.watchdog.eclipse.ui.wizards.FormValidationListener;
-import nl.tudelft.watchdog.eclipse.ui.wizards.RegistrationEndingPageBase;
-import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
-
 import org.apache.commons.validator.routines.EmailValidator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
@@ -17,6 +7,17 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+
+import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
+import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
+import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
+import nl.tudelft.watchdog.core.ui.wizards.User;
+import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
+import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
+import nl.tudelft.watchdog.eclipse.ui.wizards.FinishableWizardPage;
+import nl.tudelft.watchdog.eclipse.ui.wizards.FormValidationListener;
+import nl.tudelft.watchdog.eclipse.ui.wizards.RegistrationEndingPageBase;
+import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /** The Page on which new users can register themselves. */
 public class UserRegistrationPage extends RegistrationEndingPageBase {
@@ -65,11 +66,9 @@ public class UserRegistrationPage extends RegistrationEndingPageBase {
 		Composite composite = UIUtils.createGridedComposite(innerParent, 2);
 		composite.setLayoutData(UIUtils.createFullGridUsageData());
 
-		emailInput = UIUtils
-				.createLinkedFieldInput(
-						"Your eMail: ",
-						"We contact you via this address, if you win one of our amazing prices. So make sure it's correct.",
-						composite);
+		emailInput = UIUtils.createLinkedFieldInput("Your eMail: ",
+				"We contact you via this address, if you win one of our amazing prices. So make sure it's correct.",
+				composite);
 		organizationInput = UIUtils.createLinkedFieldInput(
 				"Your Organization/Company: ",
 				"You can include your organization's website here.", composite);
@@ -78,13 +77,14 @@ public class UserRegistrationPage extends RegistrationEndingPageBase {
 		emailInput.addModifyListener(formValidator);
 
 		UIUtils.createLabel("Your Programming Experience: ", composite);
-		experienceDropDown = UIUtils.createComboList(composite, formValidator,
-				new String[] { "", "< 1 year", "1-2 years", "3-6 years",
-						"7-10 years", "> 10 years" }, 0);
+		experienceDropDown = UIUtils.createComboList(
+				composite, formValidator, new String[] { "", "< 1 year",
+						"1-2 years", "3-6 years", "7-10 years", "> 10 years" },
+				0);
 
 		mayContactButton = new Button(innerParent, SWT.CHECK);
-		mayContactButton
-				.setText("I want to win prizes! The lovely TestRoots team from TU Delft may contact me.");
+		mayContactButton.setText(
+				"I want to win prizes! The lovely TestRoots team from TU Delft may contact me.");
 		mayContactButton.addSelectionListener(formValidator);
 		mayContactButton.setSelection(true);
 
@@ -101,19 +101,22 @@ public class UserRegistrationPage extends RegistrationEndingPageBase {
 		setErrorMessageAndPageComplete(null);
 		if (WatchDogUtils
 				.isEmptyOrHasOnlyWhitespaces(getProgrammingExperience())) {
-			setErrorMessageAndPageComplete("Please fill in your years of programming experience");
+			setErrorMessageAndPageComplete(
+					"Please fill in your years of programming experience");
 		}
 
 		if (!WatchDogUtils.isEmpty(emailInput.getText())) {
 			if (!EmailValidator.getInstance(false)
 					.isValid(emailInput.getText())) {
-				setErrorMessageAndPageComplete("Your mail address is not valid!");
+				setErrorMessageAndPageComplete(
+						"Your mail address is not valid!");
 			}
 		}
 
 		if (WatchDogUtils.isEmpty(emailInput.getText())
 				&& mayContactButton.getSelection()) {
-			setErrorMessageAndPageComplete("You can only participate in the lottery if you enter your email address.");
+			setErrorMessageAndPageComplete(
+					"You can only participate in the lottery if you enter your email address.");
 		}
 
 		getWizard().getContainer().updateButtons();
@@ -128,7 +131,8 @@ public class UserRegistrationPage extends RegistrationEndingPageBase {
 		user.operatingSystem = Platform.getOS();
 
 		try {
-			id = new JsonTransferer().registerNewUser(user);
+			id = new JsonTransferer<WatchDogTransferable>()
+					.registerNewUser(user);
 		} catch (ServerCommunicationException exception) {
 			successfulRegistration = false;
 			messageTitle = "Problem creating new user!";
@@ -193,9 +197,8 @@ public class UserRegistrationPage extends RegistrationEndingPageBase {
 		if (visible) {
 			validateFormInputs();
 		} else {
-			if (isPageComplete()
-					&& getWizard().getStartingPage() != getWizard()
-							.getContainer().getCurrentPage()) {
+			if (isPageComplete() && getWizard().getStartingPage() != getWizard()
+					.getContainer().getCurrentPage()) {
 				makeRegistration();
 			}
 		}

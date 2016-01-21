@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
+import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
 import nl.tudelft.watchdog.core.logic.ui.RegularCheckerBase;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
@@ -33,7 +34,7 @@ public class ClientVersionChecker extends RegularCheckerBase {
 
 	private static class ClientVersionCheckerTimerTask extends TimerTask {
 		private final Preferences preferences;
-		private final JsonTransferer jsonTransferer = new JsonTransferer();
+		private final JsonTransferer<WatchDogTransferable> jsonTransferer = new JsonTransferer<WatchDogTransferable>();
 
 		private ClientVersionCheckerTimerTask() {
 			this.preferences = Preferences.getInstance();
