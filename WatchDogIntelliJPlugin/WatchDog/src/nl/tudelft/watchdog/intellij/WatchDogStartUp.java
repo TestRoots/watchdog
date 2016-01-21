@@ -12,6 +12,7 @@ import com.intellij.openapi.wm.WindowManager;
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.core.ui.wizards.User;
+import nl.tudelft.watchdog.intellij.logic.EventInitializationManager;
 import nl.tudelft.watchdog.intellij.logic.IntervalInitializationManager;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
@@ -100,6 +101,10 @@ public class WatchDogStartUp implements ProjectComponent {
         intervalIntervalInitializationManager.getIntervalManager().closeAllIntervals();
         intervalIntervalInitializationManager.getTransferManager().sendIntervalsImmediately();
         intervalIntervalInitializationManager.shutdown(project.getName());
+
+        EventInitializationManager eventInitializationManager = EventInitializationManager.getInstance(project.getName());
+        //TODO: transfer events immediately
+        eventInitializationManager.shutdown(project.getName());
 
         JFrame frame = WindowManager.getInstance().getFrame(project);
         if (frame != null) {
@@ -198,6 +203,7 @@ public class WatchDogStartUp implements ProjectComponent {
         if (setting.enableWatchdog) {
             WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
             IntervalInitializationManager.getInstance(project.getName());
+            EventInitializationManager.getInstance(project.getName());
             WatchDogUtils.setWatchDogActiveForProject(project);
             new ViewToolWindowButtonsAction().setSelected(null, true);
         }
