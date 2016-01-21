@@ -38,8 +38,8 @@ public class JsonTransferer<T extends WatchDogTransferable> {
 	}
 
 	/**
-	 * Sends the recorded T's to the server. Returns <code>true</code> on
-	 * successful transfer, <code>false</code> otherwise.
+	 * Sends the recorded T's to the server. Returns whether or not the transfer
+	 * was successful or a network error occurred.
 	 */
 	public Connection sendItems(List<T> recordedItems, String projectName) {
 		String userId = WatchDogGlobals.getPreferences().getUserId();
@@ -122,8 +122,13 @@ public class JsonTransferer<T extends WatchDogTransferable> {
 			return "[]";
 		}
 	}
-	
+
+	/**
+	 * @return the POST URL to be used to send the JSON data to.
+	 */
 	protected String getPostURL(String userId, String projectId) {
+		// Note: This is only a dummy implementation, subclasses should override
+		// this method to return a correct URL.
 		return null;
 	}
 

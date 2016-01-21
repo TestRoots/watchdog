@@ -32,7 +32,7 @@ public class IntervalTransferManagerBase extends TransferManagerBase<IntervalBas
 	}
 
 	@Override
-	protected void updatePreferences(int transferredIntervals) {
+	protected void updateStatisticsPreferences(int transferredIntervals) {
 		PreferencesBase prefs = WatchDogGlobals.getPreferences();
 		prefs.setLastTransferedInterval();
 		prefs.addTransferedIntervals(transferredIntervals);		

@@ -39,8 +39,11 @@ public abstract class TransferManagerBase<T extends WatchDogTransferable> extend
 
 	protected static void refreshUI() {	}
 	
+	/** @return a JSON transferrer to be used to transfer the items to the server. */
 	protected abstract JsonTransferer<T> createTransferer();
-	protected abstract void updatePreferences(int transferredItems);
+	
+	/** Updates the statistics preferences after transferring the items to the server. */
+	protected abstract void updateStatisticsPreferences(int transferredItems);
 
 	private class TransferTimerTask extends TimerTask {
 		private final PersisterBase<T> persister;
@@ -79,7 +82,7 @@ public abstract class TransferManagerBase<T extends WatchDogTransferable> extend
 			switch (connection) {
 			case SUCCESSFUL:
 				persister.removeItems(itemsToTransfer);
-				updatePreferences(itemsToTransfer.size());
+				updateStatisticsPreferences(itemsToTransfer.size());
 				WatchDogGlobals.lastTransactionFailed = false;
 				break;
 
