@@ -15,25 +15,27 @@ public class Breakpoint implements Serializable {
 
 	/** The hash of this breakpoint. */
 	@SerializedName("bh")
-	private String hash;
+	private int hash;
 	
 	/** The type of this breakpoint. */
 	@SerializedName("bt")
 	private BreakpointType breakpointType;
 	
+	private boolean enabled;
+	
 	/** Constructor. */
-	public Breakpoint(BreakpointType type, String hash) {
+	public Breakpoint(BreakpointType type, int hash) {
 		this.breakpointType = type;
 		this.hash = hash;
 	}
 
 	/** @return the hash of the breakpoint. */
-	public String getHash() {
+	public int getHash() {
 		return hash;
 	}
 
 	/** Sets the hash of the breakpoint. */
-	public void setHash(String hash) {
+	public void setHash(int hash) {
 		this.hash = hash;
 	}
 
@@ -45,5 +47,15 @@ public class Breakpoint implements Serializable {
 	/** Sets the type of the breakpoint. */
 	public void setBreakpointType(BreakpointType breakpointType) {
 		this.breakpointType = breakpointType;
+	}
+	
+	/** @return true if the breakpoint is enabled. */
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	/** Sets whether the breakpoint is enabled or not. */
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 }
