@@ -23,10 +23,11 @@ public class BreakpointCreator {
 		try {
 			result.setEnabled(breakpoint.isEnabled());
 
-			// Make sure the hit count is initialized.
+			// Make sure the hit count and suspend policy are initialized.
 			result.setHitCount(-1);
 			if (breakpoint instanceof IJavaBreakpoint) {
 				IJavaBreakpoint bp = (IJavaBreakpoint) breakpoint;
+				result.setSuspendPolicy(bp.getSuspendPolicy());
 				result.setHitCount(bp.getHitCount());
 			}
 		} catch (CoreException exception) {

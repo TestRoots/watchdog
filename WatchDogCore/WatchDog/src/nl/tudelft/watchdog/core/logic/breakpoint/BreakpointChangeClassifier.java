@@ -43,6 +43,11 @@ public class BreakpointChangeClassifier {
 				changes.add(BreakpointChangeType.HC_REMOVED);
 			}
 		}
+		
+		// Check for changes in the suspend policy of the breakpoint.
+		if(old_bp.getSuspendPolicy() != new_bp.getSuspendPolicy()) {
+			changes.add(BreakpointChangeType.SP_CHANGED);
+		}
 
 		//TODO: support more types of changes
 		

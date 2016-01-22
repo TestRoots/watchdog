@@ -24,6 +24,10 @@ public enum BreakpointChangeType {
 	@SerializedName("hr")
 	HC_REMOVED,
 	
+	/** Breakpoint's suspend policy has been changed. */
+	@SerializedName("sp")
+	SP_CHANGED,
+	
 	/** Unknown change to the breakpoint. */
 	@SerializedName("un")
 	UNKNOWN;
