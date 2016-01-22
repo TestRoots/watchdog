@@ -13,6 +13,7 @@ import java.util.Random;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointType;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointAddEvent;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
 
@@ -57,7 +58,7 @@ public class EventPersisterTest extends EventPersisterTestBase {
 	}
 
 	public static EventBase createRandomEvent() {
-		EventBase event = new BreakpointAddEvent(null, new Date());
+		EventBase event = new BreakpointAddEvent(new Random().nextInt(100000), BreakpointType.LINE, new Date());
 		event.setSessionSeed("444");
 		event.setTimestamp(new Date(event.getTimestamp().getTime() + (new Random()).nextInt(100000)));
 		return event;
