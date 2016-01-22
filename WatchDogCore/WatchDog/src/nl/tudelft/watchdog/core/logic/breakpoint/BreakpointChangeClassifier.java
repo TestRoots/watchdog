@@ -30,6 +30,19 @@ public class BreakpointChangeClassifier {
 				changes.add(BreakpointChangeType.DISABLED);
 			}
 		}
+		
+		// Check for changes in the hit count of the breakpoint.
+		if (old_bp.getHitCount() != new_bp.getHitCount()) {
+			if (new_bp.getHitCount() != -1) {
+				if (old_bp.getHitCount() == -1) {
+					changes.add(BreakpointChangeType.HC_ADDED);
+				} else {
+					changes.add(BreakpointChangeType.HC_CHANGED);
+				}
+			} else {
+				changes.add(BreakpointChangeType.HC_REMOVED);
+			}
+		}
 
 		//TODO: support more types of changes
 		

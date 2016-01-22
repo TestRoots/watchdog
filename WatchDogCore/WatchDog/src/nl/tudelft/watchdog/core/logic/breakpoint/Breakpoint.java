@@ -15,6 +15,9 @@ public class Breakpoint {
 	/** Whether or not this breakpoint is enabled. */
 	private boolean enabled;
 	
+	/** The hit count of this breakpoint (-1 when not specified). */
+	private int hitCount;
+	
 	/** Constructor. */
 	public Breakpoint(int hash, BreakpointType type) {
 		this.breakpointType = type;
@@ -49,5 +52,15 @@ public class Breakpoint {
 	/** Sets whether the breakpoint is enabled or not. */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+	
+	/** @return the hit count of this breakpoint (-1 if not specified). */
+	public int getHitCount() {
+		return hitCount;
+	}
+	
+	/** Sets the hit count of this breakpoint. */
+	public void setHitCount(int hitCount) {
+		this.hitCount = hitCount;
 	}
 }

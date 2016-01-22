@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.eclipse.logic.breakpoint;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.model.IBreakpoint;
+import org.eclipse.jdt.debug.core.IJavaBreakpoint;
 
 import nl.tudelft.watchdog.core.logic.breakpoint.Breakpoint;
 
@@ -21,6 +22,13 @@ public class BreakpointCreator {
 
 		try {
 			result.setEnabled(breakpoint.isEnabled());
+
+			// Make sure the hit count is initialized.
+			result.setHitCount(-1);
+			if (breakpoint instanceof IJavaBreakpoint) {
+				IJavaBreakpoint bp = (IJavaBreakpoint) breakpoint;
+				result.setHitCount(bp.getHitCount());
+			}
 		} catch (CoreException exception) {
 			exception.printStackTrace();
 		}
