@@ -4,11 +4,11 @@ import com.google.gson.annotations.SerializedName;
 
 /** The different types of changes to a breakpoint. */
 public enum BreakpointChangeType {
-	/** Breakpoint is enabled. */
+	/** Breakpoint has been enabled. */
 	@SerializedName("en")
 	ENABLED,
 
-	/** Breakpoint is disabled. */
+	/** Breakpoint has been disabled. */
 	@SerializedName("ds")
 	DISABLED,
 	

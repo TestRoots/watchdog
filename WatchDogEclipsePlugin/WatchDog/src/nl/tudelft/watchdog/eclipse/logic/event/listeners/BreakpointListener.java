@@ -4,15 +4,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IMarkerDelta;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.IBreakpointListener;
 import org.eclipse.debug.core.model.IBreakpoint;
 
 import nl.tudelft.watchdog.core.logic.breakpoint.Breakpoint;
+import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointChangeClassifier;
 import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointChangeType;
 import nl.tudelft.watchdog.core.logic.event.EventManager;
-import nl.tudelft.watchdog.eclipse.logic.breakpoint.BreakpointClassifier;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointEventBase;
+import nl.tudelft.watchdog.eclipse.logic.breakpoint.BreakpointCreator;
 
+/**
+ * Listener that is notified when breakpoints are added, changed or removed.
+ * Based on these notifications an instance of a subclass of
+ * {@link BreakpointEventBase} is generated and given to the
+ * {@link EventManager}.
+ */
 public class BreakpointListener implements IBreakpointListener {
 
 	private final EventManager eventManager;
@@ -31,7 +38,7 @@ public class BreakpointListener implements IBreakpointListener {
 
 	@Override
 	public void breakpointAdded(IBreakpoint breakpoint) {
-		Breakpoint bp = createBreakpointRepresentation(breakpoint);
+		Breakpoint bp = BreakpointCreator.createBreakpoint(breakpoint);
 		breakpoints.put(bp.getHash(), bp);
 		System.out.println(
 				"BP added: " + bp.getBreakpointType() + " " + bp.getHash());
@@ -39,7 +46,7 @@ public class BreakpointListener implements IBreakpointListener {
 
 	@Override
 	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
-		Breakpoint bp = createBreakpointRepresentation(breakpoint);
+		Breakpoint bp = BreakpointCreator.createBreakpoint(breakpoint);
 		breakpoints.remove(bp.getHash());
 		System.out.println(
 				"BP removed: " + bp.getBreakpointType() + " " + bp.getHash());
@@ -47,45 +54,17 @@ public class BreakpointListener implements IBreakpointListener {
 
 	@Override
 	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta) {
-		Breakpoint bp = createBreakpointRepresentation(breakpoint);
+		Breakpoint bp = BreakpointCreator.createBreakpoint(breakpoint);
 		Breakpoint old = breakpoints.put(bp.getHash(), bp); // replace entry if
 															// present,
 															// otherwise add
-		BreakpointChangeType change = determineBreakpointChangeType(old, bp);
+		BreakpointChangeType change = BreakpointChangeClassifier.classify(old,
+				bp);
+		// TODO: multiple changes at the same time?
 
 		System.out.println("BP changed: " + change + " "
 				+ bp.getBreakpointType() + " " + bp.getHash());
 
-	}
-
-	private BreakpointChangeType determineBreakpointChangeType(
-			Breakpoint old_bp, Breakpoint new_bp) {
-		if (old_bp == null) {
-			// old BP added in previous session, so unknown change
-			return BreakpointChangeType.UNKNOWN;
-		}
-
-		if (old_bp.isEnabled() != new_bp.isEnabled()) {
-			if (new_bp.isEnabled()) {
-				return BreakpointChangeType.ENABLED;
-			} else {
-				return BreakpointChangeType.DISABLED;
-			}
-		}
-		return BreakpointChangeType.UNKNOWN;
-	}
-
-	private Breakpoint createBreakpointRepresentation(IBreakpoint breakpoint) {
-		Breakpoint res = new Breakpoint(
-				BreakpointClassifier.classify(breakpoint),
-				breakpoint.hashCode());
-
-		try {
-			res.setEnabled(breakpoint.isEnabled());
-		} catch (CoreException exception) {
-			exception.printStackTrace();
-		}
-		return res;
 	}
 
 }

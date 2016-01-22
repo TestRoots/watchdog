@@ -1,30 +1,22 @@
 package nl.tudelft.watchdog.core.logic.breakpoint;
 
-import java.io.Serializable;
-
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Data container which stores information about a breakpoint, including its
  *  {@link BreakpointType}.
  */
-public class Breakpoint implements Serializable {
-
-	/** Serial id. */
-	private static final long serialVersionUID = 1L;
+public class Breakpoint {
 
 	/** The hash of this breakpoint. */
-	@SerializedName("bh")
 	private int hash;
 	
 	/** The type of this breakpoint. */
-	@SerializedName("bt")
 	private BreakpointType breakpointType;
 	
+	/** Whether or not this breakpoint is enabled. */
 	private boolean enabled;
 	
 	/** Constructor. */
-	public Breakpoint(BreakpointType type, int hash) {
+	public Breakpoint(int hash, BreakpointType type) {
 		this.breakpointType = type;
 		this.hash = hash;
 	}
