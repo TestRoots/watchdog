@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.eclipse.logic.event.listeners;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +12,10 @@ import nl.tudelft.watchdog.core.logic.breakpoint.Breakpoint;
 import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointChangeClassifier;
 import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointChangeType;
 import nl.tudelft.watchdog.core.logic.event.EventManager;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointAddEvent;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointChangeEvent;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointEventBase;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointRemoveEvent;
 import nl.tudelft.watchdog.eclipse.logic.breakpoint.BreakpointCreator;
 
 /**
@@ -22,6 +26,7 @@ import nl.tudelft.watchdog.eclipse.logic.breakpoint.BreakpointCreator;
  */
 public class BreakpointListener implements IBreakpointListener {
 
+	/** The event manager that should receive the generated events. */
 	private final EventManager eventManager;
 
 	/**
@@ -38,33 +43,38 @@ public class BreakpointListener implements IBreakpointListener {
 
 	@Override
 	public void breakpointAdded(IBreakpoint breakpoint) {
+		Date timestamp = new Date();
 		Breakpoint bp = BreakpointCreator.createBreakpoint(breakpoint);
 		breakpoints.put(bp.getHash(), bp);
-		System.out.println(
-				"BP added: " + bp.getBreakpointType() + " " + bp.getHash());
+		BreakpointAddEvent event = new BreakpointAddEvent(bp.getHash(),
+				bp.getBreakpointType(), timestamp);
+		eventManager.addEvent(event);
 	}
 
 	@Override
 	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
+		Date timestamp = new Date();
 		Breakpoint bp = BreakpointCreator.createBreakpoint(breakpoint);
 		breakpoints.remove(bp.getHash());
-		System.out.println(
-				"BP removed: " + bp.getBreakpointType() + " " + bp.getHash());
+		BreakpointRemoveEvent event = new BreakpointRemoveEvent(bp.getHash(),
+				bp.getBreakpointType(), timestamp);
+		eventManager.addEvent(event);
 	}
 
 	@Override
 	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta) {
+		Date timestamp = new Date();
 		Breakpoint bp = BreakpointCreator.createBreakpoint(breakpoint);
-		Breakpoint old = breakpoints.put(bp.getHash(), bp); // replace entry if
-															// present,
-															// otherwise add
+
+		// Replace entry if present, otherwise create new entry.
+		Breakpoint old = breakpoints.put(bp.getHash(), bp);
+
+		// TODO: multiple changes at the same time?
 		BreakpointChangeType change = BreakpointChangeClassifier.classify(old,
 				bp);
-		// TODO: multiple changes at the same time?
-
-		System.out.println("BP changed: " + change + " "
-				+ bp.getBreakpointType() + " " + bp.getHash());
-
+		BreakpointChangeEvent event = new BreakpointChangeEvent(bp.getHash(),
+				bp.getBreakpointType(), change, timestamp);
+		eventManager.addEvent(event);
 	}
 
 }
