@@ -1,5 +1,8 @@
 package nl.tudelft.watchdog.core.logic.breakpoint;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Estimates the nature of a breakpoint change into one of
  * {@link BreakpointChangeType}.
@@ -7,24 +10,34 @@ package nl.tudelft.watchdog.core.logic.breakpoint;
 public class BreakpointChangeClassifier {
 
 	/**
-	 * Classifies the breakpoint change type by analyzing the differences
+	 * Classifies the breakpoint change type(s) by analyzing the differences
 	 * between the properties of the old and new breakpoint.
 	 */
-	public static BreakpointChangeType classify(Breakpoint old_bp, Breakpoint new_bp) {
+	public static List<BreakpointChangeType> classify(Breakpoint old_bp, Breakpoint new_bp) {
+		List<BreakpointChangeType> changes = new ArrayList<>();
 		if (old_bp == null) {
 			// Old BP was added in a previous session, so the change(s) are
 			// unknown.
-			return BreakpointChangeType.UNKNOWN;
+			changes.add(BreakpointChangeType.UNKNOWN);
+			return changes;
 		}
 
+		// Check for changes in breakpoint enablement.
 		if (old_bp.isEnabled() != new_bp.isEnabled()) {
 			if (new_bp.isEnabled()) {
-				return BreakpointChangeType.ENABLED;
+				changes.add(BreakpointChangeType.ENABLED);
 			} else {
-				return BreakpointChangeType.DISABLED;
+				changes.add(BreakpointChangeType.DISABLED);
 			}
 		}
-		return BreakpointChangeType.UNKNOWN;
+
+		//TODO: support more types of changes
+		
+		// If no changes are identified at this point, add UNKNOWN change.
+		if (changes.size() == 0) {
+			changes.add(BreakpointChangeType.UNKNOWN);
+		}
+		return changes;
 	}
 
 }

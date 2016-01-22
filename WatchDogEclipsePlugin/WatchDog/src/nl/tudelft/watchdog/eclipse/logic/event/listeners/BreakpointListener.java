@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.eclipse.logic.event.listeners;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IMarkerDelta;
@@ -69,11 +70,10 @@ public class BreakpointListener implements IBreakpointListener {
 		// Replace entry if present, otherwise create new entry.
 		Breakpoint old = breakpoints.put(bp.getHash(), bp);
 
-		// TODO: multiple changes at the same time?
-		BreakpointChangeType change = BreakpointChangeClassifier.classify(old,
-				bp);
+		List<BreakpointChangeType> changes = BreakpointChangeClassifier
+				.classify(old, bp);
 		BreakpointChangeEvent event = new BreakpointChangeEvent(bp.getHash(),
-				bp.getBreakpointType(), change, timestamp);
+				bp.getBreakpointType(), changes, timestamp);
 		eventManager.addEvent(event);
 	}
 
