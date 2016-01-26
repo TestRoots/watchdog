@@ -5,7 +5,7 @@
     <vendor email="igor.levaja@testroots.org" url="http://www.testroots.org">TestRoots, TU Delft</vendor>
 
     <description><![CDATA[
-    Do you as a Java developer know, how much time you spent on testing your application? Do you know how much time you actually write new code, and how long you browse through existing code? Do you want to win amazing prizes?
+    Do you as an Android Java developer know, how much time you spent on testing your app? Do you know how much time you actually write new code, and how long you browse through existing code? Do you want to win amazing prizes?
     <br>
     Then install TestRoots WatchDog!<br>
     WatchDog assess your development behavior, which tests you write (Junit, Mockito, Powermock and others) and gives you answers to the above questions. WatchDog comes with the "WatchDog Statistics" view that displays the answers in easy-to-understand diagrams and immediate statistics on your development habits.<br>
@@ -17,6 +17,7 @@
 
       1.7.0<br>
       Maintenance release:<br>
+      - Adds Android Studio support;
       - Makes WD much faster when working with large files (improvements in Levenshtein distance calculation);<br>
       - Fixes bug of not registering all intervals.<br><br>
 
