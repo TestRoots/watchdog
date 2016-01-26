@@ -1,13 +1,11 @@
 package nl.tudelft.watchdog.logic.interval;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -18,28 +16,16 @@ import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
-import nl.tudelft.watchdog.core.ui.wizards.Project;
-import nl.tudelft.watchdog.core.ui.wizards.User;
-import nl.tudelft.watchdog.core.util.WatchDogGlobals;
-import nl.tudelft.watchdog.core.util.WatchDogGlobals.IDE;
 import nl.tudelft.watchdog.eclipse.logic.document.EditorWrapper;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
+import nl.tudelft.watchdog.logic.network.JsonConverterTestBase;
 
 /**
- * Test the transfer from {@link IInterval}s to JSon.
+ * Test the transfer from {@link IntervalBase}s to JSon.
  */
-public class JsonConverterTest {
+public class IntervalJsonConverterTest extends JsonConverterTestBase{
 
 	private IntervalJsonTransferer transferer = new IntervalJsonTransferer();
-
-	@BeforeClass
-	public static void setUp() {
-		WatchDogGlobals.hostIDE = IDE.ECLIPSE;
-	}
-
-	public String pasteWDVAndClient() {
-		return "\"wdv\":\"" + WatchDogGlobals.CLIENT_VERSION + "\",\"ide\":\"ec\"";
-	}
 
 	/** Tests the format of the returned Json representation. */
 	@Test
@@ -201,20 +187,6 @@ public class JsonConverterTest {
 		Thread.yield();
 		WatchDogUtils.sleep(200);
 		Thread.yield();
-	}
-
-	@Test
-	public void testUserHasWatchDogVersion() {
-		String gsonRepresentation = WatchDogUtils.convertToJson(new User());
-		boolean containsWDVersion = gsonRepresentation.contains("\"wdv\":\"" + WatchDogGlobals.CLIENT_VERSION + "\"");
-		assertTrue(containsWDVersion);
-	}
-
-	@Test
-	public void testProjectHasWatchDogVersion() {
-		String gsonRepresentation = WatchDogUtils.convertToJson(new Project(""));
-		boolean containsWDVersion = gsonRepresentation.contains("\"wdv\":\"" + WatchDogGlobals.CLIENT_VERSION + "\"");
-		assertTrue(containsWDVersion);
 	}
 
 }
