@@ -2,10 +2,13 @@ package nl.tudelft.watchdog.eclipse.logic;
 
 import java.io.File;
 
+import org.eclipse.debug.core.DebugPlugin;
+
 import nl.tudelft.watchdog.core.logic.event.EventManager;
 import nl.tudelft.watchdog.core.logic.event.EventPersisterBase;
 import nl.tudelft.watchdog.core.logic.event.EventTransferManagerBase;
 import nl.tudelft.watchdog.eclipse.Activator;
+import nl.tudelft.watchdog.eclipse.logic.event.listeners.BreakpointListener;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /**
@@ -40,7 +43,9 @@ public class EventInitializationManager {
 				.getIntervalManager().getSessionSeed());
 		eventTransferManager = new EventTransferManagerBase(
 				eventsToTransferPersister, WatchDogUtils.getWorkspaceName());
-		// TODO: init listeners
+
+		DebugPlugin.getDefault().getBreakpointManager()
+				.addBreakpointListener(new BreakpointListener(eventManager));
 	}
 
 	/**

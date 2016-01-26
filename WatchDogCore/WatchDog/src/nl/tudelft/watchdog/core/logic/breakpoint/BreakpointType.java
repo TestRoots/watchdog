@@ -20,11 +20,11 @@ public enum BreakpointType {
 	@SerializedName("me")
 	METHOD,
 	
-	/** A conditional breakpoint with a specified expression. */
-	@SerializedName("ce")
-	COND_EXPR,
+	/** A class prepare breakpoint. */
+	@SerializedName("cp")
+	CLASS,
 	
-	/** A conditional breakpoint with a hit/pass count. */
-	@SerializedName("ch")
-	COND_HIT;
+	/** An undefined breakpoint. */
+	@SerializedName("un")
+	UNDEFINED;
 }

@@ -4,21 +4,26 @@ import java.util.Date;
 
 import com.google.gson.annotations.SerializedName;
 
-import nl.tudelft.watchdog.core.logic.breakpoint.Breakpoint;
+import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointType;
 
 public abstract class BreakpointEventBase extends EventBase {
 
 	/** Serial id. */
 	private static final long serialVersionUID = 1L;
 
-	/** The breakpoint associated with this {@link BreakpointEventBase}. */
-	@SerializedName("bp")
-	private Breakpoint breakpoint;
+	/** The hash of the breakpoint associated with this event. */
+	@SerializedName("bh")
+	private int hash;
+	
+	/** The type of the breakpoint associated with this event. */
+	@SerializedName("bt")
+	private BreakpointType breakpointType;
 
 	/** Constructor. */
-	public BreakpointEventBase(Breakpoint bp, EventType type, Date timestamp) {
+	public BreakpointEventBase(int hash, BreakpointType bpType, EventType type, Date timestamp) {
 		super(type, timestamp);
-		this.breakpoint = bp;
+		this.hash = hash;
+		this.breakpointType = bpType;
 	}
 
 }

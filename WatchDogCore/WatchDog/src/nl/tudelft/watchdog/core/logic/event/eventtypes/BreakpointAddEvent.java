@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.core.logic.event.eventtypes;
 
 import java.util.Date;
 
-import nl.tudelft.watchdog.core.logic.breakpoint.Breakpoint;
+import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointType;
 
 /** A breakpoint addition event, i.e. the user adds a breakpoint. */
 public class BreakpointAddEvent extends BreakpointEventBase {
@@ -11,8 +11,8 @@ public class BreakpointAddEvent extends BreakpointEventBase {
 	private static final long serialVersionUID = 1L;
 
 	/** Constructor. */
-	public BreakpointAddEvent(Breakpoint breakpoint, Date timestamp) {
-		super(breakpoint, EventType.BREAKPOINT_ADD, timestamp);
+	public BreakpointAddEvent(int hash, BreakpointType type, Date timestamp) {
+		super(hash, type, EventType.BREAKPOINT_ADD, timestamp);
 	}
 
 }
