@@ -63,6 +63,10 @@ public class WatchDogGlobals {
 
 		/** IntelliJ-IDE */
 		@SerializedName("ij")
-		INTELLIJ
+		INTELLIJ,
+
+		/** Android Studio (IntelliJ-IDE based) */
+		@SerializedName("as")
+		ANDROIDSTUDIO
 	}
 }
