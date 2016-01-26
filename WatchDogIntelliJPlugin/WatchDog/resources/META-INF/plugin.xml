@@ -17,7 +17,7 @@
 
       1.7.0<br>
       Maintenance release:<br>
-      - Adds Android Studio support;
+      - Adds Android Studio support;<br>
       - Makes WD much faster when working with large files (improvements in Levenshtein distance calculation);<br>
       - Fixes bug of not registering all intervals.<br><br>
 
@@ -48,7 +48,8 @@
     <!-- uncomment to enable plugin in all products
     <depends>com.intellij.modules.lang</depends>
     -->
-    <depends>com.intellij.modules.androidstudio</depends>
+    <depends>com.intellij.modules.java</depends>
+    <depends optional="true">com.intellij.modules.androidstudio</depends>
 
     <!--depends optional="false">JUnit</depends-->
 
