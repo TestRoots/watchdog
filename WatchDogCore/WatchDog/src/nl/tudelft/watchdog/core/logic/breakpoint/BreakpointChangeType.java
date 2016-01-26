@@ -28,6 +28,18 @@ public enum BreakpointChangeType {
 	@SerializedName("sp")
 	SP_CHANGED,
 	
+	/** Breakpoint's condition has been enabled. */
+	@SerializedName("ce")
+	COND_ENABLED,
+	
+	/** Breakpoint's condition has been disabled. */
+	@SerializedName("cd")
+	COND_DISABLED,
+	
+	/** Breakpoint's condition has changed. */
+	@SerializedName("cc")
+	COND_CHANGED,
+	
 	/** Unknown change to the breakpoint. */
 	@SerializedName("un")
 	UNKNOWN;

@@ -30,7 +30,7 @@ public class BreakpointChangeClassifier {
 				changes.add(BreakpointChangeType.DISABLED);
 			}
 		}
-		
+
 		// Check for changes in the hit count of the breakpoint.
 		if (old_bp.getHitCount() != new_bp.getHitCount()) {
 			if (new_bp.getHitCount() != -1) {
@@ -43,14 +43,31 @@ public class BreakpointChangeClassifier {
 				changes.add(BreakpointChangeType.HC_REMOVED);
 			}
 		}
-		
+
 		// Check for changes in the suspend policy of the breakpoint.
-		if(old_bp.getSuspendPolicy() != new_bp.getSuspendPolicy()) {
+		if (old_bp.getSuspendPolicy() != new_bp.getSuspendPolicy()) {
 			changes.add(BreakpointChangeType.SP_CHANGED);
 		}
 
-		//TODO: support more types of changes
-		
+		// Check for changes in the enablement of the condition of the
+		// breakpoint.
+		if (old_bp.isConditionEnabled() != new_bp.isConditionEnabled()) {
+			if (new_bp.isConditionEnabled()) {
+				changes.add(BreakpointChangeType.COND_ENABLED);
+			} else {
+				changes.add(BreakpointChangeType.COND_DISABLED);
+			}
+		}
+
+		// Check for changes in the condition of the breakpoint.
+		if (old_bp.getCondition() != null) {
+			if (!old_bp.getCondition().equals(new_bp.getCondition())) {
+				changes.add(BreakpointChangeType.COND_CHANGED);
+			}
+		}
+
+		// TODO: support more types of changes
+
 		// If no changes are identified at this point, add UNKNOWN change.
 		if (changes.size() == 0) {
 			changes.add(BreakpointChangeType.UNKNOWN);

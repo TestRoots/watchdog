@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.eclipse.logic.breakpoint;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jdt.debug.core.IJavaBreakpoint;
+import org.eclipse.jdt.debug.core.IJavaLineBreakpoint;
 
 import nl.tudelft.watchdog.core.logic.breakpoint.Breakpoint;
 
@@ -29,6 +30,13 @@ public class BreakpointCreator {
 				IJavaBreakpoint bp = (IJavaBreakpoint) breakpoint;
 				result.setSuspendPolicy(bp.getSuspendPolicy());
 				result.setHitCount(bp.getHitCount());
+			}
+
+			// Initialize condition fields if available.
+			if (breakpoint instanceof IJavaLineBreakpoint) {
+				IJavaLineBreakpoint bp = (IJavaLineBreakpoint) breakpoint;
+				result.setConditionEnabled(bp.isConditionEnabled());
+				result.setCondition(bp.getCondition());
 			}
 		} catch (CoreException exception) {
 			exception.printStackTrace();
