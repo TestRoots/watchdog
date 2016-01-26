@@ -5,6 +5,7 @@ import java.util.Date;
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.document.EditorWrapperBase;
 import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEActiveInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
@@ -218,6 +219,21 @@ public abstract class EventManagerBase {
 		case END_WATCHDOGVIEW:
 			interval = intervalManager.getInterval(WatchDogViewInterval.class);
 			if (intervalIsOfType(interval, IntervalType.WATCHDOGVIEW)) {
+				intervalManager.closeInterval(interval, forcedDate);
+			}
+			break;
+			
+		case START_DEBUG:
+			interval = intervalManager.getInterval(DebugInterval.class);
+			if(!intervalIsOfType(interval, IntervalType.DEBUG)) {
+				intervalManager.addInterval(new DebugInterval(forcedDate));
+			}
+			userInactivityNotifier.trigger(forcedDate);
+			break;
+			
+		case END_DEBUG:
+			interval = intervalManager.getInterval(DebugInterval.class);
+			if(intervalIsOfType(interval, IntervalType.DEBUG)) {
 				intervalManager.closeInterval(interval, forcedDate);
 			}
 			break;

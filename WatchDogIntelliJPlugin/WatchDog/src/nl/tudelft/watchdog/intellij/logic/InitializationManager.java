@@ -1,12 +1,15 @@
 package nl.tudelft.watchdog.intellij.logic;
 
+import com.intellij.debugger.DebuggerManagerEx;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.project.Project;
 import nl.tudelft.watchdog.core.logic.interval.IntervalTransferManagerBase;
 import nl.tudelft.watchdog.core.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalPersister;
 import nl.tudelft.watchdog.intellij.logic.ui.EventManager;
+import nl.tudelft.watchdog.intellij.logic.ui.listeners.DebuggerListener;
 import nl.tudelft.watchdog.intellij.logic.ui.listeners.IntelliJListener;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
@@ -73,7 +76,8 @@ public class InitializationManager {
     public static InitializationManager getInstance(String projectName) {
         InitializationManager instance = instances.get(projectName);
         if (instance == null) {
-            instances.put(projectName, new InitializationManager());
+            instance = new InitializationManager();
+            instances.put(projectName, instance);
         }
         return instance;
     }
@@ -110,6 +114,11 @@ public class InitializationManager {
 
     public IntervalTransferManagerBase getTransferManager() {
         return transferManager;
+    }
+
+    /** Adds a new listener for debug events. */
+    public void addDebuggerListener(Project project) {
+        DebuggerManagerEx.getInstanceEx(project).addDebuggerManagerListener(new DebuggerListener(eventManager));
     }
 }
 

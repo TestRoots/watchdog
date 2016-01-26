@@ -8,6 +8,7 @@ import java.util.Date;
 
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.ReadingInterval;
@@ -164,6 +165,15 @@ public class JsonConverterTest {
 		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
 
 		assertEquals("[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
+				transferer.toJson(intervals));
+	}
+	
+	@Test
+	public void testJsonDebugIntervalRepresentation() {
+		IntervalBase interval = new DebugInterval(new Date());
+		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
+
+		assertEquals("[{\"it\":\"db\",\"ts\":1,\"te\":2,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
 				transferer.toJson(intervals));
 	}
 
