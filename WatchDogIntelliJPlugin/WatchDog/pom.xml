@@ -105,6 +105,8 @@
 					<compilerArguments>
 						<extdirs>${project.build.directory}/IntelliJ-IDEA-CE/lib/</extdirs>
 					</compilerArguments>
+					<source>1.7</source>
+					<target>1.7</target>
 				</configuration>
 				<executions>
 					<execution>

@@ -14,7 +14,7 @@ public class BreakpointChangeClassifier {
 	 * between the properties of the old and new breakpoint.
 	 */
 	public static List<BreakpointChangeType> classify(Breakpoint old_bp, Breakpoint new_bp) {
-		List<BreakpointChangeType> changes = new ArrayList<>();
+		List<BreakpointChangeType> changes = new ArrayList<BreakpointChangeType>();
 		if (old_bp == null || new_bp == null) {
 			// Old BP was added in a previous session, so the change(s) are
 			// unknown.
