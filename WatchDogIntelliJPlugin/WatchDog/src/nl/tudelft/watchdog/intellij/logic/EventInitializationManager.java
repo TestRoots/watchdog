@@ -2,9 +2,12 @@ package nl.tudelft.watchdog.intellij.logic;
 
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.project.Project;
+import com.intellij.xdebugger.XDebuggerManager;
 import nl.tudelft.watchdog.core.logic.event.EventManager;
 import nl.tudelft.watchdog.core.logic.event.EventTransferManagerBase;
 import nl.tudelft.watchdog.intellij.logic.event.EventPersister;
+import nl.tudelft.watchdog.intellij.logic.event.listeners.BreakpointListener;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
 import java.io.File;
@@ -31,7 +34,7 @@ public class EventInitializationManager {
     /**
      * Private constructor.
      */
-    private EventInitializationManager(String sessionSeed) {
+    private EventInitializationManager(Project project) {
         // Double getPath() because they are different methods on different objects
         File baseFolder = new File(PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog")).getPath().getPath());
 
@@ -42,22 +45,23 @@ public class EventInitializationManager {
         eventsStatisticsPersister = new EventPersister(statisticsDatabaseFile);
 
         eventManager = new EventManager(eventsToTransferPersister, eventsStatisticsPersister);
-        eventManager.setSessionSeed(sessionSeed);
+        eventManager.setSessionSeed(IntervalInitializationManager.getInstance(project.getName())
+                .getIntervalManager().getSessionSeed());
 
         eventTransferManager = new EventTransferManagerBase(eventsToTransferPersister, WatchDogUtils.getProjectName());
-        //TODO: init listeners
+
+        XDebuggerManager.getInstance(project).getBreakpointManager().addBreakpointListener(new BreakpointListener(eventManager));
     }
 
     /**
      * Returns the existing or creates and returns a new
      * {@link EventInitializationManager} instance for the given project.
      */
-    public static EventInitializationManager getInstance(String projectName) {
-        EventInitializationManager instance = instances.get(projectName);
+    public static EventInitializationManager getInstance(Project project) {
+        EventInitializationManager instance = instances.get(project.getName());
         if (instance == null) {
-            instance = new EventInitializationManager(IntervalInitializationManager.getInstance(projectName)
-                    .getIntervalManager().getSessionSeed());
-            instances.put(projectName, instance);
+            instance = new EventInitializationManager(project);
+            instances.put(project.getName(), instance);
         }
         return instance;
     }
@@ -70,10 +74,12 @@ public class EventInitializationManager {
         eventsToTransferPersister.closeDatabase();
         eventsStatisticsPersister.closeDatabase();
         instances.remove(projectName);
-        //TODO: remove listeners
+        //TODO: remove listeners?
     }
 
-    /** @return the event transfer manager. */
+    /**
+     * @return the event transfer manager.
+     */
     public EventTransferManagerBase getEventTransferManager() {
         return eventTransferManager;
     }
