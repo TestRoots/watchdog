@@ -20,6 +20,10 @@ import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointRemoveEvent;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 
+/**
+ * Tests for testing the correctness of the {@link EventManager} when events are
+ * added.
+ */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(WatchDogGlobals.class)
 public class EventManagerTest {
@@ -43,8 +47,6 @@ public class EventManagerTest {
 		PowerMockito.mockStatic(WatchDogGlobals.class);
 		Mockito.when(WatchDogGlobals.getLogDirectory()).thenReturn("watchdog/logs/");
 		Mockito.when(WatchDogGlobals.getPreferences()).thenReturn(mockedPreferences);
-		// Mockito.when(mockedPreferences.isAuthenticationEnabled()).thenReturn(
-		// true);
 		Mockito.when(mockedPreferences.isLoggingEnabled()).thenReturn(false);
 	}
 
