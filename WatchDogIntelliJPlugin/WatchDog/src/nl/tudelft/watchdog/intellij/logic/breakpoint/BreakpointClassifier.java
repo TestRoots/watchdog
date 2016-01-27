@@ -10,10 +10,25 @@ public class BreakpointClassifier {
 
     /**
      * Classifies the breakpoint type of the given breakpoint by analyzing its
-     * class name.TODO!!!!
+     * type. Note: class prepare breakpoints not available in IntelliJ.
      */
     public static BreakpointType classify(XBreakpoint breakpoint) {
-        //TODO
-        return BreakpointType.UNDEFINED;
+        switch (breakpoint.getType().getId()) {
+            case "java-line":
+                return BreakpointType.LINE;
+
+            case "java-method":
+                return BreakpointType.METHOD;
+
+            case "java-exception":
+                return BreakpointType.EXCEPTION;
+
+            case "java-field":
+                return BreakpointType.FIELD;
+
+            default:
+                return BreakpointType.UNDEFINED;
+
+        }
     }
 }

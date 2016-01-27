@@ -16,7 +16,9 @@ public class BreakpointCreator {
     public static Breakpoint createBreakpoint(XBreakpoint breakpoint) {
         Breakpoint result = new Breakpoint(breakpoint.hashCode(),
                 BreakpointClassifier.classify(breakpoint));
-        //TODO
+
+        result.setEnabled(breakpoint.isEnabled());
+        result.setSuspendPolicy(breakpoint.getSuspendPolicy().ordinal());
         return result;
     }
 }
