@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.intellij.logic.breakpoint;
 
+import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import nl.tudelft.watchdog.core.logic.breakpoint.Breakpoint;
 
@@ -17,8 +18,16 @@ public class BreakpointCreator {
         Breakpoint result = new Breakpoint(breakpoint.hashCode(),
                 BreakpointClassifier.classify(breakpoint));
 
+        // Initialize enabled and SuspendPolicy fields.
         result.setEnabled(breakpoint.isEnabled());
         result.setSuspendPolicy(breakpoint.getSuspendPolicy().ordinal());
+
+        // Initialize condition fields if available.
+        XExpression condition = breakpoint.getConditionExpression();
+        if (condition != null) {
+            result.setCondition(condition.getExpression());
+            result.setConditionEnabled(true);
+        }
         return result;
     }
 }
