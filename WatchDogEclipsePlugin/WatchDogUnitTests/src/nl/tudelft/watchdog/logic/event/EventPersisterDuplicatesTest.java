@@ -1,0 +1,88 @@
+package nl.tudelft.watchdog.logic.event;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+import java.util.Date;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointType;
+import nl.tudelft.watchdog.core.logic.event.EventPersisterBase;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointAddEvent;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointRemoveEvent;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
+
+/**
+ * Test class that tests the {@link EventPersisterBase} in case the same or
+ * similar events are saved to ensure each different event is added, but
+ * duplicate events are not.
+ */
+public class EventPersisterDuplicatesTest extends EventPersisterTestBase {
+
+	private EventBase event;
+
+	@BeforeClass
+	public static void setUpBeforeClass() {
+		databaseName = "DuplicateTest";
+		setUpSuperClass();
+	}
+
+	@Test
+	public void test1AddEvent() {
+		event = createEvent();
+		persister.saveItem(event);
+
+		EventBase savedEvent = new ArrayList<>(persister.readItems()).get(0);
+		assertEquals(event.getType(), savedEvent.getType());
+		assertEquals(event.getTimestamp(), savedEvent.getTimestamp());
+	}
+
+	@Test
+	public void test2DatabasePersisted() {
+		assertEquals(1, persister.getSize());
+	}
+
+	@Test
+	public void test3AddSameEventTestNotPersisted() {
+		event = createEvent();
+		persister.saveItem(event);
+		assertEquals(1, persister.getSize());
+	}
+
+	@Test
+	public void test4AddSimilarEventDifferentTimestampTestPersisted() {
+		event = createEvent();
+		event.setTimestamp(new Date(2));
+		persister.saveItem(event);
+		assertEquals(2, persister.getSize());
+	}
+
+	@Test
+	public void test5AddSimilarEventDifferentTypeTestPersisted() {
+		event = new BreakpointRemoveEvent(1, BreakpointType.LINE, new Date(1));
+		event.setSessionSeed("444");
+		persister.saveItem(event);
+		assertEquals(3, persister.getSize());
+	}
+
+	@Test
+	public void test6AddAlreadyPersistedEventAgainTestNotPersisted() {
+		event = createEvent();
+		persister.saveItem(event);
+		assertEquals(3, persister.getSize());
+	}
+
+	@Test
+	public void test7DatabaseCleared() {
+		persister.clearAndResetMap();
+		assertEquals(0, persister.getSize());
+	}
+
+	private static EventBase createEvent() {
+		EventBase event = new BreakpointAddEvent(1, BreakpointType.LINE, new Date(1));
+		event.setSessionSeed("444");
+		return event;
+	}
+}
