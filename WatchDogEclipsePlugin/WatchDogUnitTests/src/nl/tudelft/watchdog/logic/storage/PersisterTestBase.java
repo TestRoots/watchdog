@@ -37,7 +37,7 @@ public abstract class PersisterTestBase {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		copiedDatabase = new File(copiedDirectory.getRoot(), databaseName + ".map");
+		copiedDatabase = new File(copiedDirectory.getRoot(), databaseName + ".mapdb");
 	}
 
 	@Test
