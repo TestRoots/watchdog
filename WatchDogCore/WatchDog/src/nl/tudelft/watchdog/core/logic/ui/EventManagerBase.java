@@ -114,7 +114,7 @@ public abstract class EventManagerBase {
 			Object editor = event.getSource();
 
 			readingInactivityNotifier.cancelTimer(forcedDate);
-			if (intervalIsOfType(editorInterval, IntervalType.TYPING)
+			if (intervalExistsAndIsOfType(editorInterval, IntervalType.TYPING)
 					&& !isDifferentEditor(editorInterval, editor)) {
 				return;
 			}
@@ -142,7 +142,7 @@ public abstract class EventManagerBase {
 			editor = event.getSource();
 
 			if (isClosed(editorInterval)
-					|| !intervalIsOfType(editorInterval, IntervalType.TYPING)
+					|| !intervalExistsAndIsOfType(editorInterval, IntervalType.TYPING)
 					|| isDifferentEditor(editorInterval, editor)) {
 				update(new WatchDogEvent(event.getSource(),
 						EventType.START_EDIT));
@@ -195,21 +195,21 @@ public abstract class EventManagerBase {
 
 		case TYPING_INACTIVITY:
 			editorInterval = intervalManager.getEditorInterval();
-			if (intervalIsOfType(editorInterval, IntervalType.TYPING)) {
+			if (intervalExistsAndIsOfType(editorInterval, IntervalType.TYPING)) {
 				intervalManager.closeInterval(editorInterval, forcedDate);
 			}
 			break;
 
 		case READING_INACTIVITY:
 			editorInterval = intervalManager.getEditorInterval();
-			if (intervalIsOfType(editorInterval, IntervalType.READING)) {
+			if (intervalExistsAndIsOfType(editorInterval, IntervalType.READING)) {
 				intervalManager.closeInterval(editorInterval, forcedDate);
 			}
 			break;
 
 		case START_WATCHDOGVIEW:
 			interval = intervalManager.getInterval(WatchDogViewInterval.class);
-			if (!intervalIsOfType(interval, IntervalType.WATCHDOGVIEW)) {
+			if (!intervalExistsAndIsOfType(interval, IntervalType.WATCHDOGVIEW)) {
 				intervalManager
 						.addInterval(new WatchDogViewInterval(forcedDate));
 			}
@@ -218,14 +218,14 @@ public abstract class EventManagerBase {
 
 		case END_WATCHDOGVIEW:
 			interval = intervalManager.getInterval(WatchDogViewInterval.class);
-			if (intervalIsOfType(interval, IntervalType.WATCHDOGVIEW)) {
+			if (intervalExistsAndIsOfType(interval, IntervalType.WATCHDOGVIEW)) {
 				intervalManager.closeInterval(interval, forcedDate);
 			}
 			break;
 			
 		case START_DEBUG:
 			interval = intervalManager.getInterval(DebugInterval.class);
-			if(!intervalIsOfType(interval, IntervalType.DEBUG)) {
+			if(!intervalExistsAndIsOfType(interval, IntervalType.DEBUG)) {
 				intervalManager.addInterval(new DebugInterval(forcedDate));
 			}
 			userInactivityNotifier.trigger(forcedDate);
@@ -233,7 +233,7 @@ public abstract class EventManagerBase {
 			
 		case END_DEBUG:
 			interval = intervalManager.getInterval(DebugInterval.class);
-			if(intervalIsOfType(interval, IntervalType.DEBUG)) {
+			if(intervalExistsAndIsOfType(interval, IntervalType.DEBUG)) {
 				intervalManager.closeInterval(interval, forcedDate);
 			}
 			break;
@@ -270,7 +270,7 @@ public abstract class EventManagerBase {
 		return editorInterval.getEditorWrapper().getEditor() != editor;
 	}
 	
-	private boolean intervalIsOfType(IntervalBase interval, IntervalType type) {
+	private boolean intervalExistsAndIsOfType(IntervalBase interval, IntervalType type) {
 		return interval != null && interval.getType() == type;
 	}
 

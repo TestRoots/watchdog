@@ -24,7 +24,7 @@ public class JUnitListener extends TestStatusListener {
             return;
         }
 
-        EventManager eventManager = InitializationManager.getInstance(project.getName()).getEventManager();
+        EventManager eventManager = InitializationManager.getInstance(project).getEventManager();
         JUnitInterval interval = new JUnitInterval(testProxy);
         eventManager.update(new JUnitEvent(interval));
     }
