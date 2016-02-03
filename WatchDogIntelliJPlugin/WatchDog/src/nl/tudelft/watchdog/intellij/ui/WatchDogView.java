@@ -32,23 +32,19 @@ import org.jfree.util.Rotation;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 
-/**
- * A view displaying all the statistics that WatchDog has gathered.
- */
+/** A view displaying all the statistics that WatchDog has gathered. */
 public class WatchDogView extends SimpleToolWindowPanel {
 	private static final float FOREGROUND_TRANSPARENCY = 0.8f;
 
-	/**
-	 * The Id of the view.
-	 */
+	/** The Id of the view. */
 	public static final String ID = "WatchDog.view";
 
 	private IntervalStatistics intervalStatistics;
 
-	private JComponent parent = getComponent();
-	private JButton refreshButton;
+    private JComponent parent = getComponent();
+    private JButton refreshButton;
 
-	private double intelliJOpen;
+    private double intelliJOpen;
 	private double userActive;
 	private double userReading;
 	private double userTyping;
@@ -66,21 +62,20 @@ public class WatchDogView extends SimpleToolWindowPanel {
 
 	private JPanel oneColumn;
 	private JPanel intervalSelection;
-	private ComboBox intervalSelectionBox;
+    private ComboBox intervalSelectionBox;
 
 
-	public WatchDogView(boolean vertical) {
+
+    public WatchDogView(boolean vertical) {
 		super(vertical);
 		createWatchDogView();
 	}
 
-	/**
-	 * Updates the view by completely repainting it.
-	 */
+	/** Updates the view by completely repainting it. */
 	public void update() {
-		parent.removeAll();
+        parent.removeAll();
 		createWatchDogView();
-		parent.updateUI();
+        parent.updateUI();
 	}
 
 
@@ -92,21 +87,21 @@ public class WatchDogView extends SimpleToolWindowPanel {
 		} else {
 			calculateTimes();
 			createActiveView();
-			makeScrollable();
+            makeScrollable();
 		}
 		// Always create refresh link, even when statistics are not shown
 		createRefreshLink(intervalSelection);
 	}
 
-	private void makeScrollable() {
-		JBScrollPane scrollPane = new JBScrollPane(oneColumn);
-		parent.add(scrollPane);
-		scrollPane.setViewportView(oneColumn);
-		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-	}
+    private void makeScrollable() {
+        JBScrollPane scrollPane = new JBScrollPane(oneColumn);
+        parent.add(scrollPane);
+        scrollPane.setViewportView(oneColumn);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+    }
 
-	private void createInactiveViewContent() {
-		JComponent container = UIUtils.createVerticalBoxJPanel(oneColumn);
+    private void createInactiveViewContent() {
+        JComponent container = UIUtils.createVerticalBoxJPanel(oneColumn);
 		UIUtils.createBoldLabel(container, "<html>WatchDog is not active in this workspace! <br>");
 		UIUtils.createLabel(container,
 				"<html>Therefore we cannot show you any cool test statistics. <br>To get them, go to settings and enable WatchDog.");
@@ -114,26 +109,26 @@ public class WatchDogView extends SimpleToolWindowPanel {
 	}
 
 	private void createActiveView() {
-		JComponent container = UIUtils.createGridedJPanel(oneColumn, 2);
+        JComponent container = UIUtils.createGridedJPanel(oneColumn, 2);
 
 		createChartPanel(
-				container,
+                container,
 				createBarChart(createDevelopmentBarDataset(),
 						"Your Development Activity", "", "minutes"));
 		createChartPanel(
-				container,
+                container,
 				createPieChart(createDevelopmentPieDataset(),
 						"Your Development Activity"));
 		createChartPanel(
-				container,
+                container,
 				createBarChart(createProductionVSTestBarDataset(),
 						"Your Production vs. Test Activity", "", "minutes"));
 		createChartPanel(
-				container,
+                container,
 				createPieChart(createProductionVSTestPieDataset(),
 						"Your Production vs. Test Activity"));
 		createChartPanel(
-				container,
+                container,
 				createStackedBarChart(createJunitExecutionBarDataset(),
 						"Your Test Run Activity", "", ""));
 
@@ -142,43 +137,43 @@ public class WatchDogView extends SimpleToolWindowPanel {
 	}
 
 	private void createShowingStatisticsLines() {
-		JPanel lines = UIUtils.createGridedJPanel(oneColumn, 1);
+        JPanel lines = UIUtils.createGridedJPanel(oneColumn, 1);
 		UIUtils.createLabel(lines,
 				"Showing statistics from " + intervalStatistics.oldestDate
 						+ " to " + intervalStatistics.mostRecentDate + " ("
 						+ intervalStatistics.getNumberOfIntervals()
 						+ " intervals).");
-		JPanel reportLine = UIUtils.createFlowJPanelLeft(lines);
+        JPanel reportLine = UIUtils.createFlowJPanelLeft(lines);
 		UIUtils.createLabel(reportLine, "Not enough statistics for you? ");
 		UIUtils.createOpenReportLink(reportLine);
 	}
 
 	private void createTimeSpanSelectionList() {
 		intervalSelection = UIUtils.createFlowJPanelLeft(oneColumn);
-		UIUtils.createLabel(intervalSelection, "Show statistics of the past ");
+		UIUtils.createLabel(intervalSelection,"Show statistics of the past ");
 
-		intervalSelectionBox = UIUtils.createComboBox(intervalSelection, new ItemListener() {
+        intervalSelectionBox = UIUtils.createComboBox(intervalSelection, new ItemListener() {
 
-			@Override
-			public void itemStateChanged(ItemEvent e) {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
 
-				selectedTimePeriod = StatisticsTimePeriod.values()[intervalSelectionBox.getSelectedIndex()];
-			}
-		}, StatisticsTimePeriod.names(), selectedTimePeriod.ordinal());
+                selectedTimePeriod = StatisticsTimePeriod.values()[intervalSelectionBox.getSelectedIndex()];
+            }
+        }, StatisticsTimePeriod.names(), selectedTimePeriod.ordinal());
 	}
 
 	private void createRefreshLink(JComponent parent) {
 		refreshButton = UIUtils.createButton(parent, "Refresh.", new MouseInputAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				update();
-			}
-		});
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                update();
+            }
+        });
 	}
 
 	private void calculateTimes() {
 		intervalStatistics = new IntervalStatistics(InitializationManager
-				.getIntervalManagerForProject(WatchDogUtils.getProjectName()), selectedTimePeriod);
+				.getInstance(WatchDogUtils.getProjectName()).getIntervalManager(), selectedTimePeriod);
 
 		intelliJOpen = intervalStatistics
 				.getPreciseTime(intervalStatistics.ideOpen);
@@ -255,7 +250,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
 	}
 
 	private JFreeChart createBarChart(final DefaultCategoryDataset dataset,
-									  String title, String xAxisName, String yAxisName) {
+			String title, String xAxisName, String yAxisName) {
 		JFreeChart chart = ChartFactory.createBarChart3D(title, xAxisName,
 				yAxisName, dataset);
 		chart.getLegend().setVisible(false);
@@ -263,7 +258,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
 	}
 
 	private JFreeChart createStackedBarChart(CategoryDataset dataset,
-											 String title, String xAxisName, String yAxisName) {
+			String title, String xAxisName, String yAxisName) {
 		JFreeChart chart = ChartFactory.createStackedBarChart3D(title,
 				xAxisName, yAxisName, dataset);
 		chart.getLegend().setVisible(false);
@@ -305,10 +300,10 @@ public class WatchDogView extends SimpleToolWindowPanel {
 			testDurationTitle += " (in minutes)";
 		}
 
-		String[] columns = new String[]{"Successful", "Failed", "Both"};
-		String[] rows = new String[]{"Test Runs", testDurationTitle};
-		double[][] data = new double[][]{{junitSuccessCount, 0},
-				{junitFailuresCount, 0}, {0, testDuration}};
+		String[] columns = new String[] { "Successful", "Failed", "Both" };
+		String[] rows = new String[] { "Test Runs", testDurationTitle };
+		double[][] data = new double[][] { { junitSuccessCount, 0 },
+				{ junitFailuresCount, 0 }, { 0, testDuration } };
 		CategoryDataset dataSet = DatasetUtilities.createCategoryDataset(
 				columns, rows, data);
 
