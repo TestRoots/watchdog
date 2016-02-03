@@ -103,7 +103,7 @@ public class WatchDogStartUp implements ProjectComponent {
             return;
         }
 
-        InitializationManager intervalInitializationManager = InitializationManager.getInstance(project.getName());
+        InitializationManager intervalInitializationManager = InitializationManager.getInstance(project);
         intervalInitializationManager.getEventManager().update(new WatchDogEvent(this, WatchDogEvent.EventType.END_IDE));
         intervalInitializationManager.getIntervalManager().closeAllIntervals();
         intervalInitializationManager.getTransferManager().sendIntervalsImmediately();
@@ -205,7 +205,7 @@ public class WatchDogStartUp implements ProjectComponent {
                 .getOrCreateProjectSetting(project.getName());
         if (setting.enableWatchdog) {
             WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
-            InitializationManager.getInstance(project.getName());
+            InitializationManager.getInstance(project);
             WatchDogUtils.setWatchDogActiveForProject(project);
             new ViewToolWindowButtonsAction().setSelected(null, true);
         }

@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.intellij.logic;
 
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.project.Project;
 import nl.tudelft.watchdog.core.logic.interval.IntervalTransferManagerBase;
 import nl.tudelft.watchdog.core.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalManager;
@@ -23,9 +24,9 @@ public class InitializationManager {
     private static final int USER_ACTIVITY_TIMEOUT = 16000;
 
     /**
-     * The singleton instance of the interval manager.
+     * The map containing the InitializationManager for each open IntelliJ project.
      */
-    private static volatile HashMap<String, InitializationManager> instances = new HashMap<String, InitializationManager>();
+    private static volatile HashMap<String, InitializationManager> initializationManagers = new HashMap<String, InitializationManager>();
 
     private final IntervalManager intervalManager;
 
@@ -42,7 +43,7 @@ public class InitializationManager {
     /**
      * Private constructor.
      */
-    private InitializationManager() {
+    private InitializationManager(Project project) {
         // Double getPath() because they are different methods on different objects
         File baseFolder = new File(PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog")).getPath().getPath());
 
@@ -62,7 +63,7 @@ public class InitializationManager {
 
         transferManager = new IntervalTransferManagerBase(intervalsToTransferPersister, WatchDogUtils.getProjectName());
 
-        intelliJListener = new IntelliJListener(eventManager, WatchDogUtils.getProjectName());
+        intelliJListener = new IntelliJListener(eventManager, project);
         intelliJListener.attachListeners();
     }
 
@@ -70,10 +71,11 @@ public class InitializationManager {
      * Returns the existing or creates and returns a new
      * {@link InitializationManager} instance.
      */
-    public static InitializationManager getInstance(String projectName) {
-        InitializationManager instance = instances.get(projectName);
+    public static InitializationManager getInstance(Project project) {
+        InitializationManager instance = initializationManagers.get(project.getName());
         if (instance == null) {
-            instances.put(projectName, new InitializationManager());
+            instance = new InitializationManager(project);
+            initializationManagers.put(project.getName(), instance);
         }
         return instance;
     }
@@ -83,6 +85,17 @@ public class InitializationManager {
      */
     public IntervalManager getIntervalManager() {
         return intervalManager;
+    }
+
+    /**
+     * @return the intervalManager belonging to the project.
+     */
+    public static IntervalManager getIntervalManagerForProject(String projectName) {
+        InitializationManager initializationManager = initializationManagers.get(projectName);
+        if (initializationManager != null) {
+            return initializationManager.getIntervalManager();
+        }
+        return null;
     }
 
     /**
@@ -100,7 +113,7 @@ public class InitializationManager {
         intervalsToTransferPersister.closeDatabase();
         intervalsStatisticsPersister.closeDatabase();
         intelliJListener.removeListeners();
-        instances.remove(projectName);
+        initializationManagers.remove(projectName);
     }
 
 

@@ -1,15 +1,16 @@
 package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchListener;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalTransferManager;
 import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
-
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchListener;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * Sets up the listeners for eclipse UI events and registers the shutdown
@@ -40,7 +41,7 @@ public class WorkbenchListener {
 
 	/**
 	 * Adds listeners to Workbench including already opened windows and
-	 * registers shutdown listeners.
+	 * registers shutdown and debugger listeners.
 	 */
 	public void attachListeners() {
 		eventManager.update(new WatchDogEvent(workbench, EventType.START_IDE));
@@ -50,6 +51,8 @@ public class WorkbenchListener {
 		new JUnitListener(eventManager);
 		new GeneralActivityListener(eventManager, workbench.getDisplay());
 		addShutdownListeners();
+		DebugPlugin.getDefault()
+				.addDebugEventListener(new DebuggerListener(eventManager));
 	}
 
 	/** The shutdown listeners, executed when Eclipse is shutdown. */
@@ -63,8 +66,8 @@ public class WorkbenchListener {
 					final boolean forced) {
 				intervalInitializationManager = InitializationManager
 						.getInstance();
-				eventManager.update(new WatchDogEvent(workbench,
-						EventType.END_IDE));
+				eventManager.update(
+						new WatchDogEvent(workbench, EventType.END_IDE));
 				intervalInitializationManager.getIntervalManager()
 						.closeAllIntervals();
 				intervalTransferManager.sendIntervalsImmediately();

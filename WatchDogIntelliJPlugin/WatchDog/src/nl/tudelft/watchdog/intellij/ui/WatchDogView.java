@@ -173,7 +173,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
 
 	private void calculateTimes() {
 		intervalStatistics = new IntervalStatistics(InitializationManager
-				.getInstance(WatchDogUtils.getProjectName()).getIntervalManager(), selectedTimePeriod);
+				.getIntervalManagerForProject(WatchDogUtils.getProjectName()), selectedTimePeriod);
 
 		intelliJOpen = intervalStatistics
 				.getPreciseTime(intervalStatistics.ideOpen);
