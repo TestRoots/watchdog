@@ -16,6 +16,7 @@ import org.junit.Test;
 import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointType;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointAddEvent;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
+import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
 
 public class EventPersisterTest extends EventPersisterTestBase {
 
@@ -42,7 +43,7 @@ public class EventPersisterTest extends EventPersisterTestBase {
 			persister.save(event);
 		}
 
-		List<EventBase> readEvents = new ArrayList<EventBase>(persister.readItems());
+		List<WatchDogTransferable> readEvents = new ArrayList<WatchDogTransferable>(persister.readItems());
 		assertEquals(readEvents.size(), items);
 
 		// Test order of returned results
@@ -72,8 +73,8 @@ public class EventPersisterTest extends EventPersisterTestBase {
 	@Test
 	public void test3RemoveFirstEvent() {
 		assertEquals(100, persister.getSize());
-		Iterator<EventBase> readEvents = persister.readItems().iterator();
-		ArrayList<EventBase> firstEvent = new ArrayList<EventBase>(Arrays.asList(readEvents.next()));
+		Iterator<WatchDogTransferable> readEvents = persister.readItems().iterator();
+		ArrayList<WatchDogTransferable> firstEvent = new ArrayList<WatchDogTransferable>(Arrays.asList(readEvents.next()));
 		persister.removeItems(firstEvent);
 		assertEquals(99, persister.getSize());
 	}

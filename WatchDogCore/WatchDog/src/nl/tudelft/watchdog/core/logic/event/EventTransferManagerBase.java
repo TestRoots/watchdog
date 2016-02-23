@@ -1,8 +1,8 @@
 package nl.tudelft.watchdog.core.logic.event;
 
 import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
-import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.TransferManagerBase;
+import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.core.ui.preferences.PreferencesBase;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 
@@ -21,13 +21,8 @@ public class EventTransferManagerBase extends TransferManagerBase<EventBase> {
 	 * Constructor. Tries to immediately transfer all remaining events, and sets
 	 * up a scheduled timer to run every {@value #UPDATE_RATE} milliseconds.
 	 */
-	public EventTransferManagerBase(final EventPersisterBase eventPersisterBase, String projectName) {
+	public EventTransferManagerBase(final PersisterBase eventPersisterBase, String projectName) {
 		super(eventPersisterBase, projectName, UPDATE_RATE);
-	}
-
-	@Override
-	protected JsonTransferer<EventBase> createTransferer() {
-		return new EventJsonTransferer();
 	}
 
 	@Override

@@ -23,7 +23,7 @@ public abstract class TransferManagerBase<T extends WatchDogTransferable> extend
 	 * Constructor. Tries to immediately transfer all remaining T's, and sets up
 	 * a scheduled timer to run every {@value #updateRate} milliseconds.
 	 */
-	public TransferManagerBase(final PersisterBase<T> persisterBase, String projectName, int updateRate) {
+	public TransferManagerBase(final PersisterBase persisterBase, String projectName, int updateRate) {
 		super(updateRate);
 		task = new TransferTimerTask(persisterBase, projectName);
 		runSetupAndStartTimeChecker();
@@ -44,17 +44,14 @@ public abstract class TransferManagerBase<T extends WatchDogTransferable> extend
 	 */
 	protected static void refreshUI() {	}
 	
-	/** @return a JSON transferrer to be used to transfer the items to the server. */
-	protected abstract JsonTransferer<T> createTransferer();
-	
 	/** Updates the statistics preferences after transferring the items to the server. */
 	protected abstract void updateStatisticsPreferences(int transferredItems);
 
 	private class TransferTimerTask extends TimerTask {
-		private final PersisterBase<T> persister;
+		private final PersisterBase persister;
 		private final String projectName;
 
-		private TransferTimerTask(PersisterBase<T> persisterBase, String projectName) {
+		private TransferTimerTask(PersisterBase persisterBase, String projectName) {
 			this.persister = persisterBase;
 			this.projectName = projectName;
 		}
@@ -69,7 +66,7 @@ public abstract class TransferManagerBase<T extends WatchDogTransferable> extend
 				return;
 			}
 
-			List<T> itemsToTransfer = new ArrayList<T>(persister.readItems());
+			List<WatchDogTransferable> itemsToTransfer = new ArrayList<WatchDogTransferable>(persister.readItems());
 
 			if (itemsToTransfer.isEmpty()) {
 				return;
@@ -80,8 +77,8 @@ public abstract class TransferManagerBase<T extends WatchDogTransferable> extend
 			refreshUI();
 		}
 
-		private void transferItems(List<T> itemsToTransfer) {
-			JsonTransferer<T> transferer = createTransferer();
+		private void transferItems(List<WatchDogTransferable> itemsToTransfer) {
+			JsonTransferer transferer = new JsonTransferer();
 
 			Connection connection = transferer.sendItems(itemsToTransfer, projectName);
 			switch (connection) {
@@ -113,8 +110,8 @@ public abstract class TransferManagerBase<T extends WatchDogTransferable> extend
 
 				// divide and conquer
 				int halfOfItems = (int) Math.floor(items / 2);
-				List<T> firstHalfItems = itemsToTransfer.subList(0, halfOfItems);
-				List<T> secondHalfItems = itemsToTransfer.subList(halfOfItems, items);
+				List<WatchDogTransferable> firstHalfItems = itemsToTransfer.subList(0, halfOfItems);
+				List<WatchDogTransferable> secondHalfItems = itemsToTransfer.subList(halfOfItems, items);
 				transferItems(firstHalfItems);
 				transferItems(secondHalfItems);
 				break;

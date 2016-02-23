@@ -10,11 +10,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
-import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
 
 public class IntervalPersisterTest extends IntervalPersisterTestBase {
 
@@ -41,7 +42,7 @@ public class IntervalPersisterTest extends IntervalPersisterTestBase {
 			persister.save(intervalBase);
 		}
 
-		List<IntervalBase> readIntervals = new ArrayList<IntervalBase>(
+		List<WatchDogTransferable> readIntervals = new ArrayList<WatchDogTransferable>(
 				persister.readItems());
 		assertEquals(readIntervals.size(), items);
 
@@ -76,9 +77,9 @@ public class IntervalPersisterTest extends IntervalPersisterTestBase {
 	@Test
 	public void test3RemoveFirstInterval() {
 		assertEquals(100, persister.getSize());
-		Iterator<IntervalBase> readIntervals = persister.readItems()
+		Iterator<WatchDogTransferable> readIntervals = persister.readItems()
 				.iterator();
-		ArrayList<IntervalBase> firstInterval = new ArrayList<IntervalBase>(
+		ArrayList<WatchDogTransferable> firstInterval = new ArrayList<WatchDogTransferable>(
 				Arrays.asList(readIntervals.next()));
 		persister.removeItems(firstInterval);
 		assertEquals(99, persister.getSize());

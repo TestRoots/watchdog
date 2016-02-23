@@ -4,11 +4,11 @@ import java.io.IOException;
 
 import org.junit.AfterClass;
 
-import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
+import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.logic.storage.PersisterTestBase;
 
 public abstract class IntervalPersisterTestBase extends PersisterTestBase {
-	protected static IntervalPersisterBase persister;
+	protected static PersisterBase persister;
 
 	/**
 	 * Initializes the variables required for the tests and initializes the
@@ -16,7 +16,7 @@ public abstract class IntervalPersisterTestBase extends PersisterTestBase {
 	 */
 	protected static void setUpSuperClass() {
 		PersisterTestBase.setUpSuperClass("IntervalPersisterTests");
-		persister = new IntervalPersisterBase(copiedDatabase);
+		persister = new PersisterBase(copiedDatabase);
 	}
 
 	@AfterClass

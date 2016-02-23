@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.core.logic.event;
 
 import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
+import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 
 /**
@@ -18,12 +19,12 @@ public class EventManager {
 	 */
 	private String sessionSeed;
 
-	private EventPersisterBase eventsToTransferPersister;
-	private EventPersisterBase eventsStatisticsPersister;
+	private PersisterBase eventsToTransferPersister;
+	private PersisterBase eventsStatisticsPersister;
 
 	/** Constructor. */
-	public EventManager(EventPersisterBase eventsToTransferPersister,
-			EventPersisterBase eventsStatisticsPersister) {
+	public EventManager(PersisterBase eventsToTransferPersister,
+			PersisterBase eventsStatisticsPersister) {
 		this.eventsToTransferPersister = eventsToTransferPersister;
 		this.eventsStatisticsPersister = eventsStatisticsPersister;
 	}

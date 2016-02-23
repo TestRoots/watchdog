@@ -21,7 +21,7 @@ import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
 /**
  * Transmits WatchDog data objects in a Json format to the WatchDog server.
  */
-public class JsonTransferer<T extends WatchDogTransferable> {
+public class JsonTransferer {
 
 	/** The {@link GsonBuilder} for building the T's. */
 	private GsonBuilder gsonBuilder = new GsonBuilder();
@@ -41,7 +41,7 @@ public class JsonTransferer<T extends WatchDogTransferable> {
 	 * Sends the recorded T's to the server. Returns whether or not the transfer
 	 * was successful or a network error occurred.
 	 */
-	public Connection sendItems(List<T> recordedItems, String projectName) {
+	public Connection sendItems(List<WatchDogTransferable> recordedItems, String projectName) {
 		String userId = WatchDogGlobals.getPreferences().getUserId();
 		String projectId = WatchDogGlobals.getPreferences().getOrCreateProjectSetting(projectName).projectId;
 
@@ -53,6 +53,7 @@ public class JsonTransferer<T extends WatchDogTransferable> {
 
 		String serializedItems = toJson(recordedItems);
 		try {
+			//TODO: differentiate between events and intervals
 			NetworkUtils.transferJsonAndGetResponse(getPostURL(userId, projectId), serializedItems);
 			return Connection.SUCCESSFUL;
 		} catch (ServerReturnCodeException exception) {
@@ -115,7 +116,7 @@ public class JsonTransferer<T extends WatchDogTransferable> {
 	}
 
 	/** Converts the items to Json. */
-	public String toJson(List<T> recordedItems) {
+	public String toJson(List<WatchDogTransferable> recordedItems) {
 		try {
 			return gson.toJson(recordedItems);
 		} catch (RuntimeException e) {

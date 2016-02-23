@@ -18,17 +18,17 @@ import nl.tudelft.watchdog.core.util.WatchDogLogger;
  * WatchDog instance can record before the database breaks is
  * {@link Long#MAX_VALUE}.
  */
-public abstract class PersisterBase<T extends WatchDogTransferable> {
+public class PersisterBase {
 
 	private boolean isClosed;
 
 	/** The name of the DB collection to be used. */
-	private final String collection;
+	private static final String COLLECTION = "watchdog";
 
 	protected DB database;
 
 	/** In memory representation of the store. */
-	protected Set<T> set;
+	protected Set<WatchDogTransferable> set;
 
 	protected File databaseFile;
 
@@ -36,9 +36,8 @@ public abstract class PersisterBase<T extends WatchDogTransferable> {
 	 * Create a new persister. If file points to an existing database, it will
 	 * be reused.
 	 */
-	public PersisterBase(final File file, final String collectionName) {
+	public PersisterBase(final File file) {
 		this.databaseFile = file;
-		this.collection = collectionName;
 		try {
 			initalizeDatabase(file);
 		} catch (Error e) {
@@ -77,9 +76,9 @@ public abstract class PersisterBase<T extends WatchDogTransferable> {
 		}
 	}
 
-	private Set<T> createSet() {
+	private Set<WatchDogTransferable> createSet() {
 		replaceClassLoader();
-		Set<T> baseSet = database.getTreeSet(collection);
+		Set<WatchDogTransferable> baseSet = database.getTreeSet(COLLECTION);
 		resetOldClassLoader();
 		return baseSet;
 	}
@@ -134,14 +133,14 @@ public abstract class PersisterBase<T extends WatchDogTransferable> {
 	/**
 	 * Reads all items in the collection and returns them as a List.
 	 */
-	public Set<T> readItems() {
+	public Set<WatchDogTransferable> readItems() {
 		return set;
 	}
 
 	/**
 	 * Saves one item to persistent storage
 	 */
-	public void save(T item) {
+	public void save(WatchDogTransferable item) {
 		try {
 			replaceClassLoader();
 			set.add(item);
@@ -160,9 +159,9 @@ public abstract class PersisterBase<T extends WatchDogTransferable> {
 	/**
 	 * Removes the items from the database.
 	 */
-	public void removeItems(List<T> itemsToRemove) {
+	public void removeItems(List<WatchDogTransferable> itemsToRemove) {
 		replaceClassLoader();
-		for (T item : itemsToRemove) {
+		for (WatchDogTransferable item : itemsToRemove) {
 			set.remove(item);
 		}
 		database.commit();
@@ -206,7 +205,7 @@ public abstract class PersisterBase<T extends WatchDogTransferable> {
 	public void clearAndResetMap() {
 		if (database != null && !database.isClosed()) {
 			replaceClassLoader();
-			database.delete(collection);
+			database.delete(COLLECTION);
 			database.commit();
 			resetOldClassLoader();
 			set = createSet();

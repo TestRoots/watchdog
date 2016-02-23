@@ -10,7 +10,6 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
-import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
 import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
 import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
@@ -95,8 +94,7 @@ public class StartupUIThread implements Runnable {
 			User user = new User();
 			user.programmingExperience = "NA";
 			try {
-				userId = new JsonTransferer<WatchDogTransferable>()
-						.registerNewUser(user);
+				userId = new JsonTransferer().registerNewUser(user);
 			} catch (ServerCommunicationException exception) {
 				WatchDogLogger.getInstance().logSevere(exception);
 			}
@@ -116,10 +114,8 @@ public class StartupUIThread implements Runnable {
 	private void registerAnonymousProject(String userId) {
 		String projectId = "";
 		try {
-			projectId = new JsonTransferer<WatchDogTransferable>()
-					.registerNewProject(
-							new nl.tudelft.watchdog.core.ui.wizards.Project(
-									userId));
+			projectId = new JsonTransferer().registerNewProject(
+					new nl.tudelft.watchdog.core.ui.wizards.Project(userId));
 		} catch (ServerCommunicationException exception) {
 			WatchDogLogger.getInstance().logSevere(exception);
 		}

@@ -5,8 +5,8 @@ import java.io.File;
 import org.eclipse.debug.core.DebugPlugin;
 
 import nl.tudelft.watchdog.core.logic.event.EventManager;
-import nl.tudelft.watchdog.core.logic.event.EventPersisterBase;
 import nl.tudelft.watchdog.core.logic.event.EventTransferManagerBase;
+import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.eclipse.Activator;
 import nl.tudelft.watchdog.eclipse.logic.event.listeners.BreakpointListener;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
@@ -22,8 +22,8 @@ public class EventInitializationManager {
 	private static volatile EventInitializationManager instance = null;
 
 	private final EventManager eventManager;
-	private final EventPersisterBase eventsToTransferPersister;
-	private final EventPersisterBase eventsStatisticsPersister;
+	private final PersisterBase eventsToTransferPersister;
+	private final PersisterBase eventsStatisticsPersister;
 	private final EventTransferManagerBase eventTransferManager;
 
 	/** Private constructor. */
@@ -33,10 +33,8 @@ public class EventInitializationManager {
 		File statisticsDatabaseFile = new File(baseFolder,
 				"eventsStatistics.mapdb");
 
-		eventsToTransferPersister = new EventPersisterBase(
-				toTransferDatabaseFile);
-		eventsStatisticsPersister = new EventPersisterBase(
-				statisticsDatabaseFile);
+		eventsToTransferPersister = new PersisterBase(toTransferDatabaseFile);
+		eventsStatisticsPersister = new PersisterBase(statisticsDatabaseFile);
 		eventManager = new EventManager(eventsToTransferPersister,
 				eventsStatisticsPersister);
 		eventManager.setSessionSeed(IntervalInitializationManager.getInstance()

@@ -10,12 +10,13 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import nl.tudelft.watchdog.core.logic.document.Document;
-import nl.tudelft.watchdog.core.logic.interval.IntervalJsonTransferer;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
+import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
+import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
 import nl.tudelft.watchdog.eclipse.logic.document.EditorWrapper;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 import nl.tudelft.watchdog.logic.network.JsonConverterTestBase;
@@ -25,13 +26,13 @@ import nl.tudelft.watchdog.logic.network.JsonConverterTestBase;
  */
 public class IntervalJsonConverterTest extends JsonConverterTestBase{
 
-	private IntervalJsonTransferer transferer = new IntervalJsonTransferer();
+	private JsonTransferer transferer = new JsonTransferer();
 
 	/** Tests the format of the returned Json representation. */
 	@Test
 	public void testJsonReadingIntervalRepresentation() {
 		ReadingInterval interval = new ReadingInterval(null, new Date());
-		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
+		ArrayList<WatchDogTransferable> intervals = createSampleIntervals(interval);
 
 		assertEquals(
 				"[{\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"re\",\"ts\":1,\"te\":2,\"ss\":\"\","
@@ -47,7 +48,7 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase{
 	public void testJsonTypingIntervalMissingDocumentRepresentation() {
 		ITextEditor editor = Mockito.mock(ITextEditor.class);
 		TypingInterval interval = new TypingInterval(new EditorWrapper(editor), new Date());
-		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
+		ArrayList<WatchDogTransferable> intervals = createSampleIntervals(interval);
 
 		assertEquals(
 				"[{\"modCountDiff\":0,\"charLengthDiff\":0,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":\"\","
@@ -63,7 +64,7 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase{
 		interval.setDocument(new Document("Project", "filepath", "Production.java", "blah-document"));
 		interval.setEndingDocument(new Document("Project", "Production.java", "filepath", "blah-document"));
 
-		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
+		ArrayList<WatchDogTransferable> intervals = createSampleIntervals(interval);
 
 		assertEquals(
 				"[{\"endingDocument\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"diff\":0,\"modCountDiff\":0,\"charLengthDiff\":0,\"doc\":{\"pn\":\"f6f4da8d93e88a08220e03b7810451d3ba540a34\",\"fn\":\"90a8834de76326869f3e703cd61513081ad73d3c\",\"sloc\":1,\"dt\":\"pr\"},\"it\":\"ty\",\"ts\":1,\"te\":2,\"ss\":\"\","
@@ -80,7 +81,7 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase{
 		interval.close();
 		sleepABit();
 
-		ArrayList<IntervalBase> intervals = new ArrayList<>();
+		ArrayList<WatchDogTransferable> intervals = new ArrayList<>();
 		intervals.add(interval);
 
 		assertEquals(
@@ -98,7 +99,7 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase{
 		interval.close();
 		sleepABit();
 
-		ArrayList<IntervalBase> intervals = new ArrayList<>();
+		ArrayList<WatchDogTransferable> intervals = new ArrayList<>();
 		intervals.add(interval);
 
 		assertEquals(
@@ -116,7 +117,7 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase{
 		interval.close();
 		sleepABit();
 
-		ArrayList<IntervalBase> intervals = new ArrayList<>();
+		ArrayList<WatchDogTransferable> intervals = new ArrayList<>();
 		intervals.add(interval);
 
 		assertEquals(
@@ -134,7 +135,7 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase{
 		interval.close();
 		sleepABit();
 
-		ArrayList<IntervalBase> intervals = new ArrayList<>();
+		ArrayList<WatchDogTransferable> intervals = new ArrayList<>();
 		intervals.add(interval);
 
 		assertEquals(
@@ -147,7 +148,7 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase{
 	@Test
 	public void testJsonSessionIntervalRepresentation() {
 		IntervalBase interval = new IDEOpenInterval(new Date());
-		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
+		ArrayList<WatchDogTransferable> intervals = createSampleIntervals(interval);
 
 		assertEquals("[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
 				transferer.toJson(intervals));
@@ -160,20 +161,20 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase{
 	@Test
 	public void testContainsIDEHost() {
 		IntervalBase interval = new IDEOpenInterval(new Date());
-		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
+		ArrayList<WatchDogTransferable> intervals = createSampleIntervals(interval);
 
 		assertEquals("[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
 				transferer.toJson(intervals));
 	}
 
-	private ArrayList<IntervalBase> createSampleIntervals(EditorIntervalBase interval) {
+	private ArrayList<WatchDogTransferable> createSampleIntervals(EditorIntervalBase interval) {
 		interval.setDocument(new Document("Project", "Production.java", "filepath", "blah-document"));
-		ArrayList<IntervalBase> intervals = createSampleIntervals((IntervalBase) interval);
+		ArrayList<WatchDogTransferable> intervals = createSampleIntervals((IntervalBase) interval);
 		return intervals;
 	}
 
-	private ArrayList<IntervalBase> createSampleIntervals(IntervalBase interval) {
-		ArrayList<IntervalBase> intervals = new ArrayList<IntervalBase>();
+	private ArrayList<WatchDogTransferable> createSampleIntervals(IntervalBase interval) {
+		ArrayList<WatchDogTransferable> intervals = new ArrayList<WatchDogTransferable>();
 		interval.close();
 		sleepABit();
 		interval.setStartTime(new Date(1));

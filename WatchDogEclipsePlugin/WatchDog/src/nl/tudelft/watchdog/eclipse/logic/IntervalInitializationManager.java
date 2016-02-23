@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.eclipse.logic;
 
 import java.io.File;
 
-import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
+import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.core.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.Activator;
@@ -28,9 +28,9 @@ public class IntervalInitializationManager {
 
 	private final IntervalManager intervalManager;
 
-	private final IntervalPersisterBase intervalsToTransferPersister;
+	private final PersisterBase intervalsToTransferPersister;
 
-	private final IntervalPersisterBase intervalsStatisticsPersister;
+	private final PersisterBase intervalsStatisticsPersister;
 
 	private WatchDogEventManager eventManager;
 
@@ -44,15 +44,16 @@ public class IntervalInitializationManager {
 		File statisticsDatabaseFile = new File(baseFolder,
 				"intervalsStatistics.mapdb");
 
-		intervalsToTransferPersister = new IntervalPersisterBase(
+		intervalsToTransferPersister = new PersisterBase(
 				toTransferDatabaseFile);
-		intervalsStatisticsPersister = new IntervalPersisterBase(
+		intervalsStatisticsPersister = new PersisterBase(
 				statisticsDatabaseFile);
 
 		new ClientVersionChecker();
 		intervalManager = new IntervalManager(intervalsToTransferPersister,
 				intervalsStatisticsPersister);
-		eventManager = new WatchDogEventManager(intervalManager, USER_ACTIVITY_TIMEOUT);
+		eventManager = new WatchDogEventManager(intervalManager,
+				USER_ACTIVITY_TIMEOUT);
 		new TimeSynchronityChecker(intervalManager, eventManager);
 
 		WorkbenchListener workbenchListener = new WorkbenchListener(
@@ -79,7 +80,7 @@ public class IntervalInitializationManager {
 	}
 
 	/** @return the statistics interval persisters. */
-	public IntervalPersisterBase getIntervalsStatisticsPersister() {
+	public PersisterBase getIntervalsStatisticsPersister() {
 		return intervalsStatisticsPersister;
 	}
 
