@@ -13,6 +13,7 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
 
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
+import nl.tudelft.watchdog.core.logic.network.TransferManagerBase.ItemType;
 import nl.tudelft.watchdog.core.ui.wizards.Project;
 import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
@@ -41,7 +42,8 @@ public class JsonTransferer {
 	 * Sends the recorded T's to the server. Returns whether or not the transfer
 	 * was successful or a network error occurred.
 	 */
-	public Connection sendItems(List<WatchDogTransferable> recordedItems, String projectName) {
+	public Connection sendItems(List<WatchDogTransferable> recordedItems, String projectName,
+			ItemType recordedItemsType) {
 		String userId = WatchDogGlobals.getPreferences().getUserId();
 		String projectId = WatchDogGlobals.getPreferences().getOrCreateProjectSetting(projectName).projectId;
 
@@ -53,8 +55,7 @@ public class JsonTransferer {
 
 		String serializedItems = toJson(recordedItems);
 		try {
-			//TODO: differentiate between events and intervals
-			NetworkUtils.transferJsonAndGetResponse(getPostURL(userId, projectId), serializedItems);
+			NetworkUtils.transferJsonAndGetResponse(getPostURL(userId, projectId, recordedItemsType), serializedItems);
 			return Connection.SUCCESSFUL;
 		} catch (ServerReturnCodeException exception) {
 			return Connection.UNSUCCESSFUL;
@@ -127,10 +128,15 @@ public class JsonTransferer {
 	/**
 	 * @return the POST URL to be used to send the JSON data to.
 	 */
-	protected String getPostURL(String userId, String projectId) {
-		// Note: This is only a dummy implementation, subclasses should override
-		// this method to return a correct URL.
-		return null;
+	private String getPostURL(String userId, String projectId, ItemType itemsToTransferType) {
+		switch (itemsToTransferType) {
+		case EVENT:
+			return NetworkUtils.buildEventsPostURL(userId, projectId);
+		case INTERVAL:
+			return NetworkUtils.buildIntervalsPostURL(userId, projectId);
+		default:
+			return null;
+		}
 	}
 
 	/** A JSon Serializer for Date. */

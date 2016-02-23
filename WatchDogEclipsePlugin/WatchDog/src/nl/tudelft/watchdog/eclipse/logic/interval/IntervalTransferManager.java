@@ -1,13 +1,13 @@
 package nl.tudelft.watchdog.eclipse.logic.interval;
 
-import nl.tudelft.watchdog.core.logic.interval.IntervalTransferManagerBase;
+import nl.tudelft.watchdog.core.logic.network.TransferManagerBase;
 import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
 
 /**
  * {@inheritDoc}
  */
-public class IntervalTransferManager extends IntervalTransferManagerBase {
+public class IntervalTransferManager extends TransferManagerBase {
 
 	/**
 	 * Constructor.

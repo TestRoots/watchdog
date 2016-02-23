@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
 
+import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
 import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.core.logic.ui.RegularCheckerBase;
+import nl.tudelft.watchdog.core.ui.preferences.PreferencesBase;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 
@@ -17,14 +20,21 @@ import nl.tudelft.watchdog.core.util.WatchDogLogger;
  * execution of this regularly scheduled task, e.g. when it is needed on
  * exiting.
  */
-public abstract class TransferManagerBase<T extends WatchDogTransferable> extends RegularCheckerBase {
+public class TransferManagerBase extends RegularCheckerBase {
+
+	private static final int UPDATE_RATE = 3 * 60 * 1000;
+	
+	/** Indicates the type of the items to be send to the server. */
+	public enum ItemType {
+		EVENT, INTERVAL;
+	}
 
 	/**
 	 * Constructor. Tries to immediately transfer all remaining T's, and sets up
-	 * a scheduled timer to run every {@value #updateRate} milliseconds.
+	 * a scheduled timer to run every {@value #UPDATE_RATE} milliseconds.
 	 */
-	public TransferManagerBase(final PersisterBase persisterBase, String projectName, int updateRate) {
-		super(updateRate);
+	public TransferManagerBase(final PersisterBase persisterBase, String projectName) {
+		super(UPDATE_RATE);
 		task = new TransferTimerTask(persisterBase, projectName);
 		runSetupAndStartTimeChecker();
 	}
@@ -45,7 +55,20 @@ public abstract class TransferManagerBase<T extends WatchDogTransferable> extend
 	protected static void refreshUI() {	}
 	
 	/** Updates the statistics preferences after transferring the items to the server. */
-	protected abstract void updateStatisticsPreferences(int transferredItems);
+	private void updateStatisticsPreferences(ItemType itemType, int transferredItems) {
+		PreferencesBase prefs = WatchDogGlobals.getPreferences();
+		switch (itemType) {
+		case EVENT:
+			prefs.setLastTransferedEvent();
+			prefs.addTransferedEvents(transferredItems);			
+			break;
+
+		case INTERVAL:
+			prefs.setLastTransferedInterval();
+			prefs.addTransferedIntervals(transferredItems);		
+			break;
+		}
+	}
 
 	private class TransferTimerTask extends TimerTask {
 		private final PersisterBase persister;
@@ -67,24 +90,38 @@ public abstract class TransferManagerBase<T extends WatchDogTransferable> extend
 			}
 
 			List<WatchDogTransferable> itemsToTransfer = new ArrayList<WatchDogTransferable>(persister.readItems());
-
 			if (itemsToTransfer.isEmpty()) {
 				return;
 			}
-
-			transferItems(itemsToTransfer);
+			
+			// Split events/intervals and send them separately to the correct URL
+			List<WatchDogTransferable> eventsToTransfer = new ArrayList<>();
+			List<WatchDogTransferable> intervalsToTransfer = new ArrayList<>();
+			for (WatchDogTransferable item: itemsToTransfer) {
+				if (item instanceof EventBase) {
+					eventsToTransfer.add(item);
+				} else if (item instanceof IntervalBase) {
+					intervalsToTransfer.add(item);
+				}
+			}
+			
+			transferItems(eventsToTransfer, ItemType.EVENT);
+			transferItems(intervalsToTransfer, ItemType.INTERVAL);			
 			resetDatabase();
 			refreshUI();
 		}
 
-		private void transferItems(List<WatchDogTransferable> itemsToTransfer) {
+		private void transferItems(List<WatchDogTransferable> itemsToTransfer, ItemType itemsToTransferType) {
+			if (itemsToTransfer.isEmpty()) {
+				return;
+			}
+			
 			JsonTransferer transferer = new JsonTransferer();
-
-			Connection connection = transferer.sendItems(itemsToTransfer, projectName);
+			Connection connection = transferer.sendItems(itemsToTransfer, projectName, itemsToTransferType);
 			switch (connection) {
 			case SUCCESSFUL:
 				persister.removeItems(itemsToTransfer);
-				updateStatisticsPreferences(itemsToTransfer.size());
+				updateStatisticsPreferences(itemsToTransferType, itemsToTransfer.size());
 				WatchDogGlobals.lastTransactionFailed = false;
 				break;
 
@@ -112,8 +149,8 @@ public abstract class TransferManagerBase<T extends WatchDogTransferable> extend
 				int halfOfItems = (int) Math.floor(items / 2);
 				List<WatchDogTransferable> firstHalfItems = itemsToTransfer.subList(0, halfOfItems);
 				List<WatchDogTransferable> secondHalfItems = itemsToTransfer.subList(halfOfItems, items);
-				transferItems(firstHalfItems);
-				transferItems(secondHalfItems);
+				transferItems(firstHalfItems, itemsToTransferType);
+				transferItems(secondHalfItems, itemsToTransferType);
 				break;
 			}
 

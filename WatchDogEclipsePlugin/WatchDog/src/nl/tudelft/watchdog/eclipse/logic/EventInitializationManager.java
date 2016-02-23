@@ -5,7 +5,7 @@ import java.io.File;
 import org.eclipse.debug.core.DebugPlugin;
 
 import nl.tudelft.watchdog.core.logic.event.EventManager;
-import nl.tudelft.watchdog.core.logic.event.EventTransferManagerBase;
+import nl.tudelft.watchdog.core.logic.network.TransferManagerBase;
 import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.eclipse.Activator;
 import nl.tudelft.watchdog.eclipse.logic.event.listeners.BreakpointListener;
@@ -24,7 +24,7 @@ public class EventInitializationManager {
 	private final EventManager eventManager;
 	private final PersisterBase eventsToTransferPersister;
 	private final PersisterBase eventsStatisticsPersister;
-	private final EventTransferManagerBase eventTransferManager;
+	private final TransferManagerBase eventTransferManager;
 
 	/** Private constructor. */
 	private EventInitializationManager() {
@@ -39,7 +39,7 @@ public class EventInitializationManager {
 				eventsStatisticsPersister);
 		eventManager.setSessionSeed(IntervalInitializationManager.getInstance()
 				.getIntervalManager().getSessionSeed());
-		eventTransferManager = new EventTransferManagerBase(
+		eventTransferManager = new TransferManagerBase(
 				eventsToTransferPersister, WatchDogUtils.getWorkspaceName());
 
 		DebugPlugin.getDefault().getBreakpointManager()
@@ -67,7 +67,7 @@ public class EventInitializationManager {
 	}
 
 	/** @return the event transfer manager. */
-	public EventTransferManagerBase getEventTransferManager() {
+	public TransferManagerBase getEventTransferManager() {
 		return eventTransferManager;
 	}
 
