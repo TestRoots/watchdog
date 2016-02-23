@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.eclipse.logic.interval;
+package nl.tudelft.watchdog.eclipse.logic.network;
 
 import nl.tudelft.watchdog.core.logic.network.TransferManagerBase;
 import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
@@ -7,14 +7,14 @@ import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
 /**
  * {@inheritDoc}
  */
-public class IntervalTransferManager extends TransferManagerBase {
+public class TransferManager extends TransferManagerBase {
 
 	/**
 	 * Constructor.
 	 */
-	public IntervalTransferManager(final PersisterBase intervalPersister,
+	public TransferManager(final PersisterBase persister,
 			String projectName) {
-		super(intervalPersister, projectName);
+		super(persister, projectName);
 	}
 
 	/** {@inheritDoc} */

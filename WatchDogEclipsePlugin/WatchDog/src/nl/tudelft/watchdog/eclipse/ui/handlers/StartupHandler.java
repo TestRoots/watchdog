@@ -8,8 +8,7 @@ import org.eclipse.ui.IStartup;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals.IDE;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
-import nl.tudelft.watchdog.eclipse.logic.EventInitializationManager;
-import nl.tudelft.watchdog.eclipse.logic.IntervalInitializationManager;
+import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
 import nl.tudelft.watchdog.eclipse.ui.WatchDogView;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
@@ -39,8 +38,7 @@ public class StartupHandler implements IStartup {
 
 			// Initialize the interval and event manager, and thereby, interval
 			// and event recording.
-			IntervalInitializationManager.getInstance();
-			EventInitializationManager.getInstance();
+			InitializationManager.getInstance();
 			WatchDogGlobals.isActive = true;
 			// Update WatchDog icon
 			UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);
