@@ -14,24 +14,25 @@ import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 
 /**
- * This manager takes care of the repeated transferal of all T's to the server.
- * When the transfer to the server was successful, the T's are immediately
- * deleted from the local database. Furthermore, it allows the immediate
- * execution of this regularly scheduled task, e.g. when it is needed on
- * exiting.
+ * This manager takes care of the repeated transferal of all events and
+ * intervals to the server. When the transfer to the server was successful, the
+ * items are immediately deleted from the local database. Furthermore, it allows
+ * the immediate execution of this regularly scheduled task, e.g. when it is
+ * needed on exiting.
  */
 public class TransferManagerBase extends RegularCheckerBase {
 
 	private static final int UPDATE_RATE = 3 * 60 * 1000;
-	
+
 	/** Indicates the type of the items to be send to the server. */
 	public enum ItemType {
 		EVENT, INTERVAL;
 	}
 
 	/**
-	 * Constructor. Tries to immediately transfer all remaining T's, and sets up
-	 * a scheduled timer to run every {@value #UPDATE_RATE} milliseconds.
+	 * Constructor. Tries to immediately transfer all remaining events and
+	 * intervals, and sets up a scheduled timer to run every
+	 * {@value #UPDATE_RATE} milliseconds.
 	 */
 	public TransferManagerBase(final PersisterBase persisterBase, String projectName) {
 		super(UPDATE_RATE);
@@ -39,7 +40,7 @@ public class TransferManagerBase extends RegularCheckerBase {
 		runSetupAndStartTimeChecker();
 	}
 
-	/** Immediately synchronizes the T's with the server. */
+	/** Immediately synchronizes the events and intervals with the server. */
 	public void sendItemsImmediately() {
 		NetworkUtils.setConnectionTimeout(2000);
 		NetworkUtils.cancelTransferAfter(2000);
@@ -47,25 +48,29 @@ public class TransferManagerBase extends RegularCheckerBase {
 		NetworkUtils.setConnectionTimeout(NetworkUtils.DEFAULT_TIMEOUT);
 	}
 
-	/** 
-	 * Refreshes the InfoDialog in Eclipse to show updated transfer statistics. 
+	/**
+	 * Refreshes the InfoDialog in Eclipse to show updated transfer statistics.
 	 * 
-	 * Note: To be implemented in IDE specific implementation 
+	 * Note: To be implemented in IDE specific implementation
 	 */
-	protected static void refreshUI() {	}
-	
-	/** Updates the statistics preferences after transferring the items to the server. */
+	protected static void refreshUI() {
+	}
+
+	/**
+	 * Updates the statistics preferences after transferring the items to the
+	 * server.
+	 */
 	private void updateStatisticsPreferences(ItemType itemType, int transferredItems) {
 		PreferencesBase prefs = WatchDogGlobals.getPreferences();
 		switch (itemType) {
 		case EVENT:
 			prefs.setLastTransferedEvent();
-			prefs.addTransferedEvents(transferredItems);			
+			prefs.addTransferedEvents(transferredItems);
 			break;
 
 		case INTERVAL:
 			prefs.setLastTransferedInterval();
-			prefs.addTransferedIntervals(transferredItems);		
+			prefs.addTransferedIntervals(transferredItems);
 			break;
 		}
 	}
@@ -80,8 +85,8 @@ public class TransferManagerBase extends RegularCheckerBase {
 		}
 
 		/**
-		 * Transfers all T's from the persistence storage that are not yet on
-		 * the server, to the server.
+		 * Transfers all events and intervals from the persistence storage that
+		 * are not yet on the server, to the server.
 		 */
 		@Override
 		public void run() {
@@ -93,20 +98,21 @@ public class TransferManagerBase extends RegularCheckerBase {
 			if (itemsToTransfer.isEmpty()) {
 				return;
 			}
-			
-			// Split events/intervals and send them separately to the correct URL
+
+			// Split events/intervals and send them separately to the correct
+			// URL
 			List<WatchDogTransferable> eventsToTransfer = new ArrayList<>();
 			List<WatchDogTransferable> intervalsToTransfer = new ArrayList<>();
-			for (WatchDogTransferable item: itemsToTransfer) {
+			for (WatchDogTransferable item : itemsToTransfer) {
 				if (item instanceof EventBase) {
 					eventsToTransfer.add(item);
 				} else if (item instanceof IntervalBase) {
 					intervalsToTransfer.add(item);
 				}
 			}
-			
+
 			transferItems(eventsToTransfer, ItemType.EVENT);
-			transferItems(intervalsToTransfer, ItemType.INTERVAL);			
+			transferItems(intervalsToTransfer, ItemType.INTERVAL);
 			resetDatabase();
 			refreshUI();
 		}
@@ -115,7 +121,7 @@ public class TransferManagerBase extends RegularCheckerBase {
 			if (itemsToTransfer.isEmpty()) {
 				return;
 			}
-			
+
 			JsonTransferer transferer = new JsonTransferer();
 			Connection connection = transferer.sendItems(itemsToTransfer, projectName, itemsToTransferType);
 			switch (connection) {

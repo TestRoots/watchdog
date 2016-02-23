@@ -12,8 +12,8 @@ import org.joda.time.format.PeriodFormat;
 import com.google.gson.annotations.SerializedName;
 
 /** The interval base. */
-abstract public class IntervalBase extends WatchDogTransferable implements
-		Serializable, Comparable<WatchDogTransferable>, Cloneable {
+abstract public class IntervalBase extends WatchDogTransferable
+		implements Serializable, Comparable<WatchDogTransferable>, Cloneable {
 
 	/** The version id of this class. */
 	private static final long serialVersionUID = 2L;
@@ -120,7 +120,12 @@ abstract public class IntervalBase extends WatchDogTransferable implements
 		return intervalType;
 	}
 
-	/** Necessary for storage of Intervals and events. */
+	/**
+	 * Necessary for storage of Intervals and events.
+	 * 
+	 * If the item to compare to isn't an instance of IntervalBase, the class
+	 * name is used to determine the result of the comparison.
+	 */
 	public int compareTo(WatchDogTransferable comparedItem) {
 		if (comparedItem instanceof IntervalBase) {
 			IntervalBase comparedInterval = (IntervalBase) comparedItem;

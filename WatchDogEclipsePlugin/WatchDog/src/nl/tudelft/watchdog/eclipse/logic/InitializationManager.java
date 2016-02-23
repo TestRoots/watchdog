@@ -21,22 +21,22 @@ import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 /**
  * Manages the setup process of the interval and event recording infrastructure.
  * Is a singleton and contains UI code. Guarantees that there is only one
- * properly initialized {@link IntervalManager} that does the real work.
+ * properly initialized {@link IntervalManager} and {@link EventManager} that do
+ * the real work.
  */
 public class InitializationManager {
 
 	private static final int USER_ACTIVITY_TIMEOUT = 16000;
 
-	/** The singleton instance of the interval manager. */
+	/** The singleton instance. */
 	private static volatile InitializationManager instance = null;
-
-	private final IntervalManager intervalManager;
 
 	private final PersisterBase toTransferPersister;
 	private final PersisterBase statisticsPersister;
 
 	private final WatchDogEventManager watchDogEventManager;
 	private final EventManager eventManager;
+	private final IntervalManager intervalManager;
 
 	/** Private constructor. */
 	private InitializationManager() {
@@ -94,7 +94,7 @@ public class InitializationManager {
 		return statisticsPersister;
 	}
 
-	/** @return the event Manager. */
+	/** @return the WatchDog event manager. */
 	public WatchDogEventManager getWatchDogEventManager() {
 		return watchDogEventManager;
 	}

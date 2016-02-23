@@ -24,7 +24,7 @@ import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
  */
 public class JsonTransferer {
 
-	/** The {@link GsonBuilder} for building the T's. */
+	/** The {@link GsonBuilder} for building the items. */
 	private GsonBuilder gsonBuilder = new GsonBuilder();
 
 	/** The Gson object for object serialization to Json. */
@@ -39,7 +39,7 @@ public class JsonTransferer {
 	}
 
 	/**
-	 * Sends the recorded T's to the server. Returns whether or not the transfer
+	 * Sends the recorded items to the server. Returns whether or not the transfer
 	 * was successful or a network error occurred.
 	 */
 	public Connection sendItems(List<WatchDogTransferable> recordedItems, String projectName,

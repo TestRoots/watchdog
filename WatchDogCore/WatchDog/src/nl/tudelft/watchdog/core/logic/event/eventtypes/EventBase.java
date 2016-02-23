@@ -56,11 +56,14 @@ public abstract class EventBase extends WatchDogTransferable implements Serializ
 	}
 
 	/**
-	 * Necessary for the storage of events and intervals. The comparison is first based on the
-	 * timestamps of the two events. If these dates are equal but the events
-	 * themselves are not, the type of the events is used to produce the result
-	 * of this method. These two steps are required to ensure that events are
-	 * not lost when two or more events have the same timestamp.
+	 * Necessary for the storage of events and intervals. The comparison is
+	 * first based on the timestamps of the two events. If these dates are equal
+	 * but the events themselves are not, the type of the events is used to
+	 * produce the result of this method. These two steps are required to ensure
+	 * that events are not lost when two or more events have the same timestamp.
+	 * 
+	 * If the item to compare to isn't an instance of EventBase, the class name
+	 * is used to determine the result of the comparison.
 	 */
 	public int compareTo(WatchDogTransferable comparedItem) {
 		if (comparedItem instanceof EventBase) {
