@@ -11,8 +11,7 @@ public abstract class EventPersisterTestBase extends PersisterTestBase {
 	protected static PersisterBase persister;
 
 	/**
-	 * Initializes the variables required for the tests and initializes the
-	 * persister as an EventPersister.
+	 * Initializes the variables required for the tests.
 	 */
 	protected static void setUpSuperClass() {
 		PersisterTestBase.setUpSuperClass("EventPersisterTests");

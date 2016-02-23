@@ -11,8 +11,7 @@ public abstract class IntervalPersisterTestBase extends PersisterTestBase {
 	protected static PersisterBase persister;
 
 	/**
-	 * Initializes the variables required for the tests and initializes the
-	 * persister as an IntervalPersister.
+	 * Initializes the variables required for the tests.
 	 */
 	protected static void setUpSuperClass() {
 		PersisterTestBase.setUpSuperClass("IntervalPersisterTests");

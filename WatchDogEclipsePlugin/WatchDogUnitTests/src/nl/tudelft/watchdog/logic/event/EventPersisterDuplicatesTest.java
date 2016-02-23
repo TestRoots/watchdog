@@ -16,7 +16,7 @@ import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
 import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
 
 /**
- * Test class that tests the {@link EventPersisterBase} in case the same or
+ * Test class that tests the {@link PersisterBase} in case the same or
  * similar events are saved to ensure each different event is added, but
  * duplicate events are not.
  */
