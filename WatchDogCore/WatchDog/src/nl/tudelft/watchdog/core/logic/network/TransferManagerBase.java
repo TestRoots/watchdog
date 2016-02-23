@@ -37,6 +37,11 @@ public abstract class TransferManagerBase<T extends WatchDogTransferable> extend
 		NetworkUtils.setConnectionTimeout(NetworkUtils.DEFAULT_TIMEOUT);
 	}
 
+	/** 
+	 * Refreshes the InfoDialog in Eclipse to show updated transfer statistics. 
+	 * 
+	 * Note: To be implemented in IDE specific implementation 
+	 */
 	protected static void refreshUI() {	}
 	
 	/** @return a JSON transferrer to be used to transfer the items to the server. */

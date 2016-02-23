@@ -17,6 +17,7 @@ public class IntervalTransferManager extends IntervalTransferManagerBase {
 		super(intervalPersister, projectName);
 	}
 
+	/** {@inheritDoc} */
 	protected static void refreshUI() {
 		UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);
 	}
