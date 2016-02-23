@@ -13,32 +13,32 @@ public class BreakpointChangeClassifier {
 	 * Classifies the breakpoint change type(s) by analyzing the differences
 	 * between the properties of the old and new breakpoint.
 	 */
-	public static List<BreakpointChangeType> classify(Breakpoint old_bp, Breakpoint new_bp) {
+	public static List<BreakpointChangeType> classify(Breakpoint oldBreakpoint, Breakpoint newBreakpoint) {
 		List<BreakpointChangeType> changes = new ArrayList<BreakpointChangeType>();
-		if (old_bp == null || new_bp == null) {
+		if (oldBreakpoint == null || newBreakpoint == null) {
 			// Old BP was added in a previous session, so the change(s) are
 			// unknown.
 			changes.add(BreakpointChangeType.UNKNOWN);
 			return changes;
 		}
 
-		checkForEnablementChanges(old_bp, new_bp, changes);
-		checkForHitCountChanges(old_bp, new_bp, changes);
-		checkForSuspendPolicyChanges(old_bp, new_bp, changes);
-		checkForConditionChanges(old_bp, new_bp, changes);
+		checkForEnablementChanges(oldBreakpoint, newBreakpoint, changes);
+		checkForHitCountChanges(oldBreakpoint, newBreakpoint, changes);
+		checkForSuspendPolicyChanges(oldBreakpoint, newBreakpoint, changes);
+		checkForConditionChanges(oldBreakpoint, newBreakpoint, changes);
 
 		// If no changes are identified at this point, add UNKNOWN change.
-		if (changes.size() == 0) {
+		if (changes.isEmpty()) {
 			changes.add(BreakpointChangeType.UNKNOWN);
 		}
 		return changes;
 	}
 
 	/** Check for changes in breakpoint enablement. */
-	private static void checkForEnablementChanges(Breakpoint old_bp, Breakpoint new_bp,
+	private static void checkForEnablementChanges(Breakpoint oldBreakpoint, Breakpoint newBreakpoint,
 			List<BreakpointChangeType> changes) {
-		if (old_bp.isEnabled() != new_bp.isEnabled()) {
-			if (new_bp.isEnabled()) {
+		if (oldBreakpoint.isEnabled() != newBreakpoint.isEnabled()) {
+			if (newBreakpoint.isEnabled()) {
 				changes.add(BreakpointChangeType.ENABLED);
 			} else {
 				changes.add(BreakpointChangeType.DISABLED);
@@ -47,15 +47,13 @@ public class BreakpointChangeClassifier {
 	}
 
 	/** Check for changes in the hit count of the breakpoint. */
-	private static void checkForHitCountChanges(Breakpoint old_bp, Breakpoint new_bp,
+	private static void checkForHitCountChanges(Breakpoint oldBreakpoint, Breakpoint newBreakpoint,
 			List<BreakpointChangeType> changes) {
-		if (old_bp.getHitCount() != new_bp.getHitCount()) {
-			if (new_bp.getHitCount() != -1) {
-				if (old_bp.getHitCount() == -1) {
-					changes.add(BreakpointChangeType.HC_ADDED);
-				} else {
-					changes.add(BreakpointChangeType.HC_CHANGED);
-				}
+		if (oldBreakpoint.getHitCount() != newBreakpoint.getHitCount()) {
+			if (newBreakpoint.hitCountEnabled()) {
+				BreakpointChangeType changeType = (!oldBreakpoint.hitCountEnabled()) ? BreakpointChangeType.HC_ADDED
+						: BreakpointChangeType.HC_CHANGED;
+				changes.add(changeType);
 			} else {
 				changes.add(BreakpointChangeType.HC_REMOVED);
 			}
@@ -63,9 +61,9 @@ public class BreakpointChangeClassifier {
 	}
 
 	/** Check for changes in the suspend policy of the breakpoint. */
-	private static void checkForSuspendPolicyChanges(Breakpoint old_bp, Breakpoint new_bp,
+	private static void checkForSuspendPolicyChanges(Breakpoint oldBreakpoint, Breakpoint newBreakpoint,
 			List<BreakpointChangeType> changes) {
-		if (old_bp.getSuspendPolicy() != new_bp.getSuspendPolicy()) {
+		if (oldBreakpoint.getSuspendPolicy() != newBreakpoint.getSuspendPolicy()) {
 			changes.add(BreakpointChangeType.SP_CHANGED);
 		}
 	}
@@ -74,21 +72,26 @@ public class BreakpointChangeClassifier {
 	 * Check for changes in the enablement of the condition of the breakpoint
 	 * and the condition itself.
 	 */
-	private static void checkForConditionChanges(Breakpoint old_bp, Breakpoint new_bp,
+	private static void checkForConditionChanges(Breakpoint oldBreakpoint, Breakpoint newBreakpoint,
 			List<BreakpointChangeType> changes) {
-		if (old_bp.isConditionEnabled() != new_bp.isConditionEnabled()) {
-			if (new_bp.isConditionEnabled()) {
+		if (oldBreakpoint.isConditionEnabled() != newBreakpoint.isConditionEnabled()) {
+			if (newBreakpoint.isConditionEnabled()) {
 				changes.add(BreakpointChangeType.COND_ENABLED);
 			} else {
 				changes.add(BreakpointChangeType.COND_DISABLED);
 			}
 		}
 
-		if (old_bp.getCondition() != null) {
-			if (!old_bp.getCondition().equals(new_bp.getCondition())) {
+		if (oldBreakpoint.getCondition() != null) {
+			if (conditionIsDifferent(oldBreakpoint, newBreakpoint)) {
 				changes.add(BreakpointChangeType.COND_CHANGED);
 			}
 		}
+	}
+
+	/** @return whether or not the conditions of the breakpoints are different. */
+	private static boolean conditionIsDifferent(Breakpoint oldBreakpoint, Breakpoint newBreakpoint) {
+		return !oldBreakpoint.getCondition().equals(newBreakpoint.getCondition());
 	}
 
 }

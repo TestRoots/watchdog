@@ -68,6 +68,11 @@ public class Breakpoint {
 		return hitCount;
 	}
 
+	/** @return whether or not the hit count of this breakpoint is enabled. */
+	public boolean hitCountEnabled() {
+		return hitCount != -1;
+	}
+
 	/** Sets the hit count of this breakpoint. */
 	public void setHitCount(int hitCount) {
 		this.hitCount = hitCount;
@@ -82,24 +87,24 @@ public class Breakpoint {
 	public void setSuspendPolicy(int suspendPolicy) {
 		this.suspendPolicy = suspendPolicy;
 	}
-	
+
 	/** @return whether or not a condition is enabled. */
 	public boolean isConditionEnabled() {
 		return conditionEnabled;
 	}
-	
+
 	/** Sets whether or not a condition is enabled. */
 	public void setConditionEnabled(boolean enabled) {
 		this.conditionEnabled = enabled;
 	}
-	
+
 	/** @return the condition set on this breakpoint or null if not set. */
 	public String getCondition() {
 		return condition;
 	}
 
 	/** Sets the condition on this breakpoint. */
-	public void setCondition(String cond) {
-		this.condition = cond;
+	public void setCondition(String condition) {
+		this.condition = condition;
 	}
 }
