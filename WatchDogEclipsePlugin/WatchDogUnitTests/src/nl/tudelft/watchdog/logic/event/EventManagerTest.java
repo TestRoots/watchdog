@@ -63,8 +63,8 @@ public class EventManagerTest {
 		BreakpointAddEvent event = Mockito.spy(eventReal);
 		eventManager.addEvent(event);
 		Mockito.verify(event).setSessionSeed(Mockito.anyString());
-		Mockito.verify(eventsToTransferPersister).saveItem(Mockito.isA(BreakpointAddEvent.class));
-		Mockito.verify(eventsStatisticsPersister).saveItem(Mockito.isA(BreakpointAddEvent.class));
+		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(BreakpointAddEvent.class));
+		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(BreakpointAddEvent.class));
 	}
 
 	@Test
@@ -73,8 +73,8 @@ public class EventManagerTest {
 		BreakpointRemoveEvent event = Mockito.spy(eventReal);
 		eventManager.addEvent(event);
 		Mockito.verify(event).setSessionSeed(Mockito.anyString());
-		Mockito.verify(eventsToTransferPersister).saveItem(Mockito.isA(BreakpointRemoveEvent.class));
-		Mockito.verify(eventsStatisticsPersister).saveItem(Mockito.isA(BreakpointRemoveEvent.class));
+		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(BreakpointRemoveEvent.class));
+		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(BreakpointRemoveEvent.class));
 	}
 
 	@Test
@@ -83,8 +83,8 @@ public class EventManagerTest {
 		BreakpointChangeEvent event = Mockito.spy(eventReal);
 		eventManager.addEvent(event);
 		Mockito.verify(event).setSessionSeed(Mockito.anyString());
-		Mockito.verify(eventsToTransferPersister).saveItem(Mockito.isA(BreakpointChangeEvent.class));
-		Mockito.verify(eventsStatisticsPersister).saveItem(Mockito.isA(BreakpointChangeEvent.class));
+		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(BreakpointChangeEvent.class));
+		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(BreakpointChangeEvent.class));
 	}
 
 }

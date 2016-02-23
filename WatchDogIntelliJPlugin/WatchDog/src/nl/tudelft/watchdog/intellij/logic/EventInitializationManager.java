@@ -74,7 +74,6 @@ public class EventInitializationManager {
         eventsToTransferPersister.closeDatabase();
         eventsStatisticsPersister.closeDatabase();
         instances.remove(projectName);
-        //TODO: remove listeners?
     }
 
     /**

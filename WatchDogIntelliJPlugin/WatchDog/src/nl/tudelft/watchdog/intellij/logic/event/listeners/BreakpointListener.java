@@ -44,35 +44,35 @@ public class BreakpointListener implements XBreakpointListener {
     @Override
     public void breakpointAdded(@NotNull XBreakpoint xBreakpoint) {
         Date timestamp = new Date();
-        Breakpoint bp = BreakpointCreator.createBreakpoint(xBreakpoint);
-        breakpoints.put(bp.getHash(), bp);
-        BreakpointAddEvent event = new BreakpointAddEvent(bp.getHash(),
-                bp.getBreakpointType(), timestamp);
+        Breakpoint breakpoint = BreakpointCreator.createBreakpoint(xBreakpoint);
+        breakpoints.put(breakpoint.getHash(), breakpoint);
+        BreakpointAddEvent event = new BreakpointAddEvent(breakpoint.getHash(),
+                breakpoint.getBreakpointType(), timestamp);
         eventManager.addEvent(event);
     }
 
     @Override
     public void breakpointRemoved(@NotNull XBreakpoint xBreakpoint) {
         Date timestamp = new Date();
-        Breakpoint bp = BreakpointCreator.createBreakpoint(xBreakpoint);
-        breakpoints.remove(bp.getHash());
-        BreakpointRemoveEvent event = new BreakpointRemoveEvent(bp.getHash(),
-                bp.getBreakpointType(), timestamp);
+        Breakpoint breakpoint = BreakpointCreator.createBreakpoint(xBreakpoint);
+        breakpoints.remove(breakpoint.getHash());
+        BreakpointRemoveEvent event = new BreakpointRemoveEvent(breakpoint.getHash(),
+                breakpoint.getBreakpointType(), timestamp);
         eventManager.addEvent(event);
     }
 
     @Override
     public void breakpointChanged(@NotNull XBreakpoint xBreakpoint) {
         Date timestamp = new Date();
-        Breakpoint bp = BreakpointCreator.createBreakpoint(xBreakpoint);
+        Breakpoint breakpoint = BreakpointCreator.createBreakpoint(xBreakpoint);
 
         // Replace entry if present, otherwise create new entry.
-        Breakpoint old = breakpoints.put(bp.getHash(), bp);
+        Breakpoint oldBreakpoint = breakpoints.put(breakpoint.getHash(), breakpoint);
 
         List<BreakpointChangeType> changes = BreakpointChangeClassifier
-                .classify(old, bp);
-        BreakpointChangeEvent event = new BreakpointChangeEvent(bp.getHash(),
-                bp.getBreakpointType(), changes, timestamp);
+                .classify(oldBreakpoint, breakpoint);
+        BreakpointChangeEvent event = new BreakpointChangeEvent(breakpoint.getHash(),
+                breakpoint.getBreakpointType(), changes, timestamp);
         eventManager.addEvent(event);
     }
 }

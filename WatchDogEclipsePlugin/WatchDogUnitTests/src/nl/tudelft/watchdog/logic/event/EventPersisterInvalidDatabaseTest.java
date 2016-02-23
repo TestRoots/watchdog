@@ -41,7 +41,7 @@ public class EventPersisterInvalidDatabaseTest extends EventPersisterTestBase {
 
 	@Test
 	public void test2CreateEvent() {
-		persister.saveItem(EventPersisterTest.createRandomEvent());
+		persister.save(EventPersisterTest.createRandomEvent());
 		assertEquals(1, persister.getSize());
 	}
 

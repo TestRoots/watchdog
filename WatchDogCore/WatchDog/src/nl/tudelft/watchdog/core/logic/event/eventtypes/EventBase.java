@@ -76,25 +76,33 @@ public abstract class EventBase extends WatchDogTransferable implements Serializ
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		EventBase other = (EventBase) obj;
-		if (eventType != other.eventType)
+		if (eventType != other.eventType) {
 			return false;
+		}
 		if (sessionSeed == null) {
-			if (other.sessionSeed != null)
+			if (other.sessionSeed != null) {
 				return false;
-		} else if (!sessionSeed.equals(other.sessionSeed))
+			}
+		} else if (!sessionSeed.equals(other.sessionSeed)) {
 			return false;
+		}
 		if (timestamp == null) {
-			if (other.timestamp != null)
+			if (other.timestamp != null) {
 				return false;
-		} else if (!timestamp.equals(other.timestamp))
+			}
+		} else if (!timestamp.equals(other.timestamp)) {
 			return false;
+		}
 		return true;
 	}
 }
