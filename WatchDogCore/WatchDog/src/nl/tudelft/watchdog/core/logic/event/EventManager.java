@@ -40,8 +40,8 @@ public class EventManager {
 	public void addEvent(EventBase event) {
 		if (event != null) {
 			event.setSessionSeed(sessionSeed);
-			eventsToTransferPersister.saveItem(event);
-			eventsStatisticsPersister.saveItem(event);
+			eventsToTransferPersister.save(event);
+			eventsStatisticsPersister.save(event);
 			WatchDogLogger.getInstance().logInfo("Created event " + event + " " + event.getType());
 		}
 

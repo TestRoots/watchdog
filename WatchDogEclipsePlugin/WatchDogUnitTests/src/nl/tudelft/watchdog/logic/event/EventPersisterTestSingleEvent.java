@@ -22,7 +22,7 @@ public class EventPersisterTestSingleEvent extends EventPersisterTestBase {
 	@Test
 	public void test1WriteEvent() {
 		event = EventPersisterTest.createRandomEvent();
-		persister.saveItem(event);
+		persister.save(event);
 
 		EventBase savedEvent = new ArrayList<>(persister.readItems()).get(0);
 		assertEquals(event.getType(), savedEvent.getType());

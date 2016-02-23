@@ -26,7 +26,7 @@ public class IntervalPersisterBug101Test extends IntervalPersisterTestBase {
 
 	@Test
 	public void test3CreateInterval() {
-		persister.saveItem(IntervalPersisterTest.createRandomInterval());
+		persister.save(IntervalPersisterTest.createRandomInterval());
 		assertEquals(1, persister.getSize());
 	}
 

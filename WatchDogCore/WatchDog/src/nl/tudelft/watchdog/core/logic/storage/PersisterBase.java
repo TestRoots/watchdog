@@ -141,7 +141,7 @@ public abstract class PersisterBase<T extends WatchDogTransferable> {
 	/**
 	 * Saves one item to persistent storage
 	 */
-	public void saveItem(T item) {
+	public void save(T item) {
 		try {
 			replaceClassLoader();
 			set.add(item);

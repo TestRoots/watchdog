@@ -39,7 +39,7 @@ public class EventPersisterTest extends EventPersisterTestBase {
 		Collections.sort(generatedEvents);
 
 		for (EventBase event : generatedEvents) {
-			persister.saveItem(event);
+			persister.save(event);
 		}
 
 		List<EventBase> readEvents = new ArrayList<EventBase>(persister.readItems());

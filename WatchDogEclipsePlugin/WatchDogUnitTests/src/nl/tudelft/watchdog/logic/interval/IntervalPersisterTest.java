@@ -38,7 +38,7 @@ public class IntervalPersisterTest extends IntervalPersisterTestBase {
 		Collections.sort(generatedIntervals);
 
 		for (IntervalBase intervalBase : generatedIntervals) {
-			persister.saveItem(intervalBase);
+			persister.save(intervalBase);
 		}
 
 		List<IntervalBase> readIntervals = new ArrayList<IntervalBase>(

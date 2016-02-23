@@ -23,7 +23,7 @@ public class IntervalPersisterTestSingleInterval extends IntervalPersisterTestBa
 	public void test1WriteInterval() {
 		interval = IntervalPersisterTest.createRandomInterval();
 		interval.close();
-		persister.saveItem(interval);
+		persister.save(interval);
 
 		IntervalBase savedInterval = new ArrayList<>(persister.readItems())
 				.get(0);

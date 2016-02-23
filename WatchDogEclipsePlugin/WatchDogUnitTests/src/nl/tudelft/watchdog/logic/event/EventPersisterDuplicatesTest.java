@@ -32,7 +32,7 @@ public class EventPersisterDuplicatesTest extends EventPersisterTestBase {
 	@Test
 	public void test1AddEvent() {
 		event = createEvent();
-		persister.saveItem(event);
+		persister.save(event);
 
 		EventBase savedEvent = new ArrayList<>(persister.readItems()).get(0);
 		assertEquals(event.getType(), savedEvent.getType());
@@ -47,7 +47,7 @@ public class EventPersisterDuplicatesTest extends EventPersisterTestBase {
 	@Test
 	public void test3AddSameEventTestNotPersisted() {
 		event = createEvent();
-		persister.saveItem(event);
+		persister.save(event);
 		assertEquals(1, persister.getSize());
 	}
 
@@ -55,7 +55,7 @@ public class EventPersisterDuplicatesTest extends EventPersisterTestBase {
 	public void test4AddSimilarEventDifferentTimestampTestPersisted() {
 		event = createEvent();
 		event.setTimestamp(new Date(2));
-		persister.saveItem(event);
+		persister.save(event);
 		assertEquals(2, persister.getSize());
 	}
 
@@ -63,14 +63,14 @@ public class EventPersisterDuplicatesTest extends EventPersisterTestBase {
 	public void test5AddSimilarEventDifferentTypeTestPersisted() {
 		event = new BreakpointRemoveEvent(1, BreakpointType.LINE, new Date(1));
 		event.setSessionSeed("444");
-		persister.saveItem(event);
+		persister.save(event);
 		assertEquals(3, persister.getSize());
 	}
 
 	@Test
 	public void test6AddAlreadyPersistedEventAgainTestNotPersisted() {
 		event = createEvent();
-		persister.saveItem(event);
+		persister.save(event);
 		assertEquals(3, persister.getSize());
 	}
 
