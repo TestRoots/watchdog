@@ -89,13 +89,13 @@ public class InitializationManager {
 		return intervalManager;
 	}
 
-	/** @return the statistics interval persisters. */
-	public PersisterBase getIntervalsStatisticsPersister() {
+	/** @return the statistics persister. */
+	public PersisterBase getStatisticsPersister() {
 		return statisticsPersister;
 	}
 
 	/** @return the event Manager. */
-	public WatchDogEventManager getEventManager() {
+	public WatchDogEventManager getWatchDogEventManager() {
 		return watchDogEventManager;
 	}
 

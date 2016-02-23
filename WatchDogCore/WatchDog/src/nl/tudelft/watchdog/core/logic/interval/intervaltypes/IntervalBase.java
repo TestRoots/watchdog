@@ -13,7 +13,7 @@ import com.google.gson.annotations.SerializedName;
 
 /** The interval base. */
 abstract public class IntervalBase extends WatchDogTransferable implements
-		Serializable, Comparable<IntervalBase>, Cloneable {
+		Serializable, Comparable<WatchDogTransferable>, Cloneable {
 
 	/** The version id of this class. */
 	private static final long serialVersionUID = 2L;
@@ -120,9 +120,13 @@ abstract public class IntervalBase extends WatchDogTransferable implements
 		return intervalType;
 	}
 
-	/** Necessary for storage of Intervals. */
-	public int compareTo(IntervalBase comparedInterval) {
-		return getEnd().compareTo(comparedInterval.getEnd());
+	/** Necessary for storage of Intervals and events. */
+	public int compareTo(WatchDogTransferable comparedItem) {
+		if (comparedItem instanceof IntervalBase) {
+			IntervalBase comparedInterval = (IntervalBase) comparedItem;
+			return getEnd().compareTo(comparedInterval.getEnd());
+		}
+		return this.getClass().getName().compareTo(comparedItem.getClass().getName());
 	}
 
 	/**

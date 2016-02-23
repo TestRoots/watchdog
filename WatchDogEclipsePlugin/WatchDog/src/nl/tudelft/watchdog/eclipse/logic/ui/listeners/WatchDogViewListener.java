@@ -24,7 +24,7 @@ public class WatchDogViewListener implements IPartListener2 {
 	public WatchDogViewListener(WatchDogView watchDogView) {
 		this.watchDogView = watchDogView;
 		this.eventManager = InitializationManager.getInstance()
-				.getEventManager();
+				.getWatchDogEventManager();
 	}
 
 	@Override
