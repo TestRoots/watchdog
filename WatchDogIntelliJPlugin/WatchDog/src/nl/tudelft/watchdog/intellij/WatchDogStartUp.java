@@ -16,8 +16,7 @@ import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
 import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
-import nl.tudelft.watchdog.intellij.logic.EventInitializationManager;
-import nl.tudelft.watchdog.intellij.logic.IntervalInitializationManager;
+import nl.tudelft.watchdog.intellij.logic.InitializationManager;
 import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
 import nl.tudelft.watchdog.intellij.ui.wizards.projectregistration.ProjectRegistrationWizard;
 import nl.tudelft.watchdog.intellij.ui.wizards.userregistration.UserProjectRegistrationWizard;
@@ -96,15 +95,11 @@ public class WatchDogStartUp implements ProjectComponent {
             return;
         }
 
-        IntervalInitializationManager intervalIntervalInitializationManager = IntervalInitializationManager.getInstance(project.getName());
-        intervalIntervalInitializationManager.getEventManager().update(new WatchDogEvent(this, WatchDogEvent.EventType.END_IDE));
-        intervalIntervalInitializationManager.getIntervalManager().closeAllIntervals();
-        intervalIntervalInitializationManager.getTransferManager().sendItemsImmediately();
-        intervalIntervalInitializationManager.shutdown(project.getName());
-
-        EventInitializationManager eventInitializationManager = EventInitializationManager.getInstance(project);
-        eventInitializationManager.getEventTransferManager().sendItemsImmediately();
-        eventInitializationManager.shutdown(project.getName());
+        InitializationManager intervalInitializationManager = InitializationManager.getInstance(project);
+        intervalInitializationManager.getWatchDogEventManager().update(new WatchDogEvent(this, WatchDogEvent.EventType.END_IDE));
+        intervalInitializationManager.getIntervalManager().closeAllIntervals();
+        intervalInitializationManager.getTransferManager().sendItemsImmediately();
+        intervalInitializationManager.shutdown(project.getName());
 
         JFrame frame = WindowManager.getInstance().getFrame(project);
         if (frame != null) {
@@ -202,8 +197,7 @@ public class WatchDogStartUp implements ProjectComponent {
                 .getOrCreateProjectSetting(project.getName());
         if (setting.enableWatchdog) {
             WatchDogLogger.getInstance().logInfo("Starting WatchDog ...");
-            IntervalInitializationManager.getInstance(project.getName());
-            EventInitializationManager.getInstance(project);
+            InitializationManager.getInstance(project);
             WatchDogUtils.setWatchDogActiveForProject(project);
             new ViewToolWindowButtonsAction().setSelected(null, true);
         }
