@@ -14,6 +14,7 @@ import com.google.gson.JsonSyntaxException;
 
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
 import nl.tudelft.watchdog.core.logic.network.TransferManagerBase.ItemType;
+import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 import nl.tudelft.watchdog.core.ui.wizards.Project;
 import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
@@ -39,10 +40,10 @@ public class JsonTransferer {
 	}
 
 	/**
-	 * Sends the recorded items to the server. Returns whether or not the transfer
+	 * Sends the recorded WD items to the server. Returns whether or not the transfer
 	 * was successful or a network error occurred.
 	 */
-	public Connection sendItems(List<WatchDogTransferable> recordedItems, String projectName,
+	public Connection sendItems(List<WatchDogItem> recordedItems, String projectName,
 			ItemType recordedItemsType) {
 		String userId = WatchDogGlobals.getPreferences().getUserId();
 		String projectId = WatchDogGlobals.getPreferences().getOrCreateProjectSetting(projectName).projectId;
@@ -117,7 +118,7 @@ public class JsonTransferer {
 	}
 
 	/** Converts the items to Json. */
-	public String toJson(List<WatchDogTransferable> recordedItems) {
+	public String toJson(List<WatchDogItem> recordedItems) {
 		try {
 			return gson.toJson(recordedItems);
 		} catch (RuntimeException e) {

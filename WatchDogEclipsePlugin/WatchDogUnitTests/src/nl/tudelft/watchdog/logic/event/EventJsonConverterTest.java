@@ -15,7 +15,7 @@ import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointChangeEvent;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointRemoveEvent;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
-import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
+import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 import nl.tudelft.watchdog.logic.network.JsonConverterTestBase;
 
 /**
@@ -28,7 +28,7 @@ public class EventJsonConverterTest extends JsonConverterTestBase{
 	@Test
 	public void testJsonLineBreakpointAddEventRepresentation() {
 		BreakpointAddEvent event = new BreakpointAddEvent(1, BreakpointType.LINE, new Date());
-		ArrayList<WatchDogTransferable> events = createSampleEvents(event);
+		ArrayList<WatchDogItem> events = createSampleEvents(event);
 
 		assertEquals("[{\"bh\":1,\"bt\":\"li\",\"et\":\"ba\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
 				transferer.toJson(events));
@@ -37,7 +37,7 @@ public class EventJsonConverterTest extends JsonConverterTestBase{
 	@Test
 	public void testJsonExceptionBreakpointAddEventRepresentation() {
 		BreakpointAddEvent event = new BreakpointAddEvent(1, BreakpointType.EXCEPTION, new Date());
-		ArrayList<WatchDogTransferable> events = createSampleEvents(event);
+		ArrayList<WatchDogItem> events = createSampleEvents(event);
 
 		assertEquals("[{\"bh\":1,\"bt\":\"ex\",\"et\":\"ba\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
 				transferer.toJson(events));
@@ -46,7 +46,7 @@ public class EventJsonConverterTest extends JsonConverterTestBase{
 	@Test
 	public void testJsonFieldBreakpointAddEventRepresentation() {
 		BreakpointAddEvent event = new BreakpointAddEvent(1, BreakpointType.FIELD, new Date());
-		ArrayList<WatchDogTransferable> events = createSampleEvents(event);
+		ArrayList<WatchDogItem> events = createSampleEvents(event);
 
 		assertEquals("[{\"bh\":1,\"bt\":\"fi\",\"et\":\"ba\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
 				transferer.toJson(events));
@@ -55,7 +55,7 @@ public class EventJsonConverterTest extends JsonConverterTestBase{
 	@Test
 	public void testJsonMethodBreakpointAddEventRepresentation() {
 		BreakpointAddEvent event = new BreakpointAddEvent(1, BreakpointType.METHOD, new Date());
-		ArrayList<WatchDogTransferable> events = createSampleEvents(event);
+		ArrayList<WatchDogItem> events = createSampleEvents(event);
 
 		assertEquals("[{\"bh\":1,\"bt\":\"me\",\"et\":\"ba\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
 				transferer.toJson(events));
@@ -64,7 +64,7 @@ public class EventJsonConverterTest extends JsonConverterTestBase{
 	@Test
 	public void testJsonClassBreakpointAddEventRepresentation() {
 		BreakpointAddEvent event = new BreakpointAddEvent(1, BreakpointType.CLASS, new Date());
-		ArrayList<WatchDogTransferable> events = createSampleEvents(event);
+		ArrayList<WatchDogItem> events = createSampleEvents(event);
 
 		assertEquals("[{\"bh\":1,\"bt\":\"cp\",\"et\":\"ba\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
 				transferer.toJson(events));
@@ -73,7 +73,7 @@ public class EventJsonConverterTest extends JsonConverterTestBase{
 	@Test
 	public void testJsonUndefinedBreakpointAddEventRepresentation() {
 		BreakpointAddEvent event = new BreakpointAddEvent(1, BreakpointType.UNDEFINED, new Date());
-		ArrayList<WatchDogTransferable> events = createSampleEvents(event);
+		ArrayList<WatchDogItem> events = createSampleEvents(event);
 
 		assertEquals("[{\"bh\":1,\"bt\":\"un\",\"et\":\"ba\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
 				transferer.toJson(events));
@@ -82,7 +82,7 @@ public class EventJsonConverterTest extends JsonConverterTestBase{
 	@Test
 	public void testJsonLineBreakpointRemoveEventRepresentation() {
 		BreakpointRemoveEvent event = new BreakpointRemoveEvent(1, BreakpointType.LINE, new Date());
-		ArrayList<WatchDogTransferable> events = createSampleEvents(event);
+		ArrayList<WatchDogItem> events = createSampleEvents(event);
 
 		assertEquals("[{\"bh\":1,\"bt\":\"li\",\"et\":\"br\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
 				transferer.toJson(events));
@@ -91,7 +91,7 @@ public class EventJsonConverterTest extends JsonConverterTestBase{
 	@Test
 	public void testJsonLineBreakpointChangeEventNoChanges() {
 		BreakpointChangeEvent event = new BreakpointChangeEvent(1, BreakpointType.LINE, null, new Date());
-		ArrayList<WatchDogTransferable> events = createSampleEvents(event);
+		ArrayList<WatchDogItem> events = createSampleEvents(event);
 
 		assertEquals("[{\"bh\":1,\"bt\":\"li\",\"et\":\"bc\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
 				transferer.toJson(events));
@@ -102,7 +102,7 @@ public class EventJsonConverterTest extends JsonConverterTestBase{
 		List<BreakpointChangeType> changes = new ArrayList<>();
 		changes.add(BreakpointChangeType.UNKNOWN);
 		BreakpointChangeEvent event = new BreakpointChangeEvent(1, BreakpointType.LINE, changes, new Date());
-		ArrayList<WatchDogTransferable> events = createSampleEvents(event);
+		ArrayList<WatchDogItem> events = createSampleEvents(event);
 
 		assertEquals("[{\"ch\":[\"un\"],\"bh\":1,\"bt\":\"li\",\"et\":\"bc\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
 				transferer.toJson(events));
@@ -113,7 +113,7 @@ public class EventJsonConverterTest extends JsonConverterTestBase{
 		List<BreakpointChangeType> changes = new ArrayList<>();
 		changes.add(BreakpointChangeType.ENABLED);
 		BreakpointChangeEvent event = new BreakpointChangeEvent(1, BreakpointType.LINE, changes, new Date());
-		ArrayList<WatchDogTransferable> events = createSampleEvents(event);
+		ArrayList<WatchDogItem> events = createSampleEvents(event);
 
 		assertEquals("[{\"ch\":[\"en\"],\"bh\":1,\"bt\":\"li\",\"et\":\"bc\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
 				transferer.toJson(events));
@@ -125,7 +125,7 @@ public class EventJsonConverterTest extends JsonConverterTestBase{
 		changes.add(BreakpointChangeType.ENABLED);
 		changes.add(BreakpointChangeType.HC_ADDED);
 		BreakpointChangeEvent event = new BreakpointChangeEvent(1, BreakpointType.LINE, changes, new Date());
-		ArrayList<WatchDogTransferable> events = createSampleEvents(event);
+		ArrayList<WatchDogItem> events = createSampleEvents(event);
 
 		assertEquals("[{\"ch\":[\"en\",\"ha\"],\"bh\":1,\"bt\":\"li\",\"et\":\"bc\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
 				transferer.toJson(events));
@@ -138,14 +138,14 @@ public class EventJsonConverterTest extends JsonConverterTestBase{
 		changes.add(BreakpointChangeType.COND_DISABLED);
 		changes.add(BreakpointChangeType.COND_CHANGED);
 		BreakpointChangeEvent event = new BreakpointChangeEvent(1, BreakpointType.LINE, changes, new Date());
-		ArrayList<WatchDogTransferable> events = createSampleEvents(event);
+		ArrayList<WatchDogItem> events = createSampleEvents(event);
 
 		assertEquals("[{\"ch\":[\"ds\",\"cd\",\"cc\"],\"bh\":1,\"bt\":\"li\",\"et\":\"bc\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
 				transferer.toJson(events));
 	}
 
-	private ArrayList<WatchDogTransferable> createSampleEvents(EventBase event) {
-		ArrayList<WatchDogTransferable> events = new ArrayList<WatchDogTransferable>();
+	private ArrayList<WatchDogItem> createSampleEvents(EventBase event) {
+		ArrayList<WatchDogItem> events = new ArrayList<WatchDogItem>();
 		event.setTimestamp(new Date(1));
 		event.setSessionSeed("");
 		events.add(event);

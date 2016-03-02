@@ -8,6 +8,7 @@ import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
 import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
+import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 import nl.tudelft.watchdog.core.logic.ui.RegularCheckerBase;
 import nl.tudelft.watchdog.core.ui.preferences.PreferencesBase;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
@@ -16,9 +17,9 @@ import nl.tudelft.watchdog.core.util.WatchDogLogger;
 /**
  * This manager takes care of the repeated transferal of all events and
  * intervals to the server. When the transfer to the server was successful, the
- * items are immediately deleted from the local database. Furthermore, it allows
- * the immediate execution of this regularly scheduled task, e.g. when it is
- * needed on exiting.
+ * WatchDogItems are immediately deleted from the local database. Furthermore,
+ * it allows the immediate execution of this regularly scheduled task, e.g. when
+ * it is needed on exiting.
  */
 public class TransferManagerBase extends RegularCheckerBase {
 
@@ -94,16 +95,16 @@ public class TransferManagerBase extends RegularCheckerBase {
 				return;
 			}
 
-			List<WatchDogTransferable> itemsToTransfer = new ArrayList<WatchDogTransferable>(persister.readItems());
+			List<WatchDogItem> itemsToTransfer = new ArrayList<WatchDogItem>(persister.readItems());
 			if (itemsToTransfer.isEmpty()) {
 				return;
 			}
 
 			// Split events/intervals and send them separately to the correct
 			// URL
-			List<WatchDogTransferable> eventsToTransfer = new ArrayList<>();
-			List<WatchDogTransferable> intervalsToTransfer = new ArrayList<>();
-			for (WatchDogTransferable item : itemsToTransfer) {
+			List<WatchDogItem> eventsToTransfer = new ArrayList<>();
+			List<WatchDogItem> intervalsToTransfer = new ArrayList<>();
+			for (WatchDogItem item : itemsToTransfer) {
 				if (item instanceof EventBase) {
 					eventsToTransfer.add(item);
 				} else if (item instanceof IntervalBase) {
@@ -117,7 +118,7 @@ public class TransferManagerBase extends RegularCheckerBase {
 			refreshUI();
 		}
 
-		private void transferItems(List<WatchDogTransferable> itemsToTransfer, ItemType itemsToTransferType) {
+		private void transferItems(List<WatchDogItem> itemsToTransfer, ItemType itemsToTransferType) {
 			if (itemsToTransfer.isEmpty()) {
 				return;
 			}
@@ -153,8 +154,8 @@ public class TransferManagerBase extends RegularCheckerBase {
 
 				// divide and conquer
 				int halfOfItems = (int) Math.floor(items / 2);
-				List<WatchDogTransferable> firstHalfItems = itemsToTransfer.subList(0, halfOfItems);
-				List<WatchDogTransferable> secondHalfItems = itemsToTransfer.subList(halfOfItems, items);
+				List<WatchDogItem> firstHalfItems = itemsToTransfer.subList(0, halfOfItems);
+				List<WatchDogItem> secondHalfItems = itemsToTransfer.subList(halfOfItems, items);
 				transferItems(firstHalfItems, itemsToTransferType);
 				transferItems(secondHalfItems, itemsToTransferType);
 				break;

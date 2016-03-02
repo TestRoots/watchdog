@@ -9,11 +9,10 @@ import java.util.Set;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 
-import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 
 /**
- * Support for storing and querying {@link WatchDogTransferable}s. The items are
+ * Support for storing and querying {@link WatchDogItem}s. The items are
  * saved with a long key, thus the maximum number of items that any single
  * WatchDog instance can record before the database breaks is
  * {@link Long#MAX_VALUE}.
@@ -28,7 +27,7 @@ public class PersisterBase {
 	protected DB database;
 
 	/** In memory representation of the store. */
-	protected Set<WatchDogTransferable> set;
+	protected Set<WatchDogItem> set;
 
 	protected File databaseFile;
 
@@ -76,9 +75,9 @@ public class PersisterBase {
 		}
 	}
 
-	private Set<WatchDogTransferable> createSet() {
+	private Set<WatchDogItem> createSet() {
 		replaceClassLoader();
-		Set<WatchDogTransferable> baseSet = database.getTreeSet(COLLECTION);
+		Set<WatchDogItem> baseSet = database.getTreeSet(COLLECTION);
 		resetOldClassLoader();
 		return baseSet;
 	}
@@ -133,14 +132,14 @@ public class PersisterBase {
 	/**
 	 * Reads all items in the collection and returns them as a List.
 	 */
-	public Set<WatchDogTransferable> readItems() {
+	public Set<WatchDogItem> readItems() {
 		return set;
 	}
 
 	/**
 	 * Saves one item to persistent storage
 	 */
-	public void save(WatchDogTransferable item) {
+	public void save(WatchDogItem item) {
 		try {
 			replaceClassLoader();
 			set.add(item);
@@ -159,9 +158,9 @@ public class PersisterBase {
 	/**
 	 * Removes the items from the database.
 	 */
-	public void removeItems(List<WatchDogTransferable> itemsToRemove) {
+	public void removeItems(List<WatchDogItem> itemsToRemove) {
 		replaceClassLoader();
-		for (WatchDogTransferable item : itemsToRemove) {
+		for (WatchDogItem item : itemsToRemove) {
 			set.remove(item);
 		}
 		database.commit();

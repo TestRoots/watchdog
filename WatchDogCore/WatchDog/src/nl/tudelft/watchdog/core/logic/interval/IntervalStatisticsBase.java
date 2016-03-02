@@ -16,8 +16,8 @@ import nl.tudelft.watchdog.core.logic.interval.intervaltypes.PerspectiveInterval
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.UserActiveInterval;
-import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
 import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
+import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 
 /**
  * Gathers and calculates statistics on developer behavior in a variable time
@@ -89,7 +89,7 @@ public abstract class IntervalStatisticsBase extends IntervalManagerBase {
 	}
 
 	private void addIntervals(IDEIntervalManagerBase intervalManager) {
-		for (WatchDogTransferable item : intervalPersister.readItems()) {
+		for (WatchDogItem item : intervalPersister.readItems()) {
 			if (item instanceof IntervalBase) {
 				IntervalBase interval = (IntervalBase) item;
 				interval.setClosed();
@@ -105,7 +105,7 @@ public abstract class IntervalStatisticsBase extends IntervalManagerBase {
 	 */
 	private void filterIntervals() {
 		ArrayList<IntervalBase> filteredIntervals = new ArrayList<IntervalBase>();
-		ArrayList<WatchDogTransferable> intervalsToRemove = new ArrayList<WatchDogTransferable>();
+		ArrayList<WatchDogItem> intervalsToRemove = new ArrayList<WatchDogItem>();
 
 		if (intervals.size() == 0) {
 			return;

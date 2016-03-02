@@ -13,7 +13,7 @@ import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointType;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointAddEvent;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointRemoveEvent;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
-import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
+import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 
 /**
  * Test class that tests the {@link PersisterBase} in case the same or
@@ -35,7 +35,7 @@ public class EventPersisterDuplicatesTest extends EventPersisterTestBase {
 		event = createEvent();
 		persister.save(event);
 		
-		WatchDogTransferable item = new ArrayList<>(persister.readItems()).get(0);
+		WatchDogItem item = new ArrayList<>(persister.readItems()).get(0);
 		assertTrue(item instanceof EventBase);
 
 		EventBase savedEvent = (EventBase) item;

@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
-import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
+import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class IntervalPersisterTestSingleInterval extends IntervalPersisterTestBa
 		interval.close();
 		persister.save(interval);
 
-		WatchDogTransferable savedItem = new ArrayList<>(persister.readItems())
+		WatchDogItem savedItem = new ArrayList<>(persister.readItems())
 				.get(0);
 		assertTrue(savedItem instanceof IntervalBase);
 		
@@ -41,7 +41,7 @@ public class IntervalPersisterTestSingleInterval extends IntervalPersisterTestBa
 
 	@Test
 	public void test2CompareIntervalAfterWrite() {
-		WatchDogTransferable savedItem = new ArrayList<>(persister.readItems())
+		WatchDogItem savedItem = new ArrayList<>(persister.readItems())
 				.get(0);
 		assertTrue(savedItem instanceof IntervalBase);
 		
@@ -53,7 +53,7 @@ public class IntervalPersisterTestSingleInterval extends IntervalPersisterTestBa
 
 	@Test
 	public void test3CompareIntervalAfterWriteDemonstratesCloseIsNotPersisted() {
-		WatchDogTransferable savedItem = new ArrayList<>(persister.readItems())
+		WatchDogItem savedItem = new ArrayList<>(persister.readItems())
 				.get(0);
 		assertTrue(savedItem instanceof IntervalBase);
 		

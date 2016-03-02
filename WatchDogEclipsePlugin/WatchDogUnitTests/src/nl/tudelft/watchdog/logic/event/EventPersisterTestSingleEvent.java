@@ -9,7 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
-import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
+import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 
 public class EventPersisterTestSingleEvent extends EventPersisterTestBase {
 
@@ -26,7 +26,7 @@ public class EventPersisterTestSingleEvent extends EventPersisterTestBase {
 		event = EventPersisterTest.createRandomEvent();
 		persister.save(event);
 		
-		WatchDogTransferable item = new ArrayList<>(persister.readItems()).get(0);
+		WatchDogItem item = new ArrayList<>(persister.readItems()).get(0);
 		assertTrue(item instanceof EventBase);
 
 		EventBase savedEvent = (EventBase) item;
@@ -36,7 +36,7 @@ public class EventPersisterTestSingleEvent extends EventPersisterTestBase {
 
 	@Test
 	public void test2CompareEventAfterWrite() {
-		WatchDogTransferable item = new ArrayList<>(persister.readItems()).get(0);
+		WatchDogItem item = new ArrayList<>(persister.readItems()).get(0);
 		assertTrue(item instanceof EventBase);
 		
 		EventBase savedEvent = (EventBase) item;

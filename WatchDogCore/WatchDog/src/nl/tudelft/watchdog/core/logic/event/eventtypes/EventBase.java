@@ -5,9 +5,9 @@ import java.util.Date;
 
 import com.google.gson.annotations.SerializedName;
 
-import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
+import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 
-public abstract class EventBase extends WatchDogTransferable implements Serializable, Comparable<WatchDogTransferable> {
+public abstract class EventBase extends WatchDogItem implements Serializable, Comparable<WatchDogItem> {
 
 	/** Serial ID. */
 	private static final long serialVersionUID = 1L;
@@ -65,7 +65,7 @@ public abstract class EventBase extends WatchDogTransferable implements Serializ
 	 * If the item to compare to isn't an instance of EventBase, the class name
 	 * is used to determine the result of the comparison.
 	 */
-	public int compareTo(WatchDogTransferable comparedItem) {
+	public int compareTo(WatchDogItem comparedItem) {
 		if (comparedItem instanceof EventBase) {
 			EventBase comparedEvent = (EventBase) comparedItem;
 			int res = getTimestamp().compareTo(comparedEvent.getTimestamp());
