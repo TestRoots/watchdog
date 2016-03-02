@@ -12,8 +12,7 @@ import com.google.gson.annotations.SerializedName;
 import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 
 /** The interval base. */
-abstract public class IntervalBase extends WatchDogItem
-		implements Serializable, Comparable<WatchDogItem>, Cloneable {
+abstract public class IntervalBase extends WatchDogItem implements Serializable, Comparable<WatchDogItem>, Cloneable {
 
 	/** The version id of this class. */
 	private static final long serialVersionUID = 2L;
@@ -121,7 +120,13 @@ abstract public class IntervalBase extends WatchDogItem
 	}
 
 	/**
-	 * Necessary for storage of Intervals and events.
+	 * Necessary for storage of Intervals. The comparison is first based on the
+	 * end dates of the two intervals. If these dates are equal but the
+	 * intervals themselves not, the comparison is based on the start dates. If
+	 * the start dates are also equal, the type of the intervals is used to
+	 * produce the result of this method. This sequence of step is required to
+	 * ensure that intervals are not lost when two or more intervals have the
+	 * same end date.
 	 * 
 	 * If the item to compare to isn't an instance of IntervalBase, the class
 	 * name is used to determine the result of the comparison.
@@ -129,7 +134,14 @@ abstract public class IntervalBase extends WatchDogItem
 	public int compareTo(WatchDogItem comparedItem) {
 		if (comparedItem instanceof IntervalBase) {
 			IntervalBase comparedInterval = (IntervalBase) comparedItem;
-			return getEnd().compareTo(comparedInterval.getEnd());
+			int res = getEnd().compareTo(comparedInterval.getEnd());
+			if (res == 0 && !this.equals(comparedInterval)) {
+				res = getStart().compareTo(comparedInterval.getStart());
+				if (res == 0) {
+					res = getType().compareTo(comparedInterval.getType()) > 0 ? 1 : -1;
+				}
+			}
+			return res;
 		}
 		return this.getClass().getName().compareTo(comparedItem.getClass().getName());
 	}
@@ -145,6 +157,50 @@ abstract public class IntervalBase extends WatchDogItem
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
+	}
+
+	/**
+	 * Checks whether the parameter is an IntervalBase and is equal to this by
+	 * comparing the start dates, end dates, types and session seeds of the two
+	 * intervals.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		IntervalBase other = (IntervalBase) obj;
+		if (end == null) {
+			if (other.end != null) {
+				return false;
+			}
+		} else if (!end.equals(other.end)) {
+			return false;
+		}
+		if (intervalType != other.intervalType) {
+			return false;
+		}
+		if (sessionSeed == null) {
+			if (other.sessionSeed != null) {
+				return false;
+			}
+		} else if (!sessionSeed.equals(other.sessionSeed)) {
+			return false;
+		}
+		if (start == null) {
+			if (other.start != null) {
+				return false;
+			}
+		} else if (!start.equals(other.start)) {
+			return false;
+		}
+		return true;
 	}
 
 }

@@ -1,9 +1,11 @@
 package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 
+import com.intellij.debugger.DebuggerManagerEx;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
@@ -19,7 +21,7 @@ public class IntelliJListener {
     /** The editorObservable */
     private WatchDogEventManager eventManager;
 
-    private String projectName;
+    private Project project;
 
     /** Dummy disposable, needed for EditorFactory listener */
     private Disposable parent;
@@ -31,9 +33,9 @@ public class IntelliJListener {
     private GeneralActivityListener activityListener;
 
     /** Constructor. */
-    public IntelliJListener(WatchDogEventManager eventManager, String projectName) {
+    public IntelliJListener(WatchDogEventManager eventManager, Project project) {
         this.eventManager = eventManager;
-        this.projectName = projectName;
+        this.project = project;
 
         parent = new Disposable() {
             @Override
@@ -42,7 +44,7 @@ public class IntelliJListener {
             }
         };
 
-        editorWindowListener = new EditorWindowListener(eventManager, projectName);
+        editorWindowListener = new EditorWindowListener(eventManager, project.getName());
 
         final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
         connection = messageBus.connect();
@@ -50,16 +52,17 @@ public class IntelliJListener {
 
     /**
      * Adds IntelliJ listeners including already opened windows and
-     * registers shutdown listeners.
+     * registers shutdown and debugger listeners.
      */
     public void attachListeners() {
         eventManager.update(new WatchDogEvent(this, EventType.START_IDE));
 
         connection.subscribe(ApplicationActivationListener.TOPIC,
                 new IntelliJActivationListener(eventManager));
-        activityListener = new GeneralActivityListener(eventManager, projectName);
+        activityListener = new GeneralActivityListener(eventManager, project.getName());
 
         EditorFactory.getInstance().addEditorFactoryListener(editorWindowListener, parent);
+        DebuggerManagerEx.getInstanceEx(project).addDebuggerManagerListener(new DebuggerListener(eventManager));
     }
 
     public void removeListeners() {

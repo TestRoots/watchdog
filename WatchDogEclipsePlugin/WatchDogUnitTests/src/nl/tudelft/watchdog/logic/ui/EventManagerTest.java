@@ -15,6 +15,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
@@ -291,6 +292,14 @@ public class EventManagerTest {
 
 	}
 	
+	@Test
+	public void testCreateDebugInterval() {
+		eventManager.update(createMockEvent(EventType.START_DEBUG));
+		Mockito.verify(intervalManager).addInterval(Mockito.isA(DebugInterval.class));
+		eventManager.update(createMockEvent(EventType.END_DEBUG));
+		Mockito.verify(intervalManager, Mockito.atLeastOnce()).closeInterval(
+				Mockito.isA(DebugInterval.class), Mockito.isA(Date.class));
+	}
 
 	private WatchDogEvent createMockEvent(EventType eventType) {
 		return new WatchDogEvent(mockedTextEditor, eventType);

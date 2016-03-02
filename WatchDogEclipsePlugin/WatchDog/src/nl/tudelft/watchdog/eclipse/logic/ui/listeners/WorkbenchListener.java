@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -40,7 +41,7 @@ public class WorkbenchListener {
 
 	/**
 	 * Adds listeners to Workbench including already opened windows and
-	 * registers shutdown listeners.
+	 * registers shutdown and debugger listeners.
 	 */
 	public void attachListeners() {
 		watchDogEventManager
@@ -52,6 +53,8 @@ public class WorkbenchListener {
 		new GeneralActivityListener(watchDogEventManager,
 				workbench.getDisplay());
 		addShutdownListeners();
+		DebugPlugin.getDefault().addDebugEventListener(
+				new DebuggerListener(watchDogEventManager));
 	}
 
 	/** The shutdown listeners, executed when Eclipse is shutdown. */
@@ -63,8 +66,7 @@ public class WorkbenchListener {
 			@Override
 			public boolean preShutdown(final IWorkbench workbench,
 					final boolean forced) {
-				initializationManager = InitializationManager
-						.getInstance();
+				initializationManager = InitializationManager.getInstance();
 				watchDogEventManager.update(
 						new WatchDogEvent(workbench, EventType.END_IDE));
 				initializationManager.getIntervalManager().closeAllIntervals();

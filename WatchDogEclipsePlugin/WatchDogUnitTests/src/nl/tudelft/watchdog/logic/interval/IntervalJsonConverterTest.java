@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import nl.tudelft.watchdog.core.logic.document.Document;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
@@ -24,7 +25,7 @@ import nl.tudelft.watchdog.logic.network.JsonConverterTestBase;
 /**
  * Test the transfer from {@link IntervalBase}s to JSon.
  */
-public class IntervalJsonConverterTest extends JsonConverterTestBase{
+public class IntervalJsonConverterTest extends JsonConverterTestBase {
 
 	private JsonTransferer transferer = new JsonTransferer();
 
@@ -151,6 +152,15 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase{
 		ArrayList<WatchDogItem> intervals = createSampleIntervals(interval);
 
 		assertEquals("[{\"it\":\"eo\",\"ts\":1,\"te\":2,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
+				transferer.toJson(intervals));
+	}
+
+	@Test
+	public void testJsonDebugIntervalRepresentation() {
+		IntervalBase interval = new DebugInterval(new Date());
+		ArrayList<WatchDogItem> intervals = createSampleIntervals(interval);
+
+		assertEquals("[{\"it\":\"db\",\"ts\":1,\"te\":2,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
 				transferer.toJson(intervals));
 	}
 

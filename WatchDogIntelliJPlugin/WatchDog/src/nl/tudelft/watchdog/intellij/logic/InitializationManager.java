@@ -27,9 +27,9 @@ public class InitializationManager {
     private static final int USER_ACTIVITY_TIMEOUT = 16000;
 
     /**
-     * The singleton instance of the interval manager.
+     * The map containing the InitializationManager for each open IntelliJ project.
      */
-    private static volatile HashMap<String, InitializationManager> instances = new HashMap<String, InitializationManager>();
+    private static volatile HashMap<String, InitializationManager> initializationManagers = new HashMap<String, InitializationManager>();
 
     private final Persister toTransferPersister;
     private final Persister statisticsPersister;
@@ -68,7 +68,7 @@ public class InitializationManager {
         transferManager = new TransferManagerBase(toTransferPersister, WatchDogUtils.getProjectName());
 
         // Initialize listeners
-        intelliJListener = new IntelliJListener(watchDogEventManager, WatchDogUtils.getProjectName());
+        intelliJListener = new IntelliJListener(watchDogEventManager, project);
         intelliJListener.attachListeners();
         XDebuggerManager.getInstance(project).getBreakpointManager().addBreakpointListener(new BreakpointListener(eventManager));
     }
@@ -78,10 +78,10 @@ public class InitializationManager {
      * {@link InitializationManager} instance.
      */
     public static InitializationManager getInstance(Project project) {
-        InitializationManager instance = instances.get(project.getName());
+        InitializationManager instance = initializationManagers.get(project.getName());
         if (instance == null) {
             instance = new InitializationManager(project);
-            instances.put(project.getName(), instance);
+            initializationManagers.put(project.getName(), instance);
         }
         return instance;
     }
@@ -108,7 +108,7 @@ public class InitializationManager {
         toTransferPersister.closeDatabase();
         statisticsPersister.closeDatabase();
         intelliJListener.removeListeners();
-        instances.remove(projectName);
+        initializationManagers.remove(projectName);
     }
 
 

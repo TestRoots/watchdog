@@ -25,7 +25,7 @@ public class WatchDogGlobals {
 	public static boolean lastTransactionFailed = false;
 
 	/** The client's version, as set in pom.xml. */
-	public final static String CLIENT_VERSION = "1.6.0";
+	public final static String CLIENT_VERSION = "1.7.0";
 
 	/** The host ide this plugin is running on. */
 	public static IDE hostIDE;
@@ -63,6 +63,10 @@ public class WatchDogGlobals {
 
 		/** IntelliJ-IDE */
 		@SerializedName("ij")
-		INTELLIJ
+		INTELLIJ,
+
+		/** Android Studio (IntelliJ-IDE based) */
+		@SerializedName("as")
+		ANDROIDSTUDIO
 	}
 }

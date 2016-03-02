@@ -5,6 +5,7 @@ import java.util.Date;
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.document.EditorWrapperBase;
 import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEActiveInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
@@ -113,7 +114,7 @@ public abstract class WatchDogEventManagerBase {
 			Object editor = event.getSource();
 
 			readingInactivityNotifier.cancelTimer(forcedDate);
-			if (intervalIsOfType(editorInterval, IntervalType.TYPING)
+			if (intervalExistsAndIsOfType(editorInterval, IntervalType.TYPING)
 					&& !isDifferentEditor(editorInterval, editor)) {
 				return;
 			}
@@ -141,7 +142,7 @@ public abstract class WatchDogEventManagerBase {
 			editor = event.getSource();
 
 			if (isClosed(editorInterval)
-					|| !intervalIsOfType(editorInterval, IntervalType.TYPING)
+					|| !intervalExistsAndIsOfType(editorInterval, IntervalType.TYPING)
 					|| isDifferentEditor(editorInterval, editor)) {
 				update(new WatchDogEvent(event.getSource(),
 						EventType.START_EDIT));
@@ -194,21 +195,21 @@ public abstract class WatchDogEventManagerBase {
 
 		case TYPING_INACTIVITY:
 			editorInterval = intervalManager.getEditorInterval();
-			if (intervalIsOfType(editorInterval, IntervalType.TYPING)) {
+			if (intervalExistsAndIsOfType(editorInterval, IntervalType.TYPING)) {
 				intervalManager.closeInterval(editorInterval, forcedDate);
 			}
 			break;
 
 		case READING_INACTIVITY:
 			editorInterval = intervalManager.getEditorInterval();
-			if (intervalIsOfType(editorInterval, IntervalType.READING)) {
+			if (intervalExistsAndIsOfType(editorInterval, IntervalType.READING)) {
 				intervalManager.closeInterval(editorInterval, forcedDate);
 			}
 			break;
 
 		case START_WATCHDOGVIEW:
 			interval = intervalManager.getInterval(WatchDogViewInterval.class);
-			if (!intervalIsOfType(interval, IntervalType.WATCHDOGVIEW)) {
+			if (!intervalExistsAndIsOfType(interval, IntervalType.WATCHDOGVIEW)) {
 				intervalManager
 						.addInterval(new WatchDogViewInterval(forcedDate));
 			}
@@ -217,7 +218,22 @@ public abstract class WatchDogEventManagerBase {
 
 		case END_WATCHDOGVIEW:
 			interval = intervalManager.getInterval(WatchDogViewInterval.class);
-			if (intervalIsOfType(interval, IntervalType.WATCHDOGVIEW)) {
+			if (intervalExistsAndIsOfType(interval, IntervalType.WATCHDOGVIEW)) {
+				intervalManager.closeInterval(interval, forcedDate);
+			}
+			break;
+			
+		case START_DEBUG:
+			interval = intervalManager.getInterval(DebugInterval.class);
+			if(!intervalExistsAndIsOfType(interval, IntervalType.DEBUG)) {
+				intervalManager.addInterval(new DebugInterval(forcedDate));
+			}
+			userInactivityNotifier.trigger(forcedDate);
+			break;
+			
+		case END_DEBUG:
+			interval = intervalManager.getInterval(DebugInterval.class);
+			if(intervalExistsAndIsOfType(interval, IntervalType.DEBUG)) {
 				intervalManager.closeInterval(interval, forcedDate);
 			}
 			break;
@@ -254,7 +270,7 @@ public abstract class WatchDogEventManagerBase {
 		return editorInterval.getEditorWrapper().getEditor() != editor;
 	}
 	
-	private boolean intervalIsOfType(IntervalBase interval, IntervalType type) {
+	private boolean intervalExistsAndIsOfType(IntervalBase interval, IntervalType type) {
 		return interval != null && interval.getType() == type;
 	}
 

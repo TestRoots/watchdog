@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.intellij;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.actions.ViewToolWindowButtonsAction;
 import com.intellij.ide.plugins.PluginManager;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
@@ -57,7 +58,14 @@ public class WatchDogStartUp implements ProjectComponent {
         WatchDogUtils.setActiveProject(project);
         WatchDogGlobals.setLogDirectory(PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog")).getPath().toString() + File.separator + "logs" + File.separator);
         WatchDogGlobals.setPreferences(Preferences.getInstance());
-        WatchDogGlobals.hostIDE = WatchDogGlobals.IDE.INTELLIJ;
+
+        String platform = ApplicationInfo.getInstance().getVersionName();
+        if (platform.equals("Android Studio")) {
+            WatchDogGlobals.hostIDE = WatchDogGlobals.IDE.ANDROIDSTUDIO;
+
+        } else {
+            WatchDogGlobals.hostIDE = WatchDogGlobals.IDE.INTELLIJ;
+        }
     }
 
     public void disposeComponent() {
@@ -95,11 +103,11 @@ public class WatchDogStartUp implements ProjectComponent {
             return;
         }
 
-        InitializationManager intervalInitializationManager = InitializationManager.getInstance(project);
-        intervalInitializationManager.getWatchDogEventManager().update(new WatchDogEvent(this, WatchDogEvent.EventType.END_IDE));
-        intervalInitializationManager.getIntervalManager().closeAllIntervals();
-        intervalInitializationManager.getTransferManager().sendItemsImmediately();
-        intervalInitializationManager.shutdown(project.getName());
+        InitializationManager initializationManager = InitializationManager.getInstance(project);
+        initializationManager.getWatchDogEventManager().update(new WatchDogEvent(this, WatchDogEvent.EventType.END_IDE));
+        initializationManager.getIntervalManager().closeAllIntervals();
+        initializationManager.getTransferManager().sendItemsImmediately();
+        initializationManager.shutdown(project.getName());
 
         JFrame frame = WindowManager.getInstance().getFrame(project);
         if (frame != null) {

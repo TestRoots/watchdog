@@ -37,6 +37,10 @@ public enum IntervalType {
 
 	/** The WatchDogView is open. */
 	@SerializedName("wo")
-	WATCHDOGVIEW;
+	WATCHDOGVIEW,
+	
+	/** A debug interval. */
+	@SerializedName("db")
+	DEBUG;
 
 }

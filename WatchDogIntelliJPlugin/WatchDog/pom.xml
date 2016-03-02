@@ -7,7 +7,7 @@
 		<relativePath>../pom.xml</relativePath>
 		<groupId>nl.tudelft</groupId>
 		<artifactId>parent</artifactId>
-		<version>1.6.0</version>
+		<version>1.7.0</version>
 	</parent>
 
 	<artifactId>nl.tudelft.WatchDog</artifactId>
@@ -26,7 +26,7 @@
 		<dependency>
 			<groupId>nl.tudelft</groupId>
 			<artifactId>nl.tudelft.WatchDogCore</artifactId>
-			<version>1.6.0</version>
+			<version>1.7.0</version>
 			<scope>provided</scope>
 		</dependency>
 
