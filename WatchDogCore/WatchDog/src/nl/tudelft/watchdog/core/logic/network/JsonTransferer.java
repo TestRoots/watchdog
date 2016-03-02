@@ -13,6 +13,8 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
 
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
+import nl.tudelft.watchdog.core.logic.network.TransferManagerBase.ItemType;
+import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 import nl.tudelft.watchdog.core.ui.wizards.Project;
 import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
@@ -21,9 +23,9 @@ import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
 /**
  * Transmits WatchDog data objects in a Json format to the WatchDog server.
  */
-public class JsonTransferer<T extends WatchDogTransferable> {
+public class JsonTransferer {
 
-	/** The {@link GsonBuilder} for building the T's. */
+	/** The {@link GsonBuilder} for building the items. */
 	private GsonBuilder gsonBuilder = new GsonBuilder();
 
 	/** The Gson object for object serialization to Json. */
@@ -38,10 +40,11 @@ public class JsonTransferer<T extends WatchDogTransferable> {
 	}
 
 	/**
-	 * Sends the recorded T's to the server. Returns whether or not the transfer
+	 * Sends the recorded WD items to the server. Returns whether or not the transfer
 	 * was successful or a network error occurred.
 	 */
-	public Connection sendItems(List<T> recordedItems, String projectName) {
+	public Connection sendItems(List<WatchDogItem> recordedItems, String projectName,
+			ItemType recordedItemsType) {
 		String userId = WatchDogGlobals.getPreferences().getUserId();
 		String projectId = WatchDogGlobals.getPreferences().getOrCreateProjectSetting(projectName).projectId;
 
@@ -53,7 +56,7 @@ public class JsonTransferer<T extends WatchDogTransferable> {
 
 		String serializedItems = toJson(recordedItems);
 		try {
-			NetworkUtils.transferJsonAndGetResponse(getPostURL(userId, projectId), serializedItems);
+			NetworkUtils.transferJsonAndGetResponse(getPostURL(userId, projectId, recordedItemsType), serializedItems);
 			return Connection.SUCCESSFUL;
 		} catch (ServerReturnCodeException exception) {
 			return Connection.UNSUCCESSFUL;
@@ -115,7 +118,7 @@ public class JsonTransferer<T extends WatchDogTransferable> {
 	}
 
 	/** Converts the items to Json. */
-	public String toJson(List<T> recordedItems) {
+	public String toJson(List<WatchDogItem> recordedItems) {
 		try {
 			return gson.toJson(recordedItems);
 		} catch (RuntimeException e) {
@@ -126,10 +129,15 @@ public class JsonTransferer<T extends WatchDogTransferable> {
 	/**
 	 * @return the POST URL to be used to send the JSON data to.
 	 */
-	protected String getPostURL(String userId, String projectId) {
-		// Note: This is only a dummy implementation, subclasses should override
-		// this method to return a correct URL.
-		return null;
+	private String getPostURL(String userId, String projectId, ItemType itemsToTransferType) {
+		switch (itemsToTransferType) {
+		case EVENT:
+			return NetworkUtils.buildEventsPostURL(userId, projectId);
+		case INTERVAL:
+			return NetworkUtils.buildIntervalsPostURL(userId, projectId);
+		default:
+			return null;
+		}
 	}
 
 	/** A JSon Serializer for Date. */

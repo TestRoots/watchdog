@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import nl.tudelft.watchdog.core.logic.event.EventPersisterBase;
+import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 
 public class EventPersisterInvalidDatabaseTest extends EventPersisterTestBase {
 
@@ -31,7 +31,7 @@ public class EventPersisterInvalidDatabaseTest extends EventPersisterTestBase {
 	 */
 	@Before
 	public void setUpBeforeMethod() {
-		persister = new EventPersisterBase(copiedDatabase);
+		persister = new PersisterBase(copiedDatabase);
 	}
 
 	@Test

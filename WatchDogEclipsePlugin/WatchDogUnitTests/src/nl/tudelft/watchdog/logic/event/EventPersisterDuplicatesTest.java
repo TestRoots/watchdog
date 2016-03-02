@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.logic.event;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,13 +10,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointType;
-import nl.tudelft.watchdog.core.logic.event.EventPersisterBase;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointAddEvent;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointRemoveEvent;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
+import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 
 /**
- * Test class that tests the {@link EventPersisterBase} in case the same or
+ * Test class that tests the {@link PersisterBase} in case the same or
  * similar events are saved to ensure each different event is added, but
  * duplicate events are not.
  */
@@ -33,8 +34,11 @@ public class EventPersisterDuplicatesTest extends EventPersisterTestBase {
 	public void test1AddEvent() {
 		event = createEvent();
 		persister.save(event);
+		
+		WatchDogItem item = new ArrayList<>(persister.readItems()).get(0);
+		assertTrue(item instanceof EventBase);
 
-		EventBase savedEvent = new ArrayList<>(persister.readItems()).get(0);
+		EventBase savedEvent = (EventBase) item;
 		assertEquals(event.getType(), savedEvent.getType());
 		assertEquals(event.getTimestamp(), savedEvent.getTimestamp());
 	}

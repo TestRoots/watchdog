@@ -15,7 +15,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
-import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
@@ -23,6 +22,7 @@ import nl.tudelft.watchdog.core.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.UserActiveInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.WatchDogViewInterval;
+import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
@@ -61,8 +61,8 @@ public class EventManagerTest {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		IDEIntervalManagerBase intervalManagerReal = new IntervalManager(
-				Mockito.mock(IntervalPersisterBase.class),
-				Mockito.mock(IntervalPersisterBase.class));
+				Mockito.mock(PersisterBase.class),
+				Mockito.mock(PersisterBase.class));
 		intervalManager = Mockito.spy(intervalManagerReal);
 		mockedTextEditor = Mockito.mock(ITextEditor.class);
 		eventManager = new WatchDogEventManager(intervalManager, USER_ACTIVITY_TIMEOUT);

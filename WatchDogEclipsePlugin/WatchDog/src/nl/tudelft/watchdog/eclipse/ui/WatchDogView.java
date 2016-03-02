@@ -3,7 +3,7 @@ package nl.tudelft.watchdog.eclipse.ui;
 import java.awt.Color;
 
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
-import nl.tudelft.watchdog.eclipse.logic.IntervalInitializationManager;
+import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase.StatisticsTimePeriod;
 import nl.tudelft.watchdog.eclipse.logic.ui.listeners.WatchDogViewListener;
@@ -197,7 +197,7 @@ public class WatchDogView extends ViewPart {
 	}
 
 	private void calculateTimes() {
-		intervalStatistics = new IntervalStatistics(IntervalInitializationManager
+		intervalStatistics = new IntervalStatistics(InitializationManager
 				.getInstance().getIntervalManager(), selectedTimePeriod);
 
 		eclipseOpen = intervalStatistics

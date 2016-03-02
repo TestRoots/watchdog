@@ -5,9 +5,9 @@ import java.util.Date;
 
 import com.google.gson.annotations.SerializedName;
 
-import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
+import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 
-public abstract class EventBase extends WatchDogTransferable implements Serializable, Comparable<EventBase> {
+public abstract class EventBase extends WatchDogItem implements Serializable, Comparable<WatchDogItem> {
 
 	/** Serial ID. */
 	private static final long serialVersionUID = 1L;
@@ -56,18 +56,25 @@ public abstract class EventBase extends WatchDogTransferable implements Serializ
 	}
 
 	/**
-	 * Necessary for the storage of events. The comparison is first based on the
-	 * timestamps of the two events. If these dates are equal but the events
-	 * themselves are not, the type of the events is used to produce the result
-	 * of this method. These two steps are required to ensure that events are
-	 * not lost when two or more events have the same timestamp.
+	 * Necessary for the storage of events and intervals. The comparison is
+	 * first based on the timestamps of the two events. If these dates are equal
+	 * but the events themselves are not, the type of the events is used to
+	 * produce the result of this method. These two steps are required to ensure
+	 * that events are not lost when two or more events have the same timestamp.
+	 * 
+	 * If the item to compare to isn't an instance of EventBase, the class name
+	 * is used to determine the result of the comparison.
 	 */
-	public int compareTo(EventBase comparedEvent) {
-		int res = getTimestamp().compareTo(comparedEvent.getTimestamp());
-		if (res == 0 && !this.equals(comparedEvent)) {
-			res = getType().compareTo(comparedEvent.getType()) > 0 ? 1 : -1;
+	public int compareTo(WatchDogItem comparedItem) {
+		if (comparedItem instanceof EventBase) {
+			EventBase comparedEvent = (EventBase) comparedItem;
+			int res = getTimestamp().compareTo(comparedEvent.getTimestamp());
+			if (res == 0 && !this.equals(comparedEvent)) {
+				res = getType().compareTo(comparedEvent.getType()) > 0 ? 1 : -1;
+			}
+			return res;
 		}
-		return res;
+		return this.getClass().getName().compareTo(comparedItem.getClass().getName());
 	}
 
 	/**

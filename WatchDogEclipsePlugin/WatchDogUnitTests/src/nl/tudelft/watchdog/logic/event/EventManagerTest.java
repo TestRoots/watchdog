@@ -13,10 +13,10 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointType;
 import nl.tudelft.watchdog.core.logic.event.EventManager;
-import nl.tudelft.watchdog.core.logic.event.EventPersisterBase;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointAddEvent;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointChangeEvent;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointRemoveEvent;
+import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 
@@ -29,8 +29,8 @@ import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 public class EventManagerTest {
 
 	private EventManager eventManager;
-	private EventPersisterBase eventsToTransferPersister;
-	private EventPersisterBase eventsStatisticsPersister;
+	private PersisterBase eventsToTransferPersister;
+	private PersisterBase eventsStatisticsPersister;
 
 	@Mock
 	Preferences mockedPreferences;
@@ -40,8 +40,8 @@ public class EventManagerTest {
 
 	@Before
 	public void setup() {
-		eventsToTransferPersister = Mockito.mock(EventPersisterBase.class);
-		eventsStatisticsPersister = Mockito.mock(EventPersisterBase.class);
+		eventsToTransferPersister = Mockito.mock(PersisterBase.class);
+		eventsStatisticsPersister = Mockito.mock(PersisterBase.class);
 		eventManager = new EventManager(eventsToTransferPersister, eventsStatisticsPersister);
 
 		PowerMockito.mockStatic(WatchDogGlobals.class);

@@ -3,17 +3,17 @@ package nl.tudelft.watchdog.core.logic.interval.intervaltypes;
 import java.io.Serializable;
 import java.util.Date;
 
-import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
-
 import org.joda.time.Duration;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormat;
 
 import com.google.gson.annotations.SerializedName;
 
+import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
+
 /** The interval base. */
-abstract public class IntervalBase extends WatchDogTransferable implements
-		Serializable, Comparable<IntervalBase>, Cloneable {
+abstract public class IntervalBase extends WatchDogItem
+		implements Serializable, Comparable<WatchDogItem>, Cloneable {
 
 	/** The version id of this class. */
 	private static final long serialVersionUID = 2L;
@@ -120,9 +120,18 @@ abstract public class IntervalBase extends WatchDogTransferable implements
 		return intervalType;
 	}
 
-	/** Necessary for storage of Intervals. */
-	public int compareTo(IntervalBase comparedInterval) {
-		return getEnd().compareTo(comparedInterval.getEnd());
+	/**
+	 * Necessary for storage of Intervals and events.
+	 * 
+	 * If the item to compare to isn't an instance of IntervalBase, the class
+	 * name is used to determine the result of the comparison.
+	 */
+	public int compareTo(WatchDogItem comparedItem) {
+		if (comparedItem instanceof IntervalBase) {
+			IntervalBase comparedInterval = (IntervalBase) comparedItem;
+			return getEnd().compareTo(comparedInterval.getEnd());
+		}
+		return this.getClass().getName().compareTo(comparedItem.getClass().getName());
 	}
 
 	/**

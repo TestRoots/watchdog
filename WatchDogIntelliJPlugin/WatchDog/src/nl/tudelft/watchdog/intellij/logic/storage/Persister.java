@@ -1,31 +1,29 @@
-package nl.tudelft.watchdog.intellij.logic.event;
+package nl.tudelft.watchdog.intellij.logic.storage;
 
-import nl.tudelft.watchdog.core.logic.event.EventPersisterBase;
+import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.intellij.WatchDogStartUp;
 
 import java.io.File;
 
 /**
- * {@inheritDoc} IntelliJ's version of EventPersister which handles ClassLoaders.
+ * {@inheritDoc} IntelliJ's version of {@link PersisterBase} which handles ClassLoaders.
  */
-public class EventPersister extends EventPersisterBase {
+public class Persister extends PersisterBase {
 
     private ClassLoader oldClassLoader = null;
 
     /**
      * {@inheritDoc}
      */
-    public EventPersister(File file) {
+    public Persister(final File file) {
         super(file);
     }
 
-    @Override
     protected void replaceClassLoader() {
         oldClassLoader = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(WatchDogStartUp.class.getClassLoader());
     }
 
-    @Override
     protected void resetOldClassLoader() {
         Thread.currentThread().setContextClassLoader(oldClassLoader);
     }

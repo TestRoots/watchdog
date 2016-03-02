@@ -10,7 +10,6 @@ import org.eclipse.swt.widgets.Text;
 
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
-import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
 import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
@@ -131,8 +130,7 @@ public class UserRegistrationPage extends RegistrationEndingPageBase {
 		user.operatingSystem = Platform.getOS();
 
 		try {
-			id = new JsonTransferer<WatchDogTransferable>()
-					.registerNewUser(user);
+			id = new JsonTransferer().registerNewUser(user);
 		} catch (ServerCommunicationException exception) {
 			successfulRegistration = false;
 			messageTitle = "Problem creating new user!";

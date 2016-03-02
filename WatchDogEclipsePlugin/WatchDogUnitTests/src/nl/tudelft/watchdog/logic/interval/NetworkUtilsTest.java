@@ -9,11 +9,12 @@ import java.util.Date;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import nl.tudelft.watchdog.core.logic.interval.IntervalJsonTransferer;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
+import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.core.logic.network.ServerReturnCodeException;
 
@@ -46,9 +47,9 @@ public class NetworkUtilsTest {
 	@Test
 	@Ignore
 	public void testIntervalTransfer() {
-		IntervalJsonTransferer it = new IntervalJsonTransferer();
+		JsonTransferer it = new JsonTransferer();
 		IntervalBase interval = new IDEOpenInterval(new Date());
-		ArrayList<IntervalBase> intervals = createSampleIntervals(interval);
+		ArrayList<WatchDogItem> intervals = createSampleIntervals(interval);
 		String json = it.toJson(intervals);
 
 		try {
@@ -59,8 +60,8 @@ public class NetworkUtilsTest {
 		}
 	}
 
-	private ArrayList<IntervalBase> createSampleIntervals(IntervalBase interval) {
-		ArrayList<IntervalBase> intervals = new ArrayList<IntervalBase>();
+	private ArrayList<WatchDogItem> createSampleIntervals(IntervalBase interval) {
+		ArrayList<WatchDogItem> intervals = new ArrayList<WatchDogItem>();
 		interval.setStartTime(new Date(1));
 		interval.setEndTime(new Date(2));
 		intervals.add(interval);

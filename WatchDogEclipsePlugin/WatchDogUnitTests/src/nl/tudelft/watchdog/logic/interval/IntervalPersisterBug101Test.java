@@ -1,10 +1,11 @@
 package nl.tudelft.watchdog.logic.interval;
 
 import static org.junit.Assert.assertEquals;
-import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 
 public class IntervalPersisterBug101Test extends IntervalPersisterTestBase {
 
@@ -16,7 +17,7 @@ public class IntervalPersisterBug101Test extends IntervalPersisterTestBase {
 	
 	@Test
 	public void test1IfDatabaseStartsUpFine() {
-		persister = new IntervalPersisterBase(copiedDatabase);
+		persister = new PersisterBase(copiedDatabase);
 	}
 
 	@Test

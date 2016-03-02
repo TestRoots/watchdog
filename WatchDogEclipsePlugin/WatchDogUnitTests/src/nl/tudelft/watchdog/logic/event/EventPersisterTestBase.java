@@ -4,19 +4,18 @@ import java.io.IOException;
 
 import org.junit.AfterClass;
 
-import nl.tudelft.watchdog.core.logic.event.EventPersisterBase;
+import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.logic.storage.PersisterTestBase;
 
 public abstract class EventPersisterTestBase extends PersisterTestBase {
-	protected static EventPersisterBase persister;
+	protected static PersisterBase persister;
 
 	/**
-	 * Initializes the variables required for the tests and initializes the
-	 * persister as an EventPersister.
+	 * Initializes the variables required for the tests.
 	 */
 	protected static void setUpSuperClass() {
 		PersisterTestBase.setUpSuperClass("EventPersisterTests");
-		persister = new EventPersisterBase(copiedDatabase);
+		persister = new PersisterBase(copiedDatabase);
 	}
 
 	@AfterClass

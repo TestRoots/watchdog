@@ -1,8 +1,8 @@
 package nl.tudelft.watchdog.intellij.logic.interval;
 
 import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
-import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
+import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.intellij.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.intellij.logic.document.EditorWrapper;
 
@@ -14,8 +14,8 @@ public class IntervalManager extends IDEIntervalManagerBase {
     /**
      * Constructor.
      */
-    public IntervalManager(IntervalPersisterBase intervalsToTransferPersister,
-                           IntervalPersisterBase intervalsStatisticsPersister) {
+    public IntervalManager(PersisterBase intervalsToTransferPersister,
+                           PersisterBase intervalsStatisticsPersister) {
         super(intervalsToTransferPersister, intervalsStatisticsPersister);
     }
 
