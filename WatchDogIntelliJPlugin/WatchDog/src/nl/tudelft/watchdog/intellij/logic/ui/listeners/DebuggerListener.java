@@ -3,16 +3,19 @@ package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 import com.intellij.debugger.impl.DebuggerManagerListener;
 import com.intellij.debugger.impl.DebuggerSession;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.core.util.WatchDogLogger;
-import nl.tudelft.watchdog.intellij.logic.ui.EventManager;
+import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
 
-/** Listener for debug events. */
+/**
+ * Listener for debug events.
+ */
 public class DebuggerListener implements DebuggerManagerListener {
 
-    private final EventManager eventManager;
+    private final WatchDogEventManager eventManager;
 
-    /** Constructor. */
-    public DebuggerListener(EventManager eventManager) {
+    /**
+     * Constructor.
+     */
+    public DebuggerListener(WatchDogEventManager eventManager) {
         this.eventManager = eventManager;
     }
 

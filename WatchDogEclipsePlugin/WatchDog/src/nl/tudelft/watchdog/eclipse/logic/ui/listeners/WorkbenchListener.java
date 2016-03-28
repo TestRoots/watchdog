@@ -9,8 +9,8 @@ import org.eclipse.ui.PlatformUI;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
-import nl.tudelft.watchdog.eclipse.logic.interval.IntervalTransferManager;
-import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
+import nl.tudelft.watchdog.eclipse.logic.network.TransferManager;
+import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 
 /**
  * Sets up the listeners for eclipse UI events and registers the shutdown
@@ -18,10 +18,10 @@ import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
  */
 public class WorkbenchListener {
 	/** The serialization manager. */
-	private IntervalTransferManager intervalTransferManager;
+	private TransferManager transferManager;
 
 	/** The editorObservable. */
-	private EventManager eventManager;
+	private WatchDogEventManager watchDogEventManager;
 
 	/**
 	 * The window listener. An Eclipse window is the whole Eclipse application
@@ -32,10 +32,10 @@ public class WorkbenchListener {
 	private IWorkbench workbench;
 
 	/** Constructor. */
-	public WorkbenchListener(EventManager userActionManager,
-			IntervalTransferManager intervalTransferManager) {
-		this.eventManager = userActionManager;
-		this.intervalTransferManager = intervalTransferManager;
+	public WorkbenchListener(WatchDogEventManager userActionManager,
+			TransferManager transferManager) {
+		this.watchDogEventManager = userActionManager;
+		this.transferManager = transferManager;
 		this.workbench = PlatformUI.getWorkbench();
 	}
 
@@ -44,39 +44,39 @@ public class WorkbenchListener {
 	 * registers shutdown and debugger listeners.
 	 */
 	public void attachListeners() {
-		eventManager.update(new WatchDogEvent(workbench, EventType.START_IDE));
-		windowListener = new WindowListener(eventManager);
+		watchDogEventManager
+				.update(new WatchDogEvent(workbench, EventType.START_IDE));
+		windowListener = new WindowListener(watchDogEventManager);
 		workbench.addWindowListener(windowListener);
 		addListenersToAlreadyOpenWindows();
-		new JUnitListener(eventManager);
-		new GeneralActivityListener(eventManager, workbench.getDisplay());
+		new JUnitListener(watchDogEventManager);
+		new GeneralActivityListener(watchDogEventManager,
+				workbench.getDisplay());
 		addShutdownListeners();
-		DebugPlugin.getDefault()
-				.addDebugEventListener(new DebuggerListener(eventManager));
+		DebugPlugin.getDefault().addDebugEventListener(
+				new DebuggerListener(watchDogEventManager));
 	}
 
 	/** The shutdown listeners, executed when Eclipse is shutdown. */
 	private void addShutdownListeners() {
 		workbench.addWorkbenchListener(new IWorkbenchListener() {
 
-			private InitializationManager intervalInitializationManager;
+			private InitializationManager initializationManager;
 
 			@Override
 			public boolean preShutdown(final IWorkbench workbench,
 					final boolean forced) {
-				intervalInitializationManager = InitializationManager
-						.getInstance();
-				eventManager.update(
+				initializationManager = InitializationManager.getInstance();
+				watchDogEventManager.update(
 						new WatchDogEvent(workbench, EventType.END_IDE));
-				intervalInitializationManager.getIntervalManager()
-						.closeAllIntervals();
-				intervalTransferManager.sendIntervalsImmediately();
+				initializationManager.getIntervalManager().closeAllIntervals();
+				transferManager.sendItemsImmediately();
 				return true;
 			}
 
 			@Override
 			public void postShutdown(final IWorkbench workbench) {
-				intervalInitializationManager.shutdown();
+				initializationManager.shutdown();
 			}
 		});
 	}

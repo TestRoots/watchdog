@@ -3,11 +3,14 @@ package nl.tudelft.watchdog.intellij.logic;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
-import nl.tudelft.watchdog.core.logic.interval.IntervalTransferManagerBase;
+import com.intellij.xdebugger.XDebuggerManager;
+import nl.tudelft.watchdog.core.logic.event.EventManager;
+import nl.tudelft.watchdog.core.logic.network.TransferManagerBase;
 import nl.tudelft.watchdog.core.logic.ui.TimeSynchronityChecker;
+import nl.tudelft.watchdog.intellij.logic.event.listeners.BreakpointListener;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.intellij.logic.interval.IntervalPersister;
-import nl.tudelft.watchdog.intellij.logic.ui.EventManager;
+import nl.tudelft.watchdog.intellij.logic.storage.Persister;
+import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.intellij.logic.ui.listeners.IntelliJListener;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
@@ -15,9 +18,9 @@ import java.io.File;
 import java.util.HashMap;
 
 /**
- * Manages the setup process of the interval recording infrastructure. Is a
+ * Manages the setup process of the interval and event recording infrastructure. Is a
  * singleton and contains UI code. Guarantees that there is only one properly
- * initialized {@link IntervalManager} that does the real work.
+ * initialized {@link IntervalManager} and {@link EventManager} that do the real work.
  */
 public class InitializationManager {
 
@@ -28,43 +31,46 @@ public class InitializationManager {
      */
     private static volatile HashMap<String, InitializationManager> initializationManagers = new HashMap<String, InitializationManager>();
 
+    private final Persister toTransferPersister;
+    private final Persister statisticsPersister;
+
+    private final WatchDogEventManager watchDogEventManager;
+    private final EventManager eventManager;
     private final IntervalManager intervalManager;
 
-    private final IntervalPersister intervalsToTransferPersister;
-
-    private final IntervalPersister intervalsStatisticsPersister;
-
-    private final IntervalTransferManagerBase transferManager;
-
-    private final EventManager eventManager;
-
     private final IntelliJListener intelliJListener;
+    private final TransferManagerBase transferManager;
 
     /**
      * Private constructor.
      */
     private InitializationManager(Project project) {
+        // Initialize persisters
         // Double getPath() because they are different methods on different objects
         File baseFolder = new File(PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog")).getPath().getPath());
 
-        File toTransferDatabaseFile = new File(baseFolder, WatchDogUtils.getProjectName() + "intervals.mapdb");
-        File statisticsDatabaseFile = new File(baseFolder, WatchDogUtils.getProjectName() + "intervalsStatistics.mapdb");
+        File toTransferDatabaseFile = new File(baseFolder, WatchDogUtils.getProjectName() + "watchdog.mapdb");
+        File statisticsDatabaseFile = new File(baseFolder, WatchDogUtils.getProjectName() + "watchdogStatistics.mapdb");
 
-        intervalsToTransferPersister = new IntervalPersister(
+        toTransferPersister = new Persister(
                 toTransferDatabaseFile);
-        intervalsStatisticsPersister = new IntervalPersister(
+        statisticsPersister = new Persister(
                 statisticsDatabaseFile);
 
-        intervalManager = new IntervalManager(intervalsToTransferPersister,
-                intervalsStatisticsPersister);
-        eventManager = new EventManager(intervalManager,
+        // Initialize managers
+        intervalManager = new IntervalManager(toTransferPersister,
+                statisticsPersister);
+        eventManager = new EventManager(toTransferPersister, statisticsPersister);
+        eventManager.setSessionSeed(intervalManager.getSessionSeed());
+        watchDogEventManager = new WatchDogEventManager(intervalManager,
                 USER_ACTIVITY_TIMEOUT);
-        new TimeSynchronityChecker(intervalManager, eventManager);
+        new TimeSynchronityChecker(intervalManager, watchDogEventManager);
+        transferManager = new TransferManagerBase(toTransferPersister, WatchDogUtils.getProjectName());
 
-        transferManager = new IntervalTransferManagerBase(intervalsToTransferPersister, WatchDogUtils.getProjectName());
-
-        intelliJListener = new IntelliJListener(eventManager, project);
+        // Initialize listeners
+        intelliJListener = new IntelliJListener(watchDogEventManager, project);
         intelliJListener.attachListeners();
+        XDebuggerManager.getInstance(project).getBreakpointManager().addBreakpointListener(new BreakpointListener(eventManager));
     }
 
     /**
@@ -88,21 +94,10 @@ public class InitializationManager {
     }
 
     /**
-     * @return the intervalManager belonging to the project.
-     */
-    public static IntervalManager getIntervalManagerForProject(String projectName) {
-        InitializationManager initializationManager = initializationManagers.get(projectName);
-        if (initializationManager != null) {
-            return initializationManager.getIntervalManager();
-        }
-        return null;
-    }
-
-    /**
      * @return the statistics interval persisters.
      */
-    public IntervalPersister getIntervalsStatisticsPersister() {
-        return intervalsStatisticsPersister;
+    public Persister getStatisticsPersister() {
+        return statisticsPersister;
     }
 
     /**
@@ -110,18 +105,18 @@ public class InitializationManager {
      * properly, but it is good practice to close it anyway.
      */
     public void shutdown(String projectName) {
-        intervalsToTransferPersister.closeDatabase();
-        intervalsStatisticsPersister.closeDatabase();
+        toTransferPersister.closeDatabase();
+        statisticsPersister.closeDatabase();
         intelliJListener.removeListeners();
         initializationManagers.remove(projectName);
     }
 
 
-    public EventManager getEventManager() {
-        return eventManager;
+    public WatchDogEventManager getWatchDogEventManager() {
+        return watchDogEventManager;
     }
 
-    public IntervalTransferManagerBase getTransferManager() {
+    public TransferManagerBase getTransferManager() {
         return transferManager;
     }
 }

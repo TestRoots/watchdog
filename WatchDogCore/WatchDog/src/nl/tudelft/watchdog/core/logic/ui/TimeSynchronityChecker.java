@@ -22,11 +22,11 @@ public class TimeSynchronityChecker extends RegularCheckerBase {
 
 	private final IDEIntervalManagerBase intervalManager;
 
-	private final EventManagerBase eventManager;
+	private final WatchDogEventManagerBase eventManager;
 
 	/** Constructor. */
 	public TimeSynchronityChecker(IDEIntervalManagerBase intervalManager,
-			EventManagerBase eventManager) {
+			WatchDogEventManagerBase eventManager) {
 		super(UPDATE_RATE);
 		this.intervalManager = intervalManager;
 		this.eventManager = eventManager;

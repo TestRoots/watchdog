@@ -201,6 +201,51 @@ class WatchDogServer < Sinatra::Base
     body ivals.size.to_s
   end
 
+  # Create new events
+  post '/user/:uid/:pid/events' do
+    evs = create_json_object(request)
+
+    unless evs.kind_of?(Array)
+      halt 400, 'Wrong request, body is not a JSON array'
+    end
+
+    if evs.size > 100000
+      halt 413, 'Request too long (> 100000 events)'
+    end
+
+    user_id = params[:uid]
+    user = get_user_by_id(user_id)
+
+    if user.nil?
+      halt 404, "User does not exist"
+    end
+
+    project_id = params[:pid]
+    project = get_project_by_id(project_id)
+
+    if project.nil?
+      halt 404, "Project does not exist"
+    end
+
+    evs.each do |i|
+      begin
+        i['userId'] = user_id
+        i['projectId'] = project_id
+        add_ip_timestamp(i, request)
+        events.save(i)
+      rescue IndexError => e
+        log.error "IndexError occurred. Event: #{i}"
+        log.error e.backtrace
+      rescue StandardError => e
+        log.error "Unexpected error: #{e.message}"
+        log.error e.backtrace
+      end
+    end
+
+    status 201
+    body evs.size.to_s
+  end
+
   private
 
   def users
@@ -213,6 +258,10 @@ class WatchDogServer < Sinatra::Base
 
   def intervals
     @db.collection('intervals')
+  end
+
+  def events
+    @db.collection('events')
   end
 
   def get_user_by_id(id)

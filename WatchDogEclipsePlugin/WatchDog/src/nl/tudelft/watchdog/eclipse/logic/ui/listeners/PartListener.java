@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
 import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
+import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -15,12 +15,12 @@ import org.eclipse.ui.texteditor.ITextEditor;
 public class PartListener implements IPartListener {
 
 	/** Constructor. */
-	public PartListener(EventManager userActionManager) {
+	public PartListener(WatchDogEventManager userActionManager) {
 		this.eventManager = userActionManager;
 	}
 
 	/** The eventObservable. */
-	private EventManager eventManager;
+	private WatchDogEventManager eventManager;
 
 	@Override
 	public void partOpened(IWorkbenchPart part) {

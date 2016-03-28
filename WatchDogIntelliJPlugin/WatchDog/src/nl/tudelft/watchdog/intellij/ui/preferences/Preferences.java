@@ -33,6 +33,12 @@ public class Preferences extends PreferencesBase {
 	/** The last date of successfully transfered intervals. */
 	public final static String LAST_TRANSFERED_INTERVALS_KEY = "WATCHDOG.LAST_TRANSFERED_INTERVALS";
 
+	/** The number of successfully transfered events. */
+	public final static String TRANSFERED_EVENTS_KEY = "WATCHDOG.TRANSFERED_EVENTS";
+
+	/** The last date of successfully transfered events. */
+	public final static String LAST_TRANSFERED_EVENTS_KEY = "WATCHDOG.LAST_TRANSFERED_EVENTS";
+
 	/** Flag denoting whether WatchDog plugin should do logging or not. */
 	public final static String LOGGING_ENABLED_KEY = "WATCHDOG.ENABLE_LOGGING";
 
@@ -76,6 +82,8 @@ public class Preferences extends PreferencesBase {
         properties.getOrInit(LOGGING_ENABLED_KEY, "false");
         properties.getOrInit(TRANSFERED_INTERVALS_KEY, "0");
         properties.getOrInit(LAST_TRANSFERED_INTERVALS_KEY, "never");
+		properties.getOrInit(TRANSFERED_EVENTS_KEY, "0");
+		properties.getOrInit(LAST_TRANSFERED_EVENTS_KEY, "never");
         properties.getOrInit(IS_OLD_VERSION, "false");
         properties.getOrInit(IS_BIG_UPDATE_ANSWERED, "false");
         properties.getOrInit(IS_BIG_UPDATE_AVAILABLE, "false");
@@ -200,10 +208,34 @@ public class Preferences extends PreferencesBase {
 		return properties.getValue(LAST_TRANSFERED_INTERVALS_KEY);
 	}
 
-	/** Adds the number to the transfered intervals for the store. */
+	/** Sets the date the last intervals were transfered for the store. */
 	@Override
     public void setLastTransferedInterval() {
 		properties.setValue(LAST_TRANSFERED_INTERVALS_KEY, new Date().toString());
+	}
+
+	/** @return The number of successfully transfered events. */
+	@Override
+	public long getEvents() {
+		return properties.getOrInitLong(TRANSFERED_EVENTS_KEY, 0);
+	}
+
+	/** Adds the number to the transfered events for the store. */
+	@Override
+	public void addTransferedEvents(long number) {
+		properties.setValue(TRANSFERED_EVENTS_KEY, Long.toString(getEvents() + number));
+	}
+
+	/** @return The number of successfully transfered events. */
+	@Override
+	public String getLastEventTransferDate() {
+		return properties.getValue(LAST_TRANSFERED_EVENTS_KEY);
+	}
+
+	/** Sets the date the last events were transfered for the store. */
+	@Override
+	public void setLastTransferedEvent() {
+		properties.setValue(LAST_TRANSFERED_EVENTS_KEY, new Date().toString());
 	}
 
 	/** @return The serverURL. */
@@ -234,6 +266,8 @@ public class Preferences extends PreferencesBase {
         properties.setValue(LOGGING_ENABLED_KEY, "false");
 		properties.setValue(TRANSFERED_INTERVALS_KEY, "0");
 		properties.setValue(LAST_TRANSFERED_INTERVALS_KEY, "never");
+		properties.setValue(TRANSFERED_EVENTS_KEY, "0");
+		properties.setValue(LAST_TRANSFERED_EVENTS_KEY, "never");
 		properties.setValue(IS_OLD_VERSION, "false");
 		properties.setValue(IS_BIG_UPDATE_ANSWERED, "false");
 		properties.setValue(IS_BIG_UPDATE_AVAILABLE, "false");

@@ -2,64 +2,75 @@ package nl.tudelft.watchdog.eclipse.logic;
 
 import java.io.File;
 
-import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
+import org.eclipse.debug.core.DebugPlugin;
+
+import nl.tudelft.watchdog.core.logic.event.EventManager;
+import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.core.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.Activator;
+import nl.tudelft.watchdog.eclipse.logic.event.listeners.BreakpointListener;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.eclipse.logic.interval.IntervalTransferManager;
 import nl.tudelft.watchdog.eclipse.logic.network.ClientVersionChecker;
-import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
+import nl.tudelft.watchdog.eclipse.logic.network.TransferManager;
+import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.eclipse.logic.ui.listeners.WorkbenchListener;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /**
- * Manages the setup process of the interval recording infrastructure. Is a
- * singleton and contains UI code. Guarantees that there is only one properly
- * initialized {@link IntervalManager} that does the real work.
+ * Manages the setup process of the interval and event recording infrastructure.
+ * Is a singleton and contains UI code. Guarantees that there is only one
+ * properly initialized {@link IntervalManager} and {@link EventManager} that do
+ * the real work.
  */
 public class InitializationManager {
 
 	private static final int USER_ACTIVITY_TIMEOUT = 16000;
 
-	/** The singleton instance of the interval manager. */
+	/** The singleton instance. */
 	private static volatile InitializationManager instance = null;
 
+	private final PersisterBase toTransferPersister;
+	private final PersisterBase statisticsPersister;
+
+	private final WatchDogEventManager watchDogEventManager;
+	private final EventManager eventManager;
 	private final IntervalManager intervalManager;
-
-	private final IntervalPersisterBase intervalsToTransferPersister;
-
-	private final IntervalPersisterBase intervalsStatisticsPersister;
-
-	private EventManager eventManager;
 
 	/** Private constructor. */
 	private InitializationManager() {
 		WatchDogGlobals.setLogDirectory(
 				"watchdog" + File.separator + "logs" + File.separator);
 		WatchDogGlobals.setPreferences(Preferences.getInstance());
+
+		// Initialize persisters
 		File baseFolder = Activator.getDefault().getStateLocation().toFile();
-		File toTransferDatabaseFile = new File(baseFolder, "intervals.mapdb");
+		File toTransferDatabaseFile = new File(baseFolder, "watchdog.mapdb");
 		File statisticsDatabaseFile = new File(baseFolder,
-				"intervalsStatistics.mapdb");
+				"watchdogStatistics.mapdb");
+		toTransferPersister = new PersisterBase(toTransferDatabaseFile);
+		statisticsPersister = new PersisterBase(statisticsDatabaseFile);
 
-		intervalsToTransferPersister = new IntervalPersisterBase(
-				toTransferDatabaseFile);
-		intervalsStatisticsPersister = new IntervalPersisterBase(
-				statisticsDatabaseFile);
-
+		// Initialize managers
 		new ClientVersionChecker();
-		intervalManager = new IntervalManager(intervalsToTransferPersister,
-				intervalsStatisticsPersister);
-		eventManager = new EventManager(intervalManager, USER_ACTIVITY_TIMEOUT);
-		new TimeSynchronityChecker(intervalManager, eventManager);
+		intervalManager = new IntervalManager(toTransferPersister,
+				statisticsPersister);
+		eventManager = new EventManager(toTransferPersister,
+				statisticsPersister);
+		eventManager.setSessionSeed(intervalManager.getSessionSeed());
 
+		watchDogEventManager = new WatchDogEventManager(intervalManager,
+				USER_ACTIVITY_TIMEOUT);
+		new TimeSynchronityChecker(intervalManager, watchDogEventManager);
+
+		// Initialize listeners
 		WorkbenchListener workbenchListener = new WorkbenchListener(
-				eventManager,
-				new IntervalTransferManager(intervalsToTransferPersister,
+				watchDogEventManager, new TransferManager(toTransferPersister,
 						WatchDogUtils.getWorkspaceName()));
 		workbenchListener.attachListeners();
+		DebugPlugin.getDefault().getBreakpointManager()
+				.addBreakpointListener(new BreakpointListener(eventManager));
 	}
 
 	/**
@@ -78,14 +89,14 @@ public class InitializationManager {
 		return intervalManager;
 	}
 
-	/** @return the statistics interval persisters. */
-	public IntervalPersisterBase getIntervalsStatisticsPersister() {
-		return intervalsStatisticsPersister;
+	/** @return the statistics persister. */
+	public PersisterBase getStatisticsPersister() {
+		return statisticsPersister;
 	}
 
-	/** @return the event Manager. */
-	public EventManager getEventManager() {
-		return eventManager;
+	/** @return the WatchDog event manager. */
+	public WatchDogEventManager getWatchDogEventManager() {
+		return watchDogEventManager;
 	}
 
 	/**
@@ -93,7 +104,7 @@ public class InitializationManager {
 	 * properly, but it is good practice to close it anyway.
 	 */
 	public void shutdown() {
-		intervalsToTransferPersister.closeDatabase();
-		intervalsStatisticsPersister.closeDatabase();
+		toTransferPersister.closeDatabase();
+		statisticsPersister.closeDatabase();
 	}
 }

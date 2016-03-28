@@ -8,7 +8,7 @@ import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import nl.tudelft.watchdog.intellij.logic.ui.EventManager;
+import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 
@@ -19,7 +19,7 @@ import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 public class IntelliJListener {
     
     /** The editorObservable */
-    private EventManager eventManager;
+    private WatchDogEventManager eventManager;
 
     private Project project;
 
@@ -33,7 +33,7 @@ public class IntelliJListener {
     private GeneralActivityListener activityListener;
 
     /** Constructor. */
-    public IntelliJListener(EventManager eventManager, Project project) {
+    public IntelliJListener(WatchDogEventManager eventManager, Project project) {
         this.eventManager = eventManager;
         this.project = project;
 
