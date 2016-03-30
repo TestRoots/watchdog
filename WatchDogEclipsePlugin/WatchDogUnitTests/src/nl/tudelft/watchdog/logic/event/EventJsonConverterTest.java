@@ -13,7 +13,9 @@ import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointType;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointAddEvent;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointChangeEvent;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointRemoveEvent;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.DebugEventBase;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.EventType;
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 import nl.tudelft.watchdog.logic.network.JsonConverterTestBase;
@@ -141,6 +143,60 @@ public class EventJsonConverterTest extends JsonConverterTestBase{
 		ArrayList<WatchDogItem> events = createSampleEvents(event);
 
 		assertEquals("[{\"ch\":[\"ds\",\"cd\",\"cc\"],\"bh\":1,\"bt\":\"li\",\"et\":\"bc\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
+				transferer.toJson(events));
+	}
+	
+	@Test
+	public void testJsonSuspendBreakpointEvent() {
+		DebugEventBase event = new DebugEventBase(EventType.SUSPEND_BREAKPOINT, new Date());
+		ArrayList<WatchDogItem> events = createSampleEvents(event);
+		
+		assertEquals("[{\"et\":\"sb\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
+				transferer.toJson(events));
+	}
+	
+	@Test
+	public void testJsonSuspendClientEvent() {
+		DebugEventBase event = new DebugEventBase(EventType.SUSPEND_CLIENT, new Date());
+		ArrayList<WatchDogItem> events = createSampleEvents(event);
+		
+		assertEquals("[{\"et\":\"sc\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
+				transferer.toJson(events));
+	}
+	
+	@Test
+	public void testJsonStepEvent() {
+		DebugEventBase event = new DebugEventBase(EventType.STEP, new Date());
+		ArrayList<WatchDogItem> events = createSampleEvents(event);
+		
+		assertEquals("[{\"et\":\"st\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
+				transferer.toJson(events));
+	}
+	
+	@Test
+	public void testJsonStepIntoEvent() {
+		DebugEventBase event = new DebugEventBase(EventType.STEP_INTO, new Date());
+		ArrayList<WatchDogItem> events = createSampleEvents(event);
+		
+		assertEquals("[{\"et\":\"si\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
+				transferer.toJson(events));
+	}
+	
+	@Test
+	public void testJsonStepOverEvent() {
+		DebugEventBase event = new DebugEventBase(EventType.STEP_OVER, new Date());
+		ArrayList<WatchDogItem> events = createSampleEvents(event);
+		
+		assertEquals("[{\"et\":\"so\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
+				transferer.toJson(events));
+	}
+	
+	@Test
+	public void testJsonResumeClientEvent() {
+		DebugEventBase event = new DebugEventBase(EventType.RESUME_CLIENT, new Date());
+		ArrayList<WatchDogItem> events = createSampleEvents(event);
+		
+		assertEquals("[{\"et\":\"rc\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
 				transferer.toJson(events));
 	}
 

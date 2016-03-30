@@ -16,6 +16,8 @@ import nl.tudelft.watchdog.core.logic.event.EventManager;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointAddEvent;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointChangeEvent;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointRemoveEvent;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.DebugEventBase;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.EventType;
 import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
@@ -85,6 +87,26 @@ public class EventManagerTest {
 		Mockito.verify(event).setSessionSeed(Mockito.anyString());
 		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(BreakpointChangeEvent.class));
 		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(BreakpointChangeEvent.class));
+	}
+	
+	@Test
+	public void testAddSuspendBreakpointEvent() {
+		DebugEventBase eventReal = new DebugEventBase(EventType.SUSPEND_BREAKPOINT, new Date());
+		DebugEventBase event = Mockito.spy(eventReal);
+		eventManager.addEvent(event);
+		Mockito.verify(event).setSessionSeed(Mockito.anyString());
+		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(DebugEventBase.class));
+		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(DebugEventBase.class));
+	}
+	
+	@Test
+	public void testAddStepIntoEvent() {
+		DebugEventBase eventReal = new DebugEventBase(EventType.STEP_INTO, new Date());
+		DebugEventBase event = Mockito.spy(eventReal);
+		eventManager.addEvent(event);
+		Mockito.verify(event).setSessionSeed(Mockito.anyString());
+		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(DebugEventBase.class));
+		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(DebugEventBase.class));
 	}
 
 }
