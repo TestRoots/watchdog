@@ -10,6 +10,7 @@ import nl.tudelft.watchdog.core.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.Activator;
 import nl.tudelft.watchdog.eclipse.logic.event.listeners.BreakpointListener;
+import nl.tudelft.watchdog.eclipse.logic.event.listeners.DebugEventListener;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.eclipse.logic.network.ClientVersionChecker;
 import nl.tudelft.watchdog.eclipse.logic.network.TransferManager;
@@ -71,6 +72,8 @@ public class InitializationManager {
 		workbenchListener.attachListeners();
 		DebugPlugin.getDefault().getBreakpointManager()
 				.addBreakpointListener(new BreakpointListener(eventManager));
+		DebugPlugin.getDefault()
+				.addDebugEventListener(new DebugEventListener(eventManager));
 	}
 
 	/**
