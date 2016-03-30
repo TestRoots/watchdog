@@ -17,6 +17,30 @@ public enum EventType {
 	
 	/** User removes a breakpoint. */
 	@SerializedName("br")
-	BREAKPOINT_REMOVE;
+	BREAKPOINT_REMOVE,
+	
+	/** The debug target is suspended due to a breakpoint hit. */
+	@SerializedName("sb")
+	SUSPEND_BREAKPOINT,
+	
+	/** The debug target is suspended due to a call to suspend(). */
+	@SerializedName("sc")
+	SUSPEND_CLIENT,
+	
+	/** A step event is performed by the user. */
+	@SerializedName("st")
+	STEP,
+
+	/** A step into event is performed by the user. */
+	@SerializedName("si")
+	STEP_INTO,	
+
+	/** A step over event is performed by the user. */
+	@SerializedName("so")
+	STEP_OVER,
+	
+	/** The program is resumed by the user. */
+	@SerializedName("rc")
+	RESUME_CLIENT;
 
 }
