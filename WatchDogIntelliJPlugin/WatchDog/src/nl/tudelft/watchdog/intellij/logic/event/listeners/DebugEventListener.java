@@ -49,9 +49,6 @@ public class DebugEventListener implements DebuggerContextListener {
                 eventManager.addEvent(new DebugEventBase(EventType.RESUME_CLIENT, new Date()));
                 firstPauseAfterStartOrResume = true;
                 break;
-            case STEP:
-                eventManager.addEvent(new DebugEventBase(EventType.STEP, new Date()));
-                break;
         }
     }
 }

@@ -27,9 +27,9 @@ public enum EventType {
 	@SerializedName("sc")
 	SUSPEND_CLIENT,
 	
-	/** A step event is performed by the user. */
+	/** A step out event is performed by the user. */
 	@SerializedName("st")
-	STEP,
+	STEP_OUT,
 
 	/** A step into event is performed by the user. */
 	@SerializedName("si")

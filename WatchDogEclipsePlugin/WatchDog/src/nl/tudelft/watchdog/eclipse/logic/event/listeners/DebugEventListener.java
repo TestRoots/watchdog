@@ -65,7 +65,7 @@ public class DebugEventListener implements IDebugEventSetListener {
 				break;
 			case DebugEvent.STEP_RETURN:
 				eventManager.addEvent(
-						new DebugEventBase(EventType.STEP, new Date()));
+						new DebugEventBase(EventType.STEP_OUT, new Date()));
 				break;
 			case DebugEvent.CLIENT_REQUEST:
 				eventManager.addEvent(new DebugEventBase(

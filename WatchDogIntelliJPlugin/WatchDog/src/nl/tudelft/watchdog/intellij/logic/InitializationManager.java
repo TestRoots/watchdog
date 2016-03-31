@@ -2,6 +2,11 @@ package nl.tudelft.watchdog.intellij.logic;
 
 import com.intellij.debugger.DebuggerManagerEx;
 import com.intellij.ide.plugins.PluginManager;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.XDebuggerManager;
@@ -9,6 +14,7 @@ import nl.tudelft.watchdog.core.logic.event.EventManager;
 import nl.tudelft.watchdog.core.logic.network.TransferManagerBase;
 import nl.tudelft.watchdog.core.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.intellij.logic.event.listeners.BreakpointListener;
+import nl.tudelft.watchdog.intellij.logic.event.listeners.DebugActionListener;
 import nl.tudelft.watchdog.intellij.logic.event.listeners.DebugEventListener;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.intellij.logic.storage.Persister;
@@ -74,6 +80,7 @@ public class InitializationManager {
         intelliJListener.attachListeners();
         XDebuggerManager.getInstance(project).getBreakpointManager().addBreakpointListener(new BreakpointListener(eventManager));
         DebuggerManagerEx.getInstanceEx(project).getContextManager().addListener(new DebugEventListener(eventManager));
+        ActionManager.getInstance().addAnActionListener(new DebugActionListener(eventManager));
     }
 
     /**
