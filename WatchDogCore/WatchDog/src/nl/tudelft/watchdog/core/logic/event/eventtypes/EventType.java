@@ -41,6 +41,22 @@ public enum EventType {
 	
 	/** The program is resumed by the user. */
 	@SerializedName("rc")
-	RESUME_CLIENT;
+	RESUME_CLIENT,
+	
+	/** The user executes the 'Inspect' command. */
+	@SerializedName("iv")
+	INSPECT_VARIABLE,
+	
+	/** The user defined a watch expression. */
+	@SerializedName("dw")
+	DEFINE_WATCH,
+	
+	/** The user opened the expressions dialog (IntelliJ only). */
+	@SerializedName("ee")
+	EVALUATE_EXPRESSION,
+	
+	/** The user changed the value of a variable. */
+	@SerializedName("mvv")
+	MODIFY_VARIABLE_VALUE;
 
 }

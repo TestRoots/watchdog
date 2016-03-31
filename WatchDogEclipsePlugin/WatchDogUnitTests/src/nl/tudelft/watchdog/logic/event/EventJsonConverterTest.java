@@ -165,8 +165,8 @@ public class EventJsonConverterTest extends JsonConverterTestBase{
 	}
 	
 	@Test
-	public void testJsonStepEvent() {
-		DebugEventBase event = new DebugEventBase(EventType.STEP, new Date());
+	public void testJsonStepOutEvent() {
+		DebugEventBase event = new DebugEventBase(EventType.STEP_OUT, new Date());
 		ArrayList<WatchDogItem> events = createSampleEvents(event);
 		
 		assertEquals("[{\"et\":\"st\",\"ts\":1,\"ss\":\"\"," + pasteWDVAndClient() + "}]",
