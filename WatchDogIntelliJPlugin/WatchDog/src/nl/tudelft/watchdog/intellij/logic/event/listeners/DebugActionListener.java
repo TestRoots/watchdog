@@ -5,6 +5,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.xdebugger.impl.actions.*;
+import com.intellij.xdebugger.impl.ui.tree.actions.XInspectAction;
+import com.intellij.xdebugger.impl.ui.tree.actions.XSetValueAction;
 import nl.tudelft.watchdog.core.logic.event.EventManager;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.DebugEventBase;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.EventType;
@@ -37,6 +39,14 @@ public class DebugActionListener implements AnActionListener {
             eventManager.addEvent(new DebugEventBase(EventType.STEP_OVER, new Date()));
         } else if (anAction instanceof StepOutAction) {
             eventManager.addEvent(new DebugEventBase(EventType.STEP_OUT, new Date()));
+        } else if (anAction instanceof XInspectAction) {
+            eventManager.addEvent(new DebugEventBase(EventType.INSPECT_VARIABLE, new Date()));
+        } else if (anAction.getClass().getSimpleName().equals("XAddToWatchesAction")) {
+            eventManager.addEvent(new DebugEventBase(EventType.DEFINE_WATCH, new Date()));
+        } else if (anAction.getClass().getSimpleName().equals("EvaluateAction")) {
+            eventManager.addEvent(new DebugEventBase(EventType.EVALUATE_EXPRESSION, new Date()));
+        } else if (anAction instanceof XSetValueAction) {
+            eventManager.addEvent(new DebugEventBase(EventType.MODIFY_VARIABLE_VALUE, new Date()));
         }
     }
 
