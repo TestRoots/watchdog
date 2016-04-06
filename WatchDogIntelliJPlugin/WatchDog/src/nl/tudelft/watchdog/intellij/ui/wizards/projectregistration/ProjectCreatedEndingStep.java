@@ -98,7 +98,7 @@ public class ProjectCreatedEndingStep extends RegistrationEndingStepBase {
      * debugging.
      */
     private void createDebugSurveyInfo(JPanel parent) {
-        UIUtils.createBoldLabel(parent, "Do you want to win an Amazon voucher and help research? Please fill out this 5 minute survey on debugging: ");
+        UIUtils.createBoldLabel(parent, "Do you ever debug? Did you know WatchDog now also reports on debugging?");
         UIUtils.createStartDebugSurveyLink(parent);
     }
 

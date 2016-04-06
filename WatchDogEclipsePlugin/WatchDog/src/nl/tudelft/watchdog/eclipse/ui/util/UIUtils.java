@@ -317,6 +317,7 @@ public class UIUtils {
 				+ Preferences.getInstance().getUserId()
 				+ "&entry.87074017=Java&entry.1002919343=Eclipse&entry.2010347695&entry.2084367812";
 		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
-				"Start the survey\n", surveyLink);
+				"Share your thoughts on debugging and win an additional Amazon voucher!\n",
+				surveyLink);
 	}
 }

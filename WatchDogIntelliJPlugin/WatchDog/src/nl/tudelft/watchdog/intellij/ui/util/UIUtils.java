@@ -348,7 +348,7 @@ public class UIUtils {
         String surveyLink = "https://docs.google.com/forms/d/1ybD1jC-iICXNlmQpyPEFngtmOtodicDr18E1ZbfBtx4/viewform?entry.1872114938="
                 + Preferences.getInstance().getUserId()
                 + "&entry.87074017=Java&entry.1002919343=IntelliJ&entry.2010347695&entry.2084367812";
-        UIUtils.createHyperLinkLabel(parent, "Start the survey", surveyLink);
+        UIUtils.createHyperLinkLabel(parent, "Share your thoughts on debugging and win an additional Amazon voucher!", surveyLink);
     }
 
     /**

@@ -1,7 +1,6 @@
 package nl.tudelft.watchdog.eclipse.ui.wizards.projectregistration;
 
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
@@ -139,15 +138,8 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPageBase {
 	 * debugging.
 	 */
 	private void createDebugSurveyInfo() {
-		// Resize the dialog (=>increases height).
-		Rectangle bounds = dynamicComposite.getShell().getBounds();
-		Rectangle newBounds = new Rectangle(bounds.x, bounds.y, bounds.width,
-				bounds.height + 50);
-		dynamicComposite.getShell().setBounds(newBounds);
-
-		// Create label and link.
 		UIUtils.createBoldLabel(
-				"Do you want to win an Amazon voucher and help research?\nPlease fill out this 5 minute survey on debugging: ",
+				"Do you ever debug? Did you know WatchDog now also reports on debugging?",
 				dynamicComposite);
 		UIUtils.createStartDebugSurveyLink(dynamicComposite);
 	}
