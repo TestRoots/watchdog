@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.eclipse.debug.core.DebugPlugin;
 
-import nl.tudelft.watchdog.core.logic.event.EventManager;
+import nl.tudelft.watchdog.core.logic.event.DebugEventManager;
 import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.core.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
@@ -22,7 +22,7 @@ import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 /**
  * Manages the setup process of the interval and event recording infrastructure.
  * Is a singleton and contains UI code. Guarantees that there is only one
- * properly initialized {@link IntervalManager} and {@link EventManager} that do
+ * properly initialized {@link IntervalManager} and {@link DebugEventManager} that do
  * the real work.
  */
 public class InitializationManager {
@@ -36,7 +36,7 @@ public class InitializationManager {
 	private final PersisterBase statisticsPersister;
 
 	private final WatchDogEventManager watchDogEventManager;
-	private final EventManager eventManager;
+	private final DebugEventManager debugEventManager;
 	private final IntervalManager intervalManager;
 
 	/** Private constructor. */
@@ -57,9 +57,9 @@ public class InitializationManager {
 		new ClientVersionChecker();
 		intervalManager = new IntervalManager(toTransferPersister,
 				statisticsPersister);
-		eventManager = new EventManager(toTransferPersister,
+		debugEventManager = new DebugEventManager(toTransferPersister,
 				statisticsPersister);
-		eventManager.setSessionSeed(intervalManager.getSessionSeed());
+		debugEventManager.setSessionSeed(intervalManager.getSessionSeed());
 
 		watchDogEventManager = new WatchDogEventManager(intervalManager,
 				USER_ACTIVITY_TIMEOUT);
@@ -70,10 +70,10 @@ public class InitializationManager {
 				watchDogEventManager, new TransferManager(toTransferPersister,
 						WatchDogUtils.getWorkspaceName()));
 		workbenchListener.attachListeners();
-		DebugPlugin.getDefault().getBreakpointManager()
-				.addBreakpointListener(new BreakpointListener(eventManager));
-		DebugPlugin.getDefault()
-				.addDebugEventListener(new DebugEventListener(eventManager));
+		DebugPlugin debugPlugin = DebugPlugin.getDefault();
+		debugPlugin.getBreakpointManager()
+				.addBreakpointListener(new BreakpointListener(debugEventManager));
+		debugPlugin.addDebugEventListener(new DebugEventListener(debugEventManager));
 	}
 
 	/**

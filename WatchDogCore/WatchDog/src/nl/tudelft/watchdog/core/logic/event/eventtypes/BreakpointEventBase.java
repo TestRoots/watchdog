@@ -20,7 +20,7 @@ public abstract class BreakpointEventBase extends EventBase {
 	private BreakpointType breakpointType;
 
 	/** Constructor. */
-	public BreakpointEventBase(int hash, BreakpointType bpType, EventType type, Date timestamp) {
+	public BreakpointEventBase(int hash, BreakpointType bpType, DebugEventType type, Date timestamp) {
 		super(type, timestamp);
 		this.hash = hash;
 		this.breakpointType = bpType;

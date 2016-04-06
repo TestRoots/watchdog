@@ -3,10 +3,10 @@ package nl.tudelft.watchdog.core.logic.event.eventtypes;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Enumeration of the different possible events that can be fired based on the
+ * Enumeration of the different possible debug events that can be fired based on the
  * activities a developer can perform.
  */
-public enum EventType {
+public enum DebugEventType {
 	/** User adds a breakpoint. */
 	@SerializedName("ba")
 	BREAKPOINT_ADD,
@@ -56,7 +56,7 @@ public enum EventType {
 	EVALUATE_EXPRESSION,
 	
 	/** The user changed the value of a variable. */
-	@SerializedName("mvv")
+	@SerializedName("mv")
 	MODIFY_VARIABLE_VALUE;
 
 }

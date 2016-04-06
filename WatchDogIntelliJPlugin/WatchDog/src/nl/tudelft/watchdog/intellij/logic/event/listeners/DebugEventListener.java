@@ -3,22 +3,22 @@ package nl.tudelft.watchdog.intellij.logic.event.listeners;
 import com.intellij.debugger.impl.DebuggerContextImpl;
 import com.intellij.debugger.impl.DebuggerContextListener;
 import com.intellij.debugger.impl.DebuggerSession;
-import nl.tudelft.watchdog.core.logic.event.EventManager;
+import nl.tudelft.watchdog.core.logic.event.DebugEventManager;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.DebugEventBase;
-import nl.tudelft.watchdog.core.logic.event.eventtypes.EventType;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.DebugEventType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 
 /**
- * Class that handles debug events and generates the appropriate instances of {@link DebugEventBase} which are then passed to the {@link EventManager}.
+ * Class that handles debug events and generates the appropriate instances of {@link DebugEventBase} which are then passed to the {@link DebugEventManager}.
  */
 public class DebugEventListener implements DebuggerContextListener {
 
     /**
-     * The {@link EventManager} used for persisting and transferring the debug events.
+     * The {@link DebugEventManager} used for persisting and transferring the debug events.
      */
-    private final EventManager eventManager;
+    private final DebugEventManager debugEventManager;
 
     /**
      * Flag used to only consider pause events after the debugging session is just started or after a resume event.
@@ -29,8 +29,8 @@ public class DebugEventListener implements DebuggerContextListener {
     /**
      * Constructor.
      */
-    public DebugEventListener(EventManager eventManager) {
-        this.eventManager = eventManager;
+    public DebugEventListener(DebugEventManager debugEventManager) {
+        this.debugEventManager = debugEventManager;
     }
 
     @Override
@@ -41,12 +41,12 @@ public class DebugEventListener implements DebuggerContextListener {
                 break;
             case PAUSE:
                 if (firstPauseAfterStartOrResume) {
-                    eventManager.addEvent(new DebugEventBase(EventType.SUSPEND_BREAKPOINT, new Date()));
+                    debugEventManager.addEvent(new DebugEventBase(DebugEventType.SUSPEND_BREAKPOINT, new Date()));
                     firstPauseAfterStartOrResume = false;
                 }
                 break;
             case RESUME:
-                eventManager.addEvent(new DebugEventBase(EventType.RESUME_CLIENT, new Date()));
+                debugEventManager.addEvent(new DebugEventBase(DebugEventType.RESUME_CLIENT, new Date()));
                 firstPauseAfterStartOrResume = true;
                 break;
         }

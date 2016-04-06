@@ -42,7 +42,7 @@ import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(WatchDogGlobals.class)
 
-public class EventManagerTest {
+public class WatchDogEventManagerTest {
 
 	private static final int USER_ACTIVITY_TIMEOUT = 300;
 	private static final int TIMEOUT_GRACE_PERIOD = (int) (USER_ACTIVITY_TIMEOUT * 1.1);

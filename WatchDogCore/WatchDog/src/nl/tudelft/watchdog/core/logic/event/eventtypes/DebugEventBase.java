@@ -8,7 +8,7 @@ public class DebugEventBase extends EventBase {
 	private static final long serialVersionUID = 1L;
 
 	/** Constructor. */
-	public DebugEventBase(EventType type, Date timestamp) {
+	public DebugEventBase(DebugEventType type, Date timestamp) {
 		super(type, timestamp);
 	}
 

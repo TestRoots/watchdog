@@ -10,22 +10,21 @@ import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.debug.core.model.IWatchExpression;
 
-import nl.tudelft.watchdog.core.logic.event.EventManager;
+import nl.tudelft.watchdog.core.logic.event.DebugEventManager;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.DebugEventBase;
-import nl.tudelft.watchdog.core.logic.event.eventtypes.EventType;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.DebugEventType;
 
 /**
- * Class that handles all {@link DebugEvent}s and generates the appropriate
- * instances of {@link DebugEventBase} which are then passed to the
- * {@link EventManager}.
+ * Handles all {@link DebugEvent}s and generates the appropriate instances of
+ * {@link DebugEventBase} which are then passed to the {@link DebugEventManager}.
  */
 public class DebugEventListener implements IDebugEventSetListener {
 
 	/**
-	 * The {@link EventManager} used for persisting and transferring the debug
+	 * The {@link DebugEventManager} used for persisting and transferring the debug
 	 * events.
 	 */
-	private final EventManager eventManager;
+	private final DebugEventManager debugEventManager;
 
 	/**
 	 * List with the hashes of all current watch expressions. Used to avoid
@@ -34,30 +33,42 @@ public class DebugEventListener implements IDebugEventSetListener {
 	private List<Integer> watchExpressionHashes;
 
 	/** Constructor. */
-	public DebugEventListener(EventManager eventManager) {
-		this.eventManager = eventManager;
+	public DebugEventListener(DebugEventManager debugEventManager) {
+		this.debugEventManager = debugEventManager;
 		this.watchExpressionHashes = new ArrayList<>();
 	}
 
 	@Override
 	public void handleDebugEvents(DebugEvent[] events) {
 		for (DebugEvent event : events) {
-			if (event.getSource() instanceof IThread) {
+			if (isThread(event.getSource())) {
 				handleDebugEvent(event);
-			} else if (event.getSource() instanceof IWatchExpression) {
+			} else if (isWatchExpression(event.getSource())) {
 				handleWatchExpressionEvent(event);
-			} else if (event.getSource() instanceof IVariable
-					&& event.getKind() == DebugEvent.CHANGE
-					&& event.getDetail() == DebugEvent.CONTENT) {
-				eventManager.addEvent(new DebugEventBase(
-						EventType.MODIFY_VARIABLE_VALUE, new Date()));
+			} else if (isVariableModificationEvent(event)) {
+				debugEventManager.addEvent(new DebugEventBase(
+						DebugEventType.MODIFY_VARIABLE_VALUE, new Date()));
 			}
 		}
 	}
 
+	private static boolean isThread(Object source) {
+		return source instanceof IThread;
+	}
+
+	private static boolean isWatchExpression(Object source) {
+		return source instanceof IWatchExpression;
+	}
+
+	private static boolean isVariableModificationEvent(DebugEvent event) {
+		return event.getSource() instanceof IVariable
+				&& event.getKind() == DebugEvent.CHANGE
+				&& event.getDetail() == DebugEvent.CONTENT;
+	}
+
 	/**
-	 * Creates the correct {@link DebugEventBase} instance for SUSPEND and
-	 * RESUME events based on the input event's properties.
+	 * Handles {@link DebugEvent.SUSPEND} and {@link DebugEvent.RESUME} events
+	 * based on the input event's properties.
 	 */
 	private void handleDebugEvent(DebugEvent event) {
 		if (event.getKind() == DebugEvent.SUSPEND) {
@@ -70,16 +81,16 @@ public class DebugEventListener implements IDebugEventSetListener {
 	private void handleSuspendEvent(DebugEvent event) {
 		switch (event.getDetail()) {
 		case DebugEvent.BREAKPOINT:
-			eventManager.addEvent(new DebugEventBase(
-					EventType.SUSPEND_BREAKPOINT, new Date()));
+			debugEventManager.addEvent(new DebugEventBase(
+					DebugEventType.SUSPEND_BREAKPOINT, new Date()));
 			break;
 		case DebugEvent.CLIENT_REQUEST:
-			eventManager.addEvent(
-					new DebugEventBase(EventType.SUSPEND_CLIENT, new Date()));
+			debugEventManager.addEvent(new DebugEventBase(
+					DebugEventType.SUSPEND_CLIENT, new Date()));
 			break;
 		case DebugEvent.EVALUATION:
-			eventManager.addEvent(
-					new DebugEventBase(EventType.INSPECT_VARIABLE, new Date()));
+			debugEventManager.addEvent(new DebugEventBase(
+					DebugEventType.INSPECT_VARIABLE, new Date()));
 			break;
 		}
 	}
@@ -87,20 +98,20 @@ public class DebugEventListener implements IDebugEventSetListener {
 	private void handleResumeEvent(DebugEvent event) {
 		switch (event.getDetail()) {
 		case DebugEvent.STEP_INTO:
-			eventManager.addEvent(
-					new DebugEventBase(EventType.STEP_INTO, new Date()));
+			debugEventManager.addEvent(
+					new DebugEventBase(DebugEventType.STEP_INTO, new Date()));
 			break;
 		case DebugEvent.STEP_OVER:
-			eventManager.addEvent(
-					new DebugEventBase(EventType.STEP_OVER, new Date()));
+			debugEventManager.addEvent(
+					new DebugEventBase(DebugEventType.STEP_OVER, new Date()));
 			break;
 		case DebugEvent.STEP_RETURN:
-			eventManager.addEvent(
-					new DebugEventBase(EventType.STEP_OUT, new Date()));
+			debugEventManager.addEvent(
+					new DebugEventBase(DebugEventType.STEP_OUT, new Date()));
 			break;
 		case DebugEvent.CLIENT_REQUEST:
-			eventManager.addEvent(
-					new DebugEventBase(EventType.RESUME_CLIENT, new Date()));
+			debugEventManager.addEvent(new DebugEventBase(
+					DebugEventType.RESUME_CLIENT, new Date()));
 			break;
 		}
 	}
@@ -111,8 +122,8 @@ public class DebugEventListener implements IDebugEventSetListener {
 	 */
 	private void handleWatchExpressionEvent(DebugEvent event) {
 		if (!watchExpressionHashes.contains(event.getSource().hashCode())) {
-			eventManager.addEvent(
-					new DebugEventBase(EventType.DEFINE_WATCH, new Date()));
+			debugEventManager.addEvent(new DebugEventBase(
+					DebugEventType.DEFINE_WATCH, new Date()));
 			watchExpressionHashes.add(event.getSource().hashCode());
 		}
 	}
