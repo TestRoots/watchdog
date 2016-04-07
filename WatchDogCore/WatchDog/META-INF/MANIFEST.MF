@@ -13,7 +13,10 @@ Bundle-ClassPath: .,
  lib/commons-codec-1.9.jar,
  lib/commons-lang-2.6.jar,
  lib/joda-time-2.8.1.jar,
- lib/mapdb-1.0.5.jar
+ lib/mapdb-1.0.5.jar,
+ lib/jfreechart-1.0.19-swt.jar,
+ lib/jfreechart-1.0.19.jar,
+ lib/jcommon-1.0.23.jar
 Export-Package: com.google.gson,
  com.google.gson.annotations,
  com.google.gson.internal,

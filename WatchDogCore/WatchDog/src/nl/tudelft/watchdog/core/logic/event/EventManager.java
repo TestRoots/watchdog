@@ -45,6 +45,12 @@ public class EventManager {
 			eventsStatisticsPersister.save(event);
 			WatchDogLogger.getInstance().logInfo("Created event " + event + " " + event.getType());
 		}
-
+	}
+	
+	/**
+	 * @return the events statistics persister
+	 */
+	public PersisterBase getEventStatisticsPersister() {
+		return eventsStatisticsPersister;
 	}
 }

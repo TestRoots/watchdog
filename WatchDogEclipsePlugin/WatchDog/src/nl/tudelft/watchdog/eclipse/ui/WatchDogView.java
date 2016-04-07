@@ -2,7 +2,6 @@ package nl.tudelft.watchdog.eclipse.ui;
 
 import java.awt.Color;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -24,15 +23,13 @@ import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.gantt.GanttCategoryDataset;
-import org.jfree.data.gantt.Task;
-import org.jfree.data.gantt.TaskSeries;
-import org.jfree.data.gantt.TaskSeriesCollection;
 import org.jfree.data.general.DatasetUtilities;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.jfree.util.Rotation;
 
+import nl.tudelft.watchdog.core.logic.event.EventStatistics;
 import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase.StatisticsTimePeriod;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
@@ -49,6 +46,7 @@ public class WatchDogView extends ViewPart {
 	public static final String ID = "WatchDog.view";
 
 	private IntervalStatistics intervalStatistics;
+	private EventStatistics eventStatistics;
 
 	private Composite container;
 	private Composite parent;
@@ -172,18 +170,20 @@ public class WatchDogView extends ViewPart {
 
 		if (selectedDebugInterval != null) {
 			createDebugIntervalSelectionList();
-			createSWTChart(container, createGanttChart(
-					createDebugEventGanttChartDateset(),
-					"The debug events that occurred during the selected debug interval"));
+			createSWTChart(container, createDebugEventGanttChart());
 		}
 
 		createShowingStatisticsLine();
 		createTimeSpanSelectionList();
 	}
 
-	private JFreeChart createGanttChart(GanttCategoryDataset dataset,
-			String string) {
-		// TODO Auto-generated method stub
+	private JFreeChart createDebugEventGanttChart() {
+		eventStatistics = new EventStatistics(
+				InitializationManager.getInstance().getDebugEventManager(),
+				selectedDebugInterval);
+		GanttCategoryDataset dataset = eventStatistics
+				.createDebugEventGanttChartDataset();
+
 		final JFreeChart chart = ChartFactory.createGanttChart(
 				"Debug Events During Selected Debug Interval", // chart title
 				"Event", // domain axis label
@@ -193,26 +193,7 @@ public class WatchDogView extends ViewPart {
 				true, // tooltips
 				false // urls
 		);
-		// chart.getCategoryPlot().getDomainAxis().setMaxCategoryLabelWidthRatio(10.0f);
 		return chart;
-	}
-
-	private GanttCategoryDataset createDebugEventGanttChartDateset() {
-		// TODO Auto-generated method stub
-		final TaskSeries s1 = new TaskSeries("debug events");
-		s1.add(new Task("test event", new Date(1), new Date(2)));
-		s1.add(new Task("test event2", new Date(3), new Date(4)));
-
-		// NOTE: the start+end times of the parent task should be wide enough to
-		// hold all subtasks
-		Task ev3 = new Task("test event3", new Date(1), new Date(5));
-		ev3.addSubtask(new Task("test event3.2", new Date(4), new Date(5)));
-		ev3.addSubtask(new Task("test event3.1", new Date(2), new Date(3)));
-		s1.add(ev3);
-
-		final TaskSeriesCollection collection = new TaskSeriesCollection();
-		collection.add(s1);
-		return collection;
 	}
 
 	private void createShowingStatisticsLine() {

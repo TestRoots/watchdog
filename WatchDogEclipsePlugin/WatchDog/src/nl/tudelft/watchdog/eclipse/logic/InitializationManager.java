@@ -99,6 +99,11 @@ public class InitializationManager {
 		return watchDogEventManager;
 	}
 
+	/** @return the debug event manager. */
+	public EventManager getDebugEventManager() {
+		return eventManager;
+	}
+
 	/**
 	 * Closes the database. The database can recover even if it is not closed
 	 * properly, but it is good practice to close it anyway.
