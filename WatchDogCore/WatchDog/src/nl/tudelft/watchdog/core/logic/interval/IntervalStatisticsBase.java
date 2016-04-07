@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.core.logic.interval;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
 import nl.tudelft.watchdog.core.logic.document.DocumentType;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IDEOpenInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
@@ -231,6 +233,20 @@ public abstract class IntervalStatisticsBase extends IntervalManagerBase {
 
 	public double getPreciseTime(Duration duration) {
 		return ((double) duration.getStandardSeconds() / 60);
+	}
+
+	/**
+	 * @return the latest debug intervals in descending order of time or the empty list if none have been recorded yet. 
+	 * The maximum number of intervals that is returned can be specified using numberOfIntervals.
+	 */
+	public List<DebugInterval> getLatestDebugIntervals(int numberOfIntervals) {
+		List<DebugInterval> latestDebugIntervals = getIntervals(DebugInterval.class);
+		Collections.sort(latestDebugIntervals);
+		Collections.reverse(latestDebugIntervals);
+		if (latestDebugIntervals.size() > numberOfIntervals) {
+			latestDebugIntervals = latestDebugIntervals.subList(0, numberOfIntervals);
+		}
+		return latestDebugIntervals;
 	}
 
 }

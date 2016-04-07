@@ -1,7 +1,9 @@
 package nl.tudelft.watchdog.eclipse.ui;
 
 import java.awt.Color;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -32,6 +34,7 @@ import org.jfree.experimental.chart.swt.ChartComposite;
 import org.jfree.util.Rotation;
 
 import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase.StatisticsTimePeriod;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalStatistics;
@@ -69,8 +72,13 @@ public class WatchDogView extends ViewPart {
 
 	private StatisticsTimePeriod selectedTimePeriod = StatisticsTimePeriod.HOUR_1;
 
+	private DebugInterval selectedDebugInterval;
+	private List<DebugInterval> latestDebugIntervals;
+	private static final int NUMBER_OF_INTERVALS_TO_SHOW = 10;
+
 	private Composite oneColumn;
 	private Composite intervalSelection;
+	private Composite debugIntervalSelection;
 
 	private IPartService partService;
 
@@ -97,11 +105,29 @@ public class WatchDogView extends ViewPart {
 			createInactiveViewContent();
 		} else {
 			calculateTimes();
+			latestDebugIntervals = intervalStatistics
+					.getLatestDebugIntervals(NUMBER_OF_INTERVALS_TO_SHOW);
+			if (selectedDebugIntervalShouldBeReset()) {
+				selectedDebugInterval = latestDebugIntervals.get(0);
+			}
 			createActiveView();
 		}
 
 		// Always create refresh link, even when statistics are not shown
 		createRefreshLink();
+	}
+
+	/**
+	 * @return true if and only if there are debug intervals and one of the
+	 *         following two conditions hold:
+	 * 
+	 *         1. No debug interval has been selected yet; or 2. A debug
+	 *         interval has been selected before, but it is no longer part of
+	 *         the latest debug intervals.
+	 */
+	private boolean selectedDebugIntervalShouldBeReset() {
+		return !latestDebugIntervals.isEmpty() && (selectedDebugInterval == null
+				|| !latestDebugIntervals.contains(selectedDebugInterval));
 	}
 
 	private void createInactiveViewContent() {
@@ -144,13 +170,15 @@ public class WatchDogView extends ViewPart {
 		UIUtils.createLabel("", container);
 		UIUtils.createLabel("", container);
 
+		if (selectedDebugInterval != null) {
+			createDebugIntervalSelectionList();
+			createSWTChart(container, createGanttChart(
+					createDebugEventGanttChartDateset(),
+					"The debug events that occurred during the selected debug interval"));
+		}
+
 		createShowingStatisticsLine();
 		createTimeSpanSelectionList();
-
-		createSWTChart(container, createGanttChart(
-				createDebugEventGanttChartDateset(),
-				"The debug events that occurred during the selected debug interval"));
-
 	}
 
 	private JFreeChart createGanttChart(GanttCategoryDataset dataset,
@@ -220,11 +248,49 @@ public class WatchDogView extends ViewPart {
 		}, StatisticsTimePeriod.names(), selectedTimePeriod.ordinal());
 	}
 
+	private void createDebugIntervalSelectionList() {
+		debugIntervalSelection = UIUtils
+				.createZeroMarginGridedComposite(oneColumn, 3);
+		UIUtils.createLabel("Show debug events for debug interval ",
+				debugIntervalSelection);
+		UIUtils.createComboList(debugIntervalSelection,
+				new SelectionListener() {
+
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						Combo widget = (Combo) e.getSource();
+						selectedDebugInterval = latestDebugIntervals
+								.get(widget.getSelectionIndex());
+						update();
+					}
+
+					@Override
+					public void widgetDefaultSelected(SelectionEvent e) {
+					}
+
+				}, getDebugIntervalStrings(),
+				latestDebugIntervals.indexOf(selectedDebugInterval));
+	}
+
+	private String[] getDebugIntervalStrings() {
+		String[] debugIntervalStrings = new String[latestDebugIntervals.size()];
+		SimpleDateFormat dateFormatter = new SimpleDateFormat(
+				"EEE MMM d HH:mm:ss");
+		for (int i = 0; i < latestDebugIntervals.size(); i++) {
+			DebugInterval currentInterval = latestDebugIntervals.get(i);
+			debugIntervalStrings[i] = dateFormatter
+					.format(currentInterval.getStart()) + " - "
+					+ dateFormatter.format(currentInterval.getEnd());
+		}
+		return debugIntervalStrings;
+	}
+
 	private void createRefreshLink() {
 		UIUtils.createLinkedLabel(intervalSelection, new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				selectedDebugInterval = null;
 				update();
 			}
 
