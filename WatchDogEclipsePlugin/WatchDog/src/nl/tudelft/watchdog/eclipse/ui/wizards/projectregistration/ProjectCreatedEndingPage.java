@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.Composite;
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.core.ui.wizards.Project;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
@@ -138,8 +139,7 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPageBase {
 	 * debugging.
 	 */
 	private void createDebugSurveyInfo() {
-		UIUtils.createBoldLabel(
-				"Do you ever debug? Did you know WatchDog now also reports on debugging?",
+		UIUtils.createBoldLabel(WatchDogGlobals.DEBUG_SURVEY_TEXT,
 				dynamicComposite);
 		UIUtils.createStartDebugSurveyLink(dynamicComposite);
 	}
