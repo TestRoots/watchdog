@@ -39,7 +39,7 @@ public class BreakpointListener implements IBreakpointListener {
 	/** Constructor. */
 	public BreakpointListener(DebugEventManager debugEventManager) {
 		this.debugEventManager = debugEventManager;
-		this.breakpoints = new HashMap<>();
+		this.breakpoints = new HashMap<Integer, Breakpoint>();
 	}
 
 	@Override
