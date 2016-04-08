@@ -5,6 +5,7 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.openapi.ui.ComboBox;
 
+import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
 import java.awt.*;
@@ -339,6 +340,16 @@ public class UIUtils {
         UIUtils.createHyperLinkLabel(parent, "Open Report.", projectReport);
     }
 
+    /**
+     * Creates a linked label that opens the debug survey in the browser with
+     * the correct User ID.
+     */
+    public static void createStartDebugSurveyLink(JComponent parent) {
+        String surveyLink = "https://docs.google.com/forms/d/1ybD1jC-iICXNlmQpyPEFngtmOtodicDr18E1ZbfBtx4/viewform?entry.1872114938="
+                + Preferences.getInstance().getUserId()
+                + "&entry.87074017=Java&entry.1002919343=IntelliJ&entry.2010347695&entry.2084367812";
+        UIUtils.createHyperLinkLabel(parent, "Share your thoughts on debugging and win an additional Amazon voucher!", surveyLink);
+    }
 
     /**
      * Creates and returns a JPanel Group with an enclosed Grid layout with

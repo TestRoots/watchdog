@@ -86,10 +86,20 @@ public class ProjectCreatedEndingStep extends RegistrationEndingStepBase {
             UserProjectRegistrationWizard wizard = (UserProjectRegistrationWizard) getWizard();
             UserRegistrationStep userRegistrationStep = wizard.userRegistrationStep;
             if (wizard.userWelcomeStep.getRegisterNewId()) {
+                createDebugSurveyInfo(parent);
                 userRegistrationStep.createUserRegistrationSummary(parent);
             }
             createProjectRegistrationSummary(parent);
         }
+    }
+
+    /**
+     * Shows the label and link to ask the new user to fill out the survey on
+     * debugging.
+     */
+    private void createDebugSurveyInfo(JPanel parent) {
+        UIUtils.createBoldLabel(parent, "Do you ever debug? Did you know WatchDog now also reports on debugging?");
+        UIUtils.createStartDebugSurveyLink(parent);
     }
 
     private void createProjectRegistrationSummary(JPanel parent) {

@@ -124,12 +124,24 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPageBase {
 			dynamicComposite = UIUtils.createGridedComposite(topComposite, 1);
 			dynamicComposite.setLayoutData(UIUtils.createFullGridUsageData());
 			if (wizard.userWelcomePage.getRegisterNewId()) {
+				createDebugSurveyInfo();
 				userRegistrationPage
 						.createUserRegistrationSummary(dynamicComposite);
 			}
 			createProjectRegistrationSummary();
 			return;
 		}
+	}
+
+	/**
+	 * Shows the label and link to ask the new user to fill out the survey on
+	 * debugging.
+	 */
+	private void createDebugSurveyInfo() {
+		UIUtils.createBoldLabel(
+				"Do you ever debug? Did you know WatchDog now also reports on debugging?",
+				dynamicComposite);
+		UIUtils.createStartDebugSurveyLink(dynamicComposite);
 	}
 
 	private void createProjectRegistrationSummary() {
