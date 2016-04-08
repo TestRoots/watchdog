@@ -116,6 +116,11 @@ public class InitializationManager {
         return watchDogEventManager;
     }
 
+    /** @return the debug event manager. */
+    public EventManager getDebugEventManager() {
+        return eventManager;
+    }
+
     public TransferManagerBase getTransferManager() {
         return transferManager;
     }
