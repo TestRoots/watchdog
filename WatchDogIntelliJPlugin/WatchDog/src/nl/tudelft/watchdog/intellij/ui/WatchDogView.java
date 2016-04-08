@@ -4,10 +4,10 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
-import nl.tudelft.watchdog.core.logic.event.EventStatistics;
 import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase.StatisticsTimePeriod;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
 import nl.tudelft.watchdog.intellij.logic.InitializationManager;
+import nl.tudelft.watchdog.intellij.logic.event.EventStatistics;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.intellij.ui.util.UIUtils;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
@@ -114,11 +114,11 @@ public class WatchDogView extends SimpleToolWindowPanel {
 
     /**
      * @return true if and only if there are debug intervals and one of the
-     *         following two conditions hold:
-     *
-     *         1. No debug interval has been selected yet; or 2. A debug
-     *         interval has been selected before, but it is no longer part of
-     *         the latest debug intervals.
+     * following two conditions hold:
+     * <p/>
+     * 1. No debug interval has been selected yet; or 2. A debug
+     * interval has been selected before, but it is no longer part of
+     * the latest debug intervals.
      */
     private boolean selectedDebugIntervalShouldBeReset() {
         return !latestDebugIntervals.isEmpty() && (selectedDebugInterval == null
@@ -174,7 +174,9 @@ public class WatchDogView extends SimpleToolWindowPanel {
     }
 
     private JFreeChart createDebugEventGanttChart() {
-        eventStatistics = new EventStatistics(InitializationManager.getInstance(WatchDogUtils.getProject()).getDebugEventManager(), selectedDebugInterval);
+        eventStatistics = new EventStatistics(
+                InitializationManager.getInstance(WatchDogUtils.getProject()).getDebugEventManager(),
+                selectedDebugInterval);
         final GanttCategoryDataset dataset = eventStatistics.createDebugEventGanttChartDataset();
 
         final JFreeChart chart = ChartFactory.createGanttChart(
