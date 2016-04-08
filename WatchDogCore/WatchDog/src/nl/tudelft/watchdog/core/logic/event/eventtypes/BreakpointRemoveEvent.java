@@ -11,7 +11,7 @@ public class BreakpointRemoveEvent extends BreakpointEventBase {
 	private static final long serialVersionUID = 1L;
 
 	public BreakpointRemoveEvent(int hash, BreakpointType type, Date timestamp) {
-		super(hash, type, EventType.BREAKPOINT_REMOVE, timestamp);
+		super(hash, type, DebugEventType.BREAKPOINT_REMOVE, timestamp);
 	}
 
 }

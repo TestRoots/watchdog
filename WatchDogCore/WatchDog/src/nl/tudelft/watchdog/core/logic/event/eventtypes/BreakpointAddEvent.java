@@ -12,7 +12,7 @@ public class BreakpointAddEvent extends BreakpointEventBase {
 
 	/** Constructor. */
 	public BreakpointAddEvent(int hash, BreakpointType type, Date timestamp) {
-		super(hash, type, EventType.BREAKPOINT_ADD, timestamp);
+		super(hash, type, DebugEventType.BREAKPOINT_ADD, timestamp);
 	}
 
 }

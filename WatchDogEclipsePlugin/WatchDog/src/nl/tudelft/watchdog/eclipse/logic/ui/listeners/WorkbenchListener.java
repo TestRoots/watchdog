@@ -6,9 +6,12 @@ import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import nl.tudelft.watchdog.core.logic.event.DebugEventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
+import nl.tudelft.watchdog.eclipse.logic.event.listeners.BreakpointListener;
+import nl.tudelft.watchdog.eclipse.logic.event.listeners.DebugEventListener;
 import nl.tudelft.watchdog.eclipse.logic.network.TransferManager;
 import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 
@@ -23,6 +26,9 @@ public class WorkbenchListener {
 	/** The editorObservable. */
 	private WatchDogEventManager watchDogEventManager;
 
+	/** The debug event manager used to process debug events. */
+	private DebugEventManager debugEventManager;
+
 	/**
 	 * The window listener. An Eclipse window is the whole Eclipse application
 	 * window.
@@ -31,10 +37,16 @@ public class WorkbenchListener {
 
 	private IWorkbench workbench;
 
-	/** Constructor. */
+	/**
+	 * Constructor.
+	 * 
+	 * @param debugEventManager
+	 */
 	public WorkbenchListener(WatchDogEventManager userActionManager,
+			DebugEventManager debugEventManager,
 			TransferManager transferManager) {
 		this.watchDogEventManager = userActionManager;
+		this.debugEventManager = debugEventManager;
 		this.transferManager = transferManager;
 		this.workbench = PlatformUI.getWorkbench();
 	}
@@ -52,9 +64,19 @@ public class WorkbenchListener {
 		new JUnitListener(watchDogEventManager);
 		new GeneralActivityListener(watchDogEventManager,
 				workbench.getDisplay());
+		addDebuggerListeners();
 		addShutdownListeners();
-		DebugPlugin.getDefault().addDebugEventListener(
+	}
+
+	/** Initializes the listeners for debug intervals and events. */
+	private void addDebuggerListeners() {
+		DebugPlugin debugPlugin = DebugPlugin.getDefault();
+		debugPlugin.addDebugEventListener(
 				new DebuggerListener(watchDogEventManager));
+		debugPlugin.getBreakpointManager().addBreakpointListener(
+				new BreakpointListener(debugEventManager));
+		debugPlugin.addDebugEventListener(
+				new DebugEventListener(debugEventManager));
 	}
 
 	/** The shutdown listeners, executed when Eclipse is shutdown. */

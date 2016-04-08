@@ -14,7 +14,7 @@ public abstract class EventBase extends WatchDogItem implements Serializable, Co
 
 	/** The type of the event. */
 	@SerializedName("et")
-	protected EventType eventType;
+	protected DebugEventType debugEventType;
 
 	/** The timestamp of the event. */
 	@SerializedName("ts")
@@ -28,8 +28,8 @@ public abstract class EventBase extends WatchDogItem implements Serializable, Co
 	protected String sessionSeed;
 
 	/** Constructor. */
-	public EventBase(EventType type, Date timestamp) {
-		this.eventType = type;
+	public EventBase(DebugEventType type, Date timestamp) {
+		this.debugEventType = type;
 		this.timestamp = timestamp;
 	}
 
@@ -50,9 +50,9 @@ public abstract class EventBase extends WatchDogItem implements Serializable, Co
 		this.sessionSeed = sessionSeed;
 	}
 
-	/** @return the {@link EventType}. */
-	public EventType getType() {
-		return eventType;
+	/** @return the {@link DebugEventType}. */
+	public DebugEventType getType() {
+		return debugEventType;
 	}
 
 	/**
@@ -93,7 +93,7 @@ public abstract class EventBase extends WatchDogItem implements Serializable, Co
 			return false;
 		}
 		EventBase other = (EventBase) obj;
-		if (eventType != other.eventType) {
+		if (debugEventType != other.debugEventType) {
 			return false;
 		}
 		if (sessionSeed == null) {

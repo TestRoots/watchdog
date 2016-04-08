@@ -23,7 +23,7 @@ public class BreakpointChangeEvent extends BreakpointEventBase {
 
 	/** Constructor. */
 	public BreakpointChangeEvent(int hash, BreakpointType type, List<BreakpointChangeType> changes, Date timestamp) {
-		super(hash, type, EventType.BREAKPOINT_CHANGE, timestamp);
+		super(hash, type, DebugEventType.BREAKPOINT_CHANGE, timestamp);
 		this.changes = changes;
 	}
 
