@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.intellij.ui.wizards.projectregistration;
 
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
 import nl.tudelft.watchdog.intellij.ui.util.UIUtils;
 import nl.tudelft.watchdog.core.ui.wizards.Project;
@@ -98,7 +99,7 @@ public class ProjectCreatedEndingStep extends RegistrationEndingStepBase {
      * debugging.
      */
     private void createDebugSurveyInfo(JPanel parent) {
-        UIUtils.createBoldLabel(parent, "Do you ever debug? Did you know WatchDog now also reports on debugging?");
+        UIUtils.createBoldLabel(parent, WatchDogGlobals.DEBUG_SURVEY_TEXT);
         UIUtils.createStartDebugSurveyLink(parent);
     }
 
