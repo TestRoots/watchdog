@@ -62,8 +62,5 @@ Bundle-ClassPath: .,
  lib/httpclient-4.3.3.jar,
  lib/httpclient-cache-4.3.3.jar,
  lib/httpcore-4.3.2.jar,
- lib/httpmime-4.3.3.jar,
- lib/jcommon-1.0.23.jar,
- lib/jfreechart-1.0.19-swt.jar,
- lib/jfreechart-1.0.19.jar
+ lib/httpmime-4.3.3.jar
 Require-Bundle: nl.tudelft.WatchDogCore;bundle-version="1.7.0"

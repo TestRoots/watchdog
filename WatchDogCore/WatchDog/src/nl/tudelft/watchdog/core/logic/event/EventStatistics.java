@@ -1,6 +1,8 @@
 package nl.tudelft.watchdog.core.logic.event;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class EventStatistics {
 
 	/** A list of the managed events. */
 	private final List<EventBase> events = new ArrayList<>();
-	
+
 	/** The debug interval that is currently selected. */
 	private final DebugInterval selectedInterval;
 
@@ -57,22 +59,74 @@ public class EventStatistics {
 		return selectedInterval.getStart().before(timestamp) && timestamp.before(selectedInterval.getEnd());
 	}
 
+	/**
+	 * Creates a dataset of all events that occurred during the selected debug
+	 * interval.
+	 */
 	public GanttCategoryDataset createDebugEventGanttChartDataset() {
-		// TODO Auto-generated method stub
-		final TaskSeries s1 = new TaskSeries("debug events");
-		s1.add(new Task("test event", new Date(1), new Date(2)));
-		s1.add(new Task("test event2", new Date(3), new Date(4)));
+		// Split events list into one list per event type.
+		List<EventBase> bpAddEvents = new ArrayList<>();
+		List<EventBase> bpChangeEvents = new ArrayList<>();
+		List<EventBase> bpRemoveEvents = new ArrayList<>();
+		// TODO: add other event types
+		for (EventBase event : events) {
+			switch (event.getType()) {
+			case BREAKPOINT_ADD:
+				bpAddEvents.add(event);
+				break;
+			case BREAKPOINT_CHANGE:
+				bpChangeEvents.add(event);
+				break;
+			case BREAKPOINT_REMOVE:
+				bpRemoveEvents.add(event);
+				break;
+			}
+		}
 
-		// NOTE: the start+end times of the parent task should be wide enough to
-		// hold all subtasks
-		Task ev3 = new Task("test event3", new Date(1), new Date(5));
-		ev3.addSubtask(new Task("test event3.2", new Date(4), new Date(5)));
-		ev3.addSubtask(new Task("test event3.1", new Date(2), new Date(3)));
-		s1.add(ev3);
+		// Create and add the tasks for each event type. 
+		final TaskSeries allTasks = new TaskSeries("Debug Events");
+		allTasks.add(createTaskForEventsWithName("Breakpoint Added", bpAddEvents));
+		allTasks.add(createTaskForEventsWithName("Breakpoint Changed", bpChangeEvents));
+		allTasks.add(createTaskForEventsWithName("Breakpoint Removed", bpRemoveEvents));
+		// TODO: create task for other events
 
+		// Create collection of the overall tasks.
 		final TaskSeriesCollection collection = new TaskSeriesCollection();
-		collection.add(s1);
+		collection.add(allTasks);
 		return collection;
+	}
+
+	/**
+	 * Creates the overall task for a particular event type and attaches each
+	 * individual event as a subtask.
+	 */
+	private Task createTaskForEventsWithName(String taskName, List<EventBase> events) {
+		final Task overallTask;
+		if (!events.isEmpty()) {
+			Collections.sort(events);
+			overallTask = new Task(taskName, events.get(0).getTimestamp(),
+					addDeltaTo(events.get(events.size() - 1).getTimestamp()));
+
+			// Add subtask for each event
+			for (EventBase event : events) {
+				overallTask
+						.addSubtask(new Task(event.toString(), event.getTimestamp(), addDeltaTo(event.getTimestamp())));
+			}
+		} else {
+			overallTask = new Task(taskName, new Date(), addDeltaTo(new Date()));
+		}
+		return overallTask;
+	}
+
+	/**
+	 * Adds some time to make sure the end time of a task is later than its
+	 * start time.
+	 */
+	private Date addDeltaTo(Date timestamp) {
+		Calendar newTimestamp = Calendar.getInstance();
+		newTimestamp.setTime(timestamp);
+		newTimestamp.add(Calendar.MILLISECOND, 500);
+		return newTimestamp.getTime();
 	}
 
 }

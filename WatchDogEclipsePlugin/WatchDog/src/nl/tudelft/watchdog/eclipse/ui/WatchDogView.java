@@ -15,6 +15,7 @@ import org.eclipse.ui.IPartService;
 import org.eclipse.ui.part.ViewPart;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.chart.plot.Plot;
@@ -181,7 +182,7 @@ public class WatchDogView extends ViewPart {
 		eventStatistics = new EventStatistics(
 				InitializationManager.getInstance().getDebugEventManager(),
 				selectedDebugInterval);
-		GanttCategoryDataset dataset = eventStatistics
+		final GanttCategoryDataset dataset = eventStatistics
 				.createDebugEventGanttChartDataset();
 
 		final JFreeChart chart = ChartFactory.createGanttChart(
@@ -193,6 +194,13 @@ public class WatchDogView extends ViewPart {
 				true, // tooltips
 				false // urls
 		);
+
+		// Scale the chart based on the selected debug interval.
+		CategoryPlot plot = chart.getCategoryPlot();
+		ValueAxis axis = plot.getRangeAxis();
+		axis.setRangeWithMargins(selectedDebugInterval.getStart().getTime(),
+				selectedDebugInterval.getEnd().getTime());
+
 		return chart;
 	}
 
