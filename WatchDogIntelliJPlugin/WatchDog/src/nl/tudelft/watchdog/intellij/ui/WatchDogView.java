@@ -235,7 +235,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
                 update();
             }
         }, getDebugIntervalStrings(), latestDebugIntervals.indexOf(selectedDebugInterval));
-        debugIntervalSelectionBox.setMinimumAndPreferredWidth(275);
+        debugIntervalSelectionBox.setMinimumAndPreferredWidth(300);
     }
 
     private String[] getDebugIntervalStrings() {
