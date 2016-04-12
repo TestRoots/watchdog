@@ -10,7 +10,7 @@ import org.jfree.data.gantt.Task;
 import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
 
-import nl.tudelft.watchdog.core.logic.event.EventManager;
+import nl.tudelft.watchdog.core.logic.event.DebugEventManager;
 import nl.tudelft.watchdog.core.logic.event.EventStatisticsBase;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
@@ -22,9 +22,9 @@ import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
 public class EventStatistics extends EventStatisticsBase {
 
 	/** Constructor. */
-	public EventStatistics(EventManager eventManager,
+	public EventStatistics(DebugEventManager debugEventManager,
 			DebugInterval selectedInterval) {
-		super(eventManager, selectedInterval);
+		super(debugEventManager, selectedInterval);
 	}
 
 	/**

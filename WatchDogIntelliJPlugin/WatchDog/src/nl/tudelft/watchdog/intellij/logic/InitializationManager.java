@@ -120,8 +120,8 @@ public class InitializationManager {
     }
 
     /** @return the debug event manager. */
-    public EventManager getDebugEventManager() {
-        return eventManager;
+    public DebugEventManager getDebugEventManager() {
+        return debugEventManager;
     }
 
     public TransferManagerBase getTransferManager() {

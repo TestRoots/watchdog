@@ -28,8 +28,8 @@ public abstract class EventStatisticsBase {
 	private final DebugInterval selectedInterval;
 
 	/** Constructor. */
-	public EventStatisticsBase(EventManager eventManager, DebugInterval selectedInterval) {
-		this.eventsStatisticsPersister = eventManager.getEventStatisticsPersister();
+	public EventStatisticsBase(DebugEventManager debugEventManager, DebugInterval selectedInterval) {
+		this.eventsStatisticsPersister = debugEventManager.getEventStatisticsPersister();
 		this.selectedInterval = selectedInterval;
 		addAllEventsWithinSelectedInterval();
 	}
