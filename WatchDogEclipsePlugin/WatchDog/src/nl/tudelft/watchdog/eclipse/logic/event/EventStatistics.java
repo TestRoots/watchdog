@@ -1,6 +1,5 @@
 package nl.tudelft.watchdog.eclipse.logic.event;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -32,24 +31,7 @@ public class EventStatistics extends EventStatisticsBase {
 	 * interval.
 	 */
 	public GanttCategoryDataset createDebugEventGanttChartDataset() {
-		// Split events list into one list per event type.
-		List<EventBase> bpAddEvents = new ArrayList<>();
-		List<EventBase> bpChangeEvents = new ArrayList<>();
-		List<EventBase> bpRemoveEvents = new ArrayList<>();
-		// TODO: add other event types
-		for (EventBase event : events) {
-			switch (event.getType()) {
-			case BREAKPOINT_ADD:
-				bpAddEvents.add(event);
-				break;
-			case BREAKPOINT_CHANGE:
-				bpChangeEvents.add(event);
-				break;
-			case BREAKPOINT_REMOVE:
-				bpRemoveEvents.add(event);
-				break;
-			}
-		}
+		splitEventsIntoAListPerType();
 
 		// Create and add the tasks for each event type.
 		final TaskSeries allTasks = new TaskSeries("Debug Events");
@@ -59,7 +41,25 @@ public class EventStatistics extends EventStatisticsBase {
 				bpChangeEvents));
 		allTasks.add(createTaskForEventsWithName("Breakpoint Removed",
 				bpRemoveEvents));
-		// TODO: create task for other events
+		allTasks.add(createTaskForEventsWithName("Suspended (breakpoint)",
+				suspendBpEvents));
+		allTasks.add(createTaskForEventsWithName("Suspended (client)",
+				suspendClientEvents));
+		allTasks.add(createTaskForEventsWithName("Stepped Out", stepOutEvents));
+		allTasks.add(
+				createTaskForEventsWithName("Stepped Into", stepIntoEvents));
+		allTasks.add(
+				createTaskForEventsWithName("Stepped Over", stepOverEvents));
+		allTasks.add(createTaskForEventsWithName("Resumed (client)",
+				resumeClientEvents));
+		allTasks.add(createTaskForEventsWithName("Inspected Variable",
+				inspectEvents));
+		allTasks.add(createTaskForEventsWithName("Defined Watch",
+				defineWatchEvents));
+		allTasks.add(createTaskForEventsWithName("Evaluated Expression",
+				evalExpressionEvents));
+		allTasks.add(createTaskForEventsWithName("Modified Variable Value",
+				modVarValueEvents));
 
 		// Create collection of the overall tasks.
 		final TaskSeriesCollection collection = new TaskSeriesCollection();
