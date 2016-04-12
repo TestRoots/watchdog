@@ -1,12 +1,5 @@
 package nl.tudelft.watchdog.eclipse.ui.util;
 
-import nl.tudelft.watchdog.core.util.WatchDogLogger;
-import nl.tudelft.watchdog.eclipse.Activator;
-import nl.tudelft.watchdog.eclipse.ui.WatchDogView;
-import nl.tudelft.watchdog.eclipse.ui.util.CommandExecuterBase.CommandExecuter;
-import nl.tudelft.watchdog.eclipse.ui.util.CommandExecuterBase.CommandRefresher;
-import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
-
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -24,6 +17,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
+import nl.tudelft.watchdog.eclipse.Activator;
+import nl.tudelft.watchdog.eclipse.ui.WatchDogView;
+import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
+import nl.tudelft.watchdog.eclipse.ui.util.CommandExecuterBase.CommandExecuter;
+import nl.tudelft.watchdog.eclipse.ui.util.CommandExecuterBase.CommandRefresher;
+import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /** Utility methods for the UI. */
 public class UIUtils {
@@ -89,7 +90,8 @@ public class UIUtils {
 	/** Creates uneditable text field. */
 	public static Text createTextField(Composite parent, String content) {
 		Text text = new Text(parent, SWT.SINGLE | SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.BOTTOM, SWT.BEGINNING, true, false));
+		text.setLayoutData(
+				new GridData(SWT.BOTTOM, SWT.BEGINNING, true, false));
 		text.setText(content);
 		text.setEditable(false);
 		return text;
@@ -135,7 +137,8 @@ public class UIUtils {
 	 * @return A {@link GridLayout}ed composite with the given number of
 	 *         columns.
 	 */
-	public static Composite createGridedComposite(Composite parent, int columns) {
+	public static Composite createGridedComposite(Composite parent,
+			int columns) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(columns, false));
 		return composite;
@@ -222,7 +225,8 @@ public class UIUtils {
 					"resources/images/watchdog_icon_warning.png");
 
 	/** Creates and returns a label with the given text and color. */
-	public static Label createLabel(String text, Composite parent, Color color) {
+	public static Label createLabel(String text, Composite parent,
+			Color color) {
 		Label label = createLabel(text, parent);
 		label.setForeground(color);
 		return label;
@@ -234,14 +238,15 @@ public class UIUtils {
 	}
 
 	/** Creates a logo from the given image url. */
-	public static Label createLogo(Composite logoContainer, String imageLocation) {
+	public static Label createLogo(Composite logoContainer,
+			String imageLocation) {
 		Label watchdogLogo = new Label(logoContainer, SWT.NONE);
 		ImageDescriptor watchdogLogoImageDescriptor = Activator
 				.imageDescriptorFromPlugin(Activator.PLUGIN_ID, imageLocation);
 		Image watchdogLogoImage = watchdogLogoImageDescriptor.createImage();
 		watchdogLogo.setImage(watchdogLogoImage);
-		watchdogLogo.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING,
-				true, false));
+		watchdogLogo.setLayoutData(
+				new GridData(SWT.CENTER, SWT.BEGINNING, true, false));
 		return watchdogLogo;
 	}
 
@@ -287,8 +292,8 @@ public class UIUtils {
 	/** Creates a Combo List of String items. */
 	public static Combo createComboList(Composite parent,
 			SelectionListener listener, String[] items, int defaultSelection) {
-		Combo comboList = new Combo(parent, SWT.DROP_DOWN | SWT.BORDER
-				| SWT.READ_ONLY);
+		Combo comboList = new Combo(parent,
+				SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY);
 		comboList.setItems(items);
 		comboList.select(defaultSelection);
 		comboList.addSelectionListener(listener);
@@ -301,5 +306,18 @@ public class UIUtils {
 				+ WatchDogUtils.getProjectSetting().projectId + ".html";
 		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
 				"Open Report.", projectReport);
+	}
+
+	/**
+	 * Creates a linked label that opens the debug survey in the browser with
+	 * the correct User ID.
+	 */
+	public static void createStartDebugSurveyLink(Composite container) {
+		String surveyLink = "https://docs.google.com/forms/d/1ybD1jC-iICXNlmQpyPEFngtmOtodicDr18E1ZbfBtx4/viewform?entry.1872114938="
+				+ Preferences.getInstance().getUserId()
+				+ "&entry.87074017=Java&entry.1002919343=Eclipse&entry.2010347695&entry.2084367812";
+		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
+				"Share your thoughts on debugging and win an additional Amazon voucher!\n",
+				surveyLink);
 	}
 }

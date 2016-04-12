@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.Composite;
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.core.ui.wizards.Project;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
@@ -124,12 +125,23 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPageBase {
 			dynamicComposite = UIUtils.createGridedComposite(topComposite, 1);
 			dynamicComposite.setLayoutData(UIUtils.createFullGridUsageData());
 			if (wizard.userWelcomePage.getRegisterNewId()) {
+				createDebugSurveyInfo();
 				userRegistrationPage
 						.createUserRegistrationSummary(dynamicComposite);
 			}
 			createProjectRegistrationSummary();
 			return;
 		}
+	}
+
+	/**
+	 * Shows the label and link to ask the new user to fill out the survey on
+	 * debugging.
+	 */
+	private void createDebugSurveyInfo() {
+		UIUtils.createBoldLabel(WatchDogGlobals.DEBUG_SURVEY_TEXT,
+				dynamicComposite);
+		UIUtils.createStartDebugSurveyLink(dynamicComposite);
 	}
 
 	private void createProjectRegistrationSummary() {

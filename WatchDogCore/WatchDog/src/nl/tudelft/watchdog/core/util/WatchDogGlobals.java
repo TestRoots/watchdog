@@ -17,6 +17,8 @@ public class WatchDogGlobals {
 
 	/** The default URI of the WatchDogServer. */
 	public final static String DEFAULT_SERVER_URI = "http://watchdog.testroots.org/";
+	
+	public final static String DEBUG_SURVEY_TEXT = "Do you ever debug? Did you know WatchDog now also reports on debugging?";
 
 	/** Flag determining whether WatchDog is active. */
 	public static boolean isActive = false;

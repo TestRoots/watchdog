@@ -1,13 +1,17 @@
 package nl.tudelft.watchdog.intellij.logic;
 
+import com.intellij.debugger.DebuggerManagerEx;
 import com.intellij.ide.plugins.PluginManager;
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.XDebuggerManager;
-import nl.tudelft.watchdog.core.logic.event.EventManager;
+import nl.tudelft.watchdog.core.logic.event.DebugEventManager;
 import nl.tudelft.watchdog.core.logic.network.TransferManagerBase;
 import nl.tudelft.watchdog.core.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.intellij.logic.event.listeners.BreakpointListener;
+import nl.tudelft.watchdog.intellij.logic.event.listeners.DebugActionListener;
+import nl.tudelft.watchdog.intellij.logic.event.listeners.DebugEventListener;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.intellij.logic.storage.Persister;
 import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
@@ -20,7 +24,7 @@ import java.util.HashMap;
 /**
  * Manages the setup process of the interval and event recording infrastructure. Is a
  * singleton and contains UI code. Guarantees that there is only one properly
- * initialized {@link IntervalManager} and {@link EventManager} that do the real work.
+ * initialized {@link IntervalManager} and {@link DebugEventManager} that do the real work.
  */
 public class InitializationManager {
 
@@ -35,7 +39,7 @@ public class InitializationManager {
     private final Persister statisticsPersister;
 
     private final WatchDogEventManager watchDogEventManager;
-    private final EventManager eventManager;
+    private final DebugEventManager debugEventManager;
     private final IntervalManager intervalManager;
 
     private final IntelliJListener intelliJListener;
@@ -60,17 +64,16 @@ public class InitializationManager {
         // Initialize managers
         intervalManager = new IntervalManager(toTransferPersister,
                 statisticsPersister);
-        eventManager = new EventManager(toTransferPersister, statisticsPersister);
-        eventManager.setSessionSeed(intervalManager.getSessionSeed());
+        debugEventManager = new DebugEventManager(toTransferPersister, statisticsPersister);
+        debugEventManager.setSessionSeed(intervalManager.getSessionSeed());
         watchDogEventManager = new WatchDogEventManager(intervalManager,
                 USER_ACTIVITY_TIMEOUT);
         new TimeSynchronityChecker(intervalManager, watchDogEventManager);
         transferManager = new TransferManagerBase(toTransferPersister, WatchDogUtils.getProjectName());
 
         // Initialize listeners
-        intelliJListener = new IntelliJListener(watchDogEventManager, project);
+        intelliJListener = new IntelliJListener(watchDogEventManager, debugEventManager, project);
         intelliJListener.attachListeners();
-        XDebuggerManager.getInstance(project).getBreakpointManager().addBreakpointListener(new BreakpointListener(eventManager));
     }
 
     /**
