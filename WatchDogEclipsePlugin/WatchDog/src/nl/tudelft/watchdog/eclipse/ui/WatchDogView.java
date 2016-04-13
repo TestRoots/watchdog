@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.eclipse.ui;
 
 import java.awt.Color;
+import java.awt.Paint;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.chart.plot.Plot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
+import org.jfree.chart.renderer.category.GanttRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -36,6 +38,7 @@ import org.jfree.util.Rotation;
 
 import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase.StatisticsTimePeriod;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
+import nl.tudelft.watchdog.core.ui.util.DebugEventColors;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
 import nl.tudelft.watchdog.eclipse.logic.event.EventStatistics;
@@ -225,7 +228,23 @@ public class WatchDogView extends ViewPart {
 		axis.setRangeWithMargins(selectedDebugInterval.getStart().getTime(),
 				selectedDebugInterval.getEnd().getTime());
 
+		// Give each event type a different color.
+		plot.setRenderer(new WatchDogGanttRenderer());
 		return chart;
+	}
+
+	private class WatchDogGanttRenderer extends GanttRenderer {
+
+		private static final long serialVersionUID = 1L;
+
+		public WatchDogGanttRenderer() {
+			super();
+			this.setShadowVisible(false);
+		}
+
+		public Paint getItemPaint(int row, int column) {
+			return DebugEventColors.get(column);
+		}
 	}
 
 	private void createShowingStatisticsLine() {

@@ -6,6 +6,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase.StatisticsTimePeriod;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
+import nl.tudelft.watchdog.core.ui.util.DebugEventColors;
 import nl.tudelft.watchdog.intellij.logic.InitializationManager;
 import nl.tudelft.watchdog.intellij.logic.event.EventStatistics;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalStatistics;
@@ -19,6 +20,7 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.chart.plot.Plot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
+import org.jfree.chart.renderer.category.GanttRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.gantt.GanttCategoryDataset;
@@ -29,6 +31,7 @@ import org.jfree.util.Rotation;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
@@ -195,8 +198,25 @@ public class WatchDogView extends SimpleToolWindowPanel {
         axis.setRangeWithMargins(selectedDebugInterval.getStart().getTime(),
                 selectedDebugInterval.getEnd().getTime());
 
+        // Give each event type a different color.
+        plot.setRenderer(new WatchDogGanttRenderer());
         return chart;
     }
+
+    private class WatchDogGanttRenderer extends GanttRenderer {
+
+        private static final long serialVersionUID = 1L;
+
+        public WatchDogGanttRenderer() {
+            super();
+            this.setShadowVisible(false);
+        }
+
+        public Paint getItemPaint(int row, int column) {
+            return DebugEventColors.get(column);
+        }
+    }
+
 
     private void createShowingStatisticsLines() {
         JPanel lines = UIUtils.createGridedJPanel(oneColumn, 1);
