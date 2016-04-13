@@ -5,9 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -76,6 +80,7 @@ public class WatchDogView extends ViewPart {
 	private List<DebugInterval> latestDebugIntervals;
 	private static final int NUMBER_OF_INTERVALS_TO_SHOW = 10;
 
+	private ScrolledComposite scrolledComposite;
 	private Composite oneColumn;
 	private Composite intervalSelection;
 	private Composite debugIntervalSelection;
@@ -86,7 +91,7 @@ public class WatchDogView extends ViewPart {
 
 	/** Updates the view by completely repainting it. */
 	public void update() {
-		oneColumn.dispose();
+		scrolledComposite.dispose();
 		createPartControl(parent);
 		parent.update();
 		parent.layout();
@@ -100,7 +105,22 @@ public class WatchDogView extends ViewPart {
 
 		this.parent = parent;
 
-		oneColumn = UIUtils.createGridedComposite(parent, 1);
+		scrolledComposite = new ScrolledComposite(parent,
+				SWT.H_SCROLL | SWT.V_SCROLL);
+		scrolledComposite.setLayout(new FillLayout());
+		scrolledComposite.setExpandHorizontal(true);
+		scrolledComposite.setExpandVertical(true);
+		scrolledComposite.addControlListener(new ControlAdapter() {
+			public void controlResized(ControlEvent e) {
+				Rectangle r = scrolledComposite.getClientArea();
+				scrolledComposite.setMinSize(
+						oneColumn.computeSize(r.width, SWT.DEFAULT));
+			}
+		});
+
+		oneColumn = UIUtils.createGridedComposite(scrolledComposite, 1);
+		scrolledComposite.setContent(oneColumn);
+
 		if (!WatchDogGlobals.isActive) {
 			createInactiveViewContent();
 		} else {
