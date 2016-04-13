@@ -142,7 +142,6 @@ public class WatchDogView extends SimpleToolWindowPanel {
 
     private void createActiveView() {
         JComponent container = UIUtils.createGridedJPanel(oneColumn, 2);
-        JComponent debugChartContainer = UIUtils.createGridedJPanel(oneColumn, 1);
 
         createChartPanel(
                 container,
@@ -167,7 +166,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
 
         if (selectedDebugInterval != null) {
             createDebugIntervalSelectionList();
-            createChartPanel(debugChartContainer, createDebugEventGanttChart());
+            createChartPanel(UIUtils.createGridedJPanel(oneColumn, 1), createDebugEventGanttChart());
         }
 
         createShowingStatisticsLines();
@@ -226,7 +225,9 @@ public class WatchDogView extends SimpleToolWindowPanel {
     }
 
     private void createDebugIntervalSelectionList() {
-        debugIntervalSelection = UIUtils.createFlowJPanelLeft(oneColumn);
+        JPanel debugLine = UIUtils.createGridedJPanel(oneColumn, 1);
+        UIUtils.createLabel(debugLine,"");
+        debugIntervalSelection = UIUtils.createFlowJPanelLeft(debugLine);
         UIUtils.createLabel(debugIntervalSelection, "Show debug events for debug interval ");
 
         debugIntervalSelectionBox = UIUtils.createComboBox(debugIntervalSelection, new ItemListener() {
