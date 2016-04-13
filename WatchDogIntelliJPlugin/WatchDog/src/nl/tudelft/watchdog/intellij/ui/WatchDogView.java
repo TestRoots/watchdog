@@ -142,6 +142,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
 
     private void createActiveView() {
         JComponent container = UIUtils.createGridedJPanel(oneColumn, 2);
+        JComponent debugChartContainer = UIUtils.createGridedJPanel(oneColumn, 1);
 
         createChartPanel(
                 container,
@@ -166,7 +167,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
 
         if (selectedDebugInterval != null) {
             createDebugIntervalSelectionList();
-            createChartPanel(container, createDebugEventGanttChart());
+            createChartPanel(debugChartContainer, createDebugEventGanttChart());
         }
 
         createShowingStatisticsLines();

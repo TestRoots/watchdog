@@ -50,6 +50,7 @@ public class WatchDogView extends ViewPart {
 	private EventStatistics eventStatistics;
 
 	private Composite container;
+	private Composite debugChartContainer;
 	private Composite parent;
 
 	private double eclipseOpen;
@@ -142,6 +143,9 @@ public class WatchDogView extends ViewPart {
 	private void createActiveView() {
 		container = UIUtils.createGridedComposite(oneColumn, 2);
 		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		debugChartContainer = UIUtils.createGridedComposite(oneColumn, 1);
+		debugChartContainer
+				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		createSWTChart(container, createBarChart(createDevelopmentBarDataset(),
 				"Your Development Activity", "", "minutes"));
@@ -171,7 +175,7 @@ public class WatchDogView extends ViewPart {
 
 		if (selectedDebugInterval != null) {
 			createDebugIntervalSelectionList();
-			createSWTChart(container, createDebugEventGanttChart());
+			createSWTChart(debugChartContainer, createDebugEventGanttChart());
 		}
 
 		createShowingStatisticsLine();
