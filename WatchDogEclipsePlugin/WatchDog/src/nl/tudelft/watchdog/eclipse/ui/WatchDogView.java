@@ -208,10 +208,10 @@ public class WatchDogView extends ViewPart {
 		eventStatistics = new EventStatistics(
 				InitializationManager.getInstance().getDebugEventManager(),
 				selectedDebugInterval);
-		final GanttCategoryDataset dataset = eventStatistics
+		GanttCategoryDataset dataset = eventStatistics
 				.createDebugEventGanttChartDataset();
 
-		final JFreeChart chart = ChartFactory.createGanttChart(
+		JFreeChart chart = ChartFactory.createGanttChart(
 				"Debug Events During Selected Debug Interval", "Event", "Time",
 				dataset, false, true, false);
 

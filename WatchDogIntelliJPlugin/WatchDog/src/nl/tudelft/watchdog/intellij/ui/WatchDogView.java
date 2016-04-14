@@ -179,9 +179,9 @@ public class WatchDogView extends SimpleToolWindowPanel {
         eventStatistics = new EventStatistics(
                 InitializationManager.getInstance(WatchDogUtils.getProject()).getDebugEventManager(),
                 selectedDebugInterval);
-        final GanttCategoryDataset dataset = eventStatistics.createDebugEventGanttChartDataset();
+        GanttCategoryDataset dataset = eventStatistics.createDebugEventGanttChartDataset();
 
-        final JFreeChart chart = ChartFactory.createGanttChart(
+        JFreeChart chart = ChartFactory.createGanttChart(
                 "Debug Events During Selected Debug Interval", "Event", "Time", dataset, false, true, false);
 
         // Scale the chart based on the selected debug interval.

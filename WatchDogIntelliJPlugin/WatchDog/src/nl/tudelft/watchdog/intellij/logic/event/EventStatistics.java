@@ -33,7 +33,7 @@ public class EventStatistics extends EventStatisticsBase {
         splitEventsIntoAListPerType();
 
         // Create and add the tasks for each event type.
-        final TaskSeries allTasks = new TaskSeries("Debug Events");
+        TaskSeries allTasks = new TaskSeries("Debug Events");
         allTasks.add(
                 createTaskForEventsWithName(bpAddEvents, "Breakpoint Added"));
         allTasks.add(createTaskForEventsWithName(bpChangeEvents, "Breakpoint Changed"
@@ -61,7 +61,7 @@ public class EventStatistics extends EventStatisticsBase {
         ));
 
         // Create collection of the overall tasks.
-        final TaskSeriesCollection collection = new TaskSeriesCollection();
+        TaskSeriesCollection collection = new TaskSeriesCollection();
         collection.add(allTasks);
         return collection;
     }
@@ -71,7 +71,7 @@ public class EventStatistics extends EventStatisticsBase {
      * individual event as a subtask.
      */
     private Task createTaskForEventsWithName(List<EventBase> events, String taskName) {
-        final Task overallTask;
+        Task overallTask;
         if (!events.isEmpty()) {
             Collections.sort(events);
             overallTask = new Task(taskName, events.get(0).getTimestamp(),
