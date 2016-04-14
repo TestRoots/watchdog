@@ -2,7 +2,6 @@ package nl.tudelft.watchdog.eclipse.ui;
 
 import java.awt.Color;
 import java.awt.Paint;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -38,7 +37,7 @@ import org.jfree.util.Rotation;
 
 import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase.StatisticsTimePeriod;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
-import nl.tudelft.watchdog.core.ui.util.DebugEventColors;
+import nl.tudelft.watchdog.core.ui.util.DebugEventVisualizationUtils;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
 import nl.tudelft.watchdog.eclipse.logic.event.EventStatistics;
@@ -213,14 +212,8 @@ public class WatchDogView extends ViewPart {
 				.createDebugEventGanttChartDataset();
 
 		final JFreeChart chart = ChartFactory.createGanttChart(
-				"Debug Events During Selected Debug Interval", // chart title
-				"Event", // domain axis label
-				"Time", // range axis label
-				dataset, // data
-				false, // include legend
-				true, // tooltips
-				false // urls
-		);
+				"Debug Events During Selected Debug Interval", "Event", "Time",
+				dataset, false, true, false);
 
 		// Scale the chart based on the selected debug interval.
 		CategoryPlot plot = chart.getCategoryPlot();
@@ -243,7 +236,7 @@ public class WatchDogView extends ViewPart {
 		}
 
 		public Paint getItemPaint(int row, int column) {
-			return DebugEventColors.get(column);
+			return DebugEventVisualizationUtils.getColorForNumber(column);
 		}
 	}
 
@@ -300,21 +293,10 @@ public class WatchDogView extends ViewPart {
 					public void widgetDefaultSelected(SelectionEvent e) {
 					}
 
-				}, getDebugIntervalStrings(),
+				},
+				DebugEventVisualizationUtils
+						.getDebugIntervalStrings(latestDebugIntervals),
 				latestDebugIntervals.indexOf(selectedDebugInterval));
-	}
-
-	private String[] getDebugIntervalStrings() {
-		String[] debugIntervalStrings = new String[latestDebugIntervals.size()];
-		SimpleDateFormat dateFormatter = new SimpleDateFormat(
-				"EEE MMM d HH:mm:ss");
-		for (int i = 0; i < latestDebugIntervals.size(); i++) {
-			DebugInterval currentInterval = latestDebugIntervals.get(i);
-			debugIntervalStrings[i] = dateFormatter
-					.format(currentInterval.getStart()) + " - "
-					+ dateFormatter.format(currentInterval.getEnd());
-		}
-		return debugIntervalStrings;
 	}
 
 	private void createRefreshLink() {

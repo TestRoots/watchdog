@@ -36,30 +36,30 @@ public class EventStatistics extends EventStatisticsBase {
 		// Create and add the tasks for each event type.
 		final TaskSeries allTasks = new TaskSeries("Debug Events");
 		allTasks.add(
-				createTaskForEventsWithName("Breakpoint Added", bpAddEvents));
-		allTasks.add(createTaskForEventsWithName("Breakpoint Changed",
-				bpChangeEvents));
-		allTasks.add(createTaskForEventsWithName("Breakpoint Removed",
-				bpRemoveEvents));
-		allTasks.add(createTaskForEventsWithName("Suspended (breakpoint)",
-				suspendBpEvents));
-		allTasks.add(createTaskForEventsWithName("Suspended (client)",
-				suspendClientEvents));
-		allTasks.add(createTaskForEventsWithName("Stepped Out", stepOutEvents));
+				createTaskForEventsWithName(bpAddEvents, "Breakpoint Added"));
+		allTasks.add(createTaskForEventsWithName(bpChangeEvents,
+				"Breakpoint Changed"));
+		allTasks.add(createTaskForEventsWithName(bpRemoveEvents,
+				"Breakpoint Removed"));
+		allTasks.add(createTaskForEventsWithName(suspendBpEvents,
+				"Suspended (breakpoint)"));
+		allTasks.add(createTaskForEventsWithName(suspendClientEvents,
+				"Suspended (client)"));
+		allTasks.add(createTaskForEventsWithName(stepOutEvents, "Stepped Out"));
 		allTasks.add(
-				createTaskForEventsWithName("Stepped Into", stepIntoEvents));
+				createTaskForEventsWithName(stepIntoEvents, "Stepped Into"));
 		allTasks.add(
-				createTaskForEventsWithName("Stepped Over", stepOverEvents));
-		allTasks.add(createTaskForEventsWithName("Resumed (client)",
-				resumeClientEvents));
-		allTasks.add(createTaskForEventsWithName("Inspected Variable",
-				inspectEvents));
-		allTasks.add(createTaskForEventsWithName("Defined Watch",
-				defineWatchEvents));
-		allTasks.add(createTaskForEventsWithName("Evaluated Expression",
-				evalExpressionEvents));
-		allTasks.add(createTaskForEventsWithName("Modified Variable Value",
-				modVarValueEvents));
+				createTaskForEventsWithName(stepOverEvents, "Stepped Over"));
+		allTasks.add(createTaskForEventsWithName(resumeClientEvents,
+				"Resumed (client)"));
+		allTasks.add(createTaskForEventsWithName(inspectEvents,
+				"Inspected Variable"));
+		allTasks.add(createTaskForEventsWithName(defineWatchEvents,
+				"Defined Watch"));
+		allTasks.add(createTaskForEventsWithName(evalExpressionEvents,
+				"Evaluated Expression"));
+		allTasks.add(createTaskForEventsWithName(modVarValueEvents,
+				"Modified Variable Value"));
 
 		// Create collection of the overall tasks.
 		final TaskSeriesCollection collection = new TaskSeriesCollection();
@@ -71,8 +71,8 @@ public class EventStatistics extends EventStatisticsBase {
 	 * Creates the overall task for a particular event type and attaches each
 	 * individual event as a subtask.
 	 */
-	private Task createTaskForEventsWithName(String taskName,
-			List<EventBase> events) {
+	private Task createTaskForEventsWithName(List<EventBase> events,
+			String taskName) {
 		final Task overallTask;
 		if (!events.isEmpty()) {
 			Collections.sort(events);

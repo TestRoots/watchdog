@@ -6,7 +6,7 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase.StatisticsTimePeriod;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
-import nl.tudelft.watchdog.core.ui.util.DebugEventColors;
+import nl.tudelft.watchdog.core.ui.util.DebugEventVisualizationUtils;
 import nl.tudelft.watchdog.intellij.logic.InitializationManager;
 import nl.tudelft.watchdog.intellij.logic.event.EventStatistics;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalStatistics;
@@ -35,7 +35,6 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -183,14 +182,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
         final GanttCategoryDataset dataset = eventStatistics.createDebugEventGanttChartDataset();
 
         final JFreeChart chart = ChartFactory.createGanttChart(
-                "Debug Events During Selected Debug Interval", // chart title
-                "Event", // domain axis label
-                "Time", // range axis label
-                dataset, // data
-                false, // include legend
-                true, // tooltips
-                false // urls
-        );
+                "Debug Events During Selected Debug Interval", "Event", "Time", dataset, false, true, false);
 
         // Scale the chart based on the selected debug interval.
         CategoryPlot plot = chart.getCategoryPlot();
@@ -213,7 +205,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
         }
 
         public Paint getItemPaint(int row, int column) {
-            return DebugEventColors.get(column);
+            return DebugEventVisualizationUtils.getColorForNumber(column);
         }
     }
 
@@ -246,7 +238,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
 
     private void createDebugIntervalSelectionList() {
         JPanel debugLine = UIUtils.createGridedJPanel(oneColumn, 1);
-        UIUtils.createLabel(debugLine,"");
+        UIUtils.createLabel(debugLine, "");
         debugIntervalSelection = UIUtils.createFlowJPanelLeft(debugLine);
         UIUtils.createLabel(debugIntervalSelection, "Show debug events for debug interval ");
 
@@ -256,21 +248,8 @@ public class WatchDogView extends SimpleToolWindowPanel {
                 selectedDebugInterval = latestDebugIntervals.get(debugIntervalSelectionBox.getSelectedIndex());
                 update();
             }
-        }, getDebugIntervalStrings(), latestDebugIntervals.indexOf(selectedDebugInterval));
+        }, DebugEventVisualizationUtils.getDebugIntervalStrings(latestDebugIntervals), latestDebugIntervals.indexOf(selectedDebugInterval));
         debugIntervalSelectionBox.setMinimumAndPreferredWidth(300);
-    }
-
-    private String[] getDebugIntervalStrings() {
-        String[] debugIntervalStrings = new String[latestDebugIntervals.size()];
-        SimpleDateFormat dateFormatter = new SimpleDateFormat(
-                "EEE MMM d HH:mm:ss");
-        for (int i = 0; i < latestDebugIntervals.size(); i++) {
-            DebugInterval currentInterval = latestDebugIntervals.get(i);
-            debugIntervalStrings[i] = dateFormatter
-                    .format(currentInterval.getStart()) + " - "
-                    + dateFormatter.format(currentInterval.getEnd());
-        }
-        return debugIntervalStrings;
     }
 
     private void createRefreshLink(JComponent parent) {
