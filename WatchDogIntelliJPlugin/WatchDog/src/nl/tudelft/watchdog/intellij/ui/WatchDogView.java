@@ -5,19 +5,25 @@ import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase.StatisticsTimePeriod;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
+import nl.tudelft.watchdog.core.ui.util.DebugEventVisualizationUtils;
 import nl.tudelft.watchdog.intellij.logic.InitializationManager;
+import nl.tudelft.watchdog.intellij.logic.event.EventStatistics;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.intellij.ui.util.UIUtils;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.chart.plot.Plot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
+import org.jfree.chart.renderer.category.GanttRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.gantt.GanttCategoryDataset;
 import org.jfree.data.general.DatasetUtilities;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
@@ -25,9 +31,11 @@ import org.jfree.util.Rotation;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 /**
  * A view displaying all the statistics that WatchDog has gathered.
@@ -41,6 +49,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
     public static final String ID = "WatchDog.view";
 
     private IntervalStatistics intervalStatistics;
+    private EventStatistics eventStatistics;
 
     private JComponent parent = getComponent();
     private JButton refreshButton;
@@ -61,9 +70,15 @@ public class WatchDogView extends SimpleToolWindowPanel {
 
     private StatisticsTimePeriod selectedTimePeriod = StatisticsTimePeriod.HOUR_1;
 
+    private DebugInterval selectedDebugInterval;
+    private List<DebugInterval> latestDebugIntervals;
+    private static final int NUMBER_OF_INTERVALS_TO_SHOW = 10;
+
     private JPanel oneColumn;
     private JPanel intervalSelection;
     private ComboBox intervalSelectionBox;
+    private JPanel debugIntervalSelection;
+    private ComboBox debugIntervalSelectionBox;
 
 
     public WatchDogView(boolean vertical) {
@@ -88,11 +103,28 @@ public class WatchDogView extends SimpleToolWindowPanel {
             createInactiveViewContent();
         } else {
             calculateTimes();
+            latestDebugIntervals = intervalStatistics.getLatestDebugIntervals(NUMBER_OF_INTERVALS_TO_SHOW);
+            if (selectedDebugIntervalShouldBeReset()) {
+                selectedDebugInterval = latestDebugIntervals.get(0);
+            }
             createActiveView();
             makeScrollable();
         }
         // Always create refresh link, even when statistics are not shown
         createRefreshLink(intervalSelection);
+    }
+
+    /**
+     * @return true if and only if there are debug intervals and one of the
+     * following two conditions hold:
+     * <p/>
+     * 1. No debug interval has been selected yet; or 2. A debug
+     * interval has been selected before, but it is no longer part of
+     * the latest debug intervals.
+     */
+    private boolean selectedDebugIntervalShouldBeReset() {
+        return !latestDebugIntervals.isEmpty() && (selectedDebugInterval == null
+                || !latestDebugIntervals.contains(selectedDebugInterval));
     }
 
     private void makeScrollable() {
@@ -134,9 +166,49 @@ public class WatchDogView extends SimpleToolWindowPanel {
                 createStackedBarChart(createJunitExecutionBarDataset(),
                         "Your Test Run Activity", "", ""));
 
+        if (selectedDebugInterval != null) {
+            createDebugIntervalSelectionList();
+            createChartPanel(UIUtils.createGridedJPanel(oneColumn, 1), createDebugEventGanttChart());
+        }
+
         createShowingStatisticsLines();
         createTimeSpanSelectionList();
     }
+
+    private JFreeChart createDebugEventGanttChart() {
+        eventStatistics = new EventStatistics(
+                InitializationManager.getInstance(WatchDogUtils.getProject()).getDebugEventManager(),
+                selectedDebugInterval);
+        GanttCategoryDataset dataset = eventStatistics.createDebugEventGanttChartDataset();
+
+        JFreeChart chart = ChartFactory.createGanttChart(
+                "Debug Events During Selected Debug Interval", "Event", "Time", dataset, false, true, false);
+
+        // Scale the chart based on the selected debug interval.
+        CategoryPlot plot = chart.getCategoryPlot();
+        ValueAxis axis = plot.getRangeAxis();
+        axis.setRangeWithMargins(selectedDebugInterval.getStart().getTime(),
+                selectedDebugInterval.getEnd().getTime());
+
+        // Give each event type a different color.
+        plot.setRenderer(new WatchDogGanttRenderer());
+        return chart;
+    }
+
+    private class WatchDogGanttRenderer extends GanttRenderer {
+
+        private static final long serialVersionUID = 1L;
+
+        public WatchDogGanttRenderer() {
+            super();
+            this.setShadowVisible(false);
+        }
+
+        public Paint getItemPaint(int row, int column) {
+            return DebugEventVisualizationUtils.getColorForNumber(column);
+        }
+    }
+
 
     private void createShowingStatisticsLines() {
         JPanel lines = UIUtils.createGridedJPanel(oneColumn, 1);
@@ -162,6 +234,22 @@ public class WatchDogView extends SimpleToolWindowPanel {
                 selectedTimePeriod = StatisticsTimePeriod.values()[intervalSelectionBox.getSelectedIndex()];
             }
         }, StatisticsTimePeriod.names(), selectedTimePeriod.ordinal());
+    }
+
+    private void createDebugIntervalSelectionList() {
+        JPanel debugLine = UIUtils.createGridedJPanel(oneColumn, 1);
+        UIUtils.createLabel(debugLine, "");
+        debugIntervalSelection = UIUtils.createFlowJPanelLeft(debugLine);
+        UIUtils.createLabel(debugIntervalSelection, "Show debug events for debug interval ");
+
+        debugIntervalSelectionBox = UIUtils.createComboBox(debugIntervalSelection, new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                selectedDebugInterval = latestDebugIntervals.get(debugIntervalSelectionBox.getSelectedIndex());
+                update();
+            }
+        }, DebugEventVisualizationUtils.getDebugIntervalStrings(latestDebugIntervals), latestDebugIntervals.indexOf(selectedDebugInterval));
+        debugIntervalSelectionBox.setMinimumAndPreferredWidth(300);
     }
 
     private void createRefreshLink(JComponent parent) {
