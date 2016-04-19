@@ -1,15 +1,17 @@
 package nl.tudelft.watchdog.logic.interval;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
+import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class IntervalPersisterTestSingleInterval extends PersisterTestBase {
+public class IntervalPersisterTestSingleInterval extends IntervalPersisterTestBase {
 
 	@BeforeClass
 	public static void setUpBeforeClass() {
@@ -23,10 +25,13 @@ public class IntervalPersisterTestSingleInterval extends PersisterTestBase {
 	public void test1WriteInterval() {
 		interval = IntervalPersisterTest.createRandomInterval();
 		interval.close();
-		persister.saveInterval(interval);
+		persister.save(interval);
 
-		IntervalBase savedInterval = new ArrayList<>(persister.readIntervals())
+		WatchDogItem savedItem = new ArrayList<>(persister.readItems())
 				.get(0);
+		assertTrue(savedItem instanceof IntervalBase);
+		
+		IntervalBase savedInterval = (IntervalBase) savedItem;
 		assertEquals(interval.getType(), savedInterval.getType());
 		assertEquals(interval.getStart(), savedInterval.getStart());
 		assertEquals(interval.getEnd(), savedInterval.getEnd());
@@ -36,8 +41,11 @@ public class IntervalPersisterTestSingleInterval extends PersisterTestBase {
 
 	@Test
 	public void test2CompareIntervalAfterWrite() {
-		IntervalBase savedInterval = new ArrayList<>(persister.readIntervals())
+		WatchDogItem savedItem = new ArrayList<>(persister.readItems())
 				.get(0);
+		assertTrue(savedItem instanceof IntervalBase);
+		
+		IntervalBase savedInterval = (IntervalBase) savedItem;
 		assertEquals(interval.getType(), savedInterval.getType());
 		assertEquals(interval.getStart(), savedInterval.getStart());
 		assertEquals(interval.getEnd(), savedInterval.getEnd());
@@ -45,8 +53,11 @@ public class IntervalPersisterTestSingleInterval extends PersisterTestBase {
 
 	@Test
 	public void test3CompareIntervalAfterWriteDemonstratesCloseIsNotPersisted() {
-		IntervalBase savedInterval = new ArrayList<>(persister.readIntervals())
+		WatchDogItem savedItem = new ArrayList<>(persister.readItems())
 				.get(0);
+		assertTrue(savedItem instanceof IntervalBase);
+		
+		IntervalBase savedInterval = (IntervalBase) savedItem;
 		assertEquals(interval.getDuration(), savedInterval.getDuration());
 		assertEquals(interval.isClosed(), savedInterval.isClosed());
 	}

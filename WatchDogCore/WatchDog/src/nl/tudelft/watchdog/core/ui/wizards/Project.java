@@ -2,13 +2,13 @@ package nl.tudelft.watchdog.core.ui.wizards;
 
 import java.util.Date;
 
-import nl.tudelft.watchdog.core.logic.network.WatchDogTransferable;
+import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 
 /**
  * The concept of a project comprises all information entered about the project
  * by the user.
  */
-public class Project extends WatchDogTransferable {
+public class Project extends WatchDogItem {
 
 	/** Constructor. */
 	public Project(String userId) {

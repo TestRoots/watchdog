@@ -15,7 +15,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
-import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalType;
@@ -23,17 +23,18 @@ import nl.tudelft.watchdog.core.logic.interval.intervaltypes.ReadingInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.UserActiveInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.WatchDogViewInterval;
+import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
+import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /**
- * Tests the {@link EventManager}. Because this creates the intervals that are
+ * Tests the {@link WatchDogEventManager}. Because this creates the intervals that are
  * eventually transfered to the server, this is one of the most crucial parts of
  * WatchDog. Tests could flicker because they deal with timers (and Java gives
  * no guarantee as to when these timers will be executed).
@@ -41,11 +42,11 @@ import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(WatchDogGlobals.class)
 
-public class EventManagerTest {
+public class WatchDogEventManagerTest {
 
 	private static final int USER_ACTIVITY_TIMEOUT = 300;
 	private static final int TIMEOUT_GRACE_PERIOD = (int) (USER_ACTIVITY_TIMEOUT * 1.1);
-	private EventManager eventManager;
+	private WatchDogEventManager eventManager;
 	private IDEIntervalManagerBase intervalManager;
 	private ITextEditor mockedTextEditor;
 	private EditorIntervalBase editorInterval;
@@ -61,11 +62,11 @@ public class EventManagerTest {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		IDEIntervalManagerBase intervalManagerReal = new IntervalManager(
-				Mockito.mock(IntervalPersisterBase.class),
-				Mockito.mock(IntervalPersisterBase.class));
+				Mockito.mock(PersisterBase.class),
+				Mockito.mock(PersisterBase.class));
 		intervalManager = Mockito.spy(intervalManagerReal);
 		mockedTextEditor = Mockito.mock(ITextEditor.class);
-		eventManager = new EventManager(intervalManager, USER_ACTIVITY_TIMEOUT);
+		eventManager = new WatchDogEventManager(intervalManager, USER_ACTIVITY_TIMEOUT);
 		PowerMockito.mockStatic(WatchDogGlobals.class);
 		Mockito.when(WatchDogGlobals.getLogDirectory()).thenReturn("watchdog/logs/");
 		Mockito.when(WatchDogGlobals.getPreferences()).thenReturn(mockedPreferences);
@@ -291,6 +292,14 @@ public class EventManagerTest {
 
 	}
 	
+	@Test
+	public void testCreateDebugInterval() {
+		eventManager.update(createMockEvent(EventType.START_DEBUG));
+		Mockito.verify(intervalManager).addInterval(Mockito.isA(DebugInterval.class));
+		eventManager.update(createMockEvent(EventType.END_DEBUG));
+		Mockito.verify(intervalManager, Mockito.atLeastOnce()).closeInterval(
+				Mockito.isA(DebugInterval.class), Mockito.isA(Date.class));
+	}
 
 	private WatchDogEvent createMockEvent(EventType eventType) {
 		return new WatchDogEvent(mockedTextEditor, eventType);

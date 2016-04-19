@@ -2,7 +2,7 @@
 <feature
       id="WatchDog"
       label="WatchDog"
-      version="1.7.0"
+      version="2.0.0"
       provider-name="Software Engineering Research Group (TU Delft)">
 
    <description url="http://www.testroots.org">

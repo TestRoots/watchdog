@@ -4,14 +4,14 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.*;
 
-import nl.tudelft.watchdog.intellij.logic.ui.EventManager;
+import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 
 /** Editor listener for all user-triggered events. */
 public class EditorListener {
 	private final Editor editor;
-	private final EventManager eventManager;
+	private final WatchDogEventManager eventManager;
 	private final Document document;
 
 	private DocumentListener documentListener;
@@ -19,7 +19,7 @@ public class EditorListener {
 	private VisibleAreaListener  visibleAreaListener;
 
 	/** Enriches the supplied editor with all suitable listeners. */
-	public EditorListener(EventManager eventManager, Editor editor) {
+	public EditorListener(WatchDogEventManager eventManager, Editor editor) {
 		this.eventManager = eventManager;
 		this.editor = editor;
         this.document = editor.getDocument();

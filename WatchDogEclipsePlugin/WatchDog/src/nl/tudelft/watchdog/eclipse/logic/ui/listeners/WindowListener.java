@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
+import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveListener;
@@ -14,11 +14,11 @@ import org.eclipse.ui.IWorkbenchWindow;
 public class WindowListener implements IWindowListener {
 
 	/** The eventObservable. */
-	private EventManager eventManager;
+	private WatchDogEventManager eventManager;
 	private PageListener pageListener;
 
 	/** Constructor. */
-	public WindowListener(EventManager userActionManager) {
+	public WindowListener(WatchDogEventManager userActionManager) {
 		this.eventManager = userActionManager;
 	}
 

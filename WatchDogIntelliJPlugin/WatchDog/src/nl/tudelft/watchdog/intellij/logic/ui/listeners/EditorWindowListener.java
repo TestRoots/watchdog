@@ -3,13 +3,13 @@ package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
-import nl.tudelft.watchdog.intellij.logic.ui.EventManager;
+import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class EditorWindowListener implements EditorFactoryListener {
-    private EventManager eventManager;
+    private WatchDogEventManager eventManager;
 
     private EditorFocusListener focusListener;
 
@@ -17,7 +17,7 @@ public class EditorWindowListener implements EditorFactoryListener {
 
     private String myProjectName;
 
-    public EditorWindowListener (EventManager eventManager, String projectName) {
+    public EditorWindowListener (WatchDogEventManager eventManager, String projectName) {
         this.eventManager = eventManager;
         myProjectName = projectName;
     }

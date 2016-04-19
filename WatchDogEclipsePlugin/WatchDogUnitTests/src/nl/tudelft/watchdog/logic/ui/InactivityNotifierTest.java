@@ -9,7 +9,7 @@ import org.mockito.Mockito;
 import nl.tudelft.watchdog.core.logic.ui.InactivityNotifier;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.eclipse.logic.ui.EventManager;
+import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /**
@@ -22,12 +22,12 @@ public class InactivityNotifierTest {
 
 	private static final int HALF_TIMEOUT = (int) 0.5 * TIMEOUT;
 
-	private EventManager eventManagerMock;
+	private WatchDogEventManager eventManagerMock;
 	private InactivityNotifier inactivityNotifier;
 
 	@Before
 	public void setup() {
-		eventManagerMock = Mockito.mock(EventManager.class);
+		eventManagerMock = Mockito.mock(WatchDogEventManager.class);
 		inactivityNotifier = new InactivityNotifier(eventManagerMock, TIMEOUT,
 				EventType.USER_INACTIVITY);
 	}

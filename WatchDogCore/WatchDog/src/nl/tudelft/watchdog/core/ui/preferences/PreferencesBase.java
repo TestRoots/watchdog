@@ -44,16 +44,29 @@ public abstract class PreferencesBase {
 	/** Sets whether this client version has a big update available. */
     public abstract void setBigUpdateAnswered(Boolean answered);
 
+    /** @return The number of successfully transfered intervals. */
     public abstract long getIntervals();
 
 	/** Adds the number to the transfered intervals for the store. */
     public abstract void addTransferedIntervals(long number);
 
-	/** @return The number of successfully transfered intervals. */
+	/** @return The date the last intervals were transfered. */
     public abstract String getLastIntervalTransferDate();
 
-	/** Adds the number to the transfered intervals for the store. */
+	/** Sets the date when the last intervals were transfered. */
     public abstract void setLastTransferedInterval();
+    
+    /** @return The number of successfully transfered events. */
+    public abstract long getEvents();
+    
+    /** Adds the number to the transfered events for the store. */
+    public abstract void addTransferedEvents(long number);
+    
+    /** @return The date the last events were transfered. */
+    public abstract String getLastEventTransferDate();
+    
+    /** Sets the date when the last events were transfered. */
+    public abstract void setLastTransferedEvent();
 
 	/** @return The serverURL. */
     public abstract String getServerURI();

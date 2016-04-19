@@ -1,18 +1,17 @@
 package nl.tudelft.watchdog.eclipse.ui;
 
 import java.awt.Color;
-
-import nl.tudelft.watchdog.core.util.WatchDogGlobals;
-import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
-import nl.tudelft.watchdog.eclipse.logic.interval.IntervalStatistics;
-import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase.StatisticsTimePeriod;
-import nl.tudelft.watchdog.eclipse.logic.ui.listeners.WatchDogViewListener;
-import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
+import java.awt.Paint;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -20,18 +19,31 @@ import org.eclipse.ui.IPartService;
 import org.eclipse.ui.part.ViewPart;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.chart.plot.Plot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
+import org.jfree.chart.renderer.category.GanttRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.gantt.GanttCategoryDataset;
 import org.jfree.data.general.DatasetUtilities;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.jfree.util.Rotation;
+
+import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase.StatisticsTimePeriod;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
+import nl.tudelft.watchdog.core.ui.util.DebugEventVisualizationUtils;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
+import nl.tudelft.watchdog.eclipse.logic.event.EventStatistics;
+import nl.tudelft.watchdog.eclipse.logic.interval.IntervalStatistics;
+import nl.tudelft.watchdog.eclipse.logic.ui.listeners.WatchDogViewListener;
+import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
 
 /** A view displaying all the statistics that WatchDog has gathered. */
 public class WatchDogView extends ViewPart {
@@ -41,8 +53,10 @@ public class WatchDogView extends ViewPart {
 	public static final String ID = "WatchDog.view";
 
 	private IntervalStatistics intervalStatistics;
+	private EventStatistics eventStatistics;
 
 	private Composite container;
+	private Composite debugChartContainer;
 	private Composite parent;
 
 	private double eclipseOpen;
@@ -64,8 +78,14 @@ public class WatchDogView extends ViewPart {
 
 	private StatisticsTimePeriod selectedTimePeriod = StatisticsTimePeriod.HOUR_1;
 
+	private DebugInterval selectedDebugInterval;
+	private List<DebugInterval> latestDebugIntervals;
+	private static final int NUMBER_OF_INTERVALS_TO_SHOW = 10;
+
+	private ScrolledComposite scrolledComposite;
 	private Composite oneColumn;
 	private Composite intervalSelection;
+	private Composite debugIntervalSelection;
 
 	private IPartService partService;
 
@@ -73,7 +93,7 @@ public class WatchDogView extends ViewPart {
 
 	/** Updates the view by completely repainting it. */
 	public void update() {
-		oneColumn.dispose();
+		scrolledComposite.dispose();
 		createPartControl(parent);
 		parent.update();
 		parent.layout();
@@ -87,16 +107,49 @@ public class WatchDogView extends ViewPart {
 
 		this.parent = parent;
 
-		oneColumn = UIUtils.createGridedComposite(parent, 1);
+		scrolledComposite = new ScrolledComposite(parent,
+				SWT.H_SCROLL | SWT.V_SCROLL);
+		scrolledComposite.setLayout(new FillLayout());
+		scrolledComposite.setExpandHorizontal(true);
+		scrolledComposite.setExpandVertical(true);
+		scrolledComposite.addControlListener(new ControlAdapter() {
+			public void controlResized(ControlEvent e) {
+				Rectangle r = scrolledComposite.getClientArea();
+				scrolledComposite.setMinSize(
+						oneColumn.computeSize(r.width, SWT.DEFAULT));
+			}
+		});
+
+		oneColumn = UIUtils.createGridedComposite(scrolledComposite, 1);
+		scrolledComposite.setContent(oneColumn);
+
 		if (!WatchDogGlobals.isActive) {
 			createInactiveViewContent();
 		} else {
 			calculateTimes();
+			latestDebugIntervals = intervalStatistics
+					.getLatestDebugIntervals(NUMBER_OF_INTERVALS_TO_SHOW);
+			if (selectedDebugIntervalShouldBeReset()) {
+				selectedDebugInterval = latestDebugIntervals.get(0);
+			}
 			createActiveView();
 		}
 
 		// Always create refresh link, even when statistics are not shown
 		createRefreshLink();
+	}
+
+	/**
+	 * @return true if and only if there are debug intervals and one of the
+	 *         following two conditions hold:
+	 * 
+	 *         1. No debug interval has been selected yet; or 2. A debug
+	 *         interval has been selected before, but it is no longer part of
+	 *         the latest debug intervals.
+	 */
+	private boolean selectedDebugIntervalShouldBeReset() {
+		return !latestDebugIntervals.isEmpty() && (selectedDebugInterval == null
+				|| !latestDebugIntervals.contains(selectedDebugInterval));
 	}
 
 	private void createInactiveViewContent() {
@@ -113,50 +166,88 @@ public class WatchDogView extends ViewPart {
 		container = UIUtils.createGridedComposite(oneColumn, 2);
 		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		createSWTChart(
-				container,
-				createBarChart(createDevelopmentBarDataset(),
-						"Your Development Activity", "", "minutes"));
-		createSWTChart(
-				container,
-				createPieChart(createDevelopmentPieDataset(),
-						"Your Development Activity"));
+		createSWTChart(container, createBarChart(createDevelopmentBarDataset(),
+				"Your Development Activity", "", "minutes"));
+		createSWTChart(container, createPieChart(createDevelopmentPieDataset(),
+				"Your Development Activity"));
 		UIUtils.createLabel("", container);
 		UIUtils.createLabel("", container);
 
-		createSWTChart(
-				container,
+		createSWTChart(container,
 				createBarChart(createProductionVSTestBarDataset(),
 						"Your Production vs. Test Activity", "", "minutes"));
-		createSWTChart(
-				container,
+		createSWTChart(container,
 				createPieChart(createProductionVSTestPieDataset(),
 						"Your Production vs. Test Activity"));
 
 		UIUtils.createLabel("", container);
 		UIUtils.createLabel("", container);
 
-		createSWTChart(
-				container,
+		createSWTChart(container,
 				createPieChart(createPerspectiveViewPieDataset(),
 						"Your Perspective Activity"));
-		createSWTChart(
-				container,
+		createSWTChart(container,
 				createStackedBarChart(createJunitExecutionBarDataset(),
 						"Your Test Run Activity", "", ""));
+		UIUtils.createLabel("", container);
+		UIUtils.createLabel("", container);
+
+		if (selectedDebugInterval != null) {
+			createDebugIntervalSelectionList();
+			debugChartContainer = UIUtils.createGridedComposite(oneColumn, 1);
+			debugChartContainer.setLayoutData(
+					new GridData(SWT.FILL, SWT.FILL, true, true));
+			createSWTChart(debugChartContainer, createDebugEventGanttChart());
+		}
 
 		createShowingStatisticsLine();
 		createTimeSpanSelectionList();
 	}
 
+	private JFreeChart createDebugEventGanttChart() {
+		eventStatistics = new EventStatistics(
+				InitializationManager.getInstance().getDebugEventManager(),
+				selectedDebugInterval);
+		GanttCategoryDataset dataset = eventStatistics
+				.createDebugEventGanttChartDataset();
+
+		JFreeChart chart = ChartFactory.createGanttChart(
+				"Debug Events During Selected Debug Interval", "Event", "Time",
+				dataset, false, true, false);
+
+		// Scale the chart based on the selected debug interval.
+		CategoryPlot plot = chart.getCategoryPlot();
+		ValueAxis axis = plot.getRangeAxis();
+		axis.setRangeWithMargins(selectedDebugInterval.getStart().getTime(),
+				selectedDebugInterval.getEnd().getTime());
+
+		// Give each event type a different color.
+		plot.setRenderer(new WatchDogGanttRenderer());
+		return chart;
+	}
+
+	private class WatchDogGanttRenderer extends GanttRenderer {
+
+		private static final long serialVersionUID = 1L;
+
+		public WatchDogGanttRenderer() {
+			super();
+			this.setShadowVisible(false);
+		}
+
+		public Paint getItemPaint(int row, int column) {
+			return DebugEventVisualizationUtils.getColorForNumber(column);
+		}
+	}
+
 	private void createShowingStatisticsLine() {
-		Composite lineComposite = UIUtils.createZeroMarginGridedComposite(
-				oneColumn, 3);
-		UIUtils.createLabel(
-				"Showing statistics from " + intervalStatistics.oldestDate
-						+ " to " + intervalStatistics.mostRecentDate + " ("
-						+ intervalStatistics.getNumberOfIntervals()
-						+ " intervals).", lineComposite);
+		Composite lineComposite = UIUtils
+				.createZeroMarginGridedComposite(oneColumn, 3);
+		UIUtils.createLabel("Showing statistics from "
+				+ intervalStatistics.oldestDate + " to "
+				+ intervalStatistics.mostRecentDate + " ("
+				+ intervalStatistics.getNumberOfIntervals() + " intervals).",
+				lineComposite);
 
 		UIUtils.createLabel("Not enough statistics for you?", lineComposite);
 		UIUtils.createOpenReportLink(lineComposite);
@@ -182,11 +273,38 @@ public class WatchDogView extends ViewPart {
 		}, StatisticsTimePeriod.names(), selectedTimePeriod.ordinal());
 	}
 
+	private void createDebugIntervalSelectionList() {
+		debugIntervalSelection = UIUtils
+				.createZeroMarginGridedComposite(oneColumn, 3);
+		UIUtils.createLabel("Show debug events for debug interval ",
+				debugIntervalSelection);
+		UIUtils.createComboList(debugIntervalSelection,
+				new SelectionListener() {
+
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						Combo widget = (Combo) e.getSource();
+						selectedDebugInterval = latestDebugIntervals
+								.get(widget.getSelectionIndex());
+						update();
+					}
+
+					@Override
+					public void widgetDefaultSelected(SelectionEvent e) {
+					}
+
+				},
+				DebugEventVisualizationUtils
+						.getDebugIntervalStrings(latestDebugIntervals),
+				latestDebugIntervals.indexOf(selectedDebugInterval));
+	}
+
 	private void createRefreshLink() {
 		UIUtils.createLinkedLabel(intervalSelection, new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				selectedDebugInterval = null;
 				update();
 			}
 
@@ -197,8 +315,9 @@ public class WatchDogView extends ViewPart {
 	}
 
 	private void calculateTimes() {
-		intervalStatistics = new IntervalStatistics(InitializationManager
-				.getInstance().getIntervalManager(), selectedTimePeriod);
+		intervalStatistics = new IntervalStatistics(
+				InitializationManager.getInstance().getIntervalManager(),
+				selectedTimePeriod);
 
 		eclipseOpen = intervalStatistics
 				.getPreciseTime(intervalStatistics.ideOpen);
@@ -230,8 +349,8 @@ public class WatchDogView extends ViewPart {
 	private void createSWTChart(Composite container, JFreeChart chart) {
 		ChartComposite chartComposite = new ChartComposite(container, SWT.NONE,
 				chart, true);
-		chartComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				true));
+		chartComposite
+				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		Rectangle bounds = chartComposite.getBounds();
 		bounds.height = bounds.width;
 		chartComposite.setBounds(bounds);
@@ -272,7 +391,8 @@ public class WatchDogView extends ViewPart {
 		result.setValue(
 				"Production Code" + printPercent(userProduction, divisor),
 				userProduction);
-		result.setValue("Test Code" + printPercent(userTest, divisor), userTest);
+		result.setValue("Test Code" + printPercent(userTest, divisor),
+				userTest);
 		return result;
 	}
 
@@ -340,10 +460,10 @@ public class WatchDogView extends ViewPart {
 	}
 
 	private CategoryDataset createJunitExecutionBarDataset() {
-		double differenceSeconds = Math.abs(averageTestDurationSeconds
-				- junitRunsCount);
-		double differenceMinutes = Math.abs(averageTestDurationMinutes
-				- junitRunsCount);
+		double differenceSeconds = Math
+				.abs(averageTestDurationSeconds - junitRunsCount);
+		double differenceMinutes = Math
+				.abs(averageTestDurationMinutes - junitRunsCount);
 
 		String testDurationTitle = "Test Run Duration";
 		double testDuration;

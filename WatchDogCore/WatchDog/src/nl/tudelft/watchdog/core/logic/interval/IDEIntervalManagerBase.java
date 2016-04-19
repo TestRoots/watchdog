@@ -11,6 +11,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.IntervalBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
+import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 
 /**
@@ -28,13 +29,13 @@ public abstract class IDEIntervalManagerBase extends IntervalManagerBase {
 	 */
 	private String sessionSeed;
 
-	private IntervalPersisterBase intervalsToTransferPersister;
+	private PersisterBase intervalsToTransferPersister;
 
-	private IntervalPersisterBase intervalsStatisticsPersister;
+	private PersisterBase intervalsStatisticsPersister;
 
 	/** Constructor. */
-	protected IDEIntervalManagerBase(IntervalPersisterBase intervalsToTransferPersister,
-			IntervalPersisterBase intervalsStatisticsPersister) {
+	protected IDEIntervalManagerBase(PersisterBase intervalsToTransferPersister,
+			PersisterBase intervalsStatisticsPersister) {
 		this.intervalsToTransferPersister = intervalsToTransferPersister;
 		this.intervalsStatisticsPersister = intervalsStatisticsPersister;
 		generateAndSetSessionSeed();
@@ -115,8 +116,8 @@ public abstract class IDEIntervalManagerBase extends IntervalManagerBase {
 		} else {
 			intervals.remove(interval);
 		}
-		intervalsToTransferPersister.saveInterval(interval);
-		intervalsStatisticsPersister.saveInterval(interval);
+		intervalsToTransferPersister.save(interval);
+		intervalsStatisticsPersister.save(interval);
 		WatchDogLogger.getInstance().logInfo(
 				"closed interval " + interval + " " + interval.getType());
 	}
@@ -165,8 +166,15 @@ public abstract class IDEIntervalManagerBase extends IntervalManagerBase {
 	/**
 	 * @return the statistics persister.
 	 */
-	public IntervalPersisterBase getIntervalsStatisticsPersister() {
+	public PersisterBase getIntervalsStatisticsPersister() {
 		return intervalsStatisticsPersister;
+	}
+	
+	/**
+	 * @return the session seed used by this interval manager. 
+	 */
+	public String getSessionSeed() {
+		return sessionSeed;
 	}
 
 }

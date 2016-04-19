@@ -17,6 +17,8 @@ public class WatchDogGlobals {
 
 	/** The default URI of the WatchDogServer. */
 	public final static String DEFAULT_SERVER_URI = "http://watchdog.testroots.org/";
+	
+	public final static String DEBUG_SURVEY_TEXT = "Do you ever debug? Did you know WatchDog now also reports on debugging?";
 
 	/** Flag determining whether WatchDog is active. */
 	public static boolean isActive = false;
@@ -25,7 +27,7 @@ public class WatchDogGlobals {
 	public static boolean lastTransactionFailed = false;
 
 	/** The client's version, as set in pom.xml. */
-	public final static String CLIENT_VERSION = "1.7.0";
+	public final static String CLIENT_VERSION = "2.0.0";
 
 	/** The host ide this plugin is running on. */
 	public static IDE hostIDE;

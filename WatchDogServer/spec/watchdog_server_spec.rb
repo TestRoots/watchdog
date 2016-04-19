@@ -47,6 +47,12 @@ def test_interval(from, to)
   interval
 end
 
+def test_event(timestamp)
+  event = Hash.new
+  event['ts'] = timestamp
+  event
+end
+
 describe 'The WatchDog Server' do
 
   before(:each) do
@@ -63,7 +69,7 @@ describe 'The WatchDog Server' do
   it 'should get client version' do
     get '/client'
     expect(last_response).to be_ok
-    expect(last_response.body).to eq('"1.7.0"')
+    expect(last_response.body).to eq('"2.0.0"')
   end
 
   it 'should create a user when the details are correct' do
@@ -115,6 +121,16 @@ describe 'The WatchDog Server' do
     last_response.status.should eql(400)
   end
 
+  it 'should return 400 on bad JSON to /users/:id/:pid/events' do
+    post '/user/foobar/foobarproject/events', 'foobar'
+    last_response.status.should eql(400)
+  end
+
+  it 'should return 400 on non JSON array being sent to /users/:id/:pid/events' do
+    post '/user/foobar/foobarproject/events', '{"foo":"bar"}'
+    last_response.status.should eql(400)
+  end
+
   it 'should return 404 for non-existing user' do
     get '/user/noexistingfoobar'
     last_response.status.should eql(404)
@@ -143,6 +159,20 @@ describe 'The WatchDog Server' do
     post '/user/' + existing_user + '/intervals', intervals.to_json
     last_response.status.should eql(404)
   end
+
+  it 'should return 404 when posting events for non-existing user' do
+    events = (1..10).map{|x| test_event(x)}
+
+    post '/user/noexistingfoobar/foobarprojects/events', events.to_json
+    last_response.status.should eql(404)
+  end
+
+  it 'should return 404 when posting events for non-existing project' do
+    events = (1..10).map{|x| test_event(x)}
+
+    post '/user/' + existing_user + '/noexistingfoobarproject/events', events.to_json
+    last_response.status.should eql(404)
+  end
   
   it 'should return 404 when trying to register a user with missing programming experience' do
     post '/user', empty_user.to_json
@@ -159,6 +189,20 @@ describe 'The WatchDog Server' do
     project_id = last_response.body
 
     post "/user/#{user_id}/#{project_id}/intervals", intervals.to_json
+    last_response.status.should eql(201)
+    expect(last_response.body).to eq('10')
+  end
+
+  it 'should return the number of stored events on successful insert' do
+    events = (1..10).map{|x| test_event(x)}
+    user = test_user
+    post '/user', user.to_json
+    user_id = last_response.body
+    project = test_project(user_id)
+    post '/project', project.to_json
+    project_id = last_response.body
+
+    post "/user/#{user_id}/#{project_id}/events", events.to_json
     last_response.status.should eql(201)
     expect(last_response.body).to eq('10')
   end
