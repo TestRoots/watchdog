@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: WatchDogUnitTests
 Bundle-SymbolicName: WatchDogUnitTests
 Bundle-Version: 2.0.0
-Fragment-Host: nl.tudelft.WatchDog;bundle-version="[0.0.0,2.0.0)"
+Fragment-Host: nl.tudelft.WatchDog;bundle-version="[0.0.0,3.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: nl.tudelft.WatchDogCore;bundle-version="2.0.0",
  org.junit
