@@ -10,6 +10,8 @@ import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -345,8 +347,15 @@ public class UIUtils {
      * the correct User ID.
      */
     public static void createStartDebugSurveyLink(JComponent parent) {
+        String programmingExperienceParam = "&entry.962486075=";
+        try {
+            programmingExperienceParam += URLEncoder.encode(Preferences.getInstance().getProgrammingExperience(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            programmingExperienceParam = "";
+        }
+
         String surveyLink = "https://docs.google.com/forms/d/1ybD1jC-iICXNlmQpyPEFngtmOtodicDr18E1ZbfBtx4/viewform?entry.1872114938="
-                + Preferences.getInstance().getUserId()
+                + Preferences.getInstance().getUserId() + programmingExperienceParam
                 + "&entry.87074017=Java&entry.1002919343=IntelliJ&entry.2010347695&entry.2084367812";
         UIUtils.createHyperLinkLabel(parent, "Share your thoughts on debugging and win an additional Amazon voucher!", surveyLink);
     }
