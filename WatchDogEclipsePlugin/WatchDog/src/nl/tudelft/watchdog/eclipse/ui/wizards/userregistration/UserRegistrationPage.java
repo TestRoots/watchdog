@@ -146,6 +146,7 @@ public class UserRegistrationPage extends RegistrationEndingPageBase {
 		Preferences preferences = Preferences.getInstance();
 		preferences.setUserId(id);
 		preferences.registerProjectId(WatchDogUtils.getWorkspaceName(), "");
+		preferences.setProgrammingExperience(user.programmingExperience);
 	}
 
 	/**

@@ -1,5 +1,8 @@
 package nl.tudelft.watchdog.eclipse.ui.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -313,8 +316,18 @@ public class UIUtils {
 	 * the correct User ID.
 	 */
 	public static void createStartDebugSurveyLink(Composite container) {
+		String programmingExperienceParam = "&entry.962486075=";
+		try {
+			programmingExperienceParam += URLEncoder.encode(
+					Preferences.getInstance().getProgrammingExperience(),
+					"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			programmingExperienceParam = "";
+		}
+
 		String surveyLink = "https://docs.google.com/forms/d/1ybD1jC-iICXNlmQpyPEFngtmOtodicDr18E1ZbfBtx4/viewform?entry.1872114938="
 				+ Preferences.getInstance().getUserId()
+				+ programmingExperienceParam
 				+ "&entry.87074017=Java&entry.1002919343=Eclipse&entry.2010347695&entry.2084367812";
 		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
 				"Share your thoughts on debugging and win an additional Amazon voucher!\n",
