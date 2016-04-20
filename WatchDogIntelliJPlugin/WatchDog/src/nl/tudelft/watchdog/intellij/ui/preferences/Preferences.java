@@ -24,6 +24,9 @@ public class Preferences extends PreferencesBase {
 	/** The user's id on the WatchDog server. */
 	public final static String USERID_KEY = "WATCHDOG.USERID";
 
+	/** The user's programming experience entered in the registration wizard. */
+	public final static String PROG_EXP_KEY = "WATCHDOG.PROG_EXP";
+
 	/** The URL of the WatchDog server. */
 	public final static String SERVER_KEY = "WATCHDOG.SERVERURL";
 
@@ -88,6 +91,7 @@ public class Preferences extends PreferencesBase {
         properties.getOrInit(IS_BIG_UPDATE_ANSWERED, "false");
         properties.getOrInit(IS_BIG_UPDATE_AVAILABLE, "false");
         properties.getOrInit(USERID_KEY, "");
+		properties.getOrInit(PROG_EXP_KEY, "");
 		properties.getOrInit(WORKSPACES_KEY, "");
 		projectSettings = readSerializedProjectSettings(WORKSPACES_KEY);
 	}
@@ -152,6 +156,18 @@ public class Preferences extends PreferencesBase {
 	@Override
     public void setUserId(String userId) {
 		properties.setValue(USERID_KEY, userId);
+	}
+
+	/** @return the programming experience of the registered user. */
+	@Override
+	public String getProgrammingExperience() {
+		return properties.getValue(PROG_EXP_KEY);
+	}
+
+	/** Sets the programming experience of the registered user. */
+	@Override
+	public void setProgrammingExperience(String programmingExperience) {
+		properties.setValue(PROG_EXP_KEY, programmingExperience);
 	}
 
 	/** @return Whether this client version is outdated. */
@@ -272,6 +288,7 @@ public class Preferences extends PreferencesBase {
 		properties.setValue(IS_BIG_UPDATE_ANSWERED, "false");
 		properties.setValue(IS_BIG_UPDATE_AVAILABLE, "false");
         properties.getOrInit(USERID_KEY, "");
+		properties.getOrInit(PROG_EXP_KEY, "");
         properties.getOrInit(WORKSPACES_KEY, "");
 	}
 }

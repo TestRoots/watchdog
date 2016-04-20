@@ -26,6 +26,12 @@ public abstract class PreferencesBase {
 
     public abstract void setUserId(String userid);
 
+	/** @return the programming experience of the registered user. */
+	public abstract String getProgrammingExperience();
+
+	/** Sets the programming experience of the registered user. */
+	public abstract void setProgrammingExperience(String programmingExperience);
+
 	/** @return Whether this client version is outdated. */
     public abstract Boolean isOldVersion();
 

@@ -28,6 +28,9 @@ public class Preferences extends PreferencesBase {
 	/** The user's id on the WatchDog server. */
 	public final static String USERID_KEY = "USERID";
 
+	/** The user's programming experience entered in the registration wizard. */
+	public final static String PROG_EXP_KEY = "WATCHDOG.PROG_EXP";
+
 	/** The URL of the WatchDog server. */
 	public final static String SERVER_KEY = "SERVERURL";
 
@@ -87,6 +90,7 @@ public class Preferences extends PreferencesBase {
 		store.setDefault(LOGGING_ENABLED_KEY, false);
 		store.setDefault(AUTHENTICATION_ENABLED_KEY, true);
 		store.setDefault(USERID_KEY, "");
+		store.setDefault(PROG_EXP_KEY, "");
 		store.setDefault(SERVER_KEY, WatchDogGlobals.DEFAULT_SERVER_URI);
 		store.setDefault(WORKSPACES_KEY, "");
 		store.setDefault(TRANSFERED_INTERVALS_KEY, 0);
@@ -138,6 +142,14 @@ public class Preferences extends PreferencesBase {
 
 	public void setUserId(String userId) {
 		store.setValue(USERID_KEY, userId);
+	}
+
+	public String getProgrammingExperience() {
+		return store.getString(PROG_EXP_KEY);
+	}
+
+	public void setProgrammingExperience(String programmingExperience) {
+		store.setValue(PROG_EXP_KEY, programmingExperience);
 	}
 
 	public Boolean isOldVersion() {
