@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.eclipse.ui.wizards.projectregistration;
 
+import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Composite;
 
@@ -83,7 +84,8 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPageBase {
 		} catch (ServerCommunicationException exception) {
 			successfulRegistration = false;
 			messageTitle = "Problem creating new project!";
-			messageBody = exception.getMessage();
+			messageBody = WordUtils.wrap(exception.getMessage(), 100, null,
+					true);
 			messageBody += "\nAre you connected to the internet, and is port 80 open?";
 			messageBody += "\nPlease contact us via www.testroots.org. \nWe'll troubleshoot the issue!";
 			WatchDogLogger.getInstance().logSevere(exception);

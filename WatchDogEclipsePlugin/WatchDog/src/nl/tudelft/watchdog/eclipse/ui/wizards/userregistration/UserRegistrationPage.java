@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.eclipse.ui.wizards.userregistration;
 
+import org.apache.commons.lang.WordUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
@@ -134,7 +135,10 @@ public class UserRegistrationPage extends RegistrationEndingPageBase {
 		} catch (ServerCommunicationException exception) {
 			successfulRegistration = false;
 			messageTitle = "Problem creating new user!";
-			messageBody = exception.getMessage();
+			messageBody = WordUtils.wrap(exception.getMessage(), 100, null,
+					true);
+			messageBody += "\nAre you connected to the internet, and is port 80 open?";
+			messageBody += "\nPlease contact us via www.testroots.org. \nWe'll troubleshoot the issue!";
 			return;
 		}
 
