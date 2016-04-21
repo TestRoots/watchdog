@@ -1,21 +1,21 @@
-package nl.tudelft.watchdog.intellij.logic.interval;
+package nl.tudelft.watchdog.intellij.logic.storage;
 
-import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
+import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.intellij.WatchDogStartUp;
 
 import java.io.File;
 
 /**
- * {@inheritDoc} IntelliJ's version of IntervalPersister which handles ClassLoaders.
+ * {@inheritDoc} IntelliJ's version of {@link PersisterBase} which handles ClassLoaders.
  */
-public class IntervalPersister extends IntervalPersisterBase {
+public class Persister extends PersisterBase {
 
     private ClassLoader oldClassLoader = null;
 
     /**
      * {@inheritDoc}
      */
-    public IntervalPersister(final File file) {
+    public Persister(final File file) {
         super(file);
     }
 

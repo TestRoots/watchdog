@@ -28,7 +28,7 @@ public class WatchDogEvent extends EventObject {
 
 		USER_ACTIVITY, USER_INACTIVITY, TYPING_INACTIVITY, READING_INACTIVITY,
 
-		START_WATCHDOGVIEW, END_WATCHDOGVIEW
+		START_WATCHDOGVIEW, END_WATCHDOGVIEW, START_DEBUG, END_DEBUG
 	}
 
 	/** @return the {@link WatchDogEvent.EventType} of this event. */

@@ -1,7 +1,7 @@
 package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 
 import com.intellij.openapi.editor.Editor;
-import nl.tudelft.watchdog.intellij.logic.ui.EventManager;
+import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 
@@ -10,11 +10,11 @@ import java.awt.event.FocusListener;
 
 public class EditorFocusListener implements FocusListener {
 
-    private final EventManager eventManager;
+    private final WatchDogEventManager eventManager;
 
     private final Editor myEditor;
 
-    public EditorFocusListener(EventManager eventManager, Editor editor) {
+    public EditorFocusListener(WatchDogEventManager eventManager, Editor editor) {
         this.eventManager = eventManager;
         this.myEditor = editor;
     }

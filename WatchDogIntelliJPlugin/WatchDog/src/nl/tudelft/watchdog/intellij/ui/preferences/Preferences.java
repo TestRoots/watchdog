@@ -24,6 +24,9 @@ public class Preferences extends PreferencesBase {
 	/** The user's id on the WatchDog server. */
 	public final static String USERID_KEY = "WATCHDOG.USERID";
 
+	/** The user's programming experience entered in the registration wizard. */
+	public final static String PROG_EXP_KEY = "WATCHDOG.PROG_EXP";
+
 	/** The URL of the WatchDog server. */
 	public final static String SERVER_KEY = "WATCHDOG.SERVERURL";
 
@@ -32,6 +35,12 @@ public class Preferences extends PreferencesBase {
 
 	/** The last date of successfully transfered intervals. */
 	public final static String LAST_TRANSFERED_INTERVALS_KEY = "WATCHDOG.LAST_TRANSFERED_INTERVALS";
+
+	/** The number of successfully transfered events. */
+	public final static String TRANSFERED_EVENTS_KEY = "WATCHDOG.TRANSFERED_EVENTS";
+
+	/** The last date of successfully transfered events. */
+	public final static String LAST_TRANSFERED_EVENTS_KEY = "WATCHDOG.LAST_TRANSFERED_EVENTS";
 
 	/** Flag denoting whether WatchDog plugin should do logging or not. */
 	public final static String LOGGING_ENABLED_KEY = "WATCHDOG.ENABLE_LOGGING";
@@ -76,10 +85,13 @@ public class Preferences extends PreferencesBase {
         properties.getOrInit(LOGGING_ENABLED_KEY, "false");
         properties.getOrInit(TRANSFERED_INTERVALS_KEY, "0");
         properties.getOrInit(LAST_TRANSFERED_INTERVALS_KEY, "never");
+		properties.getOrInit(TRANSFERED_EVENTS_KEY, "0");
+		properties.getOrInit(LAST_TRANSFERED_EVENTS_KEY, "never");
         properties.getOrInit(IS_OLD_VERSION, "false");
         properties.getOrInit(IS_BIG_UPDATE_ANSWERED, "false");
         properties.getOrInit(IS_BIG_UPDATE_AVAILABLE, "false");
         properties.getOrInit(USERID_KEY, "");
+		properties.getOrInit(PROG_EXP_KEY, "");
 		properties.getOrInit(WORKSPACES_KEY, "");
 		projectSettings = readSerializedProjectSettings(WORKSPACES_KEY);
 	}
@@ -146,6 +158,18 @@ public class Preferences extends PreferencesBase {
 		properties.setValue(USERID_KEY, userId);
 	}
 
+	/** @return the programming experience of the registered user. */
+	@Override
+	public String getProgrammingExperience() {
+		return properties.getValue(PROG_EXP_KEY);
+	}
+
+	/** Sets the programming experience of the registered user. */
+	@Override
+	public void setProgrammingExperience(String programmingExperience) {
+		properties.setValue(PROG_EXP_KEY, programmingExperience);
+	}
+
 	/** @return Whether this client version is outdated. */
 	@Override
     public Boolean isOldVersion() {
@@ -200,10 +224,34 @@ public class Preferences extends PreferencesBase {
 		return properties.getValue(LAST_TRANSFERED_INTERVALS_KEY);
 	}
 
-	/** Adds the number to the transfered intervals for the store. */
+	/** Sets the date the last intervals were transfered for the store. */
 	@Override
     public void setLastTransferedInterval() {
 		properties.setValue(LAST_TRANSFERED_INTERVALS_KEY, new Date().toString());
+	}
+
+	/** @return The number of successfully transfered events. */
+	@Override
+	public long getEvents() {
+		return properties.getOrInitLong(TRANSFERED_EVENTS_KEY, 0);
+	}
+
+	/** Adds the number to the transfered events for the store. */
+	@Override
+	public void addTransferedEvents(long number) {
+		properties.setValue(TRANSFERED_EVENTS_KEY, Long.toString(getEvents() + number));
+	}
+
+	/** @return The number of successfully transfered events. */
+	@Override
+	public String getLastEventTransferDate() {
+		return properties.getValue(LAST_TRANSFERED_EVENTS_KEY);
+	}
+
+	/** Sets the date the last events were transfered for the store. */
+	@Override
+	public void setLastTransferedEvent() {
+		properties.setValue(LAST_TRANSFERED_EVENTS_KEY, new Date().toString());
 	}
 
 	/** @return The serverURL. */
@@ -234,10 +282,13 @@ public class Preferences extends PreferencesBase {
         properties.setValue(LOGGING_ENABLED_KEY, "false");
 		properties.setValue(TRANSFERED_INTERVALS_KEY, "0");
 		properties.setValue(LAST_TRANSFERED_INTERVALS_KEY, "never");
+		properties.setValue(TRANSFERED_EVENTS_KEY, "0");
+		properties.setValue(LAST_TRANSFERED_EVENTS_KEY, "never");
 		properties.setValue(IS_OLD_VERSION, "false");
 		properties.setValue(IS_BIG_UPDATE_ANSWERED, "false");
 		properties.setValue(IS_BIG_UPDATE_AVAILABLE, "false");
         properties.getOrInit(USERID_KEY, "");
+		properties.getOrInit(PROG_EXP_KEY, "");
         properties.getOrInit(WORKSPACES_KEY, "");
 	}
 }

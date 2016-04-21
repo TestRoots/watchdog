@@ -5,10 +5,14 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.openapi.ui.ComboBox;
 
+import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.ImageObserver;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -66,6 +70,19 @@ public class UIUtils {
     public static JLabel createLabel(JComponent parent, String text, int style) {
         JLabel label = new JLabel(text, style);
         parent.add(label);
+        return label;
+    }
+
+    /**
+     * Creates and returns a bold label that can be used as a title. Also, an
+     * extra empty label is added above and below the title to create vertical spacing.
+     */
+    public static JLabel createTitleLabel(JComponent parent, String text) {
+        createLabel(parent, "\n");
+        JLabel label = createLabel(parent, text);
+        Font font = label.getFont();
+        label.setFont(new Font(font.getName(), Font.BOLD, font.getSize() + 10));
+        createLabel(parent, "\n");
         return label;
     }
 
@@ -339,6 +356,13 @@ public class UIUtils {
         UIUtils.createHyperLinkLabel(parent, "Open Report.", projectReport);
     }
 
+    /**
+     * Creates a linked label that opens the debug survey in the browser with
+     * the correct User ID.
+     */
+    public static void createStartDebugSurveyLink(JComponent parent) {
+        UIUtils.createHyperLinkLabel(parent, "Share your thoughts on debugging and win an additional Amazon voucher!", WatchDogUtils.getDebugSurveyLink());
+    }
 
     /**
      * Creates and returns a JPanel Group with an enclosed Grid layout with

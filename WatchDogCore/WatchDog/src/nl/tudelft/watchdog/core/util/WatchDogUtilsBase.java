@@ -1,10 +1,14 @@
 package nl.tudelft.watchdog.core.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.regex.Pattern;
+
 import org.apache.commons.codec.digest.DigestUtils;
 
 import com.google.gson.Gson;
 
-import java.util.regex.Pattern;
+import nl.tudelft.watchdog.core.ui.preferences.PreferencesBase;
 
 /**
  * Base class for WatchDog Utilities.
@@ -85,6 +89,48 @@ public abstract class WatchDogUtilsBase {
 	/** Converts given object to Json format. */
 	public static String convertToJson(Object object) {
 		return new Gson().toJson(object);
+	}
+
+	/** @return a pre-filled link to the survey on debugging. */
+	public static String getDebugSurveyLink() {
+		StringBuilder builder = new StringBuilder(
+				"https://docs.google.com/forms/d/1ybD1jC-iICXNlmQpyPEFngtmOtodicDr18E1ZbfBtx4/viewform?");
+		PreferencesBase preferences = WatchDogGlobals.getPreferences();
+
+		// Add user id.
+		builder.append("entry.1872114938=");
+		builder.append(preferences.getUserId());
+
+		// Add programming experience (if available).
+		String programmingExperienceParam = "&entry.962486075=";
+		try {
+			programmingExperienceParam += URLEncoder.encode(preferences.getProgrammingExperience(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			programmingExperienceParam = "";
+		}
+
+		if (programmingExperienceParam.length() > 0) {
+			builder.append(programmingExperienceParam);
+		}
+
+		// Add programming language.
+		builder.append("&entry.87074017=Java");
+
+		// Add IDE parameter.
+		builder.append("&entry.1002919343=");
+		switch (WatchDogGlobals.hostIDE) {
+		case ECLIPSE:
+			builder.append("Eclipse");
+			break;
+		case INTELLIJ:
+		case ANDROIDSTUDIO:
+			builder.append("IntelliJ");
+			break;
+		}
+
+		// Add final parameters and build the string
+		builder.append("&entry.2010347695&entry.2084367812");
+		return builder.toString();
 	}
 
 }

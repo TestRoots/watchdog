@@ -18,7 +18,7 @@ import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
  */
 public class InactivityNotifier {
 	
-	protected final EventManagerBase eventManager;
+	protected final WatchDogEventManagerBase eventManager;
 
 	private int activityTimeout;
 
@@ -31,7 +31,7 @@ public class InactivityNotifier {
 	private boolean isRunning;
 
 	/** Constructor. */
-	public InactivityNotifier(EventManagerBase eventManager, int activityTimeout,
+	public InactivityNotifier(WatchDogEventManagerBase eventManager, int activityTimeout,
 			EventType type) {
 		this.eventManager = eventManager;
 		this.activityTimeout = activityTimeout;

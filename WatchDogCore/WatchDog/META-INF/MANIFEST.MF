@@ -1,7 +1,7 @@
 Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Manifest-Version: 1.0
-Bundle-Version: 1.7.0
+Bundle-Version: 2.0.0
 Bundle-SymbolicName: nl.tudelft.WatchDogCore;singleton:=true
 Bundle-Name: WatchDog
 Bundle-ClassPath: .,
@@ -16,17 +16,22 @@ Bundle-ClassPath: .,
  lib/mapdb-1.0.5.jar
 Export-Package: com.google.gson,
  com.google.gson.annotations,
- com.google.gson.reflect,
- com.google.gson.internal, 
+ com.google.gson.internal,
  com.google.gson.internal.bind,
+ com.google.gson.reflect,
  com.google.gson.stream,
+ nl.tudelft.watchdog.core.logic.breakpoint,
  nl.tudelft.watchdog.core.logic.document,
+ nl.tudelft.watchdog.core.logic.event,
+ nl.tudelft.watchdog.core.logic.event.eventtypes,
  nl.tudelft.watchdog.core.logic.interval,
  nl.tudelft.watchdog.core.logic.interval.intervaltypes,
  nl.tudelft.watchdog.core.logic.network,
+ nl.tudelft.watchdog.core.logic.storage,
  nl.tudelft.watchdog.core.logic.ui,
  nl.tudelft.watchdog.core.logic.ui.events,
  nl.tudelft.watchdog.core.ui.preferences,
+ nl.tudelft.watchdog.core.ui.util,
  nl.tudelft.watchdog.core.ui.wizards,
  nl.tudelft.watchdog.core.util,
  org.joda.time,

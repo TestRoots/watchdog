@@ -6,13 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
-import nl.tudelft.watchdog.core.logic.interval.IntervalPersisterBase;
-
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class IntervalPersisterInvalidDatabaseTest extends PersisterTestBase {
+import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
+
+public class IntervalPersisterInvalidDatabaseTest extends IntervalPersisterTestBase {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws FileNotFoundException,
@@ -32,7 +32,7 @@ public class IntervalPersisterInvalidDatabaseTest extends PersisterTestBase {
 	 */
 	@Before
 	public void setUpBeforeMethod() {
-		persister = new IntervalPersisterBase(copiedDatabase);
+		persister = new PersisterBase(copiedDatabase);
 	}
 
 	@Test
@@ -42,7 +42,7 @@ public class IntervalPersisterInvalidDatabaseTest extends PersisterTestBase {
 
 	@Test
 	public void test2CreateInterval() {
-		persister.saveInterval(IntervalPersisterTest.createRandomInterval());
+		persister.save(IntervalPersisterTest.createRandomInterval());
 		assertEquals(1, persister.getSize());
 	}
 
