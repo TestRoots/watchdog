@@ -180,8 +180,8 @@ public class WatchDogView extends SimpleToolWindowPanel {
         if (selectedDebugInterval != null) {
             UIUtils.createTitleLabel(UIUtils.createGridedJPanel(oneColumn, 1), "Debugging\n");
             JComponent debugSectionContainer = UIUtils.createGridedJPanel(oneColumn, 2);
-            createDebugStatisticsLabels(UIUtils.createGridedJPanel(debugSectionContainer, 1));
             createChartPanel(debugSectionContainer, createDebugEventGanttChart());
+            createDebugStatisticsLabels(UIUtils.createGridedJPanel(debugSectionContainer, 1));
         }
 
         // Controls.

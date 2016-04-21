@@ -205,9 +205,9 @@ public class WatchDogView extends ViewPart {
 					.createGridedComposite(oneColumn, 2);
 			debugSectionContainer.setLayoutData(
 					new GridData(SWT.FILL, SWT.FILL, true, true));
-			createDebugStatisticsLabels(UIUtils
-					.createZeroMarginGridedComposite(debugSectionContainer, 1));
 			createSWTChart(debugSectionContainer, createDebugEventGanttChart());
+			createDebugStatisticsLabels(
+					UIUtils.createGridedComposite(debugSectionContainer, 1));
 		}
 
 		// Controls.
@@ -386,8 +386,8 @@ public class WatchDogView extends ViewPart {
 	private void createSWTChart(Composite container, JFreeChart chart) {
 		ChartComposite chartComposite = new ChartComposite(container, SWT.NONE,
 				chart, true);
-		chartComposite
-				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		chartComposite.setLayoutData(new GridData(
+				(int) Math.floor(parent.getSize().x / 2.0) - 20, 400));
 		Rectangle bounds = chartComposite.getBounds();
 		bounds.height = bounds.width;
 		chartComposite.setBounds(bounds);
