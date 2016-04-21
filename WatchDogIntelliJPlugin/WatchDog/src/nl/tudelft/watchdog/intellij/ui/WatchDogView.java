@@ -52,7 +52,6 @@ public class WatchDogView extends SimpleToolWindowPanel {
     private EventStatistics eventStatistics;
 
     private JComponent parent = getComponent();
-    private JButton refreshButton;
 
     private double intelliJOpen;
     private double userActive;
@@ -68,6 +67,11 @@ public class WatchDogView extends SimpleToolWindowPanel {
     private int junitFailuresCount;
     private int junitSuccessCount;
 
+    private int debuggingSessionCount;
+    private double totalDebuggingTime;
+    private double debuggingTimePercentage;
+    private double averageDebuggingTime;
+
     private StatisticsTimePeriod selectedTimePeriod = StatisticsTimePeriod.HOUR_1;
 
     private DebugInterval selectedDebugInterval;
@@ -77,7 +81,6 @@ public class WatchDogView extends SimpleToolWindowPanel {
     private JPanel oneColumn;
     private JPanel intervalSelection;
     private ComboBox intervalSelectionBox;
-    private JPanel debugIntervalSelection;
     private ComboBox debugIntervalSelectionBox;
 
 
@@ -177,13 +180,24 @@ public class WatchDogView extends SimpleToolWindowPanel {
         // Debugging section.
         if (selectedDebugInterval != null) {
             UIUtils.createTitleLabel(UIUtils.createGridedJPanel(oneColumn, 1), "Debugging\n");
-            createDebugIntervalSelectionList();
-            createChartPanel(UIUtils.createGridedJPanel(oneColumn, 1), createDebugEventGanttChart());
+            JComponent debugSectionContainer = UIUtils.createGridedJPanel(oneColumn, 2);
+            createDebugStatisticsLabels(UIUtils.createGridedJPanel(debugSectionContainer, 1));
+            createChartPanel(debugSectionContainer, createDebugEventGanttChart());
         }
 
         // Controls.
         createShowingStatisticsLines();
         createTimeSpanSelectionList();
+    }
+
+    private void createDebugStatisticsLabels(JPanel container) {
+        UIUtils.createLabel(container, "Number of debugging intervals in the selected period: " + debuggingSessionCount);
+        UIUtils.createLabel(container, String.format("Time spent in debugger: %.2f minutes (%.2f%% of active IDE time)",
+                totalDebuggingTime, debuggingTimePercentage));
+        UIUtils.createLabel(container,
+                String.format("Average debugging session length: %.2f seconds",
+                        60 * averageDebuggingTime));
+        createDebugIntervalSelectionList(container);
     }
 
     private JFreeChart createDebugEventGanttChart() {
@@ -247,10 +261,10 @@ public class WatchDogView extends SimpleToolWindowPanel {
         }, StatisticsTimePeriod.names(), selectedTimePeriod.ordinal());
     }
 
-    private void createDebugIntervalSelectionList() {
-        JPanel debugLine = UIUtils.createGridedJPanel(oneColumn, 1);
+    private void createDebugIntervalSelectionList(JComponent parent) {
+        JPanel debugLine = UIUtils.createGridedJPanel(parent, 1);
         UIUtils.createLabel(debugLine, "");
-        debugIntervalSelection = UIUtils.createFlowJPanelLeft(debugLine);
+        JPanel debugIntervalSelection = UIUtils.createFlowJPanelLeft(debugLine);
         UIUtils.createLabel(debugIntervalSelection, "Show debug events for debug interval ");
 
         debugIntervalSelectionBox = UIUtils.createComboBox(debugIntervalSelection, new ItemListener() {
@@ -264,7 +278,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
     }
 
     private void createRefreshLink(JComponent parent) {
-        refreshButton = UIUtils.createButton(parent, "Refresh.", new MouseInputAdapter() {
+        UIUtils.createButton(parent, "Refresh.", new MouseInputAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 update();
@@ -295,6 +309,13 @@ public class WatchDogView extends SimpleToolWindowPanel {
         junitRunsCount = intervalStatistics.junitRunsCount;
         junitSuccessCount = intervalStatistics.junitSuccessfulRunsCount;
         junitFailuresCount = intervalStatistics.junitFailedRunsCount;
+
+        debuggingSessionCount = intervalStatistics.debuggingSessionCount;
+        totalDebuggingTime = intervalStatistics
+                .getPreciseTime(intervalStatistics.totalDebuggingDuration);
+        debuggingTimePercentage = totalDebuggingTime / userActive;
+        averageDebuggingTime = intervalStatistics
+                .getPreciseTime(intervalStatistics.averageDebuggingDuration);
     }
 
     private void createChartPanel(JComponent parent, JFreeChart chart) {

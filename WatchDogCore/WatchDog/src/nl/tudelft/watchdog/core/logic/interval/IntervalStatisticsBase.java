@@ -50,6 +50,10 @@ public abstract class IntervalStatisticsBase extends IntervalManagerBase {
 	public int junitFailedRunsCount;
 	public int junitRunsCount;
 
+	public int debuggingSessionCount;
+	public Duration totalDebuggingDuration;
+	public Duration averageDebuggingDuration;
+
 	/** Pre-defined time periods for statistics display. */
 	public enum StatisticsTimePeriod {
 		MINUTES_10(10, "10 minutes."), MINUTES_30(30, "30 minutes."), HOUR_1(60, "1 hour."), HOURS_2(120,
@@ -175,6 +179,15 @@ public abstract class IntervalStatisticsBase extends IntervalManagerBase {
 		perspectiveJava = aggregateDurations(getPerspectiveIntervals(Perspective.JAVA));
 		perspectiveOther = aggregateDurations(getPerspectiveIntervals(Perspective.OTHER));
 
+		List<DebugInterval> debugIntervals = getIntervals(DebugInterval.class);
+		debuggingSessionCount = debugIntervals.size();
+		totalDebuggingDuration = aggregateDurations(debugIntervals);
+		if (debuggingSessionCount > 0) {
+			averageDebuggingDuration = totalDebuggingDuration.dividedBy(debuggingSessionCount);
+		} else {
+			averageDebuggingDuration = totalDebuggingDuration;
+		}
+
 		calculateJUnitStatistics();
 	}
 
@@ -236,8 +249,10 @@ public abstract class IntervalStatisticsBase extends IntervalManagerBase {
 	}
 
 	/**
-	 * @return the latest debug intervals in descending order of time or the empty list if none have been recorded yet. 
-	 * The maximum number of intervals that is returned can be specified using numberOfIntervals.
+	 * @return the latest debug intervals in descending order of time or the
+	 *         empty list if none have been recorded yet. The maximum number of
+	 *         intervals that is returned can be specified using
+	 *         numberOfIntervals.
 	 */
 	public List<DebugInterval> getLatestDebugIntervals(int numberOfIntervals) {
 		List<DebugInterval> latestDebugIntervals = getIntervals(DebugInterval.class);
