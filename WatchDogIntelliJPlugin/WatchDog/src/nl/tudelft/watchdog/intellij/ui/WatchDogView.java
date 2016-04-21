@@ -108,7 +108,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
             calculateTimes();
             latestDebugIntervals = intervalStatistics.getLatestDebugIntervals(NUMBER_OF_INTERVALS_TO_SHOW);
             if (selectedDebugIntervalShouldBeReset()) {
-                selectedDebugInterval = latestDebugIntervals.get(0);
+                selectedDebugInterval = !latestDebugIntervals.isEmpty()? latestDebugIntervals.get(0) : null;
             }
             createActiveView();
             makeScrollable();
@@ -118,15 +118,14 @@ public class WatchDogView extends SimpleToolWindowPanel {
     }
 
     /**
-     * @return true if and only if there are debug intervals and one of the
-     * following two conditions hold:
-     * <p/>
+     * @return true if and only if one of the following two conditions hold:
+     *
      * 1. No debug interval has been selected yet; or 2. A debug
      * interval has been selected before, but it is no longer part of
      * the latest debug intervals.
      */
     private boolean selectedDebugIntervalShouldBeReset() {
-        return !latestDebugIntervals.isEmpty() && (selectedDebugInterval == null
+        return (selectedDebugInterval == null
                 || !latestDebugIntervals.contains(selectedDebugInterval));
     }
 
