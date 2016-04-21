@@ -84,8 +84,7 @@ public class EventStatistics extends EventStatisticsBase {
                                 addDeltaTo(event.getTimestamp())));
             }
         } else {
-            overallTask = new Task(taskName, new Date(),
-                    addDeltaTo(new Date()));
+            overallTask = new Task(taskName, new Date(0), new Date(1));
         }
         return overallTask;
     }
