@@ -10,6 +10,7 @@ import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.ImageObserver;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import javax.swing.*;
@@ -69,6 +70,19 @@ public class UIUtils {
     public static JLabel createLabel(JComponent parent, String text, int style) {
         JLabel label = new JLabel(text, style);
         parent.add(label);
+        return label;
+    }
+
+    /**
+     * Creates and returns a bold label that can be used as a title. Also, an
+     * extra empty label is added above and below the title to create vertical spacing.
+     */
+    public static JLabel createTitleLabel(JComponent parent, String text) {
+        createLabel(parent, "\n");
+        JLabel label = createLabel(parent, text);
+        Font font = label.getFont();
+        label.setFont(new Font(font.getName(), Font.BOLD, font.getSize() + 10));
+        createLabel(parent, "\n");
         return label;
     }
 

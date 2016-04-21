@@ -55,7 +55,8 @@ public class WatchDogView extends ViewPart {
 	private IntervalStatistics intervalStatistics;
 	private EventStatistics eventStatistics;
 
-	private Composite container;
+	private Composite generalSectionContainer;
+	private Composite testingSectionContainer;
 	private Composite debugChartContainer;
 	private Composite parent;
 
@@ -163,36 +164,40 @@ public class WatchDogView extends ViewPart {
 	}
 
 	private void createActiveView() {
-		container = UIUtils.createGridedComposite(oneColumn, 2);
-		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		// General section.
+		UIUtils.createTitleLabel("General", oneColumn);
+		generalSectionContainer = UIUtils.createGridedComposite(oneColumn, 2);
+		generalSectionContainer
+				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		createSWTChart(container, createBarChart(createDevelopmentBarDataset(),
-				"Your Development Activity", "", "minutes"));
-		createSWTChart(container, createPieChart(createDevelopmentPieDataset(),
-				"Your Development Activity"));
-		UIUtils.createLabel("", container);
-		UIUtils.createLabel("", container);
-
-		createSWTChart(container,
-				createBarChart(createProductionVSTestBarDataset(),
-						"Your Production vs. Test Activity", "", "minutes"));
-		createSWTChart(container,
-				createPieChart(createProductionVSTestPieDataset(),
-						"Your Production vs. Test Activity"));
-
-		UIUtils.createLabel("", container);
-		UIUtils.createLabel("", container);
-
-		createSWTChart(container,
+		createSWTChart(generalSectionContainer,
+				createBarChart(createDevelopmentBarDataset(),
+						"Your Development Activity", "", "minutes"));
+		createSWTChart(generalSectionContainer, createPieChart(
+				createDevelopmentPieDataset(), "Your Development Activity"));
+		createSWTChart(generalSectionContainer,
 				createPieChart(createPerspectiveViewPieDataset(),
 						"Your Perspective Activity"));
-		createSWTChart(container,
+
+		// Testing section.
+		UIUtils.createTitleLabel("Testing", oneColumn);
+		testingSectionContainer = UIUtils.createGridedComposite(oneColumn, 2);
+		testingSectionContainer
+				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		createSWTChart(testingSectionContainer,
+				createBarChart(createProductionVSTestBarDataset(),
+						"Your Production vs. Test Activity", "", "minutes"));
+		createSWTChart(testingSectionContainer,
+				createPieChart(createProductionVSTestPieDataset(),
+						"Your Production vs. Test Activity"));
+		createSWTChart(testingSectionContainer,
 				createStackedBarChart(createJunitExecutionBarDataset(),
 						"Your Test Run Activity", "", ""));
-		UIUtils.createLabel("", container);
-		UIUtils.createLabel("", container);
 
+		// Debugging section.
 		if (selectedDebugInterval != null) {
+			UIUtils.createTitleLabel("Debugging", oneColumn);
 			createDebugIntervalSelectionList();
 			debugChartContainer = UIUtils.createGridedComposite(oneColumn, 1);
 			debugChartContainer.setLayoutData(
@@ -200,6 +205,7 @@ public class WatchDogView extends ViewPart {
 			createSWTChart(debugChartContainer, createDebugEventGanttChart());
 		}
 
+		// Controls.
 		createShowingStatisticsLine();
 		createTimeSpanSelectionList();
 	}

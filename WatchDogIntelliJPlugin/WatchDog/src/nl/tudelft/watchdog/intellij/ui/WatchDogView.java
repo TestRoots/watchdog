@@ -143,34 +143,45 @@ public class WatchDogView extends SimpleToolWindowPanel {
     }
 
     private void createActiveView() {
-        JComponent container = UIUtils.createGridedJPanel(oneColumn, 2);
+        // General section.
+        UIUtils.createTitleLabel(UIUtils.createGridedJPanel(oneColumn, 1), "General\n");
+
+        JComponent generalSectionContainer = UIUtils.createGridedJPanel(oneColumn, 2);
 
         createChartPanel(
-                container,
+                generalSectionContainer,
                 createBarChart(createDevelopmentBarDataset(),
                         "Your Development Activity", "", "minutes"));
         createChartPanel(
-                container,
+                generalSectionContainer,
                 createPieChart(createDevelopmentPieDataset(),
                         "Your Development Activity"));
+
+        // Testing section.
+        UIUtils.createTitleLabel(UIUtils.createGridedJPanel(oneColumn, 1), "Testing\n");
+        JComponent testingSectionContainer = UIUtils.createGridedJPanel(oneColumn, 2);
+
         createChartPanel(
-                container,
+                testingSectionContainer,
                 createBarChart(createProductionVSTestBarDataset(),
                         "Your Production vs. Test Activity", "", "minutes"));
         createChartPanel(
-                container,
+                testingSectionContainer,
                 createPieChart(createProductionVSTestPieDataset(),
                         "Your Production vs. Test Activity"));
         createChartPanel(
-                container,
+                testingSectionContainer,
                 createStackedBarChart(createJunitExecutionBarDataset(),
                         "Your Test Run Activity", "", ""));
 
+        // Debugging section.
         if (selectedDebugInterval != null) {
+            UIUtils.createTitleLabel(UIUtils.createGridedJPanel(oneColumn, 1), "Debugging\n");
             createDebugIntervalSelectionList();
             createChartPanel(UIUtils.createGridedJPanel(oneColumn, 1), createDebugEventGanttChart());
         }
 
+        // Controls.
         createShowingStatisticsLines();
         createTimeSpanSelectionList();
     }
