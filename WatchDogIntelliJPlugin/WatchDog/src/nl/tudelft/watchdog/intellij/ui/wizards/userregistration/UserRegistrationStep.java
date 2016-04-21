@@ -9,6 +9,7 @@ import nl.tudelft.watchdog.intellij.ui.util.UIUtils;
 import nl.tudelft.watchdog.intellij.ui.wizards.*;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
+import org.apache.commons.lang.WordUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import javax.swing.*;
@@ -121,7 +122,9 @@ public class UserRegistrationStep extends RegistrationEndingStepBase {
         } catch (ServerCommunicationException exception) {
             successfulRegistration = false;
             messageTitle = "Problem creating new user!";
-            messageBody = exception.getMessage();
+            messageBody = "<html>" + WordUtils.wrap(exception.getMessage(), 100, "<br>", true);
+            messageBody += "<br>Are you connected to the internet, and is port 80 open?";
+            messageBody += "<br>Please contact us via www.testroots.org. <br>We'll troubleshoot the issue!</html>";
             return;
         }
 

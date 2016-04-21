@@ -12,6 +12,7 @@ import nl.tudelft.watchdog.intellij.ui.wizards.WizardStep;
 import nl.tudelft.watchdog.intellij.ui.wizards.userregistration.UserRegistrationStep;
 import nl.tudelft.watchdog.intellij.ui.wizards.userregistration.UserProjectRegistrationWizard;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
+import org.apache.commons.lang.WordUtils;
 
 
 import javax.swing.*;
@@ -65,9 +66,9 @@ public class ProjectCreatedEndingStep extends RegistrationEndingStepBase {
         } catch (ServerCommunicationException exception) {
             successfulRegistration = false;
             messageTitle = "Problem creating new project!";
-            messageBody = "<html>" + exception.getMessage().replace(". ", ". <br>");
+            messageBody = "<html>" + WordUtils.wrap(exception.getMessage(), 100, "<br>", true);
             messageBody += "<br>Are you connected to the internet, and is port 80 open?";
-            messageBody += "<br>Please contact us via www.testroots.org. <br>We'll troubleshoot the issue!";
+            messageBody += "<br>Please contact us via www.testroots.org. <br>We'll troubleshoot the issue!</html>";
             WatchDogLogger.getInstance().logSevere(exception);
             return;
         }
