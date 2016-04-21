@@ -18,6 +18,12 @@ import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
  */
 public abstract class EventStatisticsBase {
 
+	/**
+	 * The amount of time before a debug interval of which the events should be
+	 * included as well.
+	 */
+	public static final int PRE_SESSION_TIME_TO_INCLUDE = 20 * 1000;
+
 	/** Persister storing all events. */
 	private final PersisterBase eventsStatisticsPersister;
 
@@ -42,10 +48,14 @@ public abstract class EventStatisticsBase {
 	/** The debug interval that is currently selected. */
 	private final DebugInterval selectedInterval;
 
+	/** The timestamp from which the events should be added. */
+	private Date startOfEventSelection;
+
 	/** Constructor. */
 	public EventStatisticsBase(DebugEventManager debugEventManager, DebugInterval selectedInterval) {
 		this.eventsStatisticsPersister = debugEventManager.getEventStatisticsPersister();
 		this.selectedInterval = selectedInterval;
+		startOfEventSelection = new Date(selectedInterval.getStart().getTime() - PRE_SESSION_TIME_TO_INCLUDE);
 		addAllEventsWithinSelectedInterval();
 	}
 
@@ -63,11 +73,11 @@ public abstract class EventStatisticsBase {
 
 	/**
 	 * @return true if and only if the event occurred within the selected debug
-	 *         interval.
+	 *         interval or in the period right before it.
 	 */
 	private boolean isWithinSelectedDebugInterval(EventBase event) {
 		Date timestamp = event.getTimestamp();
-		return selectedInterval.getStart().before(timestamp) && timestamp.before(selectedInterval.getEnd());
+		return startOfEventSelection.before(timestamp) && timestamp.before(selectedInterval.getEnd());
 	}
 
 	/**

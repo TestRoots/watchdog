@@ -246,7 +246,9 @@ public class WatchDogView extends ViewPart {
 		// Scale the chart based on the selected debug interval.
 		CategoryPlot plot = chart.getCategoryPlot();
 		ValueAxis axis = plot.getRangeAxis();
-		axis.setRangeWithMargins(selectedDebugInterval.getStart().getTime(),
+		axis.setRangeWithMargins(
+				selectedDebugInterval.getStart().getTime()
+						- EventStatistics.PRE_SESSION_TIME_TO_INCLUDE,
 				selectedDebugInterval.getEnd().getTime());
 
 		// Give each event type a different color.
