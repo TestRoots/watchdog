@@ -7,6 +7,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -76,6 +77,19 @@ public class UIUtils {
 	public static Label createLabel(String text, int style, Composite parent) {
 		Label label = new Label(parent, style);
 		label.setText(text);
+		return label;
+	}
+
+	/**
+	 * Creates and returns a bold label that can be used as a title. Also, an
+	 * extra empty label is added above the title to create vertical spacing.
+	 */
+	public static Label createTitleLabel(String text, Composite parent) {
+		createLabel("", parent);
+		Label label = createLabel(text, parent);
+		Font font = label.getFont();
+		label.setFont(
+				new Font(font.getDevice(), "WDView Title font", 16, SWT.BOLD));
 		return label;
 	}
 

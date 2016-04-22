@@ -55,8 +55,6 @@ public class WatchDogView extends ViewPart {
 	private IntervalStatistics intervalStatistics;
 	private EventStatistics eventStatistics;
 
-	private Composite container;
-	private Composite debugChartContainer;
 	private Composite parent;
 
 	private double eclipseOpen;
@@ -76,6 +74,11 @@ public class WatchDogView extends ViewPart {
 	private int junitFailuresCount;
 	private int junitSuccessCount;
 
+	private int debuggingSessionCount;
+	private double totalDebuggingTime;
+	private double debuggingTimePercentage;
+	private double averageDebuggingTime;
+
 	private StatisticsTimePeriod selectedTimePeriod = StatisticsTimePeriod.HOUR_1;
 
 	private DebugInterval selectedDebugInterval;
@@ -85,7 +88,6 @@ public class WatchDogView extends ViewPart {
 	private ScrolledComposite scrolledComposite;
 	private Composite oneColumn;
 	private Composite intervalSelection;
-	private Composite debugIntervalSelection;
 
 	private IPartService partService;
 
@@ -130,7 +132,8 @@ public class WatchDogView extends ViewPart {
 			latestDebugIntervals = intervalStatistics
 					.getLatestDebugIntervals(NUMBER_OF_INTERVALS_TO_SHOW);
 			if (selectedDebugIntervalShouldBeReset()) {
-				selectedDebugInterval = latestDebugIntervals.get(0);
+				selectedDebugInterval = !latestDebugIntervals.isEmpty()
+						? latestDebugIntervals.get(0) : null;
 			}
 			createActiveView();
 		}
@@ -140,15 +143,14 @@ public class WatchDogView extends ViewPart {
 	}
 
 	/**
-	 * @return true if and only if there are debug intervals and one of the
-	 *         following two conditions hold:
+	 * @return true if and only if one of the following two conditions hold:
 	 * 
 	 *         1. No debug interval has been selected yet; or 2. A debug
 	 *         interval has been selected before, but it is no longer part of
 	 *         the latest debug intervals.
 	 */
 	private boolean selectedDebugIntervalShouldBeReset() {
-		return !latestDebugIntervals.isEmpty() && (selectedDebugInterval == null
+		return (selectedDebugInterval == null
 				|| !latestDebugIntervals.contains(selectedDebugInterval));
 	}
 
@@ -163,45 +165,71 @@ public class WatchDogView extends ViewPart {
 	}
 
 	private void createActiveView() {
-		container = UIUtils.createGridedComposite(oneColumn, 2);
-		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		// General section.
+		UIUtils.createTitleLabel("General", oneColumn);
+		Composite generalSectionContainer = UIUtils
+				.createGridedComposite(oneColumn, 2);
+		generalSectionContainer
+				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		createSWTChart(container, createBarChart(createDevelopmentBarDataset(),
-				"Your Development Activity", "", "minutes"));
-		createSWTChart(container, createPieChart(createDevelopmentPieDataset(),
-				"Your Development Activity"));
-		UIUtils.createLabel("", container);
-		UIUtils.createLabel("", container);
-
-		createSWTChart(container,
-				createBarChart(createProductionVSTestBarDataset(),
-						"Your Production vs. Test Activity", "", "minutes"));
-		createSWTChart(container,
-				createPieChart(createProductionVSTestPieDataset(),
-						"Your Production vs. Test Activity"));
-
-		UIUtils.createLabel("", container);
-		UIUtils.createLabel("", container);
-
-		createSWTChart(container,
+		createSWTChart(generalSectionContainer,
+				createBarChart(createDevelopmentBarDataset(),
+						"Your Development Activity", "", "minutes"));
+		createSWTChart(generalSectionContainer, createPieChart(
+				createDevelopmentPieDataset(), "Your Development Activity"));
+		createSWTChart(generalSectionContainer,
 				createPieChart(createPerspectiveViewPieDataset(),
 						"Your Perspective Activity"));
-		createSWTChart(container,
+
+		// Testing section.
+		UIUtils.createTitleLabel("Testing", oneColumn);
+		Composite testingSectionContainer = UIUtils
+				.createGridedComposite(oneColumn, 2);
+		testingSectionContainer
+				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		createSWTChart(testingSectionContainer,
+				createBarChart(createProductionVSTestBarDataset(),
+						"Your Production vs. Test Activity", "", "minutes"));
+		createSWTChart(testingSectionContainer,
+				createPieChart(createProductionVSTestPieDataset(),
+						"Your Production vs. Test Activity"));
+		createSWTChart(testingSectionContainer,
 				createStackedBarChart(createJunitExecutionBarDataset(),
 						"Your Test Run Activity", "", ""));
-		UIUtils.createLabel("", container);
-		UIUtils.createLabel("", container);
 
+		// Debugging section.
 		if (selectedDebugInterval != null) {
-			createDebugIntervalSelectionList();
-			debugChartContainer = UIUtils.createGridedComposite(oneColumn, 1);
-			debugChartContainer.setLayoutData(
+			UIUtils.createTitleLabel("Debugging", oneColumn);
+			Composite debugSectionContainer = UIUtils
+					.createGridedComposite(oneColumn, 2);
+			debugSectionContainer.setLayoutData(
 					new GridData(SWT.FILL, SWT.FILL, true, true));
-			createSWTChart(debugChartContainer, createDebugEventGanttChart());
+			createSWTChart(debugSectionContainer, createDebugEventGanttChart());
+			createDebugStatisticsLabels(
+					UIUtils.createGridedComposite(debugSectionContainer, 1));
 		}
 
+		// Controls.
 		createShowingStatisticsLine();
 		createTimeSpanSelectionList();
+	}
+
+	private void createDebugStatisticsLabels(Composite container) {
+		UIUtils.createLabel(
+				"Number of debugging intervals in the selected period: "
+						+ debuggingSessionCount,
+				container);
+		UIUtils.createLabel(
+				String.format(
+						"Time spent in debugger: %.2f minutes (%.2f%% of active IDE time)",
+						totalDebuggingTime, debuggingTimePercentage),
+				container);
+		UIUtils.createLabel(
+				String.format("Average debugging session length: %.2f seconds",
+						60 * averageDebuggingTime),
+				container);
+		createDebugIntervalSelectionList(container);
 	}
 
 	private JFreeChart createDebugEventGanttChart() {
@@ -218,7 +246,9 @@ public class WatchDogView extends ViewPart {
 		// Scale the chart based on the selected debug interval.
 		CategoryPlot plot = chart.getCategoryPlot();
 		ValueAxis axis = plot.getRangeAxis();
-		axis.setRangeWithMargins(selectedDebugInterval.getStart().getTime(),
+		axis.setRangeWithMargins(
+				selectedDebugInterval.getStart().getTime()
+						- EventStatistics.PRE_SESSION_TIME_TO_INCLUDE,
 				selectedDebugInterval.getEnd().getTime());
 
 		// Give each event type a different color.
@@ -273,9 +303,9 @@ public class WatchDogView extends ViewPart {
 		}, StatisticsTimePeriod.names(), selectedTimePeriod.ordinal());
 	}
 
-	private void createDebugIntervalSelectionList() {
-		debugIntervalSelection = UIUtils
-				.createZeroMarginGridedComposite(oneColumn, 3);
+	private void createDebugIntervalSelectionList(Composite parent) {
+		Composite debugIntervalSelection = UIUtils
+				.createZeroMarginGridedComposite(parent, 3);
 		UIUtils.createLabel("Show debug events for debug interval ",
 				debugIntervalSelection);
 		UIUtils.createComboList(debugIntervalSelection,
@@ -344,13 +374,20 @@ public class WatchDogView extends ViewPart {
 		junitRunsCount = intervalStatistics.junitRunsCount;
 		junitSuccessCount = intervalStatistics.junitSuccessfulRunsCount;
 		junitFailuresCount = intervalStatistics.junitFailedRunsCount;
+
+		debuggingSessionCount = intervalStatistics.debuggingSessionCount;
+		totalDebuggingTime = intervalStatistics
+				.getPreciseTime(intervalStatistics.totalDebuggingDuration);
+		debuggingTimePercentage = totalDebuggingTime / userActive;
+		averageDebuggingTime = intervalStatistics
+				.getPreciseTime(intervalStatistics.averageDebuggingDuration);
 	}
 
 	private void createSWTChart(Composite container, JFreeChart chart) {
 		ChartComposite chartComposite = new ChartComposite(container, SWT.NONE,
 				chart, true);
-		chartComposite
-				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		chartComposite.setLayoutData(new GridData(
+				(int) Math.floor(parent.getSize().x / 2.0) - 20, 400));
 		Rectangle bounds = chartComposite.getBounds();
 		bounds.height = bounds.width;
 		chartComposite.setBounds(bounds);
