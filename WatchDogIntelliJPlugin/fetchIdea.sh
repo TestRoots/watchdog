@@ -1,6 +1,6 @@
 #!/bin/bash
 
-idea_version="15.0.1"
+idea_version="15.0.5"
 idea_zip="ideaIC-$idea_version.tar.gz"
 idea_URL="http://download.jetbrains.com/idea/$idea_zip"
 build_dir="build_cache"

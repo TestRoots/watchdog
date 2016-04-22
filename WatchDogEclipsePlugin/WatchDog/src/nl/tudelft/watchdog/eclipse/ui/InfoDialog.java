@@ -1,16 +1,5 @@
 package nl.tudelft.watchdog.eclipse.ui;
 
-import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
-import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
-import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
-import nl.tudelft.watchdog.core.util.WatchDogGlobals;
-import nl.tudelft.watchdog.core.util.WatchDogLogger;
-import nl.tudelft.watchdog.eclipse.ui.preferences.PreferencePage;
-import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
-import nl.tudelft.watchdog.eclipse.ui.util.BrowserOpenerSelection;
-import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
-import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
-
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -28,6 +17,17 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
+
+import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
+import nl.tudelft.watchdog.core.logic.network.NetworkUtils.Connection;
+import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
+import nl.tudelft.watchdog.eclipse.ui.preferences.PreferencePage;
+import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
+import nl.tudelft.watchdog.eclipse.ui.util.BrowserOpenerSelection;
+import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
+import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /**
  * A dialog displaying statistics about the health and status quo of WatchDog.
@@ -69,25 +69,25 @@ public class InfoDialog extends Dialog {
 
 	/** Creates a label with the status of WatchDog plugin. */
 	private void createStatusText(Composite parentContainer) {
-		Composite logoContainer = UIUtils.createFullGridedComposite(
-				parentContainer, 1);
+		Composite logoContainer = UIUtils
+				.createFullGridedComposite(parentContainer, 1);
 		logoContainer.setData(new GridData(SWT.CENTER, SWT.NONE, true, false));
 		Label watchdogLogo = UIUtils.createWatchDogLogo(logoContainer);
-		watchdogLogo.setLayoutData(new GridData(SWT.CENTER, SWT.BEGINNING,
-				true, false));
+		watchdogLogo.setLayoutData(
+				new GridData(SWT.CENTER, SWT.BEGINNING, true, false));
 		UIUtils.createLabel(" ", logoContainer);
 
-		Composite container = UIUtils.createZeroMarginGridedComposite(
-				parentContainer, 2);
+		Composite container = UIUtils
+				.createZeroMarginGridedComposite(parentContainer, 2);
 		colorRed = new Color(getShell().getDisplay(), 255, 0, 0);
 		colorGreen = new Color(getShell().getDisplay(), 0, 150, 0);
 		UIUtils.createLabel("WatchDog Status: ", container);
 		if (WatchDogGlobals.isActive) {
-			UIUtils.createLabel(WatchDogGlobals.ACTIVE_WATCHDOG_TEXT,
-					container, colorGreen);
+			UIUtils.createLabel(WatchDogGlobals.ACTIVE_WATCHDOG_TEXT, container,
+					colorGreen);
 		} else {
-			Composite localGrid = UIUtils.createZeroMarginGridedComposite(
-					container, 2);
+			Composite localGrid = UIUtils
+					.createZeroMarginGridedComposite(container, 2);
 			UIUtils.createLabel(WatchDogGlobals.INACTIVE_WATCHDOG_TEXT,
 					localGrid, colorRed);
 			createFixThisProblemLink(localGrid, new PreferenceListener());
@@ -111,12 +111,19 @@ public class InfoDialog extends Dialog {
 		UIUtils.createLabel(" ", container);
 		UIUtils.createLabel(" ", container);
 
+		UIUtils.createLabel("Transfered events: ", container);
+		UIUtils.createLabel(Long.toString(preferences.getEvents()), container);
+		UIUtils.createLabel("Last Transfered: ", container);
+		UIUtils.createLabel(preferences.getLastEventTransferDate(), container);
+		UIUtils.createLabel(" ", container);
+		UIUtils.createLabel(" ", container);
+
 		UIUtils.createLabel("WatchDog Version:", container);
 		UIUtils.createLabel(WatchDogGlobals.CLIENT_VERSION, container);
 		UIUtils.createLabel(" ", container);
 		if (preferences.isOldVersion()) {
-			Composite localGrid = UIUtils.createZeroMarginGridedComposite(
-					container, 2);
+			Composite localGrid = UIUtils
+					.createZeroMarginGridedComposite(container, 2);
 			UIUtils.createLabel("Outdated!", localGrid, colorRed);
 			createFixThisProblemLink(localGrid, new DefaultSelectionListener() {
 
@@ -135,9 +142,8 @@ public class InfoDialog extends Dialog {
 		UIUtils.createLabel(" ", container);
 		UIUtils.createLabel(" ", container);
 		UIUtils.createLabel("User ID: ", container);
-		Connection userConnection = NetworkUtils
-				.urlExistsAndReturnsStatus200(NetworkUtils
-						.buildExistingUserURL(preferences.getUserId()));
+		Connection userConnection = NetworkUtils.urlExistsAndReturnsStatus200(
+				NetworkUtils.buildExistingUserURL(preferences.getUserId()));
 		reactOnConnectionStatus(container, userConnection,
 				new UserButtonListener());
 
@@ -148,9 +154,9 @@ public class InfoDialog extends Dialog {
 		if (userConnection == Connection.SUCCESSFUL
 				&& workspaceSettings.enableWatchdog) {
 			UIUtils.createLabel("Project ID: ", container);
-			projectConnection = NetworkUtils
-					.urlExistsAndReturnsStatus200(NetworkUtils
-							.buildExistingProjectURL(workspaceSettings.projectId));
+			projectConnection = NetworkUtils.urlExistsAndReturnsStatus200(
+					NetworkUtils.buildExistingProjectURL(
+							workspaceSettings.projectId));
 			if (projectConnection != Connection.SUCCESSFUL) {
 				projectIdHasProblem = true;
 			}
@@ -160,8 +166,8 @@ public class InfoDialog extends Dialog {
 
 		if (userConnection != Connection.SUCCESSFUL || projectIdHasProblem) {
 			UIUtils.createLabel(" ", container);
-			UIUtils.createLabel("WatchDog cannot transfer its data.",
-					container, colorRed);
+			UIUtils.createLabel("WatchDog cannot transfer its data.", container,
+					colorRed);
 		}
 	}
 
@@ -173,8 +179,8 @@ public class InfoDialog extends Dialog {
 			WatchDogGlobals.lastTransactionFailed = false;
 			break;
 		case UNSUCCESSFUL:
-			Composite localGrid = UIUtils.createZeroMarginGridedComposite(
-					container, 2);
+			Composite localGrid = UIUtils
+					.createZeroMarginGridedComposite(container, 2);
 			UIUtils.createLabel("Does not exist!", localGrid, colorRed);
 			WatchDogGlobals.lastTransactionFailed = true;
 			createFixThisProblemLink(localGrid, listener);
@@ -189,13 +195,13 @@ public class InfoDialog extends Dialog {
 
 	private void createStaticLinks(Composite parentContainer) {
 		UIUtils.createLabel("", parentContainer);
-		Composite container = UIUtils.createFullGridedComposite(
-				parentContainer, 3);
+		Composite container = UIUtils.createFullGridedComposite(parentContainer,
+				3);
 		container.setData(new GridData(SWT.CENTER, SWT.NONE, true, false));
 
 		UIUtils.createLinkedLabel(container, new WatchDogViewListener(),
-				"Open View.", "").setLayoutData(
-				UIUtils.createFullGridUsageData());
+				"Open View.", "")
+				.setLayoutData(UIUtils.createFullGridUsageData());
 		UIUtils.createOpenReportLink(container);
 		UIUtils.createLabel("", container);
 		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
@@ -203,8 +209,8 @@ public class InfoDialog extends Dialog {
 				"file://" + WatchDogLogger.getInstance().getLogDirectoryPath())
 				.setLayoutData(UIUtils.createFullGridUsageData());
 		UIUtils.createLinkedLabel(container, new PreferenceListener(),
-				"Open Prefs.", "").setLayoutData(
-				UIUtils.createFullGridUsageData());
+				"Open Prefs.", "")
+				.setLayoutData(UIUtils.createFullGridUsageData());
 		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
 				"Report bug.", "https://github.com/TestRoots/watchdog/issues")
 				.setLayoutData(UIUtils.createFullGridUsageData());
@@ -235,7 +241,7 @@ public class InfoDialog extends Dialog {
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 520);
+		return new Point(450, 570);
 	}
 
 	private class WatchDogViewListener extends DefaultSelectionListener {
@@ -263,7 +269,8 @@ public class InfoDialog extends Dialog {
 	private class UserButtonListener extends DefaultSelectionListener {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			UIUtils.invokeCommand("nl.tudelft.watchdog.commands.UserWizardDialog");
+			UIUtils.invokeCommand(
+					"nl.tudelft.watchdog.commands.UserWizardDialog");
 			super.widgetSelected(e);
 		}
 	}
@@ -271,13 +278,14 @@ public class InfoDialog extends Dialog {
 	private class ProjectButtonListener extends DefaultSelectionListener {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			UIUtils.invokeCommand("nl.tudelft.watchdog.commands.ProjectWizardDialog");
+			UIUtils.invokeCommand(
+					"nl.tudelft.watchdog.commands.ProjectWizardDialog");
 			super.widgetSelected(e);
 		}
 	}
 
-	private abstract class DefaultSelectionListener implements
-			SelectionListener {
+	private abstract class DefaultSelectionListener
+			implements SelectionListener {
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {

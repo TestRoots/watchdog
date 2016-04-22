@@ -37,7 +37,6 @@ public class DocumentClassifierTest {
 				"TestClass.java", "filepath", contents);
 		assertEquals(DocumentType.TEST, type);
 	}
-	
 
 	/**
 	 * Tests the recognition of a normal JUnit3 test file as
@@ -58,12 +57,40 @@ public class DocumentClassifierTest {
 	 * {@link DocumentType#FILENAME_TEST}.
 	 */
 	@Test
-	public void testNotReallyATestDocumentClassification() {
+	public void testFileNameTestDocumentClassification() {
 		String contents = "import org.junit.assert;"
 				+ "public class TestClass{" + "	@NotATest"
 				+ "	public testSomething{" + "		//do something" + "	}" + "}";
 		DocumentType type = DocumentClassifier.classifyDocument(
 				"TestClass.java", "filepath", contents);
+		assertEquals(DocumentType.FILENAME_TEST, type);
+	}
+	
+	/**
+	 * Tests the recognition of a normal JUnit test file as
+	 * {@link DocumentType#FILENAME_TEST}.
+	 */
+	@Test
+	public void testPathNameTestDocumentClassification() {
+		String contents = "import org.junit.assert;"
+				+ "public class TestClass{" + "	@NotATest"
+				+ "	public testSomething{" + "		//do something" + "	}" + "}";
+		DocumentType type = DocumentClassifier.classifyDocument(
+				"Class.java", "src/test/package/", contents);
+		assertEquals(DocumentType.PATHNAMME_TEST, type);
+	}
+	
+	/**
+	 * Tests the recognition of a normal JUnit test file as
+	 * {@link DocumentType#FILENAME_TEST}.
+	 */
+	@Test
+	public void testFileNameHasPrecedenceOverPathNameTestDocumentClassification() {
+		String contents = "import org.junit.assert;"
+				+ "public class TestClass{" + "	@NotATest"
+				+ "	public testSomething{" + "		//do something" + "	}" + "}";
+		DocumentType type = DocumentClassifier.classifyDocument(
+				"TestClass.java", "src/test/package/", contents);
 		assertEquals(DocumentType.FILENAME_TEST, type);
 	}
 

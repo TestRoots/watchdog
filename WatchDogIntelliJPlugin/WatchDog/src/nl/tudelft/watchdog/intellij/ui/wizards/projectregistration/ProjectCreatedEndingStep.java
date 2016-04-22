@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.intellij.ui.wizards.projectregistration;
 
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
 import nl.tudelft.watchdog.intellij.ui.util.UIUtils;
 import nl.tudelft.watchdog.core.ui.wizards.Project;
@@ -11,6 +12,7 @@ import nl.tudelft.watchdog.intellij.ui.wizards.WizardStep;
 import nl.tudelft.watchdog.intellij.ui.wizards.userregistration.UserRegistrationStep;
 import nl.tudelft.watchdog.intellij.ui.wizards.userregistration.UserProjectRegistrationWizard;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
+import org.apache.commons.lang.WordUtils;
 
 
 import javax.swing.*;
@@ -64,9 +66,9 @@ public class ProjectCreatedEndingStep extends RegistrationEndingStepBase {
         } catch (ServerCommunicationException exception) {
             successfulRegistration = false;
             messageTitle = "Problem creating new project!";
-            messageBody = "<html>" + exception.getMessage().replace(". ", ". <br>");
+            messageBody = "<html>" + WordUtils.wrap(exception.getMessage(), 100, "<br>", true);
             messageBody += "<br>Are you connected to the internet, and is port 80 open?";
-            messageBody += "<br>Please contact us via www.testroots.org. <br>We'll troubleshoot the issue!";
+            messageBody += "<br>Please contact us via www.testroots.org. <br>We'll troubleshoot the issue!</html>";
             WatchDogLogger.getInstance().logSevere(exception);
             return;
         }
@@ -86,10 +88,20 @@ public class ProjectCreatedEndingStep extends RegistrationEndingStepBase {
             UserProjectRegistrationWizard wizard = (UserProjectRegistrationWizard) getWizard();
             UserRegistrationStep userRegistrationStep = wizard.userRegistrationStep;
             if (wizard.userWelcomeStep.getRegisterNewId()) {
+                createDebugSurveyInfo(parent);
                 userRegistrationStep.createUserRegistrationSummary(parent);
             }
             createProjectRegistrationSummary(parent);
         }
+    }
+
+    /**
+     * Shows the label and link to ask the new user to fill out the survey on
+     * debugging.
+     */
+    private void createDebugSurveyInfo(JPanel parent) {
+        UIUtils.createBoldLabel(parent, WatchDogGlobals.DEBUG_SURVEY_TEXT);
+        UIUtils.createStartDebugSurveyLink(parent);
     }
 
     private void createProjectRegistrationSummary(JPanel parent) {
