@@ -1,13 +1,8 @@
 package nl.tudelft.watchdog.eclipse.ui.wizards.userregistration;
 
-import nl.tudelft.watchdog.eclipse.ui.wizards.RegistrationWizardBase;
-import nl.tudelft.watchdog.eclipse.ui.wizards.projectregistration.ProjectCreatedEndingPage;
-import nl.tudelft.watchdog.eclipse.ui.wizards.projectregistration.ProjectIdEnteredEndingPage;
-import nl.tudelft.watchdog.eclipse.ui.wizards.projectregistration.ProjectRegistrationPage;
-import nl.tudelft.watchdog.eclipse.ui.wizards.projectregistration.ProjectSliderPage;
-import nl.tudelft.watchdog.eclipse.ui.wizards.projectregistration.ProjectWelcomePage;
-
 import org.eclipse.jface.wizard.IWizardPage;
+
+import nl.tudelft.watchdog.eclipse.ui.wizards.RegistrationWizardBase;
 
 /**
  * A wizard that allows to register a new user or set an existing user, and then
@@ -33,21 +28,21 @@ public class UserProjectRegistrationWizard extends RegistrationWizardBase {
 	public void addPages() {
 		userWelcomePage = new UserWelcomePage();
 		addPage(userWelcomePage);
-		userRegistrationPage = new UserRegistrationPage(2);
-		addPage(userRegistrationPage);
-		existingUserEndingPage = new UserIdEnteredEndingPage(2);
-		addPage(existingUserEndingPage);
-		existingProjectIdPage = new ProjectIdEnteredEndingPage(3);
-		addPage(existingProjectIdPage);
-		projectWelcomePage = new ProjectWelcomePage(2);
-		addPage(projectWelcomePage);
-		projectRegistrationPage = new ProjectRegistrationPage(3);
-		addPage(projectRegistrationPage);
-		projectSliderPage = new ProjectSliderPage(4);
-		addPage(projectSliderPage);
-		projectedCreatedPage = new ProjectCreatedEndingPage(5);
-		addPage(projectedCreatedPage);
-		this.totalPages = 5;
+		// userRegistrationPage = new UserRegistrationPage(2);
+		// addPage(userRegistrationPage);
+		// existingUserEndingPage = new UserIdEnteredEndingPage(2);
+		// addPage(existingUserEndingPage);
+		// existingProjectIdPage = new ProjectIdEnteredEndingPage(3);
+		// addPage(existingProjectIdPage);
+		// projectWelcomePage = new ProjectWelcomePage(2);
+		// addPage(projectWelcomePage);
+		// projectRegistrationPage = new ProjectRegistrationPage(3);
+		// addPage(projectRegistrationPage);
+		// projectSliderPage = new ProjectSliderPage(4);
+		// addPage(projectSliderPage);
+		// projectedCreatedPage = new ProjectCreatedEndingPage(5);
+		// addPage(projectedCreatedPage);
+		this.totalPages = 1;
 	}
 
 	@Override
