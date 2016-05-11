@@ -128,9 +128,6 @@ public class ProjectRegistrationStep extends WizardStep {
     public void validateFormInputs() {
         if (!hasOneSelection(noSingleProjectPanel)) {
             setErrorMessageAndStepComplete("Please answer all yes/no questions!");
-        } else if (inputFieldDoesNotHaveMinimumSensibleInput(projectNameInput)
-                && projectNameInput.isEnabled()) {
-            setErrorMessageAndStepComplete("You must enter a project name longer than 2 chars.");
         } else if (!hasOneSelection(useContinuousIntegration)
                 || !hasOneSelection(useJunit)
                 || !hasOneSelection(otherTestingFrameworks)
@@ -141,12 +138,6 @@ public class ProjectRegistrationStep extends WizardStep {
         }
         updateStep();
     }
-
-    private boolean inputFieldDoesNotHaveMinimumSensibleInput(JTextField input) {
-        return WatchDogUtils.isEmptyOrHasOnlyWhitespaces(input.getText())
-                || input.getText().length() < 3;
-    }
-
 
     @Override
     protected void commit(CommitType commitType) {
