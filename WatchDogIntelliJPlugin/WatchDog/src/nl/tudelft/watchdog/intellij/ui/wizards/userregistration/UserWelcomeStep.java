@@ -18,8 +18,8 @@ public class UserWelcomeStep extends WelcomeStepBase {
     public UserWelcomeStep(int stepNumber, RegistrationWizardBase wizard) {
 		super("Welcome to WatchDog!", stepNumber, wizard);
         myIcon = IconLoader.getIcon("/images/user.png");
-		descriptionText = "<html>This wizard guides you through the setup of WatchDog Plugin.<br>Please register, so you can access your personal online report.";
-		welcomeDisplay = "Welcome! Registration is fun and takes just 3 minutes!";
+		descriptionText = "You have successfully registered your project with WatchDog.";
+		welcomeDisplay = "Welcome!";
 		welcomeText = "WatchDog is a free, open-source plugin that tells how you code your software.";
 		labelText = "Your WatchDog User-ID: ";
 		inputToolTip = "The User-ID we sent you upon your first WatchDog registration.";
@@ -53,8 +53,15 @@ public class UserWelcomeStep extends WelcomeStepBase {
         JPanel oneColumn = UIUtils.createVerticalBoxJPanel(topPanel);
         createHeader(oneColumn);
         createWatchDogDescription(oneColumn);
+        createSurveyLink(oneColumn);
         createLogoRow(oneColumn);
-        createQuestionJPanel(oneColumn);
-        setComplete(false);
+        setComplete(true);
+    }
+
+    private void createSurveyLink(JPanel parent) {
+        JPanel panel = UIUtils.createGridedJPanel(parent, 1);
+        UIUtils.createBoldLabel(panel, "Please help us by spending at most 5 minutes on a survey:");
+        UIUtils.createStartDebugSurveyLink(panel);
+        UIUtils.createLabel(panel, "");
     }
 }
