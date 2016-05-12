@@ -63,7 +63,6 @@ public class ProjectCreatedEndingPage extends RegistrationEndingPageBase {
 		if (successfulRegistration) {
 			UIUtils.createLabel(concludingMessage, dynamicComposite);
 		}
-		return;
 	}
 
 	/**

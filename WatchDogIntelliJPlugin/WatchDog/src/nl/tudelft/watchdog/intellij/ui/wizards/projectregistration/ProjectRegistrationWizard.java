@@ -25,8 +25,8 @@ public class ProjectRegistrationWizard extends RegistrationWizardBase {
 		addStep(projectSliderStep);
 		existingProjectIdStep = new ProjectIdEnteredEndingStep(3, this);
 		addStep(existingProjectIdStep);
-		projectedCreatedStep = new ProjectCreatedEndingStep(4, this);
-		addStep(projectedCreatedStep);
+		projectCreatedStep = new ProjectCreatedEndingStep(4, this);
+		addStep(projectCreatedStep);
 		this.totalSteps = 4;
 	}
 
@@ -39,10 +39,10 @@ public class ProjectRegistrationWizard extends RegistrationWizardBase {
 		}
 		if (myCurrentStep == projectRegistrationStep.getStepId()
 				&& projectRegistrationStep.shouldSkipProjectSliderStep()) {
-			return projectedCreatedStep.getStepId();
+			return projectCreatedStep.getStepId();
 		}
 		if (myCurrentStep == projectSliderStep.getStepId()) {
-			return projectedCreatedStep.getStepId();
+			return projectCreatedStep.getStepId();
 		}
 		return super.getNextStep(page);
 	}
@@ -53,7 +53,7 @@ public class ProjectRegistrationWizard extends RegistrationWizardBase {
         if (myCurrentStep == existingProjectIdStep.getStepId()) {
             return projectWelcomeStep.getStepId();
         }
-        if(myCurrentStep == projectedCreatedStep.getStepId() && projectRegistrationStep.shouldSkipProjectSliderStep()) {
+        if(myCurrentStep == projectCreatedStep.getStepId() && projectRegistrationStep.shouldSkipProjectSliderStep()) {
             return projectRegistrationStep.getStepId();
         }
         return super.getPreviousStep(step);

@@ -18,7 +18,7 @@ public class UserWelcomeStep extends WelcomeStepBase {
     public UserWelcomeStep(int stepNumber, RegistrationWizardBase wizard) {
 		super("Welcome to WatchDog!", stepNumber, wizard);
         myIcon = IconLoader.getIcon("/images/user.png");
-		descriptionText = "You have successfully registered your project with WatchDog.";
+		descriptionText = "Please register your project with WatchDog in order to start collecting data.";
 		welcomeDisplay = "Welcome!";
 		welcomeText = "WatchDog is a free, open-source plugin that tells how you code your software.";
 		labelText = "Your WatchDog User-ID: ";
@@ -53,15 +53,14 @@ public class UserWelcomeStep extends WelcomeStepBase {
         JPanel oneColumn = UIUtils.createVerticalBoxJPanel(topPanel);
         createHeader(oneColumn);
         createWatchDogDescription(oneColumn);
-        createSurveyLink(oneColumn);
+        createRegistrationInfoLabel(oneColumn);
         createLogoRow(oneColumn);
         setComplete(true);
     }
 
-    private void createSurveyLink(JPanel parent) {
+    private void createRegistrationInfoLabel(JPanel parent) {
         JPanel panel = UIUtils.createGridedJPanel(parent, 1);
-        UIUtils.createBoldLabel(panel, "Please help us by spending at most 5 minutes on a survey:");
-        UIUtils.createStartDebugSurveyLink(panel);
+        UIUtils.createBoldLabel(panel, "By clicking next, an anonymous registration will be performed for you and your project.");
         UIUtils.createLabel(panel, "");
     }
 }

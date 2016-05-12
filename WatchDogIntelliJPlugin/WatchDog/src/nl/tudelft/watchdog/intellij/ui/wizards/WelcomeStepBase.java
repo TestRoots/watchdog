@@ -197,7 +197,7 @@ public abstract class WelcomeStepBase extends WizardStep {
 
     @Override
     public boolean canFinish() {
-        return true;
+        return false;
     }
 
 }

@@ -196,7 +196,9 @@ public abstract class WizardStep implements Step {
 	/** Creates message on failure. */
 	public static void createFailureMessage(JPanel parent, String title,
 			String message) {
-		UIUtils.createBoldLabel(parent, title);
+        if (title != null && !title.isEmpty()) {
+            UIUtils.createBoldLabel(parent, title);
+        }
         JPanel innerParent = UIUtils.createFlowJPanelLeft(parent);
 		UIUtils.createLogo(innerParent, "/images/errormark.png");
 		UIUtils.createLabel(innerParent, message);
@@ -205,12 +207,16 @@ public abstract class WizardStep implements Step {
 	/** Creates message on success. */
 	public static void createSuccessMessage(JPanel parent, String title,
 			String message, String id) {
-		UIUtils.createBoldLabel(parent, title);
+        if (title != null && !title.isEmpty()) {
+            UIUtils.createBoldLabel(parent, title);
+        }
 		JPanel innerParent = UIUtils.createFlowJPanelLeft(parent);
 		UIUtils.createLogo(innerParent, "/images/checkmark.png");
 		JPanel displayInformation = UIUtils.createFlowJPanelLeft(innerParent);
 		UIUtils.createLabel(displayInformation, message);
-		UIUtils.createTextField(displayInformation, id);
+        if (id != null) {
+            UIUtils.createTextField(displayInformation, id);
+        }
 	}
 
     protected void createHeader(JComponent parent) {

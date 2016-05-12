@@ -127,10 +127,8 @@ public class WatchDogStartUp implements ProjectComponent {
         }
 
         UserProjectRegistrationWizard wizard = new UserProjectRegistrationWizard("User and Project Registration", project);
-        makeSilentRegistration();
-        if (userExists() && projectExists()) {
-            wizard.show();
-        } else {
+        wizard.show();
+        if (wizard.getExitCode() == DialogWrapper.CANCEL_EXIT_CODE) {
             if (Messages.YES == Messages.showYesNoDialog(WATCHDOG_UNREGISTERED_WARNING, "WatchDog is not registered!", Messages.getQuestionIcon())) {
                 makeSilentRegistration();
             } else {
@@ -140,19 +138,11 @@ public class WatchDogStartUp implements ProjectComponent {
         }
     }
 
-    private boolean userExists() {
-        Preferences preferences = Preferences.getInstance();
-        return preferences.getUserId() != null
-                && !preferences.getUserId().isEmpty();
-    }
-
-    private boolean projectExists() {
-        ProjectPreferenceSetting setting = WatchDogGlobals.getPreferences()
-                .getOrCreateProjectSetting(project.getName());
-        return !WatchDogUtils.isEmpty(setting.projectId);
-    }
-
-    private void makeSilentRegistration() {
+    /**
+     * @return true if a silent user and project registration was successfully.
+     */
+    public static boolean makeSilentRegistration() {
+        boolean userRegSuccess = true;
         String userId = "";
         Preferences preferences = Preferences.getInstance();
         if (preferences.getUserId() == null || preferences.getUserId().isEmpty()) {
@@ -163,34 +153,39 @@ public class WatchDogStartUp implements ProjectComponent {
                 userId = new JsonTransferer().registerNewUser(user);
             } catch (ServerCommunicationException exception) {
                 WatchDogLogger.getInstance().logSevere(exception);
+                userRegSuccess = false;
             }
 
             if (WatchDogUtils.isEmptyOrHasOnlyWhitespaces(userId)) {
-                return;
+                return false;
             }
 
             preferences.setUserId(userId);
             preferences.registerProjectId(WatchDogUtils.getProjectName(), "");
         }
 
-        registerAnonymousProject(preferences.getUserId());
+        boolean projectRegSuccess = registerAnonymousProject(preferences.getUserId());
+        return userRegSuccess && projectRegSuccess;
     }
 
-    private void registerAnonymousProject(String userId) {
+    private static boolean registerAnonymousProject(String userId) {
+        boolean projectRegSuccess = true;
         String projectId = "";
         Preferences preferences = Preferences.getInstance();
         try {
             projectId = new JsonTransferer().registerNewProject(new nl.tudelft.watchdog.core.ui.wizards.Project(userId));
         } catch (ServerCommunicationException exception) {
             WatchDogLogger.getInstance().logSevere(exception);
+            projectRegSuccess = false;
         }
 
         if (WatchDogUtils.isEmptyOrHasOnlyWhitespaces(projectId)) {
-            return;
+            return false;
         }
 
         preferences.registerProjectId(WatchDogUtils.getProjectName(), projectId);
         preferences.registerProjectUse(WatchDogUtils.getProjectName(), true);
+        return projectRegSuccess;
     }
 
     private void checkIsProjectAlreadyRegistered() {
