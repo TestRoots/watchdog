@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.eclipse.ui.wizards.userregistration;
 import org.eclipse.jface.wizard.IWizardPage;
 
 import nl.tudelft.watchdog.eclipse.ui.wizards.RegistrationWizardBase;
+import nl.tudelft.watchdog.eclipse.ui.wizards.projectregistration.ProjectCreatedEndingPage;
 
 /**
  * A wizard that allows to register a new user or set an existing user, and then
@@ -40,37 +41,16 @@ public class UserProjectRegistrationWizard extends RegistrationWizardBase {
 		// addPage(projectRegistrationPage);
 		// projectSliderPage = new ProjectSliderPage(4);
 		// addPage(projectSliderPage);
-		// projectedCreatedPage = new ProjectCreatedEndingPage(5);
-		// addPage(projectedCreatedPage);
-		this.totalPages = 1;
+		projectCreatedPage = new ProjectCreatedEndingPage(2);
+		addPage(projectCreatedPage);
+		this.totalPages = 2;
 	}
 
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		IWizardPage currentPage = getContainer().getCurrentPage();
-		if (currentPage == userWelcomePage
-				&& !userWelcomePage.getRegisterNewId()) {
-			return existingUserEndingPage;
-		}
-		if (currentPage == existingUserEndingPage) {
-			return projectWelcomePage;
-		}
-		if (currentPage == userRegistrationPage) {
-			return projectRegistrationPage;
-		}
-		if (currentPage == projectWelcomePage
-				&& !projectWelcomePage.getRegisterNewId()) {
-			return existingProjectIdPage;
-		}
-		if (currentPage == existingProjectIdPage) {
-			return null;
-		}
-		if (currentPage == projectRegistrationPage
-				&& projectRegistrationPage.shouldSkipProjectSliderPage()) {
-			return projectedCreatedPage;
-		}
-		if (currentPage == projectSliderPage) {
-			return projectedCreatedPage;
+		if (currentPage == userWelcomePage) {
+			return projectCreatedPage;
 		}
 		return super.getNextPage(page);
 	}
@@ -78,21 +58,9 @@ public class UserProjectRegistrationWizard extends RegistrationWizardBase {
 	@Override
 	public IWizardPage getPreviousPage(IWizardPage page) {
 		IWizardPage currentPage = getContainer().getCurrentPage();
-		if (currentPage == existingUserEndingPage
-				&& !userWelcomePage.getRegisterNewId()) {
-			return userWelcomePage;
-		}
-		if (currentPage == projectWelcomePage) {
-			return existingUserEndingPage;
-		}
-		if (currentPage == existingProjectIdPage
-				&& !projectWelcomePage.getRegisterNewId()) {
-			return projectWelcomePage;
-		}
-		if (currentPage == projectRegistrationPage) {
-			// Disable going back if a new user id is being created.
-			return userWelcomePage.getRegisterNewId() ? null
-					: projectWelcomePage;
+		if (currentPage == projectCreatedPage) {
+			// Disable going back.
+			return null;
 		}
 		return super.getPreviousPage(page);
 	}

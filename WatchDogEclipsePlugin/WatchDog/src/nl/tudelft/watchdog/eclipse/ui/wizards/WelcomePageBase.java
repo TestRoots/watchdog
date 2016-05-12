@@ -235,7 +235,7 @@ public abstract class WelcomePageBase extends FinishableWizardPage {
 
 	@Override
 	public boolean canFinish() {
-		return true;
+		return false;
 	}
 
 }

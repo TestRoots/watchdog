@@ -34,7 +34,7 @@ public abstract class RegistrationWizardBase extends Wizard {
 	protected ProjectSliderPage projectSliderPage;
 
 	/** Project registration completed. */
-	protected ProjectCreatedEndingPage projectedCreatedPage;
+	protected ProjectCreatedEndingPage projectCreatedPage;
 
 	@Override
 	public boolean performFinish() {

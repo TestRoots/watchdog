@@ -24,7 +24,7 @@ public class UserWelcomePage extends WelcomePageBase {
 	UserWelcomePage() {
 		super("Welcome to WatchDog!", 1);
 		setDescription(
-				"You have successfully registered your project with WatchDog.");
+				"Please register your project with WatchDog in order to start collecting data.");
 		welcomeTitle = "Welcome!";
 		welcomeText = "";
 		labelText = "Your WatchDog User-ID: ";
@@ -43,11 +43,11 @@ public class UserWelcomePage extends WelcomePageBase {
 		Composite topContainer = UIUtils.createFullGridedComposite(parent, 1);
 
 		createWatchDogDescription(topContainer);
-		createSurveyLink(topContainer);
+		createRegistrationInfoLabel(topContainer);
 		createLogoRow(topContainer);
 
 		setControl(topContainer);
-		setPageComplete(false);
+		setPageComplete(true);
 	}
 
 	private Composite createWatchDogDescription(Composite parent) {
@@ -63,13 +63,12 @@ public class UserWelcomePage extends WelcomePageBase {
 		return composite;
 	}
 
-	private Composite createSurveyLink(Composite parent) {
+	private Composite createRegistrationInfoLabel(Composite parent) {
 		Composite composite = UIUtils.createFullGridedComposite(parent, 1);
 
 		UIUtils.createBoldLabel(
-				"Please help us by spending at most 5 minutes on a survey:",
+				"By clicking next, an anonymous registration will be performed for you and your project.",
 				composite);
-		UIUtils.createStartDebugSurveyLink(composite);
 
 		return composite;
 	}
