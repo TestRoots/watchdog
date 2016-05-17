@@ -38,11 +38,6 @@ public abstract class RegistrationWizardBase extends Wizard {
 
 	@Override
 	public boolean performFinish() {
-		// Preferences preferences = Preferences.getInstance();
-		// preferences.registerProjectId(WatchDogUtils.getWorkspaceName(),
-		// projectId);
-		// preferences.registerProjectUse(WatchDogUtils.getWorkspaceName(),
-		// true);
 		StartupHandler.startWatchDog();
 		return true;
 	}

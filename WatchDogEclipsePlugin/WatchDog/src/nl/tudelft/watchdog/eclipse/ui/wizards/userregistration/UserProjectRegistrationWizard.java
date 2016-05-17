@@ -29,18 +29,6 @@ public class UserProjectRegistrationWizard extends RegistrationWizardBase {
 	public void addPages() {
 		userWelcomePage = new UserWelcomePage();
 		addPage(userWelcomePage);
-		// userRegistrationPage = new UserRegistrationPage(2);
-		// addPage(userRegistrationPage);
-		// existingUserEndingPage = new UserIdEnteredEndingPage(2);
-		// addPage(existingUserEndingPage);
-		// existingProjectIdPage = new ProjectIdEnteredEndingPage(3);
-		// addPage(existingProjectIdPage);
-		// projectWelcomePage = new ProjectWelcomePage(2);
-		// addPage(projectWelcomePage);
-		// projectRegistrationPage = new ProjectRegistrationPage(3);
-		// addPage(projectRegistrationPage);
-		// projectSliderPage = new ProjectSliderPage(4);
-		// addPage(projectSliderPage);
 		projectCreatedPage = new ProjectCreatedEndingPage(2);
 		addPage(projectCreatedPage);
 		this.totalPages = 2;

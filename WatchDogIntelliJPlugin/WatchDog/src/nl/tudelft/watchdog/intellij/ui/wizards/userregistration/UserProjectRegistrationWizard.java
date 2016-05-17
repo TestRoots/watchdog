@@ -44,18 +44,6 @@ public class UserProjectRegistrationWizard extends RegistrationWizardBase {
     public void addSteps() {
 		userWelcomeStep = new UserWelcomeStep(0, this);
 		addStep(userWelcomeStep);
-//		userRegistrationStep = new UserRegistrationStep(1, this);
-//		addStep(userRegistrationStep);
-//		existingUserEndingStep = new UserIdEnteredEndingStep(2, this);
-//		addStep(existingUserEndingStep);
-//		existingProjectIdStep = new ProjectIdEnteredEndingStep(3, this);
-//		addStep(existingProjectIdStep);
-//		projectWelcomeStep = new ProjectWelcomeStep(4, this);
-//		addStep(projectWelcomeStep);
-//		projectRegistrationStep = new ProjectRegistrationStep(5, this);
-//		addStep(projectRegistrationStep);
-//		projectSliderStep = new ProjectSliderStep(6, this);
-//		addStep(projectSliderStep);
 		projectCreatedStep = new ProjectCreatedEndingStep(1, this);
 		addStep(projectCreatedStep);
 		this.totalSteps = 2;
