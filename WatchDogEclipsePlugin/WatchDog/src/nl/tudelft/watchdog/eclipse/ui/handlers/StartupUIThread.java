@@ -42,7 +42,7 @@ public class StartupUIThread implements Runnable {
 	@Override
 	public void run() {
 		checkWhetherToDisplayUserProjectRegistrationWizard();
-		savePreferenceStoreIfNeeded();
+		savePreferenceStoreIfNeeded(preferences);
 
 		if (WatchDogUtils.isEmpty(preferences.getUserId())
 				|| userProjectRegistrationCancelled) {
@@ -60,14 +60,14 @@ public class StartupUIThread implements Runnable {
 				.getOrCreateProjectSetting(workspaceName);
 		if (!WatchDogUtils.isEmpty(preferences.getUserId())
 				|| (projectSetting.startupQuestionAsked
-						&& !projectSetting.enableWatchdog))
+						&& !projectSetting.enableWatchdog)) {
 			return;
+		}
 
 		UserRegistrationWizardDialogHandler newUserWizardHandler = new UserRegistrationWizardDialogHandler();
 		try {
 			int statusCode = (int) newUserWizardHandler
 					.execute(new ExecutionEvent());
-			savePreferenceStoreIfNeeded();
 			if (statusCode == Window.CANCEL) {
 				boolean shouldRegisterAnonymously = MessageDialog.openQuestion(
 						null, "WatchDog not active!",
@@ -87,8 +87,13 @@ public class StartupUIThread implements Runnable {
 		}
 	}
 
-	private void makeSilentRegistration() {
+	/**
+	 * @return true if a silent user and project registration was successfully.
+	 */
+	public static boolean makeSilentRegistration() {
+		boolean userRegSuccess = true;
 		String userId = "";
+		Preferences preferences = Preferences.getInstance();
 		if (preferences.getUserId() == null
 				|| preferences.getUserId().isEmpty()) {
 			User user = new User();
@@ -97,36 +102,43 @@ public class StartupUIThread implements Runnable {
 				userId = new JsonTransferer().registerNewUser(user);
 			} catch (ServerCommunicationException exception) {
 				WatchDogLogger.getInstance().logSevere(exception);
+				userRegSuccess = false;
 			}
 
 			if (WatchDogUtils.isEmptyOrHasOnlyWhitespaces(userId)) {
-				return;
+				return false;
 			}
 
 			preferences.setUserId(userId);
 			preferences.registerProjectId(WatchDogUtils.getWorkspaceName(), "");
 		}
-		savePreferenceStoreIfNeeded();
+		savePreferenceStoreIfNeeded(preferences);
 
-		registerAnonymousProject(preferences.getUserId());
+		boolean projectRegSucces = registerAnonymousProject(
+				preferences.getUserId(), preferences);
+		return userRegSuccess && projectRegSucces;
 	}
 
-	private void registerAnonymousProject(String userId) {
+	private static boolean registerAnonymousProject(String userId,
+			Preferences preferences) {
+		boolean isSuccessfull = true;
 		String projectId = "";
 		try {
 			projectId = new JsonTransferer().registerNewProject(
 					new nl.tudelft.watchdog.core.ui.wizards.Project(userId));
 		} catch (ServerCommunicationException exception) {
 			WatchDogLogger.getInstance().logSevere(exception);
+			isSuccessfull = false;
 		}
 
 		if (WatchDogUtils.isEmptyOrHasOnlyWhitespaces(projectId)) {
-			return;
+			return false;
 		}
 
 		preferences.registerProjectId(WatchDogUtils.getWorkspaceName(),
 				projectId);
 		preferences.registerProjectUse(WatchDogUtils.getWorkspaceName(), true);
+		return isSuccessfull;
 	}
 
 	private void checkIsWorkspaceAlreadyRegistered() {
@@ -146,7 +158,7 @@ public class StartupUIThread implements Runnable {
 		if (setting.enableWatchdog
 				&& WatchDogUtils.isEmpty(setting.projectId)) {
 			displayProjectWizard();
-			savePreferenceStoreIfNeeded();
+			savePreferenceStoreIfNeeded(preferences);
 		}
 	}
 
@@ -165,7 +177,7 @@ public class StartupUIThread implements Runnable {
 			int statusCode = (int) newProjectWizardHandler
 					.execute(new ExecutionEvent());
 			if (statusCode == Window.CANCEL) {
-				registerAnonymousProject(preferences.getUserId());
+				registerAnonymousProject(preferences.getUserId(), preferences);
 			}
 		} catch (ExecutionException exception) {
 			// when the new project wizard cannot be displayed, new
@@ -174,7 +186,7 @@ public class StartupUIThread implements Runnable {
 		}
 	}
 
-	private void savePreferenceStoreIfNeeded() {
+	private static void savePreferenceStoreIfNeeded(Preferences preferences) {
 		if (preferences.getStore().needsSaving()) {
 			try {
 				((ScopedPreferenceStore) preferences.getStore()).save();

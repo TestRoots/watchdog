@@ -52,7 +52,7 @@ public abstract class RegistrationWizardBase extends AbstractWizard<WizardStep> 
     /**
      * Project registration completed.
      */
-    protected ProjectCreatedEndingStep projectedCreatedStep;
+    protected ProjectCreatedEndingStep projectCreatedStep;
 
     /**
      * Constructor.
@@ -105,9 +105,6 @@ public abstract class RegistrationWizardBase extends AbstractWizard<WizardStep> 
     }
 
     public void performFinish() {
-        Preferences preferences = Preferences.getInstance();
-        preferences.registerProjectId(WatchDogUtils.getProjectName(), projectId);
-        preferences.registerProjectUse(WatchDogUtils.getProjectName(), true);
         return;
     }
 

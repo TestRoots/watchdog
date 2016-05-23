@@ -138,7 +138,11 @@ public class WatchDogStartUp implements ProjectComponent {
         }
     }
 
-    private void makeSilentRegistration() {
+    /**
+     * @return true if a silent user and project registration was successfully.
+     */
+    public static boolean makeSilentRegistration() {
+        boolean userRegSuccess = true;
         String userId = "";
         Preferences preferences = Preferences.getInstance();
         if (preferences.getUserId() == null || preferences.getUserId().isEmpty()) {
@@ -149,34 +153,39 @@ public class WatchDogStartUp implements ProjectComponent {
                 userId = new JsonTransferer().registerNewUser(user);
             } catch (ServerCommunicationException exception) {
                 WatchDogLogger.getInstance().logSevere(exception);
+                userRegSuccess = false;
             }
 
             if (WatchDogUtils.isEmptyOrHasOnlyWhitespaces(userId)) {
-                return;
+                return false;
             }
 
             preferences.setUserId(userId);
             preferences.registerProjectId(WatchDogUtils.getProjectName(), "");
         }
 
-        registerAnonymousProject(preferences.getUserId());
+        boolean projectRegSuccess = registerAnonymousProject(preferences.getUserId());
+        return userRegSuccess && projectRegSuccess;
     }
 
-    private void registerAnonymousProject(String userId) {
+    private static boolean registerAnonymousProject(String userId) {
+        boolean projectRegSuccess = true;
         String projectId = "";
         Preferences preferences = Preferences.getInstance();
         try {
             projectId = new JsonTransferer().registerNewProject(new nl.tudelft.watchdog.core.ui.wizards.Project(userId));
         } catch (ServerCommunicationException exception) {
             WatchDogLogger.getInstance().logSevere(exception);
+            projectRegSuccess = false;
         }
 
         if (WatchDogUtils.isEmptyOrHasOnlyWhitespaces(projectId)) {
-            return;
+            return false;
         }
 
         preferences.registerProjectId(WatchDogUtils.getProjectName(), projectId);
         preferences.registerProjectUse(WatchDogUtils.getProjectName(), true);
+        return projectRegSuccess;
     }
 
     private void checkIsProjectAlreadyRegistered() {

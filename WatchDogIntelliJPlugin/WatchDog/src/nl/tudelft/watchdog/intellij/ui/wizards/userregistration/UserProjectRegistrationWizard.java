@@ -12,19 +12,25 @@ import org.jetbrains.annotations.Nullable;
  */
 public class UserProjectRegistrationWizard extends RegistrationWizardBase {
 
-	/** The first step in the wizard. */
-	public UserWelcomeStep userWelcomeStep;
+    /**
+     * The first step in the wizard.
+     */
+    public UserWelcomeStep userWelcomeStep;
 
-	/** The step with all the actual user info (name, email, etc.) on it. */
-	public UserRegistrationStep userRegistrationStep;
+    /**
+     * The step with all the actual user info (name, email, etc.) on it.
+     */
+    public UserRegistrationStep userRegistrationStep;
 
-	/** When a user already exists ... */
-	/* package */UserIdEnteredEndingStep existingUserEndingStep;
+    /**
+     * When a user already exists ...
+     */
+    /* package */ UserIdEnteredEndingStep existingUserEndingStep;
 
-	/**
-	 * The userid, either entered on this step or as retrieved by the server.
-	 */
-	/* package */String userid;
+    /**
+     * The userid, either entered on this step or as retrieved by the server.
+     */
+	/* package */ String userid;
 
     /**
      * Constructor.
@@ -42,75 +48,34 @@ public class UserProjectRegistrationWizard extends RegistrationWizardBase {
     }
 
     public void addSteps() {
-		userWelcomeStep = new UserWelcomeStep(0, this);
-		addStep(userWelcomeStep);
-		userRegistrationStep = new UserRegistrationStep(1, this);
-		addStep(userRegistrationStep);
-		existingUserEndingStep = new UserIdEnteredEndingStep(2, this);
-		addStep(existingUserEndingStep);
-		existingProjectIdStep = new ProjectIdEnteredEndingStep(3, this);
-		addStep(existingProjectIdStep);
-		projectWelcomeStep = new ProjectWelcomeStep(4, this);
-		addStep(projectWelcomeStep);
-		projectRegistrationStep = new ProjectRegistrationStep(5, this);
-		addStep(projectRegistrationStep);
-		projectSliderStep = new ProjectSliderStep(6, this);
-		addStep(projectSliderStep);
-		projectedCreatedStep = new ProjectCreatedEndingStep(7, this);
-		addStep(projectedCreatedStep);
-		this.totalSteps = 5;
-	}
+        userWelcomeStep = new UserWelcomeStep(0, this);
+        addStep(userWelcomeStep);
+        projectCreatedStep = new ProjectCreatedEndingStep(1, this);
+        addStep(projectCreatedStep);
+        this.totalSteps = 2;
+    }
 
     @Override
-	public int getNextStep(int step) {
-        if(this.getCurrentStepObject().canFinish()) return getCurrentStep();
-		if (myCurrentStep == userWelcomeStep.getStepId()
-				&& !userWelcomeStep.getRegisterNewId()) {
-			return existingUserEndingStep.getStepId();
-		}
-		if (myCurrentStep == existingUserEndingStep.getStepId()) {
-			return projectWelcomeStep.getStepId();
-		}
-		if (myCurrentStep == userRegistrationStep.getStepId()) {
-			return projectRegistrationStep.getStepId();
-		}
-		if (myCurrentStep == projectWelcomeStep.getStepId()
-				&& !projectWelcomeStep.getRegisterNewId()) {
-			return existingProjectIdStep.getStepId();
-		}
-		if (myCurrentStep == projectRegistrationStep.getStepId()
-				&& projectRegistrationStep.shouldSkipProjectSliderStep()) {
-			return projectedCreatedStep.getStepId();
-		}
-		if (myCurrentStep == projectSliderStep.getStepId()) {
-			return projectedCreatedStep.getStepId();
-		}
-		return super.getNextStep(step);
-	}
-
-    @Override
-	public int getPreviousStep(int step) {
-        if(this.getCurrentStepObject().canFinish()) return -1;
-		if (myCurrentStep == existingUserEndingStep.getStepId()
-				&& !userWelcomeStep.getRegisterNewId()) {
-			return userWelcomeStep.getStepId();
-		}
-		if (myCurrentStep == projectWelcomeStep.getStepId()) {
-			return existingUserEndingStep.getStepId();
-		}
-		if (myCurrentStep == existingProjectIdStep.getStepId()
-				&& !projectWelcomeStep.getRegisterNewId()) {
-			return projectWelcomeStep.getStepId();
-		}
-		if (myCurrentStep == projectRegistrationStep.getStepId()) {
-			// Disable going back if a new user id is being created.
-			return userWelcomeStep.getRegisterNewId() ? -1
-					: projectWelcomeStep.getStepId();
-		}
-        if(myCurrentStep == projectedCreatedStep.getStepId() && projectRegistrationStep.shouldSkipProjectSliderStep()) {
-            return projectRegistrationStep.getStepId();
+    public int getNextStep(int step) {
+        if (this.getCurrentStepObject().canFinish()) {
+            return getCurrentStep();
         }
-		return super.getPreviousStep(step);
-	}
+        if (myCurrentStep == userWelcomeStep.getStepId()) {
+            return projectCreatedStep.getStepId();
+        }
+        return super.getNextStep(step);
+    }
+
+    @Override
+    public int getPreviousStep(int step) {
+        if (this.getCurrentStepObject().canFinish()) {
+            return -1;
+        }
+        if (myCurrentStep == projectCreatedStep.getStepId()) {
+            // Disable going back.
+            return -1;
+        }
+        return super.getPreviousStep(step);
+    }
 
 }

@@ -3,9 +3,6 @@ package nl.tudelft.watchdog.eclipse.ui.wizards;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import nl.tudelft.watchdog.eclipse.Activator;
-import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
-
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -23,6 +20,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import nl.tudelft.watchdog.eclipse.Activator;
+import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
+
 /**
  * The first page of a Wizard. It asks an initial yes-or no question. Depending
  * on the answer, it dynamically display an input field or an introduction page.
@@ -35,7 +35,9 @@ public abstract class WelcomePageBase extends FinishableWizardPage {
 	/** The text to welcome the user. To be changed by subclasses. */
 	protected String welcomeText;
 
-	/** The text on the label for the user input. To be changed by subclasses. */
+	/**
+	 * The text on the label for the user input. To be changed by subclasses.
+	 */
 	protected String labelText;
 
 	/** The tooltip on the label and inputText. */
@@ -107,12 +109,9 @@ public abstract class WelcomePageBase extends FinishableWizardPage {
 				setErrorMessageAndPageComplete(null);
 				removeDynamicContent(parent);
 				dynamicContent = createWelcomeComposite(parent);
-				setTitle(title
-						+ " ("
-						+ currentPageNumber
-						+ "/"
-						+ ((RegistrationWizardBase) getWizard())
-								.getTotalPages() + ")");
+				setTitle(title + " (" + currentPageNumber + "/"
+						+ ((RegistrationWizardBase) getWizard()).getTotalPages()
+						+ ")");
 				parent.layout();
 				parent.update();
 			}
@@ -130,10 +129,10 @@ public abstract class WelcomePageBase extends FinishableWizardPage {
 			public void widgetSelected(SelectionEvent e) {
 				removeDynamicContent(parent);
 				dynamicContent = createLoginComposite(parent);
-				int total = currentRegistration.equals("User") ? ((RegistrationWizardBase) getWizard())
-						.getTotalPages()
-						: ((RegistrationWizardBase) getWizard())
-								.getTotalPages() - 2;
+				int total = currentRegistration.equals("User")
+						? ((RegistrationWizardBase) getWizard()).getTotalPages()
+						: ((RegistrationWizardBase) getWizard()).getTotalPages()
+								- 2;
 				setTitle(title + " (" + currentPageNumber + "/" + total + ")");
 				parent.layout();
 				parent.update();

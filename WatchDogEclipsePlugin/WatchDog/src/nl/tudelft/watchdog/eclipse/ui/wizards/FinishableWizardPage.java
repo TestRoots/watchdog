@@ -1,8 +1,5 @@
 package nl.tudelft.watchdog.eclipse.ui.wizards;
 
-import nl.tudelft.watchdog.core.ui.wizards.YesNoDontKnowChoice;
-import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
-
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -11,6 +8,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+
+import nl.tudelft.watchdog.core.ui.wizards.YesNoDontKnowChoice;
+import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
 
 /**
  * A {@link WizardPage} that can determine for itself via the
@@ -143,7 +143,9 @@ public abstract class FinishableWizardPage extends WizardPage {
 	/** Creates message on failure. */
 	public static void createFailureMessage(Composite parent, String title,
 			String message) {
-		UIUtils.createBoldLabel(title, parent);
+		if (title != null && !title.isEmpty()) {
+			UIUtils.createBoldLabel(title, parent);
+		}
 		Composite innerParent = UIUtils.createZeroMarginGridedComposite(parent,
 				2);
 		UIUtils.createLogo(innerParent, "resources/images/errormark.png");
@@ -153,13 +155,18 @@ public abstract class FinishableWizardPage extends WizardPage {
 	/** Creates message on success. */
 	public static void createSuccessMessage(Composite parent, String title,
 			String message, String id) {
-		UIUtils.createBoldLabel(title, parent);
+		if (title != null && !title.isEmpty()) {
+			UIUtils.createBoldLabel(title, parent);
+		}
 		Composite innerParent = UIUtils.createZeroMarginGridedComposite(parent,
 				2);
 		UIUtils.createLogo(innerParent, "resources/images/checkmark.png");
-		Composite displayInformation = UIUtils.createZeroMarginGridedComposite(
-				innerParent, 2);
+		Composite displayInformation = UIUtils
+				.createZeroMarginGridedComposite(innerParent, 2);
 		UIUtils.createLabel(message, displayInformation);
-		UIUtils.createTextField(displayInformation, id);
+
+		if (id != null) {
+			UIUtils.createTextField(displayInformation, id);
+		}
 	}
 }

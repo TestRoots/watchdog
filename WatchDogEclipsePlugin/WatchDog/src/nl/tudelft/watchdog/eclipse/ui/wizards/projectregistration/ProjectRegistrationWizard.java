@@ -17,8 +17,8 @@ public class ProjectRegistrationWizard extends RegistrationWizardBase {
 		addPage(projectSliderPage);
 		existingProjectIdPage = new ProjectIdEnteredEndingPage(2);
 		addPage(existingProjectIdPage);
-		projectedCreatedPage = new ProjectCreatedEndingPage(4);
-		addPage(projectedCreatedPage);
+		projectCreatedPage = new ProjectCreatedEndingPage(4);
+		addPage(projectCreatedPage);
 		this.totalPages = 4;
 	}
 
@@ -34,10 +34,10 @@ public class ProjectRegistrationWizard extends RegistrationWizardBase {
 		}
 		if (currentPage == projectRegistrationPage
 				&& projectRegistrationPage.shouldSkipProjectSliderPage()) {
-			return projectedCreatedPage;
+			return projectCreatedPage;
 		}
 		if (currentPage == projectSliderPage) {
-			return projectedCreatedPage;
+			return projectCreatedPage;
 		}
 		return super.getNextPage(page);
 	}
