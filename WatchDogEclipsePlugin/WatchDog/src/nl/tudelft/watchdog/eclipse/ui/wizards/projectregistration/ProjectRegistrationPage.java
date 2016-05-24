@@ -5,7 +5,6 @@ import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
 import nl.tudelft.watchdog.eclipse.ui.wizards.FinishableWizardPage;
 import nl.tudelft.watchdog.eclipse.ui.wizards.FormValidationListener;
 import nl.tudelft.watchdog.eclipse.ui.wizards.RegistrationWizardBase;
-import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.events.SelectionEvent;
@@ -141,9 +140,6 @@ public class ProjectRegistrationPage extends FinishableWizardPage {
 	public void validateFormInputs() {
 		if (!hasOneSelection(noSingleProjectComposite)) {
 			setErrorMessageAndPageComplete("Please answer all yes/no questions!");
-		} else if (inputFieldDoesNotHaveMinimumSensibleInput(projectNameInput)
-				&& projectNameInput.getEnabled()) {
-			setErrorMessageAndPageComplete("You must enter a project name longer than 2 chars.");
 		} else if (!hasOneSelection(useContinuousIntegration)
 				|| !hasOneSelection(useJunit)
 				|| !hasOneSelection(otherTestingFrameworks)
@@ -164,11 +160,6 @@ public class ProjectRegistrationPage extends FinishableWizardPage {
 					+ ")");
 		}
 		getWizard().getContainer().updateButtons();
-	}
-
-	private boolean inputFieldDoesNotHaveMinimumSensibleInput(Text input) {
-		return WatchDogUtils.isEmptyOrHasOnlyWhitespaces(input.getText())
-				|| input.getText().length() < 3;
 	}
 
 	@Override
