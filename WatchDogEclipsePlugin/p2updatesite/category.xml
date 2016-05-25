@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/WatchDog_2.0.0.jar" id="WatchDog" version="2.0.0">
+   <feature url="features/WatchDog_2.0.1.jar" id="WatchDog" version="2.0.1">
       <category name="TestRoots Tools"/>
    </feature>
-      <feature url="features/WatchDogCore_2.0.0.jar" id="WatchDogCore" version="2.0.0">
+      <feature url="features/WatchDogCore_2.0.1.jar" id="WatchDogCore" version="2.0.1">
       <category name="TestRoots Tools"/>
    </feature>
    <category-def name="TestRoots Tools" label="TestRoots Tools"/>

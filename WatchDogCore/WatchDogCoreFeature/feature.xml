@@ -2,7 +2,7 @@
 <feature
       id="WatchDogCore"
       label="WatchDogCore"
-      version="2.0.0"
+      version="2.0.1"
       provider-name="Software Engineering Research Group (TU Delft)">
 
    <plugin
