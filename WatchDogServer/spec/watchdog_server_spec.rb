@@ -58,6 +58,9 @@ describe 'The WatchDog Server' do
   before(:each) do
     mongo = WatchDogServer.new.helpers.mongo
     mongo.close
+    # Disable mail sending during testing
+    WatchDogServer.any_instance.stub(:send_registration_email) do 
+    end
   end
 
   it 'should woof' do
