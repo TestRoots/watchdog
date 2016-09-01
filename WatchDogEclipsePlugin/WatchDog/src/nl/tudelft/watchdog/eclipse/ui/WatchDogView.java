@@ -213,6 +213,7 @@ public class WatchDogView extends ViewPart {
 		// Controls.
 		createShowingStatisticsLine();
 		createTimeSpanSelectionList();
+		UIUtils.createStartDebugSurveyLink(oneColumn);
 	}
 
 	private void createDebugStatisticsLabels(Composite container) {

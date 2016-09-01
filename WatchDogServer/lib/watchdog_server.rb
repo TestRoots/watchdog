@@ -322,7 +322,9 @@ You recently registered with WatchDog.
 
 Your user id is: %s
 
-You can use this id to link other WatchDog installations to your user.
+You can use this id to link other WatchDog installations to your user. Remember
+that you only start sending us data once you also register a possibly anonymous
+project. We will send you one other email once you do so.
 
 Thank you for contributing to science -- with WatchDog!
 

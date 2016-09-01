@@ -11,13 +11,11 @@
 # Should-Stop:
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Watchdog server 
-# Description:       Watchdog is high-performance and open source.
-#                    High performance, scalability, and reasonable depth of
-#                    functionality are the goals for the project.
+# Short-Description: WatchDog Server 
+# Description:       WatchDog Server is the mongo-backed WatchDog data collection backend 
 #
 ### END INIT INFO
-
+wdserver = "/mnt/data/watchdog/git-repo-server/WatchDogServer"
 
 # Some things that run always
 touch /var/lock/watchdog
@@ -25,14 +23,12 @@ touch /var/lock/watchdog
 # Carry out specific functions when asked to by the system
 case "$1" in
   start)
-    echo "Starting watchdog server"
-    cd /home/watchdog/watchdog/WatchDogServer
-    sudo -u watchdog  bash --login ./start_server.sh
+    echo "Starting watchdog server with supervise"
+    sudo -u testroots bash --login -c 'cd ${wdserver} && supervise .' &
     ;;
   stop)
     echo "Stopping watchdog server"
-    cd /home/watchdog/watchdog/WatchDogServer
-    ./stop_server.sh
+    sudo -u testroots bash --login -c 'cd ${wdserver} && svc -dx . && ./stop' 
      ;;
   *)
     echo "Usage: /etc/init.d/watchdog {start|stop}"
