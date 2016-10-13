@@ -1,14 +1,14 @@
 package nl.tudelft.watchdog.eclipse.ui.wizards.userregistration;
 
-import nl.tudelft.watchdog.eclipse.ui.util.BrowserOpenerSelection;
-import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
-import nl.tudelft.watchdog.eclipse.ui.wizards.WelcomePageBase;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
+
+import nl.tudelft.watchdog.eclipse.ui.util.BrowserOpenerSelection;
+import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
+import nl.tudelft.watchdog.eclipse.ui.wizards.WelcomePageBase;
 
 /**
  * The first page of the {@link UserProjectRegistrationWizard}. It asks the
@@ -23,8 +23,9 @@ public class UserWelcomePage extends WelcomePageBase {
 	/** Constructor. */
 	UserWelcomePage() {
 		super("Welcome to WatchDog!", 1);
-		setDescription("This wizard guides you through the setup of a WatchDog.\nPlease register, if you want to get your online report.");
-		welcomeTitle = "Welcome! Registration is fun and takes just 3 minutes!";
+		setDescription(
+				"You have successfully registered your project with WatchDog.");
+		welcomeTitle = "Welcome!";
 		welcomeText = "";
 		labelText = "Your WatchDog User-ID: ";
 		inputToolTip = "The User-ID we sent you upon your first WatchDog registration.";
@@ -42,8 +43,8 @@ public class UserWelcomePage extends WelcomePageBase {
 		Composite topContainer = UIUtils.createFullGridedComposite(parent, 1);
 
 		createWatchDogDescription(topContainer);
+		createSurveyLink(topContainer);
 		createLogoRow(topContainer);
-		createQuestionComposite(topContainer);
 
 		setControl(topContainer);
 		setPageComplete(false);
@@ -62,14 +63,25 @@ public class UserWelcomePage extends WelcomePageBase {
 		return composite;
 	}
 
+	private Composite createSurveyLink(Composite parent) {
+		Composite composite = UIUtils.createFullGridedComposite(parent, 1);
+
+		UIUtils.createBoldLabel(
+				"Please help us by spending at most 5 minutes on a survey:",
+				composite);
+		UIUtils.createStartDebugSurveyLink(composite);
+
+		return composite;
+	}
+
 	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible) {
+			welcomeTextLabel.setText(
+					"WatchDog is a free, open-source plugin that tells how you code your software.");
 			welcomeTextLabel
-					.setText("WatchDog is a free, open-source plugin that tells how you code your software.");
-			welcomeTextLabel.setLayoutData(new GridData(
-					GridData.FILL_HORIZONTAL));
+					.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			welcomeTextLabel.getParent().layout();
 			welcomeTextLabel.getParent().update();
 

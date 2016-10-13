@@ -127,8 +127,10 @@ public class WatchDogStartUp implements ProjectComponent {
         }
 
         UserProjectRegistrationWizard wizard = new UserProjectRegistrationWizard("User and Project Registration", project);
-        wizard.show();
-        if (wizard.getExitCode() == DialogWrapper.CANCEL_EXIT_CODE) {
+        makeSilentRegistration();
+        if (userExists() && projectExists()) {
+            wizard.show();
+        } else {
             if (Messages.YES == Messages.showYesNoDialog(WATCHDOG_UNREGISTERED_WARNING, "WatchDog is not registered!", Messages.getQuestionIcon())) {
                 makeSilentRegistration();
             } else {
@@ -136,6 +138,18 @@ public class WatchDogStartUp implements ProjectComponent {
                 preferences.registerProjectUse(project.getName(), false);
             }
         }
+    }
+
+    private boolean userExists() {
+        Preferences preferences = Preferences.getInstance();
+        return preferences.getUserId() != null
+                && !preferences.getUserId().isEmpty();
+    }
+
+    private boolean projectExists() {
+        ProjectPreferenceSetting setting = WatchDogGlobals.getPreferences()
+                .getOrCreateProjectSetting(project.getName());
+        return !WatchDogUtils.isEmpty(setting.projectId);
     }
 
     private void makeSilentRegistration() {

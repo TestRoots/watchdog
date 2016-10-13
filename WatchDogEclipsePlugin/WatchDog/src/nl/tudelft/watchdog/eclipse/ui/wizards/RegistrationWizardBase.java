@@ -1,15 +1,13 @@
 package nl.tudelft.watchdog.eclipse.ui.wizards;
 
+import org.eclipse.jface.wizard.Wizard;
+
 import nl.tudelft.watchdog.eclipse.ui.handlers.StartupHandler;
-import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.ui.wizards.projectregistration.ProjectCreatedEndingPage;
 import nl.tudelft.watchdog.eclipse.ui.wizards.projectregistration.ProjectIdEnteredEndingPage;
 import nl.tudelft.watchdog.eclipse.ui.wizards.projectregistration.ProjectRegistrationPage;
 import nl.tudelft.watchdog.eclipse.ui.wizards.projectregistration.ProjectSliderPage;
 import nl.tudelft.watchdog.eclipse.ui.wizards.projectregistration.ProjectWelcomePage;
-import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
-
-import org.eclipse.jface.wizard.Wizard;
 
 /** Base class for User and Project registration wizards. */
 public abstract class RegistrationWizardBase extends Wizard {
@@ -40,10 +38,11 @@ public abstract class RegistrationWizardBase extends Wizard {
 
 	@Override
 	public boolean performFinish() {
-		Preferences preferences = Preferences.getInstance();
-		preferences.registerProjectId(WatchDogUtils.getWorkspaceName(),
-				projectId);
-		preferences.registerProjectUse(WatchDogUtils.getWorkspaceName(), true);
+		// Preferences preferences = Preferences.getInstance();
+		// preferences.registerProjectId(WatchDogUtils.getWorkspaceName(),
+		// projectId);
+		// preferences.registerProjectUse(WatchDogUtils.getWorkspaceName(),
+		// true);
 		StartupHandler.startWatchDog();
 		return true;
 	}

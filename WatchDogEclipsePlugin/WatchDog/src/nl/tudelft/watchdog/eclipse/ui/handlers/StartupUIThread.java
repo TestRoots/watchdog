@@ -60,15 +60,17 @@ public class StartupUIThread implements Runnable {
 				.getOrCreateProjectSetting(workspaceName);
 		if (!WatchDogUtils.isEmpty(preferences.getUserId())
 				|| (projectSetting.startupQuestionAsked
-						&& !projectSetting.enableWatchdog))
+						&& !projectSetting.enableWatchdog)) {
 			return;
+		}
 
 		UserRegistrationWizardDialogHandler newUserWizardHandler = new UserRegistrationWizardDialogHandler();
 		try {
-			int statusCode = (int) newUserWizardHandler
-					.execute(new ExecutionEvent());
+			makeSilentRegistration();
 			savePreferenceStoreIfNeeded();
-			if (statusCode == Window.CANCEL) {
+			if (userExists() && projectExists()) {
+				newUserWizardHandler.execute(new ExecutionEvent());
+			} else {
 				boolean shouldRegisterAnonymously = MessageDialog.openQuestion(
 						null, "WatchDog not active!",
 						WATCHDOG_INACTIVE_WARNING);
@@ -85,6 +87,17 @@ public class StartupUIThread implements Runnable {
 			// users cannot register with WatchDog.
 			WatchDogLogger.getInstance().logSevere(exception);
 		}
+	}
+
+	private boolean userExists() {
+		return preferences.getUserId() != null
+				&& !preferences.getUserId().isEmpty();
+	}
+
+	private boolean projectExists() {
+		ProjectPreferenceSetting setting = preferences
+				.getOrCreateProjectSetting(workspaceName);
+		return !WatchDogUtils.isEmpty(setting.projectId);
 	}
 
 	private void makeSilentRegistration() {
