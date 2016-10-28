@@ -9,13 +9,13 @@
 # Required-Stop:     $network $local_fs $remote_fs
 # Should-Start:      $named
 # Should-Stop:
-# Default-Start:     2 3 4 5
+# Default-Start:     3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: WatchDog Server 
 # Description:       WatchDog Server is the mongo-backed WatchDog data collection backend 
 #
 ### END INIT INFO
-wdserver = "/mnt/data/watchdog/git-repo-server/WatchDogServer"
+wdserver="/mnt/data/watchdog/git-repo-server/WatchDogServer"
 
 # Some things that run always
 touch /var/lock/watchdog
