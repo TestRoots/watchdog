@@ -1,8 +1,8 @@
 #!/bin/bash
 
-idea_version="15.0.5"
-idea_zip="ideaIC-$idea_version.tar.gz"
-idea_URL="http://download.jetbrains.com/idea/$idea_zip"
+idea_version="2017.2.5"
+idea_zip="ideaIU-$idea_version.tar.gz"
+idea_URL="https://download.jetbrains.com/idea/$idea_zip"
 build_dir="build_cache"
 
 mkdir -p $build_dir
@@ -12,7 +12,7 @@ cd $build_dir
 if [ ! -f $idea_zip ];
    then
    echo "File $idea_zip not found. Loading from the Internetz ..."
-   wget http://download.jetbrains.com/idea/$idea_zip
+   wget $idea_URL
 fi
 
 # Unzip IDEA
