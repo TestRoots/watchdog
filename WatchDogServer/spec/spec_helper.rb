@@ -1,8 +1,8 @@
 require "codeclimate-test-reporter"
-CodeClimate::TestReporter.configure do |config| 
+CodeClimate::TestReporter.configure do |config|
   config.path_prefix = "WatchDogServer"
   config.git_dir = "../"
-end 
+end
 CodeClimate::TestReporter.start
 require 'rack/test'
 

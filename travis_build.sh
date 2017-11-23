@@ -1,9 +1,9 @@
 #!/bin/bash
 echo
 echo Build WatchDogServer
-echo 
+echo
 cd WatchDogServer
-bundler
+bundle install
 if [ ! -e config.yaml ];
 then
   cp config.yaml.tmpl config.yaml
@@ -31,7 +31,7 @@ cd ..
 
 echo
 echo Build WatchDogEclipsePlugin
-echo 
+echo
 cd WatchDogEclipsePlugin/
 mvn integration-test -B
 ECLIPSE_CLIENT_STATUS=$?

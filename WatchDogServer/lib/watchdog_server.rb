@@ -10,6 +10,7 @@ require 'geocoder'
 require 'yaml'
 
 class WatchDogServer < Sinatra::Base
+  logger = Logger.new('logfile.log')
   include Mongo
 
   def mongo
@@ -21,7 +22,7 @@ class WatchDogServer < Sinatra::Base
   before  do
     mongo
     @db = mongo.db(@serverconfig['mongo_db'])
-    unless @serverconfig['mongo_username'].nil? or @serverconfig['mongo_username'].empty? 
+    unless @serverconfig['mongo_username'].nil? or @serverconfig['mongo_username'].empty?
       @db.authenticate(@serverconfig['mongo_username'],
                        @serverconfig['mongo_password'])
     end
@@ -37,8 +38,6 @@ class WatchDogServer < Sinatra::Base
 
   # Enable request logging
   enable :logging
-
-  logger = Logger.new('logfile.log')
 
   # Enable post payloads up to 4MB
   Rack::Utils.key_space_limit = 4914304
@@ -68,11 +67,11 @@ class WatchDogServer < Sinatra::Base
     get_entity_info('get_project_by_id', params[:'id'])
   end
 
-  
+
   # Return info about stored entity
-  def get_entity_info(info_function, id) 
+  def get_entity_info(info_function, id)
     stored_entity = self.send(info_function, id)
-    
+
     if stored_entity.nil?
       halt 404, "Entity does not exist"
     else
@@ -84,11 +83,11 @@ class WatchDogServer < Sinatra::Base
   # Create a new user and return unique SHA1
   post '/user' do
     user = create_json_object(request)
-	
+
 	if user['programmingExperience'].nil? or user['programmingExperience'].empty?
 	  halt 404, "Missing programming experience in user registration"
 	end
-	
+
     sha = create_40_char_SHA
     logger.info user
 
@@ -97,18 +96,18 @@ class WatchDogServer < Sinatra::Base
     begin
       user['country'] = request.location.country
     rescue
-      user['country'] = 'NA' 
+      user['country'] = 'NA'
       logger.warn user
     end
     begin
       user['city'] = request.location.city
     rescue
-      user['city'] = 'NA' 
+      user['city'] = 'NA'
     end
     begin
       user['postCode'] = request.location.postal_code
-    rescue 
-      user['postCode'] = 'NA' 
+    rescue
+      user['postCode'] = 'NA'
     end
 
     add_ip_timestamp(user, request)
