@@ -27,7 +27,7 @@ fi
 if [ ! -f ${idea_path}.zip ];
    then
    echo "Compressing directory into zip"
-   zip -r ${idea_path}.zip ./$idea_path/*
+   zip -r ${idea_path}.zip $idea_path
 fi
 
 cd ..

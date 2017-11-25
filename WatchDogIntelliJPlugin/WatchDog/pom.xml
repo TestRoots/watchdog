@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>org.jetbrains</groupId>
 			<artifactId>org.jetbrains.intellij-ce</artifactId>
-			<version>15.0.5</version>
+			<version>2017.2.5</version>
 			<type>zip</type>
 			<scope>provided</scope>
 		</dependency>
@@ -132,7 +132,7 @@
 						<configuration>
 							<outputDirectory>${project.build.directory}/lib</outputDirectory>
 							<excludeArtifactIds>org.jetbrains.intellij-ce</excludeArtifactIds>
-							<excludeTransitive>true</excludeTransitive>							
+							<excludeTransitive>true</excludeTransitive>
 							<overWriteReleases>false</overWriteReleases>
 							<overWriteSnapshots>false</overWriteSnapshots>
 							<overWriteIfNewer>true</overWriteIfNewer>
@@ -175,5 +175,4 @@
 		</plugins>
 	</build>
 
-</project> 
-
+</project>
