@@ -24,13 +24,13 @@ if [ ! -d $idea_path ];
    tar zxf $idea_zip
 fi
 
-if [ ! -f ${idea_path}.zip ];
+if [ ! -f $idea_path.zip ];
    then
    echo "Compressing directory into zip"
-   zip -r ${idea_path}.zip $idea_path
+   zip -r $idea_path.zip $idea_path
 fi
 
 cd ..
 
 # Install IDEA to Maven repo
-mvn install:install-file -Dfile=$build_dir/${idea_path}.zip -DgroupId=org.jetbrains -DartifactId=org.jetbrains.intellij-ce -Dversion=${idea_version} -Dpackaging=zip
+mvn install:install-file -Dfile=$build_dir/$idea_path.zip -DgroupId=org.jetbrains -DartifactId=org.jetbrains.intellij-ce -Dversion=$idea_version -Dpackaging=zip
