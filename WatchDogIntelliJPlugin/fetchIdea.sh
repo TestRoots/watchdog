@@ -16,9 +16,9 @@ if [ ! -f $idea_zip ];
 fi
 
 # Unzip IDEA
-tar zxf ideaIC-${idea_version}.tar.gz
+tar zxf $idea_zip
 
-idea_path=$(find . -type d -name 'idea-IC*' | head -n 1)
+idea_path=$(find . -type d -name 'idea-IU*' | head -n 1)
 
 if [ ! -f ${idea_path}.zip ];
    then
