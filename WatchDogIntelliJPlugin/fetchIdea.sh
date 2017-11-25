@@ -17,13 +17,16 @@ if [ ! -f $idea_zip ];
    wget $idea_URL
 fi
 
-idea_directory=$(find . -type d -name 'idea-IU*' | head -n 1)
+has_directory=$(find . -type d -name 'idea-IU*' | head -n 1)
 
-if [ ! $idea_directory ];
+if [ ! $has_directory ];
    then
-   echo "'$idea_directory' does not exist, extracting '$idea_zip'"
+   echo "Idea folder does not exist, extracting '$idea_zip'"
    tar zxf $idea_zip
 fi
+
+# Recompute if we just extracted and it initially did not exist
+idea_directory=$(find . -type d -name 'idea-IU*' | head -n 1)
 
 if [ ! -f $idea_directory.zip ];
    then
@@ -34,4 +37,4 @@ fi
 cd ..
 
 # Install IDEA to Maven repo
-mvn install:install-file -Dfile=$build_dir/$idea_path.zip -DgroupId=org.jetbrains -DartifactId=org.jetbrains.intellij-ce -Dversion=$idea_version -Dpackaging=zip
+mvn install:install-file -Dfile=$build_dir/$idea_directory.zip -DgroupId=org.jetbrains -DartifactId=org.jetbrains.intellij-ce -Dversion=$idea_version -Dpackaging=zip
