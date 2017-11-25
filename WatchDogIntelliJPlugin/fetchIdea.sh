@@ -6,6 +6,8 @@ idea_URL="https://download.jetbrains.com/idea/$idea_zip"
 script_dir=$(dirname "$(readlink -f "$0")")
 build_dir="$script_dir/build_cache"
 
+echo $build_dir
+
 mkdir -p $build_dir
 cd $build_dir
 
@@ -16,9 +18,15 @@ if [ ! -f $idea_zip ];
    wget $idea_URL
 fi
 
+pwd
+
 find . -type d
 
+ls -l
+
 idea_path=$(find . -type d -name 'idea-IU*' | head -n 1)
+
+echo $idea_path
 
 if [ ! -d $idea_path ];
    then
