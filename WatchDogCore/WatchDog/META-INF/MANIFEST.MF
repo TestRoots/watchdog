@@ -36,5 +36,6 @@ Export-Package: com.google.gson,
  nl.tudelft.watchdog.core.util,
  org.joda.time,
  org.joda.time.base,
+ org.joda.time.chrono,
  org.joda.time.format,
  org.mapdb
