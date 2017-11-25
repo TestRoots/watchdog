@@ -18,14 +18,16 @@ fi
 
 idea_path=$(find . -type d -name 'idea-IU*' | head -n 1)
 
-if [ ! -f ${idea_path}.zip ];
+if [ ! -d $idea_path ];
    then
-
    echo "Extracting the tar file"
    tar zxf $idea_zip
+fi
 
+if [ ! -f ${idea_path}.zip ];
+   then
    echo "Compressing directory into zip"
-   zip -r ${idea_path}.zip $idea_path/*
+   zip -r ${idea_path}.zip ./$idea_path/*
 fi
 
 cd ..
