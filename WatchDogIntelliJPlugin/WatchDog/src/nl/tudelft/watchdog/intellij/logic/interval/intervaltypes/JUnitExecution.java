@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import com.intellij.rt.execution.junit.states.PoolOfTestStates;
+import com.intellij.execution.testframework.sm.runner.states.TestStateInfo.Magnitude;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.JUnitExecutionBase;
 import nl.tudelft.watchdog.core.logic.network.JsonifiedDouble;
 import nl.tudelft.watchdog.intellij.logic.ui.listeners.JUnitListener;
@@ -97,11 +97,11 @@ public class JUnitExecution extends JUnitExecutionBase {
     private Result determineTestResult(AbstractTestProxy test) {
         if (test.isPassed()) { // getMagnitude() <= PoolOfTestStates.PASSED_INDEX
             return Result.OK;
-        } else if (test.getMagnitude() == PoolOfTestStates.IGNORED_INDEX) {
+        } else if (test.getMagnitude() == Magnitude.IGNORED_INDEX.getValue()) {
             return Result.IGNORED;
-        } else if (test.getMagnitude() == PoolOfTestStates.ERROR_INDEX) {
+        } else if (test.getMagnitude() == Magnitude.ERROR_INDEX.getValue()) {
             return Result.ERROR;
-        } else if (test.getMagnitude() == PoolOfTestStates.FAILED_INDEX || test.getMagnitude() == PoolOfTestStates.COMPARISON_FAILURE) {
+        } else if (test.getMagnitude() == Magnitude.FAILED_INDEX.getValue()) {
             return Result.FAILURE;
         } else return Result.UNDEFINED;
     }
