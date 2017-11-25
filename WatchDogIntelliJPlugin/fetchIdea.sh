@@ -3,7 +3,8 @@
 idea_version="2017.2.5"
 idea_zip="ideaIU-$idea_version.tar.gz"
 idea_URL="https://download.jetbrains.com/idea/$idea_zip"
-build_dir="build_cache"
+script_dir=$(dirname "$(readlink -f "$0")")
+build_dir="$script_dir/build_cache"
 
 mkdir -p $build_dir
 cd $build_dir
@@ -15,16 +16,16 @@ if [ ! -f $idea_zip ];
    wget $idea_URL
 fi
 
-# Unzip IDEA
-tar zxf $idea_zip
-
 idea_path=$(find . -type d -name 'idea-IU*' | head -n 1)
 
 if [ ! -f ${idea_path}.zip ];
    then
+   # Unzip IDEA
+   tar zxf $idea_zip
+
    # Compress to ZIP file
    cd $idea_path
-   zip -r ../${idea_path}.zip *
+   zip -rq ../${idea_path}.zip *
    cd ..
 fi
 
