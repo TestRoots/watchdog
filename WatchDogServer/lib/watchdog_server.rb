@@ -10,25 +10,26 @@ require 'geocoder'
 require 'yaml'
 
 class WatchDogServer < Sinatra::Base
+  logger = Logger.new('logfile.log')
   include Mongo
 
   def mongo
     @serverconfig ||= YAML.load_file('config.yaml')[settings.environment.to_s]
-    MongoClient.new(@serverconfig['mongo_host'], 27017)
+    Mongo::Client.new(["#{@serverconfig['mongo_host']}:27017"])
   end
 
   # Setup database connection
   before  do
     mongo
-    @db = mongo.db(@serverconfig['mongo_db'])
-    unless @serverconfig['mongo_username'].nil? or @serverconfig['mongo_username'].empty? 
+    @db = mongo.database
+    unless @serverconfig['mongo_username'].nil? or @serverconfig['mongo_username'].empty?
       @db.authenticate(@serverconfig['mongo_username'],
                        @serverconfig['mongo_password'])
     end
   end
 
   after do
-    @db.connection.close
+    mongo.close
     @db = nil
   end
 
@@ -37,8 +38,6 @@ class WatchDogServer < Sinatra::Base
 
   # Enable request logging
   enable :logging
-
-  logger = Logger.new('logfile.log')
 
   # Enable post payloads up to 4MB
   Rack::Utils.key_space_limit = 4914304
@@ -68,11 +67,11 @@ class WatchDogServer < Sinatra::Base
     get_entity_info('get_project_by_id', params[:'id'])
   end
 
-  
+
   # Return info about stored entity
-  def get_entity_info(info_function, id) 
+  def get_entity_info(info_function, id)
     stored_entity = self.send(info_function, id)
-    
+
     if stored_entity.nil?
       halt 404, "Entity does not exist"
     else
@@ -84,11 +83,11 @@ class WatchDogServer < Sinatra::Base
   # Create a new user and return unique SHA1
   post '/user' do
     user = create_json_object(request)
-	
+
 	if user['programmingExperience'].nil? or user['programmingExperience'].empty?
 	  halt 404, "Missing programming experience in user registration"
 	end
-	
+
     sha = create_40_char_SHA
     logger.info user
 
@@ -97,23 +96,23 @@ class WatchDogServer < Sinatra::Base
     begin
       user['country'] = request.location.country
     rescue
-      user['country'] = 'NA' 
+      user['country'] = 'NA'
       logger.warn user
     end
     begin
       user['city'] = request.location.city
     rescue
-      user['city'] = 'NA' 
+      user['city'] = 'NA'
     end
     begin
       user['postCode'] = request.location.postal_code
-    rescue 
-      user['postCode'] = 'NA' 
+    rescue
+      user['postCode'] = 'NA'
     end
 
     add_ip_timestamp(user, request)
 
-    users.save(user)
+    users.insert_one(user)
     stored_user = get_user_by_id(sha)
 
     unless user['email'].nil? or user['email'].empty?
@@ -140,7 +139,7 @@ class WatchDogServer < Sinatra::Base
 
     add_ip_timestamp(project, request)
 
-    projects.save(project)
+    projects.insert_one(project)
 
     unless associated_user['email'].nil? or associated_user['email'].empty?
       send_registration_email(PROJECT_REGISTERED, associated_user['email'], sha, project['name'])
@@ -187,7 +186,7 @@ class WatchDogServer < Sinatra::Base
         i['userId'] = user_id
         i['projectId'] = project_id
         add_ip_timestamp(i, request)
-        intervals.save(i)
+        intervals.insert_one(i)
       rescue IndexError => e
         log.error "IndexError occurred. Interval: #{i}"
         log.error e.backtrace
@@ -232,7 +231,7 @@ class WatchDogServer < Sinatra::Base
         i['userId'] = user_id
         i['projectId'] = project_id
         add_ip_timestamp(i, request)
-        events.save(i)
+        events.insert_one(i)
       rescue IndexError => e
         log.error "IndexError occurred. Event: #{i}"
         log.error e.backtrace
@@ -249,27 +248,27 @@ class WatchDogServer < Sinatra::Base
   private
 
   def users
-    @db.collection('users')
+    @db[:users]
   end
 
   def projects
-    @db.collection('projects')
+    @db[:projects]
   end
 
   def intervals
-    @db.collection('intervals')
+    @db[:intervals]
   end
 
   def events
-    @db.collection('events')
+    @db[:events]
   end
 
   def get_user_by_id(id)
-    users.find_one({'id' => id})
+    users.find(id: id).limit(1).first
   end
 
   def get_project_by_id(id)
-    projects.find_one({'id' => id})
+    projects.find(id: id).limit(1).first
   end
 
   # creates a json object from a http request

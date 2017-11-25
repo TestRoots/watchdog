@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby "1.9.3"
+ruby "2.4.1"
 
 gem 'mongo'
 gem 'sinatra'
@@ -9,7 +9,8 @@ gem 'bson_ext'
 gem 'geocoder'
 
 group :test do
-  gem 'rspec', "~>2.9"
+  gem 'rspec', "~>3"
+  gem 'rack-test'
   gem 'nyan-cat-formatter'
   gem 'codeclimate-test-reporter', '~> 0.4.7'
 end
