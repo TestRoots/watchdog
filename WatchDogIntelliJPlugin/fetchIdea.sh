@@ -24,9 +24,7 @@ if [ ! -f ${idea_path}.zip ];
    tar zxf $idea_zip
 
    # Compress to ZIP file
-   cd $idea_path
-   zip -rq ../${idea_path}.zip *
-   cd ..
+   zip -rq ${idea_path}.zip $idea_path/*
 fi
 
 cd ..
