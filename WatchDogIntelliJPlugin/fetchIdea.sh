@@ -16,6 +16,8 @@ if [ ! -f $idea_zip ];
    wget $idea_URL
 fi
 
+find . -type d
+
 idea_path=$(find . -type d -name 'idea-IU*' | head -n 1)
 
 if [ ! -d $idea_path ];
