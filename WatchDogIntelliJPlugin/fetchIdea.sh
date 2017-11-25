@@ -31,7 +31,9 @@ idea_directory=$(find . -maxdepth 1 -type d -name 'idea-IU*' | head -n 1)
 if [ ! -f $idea_directory.zip ];
    then
    echo "Compressing directory '$idea_directory' into '$idea_directory.zip'"
-   zip -rq $idea_directory.zip $idea_directory
+   cd $idea_directory
+   zip -rq ../$idea_directory.zip *
+   cd ../
 fi
 
 cd ..
