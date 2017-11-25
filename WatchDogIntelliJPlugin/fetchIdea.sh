@@ -20,11 +20,12 @@ idea_path=$(find . -type d -name 'idea-IU*' | head -n 1)
 
 if [ ! -f ${idea_path}.zip ];
    then
-   # Unzip IDEA
+
+   echo "Extracting the tar file"
    tar zxf $idea_zip
 
-   # Compress to ZIP file
-   zip -rq ${idea_path}.zip $idea_path/*
+   echo "Compressing directory into zip"
+   zip -r ${idea_path}.zip $idea_path/*
 fi
 
 cd ..
