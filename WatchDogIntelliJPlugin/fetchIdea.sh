@@ -6,8 +6,7 @@ idea_URL="https://download.jetbrains.com/idea/$idea_zip"
 script_dir=$(dirname "$(readlink -f "$0")")
 build_dir="$script_dir/build_cache"
 
-echo $build_dir
-
+echo "Creating directory '$build_dir'"
 mkdir -p $build_dir
 cd $build_dir
 
@@ -18,26 +17,18 @@ if [ ! -f $idea_zip ];
    wget $idea_URL
 fi
 
-pwd
+idea_directory=$(find . -type d -name 'idea-IU*' | head -n 1)
 
-find . -type d
-
-ls -l
-
-idea_path=$(find . -type d -name 'idea-IU*' | head -n 1)
-
-echo $idea_path
-
-if [ ! -d $idea_path ];
+if [ ! $idea_directory ];
    then
-   echo "Extracting the tar file"
+   echo "'$idea_directory' does not exist, extracting '$idea_zip'"
    tar zxf $idea_zip
 fi
 
-if [ ! -f $idea_path.zip ];
+if [ ! -f $idea_directory.zip ];
    then
-   echo "Compressing directory '$idea_path' into '$idea_path.zip'"
-   zip -r $idea_path.zip $idea_path
+   echo "Compressing directory '$idea_directory' into '$idea_directory.zip'"
+   zip -r $idea_directory.zip $idea_directory
 fi
 
 cd ..
