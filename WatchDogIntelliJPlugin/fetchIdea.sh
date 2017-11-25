@@ -26,7 +26,11 @@ if [ ! $has_directory ];
 fi
 
 # Recompute if we just extracted and it initially did not exist
-idea_directory=$(find . -type d -name 'idea-IU*' | head -n 1)
+idea_directory=$(find . -maxdepth 1 -type d -name 'idea-IU*' | head -n 1)
+
+pwd
+ls -l
+find . -maxdepth 1 -type d
 
 if [ ! -f $idea_directory.zip ];
    then
