@@ -28,14 +28,10 @@ fi
 # Recompute if we just extracted and it initially did not exist
 idea_directory=$(find . -maxdepth 1 -type d -name 'idea-IU*' | head -n 1)
 
-pwd
-ls -l
-find . -maxdepth 1 -type d
-
 if [ ! -f $idea_directory.zip ];
    then
    echo "Compressing directory '$idea_directory' into '$idea_directory.zip'"
-   zip -r $idea_directory.zip $idea_directory
+   zip -rq $idea_directory.zip $idea_directory
 fi
 
 cd ..
