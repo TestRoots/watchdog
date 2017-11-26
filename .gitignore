@@ -24,10 +24,12 @@ watchdog.err.log
 watchdog.out.log
 
 # Ignore Eclipse settings
-WatchDogEclipsePlugin/WatchDog/.settings/
-WatchDogEclipsePlugin/WatchDogUnitTests/.settings/
-WatchDogCore/WatchDog/.settings/
+.settings/
+.project
+.classpath
 
 # Ignore IntelliJ workspace file
 WatchDogIntelliJPlugin/WatchDog/.idea/workspace.xml
 WatchDogIntelliJPlugin/build_cache/
+*.iml
+.idea/
