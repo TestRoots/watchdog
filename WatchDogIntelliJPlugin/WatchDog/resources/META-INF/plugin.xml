@@ -1,5 +1,5 @@
 <idea-plugin version="2">
-    <id>nl.tudelft.watchdog</id>
+    <id>nl.tudelft.watchdog.intellij</id>
     <name>WatchDog</name>
     <version>2.0.0</version>
     <vendor email="igor.levaja@testroots.org" url="http://www.testroots.org">TestRoots, TU Delft</vendor>

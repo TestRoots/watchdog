@@ -3,11 +3,19 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nl.tudelft</groupId>
-	<artifactId>parent</artifactId>
+	<artifactId>watchdog-intellij-plugin</artifactId>
 	<version>2.0.0</version>
 	<packaging>pom</packaging>
+
+	<parent>
+		<groupId>nl.tudelft.watchdog</groupId>
+		<artifactId>parent</artifactId>
+		<version>2.0.0</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
 	<modules>
 		<module>WatchDog</module>
 		<!--module>WatchDogUnitTests</module-->
 	</modules>
-</project> 
+</project>

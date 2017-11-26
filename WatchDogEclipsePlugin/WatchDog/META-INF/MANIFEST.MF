@@ -3,7 +3,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Manifest-Version: 1.0
 Bundle-Activator: nl.tudelft.watchdog.eclipse.Activator
 Bundle-Version: 2.0.0
-Bundle-SymbolicName: nl.tudelft.WatchDog;singleton:=true
+Bundle-SymbolicName: nl.tudelft.WatchDog.eclipse;singleton:=true
 Import-Package: junit.runner,
  org.eclipse.core.commands,
  org.eclipse.core.commands.common,

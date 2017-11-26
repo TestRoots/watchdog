@@ -6,11 +6,11 @@
 	<parent>
 		<relativePath>../pom.xml</relativePath>
 		<groupId>nl.tudelft</groupId>
-		<artifactId>parent</artifactId>
+		<artifactId>watchdog-intellij-plugin</artifactId>
 		<version>2.0.0</version>
 	</parent>
 
-	<artifactId>nl.tudelft.WatchDog</artifactId>
+	<artifactId>nl.tudelft.watchdog.intellij</artifactId>
 	<packaging>jar</packaging>
 
 	<dependencies>
@@ -94,36 +94,7 @@
 							<includes>**/*.jar</includes>
 						</configuration>
 					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<compilerArguments>
-						<extdirs>${project.build.directory}/IntelliJ-IDEA-CE/lib/</extdirs>
-					</compilerArguments>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-				<executions>
-					<execution>
-						<id>analyze-compile</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
+          <execution>
 						<id>copy-dependencies</id>
 						<phase>prepare-package</phase>
 						<goals>
@@ -143,7 +114,28 @@
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.version}</version>
+				<configuration>
+					<compilerArguments>
+						<extdirs>${project.build.directory}/IntelliJ-IDEA-CE/lib/</extdirs>
+					</compilerArguments>
+				</configuration>
+				<executions>
+					<execution>
+						<id>analyze-compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+        <version>${maven.jar.version}</version>
 				<configuration>
 					<outputDirectory>${project.build.directory}/lib</outputDirectory>
 					<archive>
