@@ -13,10 +13,6 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<properties>
-		<maven.exec.skip>false</maven.exec.skip>
-	</properties>
-
 	<dependencies>
 
 		<dependency>
@@ -164,25 +160,6 @@
 						<goals>
 							<goal>single</goal>
 						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>exec-maven-plugin</artifactId>
-				<groupId>org.codehaus.mojo</groupId>
-				<version>1.6.0</version>
-				<executions>
-					<execution>
-						<id>Prepare IntelliJ dependency</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>bash</executable>
-							<commandlineArgs>fetchidea.sh</commandlineArgs>
-							<skip>{maven.exec.skip}</skip>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>

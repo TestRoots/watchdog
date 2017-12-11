@@ -6,6 +6,7 @@ before_install:
  - sudo apt-get install ruby
  - sudo apt-get install rubygems-integration
  - sudo gem install bundler
+ - ./WatchDogIntellijPlugin/fetchidea.sh
 services:
   - mongodb
 script: maven clean verify
