@@ -39,4 +39,4 @@ fi
 cd ..
 
 # Install IDEA to Maven repo
-mvn install:install-file -Dfile=$build_dir/$idea_directory.zip -DgroupId=org.jetbrains -DartifactId=org.jetbrains.intellij-ce -Dversion=$idea_version -Dpackaging=zip
+mvn install:install-file -Dmaven.exec.skip -Dfile=$build_dir/$idea_directory.zip -DgroupId=org.jetbrains -DartifactId=org.jetbrains.intellij-ce -Dversion=$idea_version -Dpackaging=zip

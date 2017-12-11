@@ -9,4 +9,4 @@ before_install:
  - ./travis_build.sh
 services:
   - mongodb
-script: ./travis_test.sh
+script: maven clean verify

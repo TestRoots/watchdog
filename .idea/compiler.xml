@@ -11,6 +11,7 @@
         <module name="nl.tudelft.watchdog.p2updatesite" />
         <module name="nl.tudelft.WatchDogCore" />
         <module name="WatchDog" />
+        <module name="watchdog.server" />
         <module name="WatchDogCore" />
         <module name="WatchDogUnitTests" />
       </profile>
@@ -25,6 +26,7 @@
       <module name="watchdog-core-parent" target="1.8" />
       <module name="watchdog-eclipse-plugin" target="1.5" />
       <module name="watchdog-intellij-plugin" target="1.8" />
+      <module name="watchdog.server" target="1.8" />
       <module name="WatchDogCore" target="1.8" />
       <module name="WatchDogUnitTests" target="1.5" />
     </bytecodeTargetLevel>
