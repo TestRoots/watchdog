@@ -31,5 +31,3 @@ watchdog.out.log
 # Ignore IntelliJ workspace file
 WatchDogIntelliJPlugin/WatchDog/.idea/workspace.xml
 WatchDogIntelliJPlugin/build_cache/
-*.iml
-.idea/
