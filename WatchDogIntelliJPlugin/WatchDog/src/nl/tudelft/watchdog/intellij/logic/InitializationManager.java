@@ -51,7 +51,7 @@ public class InitializationManager {
     private InitializationManager(Project project) {
         // Initialize persisters
         // Double getPath() because they are different methods on different objects
-        File baseFolder = new File(PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog")).getPath().getPath());
+        File baseFolder = new File(PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog.intellij")).getPath().getPath());
 
         File toTransferDatabaseFile = new File(baseFolder, WatchDogUtils.getProjectName() + "watchdog.mapdb");
         File statisticsDatabaseFile = new File(baseFolder, WatchDogUtils.getProjectName() + "watchdogStatistics.mapdb");

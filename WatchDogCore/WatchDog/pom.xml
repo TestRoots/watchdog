@@ -8,6 +8,5 @@
 	</parent>
 
 	<packaging>eclipse-plugin</packaging>
-	<groupId>nl.tudelft.watchdog</groupId>
 	<artifactId>nl.tudelft.WatchDogCore</artifactId>
 </project>

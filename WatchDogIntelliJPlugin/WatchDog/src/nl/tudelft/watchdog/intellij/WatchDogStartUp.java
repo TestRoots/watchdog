@@ -56,7 +56,7 @@ public class WatchDogStartUp implements ProjectComponent {
 
     public void initComponent() {
         WatchDogUtils.setActiveProject(project);
-        WatchDogGlobals.setLogDirectory(PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog")).getPath().toString() + File.separator + "logs" + File.separator);
+        WatchDogGlobals.setLogDirectory(PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog.intellij")).getPath().toString() + File.separator + "logs" + File.separator);
         WatchDogGlobals.setPreferences(Preferences.getInstance());
 
         String platform = ApplicationInfo.getInstance().getVersionName();
