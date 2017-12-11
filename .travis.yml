@@ -9,4 +9,4 @@ before_install:
  - ./WatchDogIntelliJPlugin/fetchidea.sh
 services:
   - mongodb
-script: maven clean verify
+script: mvn verify
