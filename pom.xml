@@ -12,7 +12,7 @@
 		<module>core</module>
 		<module>eclipse</module>
 		<module>intellij</module>
-    <module>server</module>
+        <module>server</module>
 	</modules>
 
 	<properties>

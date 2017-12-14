@@ -11,7 +11,6 @@
         <module name="eclipse.features.plugin" />
         <module name="eclipse.p2updatesite" />
         <module name="eclipse.plugin" />
-        <module name="intellij" />
         <module name="eclipse.tests" />
         <module name="server" />
       </profile>

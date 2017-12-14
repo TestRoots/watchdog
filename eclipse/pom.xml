@@ -14,10 +14,10 @@
 
 	<modules>
 		<module>plugin</module>
-		<module>WatchDogUnitTests</module>
 		<module>features/core</module>
-		<module>WatchDogFeature</module>
+		<module>features/plugin</module>
 		<module>p2updatesite</module>
+		<module>tests</module>
 	</modules>
 
 	<properties>

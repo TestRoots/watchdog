@@ -9,90 +9,54 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
-      <library name="Maven: p2.eclipse-plugin:nl.tudelft.WatchDogCore:2.0.0">
+      <library name="Maven: p2.eclipse-plugin:org.apache.commons.codec:1.6.0.v201305230611">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/nl/tudelft/watchdog/nl.tudelft.WatchDogCore/2.0.0/nl.tudelft.WatchDogCore-2.0.0.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/p2/osgi/bundle/org.apache.commons.codec/1.6.0.v201305230611/org.apache.commons.codec-1.6.0.v201305230611.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: p2.eclipse-plugin:nl.tudelft.WatchDogCore:lib/gson-2.2.4.jar:2.0.0">
+      <library name="Maven: p2.eclipse-plugin:org.apache.commons.logging:1.1.1.v201101211721">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/.cache/tycho/nl.tudelft.WatchDogCore-2.0.0.jar/lib/gson-2.2.4.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/p2/osgi/bundle/org.apache.commons.logging/1.1.1.v201101211721/org.apache.commons.logging-1.1.1.v201101211721.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: p2.eclipse-plugin:nl.tudelft.WatchDogCore:lib/httpclient-4.5.jar:2.0.0">
+      <library name="Maven: p2.eclipse-plugin:org.apache.httpcomponents.httpcore:4.3.3.v201411290715">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/.cache/tycho/nl.tudelft.WatchDogCore-2.0.0.jar/lib/httpclient-4.5.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/p2/osgi/bundle/org.apache.httpcomponents.httpcore/4.3.3.v201411290715/org.apache.httpcomponents.httpcore-4.3.3.v201411290715.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: p2.eclipse-plugin:nl.tudelft.WatchDogCore:lib/httpcore-4.4.1.jar:2.0.0">
+      <library name="Maven: p2.eclipse-plugin:watchdog.core:2.0.0">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/.cache/tycho/nl.tudelft.WatchDogCore-2.0.0.jar/lib/httpcore-4.4.1.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/nl/tudelft/watchdog.core/2.0.0/watchdog.core-2.0.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: p2.eclipse-plugin:nl.tudelft.WatchDogCore:lib/httpmime-4.5.jar:2.0.0">
+      <library name="Maven: p2.eclipse-plugin:org.apache.httpcomponents.httpclient:4.3.6.v201411290715">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/.cache/tycho/nl.tudelft.WatchDogCore-2.0.0.jar/lib/httpmime-4.5.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/p2/osgi/bundle/org.apache.httpcomponents.httpclient/4.3.6.v201411290715/org.apache.httpcomponents.httpclient-4.3.6.v201411290715.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: p2.eclipse-plugin:nl.tudelft.WatchDogCore:lib/commons-logging-1.2.jar:2.0.0">
+      <library name="Maven: p2.eclipse-plugin:org.apache.commons.lang:2.6.0.v201404270220">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/.cache/tycho/nl.tudelft.WatchDogCore-2.0.0.jar/lib/commons-logging-1.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: p2.eclipse-plugin:nl.tudelft.WatchDogCore:lib/commons-codec-1.9.jar:2.0.0">
-        <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/.cache/tycho/nl.tudelft.WatchDogCore-2.0.0.jar/lib/commons-codec-1.9.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: p2.eclipse-plugin:nl.tudelft.WatchDogCore:lib/commons-lang-2.6.jar:2.0.0">
-        <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/.cache/tycho/nl.tudelft.WatchDogCore-2.0.0.jar/lib/commons-lang-2.6.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: p2.eclipse-plugin:nl.tudelft.WatchDogCore:lib/joda-time-2.8.1.jar:2.0.0">
-        <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/.cache/tycho/nl.tudelft.WatchDogCore-2.0.0.jar/lib/joda-time-2.8.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: p2.eclipse-plugin:nl.tudelft.WatchDogCore:lib/mapdb-1.0.5.jar:2.0.0">
-        <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/.cache/tycho/nl.tudelft.WatchDogCore-2.0.0.jar/lib/mapdb-1.0.5.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/p2/osgi/bundle/org.apache.commons.lang/2.6.0.v201404270220/org.apache.commons.lang-2.6.0.v201404270220.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
