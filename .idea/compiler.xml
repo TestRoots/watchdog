@@ -17,18 +17,18 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="nl.tudelft.WatchDog.eclipse" target="1.5" />
+      <module name="nl.tudelft.WatchDog.eclipse" target="1.8" />
       <module name="nl.tudelft.watchdog.intellij" target="1.8" />
-      <module name="nl.tudelft.watchdog.p2updatesite" target="1.5" />
+      <module name="nl.tudelft.watchdog.p2updatesite" target="1.8" />
       <module name="nl.tudelft.WatchDogCore" target="1.8" />
       <module name="parent" target="1.8" />
-      <module name="WatchDog" target="1.5" />
+      <module name="WatchDog" target="1.8" />
       <module name="watchdog-core-parent" target="1.8" />
-      <module name="watchdog-eclipse-plugin" target="1.5" />
+      <module name="watchdog-eclipse-plugin" target="1.8" />
       <module name="watchdog-intellij-plugin" target="1.8" />
       <module name="watchdog.server" target="1.8" />
       <module name="WatchDogCore" target="1.8" />
-      <module name="WatchDogUnitTests" target="1.5" />
+      <module name="WatchDogUnitTests" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

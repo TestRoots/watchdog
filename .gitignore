@@ -16,6 +16,7 @@ out/
 # to correctly identify the intellij plugin configuration
 .idea/workspace.xml
 .idea/vcs.xml
+.idea/dictionaries/
 
 # Eclipse-specific
 .project
