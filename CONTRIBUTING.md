@@ -29,8 +29,8 @@ In this section, we describe how WatchDog needs to be setup. It is important to 
 1. Import the `pom.xml` in the root folder
 1. Add local version of IntelliJ to your IntelliJ running per instructions of https://www.jetbrains.com/help/idea/configuring-intellij-platform-plugin-sdk.html
 1. Create a new Run Configuration.
-  1. Classpath should point to `watchdog-intellij-plugin`
-  1. JRE should be the local version of IntelliJ that exists in `WatchDogIntelliJPlugin/build_cache/`
+    1. Classpath should point to `watchdog-intellij-plugin`
+    1. JRE should be the local version of IntelliJ that exists in `WatchDogIntelliJPlugin/build_cache/`
 1. Open `WatchDogStartup.java` and click on the run configuration. A new version of IntelliJ should pop up with a local version of WatchDog running.
 1. Works.
 
