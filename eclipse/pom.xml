@@ -13,7 +13,7 @@
 	</parent>
 
 	<modules>
-		<module>WatchDog</module>
+		<module>plugin</module>
 		<module>WatchDogUnitTests</module>
 		<module>WatchDogCoreFeature</module>
 		<module>WatchDogFeature</module>
