@@ -23,10 +23,10 @@
       <module name="eclipse.features.plugin" target="1.8" />
       <module name="eclipse.p2updatesite" target="1.8" />
       <module name="eclipse.plugin" target="1.8" />
+      <module name="eclipse.tests" target="1.8" />
       <module name="intellij" target="1.8" />
       <module name="server" target="1.8" />
       <module name="watchdog" target="1.8" />
-      <module name="WatchDogUnitTests" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

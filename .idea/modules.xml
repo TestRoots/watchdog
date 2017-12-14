@@ -8,7 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/eclipse/plugin/eclipse.plugin.iml" filepath="$PROJECT_DIR$/eclipse/plugin/eclipse.plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/eclipse/features/core/eclipse.features.core.iml" filepath="$PROJECT_DIR$/eclipse/features/core/eclipse.features.core.iml" />
       <module fileurl="file://$PROJECT_DIR$/eclipse/features/plugin/eclipse.features.plugin.iml" filepath="$PROJECT_DIR$/eclipse/features/plugin/eclipse.features.plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/eclipse/WatchDogUnitTests/WatchDogUnitTests.iml" filepath="$PROJECT_DIR$/eclipse/WatchDogUnitTests/WatchDogUnitTests.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eclipse/tests/eclipse.tests.iml" filepath="$PROJECT_DIR$/eclipse/tests/eclipse.tests.iml" />
       <module fileurl="file://$PROJECT_DIR$/intellij/intellij.iml" filepath="$PROJECT_DIR$/intellij/intellij.iml" />
       <module fileurl="file://$PROJECT_DIR$/server/server.iml" filepath="$PROJECT_DIR$/server/server.iml" />
       <module fileurl="file://$PROJECT_DIR$/watchdog.iml" filepath="$PROJECT_DIR$/watchdog.iml" />
