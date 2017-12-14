@@ -128,4 +128,3 @@ public class InitializationManager {
         return transferManager;
     }
 }
-

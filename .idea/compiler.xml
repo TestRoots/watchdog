@@ -7,10 +7,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="core" />
-        <module name="eclipse" />
+        <module name="nl.tudelft.WatchDog.eclipse" />
         <module name="p2updatesite" />
-        <module name="intellij" />
-       <module name="server" />
+        <module name="server" />
+        <module name="WatchDog" />
+        <module name="WatchDogCore" />
         <module name="WatchDogUnitTests" />
       </profile>
     </annotationProcessing>
@@ -18,13 +19,13 @@
       <module name="core" target="1.8" />
       <module name="eclipse" target="1.8" />
       <module name="intellij" target="1.8" />
-      <module name="p2updatesite" target="1.8" />
       <module name="nl.tudelft.WatchDog.eclipse" target="1.8" />
-      <module name="WatchDogCore" target="1.8" />
-      <module name="WatchDog" target="1.8" />
-      <module name="WatchDogUnitTests" target="1.8" />
+      <module name="p2updatesite" target="1.8" />
       <module name="server" target="1.8" />
       <module name="watchdog" target="1.8" />
+      <module name="WatchDog" target="1.8" />
+      <module name="WatchDogCore" target="1.8" />
+      <module name="WatchDogUnitTests" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

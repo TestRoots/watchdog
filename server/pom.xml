@@ -4,13 +4,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>nl.tudelft.watchdog</groupId>
-		<artifactId>parent</artifactId>
+		<groupId>nl.tudelft</groupId>
+		<artifactId>watchdog</artifactId>
 		<version>2.0.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>server</artifactId>
+	<artifactId>watchdog.server</artifactId>
 
 	<build>
 		<plugins>
