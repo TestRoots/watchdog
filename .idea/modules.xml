@@ -2,14 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/WatchDogEclipsePlugin/WatchDogFeature/WatchDog.iml" filepath="$PROJECT_DIR$/WatchDogEclipsePlugin/WatchDogFeature/WatchDog.iml" />
-      <module fileurl="file://$PROJECT_DIR$/WatchDogEclipsePlugin/WatchDogCoreFeature/WatchDogCore.iml" filepath="$PROJECT_DIR$/WatchDogEclipsePlugin/WatchDogCoreFeature/WatchDogCore.iml" />
-      <module fileurl="file://$PROJECT_DIR$/WatchDogEclipsePlugin/WatchDogUnitTests/WatchDogUnitTests.iml" filepath="$PROJECT_DIR$/WatchDogEclipsePlugin/WatchDogUnitTests/WatchDogUnitTests.iml" />
-      <module fileurl="file://$PROJECT_DIR$/WatchDogEclipsePlugin/WatchDog/nl.tudelft.WatchDog.eclipse.iml" filepath="$PROJECT_DIR$/WatchDogEclipsePlugin/WatchDog/nl.tudelft.WatchDog.eclipse.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eclipse/WatchDogFeature/WatchDog.iml" filepath="$PROJECT_DIR$/eclipse/WatchDogFeature/WatchDog.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eclipse/WatchDogCoreFeature/WatchDogCore.iml" filepath="$PROJECT_DIR$/eclipse/WatchDogCoreFeature/WatchDogCore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eclipse/WatchDogUnitTests/WatchDogUnitTests.iml" filepath="$PROJECT_DIR$/eclipse/WatchDogUnitTests/WatchDogUnitTests.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eclipse/WatchDog/nl.tudelft.WatchDog.eclipse.iml" filepath="$PROJECT_DIR$/eclipse/WatchDog/nl.tudelft.WatchDog.eclipse.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/nl.tudelft.WatchDogCore.iml" filepath="$PROJECT_DIR$/core/nl.tudelft.WatchDogCore.iml" />
-      <module fileurl="file://$PROJECT_DIR$/WatchDogEclipsePlugin/p2updatesite/nl.tudelft.watchdog.p2updatesite.iml" filepath="$PROJECT_DIR$/WatchDogEclipsePlugin/p2updatesite/nl.tudelft.watchdog.p2updatesite.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eclipse/p2updatesite/nl.tudelft.watchdog.p2updatesite.iml" filepath="$PROJECT_DIR$/eclipse/p2updatesite/nl.tudelft.watchdog.p2updatesite.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent.iml" filepath="$PROJECT_DIR$/parent.iml" />
-      <module fileurl="file://$PROJECT_DIR$/WatchDogEclipsePlugin/watchdog-eclipse-plugin.iml" filepath="$PROJECT_DIR$/WatchDogEclipsePlugin/watchdog-eclipse-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eclipse/watchdog-eclipse-plugin.iml" filepath="$PROJECT_DIR$/eclipse/watchdog-eclipse-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/WatchDogIntelliJPlugin/watchdog-intellij-plugin.iml" filepath="$PROJECT_DIR$/WatchDogIntelliJPlugin/watchdog-intellij-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/server/watchdog.server.iml" filepath="$PROJECT_DIR$/server/watchdog.server.iml" />
     </modules>

@@ -9,8 +9,8 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>WatchDogCore</module>
-		<module>WatchDogEclipsePlugin</module>
+		<module>core</module>
+		<module>eclipse</module>
 		<module>WatchDogIntelliJPlugin</module>
     <module>server</module>
 	</modules>
