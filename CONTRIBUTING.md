@@ -6,7 +6,7 @@ This section gives a brief overview of the steps necessary to have a working dev
 1. Install Git. Install Eclipse. Install IntelliJ. Details under section IDE on this page. (Optional: Install Eclipse plugins.)
 2. Install Maven.
 3. Clone Git repository branch master.
-4. Run `./WatchDogIntelliJPlugin/fetchIdea.sh` to obtain a local version of IntelliJ for the project.
+4. Run `./intellij/fetchIdea.sh` to obtain a local version of IntelliJ for the project.
 5. Setup the WatchDog project for IntelliJ and Eclipse (see later steps)
 6. Install WatchDog for IntelliJ and Eclipse and set it up at least for your WatchDog development workspaces.
 
@@ -30,7 +30,7 @@ In this section, we describe how WatchDog needs to be setup. It is important to 
 1. Add local version of IntelliJ to your IntelliJ running per instructions of https://www.jetbrains.com/help/idea/configuring-intellij-platform-plugin-sdk.html
 1. Create a new Run Configuration.
     1. Classpath should point to `watchdog-intellij-plugin`
-    1. JRE should be the local version of IntelliJ that exists in `WatchDogIntelliJPlugin/build_cache/`
+    1. JRE should be the local version of IntelliJ that exists in `intellij/build_cache/`
 1. Open `WatchDogStartup.java` and click on the run configuration. A new version of IntelliJ should pop up with a local version of WatchDog running.
 1. Works.
 

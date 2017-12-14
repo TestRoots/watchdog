@@ -10,7 +10,7 @@
       <module fileurl="file://$PROJECT_DIR$/eclipse/p2updatesite/nl.tudelft.watchdog.p2updatesite.iml" filepath="$PROJECT_DIR$/eclipse/p2updatesite/nl.tudelft.watchdog.p2updatesite.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent.iml" filepath="$PROJECT_DIR$/parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/eclipse/watchdog-eclipse-plugin.iml" filepath="$PROJECT_DIR$/eclipse/watchdog-eclipse-plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/WatchDogIntelliJPlugin/watchdog-intellij-plugin.iml" filepath="$PROJECT_DIR$/WatchDogIntelliJPlugin/watchdog-intellij-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/intellij/watchdog-intellij-plugin.iml" filepath="$PROJECT_DIR$/intellij/watchdog-intellij-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/server/watchdog.server.iml" filepath="$PROJECT_DIR$/server/watchdog.server.iml" />
     </modules>
   </component>

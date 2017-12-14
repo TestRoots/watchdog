@@ -11,7 +11,7 @@
 	<modules>
 		<module>core</module>
 		<module>eclipse</module>
-		<module>WatchDogIntelliJPlugin</module>
+		<module>intellij</module>
     <module>server</module>
 	</modules>
 

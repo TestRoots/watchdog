@@ -76,7 +76,7 @@
     </option>
     <option name="ignoredFiles">
       <set>
-        <option value="$PROJECT_DIR$/WatchDogIntelliJPlugin/pom.xml" />
+        <option value="$PROJECT_DIR$/intellij/pom.xml" />
       </set>
     </option>
   </component>
