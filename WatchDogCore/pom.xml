@@ -15,6 +15,5 @@
 
 	<modules>
 		<module>WatchDog</module>
-		<module>WatchDogCoreFeature</module>
 	</modules>
 </project>

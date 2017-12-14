@@ -5,8 +5,8 @@
 
 	<parent>
 		<relativePath>../pom.xml</relativePath>
-		<groupId>nl.tudelft.watchdog</groupId>
-		<artifactId>watchdog-core-parent</artifactId>
+		<groupId>nl.tudelft</groupId>
+		<artifactId>watchdog-eclipse-plugin</artifactId>
 		<version>2.0.0</version>
 	</parent>
 
