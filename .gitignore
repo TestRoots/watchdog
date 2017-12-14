@@ -4,7 +4,7 @@ build_cache/
 Gemfile.lock
 
 # Ignore passwords/config
-WatchDogServer/config.yaml
+server/config.yaml
 
 # Maven-specific
 target/

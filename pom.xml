@@ -12,7 +12,7 @@
 		<module>WatchDogCore</module>
 		<module>WatchDogEclipsePlugin</module>
 		<module>WatchDogIntelliJPlugin</module>
-    <module>WatchDogServer</module>
+    <module>server</module>
 	</modules>
 
 	<properties>
