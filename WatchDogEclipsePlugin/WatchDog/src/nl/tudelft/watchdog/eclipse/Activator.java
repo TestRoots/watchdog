@@ -16,7 +16,7 @@ import nl.tudelft.watchdog.core.util.WatchDogLogger;
 public class Activator extends AbstractUIPlugin {
 
 	/** The plug-in ID */
-	public static final String PLUGIN_ID = "nl.tudelft.WatchDog.eclipse";
+	public static final String PLUGIN_ID = "nl.tudelft.WatchDog";
 
 	/** The shared instance */
 	private static Activator plugin;
