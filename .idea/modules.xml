@@ -2,16 +2,16 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/eclipse/eclipse.iml" filepath="$PROJECT_DIR$/eclipse/eclipse.iml" />
-      <module fileurl="file://$PROJECT_DIR$/eclipse/features/core/eclipse.features.core.iml" filepath="$PROJECT_DIR$/eclipse/features/core/eclipse.features.core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/eclipse/features/plugin/eclipse.features.plugin.iml" filepath="$PROJECT_DIR$/eclipse/features/plugin/eclipse.features.plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/eclipse/p2updatesite/eclipse.p2updatesite.iml" filepath="$PROJECT_DIR$/eclipse/p2updatesite/eclipse.p2updatesite.iml" />
-      <module fileurl="file://$PROJECT_DIR$/eclipse/plugin/eclipse.plugin.iml" filepath="$PROJECT_DIR$/eclipse/plugin/eclipse.plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/eclipse/tests/eclipse.tests.iml" filepath="$PROJECT_DIR$/eclipse/tests/eclipse.tests.iml" />
-      <module fileurl="file://$PROJECT_DIR$/intellij/intellij.iml" filepath="$PROJECT_DIR$/intellij/intellij.iml" />
-      <module fileurl="file://$PROJECT_DIR$/server/server.iml" filepath="$PROJECT_DIR$/server/server.iml" />
       <module fileurl="file://$PROJECT_DIR$/watchdog.iml" filepath="$PROJECT_DIR$/watchdog.iml" />
+      <module fileurl="file://$PROJECT_DIR$/core/watchdog.core.iml" filepath="$PROJECT_DIR$/core/watchdog.core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eclipse/watchdog.eclipse.iml" filepath="$PROJECT_DIR$/eclipse/watchdog.eclipse.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eclipse/features/core/watchdog.eclipse.features.core.iml" filepath="$PROJECT_DIR$/eclipse/features/core/watchdog.eclipse.features.core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eclipse/features/plugin/watchdog.eclipse.features.plugin.iml" filepath="$PROJECT_DIR$/eclipse/features/plugin/watchdog.eclipse.features.plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eclipse/p2updatesite/watchdog.eclipse.p2updatesite.iml" filepath="$PROJECT_DIR$/eclipse/p2updatesite/watchdog.eclipse.p2updatesite.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eclipse/plugin/watchdog.eclipse.plugin.iml" filepath="$PROJECT_DIR$/eclipse/plugin/watchdog.eclipse.plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eclipse/tests/watchdog.eclipse.tests.iml" filepath="$PROJECT_DIR$/eclipse/tests/watchdog.eclipse.tests.iml" />
+      <module fileurl="file://$PROJECT_DIR$/intellij/watchdog.intellij.iml" filepath="$PROJECT_DIR$/intellij/watchdog.intellij.iml" />
+      <module fileurl="file://$PROJECT_DIR$/server/watchdog.server.iml" filepath="$PROJECT_DIR$/server/watchdog.server.iml" />
     </modules>
   </component>
 </project>
