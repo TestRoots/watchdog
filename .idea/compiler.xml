@@ -12,6 +12,7 @@
         <module name="watchdog.eclipse.p2updatesite" />
         <module name="watchdog.eclipse.plugin" />
         <module name="watchdog.eclipse.tests" />
+        <module name="watchdog.intellij" />
         <module name="watchdog.server" />
       </profile>
     </annotationProcessing>
