@@ -6,7 +6,7 @@ This section gives a brief overview of the steps necessary to have a working dev
 1. Install Git. Install Eclipse. Install IntelliJ. Details under section IDE on this page. (Optional: Install Eclipse plugins.)
 2. Install Maven.
 3. Clone Git repository branch master.
-4. Run `./intellij/fetchIdea.sh` to obtain a local version of IntelliJ for the project.
+4. Run `./intellij/fetchidea.sh` to obtain a local version of IntelliJ for the project.
 5. Setup the WatchDog project for IntelliJ and Eclipse (see later steps)
 6. Install WatchDog for IntelliJ and Eclipse and set it up at least for your WatchDog development workspaces.
 
