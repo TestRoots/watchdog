@@ -14,7 +14,7 @@
 
 	<properties>
 		<ij.plugin>true</ij.plugin>
-		<ij.pluginDescriptor>${project.basedir}/resources/META-INF/plugin.xml</ij.pluginDescriptor>
+		<ij.pluginDescriptor>resources/META-INF/plugin.xml</ij.pluginDescriptor>
 	</properties>
 
 	<dependencies>
