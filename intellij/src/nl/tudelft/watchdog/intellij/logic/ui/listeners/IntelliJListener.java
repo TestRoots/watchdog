@@ -52,7 +52,7 @@ public class IntelliJListener {
             }
         };
 
-        editorWindowListener = new EditorWindowListener(watchDogEventManager, project);
+        editorWindowListener = new EditorWindowListener(watchDogEventManager, project.getName());
 
         final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
         connection = messageBus.connect();
