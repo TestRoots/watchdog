@@ -1,5 +1,5 @@
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Manifest-Version: 1.0
 Bundle-Activator: nl.tudelft.watchdog.eclipse.Activator
 Bundle-Version: 2.0.0

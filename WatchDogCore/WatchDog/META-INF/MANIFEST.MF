@@ -1,5 +1,5 @@
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Manifest-Version: 1.0
 Bundle-Version: 2.0.0
 Bundle-SymbolicName: nl.tudelft.WatchDogCore;singleton:=true
@@ -20,6 +20,7 @@ Export-Package: com.google.gson,
  com.google.gson.internal.bind,
  com.google.gson.reflect,
  com.google.gson.stream,
+ org.apache.commons.lang,
  nl.tudelft.watchdog.core.logic.breakpoint,
  nl.tudelft.watchdog.core.logic.document,
  nl.tudelft.watchdog.core.logic.event,
