@@ -6,29 +6,27 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="nl.tudelft.WatchDog.eclipse" />
-        <module name="nl.tudelft.watchdog.intellij" />
-        <module name="nl.tudelft.watchdog.p2updatesite" />
-        <module name="nl.tudelft.WatchDogCore" />
-        <module name="WatchDog" />
+        <module name="watchdog.core" />
+        <module name="watchdog.eclipse.features.core" />
+        <module name="watchdog.eclipse.features.plugin" />
+        <module name="watchdog.eclipse.p2updatesite" />
+        <module name="watchdog.eclipse.plugin" />
+        <module name="watchdog.eclipse.tests" />
+        <module name="watchdog.intellij" />
         <module name="watchdog.server" />
-        <module name="WatchDogCore" />
-        <module name="WatchDogUnitTests" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="nl.tudelft.WatchDog.eclipse" target="1.8" />
-      <module name="nl.tudelft.watchdog.intellij" target="1.8" />
-      <module name="nl.tudelft.watchdog.p2updatesite" target="1.8" />
-      <module name="nl.tudelft.WatchDogCore" target="1.8" />
-      <module name="parent" target="1.8" />
-      <module name="WatchDog" target="1.8" />
-      <module name="watchdog-core-parent" target="1.8" />
-      <module name="watchdog-eclipse-plugin" target="1.8" />
-      <module name="watchdog-intellij-plugin" target="1.8" />
+      <module name="watchdog" target="1.8" />
+      <module name="watchdog.core" target="1.8" />
+      <module name="watchdog.eclipse" target="1.8" />
+      <module name="watchdog.eclipse.features.core" target="1.8" />
+      <module name="watchdog.eclipse.features.plugin" target="1.8" />
+      <module name="watchdog.eclipse.p2updatesite" target="1.8" />
+      <module name="watchdog.eclipse.plugin" target="1.8" />
+      <module name="watchdog.eclipse.tests" target="1.8" />
+      <module name="watchdog.intellij" target="1.8" />
       <module name="watchdog.server" target="1.8" />
-      <module name="WatchDogCore" target="1.8" />
-      <module name="WatchDogUnitTests" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -4,7 +4,7 @@ build_cache/
 Gemfile.lock
 
 # Ignore passwords/config
-WatchDogServer/config.yaml
+server/config.yaml
 
 # Maven-specific
 target/
@@ -14,9 +14,8 @@ classes/
 out/
 # Other files can not be ignored, as they correctly specify the iml files
 # to correctly identify the intellij plugin configuration
-.idea/workspace.xml
-.idea/vcs.xml
-.idea/dictionaries/
+.idea/
+*.iml
 
 # Eclipse-specific
 .project

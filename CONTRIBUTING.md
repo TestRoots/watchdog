@@ -6,7 +6,7 @@ This section gives a brief overview of the steps necessary to have a working dev
 1. Install Git. Install Eclipse. Install IntelliJ. Details under section IDE on this page. (Optional: Install Eclipse plugins.)
 2. Install Maven.
 3. Clone Git repository branch master.
-4. Run `./WatchDogIntelliJPlugin/fetchIdea.sh` to obtain a local version of IntelliJ for the project.
+4. Run `./intellij/fetchidea.sh` to obtain a local version of IntelliJ for the project.
 5. Setup the WatchDog project for IntelliJ and Eclipse (see later steps)
 6. Install WatchDog for IntelliJ and Eclipse and set it up at least for your WatchDog development workspaces.
 
@@ -20,17 +20,26 @@ In this section, we describe how WatchDog needs to be setup. It is important to 
 ## Eclipse
 1. Download Eclipse.
 1. Install the PDE plugin (https://marketplace.eclipse.org/content/eclipse-pde-plug-development-environment)
-1. Import the `pom.xml` in the root folder
+1. Import `Maven -> Existing Maven project` and select the watchdog root folder. Import all subprojects except IntelliJ.
 1. Optional: For Maven IDE support, you need [m2e](https://www.eclipse.org/m2e/download/) for IDE-supported POM.xml-file editing. As we are also using [Tycho](https://eclipse.org/tycho/), you need the tycho configuration connector in m2e's marketplace.
+1. Optional: If your run configuration complains about unrecognized options, make sure to remove all inclusions of `--add-modules=ALL-SYSTEM` in your VM arguments. These are added incorrectly by PDE and won't work on a JDK 1.8 or lower.
 1. Works.
 
 ## IntelliJ
 1. Download the free IC edition
-1. Import the `pom.xml` in the root folder
-1. Add local version of IntelliJ to your IntelliJ running per instructions of https://www.jetbrains.com/help/idea/configuring-intellij-platform-plugin-sdk.html
+1. Install the "Intellij plugin development with Maven"-plugin from https://plugins.jetbrains.com/plugin/7127-intellij-plugin-development-with-maven
+1. Import the `pom.xml` in the root folder. When importing, you can step through with the defaults. The process of fetching dependencies by IntelliJ can take a while.
+1. Add local version of the IntelliJ SDK to your IntelliJ running per instructions of https://www.jetbrains.com/help/idea/configuring-intellij-platform-plugin-sdk.html
+    1. In Project Structure, go to Modules -> watchdog -> intellij.
+    1. On the tab "dependencies", click new module SDK
+    1. Select the IntelliJ SDK from the local version available in `intellij/build_cache/idea-IU-***`
+    1. Select the IntelliJ SDK in the dropdown menu Module SDK.
+    1. Click Apply.
 1. Create a new Run Configuration.
-    1. Classpath should point to `watchdog-intellij-plugin`
-    1. JRE should be the local version of IntelliJ that exists in `WatchDogIntelliJPlugin/build_cache/`
+    1. Run -> Edit Configurations -> New -> Plugin.
+    1. Classpath should point to `watchdog.intellij`
+    1. JRE should be the local version of IntelliJ that exists in `intellij/build_cache/`
+1. Double check that in `Project Structure -> Modules -> watchdog -> intellij -> Plugin Deployment`, the Path to `META-INF/plugin.xml` is `watchdog/intellij/resources/`. You can safely delete the `intellij/META-INF/` folder now.
 1. Open `WatchDogStartup.java` and click on the run configuration. A new version of IntelliJ should pop up with a local version of WatchDog running.
 1. Works.
 
