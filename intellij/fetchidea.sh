@@ -1,6 +1,6 @@
 #!/bin/bash
 
-idea_version="2017.2.5"
+idea_version="2017.2.6"
 idea_zip="ideaIU-$idea_version.tar.gz"
 idea_URL="https://download.jetbrains.com/idea/$idea_zip"
 script_dir=$(dirname "$(readlink -f "$0")")
@@ -14,7 +14,7 @@ cd $build_dir
 if [ ! -f $idea_zip ];
    then
    echo "File $idea_zip not found. Loading from the Internetz ..."
-   wget $idea_URL
+   wget $idea_URL || { echo "Failed to download IntelliJ, you probably need to update the version tp a version listed on https://www.jetbrains.com/idea/download/previous.html"; exit 1; }
 fi
 
 has_directory=$(find . -type d -name 'idea-IU*' | head -n 1)
