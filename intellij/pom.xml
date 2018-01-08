@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>org.jetbrains</groupId>
 			<artifactId>org.jetbrains.intellij-ce</artifactId>
-			<version>2017.2.5</version>
+			<version>2017.2.6</version>
 			<type>zip</type>
 			<scope>provided</scope>
 		</dependency>
