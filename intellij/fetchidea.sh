@@ -14,7 +14,7 @@ cd $build_dir
 if [ ! -f $idea_zip ];
    then
    echo "File $idea_zip not found. Loading from the Internetz ..."
-   wget $idea_URL || { echo "Failed to download IntelliJ, you probably need to update the version tp a version listed on https://www.jetbrains.com/idea/download/previous.html"; exit 1; }
+   wget $idea_URL || { echo "Failed to download IntelliJ, you probably need to update the version to a version listed on https://www.jetbrains.com/idea/download/previous.html"; exit 1; }
 fi
 
 has_directory=$(find . -type d -name 'idea-IU*' | head -n 1)
