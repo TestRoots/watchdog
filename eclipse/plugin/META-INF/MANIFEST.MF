@@ -64,6 +64,6 @@ Bundle-ClassPath: .,
  lib/httpcore-4.3.2.jar,
  lib/httpmime-4.3.3.jar,
  lib/jcommon-1.0.23.jar,
- lib/jfreechart-1.0.19-swt.jar,
- lib/jfreechart-1.0.19.jar
+ lib/jfreechart-1.0.19.jar,
+ lib/jfreechart-1.0.19-swt.jar
 Require-Bundle: watchdog.core;bundle-version="2.0.0"

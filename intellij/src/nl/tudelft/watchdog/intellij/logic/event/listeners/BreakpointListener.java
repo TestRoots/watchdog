@@ -5,11 +5,11 @@ import com.intellij.xdebugger.breakpoints.XBreakpointListener;
 import nl.tudelft.watchdog.core.logic.breakpoint.Breakpoint;
 import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointChangeClassifier;
 import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointChangeType;
-import nl.tudelft.watchdog.core.logic.event.DebugEventManager;
-import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointAddEvent;
-import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointChangeEvent;
-import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointEventBase;
-import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointRemoveEvent;
+import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.debugging.BreakpointAddEvent;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.debugging.BreakpointChangeEvent;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.debugging.BreakpointEventBase;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.debugging.BreakpointRemoveEvent;
 import nl.tudelft.watchdog.intellij.logic.breakpoint.BreakpointCreator;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,12 +22,12 @@ import java.util.Map;
  * Listener that is notified when breakpoints are added, changed or removed.
  * Based on these notifications an instance of a subclass of
  * {@link BreakpointEventBase} is generated and given to the
- * {@link DebugEventManager}.
+ * {@link TrackingEventManager}.
  */
 public class BreakpointListener implements XBreakpointListener {
 
     /** The event manager that should receive the generated events. */
-    private final DebugEventManager debugEventManager;
+    private final TrackingEventManager trackingEventManager;
 
     /**
      * Map containing all breakpoints added or changed (and not removed) in this
@@ -36,8 +36,8 @@ public class BreakpointListener implements XBreakpointListener {
     private final Map<Integer, Breakpoint> breakpoints;
 
     /** Constructor. */
-    public BreakpointListener(DebugEventManager debugEventManager) {
-        this.debugEventManager = debugEventManager;
+    public BreakpointListener(TrackingEventManager trackingEventManager) {
+        this.trackingEventManager = trackingEventManager;
         this.breakpoints = new HashMap<Integer, Breakpoint>();
     }
 
@@ -48,7 +48,7 @@ public class BreakpointListener implements XBreakpointListener {
         breakpoints.put(breakpoint.getHash(), breakpoint);
         BreakpointAddEvent event = new BreakpointAddEvent(breakpoint.getHash(),
                 breakpoint.getBreakpointType(), timestamp);
-        debugEventManager.addEvent(event);
+        trackingEventManager.addEvent(event);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class BreakpointListener implements XBreakpointListener {
         breakpoints.remove(breakpoint.getHash());
         BreakpointRemoveEvent event = new BreakpointRemoveEvent(breakpoint.getHash(),
                 breakpoint.getBreakpointType(), timestamp);
-        debugEventManager.addEvent(event);
+        trackingEventManager.addEvent(event);
     }
 
     @Override
@@ -73,6 +73,6 @@ public class BreakpointListener implements XBreakpointListener {
                 .classify(oldBreakpoint, breakpoint);
         BreakpointChangeEvent event = new BreakpointChangeEvent(breakpoint.getHash(),
                 breakpoint.getBreakpointType(), changes, timestamp);
-        debugEventManager.addEvent(event);
+        trackingEventManager.addEvent(event);
     }
 }

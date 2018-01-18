@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.core.logic.event.eventtypes;
+package nl.tudelft.watchdog.core.logic.event.eventtypes.debugging;
 
 import java.util.Date;
 import java.util.List;
@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointChangeType;
 import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointType;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.TrackingEventType;
 
 /** A breakpoint change event, i.e. the user changes a breakpoint. */
 public class BreakpointChangeEvent extends BreakpointEventBase {
@@ -23,7 +24,7 @@ public class BreakpointChangeEvent extends BreakpointEventBase {
 
 	/** Constructor. */
 	public BreakpointChangeEvent(int hash, BreakpointType type, List<BreakpointChangeType> changes, Date timestamp) {
-		super(hash, type, DebugEventType.BREAKPOINT_CHANGE, timestamp);
+		super(hash, type, TrackingEventType.BREAKPOINT_CHANGE, timestamp);
 		this.changes = changes;
 	}
 

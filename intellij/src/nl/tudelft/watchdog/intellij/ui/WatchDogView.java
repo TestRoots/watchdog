@@ -4,11 +4,11 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
+import nl.tudelft.watchdog.core.logic.event.EventStatisticsBase;
 import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase.StatisticsTimePeriod;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
 import nl.tudelft.watchdog.core.ui.util.DebugEventVisualizationUtils;
 import nl.tudelft.watchdog.intellij.logic.InitializationManager;
-import nl.tudelft.watchdog.intellij.logic.event.EventStatistics;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.intellij.ui.util.UIUtils;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
@@ -49,7 +49,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
     public static final String ID = "WatchDog.view";
 
     private IntervalStatistics intervalStatistics;
-    private EventStatistics eventStatistics;
+    private EventStatisticsBase eventStatistics;
 
     private JComponent parent = getComponent();
 
@@ -201,8 +201,8 @@ public class WatchDogView extends SimpleToolWindowPanel {
     }
 
     private JFreeChart createDebugEventGanttChart() {
-        eventStatistics = new EventStatistics(
-                InitializationManager.getInstance(WatchDogUtils.getProject()).getDebugEventManager(),
+        eventStatistics = new EventStatisticsBase(
+                InitializationManager.getInstance(WatchDogUtils.getProject()).getTrackingEventManager(),
                 selectedDebugInterval);
         GanttCategoryDataset dataset = eventStatistics.createDebugEventGanttChartDataset();
 
@@ -212,7 +212,7 @@ public class WatchDogView extends SimpleToolWindowPanel {
         // Scale the chart based on the selected debug interval.
         CategoryPlot plot = chart.getCategoryPlot();
         ValueAxis axis = plot.getRangeAxis();
-        axis.setRangeWithMargins(selectedDebugInterval.getStart().getTime() - EventStatistics.PRE_SESSION_TIME_TO_INCLUDE,
+        axis.setRangeWithMargins(selectedDebugInterval.getStart().getTime() - EventStatisticsBase.PRE_SESSION_TIME_TO_INCLUDE,
                 selectedDebugInterval.getEnd().getTime());
 
         // Give each event type a different color.

@@ -10,7 +10,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.xdebugger.XDebuggerManager;
-import nl.tudelft.watchdog.core.logic.event.DebugEventManager;
+import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.intellij.logic.event.listeners.BreakpointListener;
 import nl.tudelft.watchdog.intellij.logic.event.listeners.DebugActionListener;
 import nl.tudelft.watchdog.intellij.logic.event.listeners.DebugEventListener;
@@ -26,7 +26,7 @@ public class IntelliJListener {
     
     /** The editorObservable */
     private WatchDogEventManager watchDogEventManager;
-    private DebugEventManager debugEventManager;
+    private TrackingEventManager trackingEventManager;
 
     private Project project;
 
@@ -40,9 +40,9 @@ public class IntelliJListener {
     private GeneralActivityListener activityListener;
 
     /** Constructor. */
-    public IntelliJListener(WatchDogEventManager watchDogEventManager, DebugEventManager debugEventManager, Project project) {
+    public IntelliJListener(WatchDogEventManager watchDogEventManager, TrackingEventManager trackingEventManager, Project project) {
         this.watchDogEventManager = watchDogEventManager;
-        this.debugEventManager = debugEventManager;
+        this.trackingEventManager = trackingEventManager;
         this.project = project;
 
         parent = new Disposable() {
@@ -52,7 +52,7 @@ public class IntelliJListener {
             }
         };
 
-        editorWindowListener = new EditorWindowListener(watchDogEventManager, project.getName());
+        editorWindowListener = new EditorWindowListener(watchDogEventManager, project);
 
         final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
         connection = messageBus.connect();
@@ -74,9 +74,9 @@ public class IntelliJListener {
 
     private void attachDebuggerListeners() {
         DebuggerManagerEx.getInstanceEx(project).addDebuggerManagerListener(new DebuggerListener(watchDogEventManager));
-        XDebuggerManager.getInstance(project).getBreakpointManager().addBreakpointListener(new BreakpointListener(debugEventManager));
-        DebuggerManagerEx.getInstanceEx(project).getContextManager().addListener(new DebugEventListener(debugEventManager));
-        ActionManager.getInstance().addAnActionListener(new DebugActionListener(debugEventManager));
+        XDebuggerManager.getInstance(project).getBreakpointManager().addBreakpointListener(new BreakpointListener(trackingEventManager));
+        DebuggerManagerEx.getInstanceEx(project).getContextManager().addListener(new DebugEventListener(trackingEventManager));
+        ActionManager.getInstance().addAnActionListener(new DebugActionListener(trackingEventManager));
     }
 
     public void removeListeners() {

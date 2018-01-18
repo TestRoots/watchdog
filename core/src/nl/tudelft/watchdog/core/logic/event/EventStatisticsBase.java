@@ -2,13 +2,21 @@ package nl.tudelft.watchdog.core.logic.event;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.TrackingEventType;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
 import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
+
+import org.jfree.data.gantt.GanttCategoryDataset;
+import org.jfree.data.gantt.Task;
+import org.jfree.data.gantt.TaskSeries;
+import org.jfree.data.gantt.TaskSeriesCollection;
 
 /**
  * Contains basic functionality for selecting all events that occurred during a
@@ -16,7 +24,7 @@ import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
  * by IDE-specific code in order to avoid IDE-specific dependencies in the core
  * project.
  */
-public abstract class EventStatisticsBase {
+public class EventStatisticsBase {
 
 	/**
 	 * The amount of time before a debug interval of which the events should be
@@ -30,21 +38,6 @@ public abstract class EventStatisticsBase {
 	/** A list of the managed events. */
 	protected final List<EventBase> events = new ArrayList<EventBase>();
 
-	/** Lists of events per type. */
-	protected List<EventBase> bpAddEvents = new ArrayList<EventBase>();
-	protected List<EventBase> bpChangeEvents = new ArrayList<EventBase>();
-	protected List<EventBase> bpRemoveEvents = new ArrayList<EventBase>();
-	protected List<EventBase> suspendBpEvents = new ArrayList<EventBase>();
-	protected List<EventBase> suspendClientEvents = new ArrayList<EventBase>();
-	protected List<EventBase> stepOutEvents = new ArrayList<EventBase>();
-	protected List<EventBase> stepIntoEvents = new ArrayList<EventBase>();
-	protected List<EventBase> stepOverEvents = new ArrayList<EventBase>();
-	protected List<EventBase> resumeClientEvents = new ArrayList<EventBase>();
-	protected List<EventBase> inspectEvents = new ArrayList<EventBase>();
-	protected List<EventBase> defineWatchEvents = new ArrayList<EventBase>();
-	protected List<EventBase> evalExpressionEvents = new ArrayList<EventBase>();
-	protected List<EventBase> modVarValueEvents = new ArrayList<EventBase>();
-
 	/** The debug interval that is currently selected. */
 	private final DebugInterval selectedInterval;
 
@@ -52,8 +45,8 @@ public abstract class EventStatisticsBase {
 	private Date startOfEventSelection;
 
 	/** Constructor. */
-	public EventStatisticsBase(DebugEventManager debugEventManager, DebugInterval selectedInterval) {
-		this.eventsStatisticsPersister = debugEventManager.getEventStatisticsPersister();
+	public EventStatisticsBase(TrackingEventManager trackingEventManager, DebugInterval selectedInterval) {
+		this.eventsStatisticsPersister = trackingEventManager.getEventStatisticsPersister();
 		this.selectedInterval = selectedInterval;
 		startOfEventSelection = new Date(selectedInterval.getStart().getTime() - PRE_SESSION_TIME_TO_INCLUDE);
 		addAllEventsWithinSelectedInterval();
@@ -81,55 +74,6 @@ public abstract class EventStatisticsBase {
 	}
 
 	/**
-	 * Splits the events list into one list per event type.
-	 */
-	protected void splitEventsIntoAListPerType() {
-		for (EventBase event : events) {
-			switch (event.getType()) {
-			case BREAKPOINT_ADD:
-				bpAddEvents.add(event);
-				break;
-			case BREAKPOINT_CHANGE:
-				bpChangeEvents.add(event);
-				break;
-			case BREAKPOINT_REMOVE:
-				bpRemoveEvents.add(event);
-				break;
-			case SUSPEND_BREAKPOINT:
-				suspendBpEvents.add(event);
-				break;
-			case SUSPEND_CLIENT:
-				suspendClientEvents.add(event);
-				break;
-			case STEP_OUT:
-				stepOutEvents.add(event);
-				break;
-			case STEP_INTO:
-				stepIntoEvents.add(event);
-				break;
-			case STEP_OVER:
-				stepOverEvents.add(event);
-				break;
-			case RESUME_CLIENT:
-				resumeClientEvents.add(event);
-				break;
-			case INSPECT_VARIABLE:
-				inspectEvents.add(event);
-				break;
-			case DEFINE_WATCH:
-				defineWatchEvents.add(event);
-				break;
-			case EVALUATE_EXPRESSION:
-				evalExpressionEvents.add(event);
-				break;
-			case MODIFY_VARIABLE_VALUE:
-				modVarValueEvents.add(event);
-				break;
-			}
-		}
-	}
-
-	/**
 	 * Adds some time to make sure the end time of a task is later than its
 	 * start time.
 	 */
@@ -139,5 +83,45 @@ public abstract class EventStatisticsBase {
 		newTimestamp.add(Calendar.MILLISECOND, 500);
 		return newTimestamp.getTime();
 	}
+	
+	/**
+     * Creates a dataset of all events that occurred during the selected debug
+     * interval.
+     */
+    public GanttCategoryDataset createDebugEventGanttChartDataset() {
+        // Create and add the tasks for each event type.
+        TaskSeries allTasks = new TaskSeries("Debug Events");
+
+        for (TrackingEventType type : TrackingEventType.values()) {
+            final List<EventBase> filteredEventList = events.stream().filter(e -> e.getType() == type).collect(Collectors.toList());
+            allTasks.add(createTaskForEventsWithName(filteredEventList, type.textualDescription));
+        }
+
+        // Create collection of the overall tasks.
+        TaskSeriesCollection collection = new TaskSeriesCollection();
+        collection.add(allTasks);
+        return collection;
+    }
+
+    /**
+     * Creates the overall task for a particular event type and attaches each
+     * individual event as a subtask.
+     */
+    private Task createTaskForEventsWithName(List<EventBase> events, String taskName) {
+        if (events.isEmpty()) {
+            return new Task(taskName, new Date(0), new Date(1));
+        }
+        Collections.sort(events);
+        Task overallTask = new Task(taskName, events.get(0).getTimestamp(),
+                addDeltaTo(events.get(events.size() - 1).getTimestamp()));
+
+        // Add subtask for each event
+        for (EventBase event : events) {
+            final Task subtask = new Task(event.toString(), event.getTimestamp(),
+                    addDeltaTo(event.getTimestamp()));
+            overallTask.addSubtask(subtask);
+        }
+        return overallTask;
+    }
 
 }

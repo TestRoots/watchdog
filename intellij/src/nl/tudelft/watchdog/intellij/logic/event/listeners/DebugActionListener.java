@@ -7,9 +7,9 @@ import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.xdebugger.impl.actions.*;
 import com.intellij.xdebugger.impl.ui.tree.actions.XInspectAction;
 import com.intellij.xdebugger.impl.ui.tree.actions.XSetValueAction;
-import nl.tudelft.watchdog.core.logic.event.DebugEventManager;
-import nl.tudelft.watchdog.core.logic.event.eventtypes.DebugEventBase;
-import nl.tudelft.watchdog.core.logic.event.eventtypes.DebugEventType;
+import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.debugging.DebugEventBase;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.TrackingEventType;
 
 import java.util.Date;
 
@@ -19,15 +19,15 @@ import java.util.Date;
 public class DebugActionListener implements AnActionListener {
 
     /**
-     * DebugEventManager that will be used to persist the new events resulting from actions.
+     * TrackingEventManager that will be used to persist the new events resulting from actions.
      */
-    private final DebugEventManager debugEventManager;
+    private final TrackingEventManager trackingEventManager;
 
     /**
      * Constructor.
      */
-    public DebugActionListener(DebugEventManager debugEventManager) {
-        this.debugEventManager = debugEventManager;
+    public DebugActionListener(TrackingEventManager trackingEventManager) {
+        this.trackingEventManager = trackingEventManager;
     }
 
     @Override
@@ -38,24 +38,24 @@ public class DebugActionListener implements AnActionListener {
     @Override
     public void afterActionPerformed(AnAction anAction, DataContext dataContext, AnActionEvent anActionEvent) {
         if (anAction instanceof StepIntoAction || anAction instanceof ForceStepIntoAction) {
-            createEvent(DebugEventType.STEP_INTO);
+            createEvent(TrackingEventType.STEP_INTO);
         } else if (anAction instanceof StepOverAction || anAction instanceof ForceStepOverAction) {
-            createEvent(DebugEventType.STEP_OVER);
+            createEvent(TrackingEventType.STEP_OVER);
         } else if (anAction instanceof StepOutAction) {
-            createEvent(DebugEventType.STEP_OUT);
+            createEvent(TrackingEventType.STEP_OUT);
         } else if (anAction instanceof XInspectAction) {
-            createEvent(DebugEventType.INSPECT_VARIABLE);
+            createEvent(TrackingEventType.INSPECT_VARIABLE);
         } else if (anAction.getClass().getSimpleName().equals("XAddToWatchesAction")) {
-            createEvent(DebugEventType.DEFINE_WATCH);
+            createEvent(TrackingEventType.DEFINE_WATCH);
         } else if (anAction.getClass().getSimpleName().equals("EvaluateAction")) {
-            createEvent(DebugEventType.EVALUATE_EXPRESSION);
+            createEvent(TrackingEventType.EVALUATE_EXPRESSION);
         } else if (anAction instanceof XSetValueAction) {
-            createEvent(DebugEventType.MODIFY_VARIABLE_VALUE);
+            createEvent(TrackingEventType.MODIFY_VARIABLE_VALUE);
         }
     }
 
-    private void createEvent(DebugEventType debugEventType) {
-        debugEventManager.addEvent(new DebugEventBase(debugEventType,new Date()));
+    private void createEvent(TrackingEventType trackingEventType) {
+        trackingEventManager.addEvent(new DebugEventBase(trackingEventType,new Date()));
     }
 
     @Override

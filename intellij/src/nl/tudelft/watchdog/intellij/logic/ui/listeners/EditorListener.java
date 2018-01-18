@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.*;
@@ -9,7 +10,7 @@ import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 
 /** Editor listener for all user-triggered events. */
-public class EditorListener {
+public class EditorListener implements Disposable {
 	private final Editor editor;
 	private final WatchDogEventManager eventManager;
 	private final Document document;
@@ -101,8 +102,8 @@ public class EditorListener {
 
 	}
 
-	/** Removes all listeners registered with this editor. */
-	public void removeListeners() {
+	@Override
+	public void dispose() {
         document.removeDocumentListener(documentListener);
 		if (editor == null) {
 			return;
