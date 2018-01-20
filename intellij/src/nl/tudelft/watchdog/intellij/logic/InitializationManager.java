@@ -32,7 +32,13 @@ public class InitializationManager {
     private final Persister toTransferPersister;
     private final Persister statisticsPersister;
 
+    /**
+     * Tracks all watchdog events which are related to intervals.
+     */
     private final WatchDogEventManager watchDogEventManager;
+    /**
+     * Tracks all one-time events for debugging and static analysis.
+     */
     private final TrackingEventManager trackingEventManager;
     private final IntervalManager intervalManager;
 

@@ -79,52 +79,6 @@ public class WorkbenchListener {
 				workbench.getDisplay());
 		addDebuggerListeners();
 		addShutdownListeners();
-		// addStaticAnalysisListeners();
-	}
-
-	private void addStaticAnalysisListeners() {
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		workspace.addResourceChangeListener(new IResourceChangeListener() {
-
-			@Override
-			public void resourceChanged(IResourceChangeEvent event) {
-				try {
-					event.getDelta().accept(new IResourceDeltaVisitor() {
-
-						@Override
-						public boolean visit(IResourceDelta delta) throws CoreException {
-							for (IMarkerDelta markerDelta : delta.getMarkerDeltas()) {
-								IMarker marker = markerDelta.getMarker();
-								if (marker.exists()) {
-//									System.out.println(marker.getType());
-//									System.out.println(marker.getAttributes().entrySet().stream()
-//											.reduce("", (a,b) -> a + b.getKey() + "  " + b.getValue(), (a,b) -> a + "   " + b));
-//									System.out.println(marker.getId() + ": " + marker.getAttribute(IMarker.MESSAGE).toString());
-//									System.out.println(marker.getId() + ": " + marker.getAttribute("arguments").toString());
-									System.out.println(interpolateArguments(marker.getResource().getParent().getName(), marker.getAttribute(IMarker.MESSAGE, ""), marker.getAttribute("arguments", "")));
-								} else {
-									System.out.println(marker.getId());
-								}
-							}
-							return true;
-						}
-
-						private String interpolateArguments(String packageName, String message, String arguments) {
-							String[] numberAndActualArguments = arguments.split(":");
-							int numArguments = Integer.parseInt(numberAndActualArguments[0]);
-							String[] individualArguments = numberAndActualArguments[1].split("#");
-							String sanitizedMessage = message;
-							for (int i = 0; i < numArguments; i++) {
-								sanitizedMessage = sanitizedMessage.replaceFirst(individualArguments[i].replaceAll(packageName,  ""), "");
-							}
-							return sanitizedMessage;
-						}
-					});
-				} catch (CoreException e) {
-					e.printStackTrace();
-				}
-			}
-		}, IResourceChangeEvent.POST_CHANGE);
 	}
 
 	/** Initializes the listeners for debug intervals and events. */

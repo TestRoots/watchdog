@@ -59,17 +59,17 @@ public enum TrackingEventType {
 	@SerializedName("mv")
 	MODIFY_VARIABLE_VALUE("Modified Variable Value"),
 
-    /** A new static analysis warning is generated. */
-    @SerializedName("sa-wc")
-    SA_WARNING_CREATED("Static analysis warning created"),
+	/** A new static analysis warning is generated. */
+	@SerializedName("sa-wc")
+	SA_WARNING_CREATED("Static analysis warning created"),
 
-    /** A static analysis warning is removed. */
-    @SerializedName("sa-wr")
-    SA_WARNING_REMOVED("Static analysis warning resolved");
+	/** A static analysis warning is removed. */
+	@SerializedName("sa-wr")
+	SA_WARNING_REMOVED("Static analysis warning resolved");
 
-    public final String textualDescription;
+	public final String textualDescription;
 
-    TrackingEventType(String textualDescription) {
-        this.textualDescription = textualDescription;
-    }
+	TrackingEventType(String textualDescription) {
+		this.textualDescription = textualDescription;
+	}
 }

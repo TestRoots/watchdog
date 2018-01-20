@@ -24,7 +24,7 @@ import org.jfree.data.gantt.TaskSeriesCollection;
  * by IDE-specific code in order to avoid IDE-specific dependencies in the core
  * project.
  */
-public class EventStatisticsBase {
+public class EventStatistics {
 
 	/**
 	 * The amount of time before a debug interval of which the events should be
@@ -45,7 +45,7 @@ public class EventStatisticsBase {
 	private Date startOfEventSelection;
 
 	/** Constructor. */
-	public EventStatisticsBase(TrackingEventManager trackingEventManager, DebugInterval selectedInterval) {
+	public EventStatistics(TrackingEventManager trackingEventManager, DebugInterval selectedInterval) {
 		this.eventsStatisticsPersister = trackingEventManager.getEventStatisticsPersister();
 		this.selectedInterval = selectedInterval;
 		startOfEventSelection = new Date(selectedInterval.getStart().getTime() - PRE_SESSION_TIME_TO_INCLUDE);

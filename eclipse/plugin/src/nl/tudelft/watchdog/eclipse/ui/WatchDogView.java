@@ -35,7 +35,7 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.jfree.util.Rotation;
 
-import nl.tudelft.watchdog.core.logic.event.EventStatisticsBase;
+import nl.tudelft.watchdog.core.logic.event.EventStatistics;
 import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase.StatisticsTimePeriod;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
 import nl.tudelft.watchdog.core.ui.util.DebugEventVisualizationUtils;
@@ -53,7 +53,7 @@ public class WatchDogView extends ViewPart {
 	public static final String ID = "WatchDog.view";
 
 	private IntervalStatistics intervalStatistics;
-	private EventStatisticsBase eventStatistics;
+	private EventStatistics eventStatistics;
 
 	private Composite parent;
 
@@ -234,7 +234,7 @@ public class WatchDogView extends ViewPart {
 	}
 
 	private JFreeChart createDebugEventGanttChart() {
-		eventStatistics = new EventStatisticsBase(
+		eventStatistics = new EventStatistics(
 				InitializationManager.getInstance().getTrackingEventManager(),
 				selectedDebugInterval);
 		GanttCategoryDataset dataset = eventStatistics
@@ -249,7 +249,7 @@ public class WatchDogView extends ViewPart {
 		ValueAxis axis = plot.getRangeAxis();
 		axis.setRangeWithMargins(
 				selectedDebugInterval.getStart().getTime()
-						- EventStatisticsBase.PRE_SESSION_TIME_TO_INCLUDE,
+						- EventStatistics.PRE_SESSION_TIME_TO_INCLUDE,
 				selectedDebugInterval.getEnd().getTime());
 
 		// Give each event type a different color.

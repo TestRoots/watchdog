@@ -30,7 +30,7 @@ import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 @PrepareForTest(WatchDogGlobals.class)
 public class EventManagerTest {
 
-	private TrackingEventManager TrackingEventManager;
+	private TrackingEventManager trackingEventManager;
 	private PersisterBase eventsToTransferPersister;
 	private PersisterBase eventsStatisticsPersister;
 
@@ -44,7 +44,7 @@ public class EventManagerTest {
 	public void setup() {
 		eventsToTransferPersister = Mockito.mock(PersisterBase.class);
 		eventsStatisticsPersister = Mockito.mock(PersisterBase.class);
-		TrackingEventManager = new TrackingEventManager(eventsToTransferPersister, eventsStatisticsPersister);
+		trackingEventManager = new TrackingEventManager(eventsToTransferPersister, eventsStatisticsPersister);
 
 		PowerMockito.mockStatic(WatchDogGlobals.class);
 		Mockito.when(WatchDogGlobals.getLogDirectory()).thenReturn("watchdog/logs/");
@@ -53,8 +53,8 @@ public class EventManagerTest {
 	}
 
 	@Test
-	public void testNoInteractionsWhenAddingNull() {
-		TrackingEventManager.addEvent(null);
+	public void testNoInteractionsWhenAddingNull() { 
+	    trackingEventManager.addEvent(null);
 		Mockito.verifyZeroInteractions(eventsToTransferPersister);
 		Mockito.verifyZeroInteractions(eventsStatisticsPersister);
 	}
@@ -63,7 +63,7 @@ public class EventManagerTest {
 	public void testAddBreakpointAddEvent() {
 		BreakpointAddEvent eventReal = new BreakpointAddEvent(1, BreakpointType.LINE, new Date());
 		BreakpointAddEvent event = Mockito.spy(eventReal);
-		TrackingEventManager.addEvent(event);
+		trackingEventManager.addEvent(event);
 		Mockito.verify(event).setSessionSeed(Mockito.anyString());
 		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(BreakpointAddEvent.class));
 		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(BreakpointAddEvent.class));
@@ -73,7 +73,7 @@ public class EventManagerTest {
 	public void testAddBreakpointRemoveEvent() {
 		BreakpointRemoveEvent eventReal = new BreakpointRemoveEvent(1, BreakpointType.LINE, new Date());
 		BreakpointRemoveEvent event = Mockito.spy(eventReal);
-		TrackingEventManager.addEvent(event);
+		trackingEventManager.addEvent(event);
 		Mockito.verify(event).setSessionSeed(Mockito.anyString());
 		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(BreakpointRemoveEvent.class));
 		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(BreakpointRemoveEvent.class));
@@ -83,7 +83,7 @@ public class EventManagerTest {
 	public void testAddBreakpointChangeEvent() {
 		BreakpointChangeEvent eventReal = new BreakpointChangeEvent(1, BreakpointType.LINE, null, new Date());
 		BreakpointChangeEvent event = Mockito.spy(eventReal);
-		TrackingEventManager.addEvent(event);
+		trackingEventManager.addEvent(event);
 		Mockito.verify(event).setSessionSeed(Mockito.anyString());
 		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(BreakpointChangeEvent.class));
 		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(BreakpointChangeEvent.class));
@@ -93,7 +93,7 @@ public class EventManagerTest {
 	public void testAddSuspendBreakpointEvent() {
 		DebugEventBase eventReal = new DebugEventBase(TrackingEventType.SUSPEND_BREAKPOINT, new Date());
 		DebugEventBase event = Mockito.spy(eventReal);
-		TrackingEventManager.addEvent(event);
+		trackingEventManager.addEvent(event);
 		Mockito.verify(event).setSessionSeed(Mockito.anyString());
 		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(DebugEventBase.class));
 		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(DebugEventBase.class));
@@ -103,7 +103,7 @@ public class EventManagerTest {
 	public void testAddStepIntoEvent() {
 		DebugEventBase eventReal = new DebugEventBase(TrackingEventType.STEP_INTO, new Date());
 		DebugEventBase event = Mockito.spy(eventReal);
-		TrackingEventManager.addEvent(event);
+		trackingEventManager.addEvent(event);
 		Mockito.verify(event).setSessionSeed(Mockito.anyString());
 		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(DebugEventBase.class));
 		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(DebugEventBase.class));
