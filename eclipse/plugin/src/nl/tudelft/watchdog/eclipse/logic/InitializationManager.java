@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.eclipse.logic;
 
 import java.io.File;
 
-import nl.tudelft.watchdog.core.logic.event.DebugEventManager;
+import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.core.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
@@ -18,7 +18,7 @@ import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 /**
  * Manages the setup process of the interval and event recording infrastructure.
  * Is a singleton and contains UI code. Guarantees that there is only one
- * properly initialized {@link IntervalManager} and {@link DebugEventManager}
+ * properly initialized {@link IntervalManager} and {@link TrackingEventManager}
  * that do the real work.
  */
 public class InitializationManager {
@@ -32,7 +32,7 @@ public class InitializationManager {
 	private final PersisterBase statisticsPersister;
 
 	private final WatchDogEventManager watchDogEventManager;
-	private final DebugEventManager debugEventManager;
+	private final TrackingEventManager trackingEventManager;
 	private final IntervalManager intervalManager;
 
 	/** Private constructor. */
@@ -53,9 +53,9 @@ public class InitializationManager {
 		new ClientVersionChecker();
 		intervalManager = new IntervalManager(toTransferPersister,
 				statisticsPersister);
-		debugEventManager = new DebugEventManager(toTransferPersister,
+		trackingEventManager = new TrackingEventManager(toTransferPersister,
 				statisticsPersister);
-		debugEventManager.setSessionSeed(intervalManager.getSessionSeed());
+		trackingEventManager.setSessionSeed(intervalManager.getSessionSeed());
 
 		watchDogEventManager = new WatchDogEventManager(intervalManager,
 				USER_ACTIVITY_TIMEOUT);
@@ -63,7 +63,7 @@ public class InitializationManager {
 
 		// Initialize listeners
 		WorkbenchListener workbenchListener = new WorkbenchListener(
-				watchDogEventManager, debugEventManager, new TransferManager(
+				watchDogEventManager, trackingEventManager, new TransferManager(
 						toTransferPersister, WatchDogUtils.getWorkspaceName()));
 		workbenchListener.attachListeners();
 	}
@@ -95,8 +95,8 @@ public class InitializationManager {
 	}
 
 	/** @return the debug event manager. */
-	public DebugEventManager getDebugEventManager() {
-		return debugEventManager;
+	public TrackingEventManager getTrackingEventManager() {
+		return trackingEventManager;
 	}
 
 	/**

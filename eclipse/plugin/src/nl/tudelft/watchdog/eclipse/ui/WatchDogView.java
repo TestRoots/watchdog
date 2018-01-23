@@ -35,12 +35,12 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.jfree.util.Rotation;
 
+import nl.tudelft.watchdog.core.logic.event.EventStatistics;
 import nl.tudelft.watchdog.core.logic.interval.IntervalStatisticsBase.StatisticsTimePeriod;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
 import nl.tudelft.watchdog.core.ui.util.DebugEventVisualizationUtils;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
-import nl.tudelft.watchdog.eclipse.logic.event.EventStatistics;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalStatistics;
 import nl.tudelft.watchdog.eclipse.logic.ui.listeners.WatchDogViewListener;
 import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
@@ -235,7 +235,7 @@ public class WatchDogView extends ViewPart {
 
 	private JFreeChart createDebugEventGanttChart() {
 		eventStatistics = new EventStatistics(
-				InitializationManager.getInstance().getDebugEventManager(),
+				InitializationManager.getInstance().getTrackingEventManager(),
 				selectedDebugInterval);
 		GanttCategoryDataset dataset = eventStatistics
 				.createDebugEventGanttChartDataset();

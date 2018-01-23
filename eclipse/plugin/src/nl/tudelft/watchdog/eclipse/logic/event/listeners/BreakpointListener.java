@@ -12,23 +12,23 @@ import org.eclipse.debug.core.model.IBreakpoint;
 import nl.tudelft.watchdog.core.logic.breakpoint.Breakpoint;
 import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointChangeClassifier;
 import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointChangeType;
-import nl.tudelft.watchdog.core.logic.event.DebugEventManager;
-import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointAddEvent;
-import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointChangeEvent;
-import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointEventBase;
-import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointRemoveEvent;
+import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.debugging.BreakpointAddEvent;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.debugging.BreakpointChangeEvent;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.debugging.BreakpointEventBase;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.debugging.BreakpointRemoveEvent;
 import nl.tudelft.watchdog.eclipse.logic.breakpoint.BreakpointCreator;
 
 /**
  * Listener that is notified when breakpoints are added, changed or removed.
  * Based on these notifications an instance of a subclass of
  * {@link BreakpointEventBase} is generated and given to the
- * {@link DebugEventManager}.
+ * {@link TrackingEventManager}.
  */
 public class BreakpointListener implements IBreakpointListener {
 
 	/** The event manager that should receive the generated events. */
-	private final DebugEventManager debugEventManager;
+	private final TrackingEventManager TrackingEventManager;
 
 	/**
 	 * Map containing all breakpoints added or changed (and not removed) in this
@@ -37,8 +37,8 @@ public class BreakpointListener implements IBreakpointListener {
 	private final Map<Integer, Breakpoint> breakpoints;
 
 	/** Constructor. */
-	public BreakpointListener(DebugEventManager debugEventManager) {
-		this.debugEventManager = debugEventManager;
+	public BreakpointListener(TrackingEventManager TrackingEventManager) {
+		this.TrackingEventManager = TrackingEventManager;
 		this.breakpoints = new HashMap<Integer, Breakpoint>();
 	}
 
@@ -49,7 +49,7 @@ public class BreakpointListener implements IBreakpointListener {
 		breakpoints.put(bp.getHash(), bp);
 		BreakpointAddEvent event = new BreakpointAddEvent(bp.getHash(),
 				bp.getBreakpointType(), timestamp);
-		debugEventManager.addEvent(event);
+		TrackingEventManager.addEvent(event);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class BreakpointListener implements IBreakpointListener {
 		breakpoints.remove(bp.getHash());
 		BreakpointRemoveEvent event = new BreakpointRemoveEvent(bp.getHash(),
 				bp.getBreakpointType(), timestamp);
-		debugEventManager.addEvent(event);
+		TrackingEventManager.addEvent(event);
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class BreakpointListener implements IBreakpointListener {
 				.classify(old, bp);
 		BreakpointChangeEvent event = new BreakpointChangeEvent(bp.getHash(),
 				bp.getBreakpointType(), changes, timestamp);
-		debugEventManager.addEvent(event);
+		TrackingEventManager.addEvent(event);
 	}
 
 }

@@ -1,12 +1,25 @@
 package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
+import java.util.Map.Entry;
+
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IMarkerDelta;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.texteditor.MarkerUtilities;
+import org.jfree.chart.event.MarkerChangeListener;
 
-import nl.tudelft.watchdog.core.logic.event.DebugEventManager;
+import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
@@ -27,7 +40,7 @@ public class WorkbenchListener {
 	private WatchDogEventManager watchDogEventManager;
 
 	/** The debug event manager used to process debug events. */
-	private DebugEventManager debugEventManager;
+	private TrackingEventManager TrackingEventManager;
 
 	/**
 	 * The window listener. An Eclipse window is the whole Eclipse application
@@ -39,14 +52,14 @@ public class WorkbenchListener {
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param debugEventManager
+	 *
+	 * @param TrackingEventManager
 	 */
 	public WorkbenchListener(WatchDogEventManager userActionManager,
-			DebugEventManager debugEventManager,
+			TrackingEventManager TrackingEventManager,
 			TransferManager transferManager) {
 		this.watchDogEventManager = userActionManager;
-		this.debugEventManager = debugEventManager;
+		this.TrackingEventManager = TrackingEventManager;
 		this.transferManager = transferManager;
 		this.workbench = PlatformUI.getWorkbench();
 	}
@@ -74,9 +87,9 @@ public class WorkbenchListener {
 		debugPlugin.addDebugEventListener(
 				new DebuggerListener(watchDogEventManager));
 		debugPlugin.getBreakpointManager().addBreakpointListener(
-				new BreakpointListener(debugEventManager));
+				new BreakpointListener(TrackingEventManager));
 		debugPlugin.addDebugEventListener(
-				new DebugEventListener(debugEventManager));
+				new DebugEventListener(TrackingEventManager));
 	}
 
 	/** The shutdown listeners, executed when Eclipse is shutdown. */
@@ -107,7 +120,7 @@ public class WorkbenchListener {
 	 * If windows are already open when the listener registration from WatchDog
 	 * starts (e.g. due to saved Eclipse workspace state), add these listeners
 	 * to already opened windows.
-	 * 
+	 *
 	 * This is usually the single Eclipse application window.
 	 */
 	private void addListenersToAlreadyOpenWindows() {

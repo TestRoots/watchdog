@@ -14,7 +14,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointType;
-import nl.tudelft.watchdog.core.logic.event.eventtypes.BreakpointAddEvent;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.debugging.BreakpointAddEvent;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
 import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 
