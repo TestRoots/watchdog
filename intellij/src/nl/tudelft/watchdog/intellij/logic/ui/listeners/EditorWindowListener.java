@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EditorWindowListener implements EditorFactoryListener {
-    private WatchDogEventManager eventManager;
 
     private EditorFocusListener focusListener;
 
@@ -17,8 +16,7 @@ public class EditorWindowListener implements EditorFactoryListener {
 
     private String myProjectName;
 
-    public EditorWindowListener (WatchDogEventManager eventManager, String project) {
-        this.eventManager = eventManager;
+    public EditorWindowListener(String project) {
         myProjectName = project;
     }
 
@@ -29,9 +27,9 @@ public class EditorWindowListener implements EditorFactoryListener {
         }
 
         Editor editor = editorFactoryEvent.getEditor();
-        focusListener = new EditorFocusListener(eventManager, editor);
+        focusListener = new EditorFocusListener(editor);
         editor.getContentComponent().addFocusListener(focusListener);
-        editorListenerMap.put(editor, new EditorListener(eventManager, editor));
+        editorListenerMap.put(editor, new EditorListener(editor));
     }
 
     @Override

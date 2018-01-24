@@ -24,9 +24,8 @@ public class JUnitListener extends TestStatusListener {
             return;
         }
 
-        WatchDogEventManager eventManager = InitializationManager.getInstance(project).getWatchDogEventManager();
         JUnitInterval interval = new JUnitInterval(testProxy);
-        eventManager.update(new JUnitEvent(interval));
+        new JUnitEvent(interval).update();
     }
 
     /** For given AbstractTestProxy returns the Project the test belongs to. Should always return Project, never null. */

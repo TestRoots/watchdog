@@ -2,15 +2,23 @@ package nl.tudelft.watchdog.eclipse.logic;
 
 import java.io.File;
 
+import org.eclipse.ui.texteditor.ITextEditor;
+
+import nl.tudelft.watchdog.core.logic.document.Document;
+import nl.tudelft.watchdog.core.logic.document.EditorWrapperBase;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.core.logic.ui.TimeSynchronityChecker;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.WatchDogEventEditorSpecificImplementation;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.Activator;
+import nl.tudelft.watchdog.eclipse.logic.document.DocumentCreator;
+import nl.tudelft.watchdog.eclipse.logic.document.EditorWrapper;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
+import nl.tudelft.watchdog.eclipse.logic.interval.intervaltypes.JUnitInterval;
 import nl.tudelft.watchdog.eclipse.logic.network.ClientVersionChecker;
 import nl.tudelft.watchdog.eclipse.logic.network.TransferManager;
-import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.eclipse.logic.ui.listeners.WorkbenchListener;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
@@ -23,15 +31,12 @@ import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
  */
 public class InitializationManager {
 
-	private static final int USER_ACTIVITY_TIMEOUT = 16000;
-
 	/** The singleton instance. */
 	private static volatile InitializationManager instance = null;
 
 	private final PersisterBase toTransferPersister;
 	private final PersisterBase statisticsPersister;
 
-	private final WatchDogEventManager watchDogEventManager;
 	private final TrackingEventManager trackingEventManager;
 	private final IntervalManager intervalManager;
 
@@ -56,14 +61,31 @@ public class InitializationManager {
 		trackingEventManager = new TrackingEventManager(toTransferPersister,
 				statisticsPersister);
 		trackingEventManager.setSessionSeed(intervalManager.getSessionSeed());
+		
+		WatchDogEvent.editorSpecificImplementation = new WatchDogEventEditorSpecificImplementation() {
+			
+			@Override
+			public EditorWrapperBase createEditorWrapper(Object editor) {
+				return new EditorWrapper((ITextEditor) editor);
+			}
+			
+			@Override
+			public Document createDocument(Object editor) {
+				return DocumentCreator.createDocument((ITextEditor) editor);
+			}
+			
+			@Override
+			public void addJUnitInterval(WatchDogEvent event) {
+				JUnitInterval junitInterval = (JUnitInterval) event.getSource();
+				intervalManager.addInterval(junitInterval);
+			}
+		};
 
-		watchDogEventManager = new WatchDogEventManager(intervalManager,
-				USER_ACTIVITY_TIMEOUT);
-		new TimeSynchronityChecker(intervalManager, watchDogEventManager);
+		new TimeSynchronityChecker(intervalManager);
 
 		// Initialize listeners
 		WorkbenchListener workbenchListener = new WorkbenchListener(
-				watchDogEventManager, trackingEventManager, new TransferManager(
+				trackingEventManager, new TransferManager(
 						toTransferPersister, WatchDogUtils.getWorkspaceName()));
 		workbenchListener.attachListeners();
 	}
@@ -87,11 +109,6 @@ public class InitializationManager {
 	/** @return the statistics persister. */
 	public PersisterBase getStatisticsPersister() {
 		return statisticsPersister;
-	}
-
-	/** @return the WatchDog event manager. */
-	public WatchDogEventManager getWatchDogEventManager() {
-		return watchDogEventManager;
 	}
 
 	/** @return the debug event manager. */

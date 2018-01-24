@@ -17,12 +17,10 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 
 /** Enriches an {@link IEditorPart} for all user-triggered events. */
 public class EditorListener {
 	private final ITextEditor editor;
-	private final WatchDogEventManager eventManager;
 
 	private IDocument document;
 	private IDocumentListener documentListener;
@@ -32,8 +30,7 @@ public class EditorListener {
 	private PaintListener paintListener;
 
 	/** Enriches the supplied editor with all suitable listeners. */
-	public EditorListener(WatchDogEventManager eventManager, ITextEditor editor) {
-		this.eventManager = eventManager;
+	public EditorListener(ITextEditor editor) {
 		this.editor = editor;
 		listenToDocumentChanges();
 		listenToEditorScrolling();
@@ -72,13 +69,12 @@ public class EditorListener {
 				EditorEvent newEvent = new EditorEvent(editor,
 						EventType.SUBSEQUENT_EDIT);
 				newEvent.setModCount(modCount);
-				eventManager.update(newEvent);
+				newEvent.update();
 			}
 
 			@Override
 			public void documentAboutToBeChanged(DocumentEvent event) {
-				eventManager
-						.update(new EditorEvent(editor, EventType.START_EDIT));
+				new EditorEvent(editor, EventType.START_EDIT).update();
 			}
 		};
 		document.addDocumentListener(documentListener);
@@ -93,8 +89,7 @@ public class EditorListener {
 		caretListener = new CaretListener() {
 			@Override
 			public void caretMoved(CaretEvent event) {
-				eventManager
-						.update(new EditorEvent(editor, EventType.CARET_MOVED));
+				new EditorEvent(editor, EventType.CARET_MOVED).update();
 				// cursor place changed
 			}
 		};
@@ -104,7 +99,7 @@ public class EditorListener {
 		paintListener = new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {
-				eventManager.update(new EditorEvent(editor, EventType.PAINT));
+				new EditorEvent(editor, EventType.PAINT).update();
 			}
 		};
 		styledText.addPaintListener(paintListener);
@@ -117,8 +112,7 @@ public class EditorListener {
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				eventManager.update(
-						new EditorEvent(editor, EventType.ACTIVE_FOCUS));
+				new EditorEvent(editor, EventType.ACTIVE_FOCUS).update();
 			}
 		};
 		styledText.addFocusListener(focusListener);

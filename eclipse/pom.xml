@@ -21,7 +21,6 @@
 	</modules>
 
 	<properties>
-		<tycho.version>0.22.0</tycho.version>
 		<indigo-repo.url>http://download.eclipse.org/releases/indigo</indigo-repo.url>
 		<juno-repo.url>http://download.eclipse.org/releases/juno</juno-repo.url>
 		<kepler-repo.url>http://download.eclipse.org/releases/kepler</kepler-repo.url>

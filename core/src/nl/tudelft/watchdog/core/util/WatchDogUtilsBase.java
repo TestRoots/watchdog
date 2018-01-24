@@ -75,7 +75,7 @@ public abstract class WatchDogUtilsBase {
 	 * @return Whether the string with white spaces trimmed is empty.
 	 */
 	public static boolean isEmptyOrHasOnlyWhitespaces(String string) {
-		return isEmpty(string) ? true : string.trim().isEmpty();
+		return isEmpty(string) || string.trim().isEmpty();
 	}
 
 	/**

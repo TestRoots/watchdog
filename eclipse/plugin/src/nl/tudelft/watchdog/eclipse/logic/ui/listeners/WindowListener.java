@@ -2,7 +2,6 @@ package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
 
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveListener;
@@ -13,13 +12,10 @@ import org.eclipse.ui.IWorkbenchWindow;
 /** Listening for UI event on Eclipse windows. */
 public class WindowListener implements IWindowListener {
 
-	/** The eventObservable. */
-	private WatchDogEventManager eventManager;
 	private PageListener pageListener;
 
 	/** Constructor. */
-	public WindowListener(WatchDogEventManager userActionManager) {
-		this.eventManager = userActionManager;
+	public WindowListener() {
 	}
 
 	@Override
@@ -30,8 +26,7 @@ public class WindowListener implements IWindowListener {
 
 	@Override
 	public void windowDeactivated(IWorkbenchWindow window) {
-		eventManager
-				.update(new WatchDogEvent(window, EventType.INACTIVE_WINDOW));
+		new WatchDogEvent(window, EventType.INACTIVE_WINDOW).update();
 
 	}
 
@@ -43,13 +38,13 @@ public class WindowListener implements IWindowListener {
 
 	@Override
 	public void windowActivated(IWorkbenchWindow window) {
-		eventManager.update(new WatchDogEvent(window, EventType.ACTIVE_WINDOW));
+		new WatchDogEvent(window, EventType.ACTIVE_WINDOW).update();
 	}
 
 	/** Adds page listeners for all open pages of the supplied windows. */
 	private void addPageListener(IWorkbenchWindow window) {
 		// for new pages added in this window
-		pageListener = new PageListener(eventManager);
+		pageListener = new PageListener();
 		window.addPageListener(pageListener);
 
 		// for existing pages in this window
@@ -59,8 +54,7 @@ public class WindowListener implements IWindowListener {
 	}
 
 	private void addPerspectiveListener(IWorkbenchWindow window) {
-		IPerspectiveListener perspectiveListener = new PerspectiveListener(
-				eventManager);
+		IPerspectiveListener perspectiveListener = new PerspectiveListener();
 		window.addPerspectiveListener(perspectiveListener);
 
 		// triggers the event for the currently open perspective, if there is

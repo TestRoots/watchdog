@@ -14,9 +14,16 @@ public class IntervalManager extends IDEIntervalManagerBase {
     /**
      * Constructor.
      */
-    public IntervalManager(PersisterBase intervalsToTransferPersister,
+    private IntervalManager(PersisterBase intervalsToTransferPersister,
                            PersisterBase intervalsStatisticsPersister) {
         super(intervalsToTransferPersister, intervalsStatisticsPersister);
+    }
+
+    public static IntervalManager initialize(PersisterBase intervalsToTransferPersister,
+                                      PersisterBase intervalsStatisticsPersister) {
+        IntervalManager singleton = new IntervalManager(intervalsToTransferPersister, intervalsStatisticsPersister);
+        IDEIntervalManagerBase.INSTANCE = singleton;
+        return singleton;
     }
 
     @Override

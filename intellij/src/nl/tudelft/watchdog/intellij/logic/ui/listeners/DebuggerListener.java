@@ -10,18 +10,15 @@ import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
  */
 public class DebuggerListener implements DebuggerManagerListener {
 
-    private final WatchDogEventManager eventManager;
-
     /**
      * Constructor.
      */
-    public DebuggerListener(WatchDogEventManager eventManager) {
-        this.eventManager = eventManager;
+    public DebuggerListener() {
     }
 
     @Override
     public void sessionCreated(DebuggerSession debuggerSession) {
-        eventManager.update(new WatchDogEvent(this, WatchDogEvent.EventType.START_DEBUG));
+        new WatchDogEvent(this, WatchDogEvent.EventType.START_DEBUG).update();
     }
 
     @Override
@@ -36,6 +33,6 @@ public class DebuggerListener implements DebuggerManagerListener {
 
     @Override
     public void sessionRemoved(DebuggerSession debuggerSession) {
-        eventManager.update(new WatchDogEvent(this, WatchDogEvent.EventType.END_DEBUG));
+        new WatchDogEvent(this, WatchDogEvent.EventType.END_DEBUG).update();
     }
 }

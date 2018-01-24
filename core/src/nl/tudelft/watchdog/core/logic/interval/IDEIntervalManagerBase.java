@@ -20,8 +20,8 @@ import nl.tudelft.watchdog.core.util.WatchDogLogger;
  * Each plugin should extends this class and implement the missing functionality.
  */
 public abstract class IDEIntervalManagerBase extends IntervalManagerBase {
-	
-	private EditorIntervalBase editorInterval;
+
+    private EditorIntervalBase editorInterval;
 
 	/**
 	 * The session seed, a random number generated on each instantiation of the
