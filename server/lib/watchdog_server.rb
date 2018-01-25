@@ -15,17 +15,18 @@ class WatchDogServer < Sinatra::Base
 
   def mongo
     @serverconfig ||= YAML.load_file('config.yaml')[settings.environment.to_s]
-    Mongo::Client.new(["#{@serverconfig['mongo_host']}:27017"])
+    Mongo::Client.new(
+      ["#{@serverconfig['mongo_host']}:27017"],
+      :database => @serverconfig['mongo_db'],
+      user: @serverconfig['mongo_username'],
+      password: @serverconfig['mongo_password']
+    )
   end
 
   # Setup database connection
   before  do
     mongo
     @db = mongo.database
-    unless @serverconfig['mongo_username'].nil? or @serverconfig['mongo_username'].empty?
-      @db.authenticate(@serverconfig['mongo_username'],
-                       @serverconfig['mongo_password'])
-    end
   end
 
   after do
