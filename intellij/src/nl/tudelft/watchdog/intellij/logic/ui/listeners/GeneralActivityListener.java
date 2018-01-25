@@ -1,6 +1,5 @@
 package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 
-import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 

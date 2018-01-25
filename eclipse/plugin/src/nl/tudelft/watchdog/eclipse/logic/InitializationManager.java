@@ -7,9 +7,12 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.document.EditorWrapperBase;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
+import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
+import nl.tudelft.watchdog.core.logic.interval.intervaltypes.PerspectiveInterval;
 import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.core.logic.ui.TimeSynchronityChecker;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.WatchDogEventEditorSpecificImplementation;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.Activator;
@@ -62,24 +65,7 @@ public class InitializationManager {
 				statisticsPersister);
 		trackingEventManager.setSessionSeed(intervalManager.getSessionSeed());
 		
-		WatchDogEvent.editorSpecificImplementation = new WatchDogEventEditorSpecificImplementation() {
-			
-			@Override
-			public EditorWrapperBase createEditorWrapper(Object editor) {
-				return new EditorWrapper((ITextEditor) editor);
-			}
-			
-			@Override
-			public Document createDocument(Object editor) {
-				return DocumentCreator.createDocument((ITextEditor) editor);
-			}
-			
-			@Override
-			public void addJUnitInterval(WatchDogEvent event) {
-				JUnitInterval junitInterval = (JUnitInterval) event.getSource();
-				intervalManager.addInterval(junitInterval);
-			}
-		};
+		WatchDogEvent.editorSpecificImplementation = new EclipseWatchDogEventSpecificImplementation(intervalManager);
 
 		new TimeSynchronityChecker(intervalManager);
 
@@ -123,5 +109,41 @@ public class InitializationManager {
 	public void shutdown() {
 		toTransferPersister.closeDatabase();
 		statisticsPersister.closeDatabase();
+	}
+	
+	public static final class EclipseWatchDogEventSpecificImplementation
+			implements WatchDogEventEditorSpecificImplementation {
+		
+		private IDEIntervalManagerBase intervalManager;
+
+		public EclipseWatchDogEventSpecificImplementation(IDEIntervalManagerBase intervalManager) {
+			this.intervalManager = intervalManager;
+		}
+
+		@Override
+		public EditorWrapperBase createEditorWrapper(Object editor) {
+			return new EditorWrapper((ITextEditor) editor);
+		}
+		
+		@Override
+		public Document createDocument(Object editor) {
+			return DocumentCreator.createDocument((ITextEditor) editor);
+		}
+		
+		@Override
+		public void addJUnitInterval(WatchDogEvent event) {
+			JUnitInterval junitInterval = (JUnitInterval) event.getSource();
+			this.intervalManager.addInterval(junitInterval);
+		}
+		
+		@Override
+		public void updatePerspectiveInterval() {
+			PerspectiveInterval perspectiveInt = this.intervalManager
+					.getInterval(PerspectiveInterval.class);
+			if (perspectiveInt != null) {
+				new WatchDogEvent(perspectiveInt.getPerspectiveType(),
+						EventType.START_PERSPECTIVE).update();
+			}
+		}
 	}
 }

@@ -104,7 +104,7 @@ public class WatchDogStartUp implements ProjectComponent {
         }
 
         InitializationManager initializationManager = InitializationManager.getInstance(project);
-        initializationManager.getWatchDogEventManager().update(new WatchDogEvent(this, WatchDogEvent.EventType.END_IDE));
+        new WatchDogEvent(this, WatchDogEvent.EventType.END_IDE).update();
         initializationManager.getIntervalManager().closeAllIntervals();
         initializationManager.getTransferManager().sendItemsImmediately();
         initializationManager.shutdown(project.getName());

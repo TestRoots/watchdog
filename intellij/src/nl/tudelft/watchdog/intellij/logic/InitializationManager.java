@@ -62,7 +62,7 @@ public class InitializationManager {
                 statisticsDatabaseFile);
 
         // Initialize managers
-        intervalManager = IntervalManager.initialize(toTransferPersister, statisticsPersister);
+        intervalManager = new IntervalManager(toTransferPersister, statisticsPersister);
         WatchDogEvent.intervalManager = intervalManager;
         WatchDogEvent.editorSpecificImplementation = new WatchDogEvent.WatchDogEventEditorSpecificImplementation() {
             @Override

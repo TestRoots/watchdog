@@ -6,6 +6,7 @@ import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.*;
 import nl.tudelft.watchdog.core.logic.ui.InactivityNotifier;
 import nl.tudelft.watchdog.core.logic.ui.UserInactivityNotifier;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 
 import java.util.Date;
 import java.util.EventObject;
@@ -15,14 +16,23 @@ public class WatchDogEvent extends EventObject {
 
 	/** Serial version. */
 	private static final long serialVersionUID = 1L;
-    private static final int USER_ACTIVITY_TIMEOUT = 16000;
 
     public static IDEIntervalManagerBase intervalManager;
     public static WatchDogEventEditorSpecificImplementation editorSpecificImplementation;
 
-    private static UserInactivityNotifier userInactivityNotifier = new UserInactivityNotifier(USER_ACTIVITY_TIMEOUT, WatchDogEvent.EventType.USER_INACTIVITY);
-    private static InactivityNotifier readingInactivityNotifier = new InactivityNotifier(USER_ACTIVITY_TIMEOUT, WatchDogEvent.EventType.TYPING_INACTIVITY);
-    private static InactivityNotifier typingInactivityNotifier = new InactivityNotifier(USER_ACTIVITY_TIMEOUT, WatchDogEvent.EventType.READING_INACTIVITY);
+    private static UserInactivityNotifier userInactivityNotifier;
+    private static InactivityNotifier readingInactivityNotifier;
+    private static InactivityNotifier typingInactivityNotifier;
+    
+    public static void initializeTimers(int timeout) {
+    	userInactivityNotifier = new UserInactivityNotifier(timeout, WatchDogEvent.EventType.USER_INACTIVITY);
+        readingInactivityNotifier = new InactivityNotifier(timeout, WatchDogEvent.EventType.READING_INACTIVITY);
+        typingInactivityNotifier = new InactivityNotifier(timeout, WatchDogEvent.EventType.TYPING_INACTIVITY);
+    }
+    
+    static {
+    	initializeTimers(WatchDogGlobals.getUserInactivityTimeoutDuration());
+    }
 
     /** Constructor. */
 	public WatchDogEvent(Object source, EventType type) {
@@ -114,8 +124,8 @@ public class WatchDogEvent extends EventObject {
                 if (isClosed(editorInterval)
                         || !intervalExistsAndIsOfType(editorInterval, IntervalType.TYPING)
                         || isDifferentEditor(editorInterval, editor)) {
-                    new WatchDogEvent(event.getSource(),
-                            WatchDogEvent.EventType.START_EDIT).update();
+                	WatchDogEvent startEvent = new WatchDogEvent(event.getSource(), WatchDogEvent.EventType.START_EDIT);
+                	WatchDogEvent.EventType.START_EDIT.update(new Date(), startEvent);
                     return;
                 }
 
@@ -224,7 +234,7 @@ public class WatchDogEvent extends EventObject {
         }, USER_INACTIVITY {
             @Override
             public void update(Date forcedDate, WatchDogEvent event) {
-                UserActiveInterval interval = intervalManager.getInterval(UserActiveInterval.class);
+                IntervalBase interval = intervalManager.getInterval(UserActiveInterval.class);
                 intervalManager.closeInterval(interval, forcedDate);
                 typingInactivityNotifier.cancelTimer(forcedDate);
                 readingInactivityNotifier.cancelTimer(forcedDate);
@@ -325,5 +335,7 @@ public class WatchDogEvent extends EventObject {
         EditorWrapperBase createEditorWrapper(Object editor);
 
         Document createDocument(Object editor);
+        
+        default void updatePerspectiveInterval() {}
     }
 }

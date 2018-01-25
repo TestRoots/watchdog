@@ -14,7 +14,6 @@ import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.intellij.logic.event.listeners.BreakpointListener;
 import nl.tudelft.watchdog.intellij.logic.event.listeners.DebugActionListener;
 import nl.tudelft.watchdog.intellij.logic.event.listeners.DebugEventListener;
-import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 
 /**

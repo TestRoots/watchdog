@@ -3,7 +3,6 @@ package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
-import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
 
 import java.util.HashMap;
 import java.util.Map;

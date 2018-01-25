@@ -2,7 +2,6 @@ package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 
 import com.intellij.openapi.editor.Editor;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
 
 import java.awt.event.FocusEvent;

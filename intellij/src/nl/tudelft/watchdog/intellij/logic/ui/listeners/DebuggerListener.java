@@ -3,7 +3,6 @@ package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 import com.intellij.debugger.impl.DebuggerManagerListener;
 import com.intellij.debugger.impl.DebuggerSession;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
 
 /**
  * Listener for debug events.

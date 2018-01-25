@@ -28,6 +28,7 @@ import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
@@ -67,9 +68,13 @@ public class WatchDogEventManagerTest {
 		PowerMockito.mockStatic(WatchDogGlobals.class);
 		Mockito.when(WatchDogGlobals.getLogDirectory()).thenReturn("watchdog/logs/");
 		Mockito.when(WatchDogGlobals.getPreferences()).thenReturn(mockedPreferences);
-		Mockito.when(mockedPreferences.isAuthenticationEnabled()).thenReturn(
-				true);
+		Mockito.when(WatchDogGlobals.getUserInactivityTimeoutDuration()).thenReturn(USER_ACTIVITY_TIMEOUT);
+		Mockito.when(mockedPreferences.isAuthenticationEnabled()).thenReturn(true);
 		Mockito.when(mockedPreferences.isLoggingEnabled()).thenReturn(false);
+
+		WatchDogEvent.intervalManager = intervalManager;
+		WatchDogEvent.editorSpecificImplementation = new InitializationManager.EclipseWatchDogEventSpecificImplementation(intervalManager);
+		WatchDogEvent.initializeTimers(USER_ACTIVITY_TIMEOUT);
 	}
 
 	@Test
@@ -203,7 +208,6 @@ public class WatchDogEventManagerTest {
 		createMockEvent(EventType.USER_ACTIVITY).update();
 		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT / 5);
 		createMockEvent(EventType.ACTIVE_FOCUS).update();
-		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT / 2);
 		editorInterval = intervalManager.getEditorInterval();
 		interval = intervalManager.getInterval(UserActiveInterval.class);
 
