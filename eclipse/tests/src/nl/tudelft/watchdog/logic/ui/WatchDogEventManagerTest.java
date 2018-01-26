@@ -208,6 +208,7 @@ public class WatchDogEventManagerTest {
 		createMockEvent(EventType.USER_ACTIVITY).update();
 		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT / 5);
 		createMockEvent(EventType.ACTIVE_FOCUS).update();
+		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT / 2);
 		editorInterval = intervalManager.getEditorInterval();
 		interval = intervalManager.getInterval(UserActiveInterval.class);
 
