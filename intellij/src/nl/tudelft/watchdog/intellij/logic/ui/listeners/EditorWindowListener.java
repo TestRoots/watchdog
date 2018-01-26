@@ -1,53 +1,70 @@
 package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
+import com.intellij.openapi.editor.impl.DocumentMarkupModel;
+import com.intellij.openapi.editor.impl.MarkupModelImpl;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
+import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class EditorWindowListener implements EditorFactoryListener {
+public class EditorWindowListener implements EditorFactoryListener, Disposable {
 
     private EditorFocusListener focusListener;
 
-    private Map<Editor, EditorListener> editorListenerMap = new HashMap<Editor, EditorListener>();
+    private Map<Editor, Disposable> editorListenerMap = new HashMap<>();
 
-    private String myProjectName;
+    private Project project;
+    private TrackingEventManager trackingEventManager;
 
-    public EditorWindowListener(String project) {
-        myProjectName = project;
+    EditorWindowListener(Project project, TrackingEventManager trackingEventManager) {
+        this.project = project;
+        this.trackingEventManager = trackingEventManager;
     }
 
     @Override
-    public void editorCreated(EditorFactoryEvent editorFactoryEvent) {
-        if(!editorBelongsToThisProject(editorFactoryEvent)) {
+    public void editorCreated(@NotNull EditorFactoryEvent editorFactoryEvent) {
+        if(editorDoesNotBelongToProject(editorFactoryEvent)) {
             return;
         }
 
         Editor editor = editorFactoryEvent.getEditor();
         focusListener = new EditorFocusListener(editor);
         editor.getContentComponent().addFocusListener(focusListener);
-        editorListenerMap.put(editor, new EditorListener(editor));
+
+        Disposable parentDisposable = Disposer.newDisposable();
+        Disposer.register(parentDisposable, new EditorListener(editor));
+        final MarkupModelImpl markupModel = (MarkupModelImpl) DocumentMarkupModel.forDocument(editor.getDocument(), this.project, true);
+        markupModel.addMarkupModelListener(parentDisposable, new IntelliJMarkupModelListener(trackingEventManager));
+
+        editorListenerMap.put(editor, parentDisposable);
     }
 
     @Override
-    public void editorReleased(EditorFactoryEvent editorFactoryEvent) {
-        if(!editorBelongsToThisProject(editorFactoryEvent)) {
+    public void editorReleased(@NotNull EditorFactoryEvent editorFactoryEvent) {
+        if (editorDoesNotBelongToProject(editorFactoryEvent)) {
             return;
         }
 
         Editor editor = editorFactoryEvent.getEditor();
         editor.getContentComponent().removeFocusListener(focusListener);
-        editorListenerMap.remove(editor).removeListeners();
+
+        Disposer.dispose(editorListenerMap.remove(editor));
     }
 
-    private boolean editorBelongsToThisProject(EditorFactoryEvent editorFactoryEvent) {
-        try {
-            return editorFactoryEvent.getEditor().getProject().getName().equals(myProjectName);
-        }
-        catch(NullPointerException e) {
-            return false;
-        }
+    private boolean editorDoesNotBelongToProject(EditorFactoryEvent editorFactoryEvent) {
+        return !project.equals(editorFactoryEvent.getEditor().getProject());
+    }
+
+    @Override
+    public void dispose() {
+        editorListenerMap.keySet()
+                .forEach(editor ->Disposer.dispose(editorListenerMap.remove(editor)));
     }
 }

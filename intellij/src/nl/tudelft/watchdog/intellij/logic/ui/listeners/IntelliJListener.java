@@ -7,6 +7,7 @@ import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.xdebugger.XDebuggerManager;
@@ -20,67 +21,67 @@ import nl.tudelft.watchdog.intellij.logic.event.listeners.DebugEventListener;
  * Sets up the listeners for IntelliJ UI events and registers the shutdown
  * listeners.
  */
-public class IntelliJListener {
+public class IntelliJListener implements Disposable {
     
     /** The editorObservable */
     private TrackingEventManager trackingEventManager;
 
     private Project project;
 
-    /** Dummy disposable, needed for EditorFactory listener */
-    private Disposable parent;
-
     private final MessageBusConnection connection;
 
     private EditorWindowListener editorWindowListener;
 
-    private GeneralActivityListener activityListener;
+    private DebuggerListener debuggerManagerListener;
+    private BreakpointListener xBreakpointListener;
+    private DebugEventListener debuggerContextListener;
+    private DebugActionListener debuggerActionListener;
 
     /** Constructor. */
     public IntelliJListener(TrackingEventManager trackingEventManager, Project project) {
         this.trackingEventManager = trackingEventManager;
         this.project = project;
 
-        parent = new Disposable() {
-            @Override
-            public void dispose() {
-                // intentionally left empty
-            }
-        };
-
-        editorWindowListener = new EditorWindowListener(project.getName());
+        editorWindowListener = new EditorWindowListener(project, trackingEventManager);
 
         final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
         connection = messageBus.connect();
+        Disposer.register(this, connection);
+
+        this.attachListeners();
     }
 
     /**
      * Adds IntelliJ listeners including already opened windows and
      * registers shutdown and debugger listeners.
      */
-    public void attachListeners() {
+    private void attachListeners() {
         WatchDogEventType.START_IDE.process(this);
 
         connection.subscribe(ApplicationActivationListener.TOPIC,
                 new IntelliJActivationListener());
-        activityListener = new GeneralActivityListener(project.getName());
-        EditorFactory.getInstance().addEditorFactoryListener(editorWindowListener, parent);
+        Disposer.register(this, new GeneralActivityListener(project.getName()));
+        EditorFactory.getInstance().addEditorFactoryListener(editorWindowListener, this);
         attachDebuggerListeners();
     }
 
     private void attachDebuggerListeners() {
-        DebuggerManagerEx.getInstanceEx(project).addDebuggerManagerListener(new DebuggerListener());
-        XDebuggerManager.getInstance(project).getBreakpointManager().addBreakpointListener(new BreakpointListener(trackingEventManager));
-        DebuggerManagerEx.getInstanceEx(project).getContextManager().addListener(new DebugEventListener(trackingEventManager));
-        ActionManager.getInstance().addAnActionListener(new DebugActionListener(trackingEventManager));
+        debuggerManagerListener = new DebuggerListener();
+        xBreakpointListener = new BreakpointListener(trackingEventManager);
+        debuggerContextListener = new DebugEventListener(trackingEventManager);
+        debuggerActionListener = new DebugActionListener(trackingEventManager);
+
+        DebuggerManagerEx.getInstanceEx(project).addDebuggerManagerListener(debuggerManagerListener);
+        XDebuggerManager.getInstance(project).getBreakpointManager().addBreakpointListener(xBreakpointListener);
+        DebuggerManagerEx.getInstanceEx(project).getContextManager().addListener(debuggerContextListener);
+        ActionManager.getInstance().addAnActionListener(debuggerActionListener);
     }
 
-    public void removeListeners() {
-        connection.disconnect();
-        activityListener.removeListeners();
-        // Disposing this parent should remove EditorFactory listener with a delay
-        parent.dispose();
-        // Deprecated, but removes listener immediately
-        EditorFactory.getInstance().removeEditorFactoryListener(editorWindowListener);
+    @Override
+    public void dispose() {
+        DebuggerManagerEx.getInstanceEx(project).removeDebuggerManagerListener(debuggerManagerListener);
+        XDebuggerManager.getInstance(project).getBreakpointManager().removeBreakpointListener(xBreakpointListener);
+        DebuggerManagerEx.getInstanceEx(project).getContextManager().removeListener(debuggerContextListener);
+        ActionManager.getInstance().removeAnActionListener(debuggerActionListener);
     }
 }

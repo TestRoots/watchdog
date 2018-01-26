@@ -1,9 +1,11 @@
 package nl.tudelft.watchdog.intellij.logic;
 
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.document.EditorWrapperBase;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
@@ -31,7 +33,7 @@ public class InitializationManager {
     /**
      * The map containing the InitializationManager for each open IntelliJ project.
      */
-    private static volatile HashMap<String, InitializationManager> initializationManagers = new HashMap<String, InitializationManager>();
+    private static volatile HashMap<String, InitializationManager> initializationManagers = new HashMap<>();
 
     private final Persister toTransferPersister;
     private final Persister statisticsPersister;
@@ -51,7 +53,13 @@ public class InitializationManager {
     private InitializationManager(Project project) {
         // Initialize persisters
         // Double getPath() because they are different methods on different objects
-        File baseFolder = new File(PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog")).getPath().getPath());
+        final IdeaPluginDescriptor plugin = PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog"));
+
+        if (plugin == null) {
+            throw new IllegalArgumentException("Plugin id \"nl.tudelft.watchdog\" could not be found in the list of installed plugins.");
+        }
+
+        File baseFolder = new File(plugin.getPath().getPath());
 
         File toTransferDatabaseFile = new File(baseFolder, WatchDogUtils.getProjectName() + "watchdog.mapdb");
         File statisticsDatabaseFile = new File(baseFolder, WatchDogUtils.getProjectName() + "watchdogStatistics.mapdb");
@@ -88,7 +96,6 @@ public class InitializationManager {
 
         // Initialize listeners
         intelliJListener = new IntelliJListener(trackingEventManager, project);
-        intelliJListener.attachListeners();
     }
 
     /**
@@ -112,20 +119,13 @@ public class InitializationManager {
     }
 
     /**
-     * @return the statistics interval persisters.
-     */
-    public Persister getStatisticsPersister() {
-        return statisticsPersister;
-    }
-
-    /**
      * Closes the database. The database can recover even if it is not closed
      * properly, but it is good practice to close it anyway.
      */
     public void shutdown(String projectName) {
         toTransferPersister.closeDatabase();
         statisticsPersister.closeDatabase();
-        intelliJListener.removeListeners();
+        Disposer.dispose(intelliJListener);
         initializationManagers.remove(projectName);
     }
 

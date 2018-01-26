@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
+import com.intellij.openapi.Disposable;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
 import java.awt.*;
@@ -10,7 +11,7 @@ import java.awt.event.*;
  * A listener that determines whether there was general activity in the IntelliJ
  * window.
  */
-public class GeneralActivityListener {
+public class GeneralActivityListener implements Disposable {
 
     private AWTEventListener mouseActivityListener;
     private AWTEventListener keyboardActivityListener;
@@ -50,7 +51,8 @@ public class GeneralActivityListener {
         Toolkit.getDefaultToolkit().addAWTEventListener(keyboardActivityListener, AWTEvent.KEY_EVENT_MASK);
     }
 
-    public void removeListeners() {
+    @Override
+    public void dispose() {
         Toolkit.getDefaultToolkit().removeAWTEventListener(mouseActivityListener);
         Toolkit.getDefaultToolkit().removeAWTEventListener(keyboardActivityListener);
     }
