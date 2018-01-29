@@ -31,6 +31,12 @@ Then make sure to configure the Ruby server to take the development profile
 export RACK_ENV=development
 ```
 
+Make sure a config file exists for the Ruby server:
+
+```bash
+./prepare_test_config.sh
+```
+
 Then run the server with
 
 ```bash
