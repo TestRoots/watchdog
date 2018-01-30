@@ -5,7 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 
@@ -61,8 +61,8 @@ public class TimeSynchronityChecker extends RegularCheckerBase {
 					intervalManager.closeAllIntervals(new Date(
 							previousExecutionDate + UPDATE_RATE));
 					intervalManager.generateAndSetSessionSeed();
-                    new WatchDogEvent(this, WatchDogEvent.EventType.START_IDE).update();
-                    WatchDogEvent.editorSpecificImplementation.updatePerspectiveInterval();
+                    WatchDogEventType.START_IDE.process(this);
+                    WatchDogEventType.editorSpecificImplementation.updatePerspectiveInterval();
 				}
 			}
 

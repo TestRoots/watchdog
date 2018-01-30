@@ -4,8 +4,7 @@ import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.IDebugEventSetListener;
 import org.eclipse.debug.core.model.IDebugTarget;
 
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 
 /** Listener for events fired by the debugger. */
 public class DebuggerListener implements IDebugEventSetListener {
@@ -20,13 +19,13 @@ public class DebuggerListener implements IDebugEventSetListener {
 			switch (event.getKind()) {
 			case DebugEvent.CREATE:
 				if (event.getSource() instanceof IDebugTarget) {
-					new WatchDogEvent(this, EventType.START_DEBUG).update();
+					WatchDogEventType.START_DEBUG.process(this);
 				}
 				break;
 
 			case DebugEvent.TERMINATE:
 				if (event.getSource() instanceof IDebugTarget) {
-					new WatchDogEvent(this, EventType.END_DEBUG).update();
+					WatchDogEventType.END_DEBUG.process(this);
 				}
 				break;
 

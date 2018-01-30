@@ -6,8 +6,7 @@ import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
 import nl.tudelft.watchdog.eclipse.logic.event.listeners.BreakpointListener;
 import nl.tudelft.watchdog.eclipse.logic.event.listeners.DebugEventListener;
@@ -49,7 +48,7 @@ public class WorkbenchListener {
 	 * registers shutdown and debugger listeners.
 	 */
 	public void attachListeners() {
-		new WatchDogEvent(workbench, EventType.START_IDE).update();
+		WatchDogEventType.START_IDE.process(workbench);
 		windowListener = new WindowListener();
 		workbench.addWindowListener(windowListener);
 		addListenersToAlreadyOpenWindows();
@@ -80,7 +79,7 @@ public class WorkbenchListener {
 			public boolean preShutdown(final IWorkbench workbench,
 					final boolean forced) {
 				initializationManager = InitializationManager.getInstance();
-				new WatchDogEvent(workbench, EventType.END_IDE).update();
+				WatchDogEventType.END_IDE.process(workbench);
 				initializationManager.getIntervalManager().closeAllIntervals();
 				transferManager.sendItemsImmediately();
 				return true;

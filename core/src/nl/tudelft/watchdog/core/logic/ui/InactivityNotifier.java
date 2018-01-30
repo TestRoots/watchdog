@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 
 /**
  * A performance-optimized notifier for a timeout when its {@link #trigger()}
@@ -23,13 +23,13 @@ public class InactivityNotifier {
 
 	private ActivityTimerTask activityTimerTask;
 
-	private WatchDogEvent.EventType eventType;
+	private WatchDogEventType eventType;
 
 	private boolean isRunning;
 
 	/** Constructor. */
 	public InactivityNotifier(int activityTimeout,
-			WatchDogEvent.EventType type) {
+			WatchDogEventType type) {
 		this.activityTimeout = activityTimeout;
 		this.eventType = type;
 		this.isRunning = false;
@@ -80,13 +80,13 @@ public class InactivityNotifier {
 	private class ActivityTimerTask extends TimerTask {
 
 		protected void run(Date forcedDate) {
-			new WatchDogEvent(this, eventType).update(forcedDate);
+		    eventType.process(forcedDate,this);
 			isRunning = false;
 		}
 
 		@Override
 		public void run() {
-		    new WatchDogEvent(this, eventType).update();
+		    eventType.process(this);
 			isRunning = false;
 		}
 	}

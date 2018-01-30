@@ -2,22 +2,22 @@ package nl.tudelft.watchdog.core.logic.ui;
 
 import java.util.Date;
 
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 
 /**
  * A Special InactivityNotifier that makes sure a wrapping
- * {@link WatchDogEvent.EventType#USER_ACTIVITY} event exists if its trigger is called.
+ * {@link WatchDogEventType#USER_ACTIVITY} event exists if its trigger is called.
  */
 public class UserInactivityNotifier extends InactivityNotifier {
 
 	/** Constructor. */
-	public UserInactivityNotifier(int activityTimeout, WatchDogEvent.EventType type) {
+	public UserInactivityNotifier(int activityTimeout, WatchDogEventType type) {
 		super(activityTimeout, type);
 	}
 
 	/** Trigger accepting a forcedDate when the event should be fired. */
 	public void trigger(Date forcedDate) {
 		trigger();
-		new WatchDogEvent(this, WatchDogEvent.EventType.USER_ACTIVITY).update(forcedDate);
+		WatchDogEventType.USER_ACTIVITY.process(forcedDate,this);
 	}
 }

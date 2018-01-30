@@ -56,16 +56,15 @@ public class JsonTransferer {
 
 		String serializedItems = toJson(recordedItems);
 		try {
-			NetworkUtils.transferJsonAndGetResponse(getPostURL(userId, projectId, recordedItemsType), serializedItems);
+            final String postURL = getPostURL(userId, projectId, recordedItemsType);
+            NetworkUtils.transferJsonAndGetResponse(postURL, serializedItems);
 			return Connection.SUCCESSFUL;
 		} catch (ServerReturnCodeException exception) {
 			return Connection.UNSUCCESSFUL;
-		} catch (ServerCommunicationException exception) {
-			return Connection.NETWORK_ERROR;
-		} catch (IllegalArgumentException exception) {
+		} catch (ServerCommunicationException | IllegalArgumentException exception) {
 			return Connection.NETWORK_ERROR;
 		}
-	}
+    }
 
 	/**
 	 * Sends the user registration data and returns the received User-ID.

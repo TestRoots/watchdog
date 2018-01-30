@@ -12,7 +12,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.WindowManager;
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
 import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
@@ -104,7 +104,7 @@ public class WatchDogStartUp implements ProjectComponent {
         }
 
         InitializationManager initializationManager = InitializationManager.getInstance(project);
-        new WatchDogEvent(this, WatchDogEvent.EventType.END_IDE).update();
+        WatchDogEventType.END_IDE.process(this);
         initializationManager.getIntervalManager().closeAllIntervals();
         initializationManager.getTransferManager().sendItemsImmediately();
         initializationManager.shutdown(project.getName());

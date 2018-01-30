@@ -1,7 +1,6 @@
 package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
-import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -28,14 +27,14 @@ public class PartListener implements IPartListener {
 	@Override
 	public void partDeactivated(IWorkbenchPart part) {
 		if (part instanceof ITextEditor) {
-			new EditorEvent(part, EventType.INACTIVE_FOCUS).update();
+			WatchDogEventType.INACTIVE_FOCUS.process(part);
 		}
 	}
 
 	@Override
 	public void partClosed(IWorkbenchPart part) {
 		if (part instanceof ITextEditor) {
-			new EditorEvent(part, EventType.INACTIVE_FOCUS).update();
+			WatchDogEventType.INACTIVE_FOCUS.process(part);
 		}
 	}
 
@@ -46,7 +45,7 @@ public class PartListener implements IPartListener {
 	@Override
 	public void partActivated(IWorkbenchPart part) {
 		if (part instanceof ITextEditor) {
-			new EditorEvent(part, EventType.ACTIVE_FOCUS).update();
+			WatchDogEventType.ACTIVE_FOCUS.process(part);
 		}
 	}
 

@@ -15,8 +15,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 
 /** Enriches an {@link IEditorPart} for all user-triggered events. */
 public class EditorListener {
@@ -66,15 +65,12 @@ public class EditorListener {
 				}
 
 				int modCount = Math.max(event.getLength(), textLength);
-				EditorEvent newEvent = new EditorEvent(editor,
-						EventType.SUBSEQUENT_EDIT);
-				newEvent.setModCount(modCount);
-				newEvent.update();
+				WatchDogEventType.SUBSEQUENT_EDIT.process(new WatchDogEventType.EditorWithModCount(editor, modCount));
 			}
 
 			@Override
 			public void documentAboutToBeChanged(DocumentEvent event) {
-				new EditorEvent(editor, EventType.START_EDIT).update();
+				WatchDogEventType.START_EDIT.process(editor);
 			}
 		};
 		document.addDocumentListener(documentListener);
@@ -89,7 +85,7 @@ public class EditorListener {
 		caretListener = new CaretListener() {
 			@Override
 			public void caretMoved(CaretEvent event) {
-				new EditorEvent(editor, EventType.CARET_MOVED).update();
+				WatchDogEventType.CARET_MOVED.process(editor);
 				// cursor place changed
 			}
 		};
@@ -99,7 +95,7 @@ public class EditorListener {
 		paintListener = new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {
-				new EditorEvent(editor, EventType.PAINT).update();
+				WatchDogEventType.PAINT.process(editor);
 			}
 		};
 		styledText.addPaintListener(paintListener);
@@ -112,7 +108,7 @@ public class EditorListener {
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				new EditorEvent(editor, EventType.ACTIVE_FOCUS).update();
+				WatchDogEventType.ACTIVE_FOCUS.process(editor);
 			}
 		};
 		styledText.addFocusListener(focusListener);

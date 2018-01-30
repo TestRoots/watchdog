@@ -11,10 +11,10 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.xdebugger.XDebuggerManager;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 import nl.tudelft.watchdog.intellij.logic.event.listeners.BreakpointListener;
 import nl.tudelft.watchdog.intellij.logic.event.listeners.DebugActionListener;
 import nl.tudelft.watchdog.intellij.logic.event.listeners.DebugEventListener;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
 
 /**
  * Sets up the listeners for IntelliJ UI events and registers the shutdown
@@ -59,7 +59,7 @@ public class IntelliJListener {
      * registers shutdown and debugger listeners.
      */
     public void attachListeners() {
-        new WatchDogEvent(this, WatchDogEvent.EventType.START_IDE).update();
+        WatchDogEventType.START_IDE.process(this);
 
         connection.subscribe(ApplicationActivationListener.TOPIC,
                 new IntelliJActivationListener());

@@ -1,8 +1,7 @@
 package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jdt.ui.JavaUI;
@@ -27,16 +26,13 @@ public class PerspectiveListener implements IPerspectiveListener {
 			IPerspectiveDescriptor perspective) {
 		switch (perspective.getId()) {
 		case IDebugUIConstants.ID_DEBUG_PERSPECTIVE:
-			new WatchDogEvent(Perspective.DEBUG,
-					EventType.START_PERSPECTIVE).update();
+			WatchDogEventType.START_PERSPECTIVE.process(Perspective.DEBUG);
 			break;
 		case JavaUI.ID_PERSPECTIVE:
-			new WatchDogEvent(Perspective.JAVA,
-					EventType.START_PERSPECTIVE).update();
+			WatchDogEventType.START_PERSPECTIVE.process(Perspective.JAVA);
 			break;
 		default:
-			new WatchDogEvent(Perspective.OTHER,
-					EventType.START_PERSPECTIVE).update();
+			WatchDogEventType.START_PERSPECTIVE.process(Perspective.OTHER);
 		}
 	}
 }

@@ -9,7 +9,7 @@ import nl.tudelft.watchdog.core.logic.document.EditorWrapperBase;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.network.TransferManagerBase;
 import nl.tudelft.watchdog.core.logic.ui.TimeSynchronityChecker;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 import nl.tudelft.watchdog.intellij.logic.document.DocumentCreator;
 import nl.tudelft.watchdog.intellij.logic.document.EditorWrapper;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalManager;
@@ -63,11 +63,11 @@ public class InitializationManager {
 
         // Initialize managers
         intervalManager = new IntervalManager(toTransferPersister, statisticsPersister);
-        WatchDogEvent.intervalManager = intervalManager;
-        WatchDogEvent.editorSpecificImplementation = new WatchDogEvent.WatchDogEventEditorSpecificImplementation() {
+        WatchDogEventType.intervalManager = intervalManager;
+        WatchDogEventType.editorSpecificImplementation = new WatchDogEventType.WatchDogEventEditorSpecificImplementation() {
             @Override
-            public void addJUnitInterval(WatchDogEvent event) {
-                JUnitInterval junitInterval = (JUnitInterval) event.getSource();
+            public void addJUnitInterval(Object source) {
+                JUnitInterval junitInterval = (JUnitInterval) source;
                 intervalManager.addInterval(junitInterval);
             }
 

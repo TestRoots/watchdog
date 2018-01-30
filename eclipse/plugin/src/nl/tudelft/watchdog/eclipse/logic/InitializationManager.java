@@ -11,9 +11,8 @@ import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.PerspectiveInterval;
 import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 import nl.tudelft.watchdog.core.logic.ui.TimeSynchronityChecker;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.WatchDogEventEditorSpecificImplementation;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType.WatchDogEventEditorSpecificImplementation;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.Activator;
 import nl.tudelft.watchdog.eclipse.logic.document.DocumentCreator;
@@ -65,7 +64,7 @@ public class InitializationManager {
 				statisticsPersister);
 		trackingEventManager.setSessionSeed(intervalManager.getSessionSeed());
 		
-		WatchDogEvent.editorSpecificImplementation = new EclipseWatchDogEventSpecificImplementation(intervalManager);
+		WatchDogEventType.editorSpecificImplementation = new EclipseWatchDogEventSpecificImplementation(intervalManager);
 
 		new TimeSynchronityChecker(intervalManager);
 
@@ -131,9 +130,8 @@ public class InitializationManager {
 		}
 		
 		@Override
-		public void addJUnitInterval(WatchDogEvent event) {
-			JUnitInterval junitInterval = (JUnitInterval) event.getSource();
-			this.intervalManager.addInterval(junitInterval);
+		public void addJUnitInterval(Object interval) {
+			this.intervalManager.addInterval((JUnitInterval) interval);
 		}
 		
 		@Override
@@ -141,8 +139,7 @@ public class InitializationManager {
 			PerspectiveInterval perspectiveInt = this.intervalManager
 					.getInterval(PerspectiveInterval.class);
 			if (perspectiveInt != null) {
-				new WatchDogEvent(perspectiveInt.getPerspectiveType(),
-						EventType.START_PERSPECTIVE).update();
+				WatchDogEventType.START_PERSPECTIVE.process(perspectiveInt.getPerspectiveType());
 			}
 		}
 	}

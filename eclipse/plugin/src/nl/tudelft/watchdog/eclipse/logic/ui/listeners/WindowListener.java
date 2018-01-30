@@ -1,7 +1,6 @@
 package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveListener;
@@ -26,7 +25,7 @@ public class WindowListener implements IWindowListener {
 
 	@Override
 	public void windowDeactivated(IWorkbenchWindow window) {
-		new WatchDogEvent(window, EventType.INACTIVE_WINDOW).update();
+		WatchDogEventType.INACTIVE_WINDOW.process(window);
 
 	}
 
@@ -38,7 +37,7 @@ public class WindowListener implements IWindowListener {
 
 	@Override
 	public void windowActivated(IWorkbenchWindow window) {
-		new WatchDogEvent(window, EventType.ACTIVE_WINDOW).update();
+		WatchDogEventType.ACTIVE_WINDOW.process(window);
 	}
 
 	/** Adds page listeners for all open pages of the supplied windows. */

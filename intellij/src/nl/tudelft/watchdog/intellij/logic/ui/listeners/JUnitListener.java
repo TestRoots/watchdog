@@ -6,8 +6,8 @@ import com.intellij.execution.testframework.TestStatusListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.psi.search.GlobalSearchScope;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 import nl.tudelft.watchdog.intellij.logic.interval.intervaltypes.JUnitInterval;
-import nl.tudelft.watchdog.core.logic.ui.events.JUnitEvent;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
 /**
@@ -23,7 +23,7 @@ public class JUnitListener extends TestStatusListener {
         }
 
         JUnitInterval interval = new JUnitInterval(testProxy);
-        new JUnitEvent(interval).update();
+        WatchDogEventType.JUNIT.process(interval);
     }
 
     /** For given AbstractTestProxy returns the Project the test belongs to. Should always return Project, never null. */

@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 
 import com.intellij.debugger.impl.DebuggerManagerListener;
 import com.intellij.debugger.impl.DebuggerSession;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 
 /**
  * Listener for debug events.
@@ -17,7 +17,7 @@ public class DebuggerListener implements DebuggerManagerListener {
 
     @Override
     public void sessionCreated(DebuggerSession debuggerSession) {
-        new WatchDogEvent(this, WatchDogEvent.EventType.START_DEBUG).update();
+        WatchDogEventType.START_DEBUG.process(this);
     }
 
     @Override
@@ -32,6 +32,6 @@ public class DebuggerListener implements DebuggerManagerListener {
 
     @Override
     public void sessionRemoved(DebuggerSession debuggerSession) {
-        new WatchDogEvent(this, WatchDogEvent.EventType.END_DEBUG).update();
+        WatchDogEventType.END_DEBUG.process(this);
     }
 }

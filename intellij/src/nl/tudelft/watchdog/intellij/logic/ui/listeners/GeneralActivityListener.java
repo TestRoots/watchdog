@@ -1,6 +1,6 @@
 package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
 import java.awt.*;
@@ -24,7 +24,7 @@ public class GeneralActivityListener {
                 if (!WatchDogUtils.getProjectName().equals(projectName)) {
                     return;
                 }
-                new WatchDogEvent(event, WatchDogEvent.EventType.USER_ACTIVITY).update();
+                 WatchDogEventType.USER_ACTIVITY.process(event);
             }
         };
 
@@ -43,7 +43,7 @@ public class GeneralActivityListener {
                     case KeyEvent.VK_LEFT:
                     case KeyEvent.VK_PAGE_DOWN:
                     case KeyEvent.VK_PAGE_UP:
-                        new WatchDogEvent(event, WatchDogEvent.EventType.USER_ACTIVITY).update();
+                        WatchDogEventType.USER_ACTIVITY.process(event);
                 }
             }
         };
