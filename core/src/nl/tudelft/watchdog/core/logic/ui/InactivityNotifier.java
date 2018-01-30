@@ -54,6 +54,10 @@ public class InactivityNotifier {
 		}
 	}
 
+	public void trigger(Date forcedDate) {
+	    this.trigger();
+    }
+
 	private void createNewTimer() {
 		activityTimer = new Timer(true);
 		activityTimerTask = new ActivityTimerTask();

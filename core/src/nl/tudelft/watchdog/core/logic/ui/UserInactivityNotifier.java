@@ -15,7 +15,7 @@ public class UserInactivityNotifier extends InactivityNotifier {
 		super(activityTimeout, type);
 	}
 
-	/** Trigger accepting a forcedDate when the event should be fired. */
+	@Override
 	public void trigger(Date forcedDate) {
 		trigger();
 		WatchDogEventType.USER_ACTIVITY.process(forcedDate,this);

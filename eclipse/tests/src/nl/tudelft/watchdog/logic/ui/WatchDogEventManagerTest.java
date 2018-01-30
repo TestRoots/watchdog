@@ -24,6 +24,9 @@ import nl.tudelft.watchdog.core.logic.interval.intervaltypes.TypingInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.UserActiveInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.WatchDogViewInterval;
 import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
+import nl.tudelft.watchdog.core.logic.ui.InActivityNotifiers;
+import nl.tudelft.watchdog.core.logic.ui.InactivityNotifier;
+import nl.tudelft.watchdog.core.logic.ui.UserInactivityNotifier;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
@@ -72,7 +75,9 @@ public class WatchDogEventManagerTest {
 
 		WatchDogEventType.intervalManager = intervalManager;
 		WatchDogEventType.editorSpecificImplementation = new InitializationManager.EclipseWatchDogEventSpecificImplementation(intervalManager);
-		WatchDogEventType.initializeTimers(USER_ACTIVITY_TIMEOUT);
+		InActivityNotifiers.READING.updateNotifier(new InactivityNotifier(USER_ACTIVITY_TIMEOUT, WatchDogEventType.READING_INACTIVITY));
+		InActivityNotifiers.USER_INACTIVITY.updateNotifier(new UserInactivityNotifier(USER_ACTIVITY_TIMEOUT, WatchDogEventType.USER_INACTIVITY));
+		InActivityNotifiers.TYPING.updateNotifier(new InactivityNotifier(USER_ACTIVITY_TIMEOUT, WatchDogEventType.TYPING_INACTIVITY));
 	}
 
 	@Test
