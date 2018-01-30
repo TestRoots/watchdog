@@ -51,16 +51,16 @@ public class InitializationManager {
      * Private constructor.
      */
     private InitializationManager(Project project) {
-        // Initialize persisters
-        // Double getPath() because they are different methods on different objects
         final IdeaPluginDescriptor plugin = PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog"));
 
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin id \"nl.tudelft.watchdog\" could not be found in the list of installed plugins.");
         }
 
+        // Double getPath() because they are different methods on different objects
         File baseFolder = new File(plugin.getPath().getPath());
 
+        // Initialize persisters
         File toTransferDatabaseFile = new File(baseFolder, WatchDogUtils.getProjectName() + "watchdog.mapdb");
         File statisticsDatabaseFile = new File(baseFolder, WatchDogUtils.getProjectName() + "watchdogStatistics.mapdb");
 

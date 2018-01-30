@@ -18,7 +18,13 @@ public class EditorWindowListener implements EditorFactoryListener, Disposable {
 
     private EditorFocusListener focusListener;
 
-    private Map<Editor, Disposable> editorListenerMap = new HashMap<>();
+    /**
+     * Every editor that is created is associated with a tree of disposables.
+     * The parent Disposable is registered with each associated listener to
+     * events of the editor. By using Disposable for this structure, we can
+     * properly cleanup all listeners once we dispose ourselves.
+     */
+    private Map<Editor, Disposable> editorDisposableTreeMap = new HashMap<>();
 
     private Project project;
     private TrackingEventManager trackingEventManager;
@@ -43,7 +49,7 @@ public class EditorWindowListener implements EditorFactoryListener, Disposable {
         final MarkupModelImpl markupModel = (MarkupModelImpl) DocumentMarkupModel.forDocument(editor.getDocument(), this.project, true);
         markupModel.addMarkupModelListener(parentDisposable, new IntelliJMarkupModelListener(trackingEventManager));
 
-        editorListenerMap.put(editor, parentDisposable);
+        editorDisposableTreeMap.put(editor, parentDisposable);
     }
 
     @Override
@@ -55,7 +61,7 @@ public class EditorWindowListener implements EditorFactoryListener, Disposable {
         Editor editor = editorFactoryEvent.getEditor();
         editor.getContentComponent().removeFocusListener(focusListener);
 
-        Disposer.dispose(editorListenerMap.remove(editor));
+        Disposer.dispose(editorDisposableTreeMap.remove(editor));
     }
 
     private boolean editorDoesNotBelongToProject(EditorFactoryEvent editorFactoryEvent) {
@@ -64,7 +70,7 @@ public class EditorWindowListener implements EditorFactoryListener, Disposable {
 
     @Override
     public void dispose() {
-        editorListenerMap.keySet()
-                .forEach(editor ->Disposer.dispose(editorListenerMap.remove(editor)));
+        editorDisposableTreeMap.keySet()
+                .forEach(editor ->Disposer.dispose(editorDisposableTreeMap.remove(editor)));
     }
 }
