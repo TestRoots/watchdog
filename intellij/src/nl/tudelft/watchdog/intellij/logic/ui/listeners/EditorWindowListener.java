@@ -9,6 +9,7 @@ import com.intellij.openapi.editor.impl.MarkupModelImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
+import nl.tudelft.watchdog.intellij.logic.ui.listeners.staticanalysis.IntelliJMarkupModelListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -46,6 +47,7 @@ public class EditorWindowListener implements EditorFactoryListener, Disposable {
 
         Disposable parentDisposable = Disposer.newDisposable();
         Disposer.register(parentDisposable, new EditorListener(editor));
+        Disposer.register(parentDisposable, IntelliJMarkupModelListener.initializeAfterAnalysisFinished(project, parentDisposable, editor.getDocument(), trackingEventManager));
 
         editorDisposableTreeMap.put(editor, parentDisposable);
     }
