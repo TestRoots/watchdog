@@ -1,9 +1,7 @@
 package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.PerspectiveInterval.Perspective;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jdt.ui.JavaUI;
@@ -13,12 +11,8 @@ import org.eclipse.ui.IWorkbenchPage;
 
 /** Listener for Perspective Changes by the user. */
 public class PerspectiveListener implements IPerspectiveListener {
-	/** The eventObservable. */
-	private WatchDogEventManager eventManager;
 
-	/** Constructor. */
-	PerspectiveListener(WatchDogEventManager eventManager) {
-		this.eventManager = eventManager;
+	PerspectiveListener() {
 	}
 
 	@Override
@@ -32,16 +26,13 @@ public class PerspectiveListener implements IPerspectiveListener {
 			IPerspectiveDescriptor perspective) {
 		switch (perspective.getId()) {
 		case IDebugUIConstants.ID_DEBUG_PERSPECTIVE:
-			eventManager.update(new WatchDogEvent(Perspective.DEBUG,
-					EventType.START_PERSPECTIVE));
+			WatchDogEventType.START_PERSPECTIVE.process(Perspective.DEBUG);
 			break;
 		case JavaUI.ID_PERSPECTIVE:
-			eventManager.update(new WatchDogEvent(Perspective.JAVA,
-					EventType.START_PERSPECTIVE));
+			WatchDogEventType.START_PERSPECTIVE.process(Perspective.JAVA);
 			break;
 		default:
-			eventManager.update(new WatchDogEvent(Perspective.OTHER,
-					EventType.START_PERSPECTIVE));
+			WatchDogEventType.START_PERSPECTIVE.process(Perspective.OTHER);
 		}
 	}
 }

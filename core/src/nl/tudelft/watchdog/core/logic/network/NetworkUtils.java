@@ -96,16 +96,11 @@ public class NetworkUtils {
 			HttpResponse response = client.execute(get);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == HttpStatus.SC_OK) {
-				String jsonResponse = readResponse(response.getEntity());
-				return jsonResponse;
+                return readResponse(response.getEntity());
 			} else {
 				errorMessage = "Not received " + HttpStatus.SC_OK;
 			}
-		} catch (IllegalStateException exception) {
-			// intentionally empty
-		} catch (IllegalArgumentException exception) {
-			// intentionally empty
-		} catch (IOException exception) {
+		} catch (IllegalStateException | IOException | IllegalArgumentException exception) {
 			// intentionally empty
 		} finally {
 			closeHttpClientGracefully(client);
@@ -137,9 +132,7 @@ public class NetworkUtils {
 				return Connection.UNSUCCESSFUL;
 			}
 			return Connection.NETWORK_ERROR;
-		} catch (IllegalStateException exception) {
-			// intentionally empty
-		} catch (IOException exception) {
+		} catch (IllegalStateException | IOException exception) {
 			// intentionally empty
 		} finally {
 			closeHttpClientGracefully(client);
@@ -181,8 +174,7 @@ public class NetworkUtils {
 
 			HttpResponse response = client.execute(post);
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED) {
-				String jsonResponse = readResponse(response.getEntity());
-				return jsonResponse;
+                return readResponse(response.getEntity());
 			} else {
 				// server returns not created
 				throw new ServerReturnCodeException(
@@ -257,15 +249,13 @@ public class NetworkUtils {
 	 * Wrapper function for Appache's {@link EntityUtils#toString()}, taking
 	 * care of the exceptions (which should never happen).
 	 */
-	public static String readResponse(HttpEntity entity) {
+	private static String readResponse(HttpEntity entity) {
 		try {
 			return EntityUtils.toString(entity);
-		} catch (ParseException exception) {
-			WatchDogLogger.getInstance().logSevere(exception);
-		} catch (IOException exception) {
+		} catch (ParseException | IOException exception) {
 			WatchDogLogger.getInstance().logSevere(exception);
 		}
-		return "";
+        return "";
 	}
 
 	private static String getServerURI() {
@@ -307,9 +297,9 @@ public class NetworkUtils {
 		CredentialsProvider provider = new BasicCredentialsProvider();
 		byte[] providerInfo = { 104, 110, 115, 112, 113, 115, 122, 110, 112,
 				113 };
-		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
+        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
 				"watchdogplugin", new String(providerInfo,
-						Charset.defaultCharset()));
+                Charset.defaultCharset()));
 		provider.setCredentials(AuthScope.ANY, credentials);
 		return createPlainHttpClientBuilder().setDefaultCredentialsProvider(
 				provider).build();

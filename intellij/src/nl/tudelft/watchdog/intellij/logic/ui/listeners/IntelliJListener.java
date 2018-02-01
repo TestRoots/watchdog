@@ -11,12 +11,10 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.xdebugger.XDebuggerManager;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 import nl.tudelft.watchdog.intellij.logic.event.listeners.BreakpointListener;
 import nl.tudelft.watchdog.intellij.logic.event.listeners.DebugActionListener;
 import nl.tudelft.watchdog.intellij.logic.event.listeners.DebugEventListener;
-import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 
 /**
  * Sets up the listeners for IntelliJ UI events and registers the shutdown
@@ -25,7 +23,6 @@ import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
 public class IntelliJListener {
     
     /** The editorObservable */
-    private WatchDogEventManager watchDogEventManager;
     private TrackingEventManager trackingEventManager;
 
     private Project project;
@@ -40,8 +37,7 @@ public class IntelliJListener {
     private GeneralActivityListener activityListener;
 
     /** Constructor. */
-    public IntelliJListener(WatchDogEventManager watchDogEventManager, TrackingEventManager trackingEventManager, Project project) {
-        this.watchDogEventManager = watchDogEventManager;
+    public IntelliJListener(TrackingEventManager trackingEventManager, Project project) {
         this.trackingEventManager = trackingEventManager;
         this.project = project;
 
@@ -52,7 +48,7 @@ public class IntelliJListener {
             }
         };
 
-        editorWindowListener = new EditorWindowListener(watchDogEventManager, project.getName());
+        editorWindowListener = new EditorWindowListener(project.getName());
 
         final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
         connection = messageBus.connect();
@@ -63,17 +59,17 @@ public class IntelliJListener {
      * registers shutdown and debugger listeners.
      */
     public void attachListeners() {
-        watchDogEventManager.update(new WatchDogEvent(this, EventType.START_IDE));
+        WatchDogEventType.START_IDE.process(this);
 
         connection.subscribe(ApplicationActivationListener.TOPIC,
-                new IntelliJActivationListener(watchDogEventManager));
-        activityListener = new GeneralActivityListener(watchDogEventManager, project.getName());
+                new IntelliJActivationListener());
+        activityListener = new GeneralActivityListener(project.getName());
         EditorFactory.getInstance().addEditorFactoryListener(editorWindowListener, parent);
         attachDebuggerListeners();
     }
 
     private void attachDebuggerListeners() {
-        DebuggerManagerEx.getInstanceEx(project).addDebuggerManagerListener(new DebuggerListener(watchDogEventManager));
+        DebuggerManagerEx.getInstanceEx(project).addDebuggerManagerListener(new DebuggerListener());
         XDebuggerManager.getInstance(project).getBreakpointManager().addBreakpointListener(new BreakpointListener(trackingEventManager));
         DebuggerManagerEx.getInstanceEx(project).getContextManager().addListener(new DebugEventListener(trackingEventManager));
         ActionManager.getInstance().addAnActionListener(new DebugActionListener(trackingEventManager));

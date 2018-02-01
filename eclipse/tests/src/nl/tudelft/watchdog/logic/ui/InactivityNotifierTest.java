@@ -7,9 +7,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import nl.tudelft.watchdog.core.logic.ui.InactivityNotifier;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventTypeInterface;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /**
@@ -22,61 +20,55 @@ public class InactivityNotifierTest {
 
 	private static final int HALF_TIMEOUT = (int) 0.5 * TIMEOUT;
 
-	private WatchDogEventManager eventManagerMock;
+	private WatchDogEventTypeInterface watchdogEventTypeMock;
 	private InactivityNotifier inactivityNotifier;
 
 	@Before
 	public void setup() {
-		eventManagerMock = Mockito.mock(WatchDogEventManager.class);
-		inactivityNotifier = new InactivityNotifier(eventManagerMock, TIMEOUT,
-				EventType.USER_INACTIVITY);
+		watchdogEventTypeMock = Mockito.mock(WatchDogEventTypeInterface.class);
+		inactivityNotifier = new InactivityNotifier(TIMEOUT, watchdogEventTypeMock);
 	}
 
 	@Test
 	public void testTimerNotStartedWhenCreated() {
-		Mockito.verifyZeroInteractions(eventManagerMock);
-		Mockito.verifyNoMoreInteractions(eventManagerMock);
+		Mockito.verifyZeroInteractions(watchdogEventTypeMock);
+		Mockito.verifyNoMoreInteractions(watchdogEventTypeMock);
 	}
 
 	@Test
 	public void testTimerExecutedAfterOneTrigger() {
 		inactivityNotifier.trigger();
-		Mockito.verify(eventManagerMock, Mockito.timeout(TIMEOUT * 2)).update(
-				createAnyWatchDogEvent());
+		Mockito.verify(watchdogEventTypeMock, Mockito.timeout(TIMEOUT * 2)).process(Mockito.any());
 	}
 
 	@Test
 	public void testTimerExecutedTwice() {
 		inactivityNotifier.trigger();
-		Mockito.verify(eventManagerMock, Mockito.timeout(TIMEOUT)).update(
-				createAnyWatchDogEvent());
+		Mockito.verify(watchdogEventTypeMock, Mockito.timeout(TIMEOUT)).process(Mockito.any());
 		inactivityNotifier.trigger();
-		Mockito.verify(eventManagerMock, Mockito.timeout(TIMEOUT)).update(
-				createAnyWatchDogEvent());
-		Mockito.verifyNoMoreInteractions(eventManagerMock);
+		Mockito.verify(watchdogEventTypeMock, Mockito.timeout(TIMEOUT)).process(Mockito.any());
+		Mockito.verifyNoMoreInteractions(watchdogEventTypeMock);
 	}
 
 	@Test
 	public void testTimerNotExecutedTooEarly() {
 		inactivityNotifier.trigger();
-		Mockito.verify(eventManagerMock, Mockito.timeout(HALF_TIMEOUT).never())
-				.update(createAnyWatchDogEvent());
+		Mockito.verify(watchdogEventTypeMock, Mockito.timeout(HALF_TIMEOUT).never())
+				.process(Mockito.any());
 		inactivityNotifier.trigger();
-		Mockito.verify(eventManagerMock, Mockito.timeout(TIMEOUT * 2)).update(
-				createAnyWatchDogEvent());
-		Mockito.verifyNoMoreInteractions(eventManagerMock);
+		Mockito.verify(watchdogEventTypeMock, Mockito.timeout(TIMEOUT * 2)).process(Mockito.any());
+		Mockito.verifyNoMoreInteractions(watchdogEventTypeMock);
 	}
 
 	@Test
 	public void testTimerStoppedAfterCancel() {
 		inactivityNotifier.trigger();
-		Mockito.verify(eventManagerMock, Mockito.timeout(HALF_TIMEOUT).never())
-				.update(createAnyWatchDogEvent());
+		Mockito.verify(watchdogEventTypeMock, Mockito.timeout(HALF_TIMEOUT).never())
+				.process(Mockito.any());
 		Date cancelDate = new Date();
 		inactivityNotifier.cancelTimer(cancelDate);
-		Mockito.verify(eventManagerMock, Mockito.times(1)).update(
-				createAnyWatchDogEvent(), Mockito.eq(cancelDate));
-		Mockito.verifyNoMoreInteractions(eventManagerMock);
+		Mockito.verify(watchdogEventTypeMock, Mockito.times(1)).process(Mockito.eq(cancelDate), Mockito.any());
+		Mockito.verifyNoMoreInteractions(watchdogEventTypeMock);
 	}
 
 	@Test
@@ -85,14 +77,9 @@ public class InactivityNotifierTest {
 			inactivityNotifier.trigger();
 			WatchDogUtils.sleep(HALF_TIMEOUT);
 		}
-		Mockito.verifyZeroInteractions(eventManagerMock);
-		Mockito.verify(eventManagerMock, Mockito.timeout(TIMEOUT)).update(
-				createAnyWatchDogEvent());
-		Mockito.verifyNoMoreInteractions(eventManagerMock);
-	}
-
-	private WatchDogEvent createAnyWatchDogEvent() {
-		return Mockito.isA(WatchDogEvent.class);
+		Mockito.verifyZeroInteractions(watchdogEventTypeMock);
+		Mockito.verify(watchdogEventTypeMock, Mockito.timeout(TIMEOUT)).process(Mockito.any());
+		Mockito.verifyNoMoreInteractions(watchdogEventTypeMock);
 	}
 
 }

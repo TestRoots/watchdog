@@ -1,7 +1,5 @@
 package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
-import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
-
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -9,12 +7,8 @@ import org.eclipse.ui.IWorkbenchPart;
 /** A listener on Pages. */
 public class PageListener implements IPageListener {
 
-	/** The editorObservable. */
-	private WatchDogEventManager userActionManager;
-
 	/** Constructor. */
-	public PageListener(WatchDogEventManager editorObservable) {
-		this.userActionManager = editorObservable;
+	public PageListener() {
 	}
 
 	@Override
@@ -32,7 +26,7 @@ public class PageListener implements IPageListener {
 
 	/** Adds a part listener for newly added parts */
 	public void addPartListener(IWorkbenchPage page) {
-		final PartListener partListener = new PartListener(userActionManager);
+		final PartListener partListener = new PartListener();
 		page.addPartListener(partListener);
 
 		// trigger already opened part

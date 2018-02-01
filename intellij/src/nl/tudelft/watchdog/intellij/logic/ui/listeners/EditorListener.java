@@ -4,14 +4,13 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.*;
 
-import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
-import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
+
+import java.util.Date;
 
 /** Editor listener for all user-triggered events. */
 public class EditorListener {
     private final Editor editor;
-    private final WatchDogEventManager eventManager;
     private final Document document;
 
     private DocumentListener documentListener;
@@ -19,8 +18,7 @@ public class EditorListener {
     private VisibleAreaListener  visibleAreaListener;
 
     /** Enriches the supplied editor with all suitable listeners. */
-    public EditorListener(WatchDogEventManager eventManager, Editor editor) {
-        this.eventManager = eventManager;
+    public EditorListener(Editor editor) {
         this.editor = editor;
         this.document = editor.getDocument();
         listenToDocumentChanges();
@@ -28,17 +26,14 @@ public class EditorListener {
     }
 
     /**
-     * Adds a document change listener to the supplied editor. Fires a
-     * {@link EditorEvent} when a change to a document is made.
-     *
-     * @throws IllegalArgumentException
+     * Adds a document change listener to the supplied editor.
      */
-    private void listenToDocumentChanges() throws IllegalArgumentException {
+    private void listenToDocumentChanges() {
         documentListener = new DocumentListener() {
 
             @Override
             public void beforeDocumentChange(DocumentEvent event) {
-                eventManager.update(new EditorEvent(editor, EventType.START_EDIT));
+                WatchDogEventType.START_EDIT.process(editor);
             }
 
             @Override
@@ -58,9 +53,7 @@ public class EditorListener {
                 int new_length = event.getNewFragment().length();
                 int old_length = event.getOldFragment().length();
                 int modCount = Math.max(old_length, new_length);
-                EditorEvent edEvent = new EditorEvent(editor, EventType.SUBSEQUENT_EDIT);
-                edEvent.setModCount(modCount);
-                eventManager.update(edEvent);
+                WatchDogEventType.SUBSEQUENT_EDIT.process(new Date(), new WatchDogEventType.EditorWithModCount(editor, modCount));
             }
 
         };
@@ -72,7 +65,7 @@ public class EditorListener {
         caretListener = new CaretListener() {
             @Override
             public void caretPositionChanged(CaretEvent e) {
-                eventManager.update(new EditorEvent(editor, EventType.CARET_MOVED));
+                WatchDogEventType.CARET_MOVED.process(editor);
                 // cursor place changed
             }
 
@@ -93,7 +86,7 @@ public class EditorListener {
             @Override
             public void visibleAreaChanged(VisibleAreaEvent e) {
                 if(e.getEditor().isViewer()) {
-                    eventManager.update(new EditorEvent(editor, EventType.PAINT));
+                    WatchDogEventType.PAINT.process(editor);
                 }
             }
         };

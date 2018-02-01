@@ -2,25 +2,22 @@ package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 
 import com.intellij.openapi.application.ApplicationActivationListener;
 import com.intellij.openapi.wm.IdeFrame;
-import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 
 public class IntelliJActivationListener implements ApplicationActivationListener {
 
-    private final WatchDogEventManager eventManager;
+    public IntelliJActivationListener() {
 
-    public IntelliJActivationListener(WatchDogEventManager eventManager) {
-        this.eventManager = eventManager;
     }
 
     @Override
     public void applicationActivated(IdeFrame ideFrame) {
-        eventManager.update(new WatchDogEvent(ideFrame, WatchDogEvent.EventType.ACTIVE_WINDOW));
+        WatchDogEventType.ACTIVE_WINDOW.process(ideFrame);
     }
 
     @Override
     public void applicationDeactivated(IdeFrame ideFrame) {
-        eventManager.update(new WatchDogEvent(ideFrame, WatchDogEvent.EventType.INACTIVE_WINDOW));
+        WatchDogEventType.INACTIVE_WINDOW.process(ideFrame);
     }
 
     @Override

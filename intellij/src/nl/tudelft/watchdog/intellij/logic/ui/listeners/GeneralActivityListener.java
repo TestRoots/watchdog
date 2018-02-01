@@ -1,8 +1,6 @@
 package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 
-import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
 import java.awt.*;
@@ -19,14 +17,14 @@ public class GeneralActivityListener {
 
 
     /** Constructor. */
-    public GeneralActivityListener(final WatchDogEventManager eventManager, final String projectName) {
+    public GeneralActivityListener(final String projectName) {
         mouseActivityListener = new AWTEventListener() {
             @Override
             public void eventDispatched(AWTEvent event) {
                 if (!WatchDogUtils.getProjectName().equals(projectName)) {
                     return;
                 }
-                eventManager.update(new WatchDogEvent(event, EventType.USER_ACTIVITY));
+                 WatchDogEventType.USER_ACTIVITY.process(event);
             }
         };
 
@@ -45,7 +43,7 @@ public class GeneralActivityListener {
                     case KeyEvent.VK_LEFT:
                     case KeyEvent.VK_PAGE_DOWN:
                     case KeyEvent.VK_PAGE_UP:
-                        eventManager.update(new WatchDogEvent(event, EventType.USER_ACTIVITY));
+                        WatchDogEventType.USER_ACTIVITY.process(event);
                 }
             }
         };

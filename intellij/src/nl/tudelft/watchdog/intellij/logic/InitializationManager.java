@@ -1,14 +1,20 @@
 package nl.tudelft.watchdog.intellij.logic;
 
 import com.intellij.ide.plugins.PluginManager;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
+import nl.tudelft.watchdog.core.logic.document.Document;
+import nl.tudelft.watchdog.core.logic.document.EditorWrapperBase;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.network.TransferManagerBase;
 import nl.tudelft.watchdog.core.logic.ui.TimeSynchronityChecker;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
+import nl.tudelft.watchdog.intellij.logic.document.DocumentCreator;
+import nl.tudelft.watchdog.intellij.logic.document.EditorWrapper;
 import nl.tudelft.watchdog.intellij.logic.interval.IntervalManager;
+import nl.tudelft.watchdog.intellij.logic.interval.intervaltypes.JUnitInterval;
 import nl.tudelft.watchdog.intellij.logic.storage.Persister;
-import nl.tudelft.watchdog.intellij.logic.ui.WatchDogEventManager;
 import nl.tudelft.watchdog.intellij.logic.ui.listeners.IntelliJListener;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
@@ -22,8 +28,6 @@ import java.util.HashMap;
  */
 public class InitializationManager {
 
-    private static final int USER_ACTIVITY_TIMEOUT = 16000;
-
     /**
      * The map containing the InitializationManager for each open IntelliJ project.
      */
@@ -32,10 +36,6 @@ public class InitializationManager {
     private final Persister toTransferPersister;
     private final Persister statisticsPersister;
 
-    /**
-     * Tracks all watchdog events which are related to intervals.
-     */
-    private final WatchDogEventManager watchDogEventManager;
     /**
      * Tracks all one-time events for debugging and static analysis.
      */
@@ -62,17 +62,32 @@ public class InitializationManager {
                 statisticsDatabaseFile);
 
         // Initialize managers
-        intervalManager = new IntervalManager(toTransferPersister,
-                statisticsPersister);
+        intervalManager = new IntervalManager(toTransferPersister, statisticsPersister);
+        WatchDogEventType.intervalManager = intervalManager;
+        WatchDogEventType.editorSpecificImplementation = new WatchDogEventType.WatchDogEventEditorSpecificImplementation() {
+            @Override
+            public void addJUnitInterval(Object source) {
+                JUnitInterval junitInterval = (JUnitInterval) source;
+                intervalManager.addInterval(junitInterval);
+            }
+
+            @Override
+            public EditorWrapperBase createEditorWrapper(Object editor) {
+                return new EditorWrapper((Editor) editor);
+            }
+
+            @Override
+            public Document createDocument(Object editor) {
+                return DocumentCreator.createDocument((Editor) editor);
+            }
+        };
         trackingEventManager = new TrackingEventManager(toTransferPersister, statisticsPersister);
         trackingEventManager.setSessionSeed(intervalManager.getSessionSeed());
-        watchDogEventManager = new WatchDogEventManager(intervalManager,
-                USER_ACTIVITY_TIMEOUT);
-        new TimeSynchronityChecker(intervalManager, watchDogEventManager);
+        new TimeSynchronityChecker(intervalManager);
         transferManager = new TransferManagerBase(toTransferPersister, WatchDogUtils.getProjectName());
 
         // Initialize listeners
-        intelliJListener = new IntelliJListener(watchDogEventManager, trackingEventManager, project);
+        intelliJListener = new IntelliJListener(trackingEventManager, project);
         intelliJListener.attachListeners();
     }
 
@@ -114,10 +129,6 @@ public class InitializationManager {
         initializationManagers.remove(projectName);
     }
 
-
-    public WatchDogEventManager getWatchDogEventManager() {
-        return watchDogEventManager;
-    }
 
     /** @return the debug event manager. */
     public TrackingEventManager getTrackingEventManager() {

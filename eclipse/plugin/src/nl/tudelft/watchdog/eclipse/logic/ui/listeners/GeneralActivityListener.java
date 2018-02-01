@@ -1,8 +1,6 @@
 package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -16,15 +14,13 @@ import org.eclipse.swt.widgets.Listener;
 public class GeneralActivityListener {
 
 	/** Constructor. */
-	public GeneralActivityListener(final WatchDogEventManager eventManager,
-			Display display) {
+	public GeneralActivityListener(Display display) {
 		display.addFilter(SWT.KeyDown | SWT.KeyUp | SWT.MouseDown | SWT.MouseUp
 				| SWT.MouseMove, new Listener() {
 
 			@Override
 			public void handleEvent(Event event) {
-				eventManager.update(new WatchDogEvent(event,
-						EventType.USER_ACTIVITY));
+				WatchDogEventType.USER_ACTIVITY.process(event);
 			}
 		});
 	}

@@ -56,6 +56,10 @@ public class WatchDogGlobals {
 	public static void setLogDirectory(String logDirectory) {
 		WatchDogGlobals.logDirectory = logDirectory;
 	}
+	
+	public static int getUserInactivityTimeoutDuration() {
+		return 16000;
+	}
 
 	/** Describes the different supported IDE plugin hosts. */
 	public enum IDE {

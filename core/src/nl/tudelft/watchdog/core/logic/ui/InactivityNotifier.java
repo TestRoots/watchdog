@@ -4,8 +4,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventTypeInterface;
 
 /**
  * A performance-optimized notifier for a timeout when its {@link #trigger()}
@@ -18,22 +17,19 @@ import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
  */
 public class InactivityNotifier {
 	
-	protected final WatchDogEventManagerBase eventManager;
-
 	private int activityTimeout;
 
 	private Timer activityTimer;
 
 	private ActivityTimerTask activityTimerTask;
 
-	private EventType eventType;
+	private WatchDogEventTypeInterface eventType;
 
 	private boolean isRunning;
 
 	/** Constructor. */
-	public InactivityNotifier(WatchDogEventManagerBase eventManager, int activityTimeout,
-			EventType type) {
-		this.eventManager = eventManager;
+	public InactivityNotifier(int activityTimeout,
+			WatchDogEventTypeInterface type) {
 		this.activityTimeout = activityTimeout;
 		this.eventType = type;
 		this.isRunning = false;
@@ -57,6 +53,10 @@ public class InactivityNotifier {
 			createNewTimer();
 		}
 	}
+
+	public void trigger(Date forcedDate) {
+	    this.trigger();
+    }
 
 	private void createNewTimer() {
 		activityTimer = new Timer(true);
@@ -84,13 +84,13 @@ public class InactivityNotifier {
 	private class ActivityTimerTask extends TimerTask {
 
 		protected void run(Date forcedDate) {
-			eventManager.update(new WatchDogEvent(this, eventType), forcedDate);
+		    eventType.process(forcedDate, this);
 			isRunning = false;
 		}
 
 		@Override
 		public void run() {
-			eventManager.update(new WatchDogEvent(this, eventType));
+		    eventType.process(this);
 			isRunning = false;
 		}
 	}

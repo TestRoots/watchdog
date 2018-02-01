@@ -1,8 +1,6 @@
 package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
-import nl.tudelft.watchdog.core.logic.ui.events.EditorEvent;
-import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEvent.EventType;
-import nl.tudelft.watchdog.eclipse.logic.ui.WatchDogEventManager;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -15,34 +13,28 @@ import org.eclipse.ui.texteditor.ITextEditor;
 public class PartListener implements IPartListener {
 
 	/** Constructor. */
-	public PartListener(WatchDogEventManager userActionManager) {
-		this.eventManager = userActionManager;
+	public PartListener() {
 	}
-
-	/** The eventObservable. */
-	private WatchDogEventManager eventManager;
 
 	@Override
 	public void partOpened(IWorkbenchPart part) {
 		if (part instanceof ITextEditor) {
 			ITextEditor editor = (ITextEditor) part;
-			new EditorListener(eventManager, editor);
+			new EditorListener(editor);
 		}
 	}
 
 	@Override
 	public void partDeactivated(IWorkbenchPart part) {
 		if (part instanceof ITextEditor) {
-			eventManager
-					.update(new EditorEvent(part, EventType.INACTIVE_FOCUS));
+			WatchDogEventType.INACTIVE_FOCUS.process(part);
 		}
 	}
 
 	@Override
 	public void partClosed(IWorkbenchPart part) {
 		if (part instanceof ITextEditor) {
-			eventManager
-					.update(new EditorEvent(part, EventType.INACTIVE_FOCUS));
+			WatchDogEventType.INACTIVE_FOCUS.process(part);
 		}
 	}
 
@@ -53,7 +45,7 @@ public class PartListener implements IPartListener {
 	@Override
 	public void partActivated(IWorkbenchPart part) {
 		if (part instanceof ITextEditor) {
-			eventManager.update(new EditorEvent(part, EventType.ACTIVE_FOCUS));
+			WatchDogEventType.ACTIVE_FOCUS.process(part);
 		}
 	}
 
