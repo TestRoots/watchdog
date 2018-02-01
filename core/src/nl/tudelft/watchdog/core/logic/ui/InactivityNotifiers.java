@@ -5,7 +5,7 @@ import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 
 import java.util.Date;
 
-public enum InActivityNotifiers {
+public enum InactivityNotifiers {
 
     USER_INACTIVITY(new UserInactivityNotifier(WatchDogGlobals.getUserInactivityTimeoutDuration(), WatchDogEventType.USER_INACTIVITY)),
     READING(new InactivityNotifier(WatchDogGlobals.getUserInactivityTimeoutDuration(), WatchDogEventType.READING_INACTIVITY)),
@@ -13,7 +13,7 @@ public enum InActivityNotifiers {
 
     private InactivityNotifier inactivityNotifier;
 
-    InActivityNotifiers(InactivityNotifier inactivityNotifier) {
+    InactivityNotifiers(InactivityNotifier inactivityNotifier) {
         this.inactivityNotifier = inactivityNotifier;
     }
 

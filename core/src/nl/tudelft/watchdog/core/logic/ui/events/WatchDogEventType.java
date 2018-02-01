@@ -4,12 +4,17 @@ import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.document.EditorWrapperBase;
 import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.*;
-import nl.tudelft.watchdog.core.logic.ui.InActivityNotifiers;
+import nl.tudelft.watchdog.core.logic.ui.InactivityNotifiers;
 
 import java.util.Date;
 
-/** The different type of events. */
-@SuppressWarnings("javadoc")
+/**
+ * Enum that specifies the types of events WatchDog handles. Each
+ * event invokes either the creation or deletion of intervals by
+ * the {@link WatchDogEventType#intervalManager}. Each enum
+ * specifies when and how intervals are created and are invoked
+ * by listeners that generate the corresponding events.
+ */
 public enum WatchDogEventType implements WatchDogEventTypeInterface {
 
     ACTIVE_WINDOW {
@@ -19,24 +24,30 @@ public enum WatchDogEventType implements WatchDogEventTypeInterface {
             if (isClosed(interval)) {
                 intervalManager.addInterval(new IDEActiveInterval(forcedDate));
             }
-            InActivityNotifiers.USER_INACTIVITY.trigger(forcedDate);
+            InactivityNotifiers.USER_INACTIVITY.trigger(forcedDate);
         }
-    }, INACTIVE_WINDOW {
+    },
+
+    INACTIVE_WINDOW {
         @Override
         public void process(Date forcedDate, Object source) {
             IDEActiveInterval interval = intervalManager.getInterval(IDEActiveInterval.class);
             intervalManager.closeInterval(interval, forcedDate);
         }
-    }, START_IDE {
+    },
+
+    START_IDE {
         @Override
         public void process(Date forcedDate, Object source) {
             intervalManager.addInterval(new IDEOpenInterval(forcedDate));
-            InActivityNotifiers.USER_INACTIVITY.trigger(forcedDate);
+            InactivityNotifiers.USER_INACTIVITY.trigger(forcedDate);
         }
-    }, END_IDE {
+    },
+
+    END_IDE {
         @Override
         public void process(Date forcedDate, Object source) {
-            InActivityNotifiers.USER_INACTIVITY.cancelTimer(forcedDate);
+            InactivityNotifiers.USER_INACTIVITY.cancelTimer(forcedDate);
         }
     },
 
@@ -45,15 +56,19 @@ public enum WatchDogEventType implements WatchDogEventTypeInterface {
         public void process(Date forcedDate, Object editor) {
             processReadingEvent(forcedDate, editor);
         }
-    }, INACTIVE_FOCUS {
+    },
+
+    INACTIVE_FOCUS {
         @Override
         public void process(Date forcedDate, Object source) {
             EditorIntervalBase editorInterval = intervalManager.getEditorInterval();
             intervalManager.closeInterval(editorInterval, forcedDate);
-            InActivityNotifiers.READING.cancelTimer(forcedDate);
-            InActivityNotifiers.TYPING.cancelTimer(forcedDate);
+            InactivityNotifiers.READING.cancelTimer(forcedDate);
+            InactivityNotifiers.TYPING.cancelTimer(forcedDate);
         }
-    }, SUBSEQUENT_EDIT {
+    },
+
+    SUBSEQUENT_EDIT {
         @Override
         public void process(Date forcedDate, Object source) {
             EditorWithModCount editorWithModCount = (EditorWithModCount) source;
@@ -70,16 +85,18 @@ public enum WatchDogEventType implements WatchDogEventTypeInterface {
             TypingInterval typingInt = (TypingInterval) editorInterval;
             typingInt.increaseModCountWith(editorWithModCount.modCount);
 
-            InActivityNotifiers.TYPING.trigger();
-            InActivityNotifiers.USER_INACTIVITY.trigger(forcedDate);
+            InactivityNotifiers.TYPING.trigger();
+            InactivityNotifiers.USER_INACTIVITY.trigger(forcedDate);
         }
-    }, START_EDIT {
+    },
+
+    START_EDIT {
         @Override
         public void process(Date forcedDate, Object editor) {
             EditorIntervalBase editorInterval = intervalManager
                     .getEditorInterval();
 
-            InActivityNotifiers.READING.cancelTimer(forcedDate);
+            InactivityNotifiers.READING.cancelTimer(forcedDate);
             if (intervalExistsAndIsOfType(editorInterval, IntervalType.TYPING)
                     && !isDifferentEditor(editorInterval, editor)) {
                 return;
@@ -99,28 +116,35 @@ public enum WatchDogEventType implements WatchDogEventTypeInterface {
             typingInterval.setDocument(document);
             intervalManager.addInterval(typingInterval);
 
-            InActivityNotifiers.TYPING.trigger();
-            InActivityNotifiers.USER_INACTIVITY.trigger(forcedDate);
+            InactivityNotifiers.TYPING.trigger();
+            InactivityNotifiers.USER_INACTIVITY.trigger(forcedDate);
         }
-    }, CARET_MOVED {
-        @Override
-        public void process(Date forcedDate, Object editor) {
-            processReadingEvent(forcedDate, editor);
-        }
-    }, PAINT {
+    },
+
+    CARET_MOVED {
         @Override
         public void process(Date forcedDate, Object editor) {
             processReadingEvent(forcedDate, editor);
         }
     },
+
+    PAINT {
+        @Override
+        public void process(Date forcedDate, Object editor) {
+            processReadingEvent(forcedDate, editor);
+        }
+    },
+
     START_PERSPECTIVE {
         @Override
         public void process(Date forcedDate, Object source) {
             PerspectiveInterval.Perspective perspective = (PerspectiveInterval.Perspective) source;
             createNewPerspectiveInterval(perspective, forcedDate);
-            InActivityNotifiers.USER_INACTIVITY.trigger(forcedDate);
+            InactivityNotifiers.USER_INACTIVITY.trigger(forcedDate);
         }
-    }, JUNIT {
+    },
+
+    JUNIT {
         @Override
         public void process(Date forcedDate, Object source) {
             editorSpecificImplementation.addJUnitInterval(source);
@@ -134,17 +158,21 @@ public enum WatchDogEventType implements WatchDogEventTypeInterface {
             if (isClosed(interval)) {
                 intervalManager.addInterval(new UserActiveInterval(forcedDate));
             }
-            InActivityNotifiers.USER_INACTIVITY.trigger();
+            InactivityNotifiers.USER_INACTIVITY.trigger();
         }
-    }, USER_INACTIVITY {
+    },
+
+    USER_INACTIVITY {
         @Override
         public void process(Date forcedDate, Object source) {
             IntervalBase interval = intervalManager.getInterval(UserActiveInterval.class);
             intervalManager.closeInterval(interval, forcedDate);
-            InActivityNotifiers.TYPING.cancelTimer(forcedDate);
-            InActivityNotifiers.READING.cancelTimer(forcedDate);
+            InactivityNotifiers.TYPING.cancelTimer(forcedDate);
+            InactivityNotifiers.READING.cancelTimer(forcedDate);
         }
-    }, TYPING_INACTIVITY {
+    },
+
+    TYPING_INACTIVITY {
         @Override
         public void process(Date forcedDate, Object source) {
             EditorIntervalBase editorInterval = intervalManager.getEditorInterval();
@@ -152,7 +180,9 @@ public enum WatchDogEventType implements WatchDogEventTypeInterface {
                 intervalManager.closeInterval(editorInterval, forcedDate);
             }
         }
-    }, READING_INACTIVITY {
+    },
+
+    READING_INACTIVITY {
         @Override
         public void process(Date forcedDate, Object source) {
             EditorIntervalBase editorInterval = intervalManager.getEditorInterval();
@@ -170,9 +200,11 @@ public enum WatchDogEventType implements WatchDogEventTypeInterface {
                 intervalManager
                         .addInterval(new WatchDogViewInterval(forcedDate));
             }
-            InActivityNotifiers.USER_INACTIVITY.trigger(forcedDate);
+            InactivityNotifiers.USER_INACTIVITY.trigger(forcedDate);
         }
-    }, END_WATCHDOGVIEW {
+    },
+
+    END_WATCHDOGVIEW {
         @Override
         public void process(Date forcedDate, Object source) {
             WatchDogViewInterval interval = intervalManager.getInterval(WatchDogViewInterval.class);
@@ -180,16 +212,20 @@ public enum WatchDogEventType implements WatchDogEventTypeInterface {
                 intervalManager.closeInterval(interval, forcedDate);
             }
         }
-    }, START_DEBUG {
+    },
+
+    START_DEBUG {
         @Override
         public void process(Date forcedDate, Object source) {
             DebugInterval interval = intervalManager.getInterval(DebugInterval.class);
             if(!intervalExistsAndIsOfType(interval, IntervalType.DEBUG)) {
                 intervalManager.addInterval(new DebugInterval(forcedDate));
             }
-            InActivityNotifiers.USER_INACTIVITY.trigger(forcedDate);
+            InactivityNotifiers.USER_INACTIVITY.trigger(forcedDate);
         }
-    }, END_DEBUG {
+    },
+
+    END_DEBUG {
         @Override
         public void process(Date forcedDate, Object source) {
             DebugInterval interval = intervalManager.getInterval(DebugInterval.class);
@@ -242,8 +278,8 @@ public enum WatchDogEventType implements WatchDogEventTypeInterface {
             intervalManager.addInterval(readingInterval);
         }
 
-        InActivityNotifiers.READING.trigger();
-        InActivityNotifiers.USER_INACTIVITY.trigger(forcedDate);
+        InactivityNotifiers.READING.trigger();
+        InactivityNotifiers.USER_INACTIVITY.trigger(forcedDate);
     }
 
     public static class EditorWithModCount {

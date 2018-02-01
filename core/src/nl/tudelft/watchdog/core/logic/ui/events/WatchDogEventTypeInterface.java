@@ -2,7 +2,7 @@ package nl.tudelft.watchdog.core.logic.ui.events;
 
 import java.util.Date;
 
-interface WatchDogEventTypeInterface {
+public interface WatchDogEventTypeInterface {
     void process(Date forcedDate, Object source);
 
     default void process() {
