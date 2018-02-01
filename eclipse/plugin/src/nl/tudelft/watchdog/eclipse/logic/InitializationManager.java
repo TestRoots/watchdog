@@ -135,7 +135,7 @@ public class InitializationManager {
 		}
 		
 		@Override
-		public void updatePerspectiveInterval() {
+		public void processPerspectiveInterval() {
 			PerspectiveInterval perspectiveInt = this.intervalManager
 					.getInterval(PerspectiveInterval.class);
 			if (perspectiveInt != null) {

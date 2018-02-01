@@ -62,7 +62,7 @@ public class TimeSynchronityChecker extends RegularCheckerBase {
 							previousExecutionDate + UPDATE_RATE));
 					intervalManager.generateAndSetSessionSeed();
                     WatchDogEventType.START_IDE.process(this);
-                    WatchDogEventType.editorSpecificImplementation.updatePerspectiveInterval();
+                    WatchDogEventType.editorSpecificImplementation.processPerspectiveInterval();
 				}
 			}
 

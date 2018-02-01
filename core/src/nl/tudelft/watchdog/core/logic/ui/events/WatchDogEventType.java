@@ -299,6 +299,6 @@ public enum WatchDogEventType implements WatchDogEventTypeInterface {
 
         Document createDocument(Object editor);
 
-        default void updatePerspectiveInterval() {}
+        default void processPerspectiveInterval() {}
     }
 }
