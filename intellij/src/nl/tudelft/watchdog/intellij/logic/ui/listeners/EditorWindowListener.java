@@ -19,8 +19,8 @@ public class EditorWindowListener implements EditorFactoryListener, Disposable {
     private EditorFocusListener focusListener;
 
     /**
-     * Every editor that is created is associated with a tree of disposables.
-     * The parent Disposable is registered with each associated listener to
+     * We associate every editor that is created with a tree of disposables.
+     * The parent {@link Disposable} is registered with each associated listener to
      * events of the editor. By using Disposable for this structure, we can
      * properly cleanup all listeners once we dispose ourselves.
      */
@@ -71,6 +71,6 @@ public class EditorWindowListener implements EditorFactoryListener, Disposable {
     @Override
     public void dispose() {
         editorDisposableTreeMap.keySet()
-                .forEach(editor ->Disposer.dispose(editorDisposableTreeMap.remove(editor)));
+                .forEach(editor -> Disposer.dispose(editorDisposableTreeMap.remove(editor)));
     }
 }

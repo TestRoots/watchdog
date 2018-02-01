@@ -30,6 +30,7 @@ import java.util.HashMap;
  */
 public class InitializationManager {
 
+    private static final String PLUGIN_ID = "nl.tudelft.watchdog";
     /**
      * The map containing the InitializationManager for each open IntelliJ project.
      */
@@ -51,10 +52,10 @@ public class InitializationManager {
      * Private constructor.
      */
     private InitializationManager(Project project) {
-        final IdeaPluginDescriptor plugin = PluginManager.getPlugin(PluginId.findId("nl.tudelft.watchdog"));
+        final IdeaPluginDescriptor plugin = PluginManager.getPlugin(PluginId.findId(PLUGIN_ID));
 
         if (plugin == null) {
-            throw new IllegalArgumentException("Plugin id \"nl.tudelft.watchdog\" could not be found in the list of installed plugins.");
+            throw new IllegalArgumentException("Plugin id \"" + PLUGIN_ID + "\" could not be found in the list of installed plugins.");
         }
 
         // Double getPath() because they are different methods on different objects
