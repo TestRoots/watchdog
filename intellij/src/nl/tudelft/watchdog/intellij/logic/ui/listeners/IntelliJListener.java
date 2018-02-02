@@ -58,6 +58,15 @@ public class IntelliJListener implements Disposable {
     private void attachListeners() {
         WatchDogEventType.START_IDE.process(this);
 
+        // Most of the listener APIs in IntelliJ accept a `Disposable` argument.
+        // Whenever you want to add a Listener to something, you have to supply a `Disposable`.
+        // Whenever this `Disposable` is disposed, the listener is automatically removed.
+        //
+        // Sadly, not all listener methods follow this pattern. `addEditorFactoryListener` does,
+        // but `addAWTEventListener` as used in `GeneralActivityListener` does not.
+        //
+        // Lastly, the messageBus (`connection`) is already registered in the constructor with
+        // `connection = messageBus.connect(); Disposer.register(this, connection);`
         connection.subscribe(ApplicationActivationListener.TOPIC,
                 new IntelliJActivationListener());
         Disposer.register(this, new GeneralActivityListener(project.getName()));
