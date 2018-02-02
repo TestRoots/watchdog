@@ -19,7 +19,7 @@ import nl.tudelft.watchdog.intellij.logic.event.listeners.DebugEventListener;
 
 /**
  * Sets up the listeners for IntelliJ UI events and registers the shutdown
- * listeners.
+ * listeners. It cleans up all its child listeners in {@link #dispose()}.
  */
 public class IntelliJListener implements Disposable {
     

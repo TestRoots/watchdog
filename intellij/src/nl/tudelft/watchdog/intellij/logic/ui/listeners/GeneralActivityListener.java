@@ -9,7 +9,7 @@ import java.awt.event.*;
 
 /**
  * A listener that determines whether there was general activity in the IntelliJ
- * window.
+ * window. It cleans up all its child listeners in {@link #dispose()}.
  */
 public class GeneralActivityListener implements Disposable {
 

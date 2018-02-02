@@ -46,8 +46,6 @@ public class EditorWindowListener implements EditorFactoryListener, Disposable {
 
         Disposable parentDisposable = Disposer.newDisposable();
         Disposer.register(parentDisposable, new EditorListener(editor));
-        final MarkupModelImpl markupModel = (MarkupModelImpl) DocumentMarkupModel.forDocument(editor.getDocument(), this.project, true);
-        markupModel.addMarkupModelListener(parentDisposable, new IntelliJMarkupModelListener(trackingEventManager));
 
         editorDisposableTreeMap.put(editor, parentDisposable);
     }
