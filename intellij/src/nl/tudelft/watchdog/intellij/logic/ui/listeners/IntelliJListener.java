@@ -65,8 +65,7 @@ public class IntelliJListener implements Disposable {
         // Sadly, not all listener methods follow this pattern. `addEditorFactoryListener` does,
         // but `addAWTEventListener` as used in `GeneralActivityListener` does not.
         //
-        // Lastly, the messageBus (`connection`) is already registered in the constructor with
-        // `connection = messageBus.connect(); Disposer.register(this, connection);`
+        // Lastly, the messageBus (`connection`) is already registered in the constructor
         connection.subscribe(ApplicationActivationListener.TOPIC,
                 new IntelliJActivationListener());
         Disposer.register(this, new GeneralActivityListener(project.getName()));
