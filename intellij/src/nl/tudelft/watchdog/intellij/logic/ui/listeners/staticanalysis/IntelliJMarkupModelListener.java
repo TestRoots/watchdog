@@ -14,7 +14,6 @@ import com.intellij.openapi.project.DumbServiceImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
-import nl.tudelft.watchdog.core.logic.event.eventtypes.TrackingEventType;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.staticanalysis.StaticAnalysisType;
 import nl.tudelft.watchdog.core.logic.ui.listeners.CoreMarkupModelListener;
 import org.jetbrains.annotations.NotNull;
@@ -59,14 +58,14 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
     @Override
     public void afterAdded(@NotNull RangeHighlighterEx rangeHighlighterEx) {
         if (rangeHighlighterEx.getLayer() == HighlighterLayer.WARNING) {
-            this.highlightersPerType.add(new StaticAnalysisWarning(StaticAnalysisType.UNKNOWN, TrackingEventType.SA_WARNING_CREATED));
+            addCreatedWarning(StaticAnalysisType.UNKNOWN);
         }
     }
 
     @Override
     public void beforeRemoved(@NotNull RangeHighlighterEx rangeHighlighterEx) {
         if (rangeHighlighterEx.getLayer() == HighlighterLayer.WARNING) {
-            this.highlightersPerType.add(new StaticAnalysisWarning(StaticAnalysisType.UNKNOWN, TrackingEventType.SA_WARNING_REMOVED));
+            addRemovedWarning(StaticAnalysisType.UNKNOWN);
         }
     }
 
