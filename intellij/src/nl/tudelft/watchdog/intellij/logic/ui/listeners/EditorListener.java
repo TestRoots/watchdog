@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.intellij.logic.ui.listeners;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.*;
@@ -9,7 +10,7 @@ import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 import java.util.Date;
 
 /** Editor listener for all user-triggered events. */
-public class EditorListener {
+public class EditorListener implements Disposable {
     private final Editor editor;
     private final Document document;
 
@@ -18,7 +19,7 @@ public class EditorListener {
     private VisibleAreaListener  visibleAreaListener;
 
     /** Enriches the supplied editor with all suitable listeners. */
-    public EditorListener(Editor editor) {
+    EditorListener(Editor editor) {
         this.editor = editor;
         this.document = editor.getDocument();
         listenToDocumentChanges();
@@ -82,20 +83,17 @@ public class EditorListener {
         editor.getCaretModel().addCaretListener(caretListener);
 
         // creates a listener for redraws of the view, e.g. when scrolled
-        visibleAreaListener = new VisibleAreaListener() {
-            @Override
-            public void visibleAreaChanged(VisibleAreaEvent e) {
-                if(e.getEditor().isViewer()) {
-                    WatchDogEventType.PAINT.process(editor);
-                }
+        visibleAreaListener = e -> {
+            if(e.getEditor().isViewer()) {
+                WatchDogEventType.PAINT.process(editor);
             }
         };
         editor.getScrollingModel().addVisibleAreaListener(visibleAreaListener);
 
     }
 
-    /** Removes all listeners registered with this editor. */
-    public void removeListeners() {
+    @Override
+    public void dispose() {
         document.removeDocumentListener(documentListener);
         if (editor == null) {
             return;

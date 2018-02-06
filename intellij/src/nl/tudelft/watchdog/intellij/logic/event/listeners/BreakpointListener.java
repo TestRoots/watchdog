@@ -24,7 +24,7 @@ import java.util.Map;
  * {@link BreakpointEventBase} is generated and given to the
  * {@link TrackingEventManager}.
  */
-public class BreakpointListener implements XBreakpointListener {
+public class BreakpointListener implements XBreakpointListener<XBreakpoint<?>> {
 
     /** The event manager that should receive the generated events. */
     private final TrackingEventManager trackingEventManager;
@@ -38,7 +38,7 @@ public class BreakpointListener implements XBreakpointListener {
     /** Constructor. */
     public BreakpointListener(TrackingEventManager trackingEventManager) {
         this.trackingEventManager = trackingEventManager;
-        this.breakpoints = new HashMap<Integer, Breakpoint>();
+        this.breakpoints = new HashMap<>();
     }
 
     @Override
