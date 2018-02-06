@@ -64,6 +64,7 @@ public class InitializationManager {
 				statisticsPersister);
 		trackingEventManager.setSessionSeed(intervalManager.getSessionSeed());
 		
+		WatchDogEventType.intervalManager = intervalManager;
 		WatchDogEventType.editorSpecificImplementation = new EclipseWatchDogEventSpecificImplementation(intervalManager);
 
 		new TimeSynchronityChecker(intervalManager);

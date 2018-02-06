@@ -1,5 +1,8 @@
 package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
@@ -21,7 +24,7 @@ public class WorkbenchListener {
 	private TransferManager transferManager;
 
 	/** The debug event manager used to process debug events. */
-	private TrackingEventManager TrackingEventManager;
+	private TrackingEventManager trackingEventManager;
 
 	/**
 	 * The window listener. An Eclipse window is the whole Eclipse application
@@ -31,6 +34,8 @@ public class WorkbenchListener {
 
 	private IWorkbench workbench;
 
+	private EclipseMarkupModelListener markupModelListener;
+
 	/**
 	 * Constructor.
 	 *
@@ -38,7 +43,7 @@ public class WorkbenchListener {
 	 */
 	public WorkbenchListener(TrackingEventManager TrackingEventManager,
 			TransferManager transferManager) {
-		this.TrackingEventManager = TrackingEventManager;
+		this.trackingEventManager = TrackingEventManager;
 		this.transferManager = transferManager;
 		this.workbench = PlatformUI.getWorkbench();
 	}
@@ -56,6 +61,7 @@ public class WorkbenchListener {
 		new GeneralActivityListener(workbench.getDisplay());
 		addDebuggerListeners();
 		addShutdownListeners();
+		addStaticAnalysisListeners();
 	}
 
 	/** Initializes the listeners for debug intervals and events. */
@@ -64,9 +70,9 @@ public class WorkbenchListener {
 		debugPlugin.addDebugEventListener(
 				new DebuggerListener());
 		debugPlugin.getBreakpointManager().addBreakpointListener(
-				new BreakpointListener(TrackingEventManager));
+				new BreakpointListener(trackingEventManager));
 		debugPlugin.addDebugEventListener(
-				new DebugEventListener(TrackingEventManager));
+				new DebugEventListener(trackingEventManager));
 	}
 
 	/** The shutdown listeners, executed when Eclipse is shutdown. */
@@ -78,6 +84,7 @@ public class WorkbenchListener {
 			@Override
 			public boolean preShutdown(final IWorkbench workbench,
 					final boolean forced) {
+				markupModelListener.dispose();
 				initializationManager = InitializationManager.getInstance();
 				WatchDogEventType.END_IDE.process(workbench);
 				initializationManager.getIntervalManager().closeAllIntervals();
@@ -90,6 +97,12 @@ public class WorkbenchListener {
 				initializationManager.shutdown();
 			}
 		});
+	}
+
+	private void addStaticAnalysisListeners() {
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		this.markupModelListener = new EclipseMarkupModelListener(this.trackingEventManager);
+		workspace.addResourceChangeListener(this.markupModelListener, IResourceChangeEvent.POST_BUILD);
 	}
 
 	/**

@@ -8,7 +8,9 @@ import java.util.Date;
 
 public class StaticAnalysisWarningEvent extends EventBase {
 
-    @SerializedName("sat")
+	private static final long serialVersionUID = -344289578682136085L;
+
+	@SerializedName("sat")
     private final StaticAnalysisType staticAnalysisType;
 
     public StaticAnalysisWarningEvent(StaticAnalysisType staticAnalysisType, TrackingEventType trackingEventType, Date creationDate) {

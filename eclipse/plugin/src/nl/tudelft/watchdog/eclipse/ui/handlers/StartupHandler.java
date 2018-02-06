@@ -44,6 +44,7 @@ public class StartupHandler implements IStartup {
 			UIUtils.refreshCommand(UIUtils.COMMAND_SHOW_INFO);
 			updateView();
 		} catch (Exception exception) {
+			exception.printStackTrace();
 			WatchDogLogger.getInstance()
 					.logSevere("Caught sever exception on top-level: ");
 			WatchDogLogger.getInstance().logSevere(exception);
