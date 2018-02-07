@@ -46,16 +46,10 @@ public class WorkbenchListener {
 		this.trackingEventManager = TrackingEventManager;
 		this.transferManager = transferManager;
 		this.workbench = PlatformUI.getWorkbench();
-	}
 
-	/**
-	 * Adds listeners to Workbench including already opened windows and
-	 * registers shutdown and debugger listeners.
-	 */
-	public void attachListeners() {
 		WatchDogEventType.START_IDE.process(workbench);
-		windowListener = new WindowListener();
-		workbench.addWindowListener(windowListener);
+		this.windowListener = new WindowListener();
+		this.workbench.addWindowListener(windowListener);
 		addListenersToAlreadyOpenWindows();
 		new JUnitListener();
 		new GeneralActivityListener(workbench.getDisplay());
@@ -101,8 +95,12 @@ public class WorkbenchListener {
 
 	private void addStaticAnalysisListeners() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		this.markupModelListener = new EclipseMarkupModelListener(this.trackingEventManager);
+		this.markupModelListener = this.createMarkupModelListener();
 		workspace.addResourceChangeListener(this.markupModelListener, IResourceChangeEvent.POST_BUILD);
+	}
+	
+	protected EclipseMarkupModelListener createMarkupModelListener() {
+		return new EclipseMarkupModelListener(this.trackingEventManager);
 	}
 
 	/**
