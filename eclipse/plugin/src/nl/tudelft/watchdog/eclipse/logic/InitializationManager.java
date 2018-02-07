@@ -69,11 +69,10 @@ public class InitializationManager {
 
 		new TimeSynchronityChecker(intervalManager);
 
-		// Initialize listeners
-		WorkbenchListener workbenchListener = new WorkbenchListener(
-				trackingEventManager, new TransferManager(
-						toTransferPersister, WatchDogUtils.getWorkspaceName()));
-		workbenchListener.attachListeners();
+		new WorkbenchListener(
+				trackingEventManager,
+				new TransferManager(toTransferPersister, WatchDogUtils.getWorkspaceName())
+		);
 	}
 
 	/**
