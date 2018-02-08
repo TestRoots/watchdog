@@ -91,8 +91,6 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
 		static MarkerHolder fromIMarker(IMarker marker) {
 			MarkerHolder holder = new MarkerHolder();
 			holder.message = marker.getAttribute(IMarker.MESSAGE, "");
-			
-			System.out.println(marker);
 			return holder;
 		}
 

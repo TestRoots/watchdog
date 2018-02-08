@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -13,6 +14,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.jobs.Job;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -78,7 +80,7 @@ public class MarkupModelListenerTest {
 				   .append('\n');
 		}
 		
-		return new ByteArrayInputStream(builder.toString().getBytes());
+		return new ByteArrayInputStream(builder.toString().getBytes(StandardCharsets.UTF_8));
 	}
 
 	@After
@@ -122,6 +124,52 @@ public class MarkupModelListenerTest {
 		Mockito.verify(this.trackingEventManager, Mockito.times(2)).addEvent(captor.capture());
 		assertTrue(captor.getAllValues().stream()
 				.allMatch(event -> event.getType() == TrackingEventType.SA_WARNING_CREATED));
+	}
+	
+	@Test
+	public void generates_removal_after_marker_is_deleted() throws Exception {
+		IMarker marker = this.testFile.createMarker(IMarker.PROBLEM);
+		marker.setAttribute(IMarker.LINE_NUMBER, 1);
+		IMarker marker2 = this.testFile.createMarker(IMarker.PROBLEM);
+		marker2.setAttribute(IMarker.LINE_NUMBER, 2);
+		
+		this.workspace.save(true, null);
+		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+		
+		this.testFile.appendContents(generateFileStreamLines(10), true, true, null);
+		marker.delete();
+		
+		this.workspace.save(true, null);
+		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+		
+		ArgumentCaptor<StaticAnalysisWarningEvent> captor = ArgumentCaptor.forClass(StaticAnalysisWarningEvent.class);
+		Mockito.verify(this.trackingEventManager, Mockito.times(3)).addEvent(captor.capture());
+		Assert.assertArrayEquals(captor.getAllValues().stream().map(StaticAnalysisWarningEvent::getType).toArray(),
+				new TrackingEventType[] {TrackingEventType.SA_WARNING_CREATED, TrackingEventType.SA_WARNING_CREATED, TrackingEventType.SA_WARNING_REMOVED});
+	}
+	
+	@Test
+	public void keeps_track_of_marker_deletions_based_on_message() throws Exception {
+		IMarker marker = this.testFile.createMarker(IMarker.PROBLEM);
+		marker.setAttribute(IMarker.MESSAGE, "Unused import java.util.*;");
+		IMarker marker2 = this.testFile.createMarker(IMarker.PROBLEM);
+		marker2.setAttribute(IMarker.MESSAGE, "Unused import java.*;");
+		
+		this.workspace.save(true, null);
+		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+		
+		this.testFile.appendContents(generateFileStreamLines(10), true, true, null);
+		marker2.delete();
+		IMarker marker3 = this.testFile.createMarker(IMarker.PROBLEM);
+		marker3.setAttribute(IMarker.MESSAGE, "Unused import java.*;");
+		
+		this.workspace.save(true, null);
+		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+		
+		ArgumentCaptor<StaticAnalysisWarningEvent> captor = ArgumentCaptor.forClass(StaticAnalysisWarningEvent.class);
+		Mockito.verify(this.trackingEventManager, Mockito.times(2)).addEvent(captor.capture());
+		Assert.assertArrayEquals(captor.getAllValues().stream().map(StaticAnalysisWarningEvent::getType).toArray(),
+				new TrackingEventType[] {TrackingEventType.SA_WARNING_CREATED, TrackingEventType.SA_WARNING_CREATED});
 	}
 
 }
