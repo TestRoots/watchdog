@@ -72,7 +72,7 @@ public class InitializationManager {
 		new WorkbenchListener(
 				trackingEventManager,
 				new TransferManager(toTransferPersister, WatchDogUtils.getWorkspaceName())
-		);
+		).attachListeners();
 	}
 
 	/**

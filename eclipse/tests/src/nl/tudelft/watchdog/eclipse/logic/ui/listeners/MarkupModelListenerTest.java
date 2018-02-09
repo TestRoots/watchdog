@@ -34,7 +34,6 @@ public class MarkupModelListenerTest {
 	private WorkbenchListener workbenchListener;
 	private TrackingEventManager trackingEventManager;
 	private TransferManager transferManager;
-	private EclipseMarkupModelListener markupModelListener;
 	private IWorkspace workspace;
 	private IProject project;
 	private IFile testFile;
@@ -45,10 +44,8 @@ public class MarkupModelListenerTest {
 		this.trackingEventManager = Mockito.mock(TrackingEventManager.class);
 		this.transferManager = Mockito.mock(TransferManager.class);
 
-		this.workbenchListener = Mockito.spy(new WorkbenchListener(trackingEventManager, transferManager));
-		this.markupModelListener = new EclipseMarkupModelListener(this.trackingEventManager);
-
-		Mockito.when(this.workbenchListener.createMarkupModelListener()).thenReturn(markupModelListener);
+		this.workbenchListener = new WorkbenchListener(trackingEventManager, transferManager);
+		this.workbenchListener.attachListeners();
 
 		this.setUpTestingProject();
 	}
@@ -88,6 +85,7 @@ public class MarkupModelListenerTest {
 		this.workspace.save(true, null);
 
 		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+		this.workbenchListener.shutDown();
 	}
 
 	@Test
