@@ -10,3 +10,4 @@ before_install:
 services:
   - mongodb
 script: mvn verify
+after_failure: cat eclipse/tests/target/work/data/.metadata/.log
