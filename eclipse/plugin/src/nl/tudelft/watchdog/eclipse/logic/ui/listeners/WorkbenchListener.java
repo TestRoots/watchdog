@@ -48,6 +48,9 @@ public class WorkbenchListener {
 		this.workbench = PlatformUI.getWorkbench();
 
 		WatchDogEventType.START_IDE.process(workbench);
+	}
+	
+	public void attachListeners() {
 		this.windowListener = new WindowListener();
 		this.workbench.addWindowListener(windowListener);
 		addListenersToAlreadyOpenWindows();
@@ -68,41 +71,39 @@ public class WorkbenchListener {
 		debugPlugin.addDebugEventListener(
 				new DebugEventListener(trackingEventManager));
 	}
+	
+	void shutDown() {
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		workspace.removeResourceChangeListener(markupModelListener);
+		WatchDogEventType.END_IDE.process(workbench);
+		InitializationManager.getInstance().getIntervalManager().closeAllIntervals();
+		transferManager.sendItemsImmediately();
+	}
 
 	/** The shutdown listeners, executed when Eclipse is shutdown. */
 	private void addShutdownListeners() {
 		workbench.addWorkbenchListener(new IWorkbenchListener() {
 
-			private InitializationManager initializationManager;
-
 			@Override
 			public boolean preShutdown(final IWorkbench workbench,
 					final boolean forced) {
-				markupModelListener.dispose();
-				initializationManager = InitializationManager.getInstance();
-				WatchDogEventType.END_IDE.process(workbench);
-				initializationManager.getIntervalManager().closeAllIntervals();
-				transferManager.sendItemsImmediately();
+				shutDown();
 				return true;
 			}
 
 			@Override
 			public void postShutdown(final IWorkbench workbench) {
-				initializationManager.shutdown();
+				InitializationManager.getInstance().shutdown();
 			}
 		});
 	}
 
 	private void addStaticAnalysisListeners() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		this.markupModelListener = this.createMarkupModelListener();
+		this.markupModelListener = new EclipseMarkupModelListener(this.trackingEventManager);
 		workspace.addResourceChangeListener(this.markupModelListener, IResourceChangeEvent.POST_BUILD);
 	}
 	
-	protected EclipseMarkupModelListener createMarkupModelListener() {
-		return new EclipseMarkupModelListener(this.trackingEventManager);
-	}
-
 	/**
 	 * If windows are already open when the listener registration from WatchDog
 	 * starts (e.g. due to saved Eclipse workspace state), add these listeners

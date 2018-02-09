@@ -56,6 +56,9 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
 		 */
 		@Override
 		public boolean visit(IResourceDelta delta) throws CoreException {
+			if (!delta.getResource().exists()) {
+				return false;
+			}
 			IPath filePath = delta.getResource().getFullPath();
 			List<MarkerHolder> oldMarkers = oldFileMarkers.get(filePath);
 			List<MarkerHolder> currentMarkers =
