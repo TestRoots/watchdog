@@ -11,7 +11,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.jobs.Job;
 import org.junit.After;
 import org.junit.Assert;
@@ -84,9 +83,11 @@ public class MarkupModelListenerTest {
 	}
 
 	@After
-	public void tearDown() throws CoreException {
+	public void tearDown() throws Exception {
 		this.project.delete(true, true, null);
 		this.workspace.save(true, null);
+
+		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
 	}
 
 	@Test
