@@ -41,6 +41,11 @@ public class StartupUIThread implements Runnable {
 
 	@Override
 	public void run() {
+		// Do not open the window during tests. This would block the Thread
+		// and not terminate on Travis
+		if (System.getProperty("suppressWatchdogRegistration") != null) {
+			return;
+		}
 		checkWhetherToDisplayUserProjectRegistrationWizard();
 		savePreferenceStoreIfNeeded();
 
