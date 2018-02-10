@@ -11,6 +11,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.jobs.Job;
 import org.junit.After;
 import org.junit.Assert;
@@ -37,6 +38,8 @@ public class MarkupModelListenerTest {
 	private IWorkspace workspace;
 	private IProject project;
 	private IFile testFile;
+	private IFile preExistingTestFile;
+	private IMarker preExistingMarker;
 
 	@Before
 	public void setup() throws Exception {
@@ -44,10 +47,10 @@ public class MarkupModelListenerTest {
 		this.trackingEventManager = Mockito.mock(TrackingEventManager.class);
 		this.transferManager = Mockito.mock(TransferManager.class);
 
+		this.setUpTestingProject();
+
 		this.workbenchListener = new WorkbenchListener(trackingEventManager, transferManager);
 		this.workbenchListener.attachListeners();
-
-		this.setUpTestingProject();
 	}
 
 	private void setUpTestingProject() throws Exception {
@@ -62,9 +65,18 @@ public class MarkupModelListenerTest {
 
 		IFolder folder = project.getFolder("src");
 		folder.create(true, true, null);
-		this.testFile = folder.getFile("Main.java");
 
+		this.testFile = folder.getFile("Main.java");
 		this.testFile.create(generateFileStreamLines(25), true, null);
+
+		this.preExistingTestFile = folder.getFile("Existing.java");
+		this.preExistingTestFile.create(generateFileStreamLines(25), true, null);
+		this.preExistingMarker = this.preExistingTestFile.createMarker(IMarker.PROBLEM);
+		this.preExistingTestFile.createMarker(IMarker.PROBLEM);
+
+		this.workspace.save(true, null);
+
+		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
 	}
 
 	private InputStream generateFileStreamLines(int numLines) {
@@ -169,6 +181,35 @@ public class MarkupModelListenerTest {
 		Mockito.verify(this.trackingEventManager, Mockito.times(2)).addEvent(captor.capture());
 		Assert.assertArrayEquals(captor.getAllValues().stream().map(StaticAnalysisWarningEvent::getType).toArray(),
 				new TrackingEventType[] {TrackingEventType.SA_WARNING_CREATED, TrackingEventType.SA_WARNING_CREATED});
+	}
+
+	@Test
+	public void modifying_an_existing_file_only_triggers_creations_for_new_warnings() throws Exception {
+		IMarker marker = this.preExistingTestFile.createMarker(IMarker.PROBLEM);
+		marker.setAttribute(IMarker.MESSAGE, "Unused import java.util.*;");
+		IMarker marker2 = this.preExistingTestFile.createMarker(IMarker.PROBLEM);
+		marker2.setAttribute(IMarker.MESSAGE, "Unused import java.*;");
+
+		this.workspace.save(true, null);
+		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+
+		ArgumentCaptor<StaticAnalysisWarningEvent> captor = ArgumentCaptor.forClass(StaticAnalysisWarningEvent.class);
+		Mockito.verify(this.trackingEventManager, Mockito.times(2)).addEvent(captor.capture());
+		Assert.assertArrayEquals(captor.getAllValues().stream().map(StaticAnalysisWarningEvent::getType).toArray(),
+				new TrackingEventType[] {TrackingEventType.SA_WARNING_CREATED, TrackingEventType.SA_WARNING_CREATED});
+	}
+
+	@Test
+	public void can_delete_warning_existed_before_file_modified() throws Exception {
+		this.preExistingMarker.delete();
+
+		this.workspace.save(true, null);
+		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+
+		ArgumentCaptor<StaticAnalysisWarningEvent> captor = ArgumentCaptor.forClass(StaticAnalysisWarningEvent.class);
+		Mockito.verify(this.trackingEventManager, Mockito.times(1)).addEvent(captor.capture());
+		Assert.assertArrayEquals(captor.getAllValues().stream().map(StaticAnalysisWarningEvent::getType).toArray(),
+				new TrackingEventType[] {TrackingEventType.SA_WARNING_REMOVED});
 	}
 
 }

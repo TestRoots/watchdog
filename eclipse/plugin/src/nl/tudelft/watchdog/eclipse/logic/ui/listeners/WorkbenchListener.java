@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
@@ -102,6 +103,11 @@ public class WorkbenchListener {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		this.markupModelListener = new EclipseMarkupModelListener(this.trackingEventManager);
 		workspace.addResourceChangeListener(this.markupModelListener, IResourceChangeEvent.POST_BUILD);
+		try {
+			workspace.getRoot().accept(this.markupModelListener.createVisitor());
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
