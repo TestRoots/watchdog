@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
@@ -26,26 +27,45 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
 
 	public EclipseMarkupModelListener(TrackingEventManager trackingEventManager) {
 		super(trackingEventManager);
-		this.reset();
+		this.oldFileMarkers = new HashMap<>();
+		this.currentFileMarkers = new HashMap<>();
 	}
 
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
 		try {
-			this.reset();
-			event.getDelta().accept(new DeltaVisitor());
+			this.oldFileMarkers = this.currentFileMarkers;
+			this.currentFileMarkers = new HashMap<>();
+			event.getDelta().accept(this.createVisitor());
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	private void reset() {
-		this.oldFileMarkers = this.currentFileMarkers;
-		this.currentFileMarkers = new HashMap<>();
+	ResourceAndResourceDeltaVisitor createVisitor() {
+		return new ResourceAndResourceDeltaVisitor();
 	}
 
-	class DeltaVisitor implements IResourceDeltaVisitor {
+	public class ResourceAndResourceDeltaVisitor implements IResourceDeltaVisitor, IResourceVisitor {
+
+		/**
+		 * Can be new resources, deleted or simply changed. In any case, even if we do not have
+		 * previous state in {@link EclipseMarkupModelListener#oldFileMarkers} we need to compute
+		 * a diff.
+		 */
+		@Override
+		public boolean visit(IResourceDelta delta) throws CoreException {
+			return this.visit(delta.getResource(), true);
+		}
+
+		/**
+		 * Invoked on initial project open to setup our initial state for {@link EclipseMarkupModelListener#oldFileMarkers}.
+		 */
+		@Override
+		public boolean visit(IResource resource) throws CoreException {
+			return this.visit(resource, false);
+		}
 
 		/**
 		 * The Eclipse API trashes and recreates all markers after a build.
@@ -54,25 +74,28 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
 		 * {@link MarkerBackTrackingAlgorithm} which is an abstraction around
 		 * this algorithm.
 		 */
-		@Override
-		public boolean visit(IResourceDelta delta) throws CoreException {
-			if (!delta.getResource().exists()) {
+		private boolean visit(IResource resource, boolean shouldComputeDiff) throws CoreException {
+			if (!resource.exists()) {
 				return false;
 			}
-			IPath filePath = delta.getResource().getFullPath();
+
+			IPath filePath = resource.getFullPath();
 			List<MarkerHolder> oldMarkers = oldFileMarkers.get(filePath);
 			List<MarkerHolder> currentMarkers =
-					Arrays.stream(delta.getResource().findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO))
+					Arrays.stream(resource.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO))
 						  .map(MarkerHolder::fromIMarker)
+						  .sorted()
 						  .collect(Collectors.toList());
 
-			if (oldMarkers == null) {
+			if (shouldComputeDiff && oldMarkers == null) {
 				oldMarkers = Collections.emptyList();
 			}
 
-			new MarkerBackTrackingAlgorithm(oldMarkers, currentMarkers)
-					.computeMemoizationTable()
-					.traverseMemoizationTable();
+			if (oldMarkers != null) {
+				new MarkerBackTrackingAlgorithm(oldMarkers, currentMarkers)
+						.computeMemoizationTable()
+						.traverseMemoizationTable();
+			}
 
 			currentFileMarkers.put(filePath, currentMarkers);
 
@@ -88,12 +111,14 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
 	 * of messages in a somewhat unique manner is its message, which does include private information.
 	 * Make sure that when you use this message, the data is anonymized.
 	 */
-	static class MarkerHolder {
+	static class MarkerHolder implements Comparable<MarkerHolder> {
 		private String message;
+		private int lineNumber;
 
 		static MarkerHolder fromIMarker(IMarker marker) {
 			MarkerHolder holder = new MarkerHolder();
 			holder.message = marker.getAttribute(IMarker.MESSAGE, "");
+			holder.lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, 0);
 			return holder;
 		}
 
@@ -103,6 +128,11 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
 				return this.message.equals(((MarkerHolder) other).message);
 			}
 			return false;
+		}
+
+		@Override
+		public int compareTo(MarkerHolder other) {
+			return Integer.compare(this.lineNumber, other.lineNumber);
 		}
 	}
 
@@ -131,16 +161,16 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
 			this.currentMarkers = currentMarkers;
 			this.oldSize = oldMarkers.size();
 			this.currentSize = currentMarkers.size();
-			memoization = new int[oldSize][currentSize];
+			memoization = new int[oldSize + 1][currentSize + 1];
 		}
 
 		MarkerBackTrackingAlgorithm computeMemoizationTable() {
-			for (int row = 1; row < oldSize; row++) {
-				for (int column = 1; column < currentSize; column++) {
+			for (int row = 0; row < oldSize; row++) {
+				for (int column = 0; column < currentSize; column++) {
 					if (oldMarkers.get(row).equals(currentMarkers.get(column))) {
-						memoization[row][column] = memoization[row - 1][column - 1] + 1;
+						memoization[row + 1][column + 1] = memoization[row][column] + 1;
 					} else {
-						memoization[row][column] = Math.max(memoization[row][column -1], memoization[row - 1][column]);
+						memoization[row + 1][column + 1] = Math.max(memoization[row + 1][column], memoization[row][column + 1]);
 					}
 				}
 			}
