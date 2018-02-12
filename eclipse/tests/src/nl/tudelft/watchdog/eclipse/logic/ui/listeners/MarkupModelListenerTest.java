@@ -11,7 +11,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.jobs.Job;
 import org.junit.After;
 import org.junit.Assert;
@@ -181,6 +180,43 @@ public class MarkupModelListenerTest {
 		Mockito.verify(this.trackingEventManager, Mockito.times(2)).addEvent(captor.capture());
 		Assert.assertArrayEquals(captor.getAllValues().stream().map(StaticAnalysisWarningEvent::getType).toArray(),
 				new TrackingEventType[] {TrackingEventType.SA_WARNING_CREATED, TrackingEventType.SA_WARNING_CREATED});
+	}
+
+	@Test
+	public void diffing_algorithm_works_on_sorted_lists_by_line_number() throws Exception {
+		IMarker marker = this.testFile.createMarker(IMarker.PROBLEM);
+		marker.setAttribute(IMarker.MESSAGE, "Unused import java.util.*;");
+		marker.setAttribute(IMarker.LINE_NUMBER, 1);
+		IMarker marker2 = this.testFile.createMarker(IMarker.PROBLEM);
+		marker2.setAttribute(IMarker.MESSAGE, "Unused import java.*;");
+		marker2.setAttribute(IMarker.LINE_NUMBER, 2);
+		IMarker marker3 = this.testFile.createMarker(IMarker.PROBLEM);
+		marker3.setAttribute(IMarker.MESSAGE, "Unused import java.util.*;");
+		marker3.setAttribute(IMarker.LINE_NUMBER, 3);
+		IMarker marker4 = this.testFile.createMarker(IMarker.PROBLEM);
+		marker4.setAttribute(IMarker.MESSAGE, "Unused import java.*;");
+		marker4.setAttribute(IMarker.LINE_NUMBER, 4);
+
+		this.workspace.save(true, null);
+		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+
+		marker3.delete();
+
+		IMarker marker5 = this.testFile.createMarker(IMarker.PROBLEM);
+		marker5.setAttribute(IMarker.MESSAGE, "Unused import java.time.*;");
+		marker5.setAttribute(IMarker.LINE_NUMBER, 5);
+
+		IMarker marker3Replaced = this.testFile.createMarker(IMarker.PROBLEM);
+		marker3Replaced.setAttribute(IMarker.MESSAGE, "Unused import java.util.*;");
+		marker3Replaced.setAttribute(IMarker.LINE_NUMBER, 3);
+
+		this.workspace.save(true, null);
+		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+
+		ArgumentCaptor<StaticAnalysisWarningEvent> captor = ArgumentCaptor.forClass(StaticAnalysisWarningEvent.class);
+		Mockito.verify(this.trackingEventManager, Mockito.times(5)).addEvent(captor.capture());
+		assertTrue(captor.getAllValues().stream()
+				.allMatch(event -> event.getType() == TrackingEventType.SA_WARNING_CREATED));
 	}
 
 	@Test
