@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -155,13 +156,17 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
 		private int[][] memoization;
 		private int oldSize;
 		private int currentSize;
+		private List<StaticAnalysisType> createdWarningTypes;
+		private List<StaticAnalysisType> removedWarningTypes;
 
 		MarkerBackTrackingAlgorithm(List<MarkerHolder> oldMarkers, List<MarkerHolder> currentMarkers) {
 			this.oldMarkers = oldMarkers;
 			this.currentMarkers = currentMarkers;
 			this.oldSize = oldMarkers.size();
 			this.currentSize = currentMarkers.size();
-			memoization = new int[oldSize + 1][currentSize + 1];
+			this.memoization = new int[oldSize + 1][currentSize + 1];
+			this.createdWarningTypes = new ArrayList<>();
+			this.removedWarningTypes = new ArrayList<>();
 		}
 
 		MarkerBackTrackingAlgorithm computeMemoizationTable() {
@@ -180,6 +185,8 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
 
 		void traverseMemoizationTable() {
 			traverseMemoizationTable(oldSize, currentSize);
+			addCreatedWarnings(this.createdWarningTypes.stream());
+			addRemovedWarnings(this.removedWarningTypes.stream());
 		}
 
 		/**
@@ -197,13 +204,13 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
 			// The markers are not the same. In this case, the length to traverse by choosing the column
 			// is longer, which means that a new marker was added (as the column is larger) in currentMarkers
 			} else if (column > 0 && (row == 0 || memoization[row][column - 1] >= memoization[row - 1][column])) {
-				addCreatedWarning(StaticAnalysisType.UNKNOWN);
+				this.createdWarningTypes.add(StaticAnalysisType.UNKNOWN);
 
 				traverseMemoizationTable(row, column - 1);
 			// In this case, the row length is lower, which means that the oldMarkers was longer at this point
 			// Therefore it is a removed warning
 			} else if (row > 0 && (column == 0 || memoization[row][column - 1] < memoization[row - 1][column])) {
-				addRemovedWarning(StaticAnalysisType.UNKNOWN);
+				this.removedWarningTypes.add(StaticAnalysisType.UNKNOWN);
 
 				traverseMemoizationTable(row - 1, column);
 			}

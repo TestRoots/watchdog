@@ -6,6 +6,8 @@ import nl.tudelft.watchdog.core.logic.event.eventtypes.staticanalysis.StaticAnal
 import nl.tudelft.watchdog.core.logic.event.eventtypes.staticanalysis.StaticAnalysisWarningEvent;
 import org.joda.time.DateTime;
 
+import java.util.stream.Stream;
+
 public class CoreMarkupModelListener {
 
     private final TrackingEventManager trackingEventManager;
@@ -14,14 +16,15 @@ public class CoreMarkupModelListener {
         this.trackingEventManager = trackingEventManager;
     }
 
-    protected void addCreatedWarning(StaticAnalysisType type) {
-		trackingEventManager.addEvent(new StaticAnalysisWarningEvent(type, TrackingEventType.SA_WARNING_CREATED, DateTime.now().toDate()));
+    protected void addCreatedWarnings(Stream<StaticAnalysisType> types) {
+		trackingEventManager.addEvents(types
+                .map(type -> new StaticAnalysisWarningEvent(type, TrackingEventType.SA_WARNING_CREATED, DateTime.now().toDate()))
+        );
     }
 
-    protected void addRemovedWarning(StaticAnalysisType type) {
-		trackingEventManager.addEvent(new StaticAnalysisWarningEvent(type, TrackingEventType.SA_WARNING_REMOVED, DateTime.now().toDate()));
-    }
-
-    public void dispose() {
+    protected void addRemovedWarnings(Stream<StaticAnalysisType> types) {
+        trackingEventManager.addEvents(types
+                .map(type -> new StaticAnalysisWarningEvent(type, TrackingEventType.SA_WARNING_REMOVED, DateTime.now().toDate()))
+        );
     }
 }

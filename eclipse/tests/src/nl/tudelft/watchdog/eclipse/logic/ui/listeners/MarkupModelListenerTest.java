@@ -3,6 +3,9 @@ package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -16,8 +19,9 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.TrackingEventType;
@@ -27,6 +31,7 @@ import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.eclipse.logic.network.TransferManager;
 import nl.tudelft.watchdog.eclipse.logic.ui.listeners.WorkbenchListener;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MarkupModelListenerTest {
@@ -40,11 +45,25 @@ public class MarkupModelListenerTest {
 	private IFile preExistingTestFile;
 	private IMarker preExistingMarker;
 
+	private List<TrackingEventType> generatedEvents;
+
 	@Before
 	public void setup() throws Exception {
 		WatchDogEventType.intervalManager = Mockito.mock(IntervalManager.class);
-		this.trackingEventManager = Mockito.mock(TrackingEventManager.class);
 		this.transferManager = Mockito.mock(TransferManager.class);
+		this.trackingEventManager = Mockito.mock(TrackingEventManager.class);
+
+		this.generatedEvents = new ArrayList<>();
+
+		Mockito.doAnswer(new Answer<Object>() {
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				Stream<StaticAnalysisWarningEvent> stream = (Stream<StaticAnalysisWarningEvent>) invocation.getArguments()[0];
+				stream.map(StaticAnalysisWarningEvent::getType).forEach(generatedEvents::add);
+				return null;
+			}}).when(this.trackingEventManager).addEvents(Mockito.any());
 
 		this.setUpTestingProject();
 
@@ -109,10 +128,9 @@ public class MarkupModelListenerTest {
 
 		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
 
-		ArgumentCaptor<StaticAnalysisWarningEvent> captor = ArgumentCaptor.forClass(StaticAnalysisWarningEvent.class);
-		Mockito.verify(this.trackingEventManager, Mockito.times(2)).addEvent(captor.capture());
-		assertTrue(captor.getAllValues().stream()
-				.allMatch(event -> event.getType() == TrackingEventType.SA_WARNING_CREATED));
+		assertEquals(generatedEvents.size(), 2);
+		assertTrue(generatedEvents.stream()
+				.allMatch(TrackingEventType.SA_WARNING_CREATED::equals));
 	}
 
 	@Test
@@ -130,10 +148,9 @@ public class MarkupModelListenerTest {
 		this.workspace.save(true, null);
 		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
 
-		ArgumentCaptor<StaticAnalysisWarningEvent> captor = ArgumentCaptor.forClass(StaticAnalysisWarningEvent.class);
-		Mockito.verify(this.trackingEventManager, Mockito.times(2)).addEvent(captor.capture());
-		assertTrue(captor.getAllValues().stream()
-				.allMatch(event -> event.getType() == TrackingEventType.SA_WARNING_CREATED));
+		assertEquals(generatedEvents.size(), 2);
+		assertTrue(generatedEvents.stream()
+				.allMatch(TrackingEventType.SA_WARNING_CREATED::equals));
 	}
 
 	@Test
@@ -152,9 +169,7 @@ public class MarkupModelListenerTest {
 		this.workspace.save(true, null);
 		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
 
-		ArgumentCaptor<StaticAnalysisWarningEvent> captor = ArgumentCaptor.forClass(StaticAnalysisWarningEvent.class);
-		Mockito.verify(this.trackingEventManager, Mockito.times(3)).addEvent(captor.capture());
-		Assert.assertArrayEquals(captor.getAllValues().stream().map(StaticAnalysisWarningEvent::getType).toArray(),
+		Assert.assertArrayEquals(generatedEvents.stream().toArray(),
 				new TrackingEventType[] {TrackingEventType.SA_WARNING_CREATED, TrackingEventType.SA_WARNING_CREATED, TrackingEventType.SA_WARNING_REMOVED});
 	}
 
@@ -176,9 +191,7 @@ public class MarkupModelListenerTest {
 		this.workspace.save(true, null);
 		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
 
-		ArgumentCaptor<StaticAnalysisWarningEvent> captor = ArgumentCaptor.forClass(StaticAnalysisWarningEvent.class);
-		Mockito.verify(this.trackingEventManager, Mockito.times(2)).addEvent(captor.capture());
-		Assert.assertArrayEquals(captor.getAllValues().stream().map(StaticAnalysisWarningEvent::getType).toArray(),
+		Assert.assertArrayEquals(generatedEvents.stream().toArray(),
 				new TrackingEventType[] {TrackingEventType.SA_WARNING_CREATED, TrackingEventType.SA_WARNING_CREATED});
 	}
 
@@ -213,10 +226,9 @@ public class MarkupModelListenerTest {
 		this.workspace.save(true, null);
 		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
 
-		ArgumentCaptor<StaticAnalysisWarningEvent> captor = ArgumentCaptor.forClass(StaticAnalysisWarningEvent.class);
-		Mockito.verify(this.trackingEventManager, Mockito.times(5)).addEvent(captor.capture());
-		assertTrue(captor.getAllValues().stream()
-				.allMatch(event -> event.getType() == TrackingEventType.SA_WARNING_CREATED));
+		assertEquals(generatedEvents.size(), 5);
+		assertTrue(generatedEvents.stream()
+				.allMatch(TrackingEventType.SA_WARNING_CREATED::equals));
 	}
 
 	@Test
@@ -229,10 +241,9 @@ public class MarkupModelListenerTest {
 		this.workspace.save(true, null);
 		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
 
-		ArgumentCaptor<StaticAnalysisWarningEvent> captor = ArgumentCaptor.forClass(StaticAnalysisWarningEvent.class);
-		Mockito.verify(this.trackingEventManager, Mockito.times(2)).addEvent(captor.capture());
-		Assert.assertArrayEquals(captor.getAllValues().stream().map(StaticAnalysisWarningEvent::getType).toArray(),
-				new TrackingEventType[] {TrackingEventType.SA_WARNING_CREATED, TrackingEventType.SA_WARNING_CREATED});
+		assertEquals(generatedEvents.size(), 2);
+		assertTrue(generatedEvents.stream()
+				.allMatch(TrackingEventType.SA_WARNING_CREATED::equals));
 	}
 
 	@Test
@@ -242,10 +253,9 @@ public class MarkupModelListenerTest {
 		this.workspace.save(true, null);
 		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
 
-		ArgumentCaptor<StaticAnalysisWarningEvent> captor = ArgumentCaptor.forClass(StaticAnalysisWarningEvent.class);
-		Mockito.verify(this.trackingEventManager, Mockito.times(1)).addEvent(captor.capture());
-		Assert.assertArrayEquals(captor.getAllValues().stream().map(StaticAnalysisWarningEvent::getType).toArray(),
-				new TrackingEventType[] {TrackingEventType.SA_WARNING_REMOVED});
+		assertEquals(generatedEvents.size(), 1);
+		assertTrue(generatedEvents.stream()
+				.allMatch(TrackingEventType.SA_WARNING_REMOVED::equals));
 	}
 
 }
