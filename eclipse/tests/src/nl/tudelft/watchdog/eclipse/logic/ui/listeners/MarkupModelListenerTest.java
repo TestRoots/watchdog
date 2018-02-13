@@ -109,12 +109,15 @@ public class MarkupModelListenerTest {
 		return new ByteArrayInputStream(builder.toString().getBytes(StandardCharsets.UTF_8));
 	}
 
+	private void saveWorkspaceAndWaitForBuild() throws Exception {
+		this.workspace.save(true, null);
+		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+	}
+
 	@After
 	public void tearDown() throws Exception {
 		this.project.delete(true, true, null);
-		this.workspace.save(true, null);
-
-		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+		this.saveWorkspaceAndWaitForBuild();
 		this.workbenchListener.shutDown();
 	}
 
@@ -124,9 +127,8 @@ public class MarkupModelListenerTest {
 		marker.setAttribute(IMarker.LINE_NUMBER, 1);
 		IMarker marker2 = this.testFile.createMarker(IMarker.PROBLEM);
 		marker2.setAttribute(IMarker.LINE_NUMBER, 2);
-		this.workspace.save(true, null);
 
-		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+		this.saveWorkspaceAndWaitForBuild();
 
 		assertEquals(generatedEvents.size(), 2);
 		assertTrue(generatedEvents.stream()
@@ -140,13 +142,11 @@ public class MarkupModelListenerTest {
 		IMarker marker2 = this.testFile.createMarker(IMarker.PROBLEM);
 		marker2.setAttribute(IMarker.LINE_NUMBER, 2);
 
-		this.workspace.save(true, null);
-		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+		this.saveWorkspaceAndWaitForBuild();
 
 		this.testFile.appendContents(generateFileStreamLines(10), true, true, null);
 
-		this.workspace.save(true, null);
-		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+		this.saveWorkspaceAndWaitForBuild();
 
 		assertEquals(generatedEvents.size(), 2);
 		assertTrue(generatedEvents.stream()
@@ -160,14 +160,12 @@ public class MarkupModelListenerTest {
 		IMarker marker2 = this.testFile.createMarker(IMarker.PROBLEM);
 		marker2.setAttribute(IMarker.LINE_NUMBER, 2);
 
-		this.workspace.save(true, null);
-		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+		this.saveWorkspaceAndWaitForBuild();
 
 		this.testFile.appendContents(generateFileStreamLines(10), true, true, null);
 		marker.delete();
 
-		this.workspace.save(true, null);
-		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+		this.saveWorkspaceAndWaitForBuild();
 
 		Assert.assertArrayEquals(generatedEvents.stream().toArray(),
 				new TrackingEventType[] {TrackingEventType.SA_WARNING_CREATED, TrackingEventType.SA_WARNING_CREATED, TrackingEventType.SA_WARNING_REMOVED});
@@ -180,16 +178,15 @@ public class MarkupModelListenerTest {
 		IMarker marker2 = this.testFile.createMarker(IMarker.PROBLEM);
 		marker2.setAttribute(IMarker.MESSAGE, "Unused import java.*;");
 
-		this.workspace.save(true, null);
-		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+		this.saveWorkspaceAndWaitForBuild();
 
 		this.testFile.appendContents(generateFileStreamLines(10), true, true, null);
+
 		marker2.delete();
 		IMarker marker3 = this.testFile.createMarker(IMarker.PROBLEM);
 		marker3.setAttribute(IMarker.MESSAGE, "Unused import java.*;");
 
-		this.workspace.save(true, null);
-		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+		this.saveWorkspaceAndWaitForBuild();
 
 		Assert.assertArrayEquals(generatedEvents.stream().toArray(),
 				new TrackingEventType[] {TrackingEventType.SA_WARNING_CREATED, TrackingEventType.SA_WARNING_CREATED});
@@ -210,8 +207,7 @@ public class MarkupModelListenerTest {
 		marker4.setAttribute(IMarker.MESSAGE, "Unused import java.*;");
 		marker4.setAttribute(IMarker.LINE_NUMBER, 4);
 
-		this.workspace.save(true, null);
-		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+		this.saveWorkspaceAndWaitForBuild();
 
 		marker3.delete();
 
@@ -223,8 +219,7 @@ public class MarkupModelListenerTest {
 		marker3Replaced.setAttribute(IMarker.MESSAGE, "Unused import java.util.*;");
 		marker3Replaced.setAttribute(IMarker.LINE_NUMBER, 3);
 
-		this.workspace.save(true, null);
-		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+		this.saveWorkspaceAndWaitForBuild();
 
 		assertEquals(generatedEvents.size(), 5);
 		assertTrue(generatedEvents.stream()
@@ -238,8 +233,7 @@ public class MarkupModelListenerTest {
 		IMarker marker2 = this.preExistingTestFile.createMarker(IMarker.PROBLEM);
 		marker2.setAttribute(IMarker.MESSAGE, "Unused import java.*;");
 
-		this.workspace.save(true, null);
-		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+		this.saveWorkspaceAndWaitForBuild();
 
 		assertEquals(generatedEvents.size(), 2);
 		assertTrue(generatedEvents.stream()
@@ -250,8 +244,7 @@ public class MarkupModelListenerTest {
 	public void can_delete_warning_existed_before_file_modified() throws Exception {
 		this.preExistingMarker.delete();
 
-		this.workspace.save(true, null);
-		Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+		this.saveWorkspaceAndWaitForBuild();
 
 		assertEquals(generatedEvents.size(), 1);
 		assertTrue(generatedEvents.stream()

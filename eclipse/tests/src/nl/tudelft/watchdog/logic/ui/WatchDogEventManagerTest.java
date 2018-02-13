@@ -44,9 +44,9 @@ import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
  * TODO(timvdlippe): This test is disabled until we can properly deflake it.
  * It is currently relying on Thread synchronization and sleeps, which are flaky.
  */
+@Ignore
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(WatchDogGlobals.class)
-@Ignore
 public class WatchDogEventManagerTest {
 
 	private static final int USER_ACTIVITY_TIMEOUT = 300;

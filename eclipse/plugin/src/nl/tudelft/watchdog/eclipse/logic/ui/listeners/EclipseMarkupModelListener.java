@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IPath;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.staticanalysis.StaticAnalysisType;
 import nl.tudelft.watchdog.core.logic.ui.listeners.CoreMarkupModelListener;
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
 
 public class EclipseMarkupModelListener extends CoreMarkupModelListener implements IResourceChangeListener {
 
@@ -39,8 +40,7 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
 			this.currentFileMarkers = new HashMap<>();
 			event.getDelta().accept(this.createVisitor());
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			WatchDogLogger.getInstance().logSevere(e.getMessage());
 		}
 	}
 
