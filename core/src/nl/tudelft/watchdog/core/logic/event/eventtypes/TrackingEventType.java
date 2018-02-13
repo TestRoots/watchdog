@@ -67,9 +67,13 @@ public enum TrackingEventType {
 	@SerializedName("sa-wr")
 	SA_WARNING_REMOVED("Static analysis warning resolved");
 
-	public final String textualDescription;
+	private final String textualDescription;
 
 	TrackingEventType(String textualDescription) {
 		this.textualDescription = textualDescription;
 	}
+
+    public String getTextualDescription() {
+        return textualDescription;
+    }
 }

@@ -94,7 +94,7 @@ public class EventStatistics {
 
         for (TrackingEventType type : TrackingEventType.values()) {
             final List<EventBase> filteredEventList = events.stream().filter(e -> e.getType() == type).collect(Collectors.toList());
-            allTasks.add(createTaskForEventsWithName(filteredEventList, type.textualDescription));
+            allTasks.add(createTaskForEventsWithName(filteredEventList, type.getTextualDescription()));
         }
 
         // Create collection of the overall tasks.
