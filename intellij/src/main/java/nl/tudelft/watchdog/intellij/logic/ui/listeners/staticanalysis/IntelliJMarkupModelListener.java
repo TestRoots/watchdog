@@ -58,6 +58,7 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
                     if (analyzer.getFileStatusMap().getFileDirtyScope(document, Pass.UPDATE_ALL) == null) {
                         final MarkupModelImpl markupModel = (MarkupModelImpl) DocumentMarkupModel.forDocument(document, project, true);
                         markupModel.addMarkupModelListener(disposable, markupModelListener);
+                        System.out.println("model added");
 
                         // We batch up changes and only transfer them on every save. This is in-line with the Eclipse
                         // interface, which only exposes listeners for `POST_BUILD`. Therefore, cache all warnings in
@@ -89,6 +90,7 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
 
     @Override
     public void afterAdded(@NotNull RangeHighlighterEx rangeHighlighterEx) {
+        System.out.println(rangeHighlighterEx);
         if (rangeHighlighterEx.getLayer() == HighlighterLayer.WARNING) {
             this.generatedWarnings.add(rangeHighlighterEx);
         }

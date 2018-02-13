@@ -4,11 +4,13 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.actions.ViewToolWindowButtonsAction;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.application.ApplicationInfo;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.impl.DialogWrapperPeerImpl;
 import com.intellij.openapi.wm.WindowManager;
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
@@ -40,7 +42,7 @@ public class WatchDogStartUp implements ProjectComponent {
     /**
      * The warning displayed when WatchDog is not registered. Note: JLabel requires html tags for a new line (and other formatting).
      */
-    public static final String WATCHDOG_UNREGISTERED_WARNING = "<html>Warning: You can only use WatchDog when you register it.<br><br>Last chance: Register now, anonymously, without filling the survey?";
+    private static final String WATCHDOG_UNREGISTERED_WARNING = "<html>Warning: You can only use WatchDog when you register it.<br><br>Last chance: Register now, anonymously, without filling the survey?";
 
     /**
      * Whether the user has cancelled the user project registration wizard.
@@ -84,7 +86,15 @@ public class WatchDogStartUp implements ProjectComponent {
                 WatchDogUtils.setActiveProject(project);
             }
         };
-        WindowManager.getInstance().getFrame(project).addWindowFocusListener(windowFocusListener);
+        final JFrame frame = WindowManager.getInstance().getFrame(project);
+        if (frame != null) {
+            frame.addWindowFocusListener(windowFocusListener);
+        }
+
+        // Do not generate the wizard when we are running in headless mode (during unit tests)
+        if (ApplicationManager.getApplication().isHeadlessEnvironment()) {
+            return;
+        }
 
         checkWhetherToDisplayUserProjectRegistrationWizard();
 
@@ -129,7 +139,7 @@ public class WatchDogStartUp implements ProjectComponent {
         UserProjectRegistrationWizard wizard = new UserProjectRegistrationWizard("User and Project Registration", project);
         wizard.show();
         if (wizard.getExitCode() == DialogWrapper.CANCEL_EXIT_CODE) {
-            if (Messages.YES == Messages.showYesNoDialog(WATCHDOG_UNREGISTERED_WARNING, "WatchDog is not registered!", Messages.getQuestionIcon())) {
+            if (Messages.YES == Messages.showYesNoDialog(WATCHDOG_UNREGISTERED_WARNING, "WatchDog Is not Registered!", Messages.getQuestionIcon())) {
                 makeSilentRegistration();
             } else {
                 userProjectRegistrationCancelled = true;

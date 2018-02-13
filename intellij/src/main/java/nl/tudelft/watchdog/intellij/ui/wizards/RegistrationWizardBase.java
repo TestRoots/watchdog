@@ -108,7 +108,6 @@ public abstract class RegistrationWizardBase extends AbstractWizard<WizardStep> 
         Preferences preferences = Preferences.getInstance();
         preferences.registerProjectId(WatchDogUtils.getProjectName(), projectId);
         preferences.registerProjectUse(WatchDogUtils.getProjectName(), true);
-        return;
     }
 
     @Override
