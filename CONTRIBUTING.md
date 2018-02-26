@@ -108,7 +108,7 @@ Upload the generated ZIP to the IntelliJ repository
 ## Sign it
 We only sign Eclipse releases.
 
-1. Go to `git-repo/WatchDogEclipsePlugin/p2updatesite/target/repository`
+1. Go to `cd eclipse/p2updatesite/target/repository/`
 2. Make sure `export JAVA_HOME=/usr/lib/jvm/java-8-oracle`
 3. Eplace STOREPASS and KEYPASS and run `find . -type f -follow -print | xargs -i  jarsigner -keystore "$JAVA_HOME/jre/lib/security/cacerts" -storepass "STOREPASS" -keypass "KEYPASS" -verbose '{}' 72a9b5399b49480482699d126b4ee9e5`
 4. Update Eclipse Updatesite on server
