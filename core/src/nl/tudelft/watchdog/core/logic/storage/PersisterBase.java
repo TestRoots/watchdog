@@ -208,13 +208,16 @@ public class PersisterBase {
 		}
 	}
 
+	public void startBatch() {
+        replaceClassLoader();
+    }
+
     public void batchedSave(WatchDogItem item) {
         set.add(item);
     }
 
     public void commitBatch() {
         try {
-            replaceClassLoader();
             // persist changes to disk
             database.commit();
             resetOldClassLoader();

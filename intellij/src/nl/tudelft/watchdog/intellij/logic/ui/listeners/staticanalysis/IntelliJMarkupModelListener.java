@@ -25,7 +25,6 @@ import java.util.Set;
 
 public class IntelliJMarkupModelListener extends CoreMarkupModelListener implements MarkupModelListener, Disposable {
 
-    private MessageBusConnection messageBusConnection;
     private final Set<RangeHighlighterEx> generatedWarnings;
     private final Set<RangeHighlighterEx> removedWarnings;
 
@@ -45,10 +44,10 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
         // Therefore, wait for smart mode and only then start listening, to make sure the codeAnalyzer actually did its thing.
         DumbServiceImpl.getInstance(project).runWhenSmart(() -> {
             final DaemonCodeAnalyzerImpl analyzer = (DaemonCodeAnalyzerImpl) DaemonCodeAnalyzer.getInstance(project);
-            final MessageBusConnection messageBusConnection = project.getMessageBus().connect(disposable);
-            markupModelListener.messageBusConnection = messageBusConnection;
+            final MessageBusConnection codeAnalyzerMessageBusConnection = project.getMessageBus().connect(disposable);
+            final MessageBusConnection documentMessageBusConnection = project.getMessageBus().connect(disposable);
 
-            messageBusConnection.subscribe(DaemonCodeAnalyzer.DAEMON_EVENT_TOPIC, new DaemonCodeAnalyzer.DaemonListenerAdapter() {
+            codeAnalyzerMessageBusConnection.subscribe(DaemonCodeAnalyzer.DAEMON_EVENT_TOPIC, new DaemonCodeAnalyzer.DaemonListenerAdapter() {
                 @Override
                 public void daemonFinished() {
                     // We only receive global Code Analyzer events. This means that once such an event triggered,
@@ -63,7 +62,7 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
                         // interface, which only exposes listeners for `POST_BUILD`. Therefore, cache all warnings in
                         // {@link IntelliJMarkupModelListener#generatedWarnings} and {@link IntelliJMarkupModelListener#removedWarnings}
                         // and flush these warnings after the fact.
-                        messageBusConnection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
+                        documentMessageBusConnection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
                             @Override
                             public void beforeDocumentSaving(@NotNull Document savedDocument) {
                                 if (document.equals(savedDocument)) {
@@ -71,6 +70,7 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
                                 }
                             }
                         });
+                        codeAnalyzerMessageBusConnection.disconnect();
                     }
                 }
             });
@@ -111,6 +111,5 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
 
     @Override
     public void dispose() {
-        messageBusConnection.disconnect();
     }
 }

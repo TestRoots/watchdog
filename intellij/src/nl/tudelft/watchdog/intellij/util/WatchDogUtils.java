@@ -20,21 +20,17 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 
     private static Project activeProject;
 
-    private static Set<String> isWatchDogActive = new HashSet<String>();
+    private static Set<String> isWatchDogActive = new HashSet<>();
 
     /**
      * Returns the contents of the editor.
      */
     public static String getEditorContent(final Editor editor)
-            throws ContentReaderException, IllegalArgumentException {
+            throws IllegalArgumentException {
         if (editor == null) {
             throw new IllegalArgumentException("Editor is null");
         }
-        Document document = editor.getDocument();
-        if (document == null) {
-            throw new ContentReaderException("Document is null");
-        }
-        return document.getText();
+        return editor.getDocument().getText();
     }
 
     /**

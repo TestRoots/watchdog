@@ -50,6 +50,8 @@ public class TrackingEventManager {
 	}
 
 	public void addEvents(Stream<EventBase> events) {
+	    eventsToTransferPersister.startBatch();
+	    eventsStatisticsPersister.startBatch();
 	    events.forEach(event -> {
 	        if (event != null) {
 	            event.setSessionSeed(sessionSeed);
