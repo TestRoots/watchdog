@@ -74,7 +74,7 @@ public class Document implements Serializable {
 	}
 
 	/** Prepares this document to extract statistics out of it. */
-	public void prepareDocument() {
+	public Document prepareDocument() {
 		this.nameHash = WatchDogUtilsBase.createFileNameHash(name);
 		if (projectName != null) {
 			this.projectNameHash = WatchDogUtilsBase.createHash(projectName);
@@ -84,5 +84,6 @@ public class Document implements Serializable {
 			this.docType = DocumentClassifier.classifyDocument(name, filePath,
 					content);
 		}
+		return this;
 	}
 }
