@@ -22,3 +22,7 @@ out/
 .project
 .classpath
 .settings/
+
+# data-analysis specific
+node_modules/
+data-analysis/results.json
