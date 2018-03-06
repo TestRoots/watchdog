@@ -124,6 +124,6 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
             return StaticAnalysisWarningClassifier.classify(((HighlightInfo) errorStripeTooltip).getDescription());
         }
 
-        return "UNKNOWN";
+        return "unknown";
     }
 }
