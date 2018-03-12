@@ -19,6 +19,60 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 
+/**
+ * Hello and welcome to this class full of reflection, hacks and other shenanigans.
+ * Before you ask: yes this is necessary. To explain why, please sit back, relax (while you still can)
+ * and get to know the absolute horror of having multiple classloaders.
+ *
+ *
+ *
+ * To start our journey, we first have to understand how CheckStyle is loaded in IntelliJ.
+ * While normally the library you depend on is available on the classpath, the CheckStyle-IDEA plugin
+ * does not have that. The reason is valid: the plugin wants to dynamically load different versions
+ * of CheckStyle. This means that the plugin has to dynamically load jars, and yes, that is done with
+ * a {@link ClassLoader}.
+ *
+ * Now the real magic starts when you realize that there are multiple classloaders necessary to load
+ * the correct files. The first classloader is created in the CheckStyle plugin. This plugin is configured
+ * to load several jars, including the CheckStyle jar. This loader therefore has access to CheckStyle
+ * classes. In the code below, this loader is called "checkStylePluginClassLoader".
+ *
+ * Besides the actual classes, other configuration must also be loaded. This configuration however partly
+ * resides in CheckStyle and other files reside in the plugin. To that end, the plugin implements a so-called
+ * "csaccess" layer, which lives besides CheckStyle. This layer has its own classloader and has access to:
+ * 1. the csaccess files as implemented by the plugin and 2. the resources available in CheckStyle.
+ * This loader is named "checkStylePackageLoaderClassLoader" in the code below.
+ *
+ * Besides these two classloader, this class itself lives in its own classloading context, which does have
+ * access to several "non-csaccess" files. This mostly includes {@link CheckstyleProjectService} and
+ * {@link CheckStylePlugin}. These classes are implemented in the plugin and handle, for example, the
+ * loading of configuration files defined by the user.
+ *
+ *
+ *
+ * The overall logic of implementation is therefore as follows: Load the configuration and other plugin-relevant\
+ * classes in our current classloader. Once we got the relevant classes, obtain the classloader created by
+ * the plugin (see {@link #getPluginCreatedClassLoaderFromService(CheckstyleProjectService)}) and load the
+ * CheckStyle checks (as defined in "com.puppycrawl.tools.checkstyle.checks"). Once we got all checks,
+ * we have to obtain their corresponding messages.
+ *
+ * Since these messages are stored in resources named "messages.properties" and based on the packagename,
+ * we need to use the last classloader to fetch the resources from there. We process the resources in
+ * {@link #addMessagesToCheckStyleBundleForLoadedChecks(ClassLoader, Map, ClassLoader)}.
+ * Observe that this method takes 2 classloaders, as we need both the classes (to obtain the resource path)
+ * and the other one to obtain the actual resource.
+ *
+ * Lastly, we also need to process the configuration files, as some messages are actually configured there.
+ * The plugin ships with two core configurations (sun and google), which define these messages.
+ * The logic for that is implemented in {@link #addMessagesForActiveConfiguration(CheckstyleProjectService)}.
+ *
+ *
+ *
+ * All in all, this journey took a long time to figure out. If you need to update this code, think carefully
+ * about which classloader can load what. When I originally wrote this class, it was mostly based on
+ * {@see https://github.com/jshiell/checkstyle-idea/blob/master/src/csaccess/java/org/infernus/idea/checkstyle/service/cmd/OpCreateChecker.java}
+ * This class contained crucial documentation regarding its "moduleClassLoader" and the "loaderOfCheckedCode".
+ */
 public class CheckStyleStartup implements ProjectComponent {
 
     private final Project project;
@@ -124,6 +178,8 @@ public class CheckStyleStartup implements ProjectComponent {
         return (Map<String, String>) packageObjectFactoryMapField.get(null);
     }
 
+    // A bunch of reflection magic, as the plugin does not expose its internal classLoader
+    // TODO(timvdlippe): Update this code to use the type-safe methods once a PR to the plugin is merged that implements the method.
     private ClassLoader getPluginCreatedClassLoaderFromService(CheckstyleProjectService service) throws NoSuchFieldException, IllegalAccessException {
         Field checkstyleClassLoaderField = service.getClass().getDeclaredField("checkstyleClassLoader");
         checkstyleClassLoaderField.setAccessible(true);

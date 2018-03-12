@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 class StaticAnalysisWarningClassifier {
 
-    static final String START_OF_CHECKSTYLE_MESSAGE = "Checkstyle: ";
+    private static final String START_OF_CHECKSTYLE_MESSAGE = "Checkstyle: ";
 
     private static final ClassificationBundle INTELLIJ_BUNDLE = new ClassificationBundle();
     static final ClassificationBundle CHECKSTYLE_BUNDLE = new ClassificationBundle();
