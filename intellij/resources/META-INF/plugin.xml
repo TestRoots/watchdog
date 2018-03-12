@@ -55,6 +55,7 @@
     -->
     <depends>com.intellij.modules.java</depends>
     <depends optional="true">com.intellij.modules.androidstudio</depends>
+	<depends optional="true" config-file="checkstyle.xml">CheckStyle-IDEA</depends>
 
     <!--depends optional="false">JUnit</depends-->
 

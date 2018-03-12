@@ -1,0 +1,7 @@
+<idea-plugin>
+	<project-components>
+		<component>
+			<implementation-class>nl.tudelft.watchdog.intellij.logic.ui.listeners.staticanalysis.CheckStyleStartup</implementation-class>
+		</component>
+	</project-components>
+</idea-plugin>
