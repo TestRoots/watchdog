@@ -81,9 +81,17 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 	 * trying to access the file from the disk.
 	 */
 	public static String getContentForEditorFromDisk(ITextEditor editor) {
+		return getContentForFileFromDisk(getFile(editor));
+	}
+	
+	/**
+	 * Reads and returns the contents of a file, by
+	 * trying to access the file from the disk.
+	 */
+	public static String getContentForFileFromDisk(IFile file) {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					getFile(editor).getContents(), "UTF-8"));
+					file.getContents(), "UTF-8"));
 			StringBuilder sb = new StringBuilder();
 			String line;
 			while ((line = reader.readLine()) != null) {

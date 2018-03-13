@@ -11,7 +11,11 @@ import java.util.stream.Stream;
 public class CoreMarkupModelListener {
 
     private final TrackingEventManager trackingEventManager;
-    private final Document document;
+    private Document document;
+
+    public CoreMarkupModelListener(TrackingEventManager trackingEventManager) {
+        this.trackingEventManager = trackingEventManager;
+    }
 
     public CoreMarkupModelListener(Document document, TrackingEventManager trackingEventManager) {
         this.trackingEventManager = trackingEventManager;
@@ -19,14 +23,22 @@ public class CoreMarkupModelListener {
     }
 
     protected void addCreatedWarnings(Stream<String> types) {
-		trackingEventManager.addEvents(types
-                .map(type -> new StaticAnalysisWarningEvent(type, this.document, TrackingEventType.SA_WARNING_CREATED, DateTime.now().toDate()))
+        this.addCreatedWarnings(types, this.document);
+    }
+
+    protected void addCreatedWarnings(Stream<String> types, Document document) {
+        trackingEventManager.addEvents(types
+                .map(type -> new StaticAnalysisWarningEvent(type, document, TrackingEventType.SA_WARNING_CREATED, DateTime.now().toDate()))
         );
     }
 
     protected void addRemovedWarnings(Stream<String> types) {
+        this.addRemovedWarnings(types, this.document);
+    }
+
+    protected void addRemovedWarnings(Stream<String> types, Document document) {
         trackingEventManager.addEvents(types
-                .map(type -> new StaticAnalysisWarningEvent(type, this.document, TrackingEventType.SA_WARNING_REMOVED, DateTime.now().toDate()))
+                .map(type -> new StaticAnalysisWarningEvent(type, document, TrackingEventType.SA_WARNING_REMOVED, DateTime.now().toDate()))
         );
     }
 }

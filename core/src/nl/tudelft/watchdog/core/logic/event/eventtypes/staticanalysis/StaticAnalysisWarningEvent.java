@@ -9,17 +9,21 @@ import java.util.Date;
 
 public class StaticAnalysisWarningEvent extends EventBase {
 
-	private static final long serialVersionUID = -344289578682136085L;
+    private static final long serialVersionUID = -344289578682136085L;
 
-	@SerializedName("sat")
+    @SerializedName("sat")
     private final String staticAnalysisType;
 
-	@SerializedName("doc")
+    @SerializedName("doc")
     private final Document document;
 
     public StaticAnalysisWarningEvent(String staticAnalysisType, Document document, TrackingEventType trackingEventType, Date creationDate) {
         super(trackingEventType, creationDate);
         this.staticAnalysisType = staticAnalysisType;
         this.document = document;
+    }
+
+    public Document getDocument() {
+        return this.document;
     }
 }
