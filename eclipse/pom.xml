@@ -25,6 +25,7 @@
 		<juno-repo.url>http://download.eclipse.org/releases/juno</juno-repo.url>
 		<kepler-repo.url>http://download.eclipse.org/releases/kepler</kepler-repo.url>
 		<luna-repo.url>http://download.eclipse.org/releases/luna</luna-repo.url>
+		<checkstyle-repo.url>https://dl.bintray.com/eclipse-cs/eclipse-cs/8.8.0/</checkstyle-repo.url>
 	</properties>
 
 	<repositories>
@@ -46,6 +47,11 @@
 		<repository>
 			<id>luna</id>
 			<url>${luna-repo.url}</url>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>checkstyle</id>
+			<url>${checkstyle-repo.url}</url>
 			<layout>p2</layout>
 		</repository>
 	</repositories>
