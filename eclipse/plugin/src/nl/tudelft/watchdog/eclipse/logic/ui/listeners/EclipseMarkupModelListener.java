@@ -24,6 +24,7 @@ import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.ui.listeners.CoreMarkupModelListener;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.eclipse.logic.document.DocumentCreator;
+import nl.tudelft.watchdog.eclipse.logic.ui.listeners.staticanalysis.StaticAnalysisClassifier;
 
 public class EclipseMarkupModelListener extends CoreMarkupModelListener implements IResourceChangeListener {
 
@@ -195,8 +196,9 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
 
         void traverseMemoizationTable() {
             traverseMemoizationTable(oldSize, currentSize);
-            addCreatedWarnings(this.createdWarningTypes.stream(), this.document);
-            addRemovedWarnings(this.removedWarningTypes.stream(), this.document);
+
+            addCreatedWarnings(this.createdWarningTypes.stream().map(StaticAnalysisClassifier::classify), this.document);
+            addRemovedWarnings(this.removedWarningTypes.stream().map(StaticAnalysisClassifier::classify), this.document);
         }
 
         /**
@@ -214,13 +216,13 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
             // The markers are not the same. In this case, the length to traverse by choosing the column
             // is longer, which means that a new marker was added (as the column is larger) in currentMarkers
             } else if (column > 0 && (row == 0 || memoization[row][column - 1] >= memoization[row - 1][column])) {
-                this.createdWarningTypes.add("unknown");
+                this.createdWarningTypes.add(currentMarkers.get(column - 1).message);
 
                 traverseMemoizationTable(row, column - 1);
             // In this case, the row length is lower, which means that the oldMarkers was longer at this point
             // Therefore it is a removed warning
             } else if (row > 0 && (column == 0 || memoization[row][column - 1] < memoization[row - 1][column])) {
-                this.removedWarningTypes.add("unknown");
+                this.removedWarningTypes.add(oldMarkers.get(row - 1).message);
 
                 traverseMemoizationTable(row - 1, column);
             }

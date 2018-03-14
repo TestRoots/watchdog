@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -16,6 +15,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.jobs.Job;
 import org.junit.After;
 import org.junit.Assert;
@@ -93,6 +93,7 @@ public class MarkupModelListenerTest {
         this.preExistingTestFile = folder.getFile("Existing.java");
         this.preExistingTestFile.create(generateFileStreamLines(25), true, null);
         this.preExistingMarker = this.preExistingTestFile.createMarker(IMarker.PROBLEM);
+        this.preExistingMarker.setAttribute(IMarker.MESSAGE, "The import java.util.Set is never used");
         this.preExistingTestFile.createMarker(IMarker.PROBLEM);
 
         this.saveWorkspaceAndWaitForBuild();
@@ -254,7 +255,56 @@ public class MarkupModelListenerTest {
 
     @Test
     public void correctly_generates_document_information() throws Exception {
-        AtomicReference<List<StaticAnalysisWarningEvent>> warnings = new AtomicReference<>();
+        List<StaticAnalysisWarningEvent> generatedWarnings = this.deleteMarkerAndReturnGeneratedWarningList(this.preExistingMarker);
+
+        assertEquals(generatedWarnings.size(), 1);
+
+        Document document = generatedWarnings.get(0).getDocument();
+        assertEquals(document.getFileName(), "Existing.java");
+        assertEquals(document.getContent().split("\\d+").length, 25);
+    }
+
+    @Test
+    public void correctly_classifies_warning_type_for_existing_marker() throws Exception {
+        List<StaticAnalysisWarningEvent> generatedWarnings = this.deleteMarkerAndReturnGeneratedWarningList(this.preExistingMarker);
+
+        assertEquals(generatedWarnings.size(), 1);
+
+        // We expect message 388 to be here, however as pointed out in
+        // https://github.com/eclipse/eclipse.jdt.core/blob/efc9b650d8590a5670b5897ab6f8c0fb0db2799d/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/DefaultProblemFactory.java#L111-L113
+        // all keys are offset by 1. Therefore 389 is the expected value
+        assertEquals(generatedWarnings.get(0).getStaticAnalysisType(), "389");
+    }
+
+    @Test
+    public void correctly_classifies_warning_type_for_creating_a_new_marker() throws Exception {
+        List<StaticAnalysisWarningEvent> generatedEvents = processMarkerAndReturnGeneratedWarningList(() -> {
+            try {
+                IMarker marker = this.testFile.createMarker(IMarker.PROBLEM);
+                marker.setAttribute(IMarker.MESSAGE, "Duplicate tag for parameter");
+            } catch (CoreException e) {
+                e.printStackTrace();
+            }
+        });
+
+        assertEquals(generatedEvents.size(), 1);
+
+        // See explanation in the previous test why this is 474
+        assertEquals(generatedEvents.get(0).getStaticAnalysisType(), "474");
+    }
+
+    private List<StaticAnalysisWarningEvent> deleteMarkerAndReturnGeneratedWarningList(IMarker marker) throws Exception {
+        return processMarkerAndReturnGeneratedWarningList(() -> {
+            try {
+                marker.delete();
+            } catch (CoreException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private List<StaticAnalysisWarningEvent> processMarkerAndReturnGeneratedWarningList(Runnable runnable) throws Exception {
+        List<StaticAnalysisWarningEvent> list = new ArrayList<>();
 
         Mockito.doAnswer(new Answer<Object>() {
 
@@ -262,20 +312,15 @@ public class MarkupModelListenerTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Stream<StaticAnalysisWarningEvent> stream = (Stream<StaticAnalysisWarningEvent>) invocation.getArguments()[0];
-                warnings.set(stream.collect(Collectors.toList()));
+                list.addAll(stream.collect(Collectors.toList()));
                 return null;
             }}).when(this.trackingEventManager).addEvents(Mockito.any());
 
-        this.preExistingMarker.delete();
+        runnable.run();
 
         this.saveWorkspaceAndWaitForBuild();
 
-        List<StaticAnalysisWarningEvent> generatedWarnings = warnings.get();
-        assertEquals(generatedWarnings.size(), 1);
-
-        Document document = generatedWarnings.get(0).getDocument();
-        assertEquals(document.getFileName(), "Existing.java");
-        assertEquals(document.getContent().split("\\d+").length, 25);
+        return list;
     }
 
 }

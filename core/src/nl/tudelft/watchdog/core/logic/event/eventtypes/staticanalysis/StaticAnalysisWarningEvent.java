@@ -23,6 +23,10 @@ public class StaticAnalysisWarningEvent extends EventBase {
         this.document = document;
     }
 
+    public String getStaticAnalysisType() {
+        return this.staticAnalysisType;
+    }
+
     public Document getDocument() {
         return this.document;
     }
