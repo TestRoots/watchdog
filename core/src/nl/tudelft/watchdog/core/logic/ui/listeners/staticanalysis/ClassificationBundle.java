@@ -53,7 +53,9 @@ public class ClassificationBundle {
                     .replaceAll(" #ref", "");
 
             // Filter out the "catch-all" patterns. These would almost always be erroneous matches.
-            if (!".+".equals(regex)) {
+            // Note that we are matching a "regex" (it is a String) with a regex String
+            // Therefore escape the dot and the plus, as these are the actual patterns we have
+            if (!regex.matches("(\\.\\+)+")) {
                 patternBasedKeyList.add(new PatternBasedKey(Pattern.compile(regex), key));
             }
         } else {

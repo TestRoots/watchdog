@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.core.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -132,5 +133,20 @@ public abstract class WatchDogUtilsBase {
 		builder.append("&entry.2010347695&entry.2084367812");
 		return builder.toString();
 	}
+
+	public static <A, T, E extends Exception> Function<A, T> unchecked(FunctionWithException<A, T, E> function) {
+        return t -> {
+            try {
+                return function.apply(t);
+            } catch (Exception e) {
+                return null;
+            }
+        };
+    }
+
+    @FunctionalInterface
+    public interface FunctionWithException<T, R, E extends Exception> {
+        R apply(T t) throws E;
+    }
 
 }

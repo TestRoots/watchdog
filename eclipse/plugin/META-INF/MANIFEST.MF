@@ -4,7 +4,9 @@ Manifest-Version: 1.0
 Bundle-Activator: nl.tudelft.watchdog.eclipse.Activator
 Bundle-Version: 2.0.0
 Bundle-SymbolicName: nl.tudelft.WatchDog;singleton:=true
-Import-Package: junit.runner,
+Import-Package: com.puppycrawl.tools.checkstyle;resolution:=optional,
+ junit.runner,
+ net.sf.eclipsecs.core;resolution:=optional,
  org.eclipse.core.commands,
  org.eclipse.core.commands.common,
  org.eclipse.core.resources,
@@ -16,11 +18,11 @@ Import-Package: junit.runner,
  org.eclipse.debug.ui,
  org.eclipse.jdt.core,
  org.eclipse.jdt.debug.core,
+ org.eclipse.jdt.internal.compiler.problem,
+ org.eclipse.jdt.internal.compiler.util,
  org.eclipse.jdt.junit,
  org.eclipse.jdt.junit.model,
  org.eclipse.jdt.ui,
- org.eclipse.jdt.internal.compiler.util,
- org.eclipse.jdt.internal.compiler.problem,
  org.eclipse.jface.action,
  org.eclipse.jface.dialogs,
  org.eclipse.jface.layout,
@@ -70,4 +72,5 @@ Bundle-ClassPath: .,
  lib/jfreechart-1.0.19.jar,
  lib/jfreechart-1.0.19-swt.jar
 Require-Bundle: watchdog.core;bundle-version="2.0.0",
- net.sf.eclipsecs.core;bundle-version="8.8.0";resolution:=optional
+ net.sf.eclipsecs.core;resolution:=optional,
+ net.sf.eclipsecs.checkstyle;resolution:=optional
