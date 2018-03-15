@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target name="New Target" sequenceNumber="35">
+    <locations>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <unit id="net.sf.eclipsecs.feature.group" version="8.8.0.201802200627"/>
+            <unit id="net.sf.eclipsecs.source.feature.group" version="8.8.0.201802200627"/>
+            <repository location="https://dl.bintray.com/eclipse-cs/eclipse-cs/8.8.0/"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <unit id="org.eclipse.core.runtime.feature.feature.group" version="0.0.0"/>
+            <unit id="org.eclipse.equinox.core.feature.feature.group" version="0.0.0"/>
+            <unit id="org.eclipse.equinox.executable.feature.group" version="0.0.0"/>
+            <unit id="org.eclipse.equinox.server.p2.feature.group" version="0.0.0"/>
+            <unit id="org.eclipse.jdt.feature.group" version="0.0.0"/>
+            <unit id="org.eclipse.ui.ide.application" version="0.0.0"/>
+            <repository location="http://download.eclipse.org/releases/oxygen/"/>
+        </location>
+    </locations>
+</target>

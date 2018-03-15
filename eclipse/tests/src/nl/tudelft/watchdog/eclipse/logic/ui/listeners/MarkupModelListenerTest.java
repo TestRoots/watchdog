@@ -33,6 +33,7 @@ import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.eclipse.logic.network.TransferManager;
 import nl.tudelft.watchdog.eclipse.logic.ui.listeners.WorkbenchListener;
+import nl.tudelft.watchdog.eclipse.logic.ui.listeners.EclipseMarkupModelListener.MarkerHolder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -270,9 +271,9 @@ public class MarkupModelListenerTest {
 
         assertEquals(generatedWarnings.size(), 1);
 
-        // We expect message 388 to be here, however as pointed out in
+        // We actually expect message 388 to be here, however as pointed out in
         // https://github.com/eclipse/eclipse.jdt.core/blob/efc9b650d8590a5670b5897ab6f8c0fb0db2799d/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/DefaultProblemFactory.java#L111-L113
-        // all keys are offset by 1. Therefore 389 is the expected value
+        // all keys are offset by 1. Therefore 389 is the expected assert value
         assertEquals(generatedWarnings.get(0).getStaticAnalysisType(), "389");
     }
 
@@ -292,6 +293,37 @@ public class MarkupModelListenerTest {
         // See explanation in the previous test why this is 474
         assertEquals(generatedEvents.get(0).getStaticAnalysisType(), "474");
     }
+
+    @Test
+    public void correctly_classifies_checkstyle_warning_type() throws Exception {
+        List<StaticAnalysisWarningEvent> generatedEvents = processMarkerAndReturnGeneratedWarningList(() -> {
+            try {
+                IMarker marker = this.testFile.createMarker(MarkerHolder.CHECKSTYLE_MARKER_ID);
+                marker.setAttribute(IMarker.MESSAGE, "Using the '.*' form of import should be avoided - java.util.*.");
+            } catch (CoreException e) {
+                e.printStackTrace();
+            }
+        });
+
+        assertEquals(generatedEvents.size(), 1);
+        assertEquals(generatedEvents.get(0).getStaticAnalysisType(), "checkstyle.imports.import.avoidStar");
+    }
+
+    @Test
+    public void non_existing_warning_should_not_match_any_type() throws Exception {
+        List<StaticAnalysisWarningEvent> generatedEvents = processMarkerAndReturnGeneratedWarningList(() -> {
+            try {
+                IMarker marker = this.testFile.createMarker(IMarker.PROBLEM);
+                marker.setAttribute(IMarker.MESSAGE, "This warning does not exist");
+            } catch (CoreException e) {
+                e.printStackTrace();
+            }
+        });
+
+        assertEquals(generatedEvents.size(), 1);
+        assertEquals(generatedEvents.get(0).getStaticAnalysisType(), "unknown");
+    }
+
 
     private List<StaticAnalysisWarningEvent> deleteMarkerAndReturnGeneratedWarningList(IMarker marker) throws Exception {
         return processMarkerAndReturnGeneratedWarningList(() -> {

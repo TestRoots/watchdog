@@ -19,13 +19,23 @@ import com.intellij.util.messages.MessageBusConnection;
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.ui.listeners.CoreMarkupModelListener;
+import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.StaticAnalysisMessageClassifier;
 import nl.tudelft.watchdog.intellij.logic.document.DocumentCreator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import static nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.StaticAnalysisMessageClassifier.IDE_BUNDLE;
+
 public class IntelliJMarkupModelListener extends CoreMarkupModelListener implements MarkupModelListener, Disposable {
+
+    static {
+        IDE_BUNDLE.createPatternsForKeysInBundle("messages.InspectionsBundle");
+        IDE_BUNDLE.createPatternsForKeysInBundle("com.siyeh.InspectionGadgetsBundle");
+
+        IDE_BUNDLE.sortList();
+    }
 
     private final Set<RangeHighlighterEx> generatedWarnings;
     private final Set<RangeHighlighterEx> removedWarnings;
@@ -121,7 +131,7 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
         final Object errorStripeTooltip = rangeHighlighterEx.getErrorStripeTooltip();
 
         if (errorStripeTooltip instanceof HighlightInfo) {
-            return StaticAnalysisWarningClassifier.classify(((HighlightInfo) errorStripeTooltip).getDescription());
+            return StaticAnalysisMessageClassifier.classify(((HighlightInfo) errorStripeTooltip).getDescription());
         }
 
         return "unknown";

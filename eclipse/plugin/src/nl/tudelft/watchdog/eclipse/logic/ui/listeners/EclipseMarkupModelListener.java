@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -18,15 +19,42 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
+import org.eclipse.jdt.internal.compiler.util.HashtableOfInt;
 
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.ui.listeners.CoreMarkupModelListener;
+import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.CheckStyleChecksMessagesFetcher;
+import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.StaticAnalysisMessageClassifier;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.eclipse.logic.document.DocumentCreator;
-import nl.tudelft.watchdog.eclipse.logic.ui.listeners.staticanalysis.StaticAnalysisClassifier;
 
+@SuppressWarnings("restriction")
 public class EclipseMarkupModelListener extends CoreMarkupModelListener implements IResourceChangeListener {
+
+    static {
+        HashtableOfInt hashTable = DefaultProblemFactory.loadMessageTemplates(Locale.getDefault());
+
+        for (int key : hashTable.keyTable) {
+            Object value = hashTable.get(key);
+            if (value != null && value instanceof String) {
+                StaticAnalysisMessageClassifier.IDE_BUNDLE.addMessage(String.valueOf(key), (String) value);
+            }
+        }
+
+        StaticAnalysisMessageClassifier.IDE_BUNDLE.sortList();
+
+        try {
+            ClassLoader currentClassLoader = EclipseMarkupModelListener.class.getClassLoader();
+            CheckStyleChecksMessagesFetcher.addCheckStyleMessagesToBundle(StaticAnalysisMessageClassifier.CHECKSTYLE_BUNDLE, currentClassLoader, currentClassLoader);
+
+            StaticAnalysisMessageClassifier.CHECKSTYLE_BUNDLE.sortList();
+        } catch (Exception ignored) {
+            // CheckStyle apparently was not loaded, bail out
+            ignored.printStackTrace();
+        }
+    }
 
     private Map<IPath, List<MarkerHolder>> oldFileMarkers;
     private Map<IPath, List<MarkerHolder>> currentFileMarkers;
@@ -122,6 +150,8 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
      * Make sure that when you use this message, the data is anonymized.
      */
     static class MarkerHolder implements Comparable<MarkerHolder> {
+        static final String CHECKSTYLE_MARKER_ID = "net.sf.eclipsecs.core.CheckstyleMarker";
+
         private String message;
         private int lineNumber;
 
@@ -129,6 +159,15 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
             MarkerHolder holder = new MarkerHolder();
             holder.message = marker.getAttribute(IMarker.MESSAGE, "");
             holder.lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, 0);
+
+            try {
+                if (CHECKSTYLE_MARKER_ID.equals(marker.getType())) {
+                    holder.message = StaticAnalysisMessageClassifier.START_OF_CHECKSTYLE_MESSAGE + holder.message;
+                }
+            } catch (CoreException ignored) {
+                // Not supposed to happen
+            }
+
             return holder;
         }
 
@@ -197,8 +236,8 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
         void traverseMemoizationTable() {
             traverseMemoizationTable(oldSize, currentSize);
 
-            addCreatedWarnings(this.createdWarningTypes.stream().map(StaticAnalysisClassifier::classify), this.document);
-            addRemovedWarnings(this.removedWarningTypes.stream().map(StaticAnalysisClassifier::classify), this.document);
+            addCreatedWarnings(this.createdWarningTypes.stream().map(StaticAnalysisMessageClassifier::classify), this.document);
+            addRemovedWarnings(this.removedWarningTypes.stream().map(StaticAnalysisMessageClassifier::classify), this.document);
         }
 
         /**
