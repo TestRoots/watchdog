@@ -92,19 +92,4 @@ public class WatchDogUtils extends WatchDogUtilsBase {
         WatchDogUtils.activeProject = activeProject;
         WatchDogGlobals.isActive = isWatchDogActive(activeProject);
     }
-
-    public static <A, T, E extends Exception> Function<A, T> unchecked(FunctionWithException<A, T, E> function) {
-        return t -> {
-            try {
-                return function.apply(t);
-            } catch (Exception e) {
-                return null;
-            }
-        };
-    }
-
-    @FunctionalInterface
-    public interface FunctionWithException<T, R, E extends Exception> {
-        R apply(T t) throws E;
-    }
 }
