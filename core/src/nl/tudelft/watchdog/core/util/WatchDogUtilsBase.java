@@ -134,12 +134,15 @@ public abstract class WatchDogUtilsBase {
 		return builder.toString();
 	}
 
-	public static <A, T, E extends Exception> Function<A, T> unchecked(FunctionWithException<A, T, E> function) {
-        return t -> {
-            try {
-                return function.apply(t);
-            } catch (Exception e) {
-                return null;
+	public static <A, R, E extends Exception> Function<A, R> unchecked(FunctionWithException<A, R, E> function) {
+        return new Function<A, R>() {
+            @Override
+            public R apply(A argument) {
+                try {
+                    return function.apply(argument);
+                } catch (Exception e) {
+                    return null;
+                }
             }
         };
     }
