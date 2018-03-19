@@ -6,15 +6,19 @@ Bundle-Version: 2.0.0
 Fragment-Host: nl.tudelft.WatchDog;bundle-version="[0.0.0,3.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: watchdog.core;bundle-version="2.0.0",
+ javassist,
  org.junit,
+ org.objenesis,
  net.sf.eclipsecs.core,
- net.sf.eclipsecs.checkstyle
-Bundle-ClassPath: libs/mockito-all-1.9.5.jar,
- .,
+ net.sf.eclipsecs.checkstyle,
+ org.mockito.mockito-core,
+ org.powermock.powermock-core,
+ org.powermock.powermock-api-mockito,
+ org.powermock.powermock-api-support,
+ org.powermock.powermock-module-junit4,
+ org.powermock.powermock-module-junit4-common
+Bundle-ClassPath: .,
  libs/commons-io-2.4.jar,
- libs/powermock-mockito-1.6.1-full.jar,
- libs/javassist-3.18.2-GA.jar,
- libs/objenesis-2.1.jar,
  libs/cglib-nodep-2.2.2.jar
 Import-Package: org.eclipse.core.resources.team,
  org.eclipse.jdt.internal.core,
