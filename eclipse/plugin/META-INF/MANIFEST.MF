@@ -59,18 +59,18 @@ Import-Package: com.puppycrawl.tools.checkstyle;resolution:=optional,
 Bundle-ActivationPolicy: lazy
 Bundle-Name: WatchDog
 Bundle-ClassPath: .,
- lib/commons-codec-1.6.jar,
- lib/commons-lang-2.6.jar,
- lib/commons-logging-1.1.3.jar,
  lib/commons-validator-1.4.0.jar,
  lib/fluent-hc-4.3.3.jar,
- lib/httpclient-4.3.3.jar,
  lib/httpclient-cache-4.3.3.jar,
- lib/httpcore-4.3.2.jar,
  lib/httpmime-4.3.3.jar,
  lib/jcommon-1.0.23.jar,
  lib/jfreechart-1.0.19.jar,
  lib/jfreechart-1.0.19-swt.jar
 Require-Bundle: watchdog.core;bundle-version="2.0.0",
  net.sf.eclipsecs.core;resolution:=optional,
- net.sf.eclipsecs.checkstyle;resolution:=optional
+ net.sf.eclipsecs.checkstyle;resolution:=optional,
+ org.apache.commons.codec,
+ org.apache.commons.lang,
+ org.apache.commons.logging,
+ org.apache.httpcomponents.httpclient,
+ org.apache.httpcomponents.httpcore
