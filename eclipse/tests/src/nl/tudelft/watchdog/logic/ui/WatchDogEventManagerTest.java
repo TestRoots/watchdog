@@ -8,13 +8,9 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
+import org.mockito.runners.MockitoJUnitRunner;
 import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
@@ -29,10 +25,8 @@ import nl.tudelft.watchdog.core.logic.ui.InactivityNotifier;
 import nl.tudelft.watchdog.core.logic.ui.InactivityNotifiers;
 import nl.tudelft.watchdog.core.logic.ui.UserInactivityNotifier;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
-import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
-import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /**
@@ -45,8 +39,7 @@ import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
  * It is currently relying on Thread synchronization and sleeps, which are flaky.
  */
 @Ignore
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(WatchDogGlobals.class)
+@RunWith(MockitoJUnitRunner.class)
 public class WatchDogEventManagerTest {
 
 	private static final int USER_ACTIVITY_TIMEOUT = 300;
@@ -56,12 +49,6 @@ public class WatchDogEventManagerTest {
 	private EditorIntervalBase editorInterval;
 	private IntervalBase interval;
 
-	@Mock
-	Preferences mockedPreferences;
-
-	@Mock
-	WatchDogGlobals mockedGlobals;
-
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
@@ -70,12 +57,6 @@ public class WatchDogEventManagerTest {
 				Mockito.mock(PersisterBase.class));
 		intervalManager = Mockito.spy(intervalManagerReal);
 		mockedTextEditor = Mockito.mock(ITextEditor.class);
-		PowerMockito.mockStatic(WatchDogGlobals.class);
-		Mockito.when(WatchDogGlobals.getLogDirectory()).thenReturn("watchdog/logs/");
-		Mockito.when(WatchDogGlobals.getPreferences()).thenReturn(mockedPreferences);
-		Mockito.when(WatchDogGlobals.getUserInactivityTimeoutDuration()).thenReturn(USER_ACTIVITY_TIMEOUT);
-		Mockito.when(mockedPreferences.isAuthenticationEnabled()).thenReturn(true);
-		Mockito.when(mockedPreferences.isLoggingEnabled()).thenReturn(false);
 
 		WatchDogEventType.intervalManager = intervalManager;
 		WatchDogEventType.editorSpecificImplementation = new InitializationManager.EclipseWatchDogEventSpecificImplementation(intervalManager);

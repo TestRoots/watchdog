@@ -7,9 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointType;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
@@ -19,16 +17,14 @@ import nl.tudelft.watchdog.core.logic.event.eventtypes.debugging.BreakpointRemov
 import nl.tudelft.watchdog.core.logic.event.eventtypes.debugging.DebugEventBase;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.TrackingEventType;
 import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
-import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 
 /**
  * Tests for testing the correctness of the {@link TrackingEventManager} when events are
  * added.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(WatchDogGlobals.class)
-public class EventManagerTest {
+@RunWith(MockitoJUnitRunner.class)
+public class TrackingEventManagerTest {
 
 	private TrackingEventManager trackingEventManager;
 	private PersisterBase eventsToTransferPersister;
@@ -37,18 +33,12 @@ public class EventManagerTest {
 	@Mock
 	Preferences mockedPreferences;
 
-	@Mock
-	WatchDogGlobals mockedGlobals;
-
 	@Before
 	public void setup() {
 		eventsToTransferPersister = Mockito.mock(PersisterBase.class);
 		eventsStatisticsPersister = Mockito.mock(PersisterBase.class);
 		trackingEventManager = new TrackingEventManager(eventsToTransferPersister, eventsStatisticsPersister);
 
-		PowerMockito.mockStatic(WatchDogGlobals.class);
-		Mockito.when(WatchDogGlobals.getLogDirectory()).thenReturn("watchdog/logs/");
-		Mockito.when(WatchDogGlobals.getPreferences()).thenReturn(mockedPreferences);
 		Mockito.when(mockedPreferences.isLoggingEnabled()).thenReturn(false);
 	}
 
