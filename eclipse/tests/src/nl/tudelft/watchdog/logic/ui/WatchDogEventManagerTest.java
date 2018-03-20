@@ -10,7 +10,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
+
 import nl.tudelft.watchdog.core.logic.interval.IDEIntervalManagerBase;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.DebugInterval;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.EditorIntervalBase;
@@ -175,14 +176,7 @@ public class WatchDogEventManagerTest {
 	@Test
 	public void testReadingTimeoutIsProlonged() {
 		createMockEvent(WatchDogEventType.ACTIVE_FOCUS);
-		Mockito.verify(intervalManager,
-				Mockito.timeout(USER_ACTIVITY_TIMEOUT / 2).never())
-				.closeInterval(Mockito.any(IntervalBase.class),
-						Mockito.isA(Date.class));
 		createMockEvent(WatchDogEventType.CARET_MOVED);
-		Mockito.verify(intervalManager,
-				Mockito.timeout(TIMEOUT_GRACE_PERIOD).never()).closeInterval(
-				Mockito.any(IntervalBase.class), Mockito.isA(Date.class));
 		Mockito.verify(intervalManager,
 				Mockito.timeout(TIMEOUT_GRACE_PERIOD * 2).atLeast(1))
 				.closeInterval(Mockito.isA(ReadingInterval.class),

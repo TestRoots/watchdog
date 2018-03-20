@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointType;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
@@ -32,14 +32,16 @@ public class TrackingEventManagerTest {
 
 	@Mock
 	Preferences mockedPreferences;
+	
+	String sessionSeed;
 
 	@Before
 	public void setup() {
 		eventsToTransferPersister = Mockito.mock(PersisterBase.class);
 		eventsStatisticsPersister = Mockito.mock(PersisterBase.class);
 		trackingEventManager = new TrackingEventManager(eventsToTransferPersister, eventsStatisticsPersister);
-
-		Mockito.when(mockedPreferences.isLoggingEnabled()).thenReturn(false);
+		sessionSeed = "sessionSeed";
+		trackingEventManager.setSessionSeed(sessionSeed);
 	}
 
 	@Test
@@ -54,7 +56,7 @@ public class TrackingEventManagerTest {
 		BreakpointAddEvent eventReal = new BreakpointAddEvent(1, BreakpointType.LINE, new Date());
 		BreakpointAddEvent event = Mockito.spy(eventReal);
 		trackingEventManager.addEvent(event);
-		Mockito.verify(event).setSessionSeed(Mockito.anyString());
+		Mockito.verify(event).setSessionSeed(sessionSeed);
 		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(BreakpointAddEvent.class));
 		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(BreakpointAddEvent.class));
 	}
@@ -64,7 +66,7 @@ public class TrackingEventManagerTest {
 		BreakpointRemoveEvent eventReal = new BreakpointRemoveEvent(1, BreakpointType.LINE, new Date());
 		BreakpointRemoveEvent event = Mockito.spy(eventReal);
 		trackingEventManager.addEvent(event);
-		Mockito.verify(event).setSessionSeed(Mockito.anyString());
+		Mockito.verify(event).setSessionSeed(sessionSeed);
 		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(BreakpointRemoveEvent.class));
 		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(BreakpointRemoveEvent.class));
 	}
@@ -74,7 +76,7 @@ public class TrackingEventManagerTest {
 		BreakpointChangeEvent eventReal = new BreakpointChangeEvent(1, BreakpointType.LINE, null, new Date());
 		BreakpointChangeEvent event = Mockito.spy(eventReal);
 		trackingEventManager.addEvent(event);
-		Mockito.verify(event).setSessionSeed(Mockito.anyString());
+		Mockito.verify(event).setSessionSeed(sessionSeed);
 		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(BreakpointChangeEvent.class));
 		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(BreakpointChangeEvent.class));
 	}
@@ -84,7 +86,7 @@ public class TrackingEventManagerTest {
 		DebugEventBase eventReal = new DebugEventBase(TrackingEventType.SUSPEND_BREAKPOINT, new Date());
 		DebugEventBase event = Mockito.spy(eventReal);
 		trackingEventManager.addEvent(event);
-		Mockito.verify(event).setSessionSeed(Mockito.anyString());
+		Mockito.verify(event).setSessionSeed(sessionSeed);
 		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(DebugEventBase.class));
 		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(DebugEventBase.class));
 	}
@@ -94,7 +96,7 @@ public class TrackingEventManagerTest {
 		DebugEventBase eventReal = new DebugEventBase(TrackingEventType.STEP_INTO, new Date());
 		DebugEventBase event = Mockito.spy(eventReal);
 		trackingEventManager.addEvent(event);
-		Mockito.verify(event).setSessionSeed(Mockito.anyString());
+		Mockito.verify(event).setSessionSeed(sessionSeed);
 		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(DebugEventBase.class));
 		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(DebugEventBase.class));
 	}
