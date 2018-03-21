@@ -5,6 +5,10 @@
       version="2.0.0"
       provider-name="Software Engineering Research Group (TU Delft)">
 
+    <url>
+       <update url="http://updatesite.testroots.org/updatesite/"/>
+    </url>
+
    <plugin
          id="watchdog.core"
          download-size="0"

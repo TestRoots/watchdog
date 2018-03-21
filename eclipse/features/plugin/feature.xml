@@ -51,7 +51,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    </license>
 
    <url>
-      <update url="http://updatesite.testroots.org"/>
+      <update url="http://updatesite.testroots.org/updatesite/"/>
    </url>
 
    <plugin
