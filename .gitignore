@@ -25,4 +25,5 @@ out/
 
 # data-analysis specific
 node_modules/
-data-analysis/results.json
+data-analysis/*.json
+data-analysis/*.bson

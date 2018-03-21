@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "bson-stream": "^0.0.8",
     "timeseries-analysis": "^1.0.12"
   }
 }

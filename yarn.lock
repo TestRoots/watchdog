@@ -2,6 +2,16 @@
 # yarn lockfile v1
 
 
+bson-stream@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/bson-stream/-/bson-stream-0.0.8.tgz#5fd9f1df6c34c20005948b6e031a33bb1d11e83f"
+  dependencies:
+    bson "^0.4.20"
+
+bson@^0.4.20:
+  version "0.4.23"
+  resolved "https://registry.yarnpkg.com/bson/-/bson-0.4.23.tgz#e65a2e3c7507ffade4109bc7575a76e50f8da915"
+
 bson@~1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/bson/-/bson-1.0.5.tgz#34563b73ff1fde9387c1b9fb5afd845ecc4ba623"

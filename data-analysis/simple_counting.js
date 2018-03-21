@@ -1,6 +1,7 @@
 const timeseriesAnalysis = require('timeseries-analysis');
 
-const output = require('./results.json');
+const fs = require('fs');
+const BSONStream = require('bson-stream');
 
 const usersIpsWithIdes = {};
 const eventTypeCounts = {
@@ -10,7 +11,16 @@ const eventTypeCounts = {
 const eventTypeForUsers = {};
 const timestampsPerUser = {};
 
-output.forEach(event => {
+fs.createReadStream('events.bson')
+  .pipe(new BSONStream())
+  .on('data', processEvent)
+  .on('end', reportStatistics);
+
+function processEvent(event) {
+  if (event.et !== 'sa-wc' && event.et !== 'sa-wr') {
+    return;
+  }
+
   const userId = event.userId;
 
   if (usersIpsWithIdes[userId]) {
@@ -31,7 +41,7 @@ output.forEach(event => {
   }
   eventTypeForUsers[userId][event.et]++;
 
-  const unixTimestamp = Math.round(parseInt(event.ts['$numberLong'])/1000);
+  const unixTimestamp = Math.round(event.ts/1000);
 
   if (!timestampsPerUser[userId]) {
     timestampsPerUser[userId] = {};
@@ -41,21 +51,23 @@ output.forEach(event => {
     timestampsPerUser[userId][unixTimestamp] = 0;
   }
   timestampsPerUser[userId][unixTimestamp] += event.et === 'sa-wc' ? 1 : -1;
-});
+};
 
-console.log(usersIpsWithIdes);
-console.log(eventTypeCounts);
-console.log(eventTypeForUsers);
-console.log(timestampsPerUser);
+function reportStatistics() {
+  console.log(usersIpsWithIdes);
+  console.log(eventTypeCounts);
+  console.log(eventTypeForUsers);
+  console.log(timestampsPerUser);
 
-const timeseries = new timeseriesAnalysis.main([]);
-for (const user of Object.keys(timestampsPerUser)) {
-  let previousValue = 0;
-  timeseries.buffer = Object.entries(timestampsPerUser[user]).sort().map(([date, count]) => {
-    previousValue += count;
-    return [date, previousValue];
-  });
-  timeseries.data = timeseries.buffer;
-  timeseries.save(user).reset();
+  const timeseries = new timeseriesAnalysis.main([]);
+  for (const user of Object.keys(timestampsPerUser)) {
+    let previousValue = 0;
+    timeseries.buffer = Object.entries(timestampsPerUser[user]).sort().map(([date, count]) => {
+      previousValue += count;
+      return [date, previousValue];
+    });
+    timeseries.data = timeseries.buffer;
+    timeseries.save(user).reset();
+  }
+  console.log(timeseries.chart({main: true, lines: [0]}));
 }
-console.log(timeseries.chart({main: true, lines: [0]}));
