@@ -15,6 +15,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 
 public class WatchDogUtils extends WatchDogUtilsBase {
 
@@ -91,5 +92,4 @@ public class WatchDogUtils extends WatchDogUtilsBase {
         WatchDogUtils.activeProject = activeProject;
         WatchDogGlobals.isActive = isWatchDogActive(activeProject);
     }
-
 }

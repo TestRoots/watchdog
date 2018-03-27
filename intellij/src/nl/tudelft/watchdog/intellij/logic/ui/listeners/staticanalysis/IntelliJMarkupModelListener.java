@@ -4,8 +4,9 @@ import com.intellij.AppTopics;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
+import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.impl.MarkupModelImpl;
@@ -15,29 +16,41 @@ import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
 import com.intellij.openapi.project.DumbServiceImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
+import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
-import nl.tudelft.watchdog.core.logic.event.eventtypes.staticanalysis.StaticAnalysisType;
 import nl.tudelft.watchdog.core.logic.ui.listeners.CoreMarkupModelListener;
+import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.StaticAnalysisMessageClassifier;
+import nl.tudelft.watchdog.intellij.logic.document.DocumentCreator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import static nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.StaticAnalysisMessageClassifier.IDE_BUNDLE;
+
 public class IntelliJMarkupModelListener extends CoreMarkupModelListener implements MarkupModelListener, Disposable {
+
+    static {
+        IDE_BUNDLE.createPatternsForKeysInBundle("messages.InspectionsBundle");
+        IDE_BUNDLE.createPatternsForKeysInBundle("com.siyeh.InspectionGadgetsBundle");
+
+        IDE_BUNDLE.sortList();
+    }
 
     private final Set<RangeHighlighterEx> generatedWarnings;
     private final Set<RangeHighlighterEx> removedWarnings;
 
-    private IntelliJMarkupModelListener(TrackingEventManager trackingEventManager) {
-        super(trackingEventManager);
+    private IntelliJMarkupModelListener(Document document, TrackingEventManager trackingEventManager) {
+        super(document, trackingEventManager);
         generatedWarnings = new HashSet<>();
         removedWarnings = new HashSet<>();
     }
 
     public static IntelliJMarkupModelListener initializeAfterAnalysisFinished(
-            Project project, Disposable disposable, Document document, TrackingEventManager trackingEventManager) {
+            Project project, Disposable disposable, Editor editor, TrackingEventManager trackingEventManager) {
 
-        final IntelliJMarkupModelListener markupModelListener = new IntelliJMarkupModelListener(trackingEventManager);
+        final com.intellij.openapi.editor.Document intellijDocument = editor.getDocument();
+        final IntelliJMarkupModelListener markupModelListener = new IntelliJMarkupModelListener(DocumentCreator.createDocument(editor), trackingEventManager);
 
         // We need to run this in smart mode, because the very first time you start your editor, it is very briefly
         // in dumb mode and the codeAnalyzer thinks (incorrectly) it is  finished.
@@ -54,8 +67,8 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
                     // we do not know for which file the analysis actually succeeded. Therefore we need to check
                     // the so-called "dirty" state of the file for this particular analyzer to check whether
                     // the analyzer actually finished. In this case, `null` indicates: the file is not dirty.
-                    if (analyzer.getFileStatusMap().getFileDirtyScope(document, Pass.UPDATE_ALL) == null) {
-                        final MarkupModelImpl markupModel = (MarkupModelImpl) DocumentMarkupModel.forDocument(document, project, true);
+                    if (analyzer.getFileStatusMap().getFileDirtyScope(intellijDocument, Pass.UPDATE_ALL) == null) {
+                        final MarkupModelImpl markupModel = (MarkupModelImpl) DocumentMarkupModel.forDocument(intellijDocument, project, true);
                         markupModel.addMarkupModelListener(disposable, markupModelListener);
 
                         // We batch up changes and only transfer them on every save. This is in-line with the Eclipse
@@ -64,8 +77,8 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
                         // and flush these warnings after the fact.
                         documentMessageBusConnection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
                             @Override
-                            public void beforeDocumentSaving(@NotNull Document savedDocument) {
-                                if (document.equals(savedDocument)) {
+                            public void beforeDocumentSaving(@NotNull com.intellij.openapi.editor.Document savedDocument) {
+                                if (intellijDocument.equals(savedDocument)) {
                                     markupModelListener.flushForDocument();
                                 }
                             }
@@ -80,17 +93,17 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
     }
 
     private void flushForDocument() {
-        addCreatedWarnings(this.generatedWarnings.stream().map(rangeHighlighterEx -> StaticAnalysisType.UNKNOWN));
+        addCreatedWarnings(this.generatedWarnings.stream().map(IntelliJMarkupModelListener::classifyWarningTypeFromHighlighter));
         this.generatedWarnings.clear();
 
-        addRemovedWarnings(this.removedWarnings.stream().map(rangeHighlighterEx -> StaticAnalysisType.UNKNOWN));
+        addRemovedWarnings(this.removedWarnings.stream().map(IntelliJMarkupModelListener::classifyWarningTypeFromHighlighter));
         this.removedWarnings.clear();
     }
 
     @Override
     public void afterAdded(@NotNull RangeHighlighterEx rangeHighlighterEx) {
         if (rangeHighlighterEx.getLayer() == HighlighterLayer.WARNING) {
-            this.generatedWarnings.add(rangeHighlighterEx);
+            this.generatedWarnings.add((rangeHighlighterEx));
         }
     }
 
@@ -111,5 +124,16 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
 
     @Override
     public void dispose() {
+    }
+
+    @NotNull
+    private static String classifyWarningTypeFromHighlighter(@NotNull RangeHighlighterEx rangeHighlighterEx) {
+        final Object errorStripeTooltip = rangeHighlighterEx.getErrorStripeTooltip();
+
+        if (errorStripeTooltip instanceof HighlightInfo) {
+            return StaticAnalysisMessageClassifier.classify(((HighlightInfo) errorStripeTooltip).getDescription());
+        }
+
+        return "unknown";
     }
 }

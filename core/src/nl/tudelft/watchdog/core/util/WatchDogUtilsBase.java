@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.core.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -132,5 +133,27 @@ public abstract class WatchDogUtilsBase {
 		builder.append("&entry.2010347695&entry.2084367812");
 		return builder.toString();
 	}
+
+	// The lambda in this function is in its expanded form, because of a very obscure Java compiler bug on Travis.
+    // For some reason, when using a lambda notation foo -> {} in a static function with type parameters,
+    // the compiler complains about "undeclared type variables" in a subclass (in this case the intellij module)
+    @SuppressWarnings("Convert2Lambda")
+    public static <A, R, E extends Exception> Function<A, R> unchecked(FunctionWithException<A, R, E> function) {
+        return new Function<A, R>() {
+            @Override
+            public R apply(A argument) {
+                try {
+                    return function.apply(argument);
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        };
+    }
+
+    @FunctionalInterface
+    public interface FunctionWithException<T, R, E extends Exception> {
+        R apply(T t) throws E;
+    }
 
 }

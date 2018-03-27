@@ -8,10 +8,6 @@ gem 'sinatra-contrib'
 gem 'bson_ext'
 gem 'geocoder'
 
-github 'sinatra/sinatra' do
-  gem 'rack-protection'
-end
-
 group :test do
   gem 'rspec', "~>3"
   gem 'rack-test'

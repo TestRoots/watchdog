@@ -13,42 +13,13 @@
 	</parent>
 
 	<modules>
+		<module>platform</module>
 		<module>plugin</module>
 		<module>features/core</module>
 		<module>features/plugin</module>
 		<module>p2updatesite</module>
 		<module>tests</module>
 	</modules>
-
-	<properties>
-		<indigo-repo.url>http://download.eclipse.org/releases/indigo</indigo-repo.url>
-		<juno-repo.url>http://download.eclipse.org/releases/juno</juno-repo.url>
-		<kepler-repo.url>http://download.eclipse.org/releases/kepler</kepler-repo.url>
-		<luna-repo.url>http://download.eclipse.org/releases/luna</luna-repo.url>
-	</properties>
-
-	<repositories>
-		<repository>
-			<id>indigo</id>
-			<url>${indigo-repo.url}</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>juno</id>
-			<url>${juno-repo.url}</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>kepler</id>
-			<url>${kepler-repo.url}</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>luna</id>
-			<url>${luna-repo.url}</url>
-			<layout>p2</layout>
-		</repository>
-	</repositories>
 
 	<build>
 		<plugins>
@@ -64,6 +35,15 @@
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho.version}</version>
 				<configuration>
+					<resolver>p2</resolver>
+	        <ignoreTychoRepositories>true</ignoreTychoRepositories>
+	        <target>
+            <artifact>
+              <groupId>nl.tudelft</groupId>
+              <artifactId>watchdog.eclipse.platform</artifactId>
+              <version>${project.version}</version>
+            </artifact>
+	        </target>
 					<environments>
 						<environment>
 							<os>linux</os>
