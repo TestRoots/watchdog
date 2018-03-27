@@ -21,6 +21,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.internal.compiler.util.HashtableOfInt;
+import org.joda.time.DateTime;
+import org.joda.time.Seconds;
 
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
@@ -154,11 +156,13 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
 
         private String message;
         private int lineNumber;
+        private DateTime warningCreationTime;
 
         static MarkerHolder fromIMarker(IMarker marker) {
             MarkerHolder holder = new MarkerHolder();
             holder.message = marker.getAttribute(IMarker.MESSAGE, "");
             holder.lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, 0);
+            holder.warningCreationTime = DateTime.now();
 
             try {
                 if (CHECKSTYLE_MARKER_ID.equals(marker.getType())) {
@@ -205,8 +209,8 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
         private final int[][] memoization;
         private final int oldSize;
         private final int currentSize;
-        private List<String> createdWarningTypes;
-        private List<String> removedWarningTypes;
+        private List<Warning<String>> createdWarningTypes;
+        private List<Warning<String>> removedWarningTypes;
 
         MarkerBackTrackingAlgorithm(Document document, List<MarkerHolder> oldMarkers, List<MarkerHolder> currentMarkers) {
             this.document = document;
@@ -236,8 +240,17 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
         void traverseMemoizationTable() {
             traverseMemoizationTable(oldSize, currentSize);
 
-            addCreatedWarnings(this.createdWarningTypes.stream().map(StaticAnalysisMessageClassifier::classify), this.document);
-            addRemovedWarnings(this.removedWarningTypes.stream().map(StaticAnalysisMessageClassifier::classify), this.document);
+            addCreatedWarnings(this.createdWarningTypes.stream().map(this::createWarning), this.document);
+            addRemovedWarnings(this.removedWarningTypes.stream().map(this::createWarning), this.document);
+        }
+
+        private Warning<String> createWarning(Warning<String> warning) {
+            return new Warning<>(
+                    StaticAnalysisMessageClassifier.classify(warning.type),
+                    warning.lineNumber,
+                    warning.warningCreationTime,
+                    warning.secondsBetween
+            );
         }
 
         /**
@@ -255,13 +268,18 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
             // The markers are not the same. In this case, the length to traverse by choosing the column
             // is longer, which means that a new marker was added (as the column is larger) in currentMarkers
             } else if (column > 0 && (row == 0 || memoization[row][column - 1] >= memoization[row - 1][column])) {
-                this.createdWarningTypes.add(currentMarkers.get(column - 1).message);
+                MarkerHolder warning = currentMarkers.get(column - 1);
+
+                this.createdWarningTypes.add(new Warning<>(warning.message, warning.lineNumber, DateTime.now()));
 
                 traverseMemoizationTable(row, column - 1);
             // In this case, the row length is lower, which means that the oldMarkers was longer at this point
             // Therefore it is a removed warning
             } else if (row > 0 && (column == 0 || memoization[row][column - 1] < memoization[row - 1][column])) {
-                this.removedWarningTypes.add(oldMarkers.get(row - 1).message);
+                MarkerHolder warning = oldMarkers.get(row - 1);
+                DateTime now = DateTime.now();
+
+                this.removedWarningTypes.add(new Warning<>(warning.message, warning.lineNumber, now, Seconds.secondsBetween(warning.warningCreationTime, now).getSeconds()));
 
                 traverseMemoizationTable(row - 1, column);
             }

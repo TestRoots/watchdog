@@ -19,26 +19,56 @@ public class CoreMarkupModelListener {
 
     public CoreMarkupModelListener(Document document, TrackingEventManager trackingEventManager) {
         this.trackingEventManager = trackingEventManager;
-        this.document = document.prepareDocument();
+        this.document = document;
     }
 
-    protected void addCreatedWarnings(Stream<String> types) {
-        this.addCreatedWarnings(types, this.document);
+    protected void addCreatedWarnings(Stream<Warning<String>> createdWarnings) {
+        this.addCreatedWarnings(createdWarnings, this.document);
     }
 
-    protected void addCreatedWarnings(Stream<String> types, Document document) {
-        trackingEventManager.addEvents(types
-                .map(type -> new StaticAnalysisWarningEvent(type, document, TrackingEventType.SA_WARNING_CREATED, DateTime.now().toDate()))
+    protected void addCreatedWarnings(Stream<Warning<String>> createdWarnings, Document document) {
+        trackingEventManager.addEvents(createdWarnings
+                .map(warning -> this.createEventFromWarning(TrackingEventType.SA_WARNING_CREATED, warning, document.prepareDocument()))
         );
     }
 
-    protected void addRemovedWarnings(Stream<String> types) {
+    protected void addRemovedWarnings(Stream<Warning<String>> types) {
         this.addRemovedWarnings(types, this.document);
     }
 
-    protected void addRemovedWarnings(Stream<String> types, Document document) {
-        trackingEventManager.addEvents(types
-                .map(type -> new StaticAnalysisWarningEvent(type, document, TrackingEventType.SA_WARNING_REMOVED, DateTime.now().toDate()))
+    protected void addRemovedWarnings(Stream<Warning<String>> removedWarnings, Document document) {
+        trackingEventManager.addEvents(removedWarnings.map(warning ->
+                this.createEventFromWarning(TrackingEventType.SA_WARNING_REMOVED, warning, document.prepareDocument()))
         );
+    }
+
+    private StaticAnalysisWarningEvent createEventFromWarning(TrackingEventType trackingEventType, Warning<String> warning, Document document) {
+        return new StaticAnalysisWarningEvent(
+                warning.type,
+                document,
+                trackingEventType,
+                DateTime.now().toDate(),
+                warning.warningCreationTime,
+                warning.secondsBetween,
+                warning.lineNumber
+        );
+    }
+
+    protected class Warning<T> {
+        public final int secondsBetween;
+        public final T type;
+        public final DateTime warningCreationTime;
+        public final int lineNumber;
+
+        public Warning(T type, int lineNumber, DateTime warningCreationTime) {
+            this(type, lineNumber, warningCreationTime, -1);
+        }
+
+        public Warning(T type, int lineNumber, DateTime warningCreationTime, int secondsBetween) {
+            this.type = type;
+            this.warningCreationTime = warningCreationTime;
+            this.secondsBetween = secondsBetween;
+            this.lineNumber = lineNumber;
+        }
     }
 }
