@@ -27,8 +27,10 @@ public class CoreMarkupModelListener {
     }
 
     protected void addCreatedWarnings(Stream<Warning<String>> createdWarnings, Document document) {
+        // Prepare the document again to update the line numbers and other statistics
+        document.prepareDocument();
         trackingEventManager.addEvents(createdWarnings
-                .map(warning -> this.createEventFromWarning(TrackingEventType.SA_WARNING_CREATED, warning, document.prepareDocument()))
+                .map(warning -> this.createEventFromWarning(TrackingEventType.SA_WARNING_CREATED, warning, document))
         );
     }
 
@@ -37,8 +39,10 @@ public class CoreMarkupModelListener {
     }
 
     protected void addRemovedWarnings(Stream<Warning<String>> removedWarnings, Document document) {
+        // Prepare the document again to update the line numbers and other statistics
+        document.prepareDocument();
         trackingEventManager.addEvents(removedWarnings.map(warning ->
-                this.createEventFromWarning(TrackingEventType.SA_WARNING_REMOVED, warning, document.prepareDocument()))
+                this.createEventFromWarning(TrackingEventType.SA_WARNING_REMOVED, warning, document))
         );
     }
 
