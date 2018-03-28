@@ -17,10 +17,15 @@ import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -30,16 +35,24 @@ import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.TrackingEventType;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.staticanalysis.StaticAnalysisWarningEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
+import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType.WatchDogEventEditorSpecificImplementation;
+import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.FileWarningSnapshotEvent;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.eclipse.logic.network.TransferManager;
 import nl.tudelft.watchdog.eclipse.logic.ui.listeners.WorkbenchListener;
 import nl.tudelft.watchdog.eclipse.logic.ui.listeners.EclipseMarkupModelListener.MarkerHolder;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MarkupModelListenerTest {
+
+    // We actually expect message 388 to be here, however as pointed out in
+    // https://github.com/eclipse/eclipse.jdt.core/blob/efc9b650d8590a5670b5897ab6f8c0fb0db2799d/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/DefaultProblemFactory.java#L111-L113
+    // all keys are offset by 1. Therefore 389 is the expected assert value
+    private static final String PRE_EXISTING_MARKER_CLASSIFICATION_TYPE = "389";
 
     private WorkbenchListener workbenchListener;
     private TrackingEventManager trackingEventManager;
@@ -49,12 +62,14 @@ public class MarkupModelListenerTest {
     private IFile testFile;
     private IFile preExistingTestFile;
     private IMarker preExistingMarker;
+    private IMarker preExistingMarker2;
 
     private List<TrackingEventType> generatedEvents;
 
     @Before
     public void setup() throws Exception {
         WatchDogEventType.intervalManager = Mockito.mock(IntervalManager.class);
+        WatchDogEventType.editorSpecificImplementation = Mockito.mock(WatchDogEventEditorSpecificImplementation.class);
         this.transferManager = Mockito.mock(TransferManager.class);
         this.trackingEventManager = Mockito.mock(TrackingEventManager.class);
 
@@ -96,7 +111,9 @@ public class MarkupModelListenerTest {
         this.preExistingTestFile.create(generateFileStreamLines(25), true, null);
         this.preExistingMarker = this.preExistingTestFile.createMarker(IMarker.PROBLEM);
         this.preExistingMarker.setAttribute(IMarker.MESSAGE, "The import java.util.Set is never used");
-        this.preExistingTestFile.createMarker(IMarker.PROBLEM);
+        this.preExistingMarker.setAttribute(IMarker.LINE_NUMBER, 2);
+        this.preExistingMarker2 = this.preExistingTestFile.createMarker(IMarker.PROBLEM);
+        this.preExistingMarker2.setAttribute(IMarker.LINE_NUMBER, 5);
 
         this.saveWorkspaceAndWaitForBuild();
     }
@@ -122,7 +139,7 @@ public class MarkupModelListenerTest {
     public void tearDown() throws Exception {
         this.project.delete(true, true, null);
         this.saveWorkspaceAndWaitForBuild();
-        this.workbenchListener.shutDown();
+        this.workspace.removeResourceChangeListener(this.workbenchListener.markupModelListener);
     }
 
     @Test
@@ -272,10 +289,7 @@ public class MarkupModelListenerTest {
 
         assertEquals(generatedWarnings.size(), 1);
 
-        // We actually expect message 388 to be here, however as pointed out in
-        // https://github.com/eclipse/eclipse.jdt.core/blob/efc9b650d8590a5670b5897ab6f8c0fb0db2799d/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/DefaultProblemFactory.java#L111-L113
-        // all keys are offset by 1. Therefore 389 is the expected assert value
-        assertEquals(generatedWarnings.get(0).getStaticAnalysisType(), "389");
+        assertEquals(generatedWarnings.get(0).getStaticAnalysisType(), PRE_EXISTING_MARKER_CLASSIFICATION_TYPE);
     }
 
     @Test
@@ -362,6 +376,45 @@ public class MarkupModelListenerTest {
         // We do not want to rely on timing differences to assert on specific values, so asserting we have
         // anything is sufficient
         assertNotEquals(generatedEvents.get(1).getWarningDifferenceTime(), -1);
+    }
+
+    @Test
+    public void generates_file_warning_snapshot_with_correct_line_numbers_when_opening_a_file() throws Exception {
+        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        IEditorPart editor = IDE.openEditor(page, this.preExistingTestFile);
+
+        ArgumentCaptor<FileWarningSnapshotEvent> captor = ArgumentCaptor.forClass(FileWarningSnapshotEvent.class);
+        Mockito.verify(this.trackingEventManager).addEvent(captor.capture());
+
+        try {
+            int[] lineNumbers = captor.getValue().getWarnings().stream()
+                    .map(warning -> warning.lineNumber)
+                    .mapToInt(Integer::intValue)
+                    .toArray();
+
+            assertArrayEquals(lineNumbers, new int[] {2, 5});
+        } finally {
+            page.closeEditor(editor, false);
+        }
+    }
+
+    @Test
+    public void generates_file_warning_snapshot_with_correct_classification_when_opening_a_file() throws Exception {
+        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        IEditorPart editor = IDE.openEditor(page, this.preExistingTestFile);
+
+        ArgumentCaptor<FileWarningSnapshotEvent> captor = ArgumentCaptor.forClass(FileWarningSnapshotEvent.class);
+        Mockito.verify(this.trackingEventManager).addEvent(captor.capture());
+
+        try {
+            String[] classifications = captor.getValue().getWarnings().stream()
+                    .map(warning -> warning.type)
+                    .toArray(String[]::new);
+
+            assertArrayEquals(classifications, new String[] {PRE_EXISTING_MARKER_CLASSIFICATION_TYPE, "unknown"});
+        } finally {
+            page.closeEditor(editor, false);
+        }
     }
 
 

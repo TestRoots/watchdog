@@ -26,9 +26,11 @@ import org.joda.time.Seconds;
 
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
-import nl.tudelft.watchdog.core.logic.ui.listeners.CoreMarkupModelListener;
 import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.CheckStyleChecksMessagesFetcher;
+import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.CoreMarkupModelListener;
+import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.FileWarningSnapshotEvent;
 import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.StaticAnalysisMessageClassifier;
+import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.Warning;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.eclipse.logic.document.DocumentCreator;
 
@@ -72,17 +74,23 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
         try {
             this.oldFileMarkers = this.currentFileMarkers;
             this.currentFileMarkers = new HashMap<>();
-            event.getDelta().accept(this.createVisitor());
+            event.getDelta().accept(this.createVisitor(false));
         } catch (CoreException e) {
             WatchDogLogger.getInstance().logSevere(e.getMessage());
         }
     }
 
-    ResourceAndResourceDeltaVisitor createVisitor() {
-        return new ResourceAndResourceDeltaVisitor();
+    ResourceAndResourceDeltaVisitor createVisitor(boolean shouldCreateSnapshot) {
+        return new ResourceAndResourceDeltaVisitor(shouldCreateSnapshot);
     }
 
-    public class ResourceAndResourceDeltaVisitor implements IResourceDeltaVisitor, IResourceVisitor {
+    private class ResourceAndResourceDeltaVisitor implements IResourceDeltaVisitor, IResourceVisitor {
+
+        private boolean shouldCreateSnapshot;
+
+        public ResourceAndResourceDeltaVisitor(boolean shouldCreateSnapshot) {
+            this.shouldCreateSnapshot = shouldCreateSnapshot;
+        }
 
         /**
          * Can be new resources, deleted or simply changed. In any case, even if we do not have
@@ -127,6 +135,9 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
                 if (shouldComputeDiff && oldMarkers == null) {
                     oldMarkers = Collections.emptyList();
                 }
+                if (this.shouldCreateSnapshot) {
+                    createWarningSnapshotForMarkers(currentMarkers);
+                }
 
                 if (oldMarkers != null) {
                     Document document = DocumentCreator.createDocument(file.getName(), file).prepareDocument();
@@ -141,6 +152,18 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
 
             return true;
         }
+    }
+
+    private void createWarningSnapshotForMarkers(List<MarkerHolder> currentMarkers) {
+        List<Warning<String>> warnings = currentMarkers.stream()
+                .map(holder -> new Warning<>(
+                        StaticAnalysisMessageClassifier.classify(holder.message),
+                        holder.lineNumber,
+                        DateTime.now().toDate()
+                    ))
+                .collect(Collectors.toList());
+
+        this.trackingEventManager.addEvent(new FileWarningSnapshotEvent(document, warnings));
     }
 
     /**
@@ -201,7 +224,7 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
      *
      * @see https://en.wikipedia.org/wiki/Longest_common_subsequence_problem
      */
-    class MarkerBackTrackingAlgorithm {
+    private class MarkerBackTrackingAlgorithm {
 
         private final Document document;
         private final List<MarkerHolder> oldMarkers;
@@ -270,7 +293,7 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
             } else if (column > 0 && (row == 0 || memoization[row][column - 1] >= memoization[row - 1][column])) {
                 MarkerHolder warning = currentMarkers.get(column - 1);
 
-                this.createdWarningTypes.add(new Warning<>(warning.message, warning.lineNumber, DateTime.now()));
+                this.createdWarningTypes.add(new Warning<>(warning.message, warning.lineNumber, DateTime.now().toDate()));
 
                 traverseMemoizationTable(row, column - 1);
             // In this case, the row length is lower, which means that the oldMarkers was longer at this point
@@ -279,7 +302,7 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
                 MarkerHolder warning = oldMarkers.get(row - 1);
                 DateTime now = DateTime.now();
 
-                this.removedWarningTypes.add(new Warning<>(warning.message, warning.lineNumber, now, Seconds.secondsBetween(warning.warningCreationTime, now).getSeconds()));
+                this.removedWarningTypes.add(new Warning<>(warning.message, warning.lineNumber, now.toDate(), Seconds.secondsBetween(warning.warningCreationTime, now).getSeconds()));
 
                 traverseMemoizationTable(row - 1, column);
             }

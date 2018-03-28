@@ -12,8 +12,10 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class PartListener implements IPartListener {
 
-	/** Constructor. */
-	public PartListener() {
+	private WorkbenchListener workbenchListener;
+
+	public PartListener(WorkbenchListener workbenchListener) {
+		this.workbenchListener = workbenchListener;
 	}
 
 	@Override
@@ -21,6 +23,7 @@ public class PartListener implements IPartListener {
 		if (part instanceof ITextEditor) {
 			ITextEditor editor = (ITextEditor) part;
 			new EditorListener(editor);
+			this.workbenchListener.editorCreated(editor);
 		}
 	}
 

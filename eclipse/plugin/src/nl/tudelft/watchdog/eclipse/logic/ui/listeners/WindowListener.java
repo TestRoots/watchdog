@@ -12,9 +12,10 @@ import org.eclipse.ui.IWorkbenchWindow;
 public class WindowListener implements IWindowListener {
 
 	private PageListener pageListener;
+	private WorkbenchListener workbenchListener;
 
-	/** Constructor. */
-	public WindowListener() {
+	public WindowListener(WorkbenchListener workbenchListener) {
+		this.workbenchListener = workbenchListener;
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class WindowListener implements IWindowListener {
 	/** Adds page listeners for all open pages of the supplied windows. */
 	private void addPageListener(IWorkbenchWindow window) {
 		// for new pages added in this window
-		pageListener = new PageListener();
+		pageListener = new PageListener(this.workbenchListener);
 		window.addPageListener(pageListener);
 
 		// for existing pages in this window

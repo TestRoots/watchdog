@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.core.logic.ui.listeners;
+package nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis;
 
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
@@ -10,8 +10,8 @@ import java.util.stream.Stream;
 
 public class CoreMarkupModelListener {
 
-    private final TrackingEventManager trackingEventManager;
-    private Document document;
+    protected Document document;
+    protected final TrackingEventManager trackingEventManager;
 
     public CoreMarkupModelListener(TrackingEventManager trackingEventManager) {
         this.trackingEventManager = trackingEventManager;
@@ -58,21 +58,4 @@ public class CoreMarkupModelListener {
         );
     }
 
-    protected class Warning<T> {
-        public final int secondsBetween;
-        public final T type;
-        public final DateTime warningCreationTime;
-        public final int lineNumber;
-
-        public Warning(T type, int lineNumber, DateTime warningCreationTime) {
-            this(type, lineNumber, warningCreationTime, -1);
-        }
-
-        public Warning(T type, int lineNumber, DateTime warningCreationTime, int secondsBetween) {
-            this.type = type;
-            this.warningCreationTime = warningCreationTime;
-            this.secondsBetween = secondsBetween;
-            this.lineNumber = lineNumber;
-        }
-    }
 }

@@ -12,24 +12,24 @@ import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.impl.MarkupModelImpl;
 import com.intellij.openapi.editor.impl.event.MarkupModelListener;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
+import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
 import com.intellij.openapi.project.DumbServiceImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
-import nl.tudelft.watchdog.core.logic.ui.listeners.CoreMarkupModelListener;
+import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.CoreMarkupModelListener;
+import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.FileWarningSnapshotEvent;
 import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.StaticAnalysisMessageClassifier;
+import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.Warning;
 import nl.tudelft.watchdog.intellij.logic.document.DocumentCreator;
 import org.jetbrains.annotations.NotNull;
-import org.jfree.data.time.Millisecond;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.StaticAnalysisMessageClassifier.IDE_BUNDLE;
 
@@ -78,6 +78,9 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
                     // the analyzer actually finished. In this case, `null` indicates: the file is not dirty.
                     if (analyzer.getFileStatusMap().getFileDirtyScope(intellijDocument, Pass.UPDATE_ALL) == null) {
                         final MarkupModelImpl markupModel = (MarkupModelImpl) DocumentMarkupModel.forDocument(intellijDocument, project, true);
+
+                        markupModelListener.processWarningSnapshot(markupModel.getAllHighlighters());
+
                         markupModel.addMarkupModelListener(disposable, markupModelListener);
 
                         // We batch up changes and only transfer them on every save. This is in-line with the Eclipse
@@ -101,21 +104,42 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
         return markupModelListener;
     }
 
+    private void processWarningSnapshot(RangeHighlighter[] highlighters) {
+        if (highlighters.length == 0) {
+            return;
+        }
+
+        final List<Warning<String>> warnings = Arrays.stream(highlighters)
+                // markupModel.getAllHighlighters returns a list of RangeHighlighter,
+                // even though we know they are all instances of RangeHighlighterEx.
+                // Therefore do an instanceof check and then explicitly cast them
+                // to use them in the other methods
+                .filter(RangeHighlighterEx.class::isInstance)
+                .map(RangeHighlighterEx.class::cast)
+
+                .filter(IntelliJMarkupModelListener::isWarningRangeHighlighter)
+                .map(rangeHighlighter -> createWarningFromRangeHighlighter(rangeHighlighter, null))
+                .map(IntelliJMarkupModelListener::classifyWarning)
+                .collect(Collectors.toList());
+
+        this.trackingEventManager.addEvent(new FileWarningSnapshotEvent(this.document.prepareDocument(), warnings));
+    }
+
     private void flushForDocument() {
-        addCreatedWarnings(this.generatedWarnings.stream().map(this::classifyWarning));
+        addCreatedWarnings(this.generatedWarnings.stream().map(IntelliJMarkupModelListener::classifyWarning));
         this.generatedWarnings.clear();
 
-        addRemovedWarnings(this.warnings.stream().map(this::classifyWarning));
+        addRemovedWarnings(this.warnings.stream().map(IntelliJMarkupModelListener::classifyWarning));
         this.warnings.clear();
     }
 
     @Override
     public void afterAdded(@NotNull RangeHighlighterEx rangeHighlighterEx) {
-        if (rangeHighlighterEx.getLayer() == HighlighterLayer.WARNING) {
+        if (isWarningRangeHighlighter(rangeHighlighterEx)) {
             final DateTime creationTime = DateTime.now();
 
             this.timeMapping.put(rangeHighlighterEx, creationTime);
-            this.generatedWarnings.add(new Warning<>(rangeHighlighterEx, getLineNumberForHighlighter(rangeHighlighterEx), creationTime));
+            this.generatedWarnings.add(new Warning<>(rangeHighlighterEx, getLineNumberForHighlighter(rangeHighlighterEx), creationTime.toDate()));
         }
     }
 
@@ -123,18 +147,11 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
     public void beforeRemoved(@NotNull RangeHighlighterEx rangeHighlighterEx) {
         DateTime creationTime = this.timeMapping.remove(rangeHighlighterEx);
 
-        if (rangeHighlighterEx.getLayer() == HighlighterLayer.WARNING) {
+        if (isWarningRangeHighlighter(rangeHighlighterEx)) {
             // Only process a deletion if we hadn't encountered this marker in this session before.
             // If we did encounter it, remove returns `true` and the warning is not saved as removed.
             if (!this.generatedWarnings.removeIf(warning -> warning.type.equals(rangeHighlighterEx))) {
-                final DateTime now = DateTime.now();
-
-                this.warnings.add(new Warning<>(
-                        rangeHighlighterEx,
-                        getLineNumberForHighlighter(rangeHighlighterEx),
-                        now,
-                        creationTime == null ? -1 : Seconds.secondsBetween(creationTime, now).getSeconds()
-                ));
+                this.warnings.add(createWarningFromRangeHighlighter(rangeHighlighterEx, creationTime));
             }
         }
     }
@@ -147,11 +164,27 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
     public void dispose() {
     }
 
+    private static boolean isWarningRangeHighlighter(@NotNull RangeHighlighterEx rangeHighlighterEx) {
+        return rangeHighlighterEx.getLayer() == HighlighterLayer.WARNING;
+    }
+
+    @NotNull
+    private Warning<RangeHighlighterEx> createWarningFromRangeHighlighter(@NotNull RangeHighlighterEx rangeHighlighterEx, DateTime creationTime) {
+        final DateTime now = DateTime.now();
+
+        return new Warning<>(
+                rangeHighlighterEx,
+                getLineNumberForHighlighter(rangeHighlighterEx),
+                now.toDate(),
+                creationTime == null ? -1 : Seconds.secondsBetween(creationTime, now).getSeconds()
+        );
+    }
+
     private int getLineNumberForHighlighter(RangeHighlighterEx warning) {
         return intellijDocument.getLineNumber(warning.getAffectedAreaStartOffset());
     }
 
-    private Warning<String> classifyWarning(Warning<RangeHighlighterEx> warning) {
+    private static Warning<String> classifyWarning(Warning<RangeHighlighterEx> warning) {
         return new Warning<>(classifyWarningTypeFromHighlighter(warning.type), warning.lineNumber, warning.warningCreationTime, warning.secondsBetween);
     }
 

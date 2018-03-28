@@ -4,8 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.TrackingEventType;
-import org.joda.time.DateTime;
-
 import java.util.Date;
 
 public class StaticAnalysisWarningEvent extends EventBase {
@@ -28,12 +26,12 @@ public class StaticAnalysisWarningEvent extends EventBase {
     private final int lineNumber;
 
     public StaticAnalysisWarningEvent(String staticAnalysisType, Document document, TrackingEventType trackingEventType,
-                                      Date eventCreationTime, DateTime warningCreationTime,
+                                      Date eventCreationTime, Date warningCreationTime,
                                       int warningDifferenceTime, int lineNumber) {
         super(trackingEventType, eventCreationTime);
         this.staticAnalysisType = staticAnalysisType;
         this.document = document;
-        this.warningCreationTime = warningCreationTime.toDate();
+        this.warningCreationTime = warningCreationTime;
         this.warningDifferenceTime = warningDifferenceTime;
         this.lineNumber = lineNumber;
     }

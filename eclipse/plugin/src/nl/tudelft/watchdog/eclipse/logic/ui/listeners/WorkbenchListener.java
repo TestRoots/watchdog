@@ -9,12 +9,15 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.texteditor.ITextEditor;
+
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
 import nl.tudelft.watchdog.eclipse.logic.event.listeners.BreakpointListener;
 import nl.tudelft.watchdog.eclipse.logic.event.listeners.DebugEventListener;
 import nl.tudelft.watchdog.eclipse.logic.network.TransferManager;
+import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /**
  * Sets up the listeners for eclipse UI events and registers the shutdown
@@ -35,7 +38,7 @@ public class WorkbenchListener {
 
 	private IWorkbench workbench;
 
-	private EclipseMarkupModelListener markupModelListener;
+	EclipseMarkupModelListener markupModelListener;
 
 	/**
 	 * Constructor.
@@ -52,7 +55,7 @@ public class WorkbenchListener {
 	}
 	
 	public void attachListeners() {
-		this.windowListener = new WindowListener();
+		this.windowListener = new WindowListener(this);
 		this.workbench.addWindowListener(windowListener);
 		addListenersToAlreadyOpenWindows();
 		new JUnitListener();
@@ -104,7 +107,7 @@ public class WorkbenchListener {
 		this.markupModelListener = new EclipseMarkupModelListener(this.trackingEventManager);
 		workspace.addResourceChangeListener(this.markupModelListener, IResourceChangeEvent.POST_BUILD);
 		try {
-			workspace.getRoot().accept(this.markupModelListener.createVisitor());
+			workspace.getRoot().accept(this.markupModelListener.createVisitor(false));
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
@@ -123,6 +126,14 @@ public class WorkbenchListener {
 		}
 		IWorkbenchWindow activeWindow = workbench.getActiveWorkbenchWindow();
 		windowListener.windowActivated(activeWindow);
+	}
+
+	void editorCreated(ITextEditor editor) {
+		try {
+			WatchDogUtils.getFile(editor).accept(this.markupModelListener.createVisitor(true));
+		} catch (IllegalArgumentException | CoreException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

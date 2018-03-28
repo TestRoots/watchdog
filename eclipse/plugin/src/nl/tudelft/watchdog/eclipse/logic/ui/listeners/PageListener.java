@@ -7,8 +7,10 @@ import org.eclipse.ui.IWorkbenchPart;
 /** A listener on Pages. */
 public class PageListener implements IPageListener {
 
-	/** Constructor. */
-	public PageListener() {
+	private WorkbenchListener workbenchListener;
+
+	public PageListener(WorkbenchListener workbenchListener) {
+		this.workbenchListener = workbenchListener;
 	}
 
 	@Override
@@ -26,7 +28,7 @@ public class PageListener implements IPageListener {
 
 	/** Adds a part listener for newly added parts */
 	public void addPartListener(IWorkbenchPage page) {
-		final PartListener partListener = new PartListener();
+		final PartListener partListener = new PartListener(this.workbenchListener);
 		page.addPartListener(partListener);
 
 		// trigger already opened part
