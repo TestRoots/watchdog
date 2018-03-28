@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,8 +18,10 @@ import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.junit.After;
@@ -380,41 +383,59 @@ public class MarkupModelListenerTest {
 
     @Test
     public void generates_file_warning_snapshot_with_correct_line_numbers_when_opening_a_file() throws Exception {
-        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        IEditorPart editor = IDE.openEditor(page, this.preExistingTestFile);
+        runForActivePage((page) -> {
+            IEditorPart editor;
+            try {
+                editor = IDE.openEditor(page, this.preExistingTestFile);
+            } catch (PartInitException e) {
+                throw new RuntimeException(e);
+            }
 
-        ArgumentCaptor<FileWarningSnapshotEvent> captor = ArgumentCaptor.forClass(FileWarningSnapshotEvent.class);
-        Mockito.verify(this.trackingEventManager).addEvent(captor.capture());
+            ArgumentCaptor<FileWarningSnapshotEvent> captor = ArgumentCaptor.forClass(FileWarningSnapshotEvent.class);
+            Mockito.verify(this.trackingEventManager).addEvent(captor.capture());
 
-        try {
-            int[] lineNumbers = captor.getValue().getWarnings().stream()
-                    .map(warning -> warning.lineNumber)
-                    .mapToInt(Integer::intValue)
-                    .toArray();
+            try {
+                int[] lineNumbers = captor.getValue().getWarnings().stream()
+                        .map(warning -> warning.lineNumber)
+                        .mapToInt(Integer::intValue)
+                        .toArray();
 
-            assertArrayEquals(lineNumbers, new int[] {2, 5});
-        } finally {
-            page.closeEditor(editor, false);
-        }
+                assertArrayEquals(lineNumbers, new int[] {2, 5});
+            } finally {
+                page.closeEditor(editor, false);
+            }
+        });
     }
 
     @Test
     public void generates_file_warning_snapshot_with_correct_classification_when_opening_a_file() throws Exception {
-        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        IEditorPart editor = IDE.openEditor(page, this.preExistingTestFile);
+        runForActivePage((page) -> {
+            IEditorPart editor;
+            try {
+                editor = IDE.openEditor(page, this.preExistingTestFile);
+            } catch (PartInitException e) {
+                throw new RuntimeException(e);
+            }
 
-        ArgumentCaptor<FileWarningSnapshotEvent> captor = ArgumentCaptor.forClass(FileWarningSnapshotEvent.class);
-        Mockito.verify(this.trackingEventManager).addEvent(captor.capture());
+            ArgumentCaptor<FileWarningSnapshotEvent> captor = ArgumentCaptor.forClass(FileWarningSnapshotEvent.class);
+            Mockito.verify(this.trackingEventManager).addEvent(captor.capture());
 
-        try {
-            String[] classifications = captor.getValue().getWarnings().stream()
-                    .map(warning -> warning.type)
-                    .toArray(String[]::new);
+            try {
+                String[] classifications = captor.getValue().getWarnings().stream()
+                        .map(warning -> warning.type)
+                        .toArray(String[]::new);
 
-            assertArrayEquals(classifications, new String[] {PRE_EXISTING_MARKER_CLASSIFICATION_TYPE, "unknown"});
-        } finally {
-            page.closeEditor(editor, false);
-        }
+                assertArrayEquals(classifications, new String[] {PRE_EXISTING_MARKER_CLASSIFICATION_TYPE, "unknown"});
+            } finally {
+                page.closeEditor(editor, false);
+            }
+        });
+    }
+
+    private void runForActivePage(Consumer<IWorkbenchPage> consumer) {
+        Display.getDefault().syncExec(() -> {
+            consumer.accept(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage());
+        });
     }
 
 
