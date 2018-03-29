@@ -47,7 +47,7 @@ cd $build_dir
 checkstyle_version="5.18.5"
 checkstyle_directory_name="CheckStyle-"
 checkstyle_zip="$checkstyle_directory_name$checkstyle_version.zip"
-checkstyle_idea_URL="http://plugins.jetbrains.com/plugin/download?rel=true&updateId=44080"
+checkstyle_idea_URL="https://plugins.jetbrains.com/plugin/download?pluginId=CheckStyle-IDEA&version=$checkstyle_version"
 
 if [ ! -f $checkstyle_zip ];
     then
