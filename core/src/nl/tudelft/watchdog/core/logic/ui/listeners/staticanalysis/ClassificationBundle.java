@@ -10,6 +10,16 @@ import java.util.regex.Pattern;
 
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 
+/**
+ * Bundle that can retrieve keys of Static Analysis warning messages based on two data-structures:
+ * A hash-map for O(1) lookup and a List of patterns for O(n) matching.
+ *
+ * Every message is first statically looked up in the HashMap. These will match for all messages that
+ * are static and do not contain any dynamic parts.
+ *
+ * If there is no result, the message will be matched against all {@link PatternBasedKey} in {@link #patternBasedKeyList}.
+ * This list is ordered from most-specific message (e.g. longest) to shortest.
+ */
 public class ClassificationBundle {
 
     /**
@@ -22,10 +32,8 @@ public class ClassificationBundle {
     private final List<PatternBasedKey> patternBasedKeyList = new ArrayList<>();
 
     public void createPatternsForKeysInBundle(String bundleName) {
-        this.createPatternsForKeysInBundle(ResourceBundle.getBundle(bundleName));
-    }
+        final ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
 
-    public void createPatternsForKeysInBundle(ResourceBundle bundle) {
         bundle.keySet().forEach(key -> {
             try {
                 this.addMessage(key, bundle.getString(key));
@@ -63,7 +71,7 @@ public class ClassificationBundle {
         }
     }
 
-    public String getFromBundle(String message) {
+    String getFromBundle(String message) {
         // For performance reasons, we first do a static lookup. In this case, the message
         // does not contain any dynamic parts. This lookup is O(1) and catches most of the cases.
         // If instead the message contains dynamic parts, we have to pattern match in the other list.
@@ -83,8 +91,10 @@ public class ClassificationBundle {
         return key;
     }
 
+    /**
+     * Sort the list on longest pattern first.
+     */
     public void sortList() {
-        // Sort the list on longest pattern first
         Collections.sort(patternBasedKeyList);
     }
 

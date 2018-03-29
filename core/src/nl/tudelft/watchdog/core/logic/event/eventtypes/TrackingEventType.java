@@ -67,6 +67,7 @@ public enum TrackingEventType {
     @SerializedName("sa-wr")
     SA_WARNING_REMOVED("Static analysis warning resolved"),
 
+    /** A snapshot list of static analysis warnings */
     @SerializedName("sa-snap")
     SA_WARNING_SNAPSHOT("Static analysis warning snapshot");
 

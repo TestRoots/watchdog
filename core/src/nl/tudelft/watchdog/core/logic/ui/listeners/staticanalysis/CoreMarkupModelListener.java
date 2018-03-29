@@ -8,11 +8,17 @@ import org.joda.time.DateTime;
 
 import java.util.stream.Stream;
 
+/**
+ * Base class for a MarkupModelListener intended to listen to static analysis warning changes.
+ * It can processes {@link Stream} of {@link Warning} and generates the corresponding
+ * {@link StaticAnalysisWarningEvent} which is added to the {@link #trackingEventManager}.
+ */
 public class CoreMarkupModelListener {
 
     protected Document document;
     protected final TrackingEventManager trackingEventManager;
 
+    @SuppressWarnings("unused")
     public CoreMarkupModelListener(TrackingEventManager trackingEventManager) {
         this.trackingEventManager = trackingEventManager;
     }
@@ -26,6 +32,7 @@ public class CoreMarkupModelListener {
         this.addCreatedWarnings(createdWarnings, this.document);
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected void addCreatedWarnings(Stream<Warning<String>> createdWarnings, Document document) {
         // Prepare the document again to update the line numbers and other statistics
         document.prepareDocument();
@@ -38,6 +45,7 @@ public class CoreMarkupModelListener {
         this.addRemovedWarnings(types, this.document);
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected void addRemovedWarnings(Stream<Warning<String>> removedWarnings, Document document) {
         // Prepare the document again to update the line numbers and other statistics
         document.prepareDocument();
@@ -48,13 +56,10 @@ public class CoreMarkupModelListener {
 
     private StaticAnalysisWarningEvent createEventFromWarning(TrackingEventType trackingEventType, Warning<String> warning, Document document) {
         return new StaticAnalysisWarningEvent(
-                warning.type,
+                warning,
                 document,
                 trackingEventType,
-                DateTime.now().toDate(),
-                warning.warningCreationTime,
-                warning.secondsBetween,
-                warning.lineNumber
+                DateTime.now().toDate()
         );
     }
 

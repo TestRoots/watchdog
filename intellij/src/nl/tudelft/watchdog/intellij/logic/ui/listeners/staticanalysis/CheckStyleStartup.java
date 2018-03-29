@@ -18,6 +18,11 @@ import java.util.Map;
 import static nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.CheckStyleChecksMessagesFetcher.addCheckStyleMessagesToBundle;
 import static nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.CheckStyleChecksMessagesFetcher.addMessageToCheckstyleBundle;
 
+/**
+ * Component that is lazily initiated, only if the CheckStyle-IDEA plugin is actually available in the editor.
+ * It loads the default configured messages from CheckStyle (in their `messages.properties` files) and
+ * traverses the currently activated configuration for any custom messages.
+ */
 public class CheckStyleStartup implements ProjectComponent {
 
     private final Project project;
@@ -37,7 +42,7 @@ public class CheckStyleStartup implements ProjectComponent {
             // This loader is used to obtain the actual resources
             final ClassLoader checkStylePluginClassLoader = getPluginCreatedClassLoaderFromService(service);
 
-            addCheckStyleMessagesToBundle(StaticAnalysisMessageClassifier.CHECKSTYLE_BUNDLE, checkStylePackageLoaderClassLoader, checkStylePluginClassLoader);
+            addCheckStyleMessagesToBundle(checkStylePackageLoaderClassLoader, checkStylePluginClassLoader);
             addMessagesForActiveConfiguration(service);
 
             StaticAnalysisMessageClassifier.CHECKSTYLE_BUNDLE.sortList();
@@ -62,7 +67,7 @@ public class CheckStyleStartup implements ProjectComponent {
                     String moduleKey = activeConfigLocation.getDescription() + "." + module.getName() + ".";
 
                     for (Map.Entry<String, String> message: module.getMessages().entrySet()) {
-                        addMessageToCheckstyleBundle(StaticAnalysisMessageClassifier.CHECKSTYLE_BUNDLE,moduleKey + message.getKey(), message.getValue());
+                        addMessageToCheckstyleBundle(moduleKey + message.getKey(), message.getValue());
                     }
                 }
         );

@@ -26,9 +26,9 @@ import org.joda.time.Seconds;
 
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.staticanalysis.FileWarningSnapshotEvent;
 import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.CheckStyleChecksMessagesFetcher;
 import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.CoreMarkupModelListener;
-import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.FileWarningSnapshotEvent;
 import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.StaticAnalysisMessageClassifier;
 import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.Warning;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
@@ -36,6 +36,8 @@ import nl.tudelft.watchdog.eclipse.logic.document.DocumentCreator;
 
 @SuppressWarnings("restriction")
 public class EclipseMarkupModelListener extends CoreMarkupModelListener implements IResourceChangeListener {
+
+    static final String CHECKSTYLE_MARKER_ID = "net.sf.eclipsecs.core.CheckstyleMarker";
 
     static {
         HashtableOfInt hashTable = DefaultProblemFactory.loadMessageTemplates(Locale.getDefault());
@@ -51,7 +53,7 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
 
         try {
             ClassLoader currentClassLoader = EclipseMarkupModelListener.class.getClassLoader();
-            CheckStyleChecksMessagesFetcher.addCheckStyleMessagesToBundle(StaticAnalysisMessageClassifier.CHECKSTYLE_BUNDLE, currentClassLoader, currentClassLoader);
+            CheckStyleChecksMessagesFetcher.addCheckStyleMessagesToBundle(currentClassLoader, currentClassLoader);
 
             StaticAnalysisMessageClassifier.CHECKSTYLE_BUNDLE.sortList();
         } catch (Exception ignored) {
@@ -174,9 +176,7 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
      * of messages in a somewhat unique manner is its message, which does include private information.
      * Make sure that when you use this message, the data is anonymized.
      */
-    static class MarkerHolder implements Comparable<MarkerHolder> {
-        static final String CHECKSTYLE_MARKER_ID = "net.sf.eclipsecs.core.CheckstyleMarker";
-
+    private static class MarkerHolder implements Comparable<MarkerHolder> {
         private String message;
         private int lineNumber;
         private DateTime warningCreationTime;

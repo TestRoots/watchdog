@@ -48,7 +48,7 @@ import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
  *
  * Since these messages are stored in resources named "messages.properties" and based on the packagename,
  * we need to use the last classloader to fetch the resources from there. We process the resources in
- * {@link #addMessagesToCheckStyleBundleForLoadedChecks(ClassificationBundle, ClassLoader, Map, ClassLoader)}.
+ * {@link #addMessagesToCheckStyleBundleForLoadedChecks(ClassLoader, Map, ClassLoader)}.
  * Observe that this method takes 2 classloaders, as we need both the classes (to obtain the resource path)
  * and the other one to obtain the actual resource.
  *
@@ -61,13 +61,12 @@ import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
  */
 public class CheckStyleChecksMessagesFetcher {
 
-    public static void addCheckStyleMessagesToBundle(ClassificationBundle bundle,
-            ClassLoader checkStylePackageLoaderClassLoader,
+    public static void addCheckStyleMessagesToBundle(ClassLoader checkStylePackageLoaderClassLoader,
             ClassLoader checkStylePluginClassLoader)
                     throws ClassNotFoundException, IllegalAccessException, NoSuchFieldException, IOException {
         final Map<String, String> nameToModuleName = getModuleMapFromPackageObjectFactory(checkStylePackageLoaderClassLoader);
 
-        addMessagesToCheckStyleBundleForLoadedChecks(bundle, checkStylePackageLoaderClassLoader, nameToModuleName, checkStylePluginClassLoader);
+        addMessagesToCheckStyleBundleForLoadedChecks(checkStylePackageLoaderClassLoader, nameToModuleName, checkStylePluginClassLoader);
     }
 
     @SuppressWarnings("unchecked")
@@ -84,7 +83,6 @@ public class CheckStyleChecksMessagesFetcher {
     }
 
     private static void addMessagesToCheckStyleBundleForLoadedChecks(
-            ClassificationBundle bundle,
             ClassLoader checkStylePackageLoaderClassLoader,
             Map<String, String> nameToModuleName,
             ClassLoader checkStylePluginClassLoader) throws IOException {
@@ -110,14 +108,14 @@ public class CheckStyleChecksMessagesFetcher {
             }
 
             for (String name : properties.stringPropertyNames()) {
-                addMessageToCheckstyleBundle(bundle, entry.getValue() + "." + name, properties.getProperty(name));
+                addMessageToCheckstyleBundle(entry.getValue() + "." + name, properties.getProperty(name));
             }
         }
     }
 
-    public static void addMessageToCheckstyleBundle(ClassificationBundle bundle, String name, String message) {
+    public static void addMessageToCheckstyleBundle(String name, String message) {
         try {
-            bundle.addMessage(
+            StaticAnalysisMessageClassifier.CHECKSTYLE_BUNDLE.addMessage(
                     "checkstyle." + name,
                     message
             );

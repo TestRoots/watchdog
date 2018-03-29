@@ -20,7 +20,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.CoreMarkupModelListener;
-import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.FileWarningSnapshotEvent;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.staticanalysis.FileWarningSnapshotEvent;
 import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.StaticAnalysisMessageClassifier;
 import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.Warning;
 import nl.tudelft.watchdog.intellij.logic.document.DocumentCreator;
@@ -55,6 +55,19 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
         timeMapping = new WeakHashMap<>();
     }
 
+    /**
+     * Create a new {@link IntelliJMarkupModelListener} for an editor. This listener is only attached after the
+     * {@link DaemonCodeAnalyzer} has finished analyzing this file.
+     *
+     * The listener is attached to the {@link com.intellij.openapi.editor.markup.MarkupModel} of the document,
+     * which contains all {@link RangeHighlighterEx}s that represent the Static Analysis warnings.
+     *
+     * @param project The project the file exists in.
+     * @param disposable The disposable to clean up the listeners and any potential {@link MessageBusConnection}.
+     * @param editor The editor of the document.
+     * @param trackingEventManager The manager that can process all the events generated.
+     * @return A newly initiated listener that will later be attached to the {@link com.intellij.openapi.editor.markup.MarkupModel} of the document
+     */
     public static IntelliJMarkupModelListener initializeAfterAnalysisFinished(
             Project project, Disposable disposable, Editor editor, TrackingEventManager trackingEventManager) {
 
