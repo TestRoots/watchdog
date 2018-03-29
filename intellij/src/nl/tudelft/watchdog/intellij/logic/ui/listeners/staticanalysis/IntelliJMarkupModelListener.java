@@ -22,9 +22,14 @@ import nl.tudelft.watchdog.core.logic.ui.listeners.CoreMarkupModelListener;
 import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.StaticAnalysisMessageClassifier;
 import nl.tudelft.watchdog.intellij.logic.document.DocumentCreator;
 import org.jetbrains.annotations.NotNull;
+import org.jfree.data.time.Millisecond;
+import org.joda.time.DateTime;
+import org.joda.time.Seconds;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import static nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.StaticAnalysisMessageClassifier.IDE_BUNDLE;
 
@@ -37,20 +42,24 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
         IDE_BUNDLE.sortList();
     }
 
-    private final Set<RangeHighlighterEx> generatedWarnings;
-    private final Set<RangeHighlighterEx> removedWarnings;
+    private final Set<Warning<RangeHighlighterEx>> generatedWarnings;
+    private final Set<Warning<RangeHighlighterEx>> warnings;
+    private final Map<RangeHighlighterEx, DateTime> timeMapping;
+    private final com.intellij.openapi.editor.Document intellijDocument;
 
-    private IntelliJMarkupModelListener(Document document, TrackingEventManager trackingEventManager) {
+    private IntelliJMarkupModelListener(Document document, TrackingEventManager trackingEventManager, com.intellij.openapi.editor.Document intellijDocument) {
         super(document, trackingEventManager);
+        this.intellijDocument = intellijDocument;
         generatedWarnings = new HashSet<>();
-        removedWarnings = new HashSet<>();
+        warnings = new HashSet<>();
+        timeMapping = new WeakHashMap<>();
     }
 
     public static IntelliJMarkupModelListener initializeAfterAnalysisFinished(
             Project project, Disposable disposable, Editor editor, TrackingEventManager trackingEventManager) {
 
         final com.intellij.openapi.editor.Document intellijDocument = editor.getDocument();
-        final IntelliJMarkupModelListener markupModelListener = new IntelliJMarkupModelListener(DocumentCreator.createDocument(editor), trackingEventManager);
+        final IntelliJMarkupModelListener markupModelListener = new IntelliJMarkupModelListener(DocumentCreator.createDocument(editor), trackingEventManager, intellijDocument);
 
         // We need to run this in smart mode, because the very first time you start your editor, it is very briefly
         // in dumb mode and the codeAnalyzer thinks (incorrectly) it is  finished.
@@ -73,7 +82,7 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
 
                         // We batch up changes and only transfer them on every save. This is in-line with the Eclipse
                         // interface, which only exposes listeners for `POST_BUILD`. Therefore, cache all warnings in
-                        // {@link IntelliJMarkupModelListener#generatedWarnings} and {@link IntelliJMarkupModelListener#removedWarnings}
+                        // {@link IntelliJMarkupModelListener#generatedWarnings} and {@link IntelliJMarkupModelListener#warnings}
                         // and flush these warnings after the fact.
                         documentMessageBusConnection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
                             @Override
@@ -93,27 +102,39 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
     }
 
     private void flushForDocument() {
-        addCreatedWarnings(this.generatedWarnings.stream().map(IntelliJMarkupModelListener::classifyWarningTypeFromHighlighter));
+        addCreatedWarnings(this.generatedWarnings.stream().map(this::classifyWarning));
         this.generatedWarnings.clear();
 
-        addRemovedWarnings(this.removedWarnings.stream().map(IntelliJMarkupModelListener::classifyWarningTypeFromHighlighter));
-        this.removedWarnings.clear();
+        addRemovedWarnings(this.warnings.stream().map(this::classifyWarning));
+        this.warnings.clear();
     }
 
     @Override
     public void afterAdded(@NotNull RangeHighlighterEx rangeHighlighterEx) {
         if (rangeHighlighterEx.getLayer() == HighlighterLayer.WARNING) {
-            this.generatedWarnings.add((rangeHighlighterEx));
+            final DateTime creationTime = DateTime.now();
+
+            this.timeMapping.put(rangeHighlighterEx, creationTime);
+            this.generatedWarnings.add(new Warning<>(rangeHighlighterEx, getLineNumberForHighlighter(rangeHighlighterEx), creationTime));
         }
     }
 
     @Override
     public void beforeRemoved(@NotNull RangeHighlighterEx rangeHighlighterEx) {
+        DateTime creationTime = this.timeMapping.remove(rangeHighlighterEx);
+
         if (rangeHighlighterEx.getLayer() == HighlighterLayer.WARNING) {
             // Only process a deletion if we hadn't encountered this marker in this session before.
             // If we did encounter it, remove returns `true` and the warning is not saved as removed.
-            if (!this.generatedWarnings.remove(rangeHighlighterEx)) {
-                this.removedWarnings.add(rangeHighlighterEx);
+            if (!this.generatedWarnings.removeIf(warning -> warning.type.equals(rangeHighlighterEx))) {
+                final DateTime now = DateTime.now();
+
+                this.warnings.add(new Warning<>(
+                        rangeHighlighterEx,
+                        getLineNumberForHighlighter(rangeHighlighterEx),
+                        now,
+                        creationTime == null ? -1 : Seconds.secondsBetween(creationTime, now).getSeconds()
+                ));
             }
         }
     }
@@ -124,6 +145,14 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
 
     @Override
     public void dispose() {
+    }
+
+    private int getLineNumberForHighlighter(RangeHighlighterEx warning) {
+        return intellijDocument.getLineNumber(warning.getAffectedAreaStartOffset());
+    }
+
+    private Warning<String> classifyWarning(Warning<RangeHighlighterEx> warning) {
+        return new Warning<>(classifyWarningTypeFromHighlighter(warning.type), warning.lineNumber, warning.warningCreationTime, warning.secondsBetween);
     }
 
     @NotNull

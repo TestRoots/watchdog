@@ -36,6 +36,7 @@ import nl.tudelft.watchdog.eclipse.logic.ui.listeners.WorkbenchListener;
 import nl.tudelft.watchdog.eclipse.logic.ui.listeners.EclipseMarkupModelListener.MarkerHolder;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MarkupModelListenerTest {
@@ -322,6 +323,45 @@ public class MarkupModelListenerTest {
 
         assertEquals(generatedEvents.size(), 1);
         assertEquals(generatedEvents.get(0).getStaticAnalysisType(), "unknown");
+    }
+
+    @Test
+    public void sets_line_number_for_generated_warning() throws Exception {
+        List<StaticAnalysisWarningEvent> generatedEvents = processMarkerAndReturnGeneratedWarningList(() -> {
+            try {
+                IMarker marker = this.testFile.createMarker(IMarker.PROBLEM);
+                marker.setAttribute(IMarker.MESSAGE, "This warning does not exist");
+                marker.setAttribute(IMarker.LINE_NUMBER, 15);
+            } catch (CoreException e) {
+                e.printStackTrace();
+            }
+        });
+
+        assertEquals(generatedEvents.size(), 1);
+        assertEquals(generatedEvents.get(0).getLineNumber(), 15);
+    }
+
+    @Test
+    public void computes_warning_time_difference_for_removed_warning() throws Exception {
+        List<StaticAnalysisWarningEvent> generatedEvents = processMarkerAndReturnGeneratedWarningList(() -> {
+            try {
+                IMarker marker = this.testFile.createMarker(IMarker.PROBLEM);
+                marker.setAttribute(IMarker.MESSAGE, "This warning does not exist");
+                marker.setAttribute(IMarker.LINE_NUMBER, 15);
+
+                this.saveWorkspaceAndWaitForBuild();
+
+                marker.delete();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        assertEquals(generatedEvents.size(), 2);
+        // We simply want any time difference here. If there is any, it is not -1, but 0, 1 or anything above
+        // We do not want to rely on timing differences to assert on specific values, so asserting we have
+        // anything is sufficient
+        assertNotEquals(generatedEvents.get(1).getWarningDifferenceTime(), -1);
     }
 
 
