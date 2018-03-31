@@ -1,9 +1,14 @@
 package nl.tudelft.watchdog.eclipse.logic.ui.listeners.staticanalysis;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.internal.compiler.util.HashtableOfInt;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
@@ -39,9 +44,11 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
     }
 
 	private TrackingEventManager trackingEventManager;
+	private final Map<IPath, List<MarkerHolder>> currentFileMarkers;
 
     public EclipseMarkupModelListener(TrackingEventManager trackingEventManager) {
         this.trackingEventManager = trackingEventManager;
+        currentFileMarkers = new HashMap<>();
     }
 
     @Override
@@ -54,6 +61,6 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
     }
 
     public ResourceAndResourceDeltaVisitor createVisitor(boolean shouldCreateSnapshot) {
-        return new ResourceAndResourceDeltaVisitor(this.trackingEventManager, shouldCreateSnapshot);
+        return new ResourceAndResourceDeltaVisitor(this.trackingEventManager, currentFileMarkers, shouldCreateSnapshot);
     }
 }

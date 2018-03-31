@@ -2,7 +2,6 @@ package nl.tudelft.watchdog.eclipse.logic.ui.listeners.staticanalysis;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,13 +25,14 @@ import nl.tudelft.watchdog.eclipse.logic.document.DocumentCreator;
 
 public class ResourceAndResourceDeltaVisitor implements IResourceDeltaVisitor, IResourceVisitor {
 	
-	private static final Map<IPath, List<MarkerHolder>> currentFileMarkers = new HashMap<>();
 	private final TrackingEventManager trackingEventManager;
+	private Map<IPath, List<MarkerHolder>> currentFileMarkers;
 	private final boolean shouldCreateSnapshot;
 
     public ResourceAndResourceDeltaVisitor(TrackingEventManager trackingEventManager,
-    		boolean shouldCreateSnapshot) {
+    		Map<IPath, List<MarkerHolder>> currentFileMarkers, boolean shouldCreateSnapshot) {
 		this.trackingEventManager = trackingEventManager;
+		this.currentFileMarkers = currentFileMarkers;
 		this.shouldCreateSnapshot = shouldCreateSnapshot;
     }
 

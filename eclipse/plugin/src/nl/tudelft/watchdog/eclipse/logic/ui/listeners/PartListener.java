@@ -5,6 +5,8 @@ import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 import nl.tudelft.watchdog.eclipse.logic.ui.listeners.staticanalysis.ResourceAndResourceDeltaVisitor;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
+import java.util.HashMap;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -29,7 +31,8 @@ public class PartListener implements IPartListener {
 			new EditorListener(editor);
 			
 			try {
-				WatchDogUtils.getFile(editor).accept(new ResourceAndResourceDeltaVisitor(trackingEventManager, true));
+				ResourceAndResourceDeltaVisitor visitor = new ResourceAndResourceDeltaVisitor(trackingEventManager, new HashMap<>(), true);
+				WatchDogUtils.getFile(editor).accept(visitor);
 			} catch (IllegalArgumentException | CoreException ignored) {
 			}
 		}
