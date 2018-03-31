@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 /**
  * Base class for a MarkupModelListener intended to listen to static analysis warning changes.
  * It can processes {@link Stream}s of {@link Warning}s and generates the corresponding
- * {@link StaticAnalysisWarningEvent} which is added to the {@link #trackingEventManager}.
+ * {@link StaticAnalysisWarningEvent} which is added to the {@link TrackingEventManager}.
  */
 public class CoreMarkupModelListener {
 

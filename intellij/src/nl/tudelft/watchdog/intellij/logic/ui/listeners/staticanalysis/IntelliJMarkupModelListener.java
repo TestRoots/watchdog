@@ -43,14 +43,19 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
         IDE_BUNDLE.sortList();
     }
 
+    private final Document document;
+    private final TrackingEventManager trackingEventManager;
+    private final com.intellij.openapi.editor.Document intellijDocument;
+
     private final Set<Warning<RangeHighlighterEx>> generatedWarnings;
     private final Set<Warning<RangeHighlighterEx>> warnings;
     private final Map<RangeHighlighterEx, DateTime> timeMapping;
-    private final com.intellij.openapi.editor.Document intellijDocument;
 
     private IntelliJMarkupModelListener(Document document, TrackingEventManager trackingEventManager, com.intellij.openapi.editor.Document intellijDocument) {
-        super(document, trackingEventManager);
+        this.document = document;
+        this.trackingEventManager = trackingEventManager;
         this.intellijDocument = intellijDocument;
+
         generatedWarnings = new HashSet<>();
         warnings = new HashSet<>();
         timeMapping = new WeakHashMap<>();
@@ -140,10 +145,10 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
     }
 
     private void flushForDocument() {
-        addCreatedWarnings(this.generatedWarnings.stream().map(IntelliJMarkupModelListener::classifyWarning));
+        addCreatedWarnings(this.trackingEventManager, this.generatedWarnings.stream().map(IntelliJMarkupModelListener::classifyWarning), this.document);
         this.generatedWarnings.clear();
 
-        addRemovedWarnings(this.warnings.stream().map(IntelliJMarkupModelListener::classifyWarning));
+        addRemovedWarnings(this.trackingEventManager, this.warnings.stream().map(IntelliJMarkupModelListener::classifyWarning), this.document);
         this.warnings.clear();
     }
 
