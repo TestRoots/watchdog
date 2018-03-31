@@ -49,6 +49,13 @@ public class TrackingEventManager {
 		}
 	}
 
+    /**
+     * Saves a stream of events to persistent storage. Use this in favor of {@link #addEvent(EventBase)}
+     * if you have multiple events to store. This method is faster, as it will only serialize to disc
+     * once rather than for every event.
+     *
+     * @param events The collection of events you want to serialize efficiently
+     */
 	public void addEvents(Stream<EventBase> events) {
 	    eventsToTransferPersister.startBatch();
 	    eventsStatisticsPersister.startBatch();

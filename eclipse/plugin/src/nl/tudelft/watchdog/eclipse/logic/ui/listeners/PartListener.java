@@ -1,7 +1,11 @@
 package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
+import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
+import nl.tudelft.watchdog.eclipse.logic.ui.listeners.staticanalysis.ResourceAndResourceDeltaVisitor;
+import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -11,11 +15,11 @@ import org.eclipse.ui.texteditor.ITextEditor;
  * interested in parts that are ITextEditors.
  */
 public class PartListener implements IPartListener {
+	
+	private final TrackingEventManager trackingEventManager;
 
-	private WorkbenchListener workbenchListener;
-
-	public PartListener(WorkbenchListener workbenchListener) {
-		this.workbenchListener = workbenchListener;
+	PartListener(TrackingEventManager trackingEventManager) {
+		this.trackingEventManager = trackingEventManager;
 	}
 
 	@Override
@@ -23,7 +27,11 @@ public class PartListener implements IPartListener {
 		if (part instanceof ITextEditor) {
 			ITextEditor editor = (ITextEditor) part;
 			new EditorListener(editor);
-			this.workbenchListener.editorCreated(editor);
+			
+			try {
+				WatchDogUtils.getFile(editor).accept(new ResourceAndResourceDeltaVisitor(trackingEventManager, true));
+			} catch (IllegalArgumentException | CoreException ignored) {
+			}
 		}
 	}
 

@@ -13,6 +13,14 @@ public class StaticAnalysisMessageClassifier {
     public static final ClassificationBundle IDE_BUNDLE = new ClassificationBundle();
     public static final ClassificationBundle CHECKSTYLE_BUNDLE = new ClassificationBundle();
 
+    /**
+     * Classify the passed in message to its corresponding key. The keys are fetched
+     * from the corresponding {@link ClassificationBundle}. For more information and examples,
+     * see {@link ClassificationBundle#getFromBundle(String)}.
+     *
+     * @param message A concrete static analysis message.
+     * @return The key of the message pattern that was used to create the message.
+     */
     public static String classify(String message) {
         if (message.startsWith(START_OF_CHECKSTYLE_MESSAGE)) {
             return CHECKSTYLE_BUNDLE.getFromBundle(message.substring(START_OF_CHECKSTYLE_MESSAGE.length()));

@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
+package nl.tudelft.watchdog.eclipse.logic.ui.listeners.staticanalysis;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -43,6 +43,7 @@ import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType.WatchDogEventE
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.eclipse.logic.network.TransferManager;
 import nl.tudelft.watchdog.eclipse.logic.ui.listeners.WorkbenchListener;
+import nl.tudelft.watchdog.eclipse.logic.ui.listeners.staticanalysis.EclipseMarkupModelListener;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -141,7 +142,7 @@ public class MarkupModelListenerTest {
     public void tearDown() throws Exception {
         this.project.delete(true, true, null);
         this.saveWorkspaceAndWaitForBuild();
-        this.workspace.removeResourceChangeListener(this.workbenchListener.markupModelListener);
+        this.workspace.removeResourceChangeListener(this.workbenchListener.getMarkupModelListener());
     }
 
     @Test

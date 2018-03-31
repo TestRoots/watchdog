@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
 
+import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 
 import org.eclipse.ui.IPerspectiveDescriptor;
@@ -12,10 +13,10 @@ import org.eclipse.ui.IWorkbenchWindow;
 public class WindowListener implements IWindowListener {
 
 	private PageListener pageListener;
-	private WorkbenchListener workbenchListener;
+	private final TrackingEventManager trackingEventManager;
 
-	public WindowListener(WorkbenchListener workbenchListener) {
-		this.workbenchListener = workbenchListener;
+	WindowListener(TrackingEventManager trackingEventManager) {
+		this.trackingEventManager = trackingEventManager;
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class WindowListener implements IWindowListener {
 	/** Adds page listeners for all open pages of the supplied windows. */
 	private void addPageListener(IWorkbenchWindow window) {
 		// for new pages added in this window
-		pageListener = new PageListener(this.workbenchListener);
+		pageListener = new PageListener(this.trackingEventManager);
 		window.addPageListener(pageListener);
 
 		// for existing pages in this window

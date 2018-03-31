@@ -57,9 +57,14 @@ import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
  * All in all, this journey took a long time to figure out. If you need to update this code, think carefully
  * about which classloader can load what. When I originally wrote this class, it was mostly based on
  * {@see https://github.com/jshiell/checkstyle-idea/blob/master/src/csaccess/java/org/infernus/idea/checkstyle/service/cmd/OpCreateChecker.java}
- * This class contained crucial documentation regarding its "moduleClassLoader" and the "loaderOfCheckedCode".
+ * This class contained crucial documentation about its usage of "moduleClassLoader" and the "loaderOfCheckedCode".
  */
 public class CheckStyleChecksMessagesFetcher {
+
+    public static void addCheckStyleMessagesToBundle(ClassLoader classLoader)
+            throws ClassNotFoundException, IllegalAccessException, NoSuchFieldException, IOException {
+        addCheckStyleMessagesToBundle(classLoader, classLoader);
+    }
 
     public static void addCheckStyleMessagesToBundle(ClassLoader checkStylePackageLoaderClassLoader,
             ClassLoader checkStylePluginClassLoader)
@@ -90,7 +95,7 @@ public class CheckStyleChecksMessagesFetcher {
         Map<String, String> resourceToPackage = new HashMap<>();
 
         nameToModuleName.values().stream()
-                .map(WatchDogUtilsBase.unchecked(checkStylePackageLoaderClassLoader::loadClass))
+                .map(WatchDogUtilsBase.transformCheckedExceptionIntoUncheckedException(checkStylePackageLoaderClassLoader::loadClass))
                 // In case loading of the class failed, we have to filter the null value
                 .filter(Objects::nonNull)
                 .forEach(clazz -> {

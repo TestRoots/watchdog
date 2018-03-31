@@ -9,15 +9,13 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.texteditor.ITextEditor;
-
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
 import nl.tudelft.watchdog.eclipse.logic.event.listeners.BreakpointListener;
 import nl.tudelft.watchdog.eclipse.logic.event.listeners.DebugEventListener;
 import nl.tudelft.watchdog.eclipse.logic.network.TransferManager;
-import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
+import nl.tudelft.watchdog.eclipse.logic.ui.listeners.staticanalysis.EclipseMarkupModelListener;
 
 /**
  * Sets up the listeners for eclipse UI events and registers the shutdown
@@ -38,7 +36,7 @@ public class WorkbenchListener {
 
 	private IWorkbench workbench;
 
-	EclipseMarkupModelListener markupModelListener;
+	private EclipseMarkupModelListener markupModelListener;
 
 	/**
 	 * Constructor.
@@ -55,14 +53,14 @@ public class WorkbenchListener {
 	}
 	
 	public void attachListeners() {
-		this.windowListener = new WindowListener(this);
+		this.windowListener = new WindowListener(this.trackingEventManager);
 		this.workbench.addWindowListener(windowListener);
 		addListenersToAlreadyOpenWindows();
 		new JUnitListener();
 		new GeneralActivityListener(workbench.getDisplay());
 		addDebuggerListeners();
-		addShutdownListeners();
 		addStaticAnalysisListeners();
+		addShutdownListeners();
 	}
 
 	/** Initializes the listeners for debug intervals and events. */
@@ -76,14 +74,6 @@ public class WorkbenchListener {
 				new DebugEventListener(trackingEventManager));
 	}
 	
-	void shutDown() {
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		workspace.removeResourceChangeListener(markupModelListener);
-		WatchDogEventType.END_IDE.process(workbench);
-		InitializationManager.getInstance().getIntervalManager().closeAllIntervals();
-		transferManager.sendItemsImmediately();
-	}
-
 	/** The shutdown listeners, executed when Eclipse is shutdown. */
 	private void addShutdownListeners() {
 		workbench.addWorkbenchListener(new IWorkbenchListener() {
@@ -91,7 +81,11 @@ public class WorkbenchListener {
 			@Override
 			public boolean preShutdown(final IWorkbench workbench,
 					final boolean forced) {
-				shutDown();
+				IWorkspace workspace = ResourcesPlugin.getWorkspace();
+				workspace.removeResourceChangeListener(getMarkupModelListener());
+				WatchDogEventType.END_IDE.process(workbench);
+				InitializationManager.getInstance().getIntervalManager().closeAllIntervals();
+				transferManager.sendItemsImmediately();
 				return true;
 			}
 
@@ -105,9 +99,9 @@ public class WorkbenchListener {
 	private void addStaticAnalysisListeners() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		this.markupModelListener = new EclipseMarkupModelListener(this.trackingEventManager);
-		workspace.addResourceChangeListener(this.markupModelListener, IResourceChangeEvent.POST_BUILD);
+		workspace.addResourceChangeListener(this.getMarkupModelListener(), IResourceChangeEvent.POST_BUILD);
 		try {
-			workspace.getRoot().accept(this.markupModelListener.createVisitor(false));
+			workspace.getRoot().accept(this.getMarkupModelListener().createVisitor(false));
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
@@ -128,12 +122,8 @@ public class WorkbenchListener {
 		windowListener.windowActivated(activeWindow);
 	}
 
-	void editorCreated(ITextEditor editor) {
-		try {
-			WatchDogUtils.getFile(editor).accept(this.markupModelListener.createVisitor(true));
-		} catch (IllegalArgumentException | CoreException e) {
-			e.printStackTrace();
-		}
+	public EclipseMarkupModelListener getMarkupModelListener() {
+		return markupModelListener;
 	}
 
 }

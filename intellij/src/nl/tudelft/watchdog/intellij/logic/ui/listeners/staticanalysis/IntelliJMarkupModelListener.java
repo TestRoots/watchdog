@@ -30,6 +30,7 @@ import org.joda.time.Seconds;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.StaticAnalysisMessageClassifier.IDE_BUNDLE;
 
@@ -93,7 +94,6 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
                         final MarkupModelImpl markupModel = (MarkupModelImpl) DocumentMarkupModel.forDocument(intellijDocument, project, true);
 
                         markupModelListener.processWarningSnapshot(markupModel.getAllHighlighters());
-
                         markupModel.addMarkupModelListener(disposable, markupModelListener);
 
                         // We batch up changes and only transfer them on every save. This is in-line with the Eclipse
@@ -122,14 +122,15 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
             return;
         }
 
-        final List<Warning<String>> warnings = Arrays.stream(highlighters)
-                // markupModel.getAllHighlighters returns a list of RangeHighlighter,
-                // even though we know they are all instances of RangeHighlighterEx.
-                // Therefore do an instanceof check and then explicitly cast them
-                // to use them in the other methods
+        // markupModel.getAllHighlighters returns a list of RangeHighlighter,
+        // even though we know they are all instances of RangeHighlighterEx.
+        // Therefore do an instanceof check and then explicitly cast them
+        // to use them in the other methods
+        final Stream<RangeHighlighterEx> rangeHighlighters = Arrays.stream(highlighters)
                 .filter(RangeHighlighterEx.class::isInstance)
-                .map(RangeHighlighterEx.class::cast)
+                .map(RangeHighlighterEx.class::cast);
 
+        final List<Warning<String>> warnings = rangeHighlighters
                 .filter(IntelliJMarkupModelListener::isWarningRangeHighlighter)
                 .map(rangeHighlighter -> createWarningFromRangeHighlighter(rangeHighlighter, null))
                 .map(IntelliJMarkupModelListener::classifyWarning)
