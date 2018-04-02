@@ -194,11 +194,19 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
     private Warning<RangeHighlighterEx> createWarningFromRangeHighlighter(@NotNull RangeHighlighterEx rangeHighlighterEx, DateTime creationTime) {
         final DateTime now = DateTime.now();
 
+        int seconds;
+
+        if (creationTime == null) {
+            seconds = -1;
+        } else {
+            seconds = Seconds.secondsBetween(creationTime, now).getSeconds();
+        }
+
         return new Warning<>(
                 rangeHighlighterEx,
                 getLineNumberForHighlighter(rangeHighlighterEx),
                 now.toDate(),
-                creationTime == null ? -1 : Seconds.secondsBetween(creationTime, now).getSeconds()
+                seconds
         );
     }
 
