@@ -12,52 +12,39 @@ import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
 
 /**
- * Hello and welcome to this class full of reflection, hacks and other shenanigans.
- * Before you ask: yes this is necessary. To explain why, please sit back, relax (while you still can)
- * and get to know the absolute horror of having multiple classloaders.
+ * Warning: This class is full of classloader fixes, reflection, hacks to support Checkstyle warnings in IntelliJ
+ * and Eclipse. There are Checkstyle IDE plugins (for Eclipse and IntelliJ) and the plain Checkstyle jar itself.
+ * The main complication comes from IntelliJ depending on Checkstyle via dynamically loading its jar over
+ * a {@link ClassLoader}. In Eclipse, we do not know whether the user has installed the Checkstyle plugin at all,
+ * which means we have to dynamically load the Checkstyle classes, too.
  *
+ * We need multiple classloaders to load the correct files to load the CheckStyle class files and one
+ * to load the CheckStyle message.properties files. The first classloader is created in the IntelliJ CheckStyle plugin.
+ * This plugin is configured to load several jars, including the CheckStyle jar. This loader therefore has access to
+ * CheckStyle classes. In the code below, this loader is called <code>checkStylePluginClassLoader</code>.
  *
- *
- * To start our journey, we first have to understand how CheckStyle is loaded in IntelliJ.
- * While normally the library you depend on is available on the classpath, the CheckStyle-IDEA plugin
- * does not have that. The reason is valid: the plugin wants to dynamically load different versions
- * of CheckStyle. This means that the plugin has to dynamically load jars, and yes, that is done with
- * a {@link ClassLoader}.
- *
- * Moreover, in Eclipse we are not certain whether the plugin is actually on the classpath,
- * which means we have to dynamically load the classes as well.
- *
- * Now the real magic starts when you realize that there are multiple classloaders necessary to load
- * the correct files. The first classloader is created in the CheckStyle plugin. This plugin is configured
- * to load several jars, including the CheckStyle jar. This loader therefore has access to CheckStyle
- * classes. In the code below, this loader is called "checkStylePluginClassLoader".
- *
- * Besides the actual classes, other configuration must also be loaded. This configuration however partly
- * resides in CheckStyle and other files reside in the plugin. To that end, the IntelliJ plugin implements a so-called
- * "csaccess" layer, which lives besides CheckStyle. This layer has its own classloader and has access to:
+ * Besides the actual classes, other configuration resources from Checkstyle must also be loaded. This configuration
+ * however partly resides in the CheckStyle jar. Other files reside in the IntelliJ plugin. To that end, the IntelliJ
+ * plugin implements a so-called "csaccess" layer. This layer has its own classloader and has access to:
  * 1. the csaccess files as implemented by the plugin and 2. the resources available in CheckStyle.
- * This loader is named "checkStylePackageLoaderClassLoader" in the code below.
+ * This loader is named <code>checkStylePackageLoaderClassLoader</code> in the code below.
  *
- *
- *
- * The overall logic of implementation is therefore as follows: Load the configuration and other plugin-relevant\
+ * The overall implementation design is therefore as follows: Load the configuration and other plugin-relevant
  * classes in our current classloader. Once we got the relevant classes, obtain the classloader created by
- * the plugin and load the
- * CheckStyle checks (as defined in "com.puppycrawl.tools.checkstyle.checks"). Once we got all checks,
- * we have to obtain their corresponding messages.
+ * the plugin and load the CheckStyle checks (as defined in "com.puppycrawl.tools.checkstyle.checks"). Once we got
+ * all checks, we obtain their corresponding messages.
  *
  * Since these messages are stored in resources named "messages.properties" and based on the packagename,
  * we need to use the last classloader to fetch the resources from there. We process the resources in
  * {@link #addMessagesToCheckStyleBundleForLoadedChecks(ClassLoader, Map, ClassLoader)}.
- * Observe that this method takes 2 classloaders, as we need both the classes (to obtain the resource path)
- * and the other one to obtain the actual resource.
+ * Observe that this method takes 2 classloaders, as we need both the classes (to obtain the resource path),
+ * e.g. the <code>checkStylePluginClassLoader</code> and the other one to obtain the cactual resource, e.g.
+ * <code>checkStylePackageLoaderClassLoader</code>.
  *
- *
- *
- * All in all, this journey took a long time to figure out. If you need to update this code, think carefully
- * about which classloader can load what. When I originally wrote this class, it was mostly based on
+ * If you need to update this code, think carefully about which classloader can load what.
+ * When we originally wrote this class, it was mostly based on
  * {@see https://github.com/jshiell/checkstyle-idea/blob/master/src/csaccess/java/org/infernus/idea/checkstyle/service/cmd/OpCreateChecker.java}
- * This class contained crucial documentation about its usage of "moduleClassLoader" and the "loaderOfCheckedCode".
+ * This class contained important documentation about its usage of "moduleClassLoader" and the "loaderOfCheckedCode".
  */
 public class CheckStyleChecksMessagesFetcher {
 

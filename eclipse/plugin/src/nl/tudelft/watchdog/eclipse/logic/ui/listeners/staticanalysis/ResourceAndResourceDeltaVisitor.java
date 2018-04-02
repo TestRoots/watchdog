@@ -23,6 +23,11 @@ import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.StaticAnalysis
 import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.Warning;
 import nl.tudelft.watchdog.eclipse.logic.document.DocumentCreator;
 
+/**
+ * Visitor that can process {@link IResourceDelta} and {@link IResource} to compute
+ * the difference between two lists of problem {@link IMarker}s. The previous state
+ * and the new list state obtained from the resource.
+ */
 public class ResourceAndResourceDeltaVisitor implements IResourceDeltaVisitor, IResourceVisitor {
 	
 	private final TrackingEventManager trackingEventManager;
@@ -37,7 +42,7 @@ public class ResourceAndResourceDeltaVisitor implements IResourceDeltaVisitor, I
     }
 
     /**
-     * Can be new resources, deleted or simply changed. In any case, even if we do not have
+     * The delta can contain new, deleted or changed resources. In any case, even if we do not have
      * previous state in {@link EclipseMarkupModelListener#oldFileMarkers} we need to compute
      * a diff.
      */
@@ -58,8 +63,8 @@ public class ResourceAndResourceDeltaVisitor implements IResourceDeltaVisitor, I
      * The Eclipse API trashes and recreates all markers after a build.
      * This means that we have to handle two lists of markers and compute
      * the difference between them. Delegate this implementation to
-     * {@link MarkerBackTrackingAlgorithm} which is an abstraction around
-     * this algorithm.
+     * {@link MarkerBackTrackingAlgorithm}, which is an abstraction around
+     * the diffing algorithm.
      */
     private boolean visit(IResource resource, boolean shouldComputeDiff) throws CoreException {
         if (!resource.exists()) {

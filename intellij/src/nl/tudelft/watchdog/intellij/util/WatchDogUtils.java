@@ -1,11 +1,9 @@
 package nl.tudelft.watchdog.intellij.util;
 
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
-import nl.tudelft.watchdog.core.util.ContentReaderException;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
 import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
@@ -15,7 +13,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Function;
 
 public class WatchDogUtils extends WatchDogUtilsBase {
 

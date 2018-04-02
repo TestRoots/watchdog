@@ -51,7 +51,7 @@ public class CheckStyleStartup implements ProjectComponent {
         }
     }
 
-    // TODO(timvdlippe): update the messages when the configuration changes
+    // TODO (TimvdLippe): update the messages when the configuration changes
     private void addMessagesForActiveConfiguration(CheckstyleProjectService service) {
         final CheckStylePlugin checkStylePlugin = project.getComponent(CheckStylePlugin.class);
         final ConfigurationLocation activeConfigLocation = checkStylePlugin.configurationManager().getCurrent().getActiveLocation();
@@ -74,7 +74,7 @@ public class CheckStyleStartup implements ProjectComponent {
     }
 
     // A bunch of reflection magic, as the plugin does not expose its internal classLoader
-    // TODO(timvdlippe): Update this code to use the type-safe methods once a PR to the plugin is merged that implements the method.
+    // TODO (TimvdLippe): Update this code to use the type-safe methods once a PR to the plugin is merged that implements the method.
     private ClassLoader getPluginCreatedClassLoaderFromService(CheckstyleProjectService service) throws NoSuchFieldException, IllegalAccessException {
         Field checkstyleClassLoaderField = service.getClass().getDeclaredField("checkstyleClassLoader");
         checkstyleClassLoaderField.setAccessible(true);

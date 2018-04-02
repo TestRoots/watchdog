@@ -83,6 +83,7 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
         // We need to run this in smart mode, because the very first time you start your editor, it is very briefly
         // in dumb mode and the codeAnalyzer thinks (incorrectly) it is  finished.
         // Therefore, wait for smart mode and only then start listening, to make sure the codeAnalyzer actually did its thing.
+        // For more information see https://www.jetbrains.org/intellij/sdk/docs/basics/indexing_and_psi_stubs.html
         DumbServiceImpl.getInstance(project).runWhenSmart(() -> {
             final DaemonCodeAnalyzerImpl analyzer = (DaemonCodeAnalyzerImpl) DaemonCodeAnalyzer.getInstance(project);
             final MessageBusConnection codeAnalyzerMessageBusConnection = project.getMessageBus().connect(disposable);
@@ -177,10 +178,12 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
 
     @Override
     public void attributesChanged(@NotNull RangeHighlighterEx rangeHighlighterEx, boolean b, boolean b1) {
+        // Unused for now.
     }
 
     @Override
     public void dispose() {
+        // We store no internal state ourselves.
     }
 
     private static boolean isWarningRangeHighlighter(@NotNull RangeHighlighterEx rangeHighlighterEx) {
