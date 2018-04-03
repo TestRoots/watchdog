@@ -18,6 +18,11 @@ import java.util.Map;
 import static nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.CheckStyleChecksMessagesFetcher.addCheckStyleMessagesToBundle;
 import static nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.CheckStyleChecksMessagesFetcher.addMessageToCheckstyleBundle;
 
+/**
+ * Component that is lazily initiated, only if the CheckStyle-IDEA plugin is actually available in the editor.
+ * It loads the default configured messages from CheckStyle (in their `messages.properties` files) and
+ * traverses the currently activated configuration for any custom messages.
+ */
 public class CheckStyleStartup implements ProjectComponent {
 
     private final Project project;
@@ -37,7 +42,7 @@ public class CheckStyleStartup implements ProjectComponent {
             // This loader is used to obtain the actual resources
             final ClassLoader checkStylePluginClassLoader = getPluginCreatedClassLoaderFromService(service);
 
-            addCheckStyleMessagesToBundle(StaticAnalysisMessageClassifier.CHECKSTYLE_BUNDLE, checkStylePackageLoaderClassLoader, checkStylePluginClassLoader);
+            addCheckStyleMessagesToBundle(checkStylePackageLoaderClassLoader, checkStylePluginClassLoader);
             addMessagesForActiveConfiguration(service);
 
             StaticAnalysisMessageClassifier.CHECKSTYLE_BUNDLE.sortList();
@@ -46,7 +51,7 @@ public class CheckStyleStartup implements ProjectComponent {
         }
     }
 
-    // TODO(timvdlippe): update the messages when the configuration changes
+    // TODO (TimvdLippe): update the messages when the configuration changes
     private void addMessagesForActiveConfiguration(CheckstyleProjectService service) {
         final CheckStylePlugin checkStylePlugin = project.getComponent(CheckStylePlugin.class);
         final ConfigurationLocation activeConfigLocation = checkStylePlugin.configurationManager().getCurrent().getActiveLocation();
@@ -62,14 +67,14 @@ public class CheckStyleStartup implements ProjectComponent {
                     String moduleKey = activeConfigLocation.getDescription() + "." + module.getName() + ".";
 
                     for (Map.Entry<String, String> message: module.getMessages().entrySet()) {
-                        addMessageToCheckstyleBundle(StaticAnalysisMessageClassifier.CHECKSTYLE_BUNDLE,moduleKey + message.getKey(), message.getValue());
+                        addMessageToCheckstyleBundle(moduleKey + message.getKey(), message.getValue());
                     }
                 }
         );
     }
 
     // A bunch of reflection magic, as the plugin does not expose its internal classLoader
-    // TODO(timvdlippe): Update this code to use the type-safe methods once a PR to the plugin is merged that implements the method.
+    // TODO (TimvdLippe): Update this code to use the type-safe methods once a PR to the plugin is merged that implements the method.
     private ClassLoader getPluginCreatedClassLoaderFromService(CheckstyleProjectService service) throws NoSuchFieldException, IllegalAccessException {
         Field checkstyleClassLoaderField = service.getClass().getDeclaredField("checkstyleClassLoader");
         checkstyleClassLoaderField.setAccessible(true);

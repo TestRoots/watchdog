@@ -208,14 +208,29 @@ public class PersisterBase {
 		}
 	}
 
+    /**
+     * Start a batch. Required before calling {@link #batchedSave(WatchDogItem)}.
+     * The batch should be closed with {@link #commitBatch()}.
+     */
 	public void startBatch() {
         replaceClassLoader();
     }
 
+    /**
+     * Save one item to the set. Requires {@link #startBatch()} before this method
+     * is called. Call {@link #commitBatch()} afterwards to persist the item to
+     * the storage.
+     *
+     * @param item The item to save.
+     */
     public void batchedSave(WatchDogItem item) {
         set.add(item);
     }
 
+    /**
+     * Serialize and flush a batch of items to the storage. First call
+     * {@link #startBatch()} and then multiple times {@link #batchedSave(WatchDogItem)}.
+     */
     public void commitBatch() {
         try {
             // persist changes to disk

@@ -4,53 +4,27 @@ import com.google.gson.annotations.SerializedName;
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.EventBase;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.TrackingEventType;
-import org.joda.time.DateTime;
+import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.Warning;
 
 import java.util.Date;
 
+/**
+ * Event that stores a specific {@link Warning} for a specific {@link Document}.
+ */
 public class StaticAnalysisWarningEvent extends EventBase {
 
     private static final long serialVersionUID = -344289578682136085L;
 
-    @SerializedName("sat")
-    private final String staticAnalysisType;
-
     @SerializedName("doc")
-    private final Document document;
+    public final Document document;
 
-    @SerializedName("time")
-    private final Date warningCreationTime;
+    @SerializedName("warning")
+    public final Warning<String> warning;
 
-    @SerializedName("diff")
-    private final int warningDifferenceTime;
-
-    @SerializedName("line")
-    private final int lineNumber;
-
-    public StaticAnalysisWarningEvent(String staticAnalysisType, Document document, TrackingEventType trackingEventType,
-                                      Date eventCreationTime, DateTime warningCreationTime,
-                                      int warningDifferenceTime, int lineNumber) {
+    public StaticAnalysisWarningEvent(Warning<String> warning, Document document,
+                                      TrackingEventType trackingEventType, Date eventCreationTime) {
         super(trackingEventType, eventCreationTime);
-        this.staticAnalysisType = staticAnalysisType;
+        this.warning = warning;
         this.document = document;
-        this.warningCreationTime = warningCreationTime.toDate();
-        this.warningDifferenceTime = warningDifferenceTime;
-        this.lineNumber = lineNumber;
     }
-
-    public String getStaticAnalysisType() {
-        return this.staticAnalysisType;
-    }
-
-    public Document getDocument() {
-        return this.document;
-    }
-
-	public int getLineNumber() {
-		return this.lineNumber;
-	}
-
-	public int getWarningDifferenceTime() {
-		return this.warningDifferenceTime;
-	}
 }

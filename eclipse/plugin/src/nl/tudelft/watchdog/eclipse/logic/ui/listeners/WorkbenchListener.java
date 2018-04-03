@@ -15,6 +15,7 @@ import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
 import nl.tudelft.watchdog.eclipse.logic.event.listeners.BreakpointListener;
 import nl.tudelft.watchdog.eclipse.logic.event.listeners.DebugEventListener;
 import nl.tudelft.watchdog.eclipse.logic.network.TransferManager;
+import nl.tudelft.watchdog.eclipse.logic.ui.listeners.staticanalysis.EclipseMarkupModelListener;
 
 /**
  * Sets up the listeners for eclipse UI events and registers the shutdown
@@ -52,14 +53,14 @@ public class WorkbenchListener {
 	}
 	
 	public void attachListeners() {
-		this.windowListener = new WindowListener();
+		this.windowListener = new WindowListener(this.trackingEventManager);
 		this.workbench.addWindowListener(windowListener);
 		addListenersToAlreadyOpenWindows();
 		new JUnitListener();
 		new GeneralActivityListener(workbench.getDisplay());
 		addDebuggerListeners();
-		addShutdownListeners();
 		addStaticAnalysisListeners();
+		addShutdownListeners();
 	}
 
 	/** Initializes the listeners for debug intervals and events. */
@@ -72,14 +73,17 @@ public class WorkbenchListener {
 		debugPlugin.addDebugEventListener(
 				new DebugEventListener(trackingEventManager));
 	}
-	
-	void shutDown() {
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		workspace.removeResourceChangeListener(markupModelListener);
-		WatchDogEventType.END_IDE.process(workbench);
-		InitializationManager.getInstance().getIntervalManager().closeAllIntervals();
-		transferManager.sendItemsImmediately();
-	}
+
+    private void addStaticAnalysisListeners() {
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        this.markupModelListener = new EclipseMarkupModelListener(this.trackingEventManager);
+        workspace.addResourceChangeListener(this.markupModelListener, IResourceChangeEvent.POST_BUILD);
+        try {
+            workspace.getRoot().accept(this.markupModelListener.createVisitor(false));
+        } catch (CoreException e) {
+            e.printStackTrace();
+        }
+    }
 
 	/** The shutdown listeners, executed when Eclipse is shutdown. */
 	private void addShutdownListeners() {
@@ -88,7 +92,11 @@ public class WorkbenchListener {
 			@Override
 			public boolean preShutdown(final IWorkbench workbench,
 					final boolean forced) {
-				shutDown();
+				IWorkspace workspace = ResourcesPlugin.getWorkspace();
+				workspace.removeResourceChangeListener(getMarkupModelListener());
+				WatchDogEventType.END_IDE.process(workbench);
+				InitializationManager.getInstance().getIntervalManager().closeAllIntervals();
+				transferManager.sendItemsImmediately();
 				return true;
 			}
 
@@ -99,17 +107,6 @@ public class WorkbenchListener {
 		});
 	}
 
-	private void addStaticAnalysisListeners() {
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		this.markupModelListener = new EclipseMarkupModelListener(this.trackingEventManager);
-		workspace.addResourceChangeListener(this.markupModelListener, IResourceChangeEvent.POST_BUILD);
-		try {
-			workspace.getRoot().accept(this.markupModelListener.createVisitor());
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	/**
 	 * If windows are already open when the listener registration from WatchDog
 	 * starts (e.g. due to saved Eclipse workspace state), add these listeners
@@ -123,6 +120,10 @@ public class WorkbenchListener {
 		}
 		IWorkbenchWindow activeWindow = workbench.getActiveWorkbenchWindow();
 		windowListener.windowActivated(activeWindow);
+	}
+
+	public EclipseMarkupModelListener getMarkupModelListener() {
+		return markupModelListener;
 	}
 
 }

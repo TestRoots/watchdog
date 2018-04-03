@@ -12,24 +12,25 @@ import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.impl.MarkupModelImpl;
 import com.intellij.openapi.editor.impl.event.MarkupModelListener;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
+import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
 import com.intellij.openapi.project.DumbServiceImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
-import nl.tudelft.watchdog.core.logic.ui.listeners.CoreMarkupModelListener;
+import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.CoreMarkupModelListener;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.staticanalysis.FileWarningSnapshotEvent;
 import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.StaticAnalysisMessageClassifier;
+import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.Warning;
 import nl.tudelft.watchdog.intellij.logic.document.DocumentCreator;
 import org.jetbrains.annotations.NotNull;
-import org.jfree.data.time.Millisecond;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.StaticAnalysisMessageClassifier.IDE_BUNDLE;
 
@@ -42,19 +43,37 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
         IDE_BUNDLE.sortList();
     }
 
+    private final Document document;
+    private final TrackingEventManager trackingEventManager;
+    private final com.intellij.openapi.editor.Document intellijDocument;
+
     private final Set<Warning<RangeHighlighterEx>> generatedWarnings;
     private final Set<Warning<RangeHighlighterEx>> warnings;
     private final Map<RangeHighlighterEx, DateTime> timeMapping;
-    private final com.intellij.openapi.editor.Document intellijDocument;
 
     private IntelliJMarkupModelListener(Document document, TrackingEventManager trackingEventManager, com.intellij.openapi.editor.Document intellijDocument) {
-        super(document, trackingEventManager);
+        this.document = document;
+        this.trackingEventManager = trackingEventManager;
         this.intellijDocument = intellijDocument;
+
         generatedWarnings = new HashSet<>();
         warnings = new HashSet<>();
         timeMapping = new WeakHashMap<>();
     }
 
+    /**
+     * Create a new {@link IntelliJMarkupModelListener} for an editor. This listener is only attached after the
+     * {@link DaemonCodeAnalyzer} has finished analyzing this file.
+     *
+     * The listener is attached to the {@link com.intellij.openapi.editor.markup.MarkupModel} of the document,
+     * which contains all {@link RangeHighlighterEx}s that represent the Static Analysis warnings.
+     *
+     * @param project The project the file exists in.
+     * @param disposable The disposable to clean up the listeners and any potential {@link MessageBusConnection}.
+     * @param editor The editor of the document.
+     * @param trackingEventManager The manager that can process all the events generated.
+     * @return A newly initiated listener that will later be attached to the {@link com.intellij.openapi.editor.markup.MarkupModel} of the document
+     */
     public static IntelliJMarkupModelListener initializeAfterAnalysisFinished(
             Project project, Disposable disposable, Editor editor, TrackingEventManager trackingEventManager) {
 
@@ -64,6 +83,7 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
         // We need to run this in smart mode, because the very first time you start your editor, it is very briefly
         // in dumb mode and the codeAnalyzer thinks (incorrectly) it is  finished.
         // Therefore, wait for smart mode and only then start listening, to make sure the codeAnalyzer actually did its thing.
+        // For more information see https://www.jetbrains.org/intellij/sdk/docs/basics/indexing_and_psi_stubs.html
         DumbServiceImpl.getInstance(project).runWhenSmart(() -> {
             final DaemonCodeAnalyzerImpl analyzer = (DaemonCodeAnalyzerImpl) DaemonCodeAnalyzer.getInstance(project);
             final MessageBusConnection codeAnalyzerMessageBusConnection = project.getMessageBus().connect(disposable);
@@ -78,6 +98,8 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
                     // the analyzer actually finished. In this case, `null` indicates: the file is not dirty.
                     if (analyzer.getFileStatusMap().getFileDirtyScope(intellijDocument, Pass.UPDATE_ALL) == null) {
                         final MarkupModelImpl markupModel = (MarkupModelImpl) DocumentMarkupModel.forDocument(intellijDocument, project, true);
+
+                        markupModelListener.processWarningSnapshot(markupModel.getAllHighlighters());
                         markupModel.addMarkupModelListener(disposable, markupModelListener);
 
                         // We batch up changes and only transfer them on every save. This is in-line with the Eclipse
@@ -101,21 +123,43 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
         return markupModelListener;
     }
 
+    private void processWarningSnapshot(RangeHighlighter[] highlighters) {
+        if (highlighters.length == 0) {
+            return;
+        }
+
+        // markupModel.getAllHighlighters returns a list of RangeHighlighter,
+        // even though we know they are all instances of RangeHighlighterEx.
+        // Therefore do an instanceof check and then explicitly cast them
+        // to use them in the other methods
+        final Stream<RangeHighlighterEx> rangeHighlighters = Arrays.stream(highlighters)
+                .filter(RangeHighlighterEx.class::isInstance)
+                .map(RangeHighlighterEx.class::cast);
+
+        final List<Warning<String>> warnings = rangeHighlighters
+                .filter(IntelliJMarkupModelListener::isWarningRangeHighlighter)
+                .map(rangeHighlighter -> createWarningFromRangeHighlighter(rangeHighlighter, null))
+                .map(IntelliJMarkupModelListener::classifyWarning)
+                .collect(Collectors.toList());
+
+        this.trackingEventManager.addEvent(new FileWarningSnapshotEvent(this.document.prepareDocument(), warnings));
+    }
+
     private void flushForDocument() {
-        addCreatedWarnings(this.generatedWarnings.stream().map(this::classifyWarning));
+        addCreatedWarnings(this.trackingEventManager, this.generatedWarnings.stream().map(IntelliJMarkupModelListener::classifyWarning), this.document);
         this.generatedWarnings.clear();
 
-        addRemovedWarnings(this.warnings.stream().map(this::classifyWarning));
+        addRemovedWarnings(this.trackingEventManager, this.warnings.stream().map(IntelliJMarkupModelListener::classifyWarning), this.document);
         this.warnings.clear();
     }
 
     @Override
     public void afterAdded(@NotNull RangeHighlighterEx rangeHighlighterEx) {
-        if (rangeHighlighterEx.getLayer() == HighlighterLayer.WARNING) {
+        if (isWarningRangeHighlighter(rangeHighlighterEx)) {
             final DateTime creationTime = DateTime.now();
 
             this.timeMapping.put(rangeHighlighterEx, creationTime);
-            this.generatedWarnings.add(new Warning<>(rangeHighlighterEx, getLineNumberForHighlighter(rangeHighlighterEx), creationTime));
+            this.generatedWarnings.add(new Warning<>(rangeHighlighterEx, getLineNumberForHighlighter(rangeHighlighterEx), creationTime.toDate()));
         }
     }
 
@@ -123,35 +167,54 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
     public void beforeRemoved(@NotNull RangeHighlighterEx rangeHighlighterEx) {
         DateTime creationTime = this.timeMapping.remove(rangeHighlighterEx);
 
-        if (rangeHighlighterEx.getLayer() == HighlighterLayer.WARNING) {
+        if (isWarningRangeHighlighter(rangeHighlighterEx)) {
             // Only process a deletion if we hadn't encountered this marker in this session before.
             // If we did encounter it, remove returns `true` and the warning is not saved as removed.
             if (!this.generatedWarnings.removeIf(warning -> warning.type.equals(rangeHighlighterEx))) {
-                final DateTime now = DateTime.now();
-
-                this.warnings.add(new Warning<>(
-                        rangeHighlighterEx,
-                        getLineNumberForHighlighter(rangeHighlighterEx),
-                        now,
-                        creationTime == null ? -1 : Seconds.secondsBetween(creationTime, now).getSeconds()
-                ));
+                this.warnings.add(createWarningFromRangeHighlighter(rangeHighlighterEx, creationTime));
             }
         }
     }
 
     @Override
     public void attributesChanged(@NotNull RangeHighlighterEx rangeHighlighterEx, boolean b, boolean b1) {
+        // Unused for now.
     }
 
     @Override
     public void dispose() {
+        // We store no internal state ourselves.
+    }
+
+    private static boolean isWarningRangeHighlighter(@NotNull RangeHighlighterEx rangeHighlighterEx) {
+        return rangeHighlighterEx.getLayer() == HighlighterLayer.WARNING;
+    }
+
+    @NotNull
+    private Warning<RangeHighlighterEx> createWarningFromRangeHighlighter(@NotNull RangeHighlighterEx rangeHighlighterEx, DateTime creationTime) {
+        final DateTime now = DateTime.now();
+
+        int seconds;
+
+        if (creationTime == null) {
+            seconds = -1;
+        } else {
+            seconds = Seconds.secondsBetween(creationTime, now).getSeconds();
+        }
+
+        return new Warning<>(
+                rangeHighlighterEx,
+                getLineNumberForHighlighter(rangeHighlighterEx),
+                now.toDate(),
+                seconds
+        );
     }
 
     private int getLineNumberForHighlighter(RangeHighlighterEx warning) {
         return intellijDocument.getLineNumber(warning.getAffectedAreaStartOffset());
     }
 
-    private Warning<String> classifyWarning(Warning<RangeHighlighterEx> warning) {
+    private static Warning<String> classifyWarning(Warning<RangeHighlighterEx> warning) {
         return new Warning<>(classifyWarningTypeFromHighlighter(warning.type), warning.lineNumber, warning.warningCreationTime, warning.secondsBetween);
     }
 

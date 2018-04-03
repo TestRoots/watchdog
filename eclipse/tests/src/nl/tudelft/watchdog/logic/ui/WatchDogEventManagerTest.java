@@ -41,7 +41,7 @@ import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
  * WatchDog. Tests could flicker because they deal with timers (and Java gives
  * no guarantee as to when these timers will be executed).
  *
- * TODO(timvdlippe): This test is disabled until we can properly deflake it.
+ * TODO (TimvdLippe): This test is disabled until we can properly deflake it.
  * It is currently relying on Thread synchronization and sleeps, which are flaky.
  */
 @Ignore
