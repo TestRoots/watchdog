@@ -10,7 +10,7 @@ import nl.tudelft.watchdog.eclipse.logic.document.DocumentCreator;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.junit.Test;
-import org.mockito.Matchers;
+import org.mockito.Mockito;
 
 /**
  * Mock tests for {@link DocumentCreator}.
@@ -31,7 +31,7 @@ public class DocumentCreatorTest {
 		org.eclipse.jface.text.IDocument mockedDocument = mock(org.eclipse.jface.text.IDocument.class);
 
 		when(mockedEditor.getDocumentProvider()).thenReturn(mockedProvider);
-		when(mockedProvider.getDocument(Matchers.anyObject())).thenReturn(
+		when(mockedProvider.getDocument(Mockito.any())).thenReturn(
 				mockedDocument);
 		when(mockedDocument.get()).thenReturn(contents);
 		when(mockedEditor.getTitle()).thenReturn("A.java");
