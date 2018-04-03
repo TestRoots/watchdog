@@ -10,7 +10,7 @@ import org.joda.time.DateTime;
 import java.util.List;
 
 /**
- * Analog to a {@link StaticAnalysisWarningEvent}, but this class it stores a list of {@link Warning},
+ * Analog to a {@link StaticAnalysisWarningEvent}, but this class stores a list of {@link Warning},
  * as a snapshot of the current state of the {@link #document}. If you need to save multiple events,
  * use this event rather than {@link StaticAnalysisWarningEvent}.
  */

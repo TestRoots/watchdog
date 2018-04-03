@@ -16,7 +16,7 @@ import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
  * and Eclipse. There are Checkstyle IDE plugins (for Eclipse and IntelliJ) and the plain Checkstyle jar itself.
  * The main complication comes from IntelliJ depending on Checkstyle via dynamically loading its jar over
  * a {@link ClassLoader}. In Eclipse, we do not know whether the user has installed the Checkstyle plugin at all,
- * which means we have to dynamically load the Checkstyle classes, too.
+ * which means we can also only dynamically depend on the Checkstyle classes.
  *
  * We need multiple classloaders to load the correct files to load the CheckStyle class files and one
  * to load the CheckStyle message.properties files. The first classloader is created in the IntelliJ CheckStyle plugin.
