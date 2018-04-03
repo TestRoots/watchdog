@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/eclipse/features/core/watchdog.eclipse.features.core.iml" filepath="$PROJECT_DIR$/eclipse/features/core/watchdog.eclipse.features.core.iml" />
       <module fileurl="file://$PROJECT_DIR$/eclipse/features/plugin/watchdog.eclipse.features.plugin.iml" filepath="$PROJECT_DIR$/eclipse/features/plugin/watchdog.eclipse.features.plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/eclipse/p2updatesite/watchdog.eclipse.p2updatesite.iml" filepath="$PROJECT_DIR$/eclipse/p2updatesite/watchdog.eclipse.p2updatesite.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eclipse/platform/watchdog.eclipse.platform.iml" filepath="$PROJECT_DIR$/eclipse/platform/watchdog.eclipse.platform.iml" />
       <module fileurl="file://$PROJECT_DIR$/eclipse/plugin/watchdog.eclipse.plugin.iml" filepath="$PROJECT_DIR$/eclipse/plugin/watchdog.eclipse.plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/eclipse/tests/watchdog.eclipse.tests.iml" filepath="$PROJECT_DIR$/eclipse/tests/watchdog.eclipse.tests.iml" />
       <module fileurl="file://$PROJECT_DIR$/intellij/watchdog.intellij.iml" filepath="$PROJECT_DIR$/intellij/watchdog.intellij.iml" />

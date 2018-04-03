@@ -2,6 +2,7 @@
 build_cache/
 *.log
 Gemfile.lock
+watchdog.intellij.zip
 
 # Ignore passwords/config
 server/config.yaml

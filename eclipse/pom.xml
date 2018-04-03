@@ -13,42 +13,13 @@
 	</parent>
 
 	<modules>
+		<module>platform</module>
 		<module>plugin</module>
 		<module>features/core</module>
 		<module>features/plugin</module>
 		<module>p2updatesite</module>
 		<module>tests</module>
 	</modules>
-
-	<properties>
-		<indigo-repo.url>http://download.eclipse.org/releases/indigo</indigo-repo.url>
-		<juno-repo.url>http://download.eclipse.org/releases/juno</juno-repo.url>
-		<kepler-repo.url>http://download.eclipse.org/releases/kepler</kepler-repo.url>
-		<luna-repo.url>http://download.eclipse.org/releases/luna</luna-repo.url>
-	</properties>
-
-	<repositories>
-		<repository>
-			<id>indigo</id>
-			<url>${indigo-repo.url}</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>juno</id>
-			<url>${juno-repo.url}</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>kepler</id>
-			<url>${kepler-repo.url}</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>luna</id>
-			<url>${luna-repo.url}</url>
-			<layout>p2</layout>
-		</repository>
-	</repositories>
 
 	<build>
 		<plugins>
@@ -64,6 +35,15 @@
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho.version}</version>
 				<configuration>
+					<resolver>p2</resolver>
+	        <ignoreTychoRepositories>true</ignoreTychoRepositories>
+	        <target>
+            <artifact>
+              <groupId>nl.tudelft</groupId>
+              <artifactId>watchdog.eclipse.platform</artifactId>
+              <version>${project.version}</version>
+            </artifact>
+	        </target>
 					<environments>
 						<environment>
 							<os>linux</os>
@@ -107,39 +87,39 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 				<version>3.4</version>
-				<configuration>
-					<reportPlugins>
-						<plugin>
-							<groupId>org.codehaus.mojo</groupId>
-							<artifactId>findbugs-maven-plugin</artifactId>
-							<version>3.0.0</version>
-							<configuration>
-								<effort>Max</effort>
-								<threshold>High</threshold>
-							</configuration>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-pmd-plugin</artifactId>
-							<version>3.2</version>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-surefire-report-plugin</artifactId>
-							<version>2.17</version>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-jxr-plugin</artifactId>
-							<configuration>
-								<linkJavadoc>true</linkJavadoc>
-							</configuration>
-							<version>2.4</version>
-						</plugin>
-					</reportPlugins>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
 
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<effort>Max</effort>
+					<threshold>High</threshold>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>3.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.17</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<configuration>
+					<linkJavadoc>true</linkJavadoc>
+				</configuration>
+				<version>2.4</version>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>

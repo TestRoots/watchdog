@@ -23,6 +23,7 @@
       <module name="watchdog.eclipse.features.core" target="1.8" />
       <module name="watchdog.eclipse.features.plugin" target="1.8" />
       <module name="watchdog.eclipse.p2updatesite" target="1.8" />
+      <module name="watchdog.eclipse.platform" target="1.8" />
       <module name="watchdog.eclipse.plugin" target="1.8" />
       <module name="watchdog.eclipse.tests" target="1.8" />
       <module name="watchdog.intellij" target="1.8" />

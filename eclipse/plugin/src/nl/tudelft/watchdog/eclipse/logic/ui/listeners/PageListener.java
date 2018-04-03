@@ -4,11 +4,15 @@ import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 
+import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
+
 /** A listener on Pages. */
 public class PageListener implements IPageListener {
+	
+	private final TrackingEventManager trackingEventManager;
 
-	/** Constructor. */
-	public PageListener() {
+	PageListener(TrackingEventManager trackingEventManager) {
+		this.trackingEventManager = trackingEventManager;
 	}
 
 	@Override
@@ -26,7 +30,7 @@ public class PageListener implements IPageListener {
 
 	/** Adds a part listener for newly added parts */
 	public void addPartListener(IWorkbenchPage page) {
-		final PartListener partListener = new PartListener();
+		final PartListener partListener = new PartListener(trackingEventManager);
 		page.addPartListener(partListener);
 
 		// trigger already opened part

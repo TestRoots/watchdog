@@ -1,11 +1,9 @@
 package nl.tudelft.watchdog.intellij.util;
 
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
-import nl.tudelft.watchdog.core.util.ContentReaderException;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogUtilsBase;
 import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
@@ -20,21 +18,17 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 
     private static Project activeProject;
 
-    private static Set<String> isWatchDogActive = new HashSet<String>();
+    private static Set<String> isWatchDogActive = new HashSet<>();
 
     /**
      * Returns the contents of the editor.
      */
     public static String getEditorContent(final Editor editor)
-            throws ContentReaderException, IllegalArgumentException {
+            throws IllegalArgumentException {
         if (editor == null) {
             throw new IllegalArgumentException("Editor is null");
         }
-        Document document = editor.getDocument();
-        if (document == null) {
-            throw new ContentReaderException("Document is null");
-        }
-        return document.getText();
+        return editor.getDocument().getText();
     }
 
     /**
@@ -95,5 +89,4 @@ public class WatchDogUtils extends WatchDogUtilsBase {
         WatchDogUtils.activeProject = activeProject;
         WatchDogGlobals.isActive = isWatchDogActive(activeProject);
     }
-
 }

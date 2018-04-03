@@ -4,11 +4,10 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
-import com.intellij.openapi.editor.impl.DocumentMarkupModel;
-import com.intellij.openapi.editor.impl.MarkupModelImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
+import nl.tudelft.watchdog.intellij.logic.ui.listeners.staticanalysis.IntelliJMarkupModelListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -24,14 +23,16 @@ public class EditorWindowListener implements EditorFactoryListener, Disposable {
      * events of the editor. By using Disposable for this structure, we can
      * properly cleanup all listeners once we dispose ourselves.
      */
-    private Map<Editor, Disposable> editorDisposableTreeMap = new HashMap<>();
+    private final Map<Editor, Disposable> editorDisposableTreeMap;
 
-    private Project project;
-    private TrackingEventManager trackingEventManager;
+    private final Project project;
+    private final TrackingEventManager trackingEventManager;
 
     EditorWindowListener(Project project, TrackingEventManager trackingEventManager) {
         this.project = project;
         this.trackingEventManager = trackingEventManager;
+
+        this.editorDisposableTreeMap = new HashMap<>();
     }
 
     @Override
@@ -46,6 +47,7 @@ public class EditorWindowListener implements EditorFactoryListener, Disposable {
 
         Disposable parentDisposable = Disposer.newDisposable();
         Disposer.register(parentDisposable, new EditorListener(editor));
+        Disposer.register(parentDisposable, IntelliJMarkupModelListener.initializeAfterAnalysisFinished(project, parentDisposable, editor, trackingEventManager));
 
         editorDisposableTreeMap.put(editor, parentDisposable);
     }

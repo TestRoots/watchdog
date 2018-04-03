@@ -1,15 +1,14 @@
 package nl.tudelft.watchdog.core.logic.storage;
 
+import nl.tudelft.watchdog.core.util.WatchDogLogger;
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-
-import org.mapdb.DB;
-import org.mapdb.DBMaker;
-
-import nl.tudelft.watchdog.core.util.WatchDogLogger;
 
 /**
  * Support for storing and querying {@link WatchDogItem}s. The items are
@@ -29,7 +28,7 @@ public class PersisterBase {
 	/** In memory representation of the store. */
 	protected Set<WatchDogItem> set;
 
-	protected File databaseFile;
+	private File databaseFile;
 
 	/**
 	 * Create a new persister. If file points to an existing database, it will
@@ -38,7 +37,7 @@ public class PersisterBase {
 	public PersisterBase(final File file) {
 		this.databaseFile = file;
 		try {
-			initalizeDatabase(file);
+			initializeDatabase(file);
 		} catch (Error e) {
 			// MapDB wraps every exception inside an Error, so this code is
 			// unfortunately necessary.
@@ -66,7 +65,7 @@ public class PersisterBase {
 	protected void resetOldClassLoader() {
 	}
 
-	protected void initalizeDatabase(File file) {
+	private void initializeDatabase(File file) {
 		try {
 			database = createDatabase(file);
 			set = createSet();
@@ -90,21 +89,21 @@ public class PersisterBase {
 		return database;
 	}
 
-	protected void recreateDatabase(final File file) {
+	private void recreateDatabase(final File file) {
 		closeDatabase();
 		// Happens when an update to the serializables in the database
 		// was made, and the new objects cannot be created from the old data
 		deleteDatabaseFile();
-		initalizeDatabase(file);
+		initializeDatabase(file);
 	}
 
-	protected void deleteDatabaseFile() {
+	private void deleteDatabaseFile() {
 		deleteOrOverwriteFileEmpty(null);
 		deleteOrOverwriteFileEmpty(".p");
 		deleteOrOverwriteFileEmpty(".t");
 	}
 
-	protected void deleteOrOverwriteFileEmpty(String extension) {
+	private void deleteOrOverwriteFileEmpty(String extension) {
 		File auxiliaryFile = databaseFile;
 		if (extension != null) {
 			auxiliaryFile = new File(databaseFile + extension);
@@ -119,13 +118,13 @@ public class PersisterBase {
 				WatchDogLogger.getInstance().logSevere(exception);
 			} finally {
 				try {
-					fileOutputStream.close();
-				} catch (IOException exception) {
-					// intentionally empty
-				} catch (NullPointerException exception) {
+                    if (fileOutputStream != null) {
+                        fileOutputStream.close();
+                    }
+                } catch (IOException exception) {
 					// intentionally empty
 				}
-			}
+            }
 		}
 	}
 
@@ -177,12 +176,10 @@ public class PersisterBase {
 	public long getSize() {
 		try {
 			return set.size();
-		} catch (Error e) {
-			return -1;
-		} catch (RuntimeException e) {
+		} catch (Error | RuntimeException e) {
 			return -1;
 		}
-	}
+    }
 
 	/**
 	 * Properly close the database. Note: The database should be ACID even when
@@ -210,4 +207,41 @@ public class PersisterBase {
 			set = createSet();
 		}
 	}
+
+    /**
+     * Start a batch. Required before calling {@link #batchedSave(WatchDogItem)}.
+     * The batch should be closed with {@link #commitBatch()}.
+     */
+	public void startBatch() {
+        replaceClassLoader();
+    }
+
+    /**
+     * Save one item to the set. Requires {@link #startBatch()} before this method
+     * is called. Call {@link #commitBatch()} afterwards to persist the item to
+     * the storage.
+     *
+     * @param item The item to save.
+     */
+    public void batchedSave(WatchDogItem item) {
+        set.add(item);
+    }
+
+    /**
+     * Serialize and flush a batch of items to the storage. First call
+     * {@link #startBatch()} and then multiple times {@link #batchedSave(WatchDogItem)}.
+     */
+    public void commitBatch() {
+        try {
+            // persist changes to disk
+            database.commit();
+            resetOldClassLoader();
+        } catch (Error error) {
+            try {
+                recreateDatabase(databaseFile);
+            } catch (Error innerError) {
+                WatchDogLogger.getInstance().logSevere(innerError);
+            }
+        }
+    }
 }

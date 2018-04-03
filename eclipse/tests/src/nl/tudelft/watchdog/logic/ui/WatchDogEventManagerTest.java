@@ -5,6 +5,7 @@ import java.util.Date;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -39,10 +40,13 @@ import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
  * eventually transfered to the server, this is one of the most crucial parts of
  * WatchDog. Tests could flicker because they deal with timers (and Java gives
  * no guarantee as to when these timers will be executed).
+ *
+ * TODO (TimvdLippe): This test is disabled until we can properly deflake it.
+ * It is currently relying on Thread synchronization and sleeps, which are flaky.
  */
+@Ignore
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(WatchDogGlobals.class)
-
 public class WatchDogEventManagerTest {
 
 	private static final int USER_ACTIVITY_TIMEOUT = 300;

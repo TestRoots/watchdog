@@ -35,6 +35,35 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+		    	<groupId>org.eclipse.tycho</groupId>
+				  <artifactId>tycho-surefire-plugin</artifactId>
+		     	<version>${tycho.version}</version>
+				<configuration>
+					<useUIHarness>true</useUIHarness>
+          			<useUIThread>false</useUIThread>
+          			<argLine>-DsuppressWatchdogRegistration</argLine>
+					<product>org.eclipse.sdk.ide</product>
+					<application>org.eclipse.ui.ide.workbench</application>
+          <dependencies>
+						<dependency>
+							<type>eclipse-plugin</type>
+							<artifactId>org.eclipse.ui.ide</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
+							<artifactId>org.eclipse.equinox.event</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+						<dependency>
+							<type>eclipse-plugin</type>
+							<artifactId>org.eclipse.equinox.ds</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+					</dependencies>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>

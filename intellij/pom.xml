@@ -22,7 +22,15 @@
 		<dependency>
 			<groupId>org.jetbrains</groupId>
 			<artifactId>org.jetbrains.intellij-ce</artifactId>
-			<version>2017.2.6</version>
+			<version>2017.2.7</version>
+			<type>zip</type>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.infernus.idea</groupId>
+			<artifactId>checkstyle</artifactId>
+			<version>5.18.3</version>
 			<type>zip</type>
 			<scope>provided</scope>
 		</dependency>
@@ -89,6 +97,17 @@
 							<includes>**/*.jar</includes>
 						</configuration>
 					</execution>
+					<execution>
+						<id>unpack-checkstyle</id>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<configuration>
+							<includeArtifactIds>checkstyle</includeArtifactIds>
+							<outputDirectory>${project.build.directory}/checkstyle</outputDirectory>
+							<includes>**/*.jar</includes>
+						</configuration>
+					</execution>
                     <execution>
 						<id>copy-dependencies</id>
 						<phase>prepare-package</phase>
@@ -97,7 +116,7 @@
 						</goals>
 						<configuration>
 							<outputDirectory>${project.build.directory}/lib</outputDirectory>
-							<excludeArtifactIds>org.jetbrains.intellij-ce</excludeArtifactIds>
+							<excludeArtifactIds>org.jetbrains.intellij-ce,checkstyle</excludeArtifactIds>
 							<excludeTransitive>true</excludeTransitive>
 							<overWriteReleases>false</overWriteReleases>
 							<overWriteSnapshots>false</overWriteSnapshots>
@@ -113,7 +132,7 @@
                 <version>${maven.compiler.version}</version>
 				<configuration>
 					<compilerArguments>
-						<extdirs>${project.build.directory}/IntelliJ-IDEA-CE/lib/</extdirs>
+						<extdirs>${project.build.directory}/IntelliJ-IDEA-CE/lib/:${project.build.directory}/checkstyle/CheckStyle-IDEA/lib/</extdirs>
 					</compilerArguments>
 				</configuration>
 				<executions>

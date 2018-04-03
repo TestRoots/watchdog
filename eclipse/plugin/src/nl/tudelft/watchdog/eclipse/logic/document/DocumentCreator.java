@@ -14,56 +14,45 @@ import org.eclipse.ui.texteditor.ITextEditor;
  * A factory for creating {@link Document}s from a supplied {@link ITextEditor}.
  */
 public class DocumentCreator {
-	/**
-	 * Factory method that creates and returns a {@link Document} from a given
-	 * {@link IWorkbenchPart}. For this to succeed, it is necessary that the the
-	 * supplied part is an IEditorPart.
-	 */
-	public static Document createDocument(ITextEditor editor) {
-		String activeProjectName = null;
-		String filePath = "";
-		String title = "";
-		try {
-			title = editor.getTitle();
-			IFile file = WatchDogUtils.getFile(editor);
-			IProject activeProject = file.getProject();
-			activeProjectName = activeProject.getName();
-			filePath = file.getProjectRelativePath().toString();
-		} catch (IllegalArgumentException ex) {
-			// Intentionally left empty
-		}
+    /**
+     * Factory method that creates and returns a {@link Document} from a given
+     * {@link IWorkbenchPart}. For this to succeed, it is necessary that the the
+     * supplied part is an IEditorPart.
+     */
+    public static Document createDocument(ITextEditor editor) {
+        try {
+            return createDocument(editor.getTitle(), WatchDogUtils.getFile(editor));
+        } catch (IllegalArgumentException ignored) {
+            try {
+                return new Document("", editor.getTitle(), "", WatchDogUtils.getEditorContent(editor));
+            } catch (IllegalArgumentException | ContentReaderException exception) {
+                return new Document("", editor.getTitle(), "", "");
+            }
+        }
 
-		try {
-			return new Document(activeProjectName, title, filePath,
-					getEditorOrFileContent(editor));
-		} catch (IllegalArgumentException exception) {
-			WatchDogLogger.getInstance().logSevere(exception);
-		}
-		return new Document(activeProjectName, title, filePath, null);
-	}
+    }
 
-	/**
-	 * Gets the contents of the given editor. If it cannot get those, tries to
-	 * get the file from disk. If this fails, too, returns <code>null</code>.
-	 */
-	private static String getEditorOrFileContent(ITextEditor editor) {
-		try {
-			return WatchDogUtils.getEditorContent(editor);
-		} catch (IllegalArgumentException | ContentReaderException exception) {
-			// Editor was null, there is nothing we can do to get the file
-			// contents.
-			WatchDogLogger.getInstance().logSevere(exception);
-			WatchDogLogger
-					.getInstance()
-					.logInfo(
-							"Document (provider) was null, trying to read resource file contents.");
-			try {
-				return WatchDogUtils.getContentForEditorFromDisk(editor);
-			} catch (IllegalArgumentException ex) {
-				WatchDogLogger.getInstance().logInfo(
-						"File does not exist anymore: " + editor.getTitle());
-			}
-		}
-		return null;
-	}
+    public static Document createDocument(String title, IFile file) {
+        return createDocument(title, file, WatchDogUtils.getContentForFileFromDisk(file));
+    }
+
+    private static Document createDocument(String title, IFile file, String content) {
+        String activeProjectName = null;
+        String filePath = "";
+        try {
+            IProject activeProject = file.getProject();
+            activeProjectName = activeProject.getName();
+            filePath = file.getProjectRelativePath().toString();
+        } catch (IllegalArgumentException ex) {
+            // Intentionally left empty
+        }
+
+        try {
+            return new Document(activeProjectName, title, filePath,
+                    WatchDogUtils.getContentForFileFromDisk(file));
+        } catch (IllegalArgumentException exception) {
+            WatchDogLogger.getInstance().logSevere(exception);
+        }
+        return new Document(activeProjectName, title, filePath, null);
+    }
 }

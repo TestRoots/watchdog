@@ -73,23 +73,7 @@ public class InitializationManager {
         // Initialize managers
         intervalManager = new IntervalManager(toTransferPersister, statisticsPersister);
         WatchDogEventType.intervalManager = intervalManager;
-        WatchDogEventType.editorSpecificImplementation = new WatchDogEventType.WatchDogEventEditorSpecificImplementation() {
-            @Override
-            public void addJUnitInterval(Object source) {
-                JUnitInterval junitInterval = (JUnitInterval) source;
-                intervalManager.addInterval(junitInterval);
-            }
-
-            @Override
-            public EditorWrapperBase createEditorWrapper(Object editor) {
-                return new EditorWrapper((Editor) editor);
-            }
-
-            @Override
-            public Document createDocument(Object editor) {
-                return DocumentCreator.createDocument((Editor) editor);
-            }
-        };
+        WatchDogEventType.editorSpecificImplementation = new IntelliJWatchDogEventEditorSpecificImplementation();
         trackingEventManager = new TrackingEventManager(toTransferPersister, statisticsPersister);
         trackingEventManager.setSessionSeed(intervalManager.getSessionSeed());
         new TimeSynchronityChecker(intervalManager);
@@ -138,5 +122,23 @@ public class InitializationManager {
 
     public TransferManagerBase getTransferManager() {
         return transferManager;
+    }
+
+    private class IntelliJWatchDogEventEditorSpecificImplementation implements WatchDogEventType.WatchDogEventEditorSpecificImplementation {
+        @Override
+        public void addJUnitInterval(Object source) {
+            JUnitInterval junitInterval = (JUnitInterval) source;
+            intervalManager.addInterval(junitInterval);
+        }
+
+        @Override
+        public EditorWrapperBase createEditorWrapper(Object editor) {
+            return new EditorWrapper((Editor) editor);
+        }
+
+        @Override
+        public Document createDocument(Object editor) {
+            return DocumentCreator.createDocument((Editor) editor);
+        }
     }
 }

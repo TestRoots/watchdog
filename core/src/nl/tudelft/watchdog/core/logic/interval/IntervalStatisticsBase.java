@@ -25,7 +25,6 @@ import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
  * Gathers and calculates statistics on developer behavior in a variable time
  * frame.
  */
-@SuppressWarnings("javadoc")
 public abstract class IntervalStatisticsBase extends IntervalManagerBase {
 	// Intervals are stored in the database for 10 hours (equals 600 minutes)
 	private static final int FILTERED_INTERVALS_IN_MINUTES = 600;
