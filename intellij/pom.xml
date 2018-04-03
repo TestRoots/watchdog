@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>org.infernus.idea</groupId>
 			<artifactId>checkstyle</artifactId>
-			<version>5.18.3</version>
+			<version>5.18.5</version>
 			<type>zip</type>
 			<scope>provided</scope>
 		</dependency>
