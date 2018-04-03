@@ -4,6 +4,14 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * Internal representation of a Static Analysis warning. It is used both as serializable format
+ * to send to the database, as well as an internal storage unit in the IntelliJ implementation.
+ * Therefore, {@link #type} is of generic type, which in practice is only a {@link String} or
+ * a RangeHighlighter in IntelliJ.
+ *
+ * @param <T> Either a {@link String} or a RangeHighlighter in IntelliJ.
+ */
 public class Warning<T> implements Serializable {
 
     private static final long serialVersionUID = -573132089990619360L;

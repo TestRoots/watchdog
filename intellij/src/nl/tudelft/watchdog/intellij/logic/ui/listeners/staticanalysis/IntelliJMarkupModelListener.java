@@ -20,7 +20,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.CoreMarkupModelListener;
-import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.FileWarningSnapshotEvent;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.staticanalysis.FileWarningSnapshotEvent;
 import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.StaticAnalysisMessageClassifier;
 import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.Warning;
 import nl.tudelft.watchdog.intellij.logic.document.DocumentCreator;
@@ -30,6 +30,7 @@ import org.joda.time.Seconds;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.StaticAnalysisMessageClassifier.IDE_BUNDLE;
 
@@ -42,19 +43,37 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
         IDE_BUNDLE.sortList();
     }
 
+    private final Document document;
+    private final TrackingEventManager trackingEventManager;
+    private final com.intellij.openapi.editor.Document intellijDocument;
+
     private final Set<Warning<RangeHighlighterEx>> generatedWarnings;
     private final Set<Warning<RangeHighlighterEx>> warnings;
     private final Map<RangeHighlighterEx, DateTime> timeMapping;
-    private final com.intellij.openapi.editor.Document intellijDocument;
 
     private IntelliJMarkupModelListener(Document document, TrackingEventManager trackingEventManager, com.intellij.openapi.editor.Document intellijDocument) {
-        super(document, trackingEventManager);
+        this.document = document;
+        this.trackingEventManager = trackingEventManager;
         this.intellijDocument = intellijDocument;
+
         generatedWarnings = new HashSet<>();
         warnings = new HashSet<>();
         timeMapping = new WeakHashMap<>();
     }
 
+    /**
+     * Create a new {@link IntelliJMarkupModelListener} for an editor. This listener is only attached after the
+     * {@link DaemonCodeAnalyzer} has finished analyzing this file.
+     *
+     * The listener is attached to the {@link com.intellij.openapi.editor.markup.MarkupModel} of the document,
+     * which contains all {@link RangeHighlighterEx}s that represent the Static Analysis warnings.
+     *
+     * @param project The project the file exists in.
+     * @param disposable The disposable to clean up the listeners and any potential {@link MessageBusConnection}.
+     * @param editor The editor of the document.
+     * @param trackingEventManager The manager that can process all the events generated.
+     * @return A newly initiated listener that will later be attached to the {@link com.intellij.openapi.editor.markup.MarkupModel} of the document
+     */
     public static IntelliJMarkupModelListener initializeAfterAnalysisFinished(
             Project project, Disposable disposable, Editor editor, TrackingEventManager trackingEventManager) {
 
@@ -64,6 +83,7 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
         // We need to run this in smart mode, because the very first time you start your editor, it is very briefly
         // in dumb mode and the codeAnalyzer thinks (incorrectly) it is  finished.
         // Therefore, wait for smart mode and only then start listening, to make sure the codeAnalyzer actually did its thing.
+        // For more information see https://www.jetbrains.org/intellij/sdk/docs/basics/indexing_and_psi_stubs.html
         DumbServiceImpl.getInstance(project).runWhenSmart(() -> {
             final DaemonCodeAnalyzerImpl analyzer = (DaemonCodeAnalyzerImpl) DaemonCodeAnalyzer.getInstance(project);
             final MessageBusConnection codeAnalyzerMessageBusConnection = project.getMessageBus().connect(disposable);
@@ -80,7 +100,6 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
                         final MarkupModelImpl markupModel = (MarkupModelImpl) DocumentMarkupModel.forDocument(intellijDocument, project, true);
 
                         markupModelListener.processWarningSnapshot(markupModel.getAllHighlighters());
-
                         markupModel.addMarkupModelListener(disposable, markupModelListener);
 
                         // We batch up changes and only transfer them on every save. This is in-line with the Eclipse
@@ -109,14 +128,15 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
             return;
         }
 
-        final List<Warning<String>> warnings = Arrays.stream(highlighters)
-                // markupModel.getAllHighlighters returns a list of RangeHighlighter,
-                // even though we know they are all instances of RangeHighlighterEx.
-                // Therefore do an instanceof check and then explicitly cast them
-                // to use them in the other methods
+        // markupModel.getAllHighlighters returns a list of RangeHighlighter,
+        // even though we know they are all instances of RangeHighlighterEx.
+        // Therefore do an instanceof check and then explicitly cast them
+        // to use them in the other methods
+        final Stream<RangeHighlighterEx> rangeHighlighters = Arrays.stream(highlighters)
                 .filter(RangeHighlighterEx.class::isInstance)
-                .map(RangeHighlighterEx.class::cast)
+                .map(RangeHighlighterEx.class::cast);
 
+        final List<Warning<String>> warnings = rangeHighlighters
                 .filter(IntelliJMarkupModelListener::isWarningRangeHighlighter)
                 .map(rangeHighlighter -> createWarningFromRangeHighlighter(rangeHighlighter, null))
                 .map(IntelliJMarkupModelListener::classifyWarning)
@@ -126,10 +146,10 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
     }
 
     private void flushForDocument() {
-        addCreatedWarnings(this.generatedWarnings.stream().map(IntelliJMarkupModelListener::classifyWarning));
+        addCreatedWarnings(this.trackingEventManager, this.generatedWarnings.stream().map(IntelliJMarkupModelListener::classifyWarning), this.document);
         this.generatedWarnings.clear();
 
-        addRemovedWarnings(this.warnings.stream().map(IntelliJMarkupModelListener::classifyWarning));
+        addRemovedWarnings(this.trackingEventManager, this.warnings.stream().map(IntelliJMarkupModelListener::classifyWarning), this.document);
         this.warnings.clear();
     }
 
@@ -158,10 +178,12 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
 
     @Override
     public void attributesChanged(@NotNull RangeHighlighterEx rangeHighlighterEx, boolean b, boolean b1) {
+        // Unused for now.
     }
 
     @Override
     public void dispose() {
+        // We store no internal state ourselves.
     }
 
     private static boolean isWarningRangeHighlighter(@NotNull RangeHighlighterEx rangeHighlighterEx) {
@@ -172,11 +194,19 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
     private Warning<RangeHighlighterEx> createWarningFromRangeHighlighter(@NotNull RangeHighlighterEx rangeHighlighterEx, DateTime creationTime) {
         final DateTime now = DateTime.now();
 
+        int seconds;
+
+        if (creationTime == null) {
+            seconds = -1;
+        } else {
+            seconds = Seconds.secondsBetween(creationTime, now).getSeconds();
+        }
+
         return new Warning<>(
                 rangeHighlighterEx,
                 getLineNumberForHighlighter(rangeHighlighterEx),
                 now.toDate(),
-                creationTime == null ? -1 : Seconds.secondsBetween(creationTime, now).getSeconds()
+                seconds
         );
     }
 

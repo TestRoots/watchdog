@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.eclipse.logic.ui.listeners;
+package nl.tudelft.watchdog.eclipse.logic.ui.listeners.staticanalysis;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -36,14 +36,14 @@ import org.mockito.stubbing.Answer;
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.TrackingEventType;
+import nl.tudelft.watchdog.core.logic.event.eventtypes.staticanalysis.FileWarningSnapshotEvent;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.staticanalysis.StaticAnalysisWarningEvent;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType.WatchDogEventEditorSpecificImplementation;
-import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.FileWarningSnapshotEvent;
 import nl.tudelft.watchdog.eclipse.logic.interval.IntervalManager;
 import nl.tudelft.watchdog.eclipse.logic.network.TransferManager;
 import nl.tudelft.watchdog.eclipse.logic.ui.listeners.WorkbenchListener;
-import nl.tudelft.watchdog.eclipse.logic.ui.listeners.EclipseMarkupModelListener.MarkerHolder;
+import nl.tudelft.watchdog.eclipse.logic.ui.listeners.staticanalysis.EclipseMarkupModelListener;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -142,7 +142,7 @@ public class MarkupModelListenerTest {
     public void tearDown() throws Exception {
         this.project.delete(true, true, null);
         this.saveWorkspaceAndWaitForBuild();
-        this.workspace.removeResourceChangeListener(this.workbenchListener.markupModelListener);
+        this.workspace.removeResourceChangeListener(this.workbenchListener.getMarkupModelListener());
     }
 
     @Test
@@ -281,7 +281,7 @@ public class MarkupModelListenerTest {
 
         assertEquals(generatedWarnings.size(), 1);
 
-        Document document = generatedWarnings.get(0).getDocument();
+        Document document = generatedWarnings.get(0).document;
         assertEquals(document.getFileName(), "Existing.java");
         assertEquals(document.getContent().split("\\d+").length, 25);
     }
@@ -292,7 +292,7 @@ public class MarkupModelListenerTest {
 
         assertEquals(generatedWarnings.size(), 1);
 
-        assertEquals(generatedWarnings.get(0).getStaticAnalysisType(), PRE_EXISTING_MARKER_CLASSIFICATION_TYPE);
+        assertEquals(generatedWarnings.get(0).warning.type, PRE_EXISTING_MARKER_CLASSIFICATION_TYPE);
     }
 
     @Test
@@ -309,14 +309,14 @@ public class MarkupModelListenerTest {
         assertEquals(generatedEvents.size(), 1);
 
         // See explanation in the previous test why this is 474
-        assertEquals(generatedEvents.get(0).getStaticAnalysisType(), "474");
+        assertEquals(generatedEvents.get(0).warning.type, "474");
     }
 
     @Test
     public void correctly_classifies_checkstyle_warning_type() throws Exception {
         List<StaticAnalysisWarningEvent> generatedEvents = processMarkerAndReturnGeneratedWarningList(() -> {
             try {
-                IMarker marker = this.testFile.createMarker(MarkerHolder.CHECKSTYLE_MARKER_ID);
+                IMarker marker = this.testFile.createMarker(EclipseMarkupModelListener.CHECKSTYLE_MARKER_ID);
                 marker.setAttribute(IMarker.MESSAGE, "Using the '.*' form of import should be avoided - java.util.*.");
             } catch (CoreException e) {
                 e.printStackTrace();
@@ -324,7 +324,7 @@ public class MarkupModelListenerTest {
         });
 
         assertEquals(generatedEvents.size(), 1);
-        assertEquals(generatedEvents.get(0).getStaticAnalysisType(), "checkstyle.imports.import.avoidStar");
+        assertEquals(generatedEvents.get(0).warning.type, "checkstyle.imports.import.avoidStar");
     }
 
     @Test
@@ -339,7 +339,7 @@ public class MarkupModelListenerTest {
         });
 
         assertEquals(generatedEvents.size(), 1);
-        assertEquals(generatedEvents.get(0).getStaticAnalysisType(), "unknown");
+        assertEquals(generatedEvents.get(0).warning.type, "unknown");
     }
 
     @Test
@@ -355,7 +355,7 @@ public class MarkupModelListenerTest {
         });
 
         assertEquals(generatedEvents.size(), 1);
-        assertEquals(generatedEvents.get(0).getLineNumber(), 15);
+        assertEquals(generatedEvents.get(0).warning.lineNumber, 15);
     }
 
     @Test
@@ -378,7 +378,7 @@ public class MarkupModelListenerTest {
         // We simply want any time difference here. If there is any, it is not -1, but 0, 1 or anything above
         // We do not want to rely on timing differences to assert on specific values, so asserting we have
         // anything is sufficient
-        assertNotEquals(generatedEvents.get(1).getWarningDifferenceTime(), -1);
+        assertNotEquals(generatedEvents.get(1).warning.secondsBetween, -1);
     }
 
     @Test
@@ -395,7 +395,7 @@ public class MarkupModelListenerTest {
             Mockito.verify(this.trackingEventManager).addEvent(captor.capture());
 
             try {
-                int[] lineNumbers = captor.getValue().getWarnings().stream()
+                int[] lineNumbers = captor.getValue().warnings.stream()
                         .map(warning -> warning.lineNumber)
                         .mapToInt(Integer::intValue)
                         .toArray();
@@ -421,7 +421,7 @@ public class MarkupModelListenerTest {
             Mockito.verify(this.trackingEventManager).addEvent(captor.capture());
 
             try {
-                String[] classifications = captor.getValue().getWarnings().stream()
+                String[] classifications = captor.getValue().warnings.stream()
                         .map(warning -> warning.type)
                         .toArray(String[]::new);
 

@@ -91,8 +91,8 @@ The Eclipse IDE updatesite needs to be signed before deployment. Deployment is t
 ## Creating a new release
 Builds are created automatically every hour on the server, and on-demand on the CI.
 Creating a new relase involves increasing the version number in several places.
-To make things easier, you can use this command (to bump from 1.0.1 to 1.0.2 in this example):
-`find . -type f ! -path "*.git*" ! -path "*/libs/*" | xargs sed -i 's/1\.0\.1/1\.0\.2/g'`
+To make things easier, you can use this command (to bump from 3.0.0 to 3.1.0 in this example):
+`find . -type f ! -path "*.git*" ! -path "*/libs/*" ! -path "*/target/*" ! -path "*/build_cache/*" | xargs sed -i 's/3\.0\.0/3\.1\.0/g'`
 Please check the diff before committing!
 
 
@@ -108,7 +108,7 @@ Upload the generated ZIP to the IntelliJ repository
 ## Sign it
 We only sign Eclipse releases.
 
-1. Go to `git-repo/WatchDogEclipsePlugin/p2updatesite/target/repository`
+1. Go to `cd eclipse/p2updatesite/target/repository/`
 2. Make sure `export JAVA_HOME=/usr/lib/jvm/java-8-oracle`
 3. Eplace STOREPASS and KEYPASS and run `find . -type f -follow -print | xargs -i  jarsigner -keystore "$JAVA_HOME/jre/lib/security/cacerts" -storepass "STOREPASS" -keypass "KEYPASS" -verbose '{}' 72a9b5399b49480482699d126b4ee9e5`
 4. Update Eclipse Updatesite on server

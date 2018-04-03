@@ -138,7 +138,8 @@ public abstract class WatchDogUtilsBase {
     // For some reason, when using a lambda notation foo -> {} in a static function with type parameters,
     // the compiler complains about "undeclared type variables" in a subclass (in this case the intellij module)
     @SuppressWarnings("Convert2Lambda")
-    public static <A, R, E extends Exception> Function<A, R> unchecked(FunctionWithException<A, R, E> function) {
+    public static <A, R, E extends Exception> Function<A, R> transformCheckedExceptionIntoUncheckedException(
+            FunctionWithException<A, R, E> function) {
         return new Function<A, R>() {
             @Override
             public R apply(A argument) {
