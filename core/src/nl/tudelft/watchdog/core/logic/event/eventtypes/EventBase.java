@@ -61,7 +61,7 @@ public abstract class EventBase extends WatchDogItem implements Serializable, Co
 	 * but the events themselves are not, the type of the events is used to
 	 * produce the result of this method. These two steps are required to ensure
 	 * that events are not lost when two or more events have the same timestamp.
-	 * 
+	 *
 	 * If the item to compare to isn't an instance of EventBase, the class name
 	 * is used to determine the result of the comparison.
 	 */

@@ -38,7 +38,7 @@ public class EditorListener {
 	/**
 	 * Adds a document change listener to the supplied editor. Fires a
 	 * {@link StartEditingEditorEvent} when a change to a document is made.
-	 * 
+	 *
 	 * @param partEditor
 	 * @throws IllegalArgumentException
 	 */
@@ -51,11 +51,11 @@ public class EditorListener {
 			public void documentChanged(DocumentEvent event) {
 				/*
 				 * Three events exist that can influence the Levenshtein
-				 * distance: 
-				 * 1. Addition. In this case length=0 and text>0,  therefore max(length,text)=text=Levenshtein distance. 
-				 * 2. Removal. In this case length>0 and text=0, therefore max(length,text)=length=Levenshtein distance. 
+				 * distance:
+				 * 1. Addition. In this case length=0 and text>0,  therefore max(length,text)=text=Levenshtein distance.
+				 * 2. Removal. In this case length>0 and text=0, therefore max(length,text)=length=Levenshtein distance.
 				 * 3. Modification. In this case length>0 and text>0, therefore max(length,text)>=Levenshtein distance.
-				 * 
+				 *
 				 * So, in general it holds that modCount >= Levenshtein
 				 * distance.
 				 */

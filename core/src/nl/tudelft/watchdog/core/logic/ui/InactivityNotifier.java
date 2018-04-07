@@ -10,13 +10,13 @@ import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventTypeInterface;
  * A performance-optimized notifier for a timeout when its {@link #trigger()}
  * was not called for a given timeout. When an inactivity is detected, an
  * inactivityEvent is fired. The type of this event can be specified.
- * 
+ *
  * Performance optimization: only update activity timer every second. This means
  * that we have 10% imprecision, ie. the user may have actually stayed inactive
  * shorter than we think he did.
  */
 public class InactivityNotifier {
-	
+
 	private int activityTimeout;
 
 	private Timer activityTimer;
@@ -67,7 +67,7 @@ public class InactivityNotifier {
 
 	/**
 	 * Immediately cancels the timer, sending an inactivity event.
-	 * 
+	 *
 	 * @param forcedDate
 	 *            the Date which should be supplied to the eventmanager for when
 	 *            this event actually happened.

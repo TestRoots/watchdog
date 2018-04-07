@@ -25,7 +25,7 @@ public class EventPersisterTestSingleEvent extends EventPersisterTestBase {
 	public void test1WriteEvent() {
 		event = EventPersisterTest.createRandomEvent();
 		persister.save(event);
-		
+
 		WatchDogItem item = new ArrayList<>(persister.readItems()).get(0);
 		assertTrue(item instanceof EventBase);
 
@@ -38,7 +38,7 @@ public class EventPersisterTestSingleEvent extends EventPersisterTestBase {
 	public void test2CompareEventAfterWrite() {
 		WatchDogItem item = new ArrayList<>(persister.readItems()).get(0);
 		assertTrue(item instanceof EventBase);
-		
+
 		EventBase savedEvent = (EventBase) item;
 		assertEquals(event.getType(), savedEvent.getType());
 		assertEquals(event.getTimestamp(), savedEvent.getTimestamp());

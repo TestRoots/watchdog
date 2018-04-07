@@ -18,7 +18,7 @@ public class IntervalPersisterTestSingleInterval extends IntervalPersisterTestBa
 		databaseName = "BaseTest";
 		setUpSuperClass();
 	}
-	
+
 	private static IntervalBase interval;
 
 	@Test
@@ -30,7 +30,7 @@ public class IntervalPersisterTestSingleInterval extends IntervalPersisterTestBa
 		WatchDogItem savedItem = new ArrayList<>(persister.readItems())
 				.get(0);
 		assertTrue(savedItem instanceof IntervalBase);
-		
+
 		IntervalBase savedInterval = (IntervalBase) savedItem;
 		assertEquals(interval.getType(), savedInterval.getType());
 		assertEquals(interval.getStart(), savedInterval.getStart());
@@ -44,7 +44,7 @@ public class IntervalPersisterTestSingleInterval extends IntervalPersisterTestBa
 		WatchDogItem savedItem = new ArrayList<>(persister.readItems())
 				.get(0);
 		assertTrue(savedItem instanceof IntervalBase);
-		
+
 		IntervalBase savedInterval = (IntervalBase) savedItem;
 		assertEquals(interval.getType(), savedInterval.getType());
 		assertEquals(interval.getStart(), savedInterval.getStart());
@@ -56,7 +56,7 @@ public class IntervalPersisterTestSingleInterval extends IntervalPersisterTestBa
 		WatchDogItem savedItem = new ArrayList<>(persister.readItems())
 				.get(0);
 		assertTrue(savedItem instanceof IntervalBase);
-		
+
 		IntervalBase savedInterval = (IntervalBase) savedItem;
 		assertEquals(interval.getDuration(), savedInterval.getDuration());
 		assertEquals(interval.isClosed(), savedInterval.isClosed());

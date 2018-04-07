@@ -65,7 +65,7 @@ public class DocumentClassifierTest {
 				"TestClass.java", "filepath", contents);
 		assertEquals(DocumentType.FILENAME_TEST, type);
 	}
-	
+
 	/**
 	 * Tests the recognition of a normal JUnit test file as
 	 * {@link DocumentType#FILENAME_TEST}.
@@ -79,7 +79,7 @@ public class DocumentClassifierTest {
 				"Class.java", "src/test/package/", contents);
 		assertEquals(DocumentType.PATHNAMME_TEST, type);
 	}
-	
+
 	/**
 	 * Tests the recognition of a normal JUnit test file as
 	 * {@link DocumentType#FILENAME_TEST}.

@@ -58,7 +58,7 @@ public abstract class FinishableWizardPage extends WizardPage {
 
 	/**
 	 * Creates a simple question with according yes/no/don't know radio buttons.
-	 * 
+	 *
 	 * @return the composite where the buttons are put onto.
 	 */
 	protected Composite createSimpleYesNoDontKnowQuestion(String question,
@@ -70,7 +70,7 @@ public abstract class FinishableWizardPage extends WizardPage {
 
 	/**
 	 * Creates a simple question with according yes/no radio buttons.
-	 * 
+	 *
 	 * @return the composite where the buttons are put onto.
 	 */
 	protected Composite createSimpleYesNoQuestion(String question,

@@ -16,7 +16,7 @@ public abstract class BreakpointEventBase extends EventBase {
 	/** The hash of the breakpoint associated with this event. */
 	@SerializedName("bh")
 	private int hash;
-	
+
 	/** The type of the breakpoint associated with this event. */
 	@SerializedName("bt")
 	private BreakpointType breakpointType;

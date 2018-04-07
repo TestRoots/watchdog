@@ -274,7 +274,7 @@ public class WatchDogEventManagerTest {
 				Mockito.isA(WatchDogViewInterval.class), Mockito.isA(Date.class));
 
 	}
-	
+
 	@Test
 	public void testCreateDebugInterval() {
 		createMockEvent(WatchDogEventType.START_DEBUG);

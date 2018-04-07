@@ -14,7 +14,7 @@ public class IntervalPersisterBug101Test extends IntervalPersisterTestBase {
 		databaseName = "IntervalPersisterBug101Test";
 		setUpSuperClass();
 	}
-	
+
 	@Test
 	public void test1IfDatabaseStartsUpFine() {
 		persister = new PersisterBase(copiedDatabase);

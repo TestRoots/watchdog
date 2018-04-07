@@ -5,10 +5,10 @@ import java.util.List;
 
 /** Skeleton for which preferences each plugin must provide. */
 public abstract class PreferencesBase {
-	
+
 	/** The map of registered projects. */
 	protected List<ProjectPreferenceSetting> projectSettings = new ArrayList<ProjectPreferenceSetting>();
-	
+
 	/**
 	 * Returns whether logging is enabled (<code>true</code>) or not (
 	 * <code>false</code>).
@@ -61,16 +61,16 @@ public abstract class PreferencesBase {
 
 	/** Sets the date when the last intervals were transfered. */
     public abstract void setLastTransferedInterval();
-    
+
     /** @return The number of successfully transfered events. */
     public abstract long getEvents();
-    
+
     /** Adds the number to the transfered events for the store. */
     public abstract void addTransferedEvents(long number);
-    
+
     /** @return The date the last events were transfered. */
     public abstract String getLastEventTransferDate();
-    
+
     /** Sets the date when the last events were transfered. */
     public abstract void setLastTransferedEvent();
 
@@ -102,7 +102,7 @@ public abstract class PreferencesBase {
 		}
 		return setting;
     }
-    
+
     /**
 	 * @return The matching {@link ProjectPreferenceSetting}, or
 	 *         <code>null</code> in case there was no match.
@@ -136,7 +136,7 @@ public abstract class PreferencesBase {
 
     /** Updates the serialized project settings in the preference store. */
     protected abstract void storeProjectSettings();
-    
+
 	/** @return a list of project settings. */
     public List<ProjectPreferenceSetting> getProjectSettings() {
 		return projectSettings;

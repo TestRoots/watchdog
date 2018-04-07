@@ -1,18 +1,14 @@
 package nl.tudelft.watchdog.intellij.logic.interval.intervaltypes;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.regex.Pattern;
-
+import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.sm.runner.states.TestStateInfo.Magnitude;
 import nl.tudelft.watchdog.core.logic.interval.intervaltypes.JUnitExecutionBase;
 import nl.tudelft.watchdog.core.logic.network.JsonifiedDouble;
 import nl.tudelft.watchdog.intellij.logic.ui.listeners.JUnitListener;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
-import com.intellij.execution.testframework.AbstractTestProxy;
-
-import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 /**
  * JUnit execution representation in a tree-structure.

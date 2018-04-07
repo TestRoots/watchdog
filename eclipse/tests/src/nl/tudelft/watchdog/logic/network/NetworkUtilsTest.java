@@ -12,7 +12,7 @@ public class NetworkUtilsTest {
 			throws ServerCommunicationException, ServerReturnCodeException {
 		NetworkUtils.transferJsonAndGetResponse("", "");
 	}
-	
+
 	@Test(expected = ServerCommunicationException.class)
 	public void testTransferToSlashURLBug148()
 			throws ServerCommunicationException, ServerReturnCodeException {

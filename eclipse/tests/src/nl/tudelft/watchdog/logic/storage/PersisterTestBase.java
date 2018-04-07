@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 /**
  * Base class for persistence tests. The convention for this IntervalPersister
  * tests is that directory name equals the database file name.
- * 
+ *
  * Subclasses should, instead of using the @BeforeClass annotation, call such
  * classes from within their constructor.
  */

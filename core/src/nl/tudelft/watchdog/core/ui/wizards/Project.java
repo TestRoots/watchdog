@@ -24,7 +24,7 @@ public class Project extends WatchDogItem {
 	 * (<code>true</code> if it does)
 	 */
 	public boolean belongToASingleSoftware;
-	
+
 	/** Do you use ContinuousIntegration? */
 	public YesNoDontKnowChoice usesContinuousIntegration;
 

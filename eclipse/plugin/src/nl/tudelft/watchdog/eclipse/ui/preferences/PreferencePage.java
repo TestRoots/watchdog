@@ -119,7 +119,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 		 * inputed value in the text field, by first saving the unchecked value
 		 * in the preferences, then loading it in again, then performing the URL
 		 * checks for a trailing / and then saving it.
-		 * 
+		 *
 		 * Finally, it reloads the value to give imminent user-feedback.
 		 */
 		@Override

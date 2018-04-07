@@ -63,7 +63,7 @@ public class InitializationManager {
 		trackingEventManager = new TrackingEventManager(toTransferPersister,
 				statisticsPersister);
 		trackingEventManager.setSessionSeed(intervalManager.getSessionSeed());
-		
+
 		WatchDogEventType.intervalManager = intervalManager;
 		WatchDogEventType.editorSpecificImplementation = new EclipseWatchDogEventSpecificImplementation(intervalManager);
 
@@ -109,10 +109,10 @@ public class InitializationManager {
 		toTransferPersister.closeDatabase();
 		statisticsPersister.closeDatabase();
 	}
-	
+
 	public static final class EclipseWatchDogEventSpecificImplementation
 			implements WatchDogEventEditorSpecificImplementation {
-		
+
 		private IDEIntervalManagerBase intervalManager;
 
 		public EclipseWatchDogEventSpecificImplementation(IDEIntervalManagerBase intervalManager) {
@@ -123,17 +123,17 @@ public class InitializationManager {
 		public EditorWrapperBase createEditorWrapper(Object editor) {
 			return new EditorWrapper((ITextEditor) editor);
 		}
-		
+
 		@Override
 		public Document createDocument(Object editor) {
 			return DocumentCreator.createDocument((ITextEditor) editor);
 		}
-		
+
 		@Override
 		public void addJUnitInterval(Object interval) {
 			this.intervalManager.addInterval((JUnitInterval) interval);
 		}
-		
+
 		@Override
 		public void processPerspectiveInterval() {
 			PerspectiveInterval perspectiveInt = this.intervalManager

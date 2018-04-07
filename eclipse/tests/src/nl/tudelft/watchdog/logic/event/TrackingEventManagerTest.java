@@ -32,7 +32,7 @@ public class TrackingEventManagerTest {
 
 	@Mock
 	Preferences mockedPreferences;
-	
+
 	String sessionSeed;
 
 	@Before
@@ -45,7 +45,7 @@ public class TrackingEventManagerTest {
 	}
 
 	@Test
-	public void testNoInteractionsWhenAddingNull() { 
+	public void testNoInteractionsWhenAddingNull() {
 	    trackingEventManager.addEvent(null);
 		Mockito.verifyZeroInteractions(eventsToTransferPersister);
 		Mockito.verifyZeroInteractions(eventsStatisticsPersister);
@@ -80,7 +80,7 @@ public class TrackingEventManagerTest {
 		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(BreakpointChangeEvent.class));
 		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(BreakpointChangeEvent.class));
 	}
-	
+
 	@Test
 	public void testAddSuspendBreakpointEvent() {
 		DebugEventBase eventReal = new DebugEventBase(TrackingEventType.SUSPEND_BREAKPOINT, new Date());
@@ -90,7 +90,7 @@ public class TrackingEventManagerTest {
 		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(DebugEventBase.class));
 		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(DebugEventBase.class));
 	}
-	
+
 	@Test
 	public void testAddStepIntoEvent() {
 		DebugEventBase eventReal = new DebugEventBase(TrackingEventType.STEP_INTO, new Date());

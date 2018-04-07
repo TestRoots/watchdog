@@ -173,7 +173,7 @@ public class BreakpointChangeClassifierTest {
 		assertEquals(1, result.size());
 		assertEquals(BreakpointChangeType.COND_CHANGED, result.get(0));
 	}
-	
+
 	@Test
 	public void testClassifyConditionNoChanges() {
 		Breakpoint old = createBreakpoint();

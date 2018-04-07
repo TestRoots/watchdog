@@ -34,7 +34,7 @@ public class EventPersisterDuplicatesTest extends EventPersisterTestBase {
 	public void test1AddEvent() {
 		event = createEvent();
 		persister.save(event);
-		
+
 		WatchDogItem item = new ArrayList<>(persister.readItems()).get(0);
 		assertTrue(item instanceof EventBase);
 

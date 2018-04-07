@@ -69,7 +69,7 @@ public class IntervalComparisonTest {
 		assertEquals(-1, interval1.compareTo(interval2));
 		assertEquals(1, interval2.compareTo(interval1));
 	}
-	
+
 	@Test
 	public void testComparisonTwoDifferentIntervalsSameType() {
 		UserActiveInterval interval1 = new UserActiveInterval(new Date(1));

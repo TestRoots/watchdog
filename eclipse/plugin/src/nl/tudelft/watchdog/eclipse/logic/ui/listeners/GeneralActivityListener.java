@@ -18,7 +18,7 @@ public class GeneralActivityListener {
 		display.syncExec(() -> {
 			display.addFilter(SWT.KeyDown | SWT.KeyUp | SWT.MouseDown | SWT.MouseUp
 					| SWT.MouseMove, new Listener() {
-	
+
 				@Override
 				public void handleEvent(Event event) {
 					WatchDogEventType.USER_ACTIVITY.process(event);

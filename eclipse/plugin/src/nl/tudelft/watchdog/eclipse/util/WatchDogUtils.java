@@ -22,7 +22,7 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 
 	/**
 	 * Returns the contents of the supplied {@link ITextEditor}.
-	 * 
+	 *
 	 * @param editor
 	 *            the editor you want the contents of
 	 * @return The content of the editor
@@ -83,7 +83,7 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 	public static String getContentForEditorFromDisk(ITextEditor editor) {
 		return getContentForFileFromDisk(getFile(editor));
 	}
-	
+
 	/**
 	 * Reads and returns the contents of a file, by
 	 * trying to access the file from the disk.

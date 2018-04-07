@@ -103,7 +103,7 @@ public class WatchDogView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		partService = (IPartService) getSite().getService(IPartService.class);
+		partService = getSite().getService(IPartService.class);
 		watchDogViewListener = new WatchDogViewListener(this);
 		partService.addPartListener(watchDogViewListener);
 
@@ -144,7 +144,7 @@ public class WatchDogView extends ViewPart {
 
 	/**
 	 * @return true if and only if one of the following two conditions hold:
-	 * 
+	 *
 	 *         1. No debug interval has been selected yet; or 2. A debug
 	 *         interval has been selected before, but it is no longer part of
 	 *         the latest debug intervals.
