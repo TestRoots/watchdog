@@ -19,11 +19,9 @@ public class EventPersisterTestSingleEvent extends EventPersisterTestBase {
 		setUpSuperClass();
 	}
 
-	private static EventBase event;
-
 	@Test
-	public void test1WriteEvent() {
-		event = EventPersisterTest.createRandomEvent();
+	public void can_compare_event_after_write() {
+		EventBase event = EventPersisterTest.createRandomEvent();
 		persister.save(event);
 
 		WatchDogItem item = new ArrayList<>(persister.readItems()).get(0);
@@ -32,16 +30,13 @@ public class EventPersisterTestSingleEvent extends EventPersisterTestBase {
 		EventBase savedEvent = (EventBase) item;
 		assertEquals(event.getType(), savedEvent.getType());
 		assertEquals(event.getTimestamp(), savedEvent.getTimestamp());
-	}
 
-	@Test
-	public void test2CompareEventAfterWrite() {
-		WatchDogItem item = new ArrayList<>(persister.readItems()).get(0);
+		WatchDogItem otherItem = new ArrayList<>(persister.readItems()).get(0);
 		assertTrue(item instanceof EventBase);
 
-		EventBase savedEvent = (EventBase) item;
-		assertEquals(event.getType(), savedEvent.getType());
-		assertEquals(event.getTimestamp(), savedEvent.getTimestamp());
+		EventBase savedOtherEvent = (EventBase) otherItem;
+		assertEquals(event.getType(), savedOtherEvent.getType());
+		assertEquals(event.getTimestamp(), savedOtherEvent.getTimestamp());
 	}
 
 }

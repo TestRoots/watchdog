@@ -16,14 +16,14 @@ import nl.tudelft.watchdog.core.logic.interval.intervaltypes.UserActiveInterval;
 public class IntervalComparisonTest {
 
 	@Test
-	public void testComparisonEqualIntervalsSameObject() {
+	public void same_interval() {
 		UserActiveInterval interval = new UserActiveInterval(new Date());
 		interval.close();
 		assertEquals(0, interval.compareTo(interval));
 	}
 
 	@Test
-	public void testComparisonEqualIntervalsDifferentObjectsSameType() {
+	public void same_characteristics() {
 		Date start = new Date();
 		UserActiveInterval interval1 = new UserActiveInterval(start);
 		UserActiveInterval interval2 = new UserActiveInterval(start);
@@ -36,7 +36,7 @@ public class IntervalComparisonTest {
 	}
 
 	@Test
-	public void testComparisonEqualIntervalsDifferentObjectsDifferentType() {
+	public void different_start_time() {
 		Date start = new Date();
 		UserActiveInterval interval1 = new UserActiveInterval(start);
 		IDEOpenInterval interval2 = new IDEOpenInterval(start);
@@ -48,7 +48,7 @@ public class IntervalComparisonTest {
 	}
 
 	@Test
-	public void testComparisonEqualIntervalsDifferentObjectsDifferentStart() {
+	public void different_end_time() {
 		UserActiveInterval interval1 = new UserActiveInterval(new Date(1));
 		UserActiveInterval interval2 = new UserActiveInterval(new Date(2));
 		interval1.close();
@@ -59,7 +59,7 @@ public class IntervalComparisonTest {
 	}
 
 	@Test
-	public void testComparisonTwoDifferentIntervalsDifferentType() {
+	public void different_start_and_end_time() {
 		UserActiveInterval interval1 = new UserActiveInterval(new Date(1));
 		IDEOpenInterval interval2 = new IDEOpenInterval(new Date(2));
 		interval1.close();
@@ -71,13 +71,13 @@ public class IntervalComparisonTest {
 	}
 
 	@Test
-	public void testComparisonTwoDifferentIntervalsSameType() {
+	public void different_start_and_end_time_again() {
 		UserActiveInterval interval1 = new UserActiveInterval(new Date(1));
 		UserActiveInterval interval2 = new UserActiveInterval(new Date(2));
 		interval1.close();
-		interval1.setEndTime(new Date(2));
+		interval1.setStartTime(new Date(2));
 		interval2.close();
-		interval2.setEndTime(new Date(3));
+		interval2.setStartTime(new Date(3));
 		assertEquals(-1, interval1.compareTo(interval2));
 		assertEquals(1, interval2.compareTo(interval1));
 	}

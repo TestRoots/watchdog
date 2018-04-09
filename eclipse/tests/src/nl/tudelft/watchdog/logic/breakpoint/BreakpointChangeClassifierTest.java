@@ -19,7 +19,7 @@ import nl.tudelft.watchdog.core.logic.breakpoint.BreakpointType;
 public class BreakpointChangeClassifierTest {
 
 	@Test
-	public void testClassifyOldBPIsNull() {
+	public void classification_with_old_break_point_null_works() {
 		Breakpoint bp = createBreakpoint();
 		List<BreakpointChangeType> result = BreakpointChangeClassifier.classify(null, bp);
 		assertEquals(1, result.size());
@@ -27,7 +27,7 @@ public class BreakpointChangeClassifierTest {
 	}
 
 	@Test
-	public void testClassifyNewBPIsNull() {
+	public void classification_with_new_breakpoint_null_works() {
 		Breakpoint bp = createBreakpoint();
 		List<BreakpointChangeType> result = BreakpointChangeClassifier.classify(bp, null);
 		assertEquals(1, result.size());
@@ -35,7 +35,7 @@ public class BreakpointChangeClassifierTest {
 	}
 
 	@Test
-	public void testClassifyNoChanges() {
+	public void equivalent_breakpoint_should_not_change() {
 		Breakpoint bp = createBreakpoint();
 		List<BreakpointChangeType> result = BreakpointChangeClassifier.classify(bp, bp);
 		assertEquals(1, result.size());
@@ -43,7 +43,7 @@ public class BreakpointChangeClassifierTest {
 	}
 
 	@Test
-	public void testClassifyBPEnabled() {
+	public void breakpoint_enabled() {
 		Breakpoint old = createBreakpoint();
 		Breakpoint bp = createBreakpoint();
 		old.setEnabled(false);
@@ -55,7 +55,7 @@ public class BreakpointChangeClassifierTest {
 	}
 
 	@Test
-	public void testClassifyBPDisabled() {
+	public void breakpoint_disabled() {
 		Breakpoint old = createBreakpoint();
 		Breakpoint bp = createBreakpoint();
 		old.setEnabled(true);
@@ -67,7 +67,7 @@ public class BreakpointChangeClassifierTest {
 	}
 
 	@Test
-	public void testClassifyHCAdded() {
+	public void breakpoint_hitcount_added() {
 		Breakpoint old = createBreakpoint();
 		Breakpoint bp = createBreakpoint();
 		old.setHitCount(-1);
@@ -79,7 +79,7 @@ public class BreakpointChangeClassifierTest {
 	}
 
 	@Test
-	public void testClassifyHCRemoved() {
+	public void breakpoint_hitcount_removed() {
 		Breakpoint old = createBreakpoint();
 		Breakpoint bp = createBreakpoint();
 		old.setHitCount(1);
@@ -91,7 +91,7 @@ public class BreakpointChangeClassifierTest {
 	}
 
 	@Test
-	public void testClassifyHCChanged() {
+	public void breakpoint_hitcount_changed() {
 		Breakpoint old = createBreakpoint();
 		Breakpoint bp = createBreakpoint();
 		old.setHitCount(1);
@@ -103,7 +103,7 @@ public class BreakpointChangeClassifierTest {
 	}
 
 	@Test
-	public void testClassifySPChanged() {
+	public void breakpoint_suspendpolicy_changed() {
 		Breakpoint old = createBreakpoint();
 		Breakpoint bp = createBreakpoint();
 		old.setSuspendPolicy(0);
@@ -115,7 +115,7 @@ public class BreakpointChangeClassifierTest {
 	}
 
 	@Test
-	public void testClassifyConditionEnabled() {
+	public void breakpoint_condition_enabled() {
 		Breakpoint old = createBreakpoint();
 		Breakpoint bp = createBreakpoint();
 		old.setConditionEnabled(false);
@@ -127,7 +127,7 @@ public class BreakpointChangeClassifierTest {
 	}
 
 	@Test
-	public void testClassifyConditionDisabled() {
+	public void breakpoint_condition_disabled() {
 		Breakpoint old = createBreakpoint();
 		Breakpoint bp = createBreakpoint();
 		old.setConditionEnabled(true);
@@ -139,7 +139,7 @@ public class BreakpointChangeClassifierTest {
 	}
 
 	@Test
-	public void testClassifyConditionAdded() {
+	public void breakpoint_condition_added() {
 		Breakpoint old = createBreakpoint();
 		Breakpoint bp = createBreakpoint();
 		old.setCondition(null);
@@ -151,7 +151,7 @@ public class BreakpointChangeClassifierTest {
 	}
 
 	@Test
-	public void testClassifyConditionRemoved() {
+	public void breakpoint_condition_removed() {
 		Breakpoint old = createBreakpoint();
 		Breakpoint bp = createBreakpoint();
 		old.setCondition("cond");
@@ -163,7 +163,7 @@ public class BreakpointChangeClassifierTest {
 	}
 
 	@Test
-	public void testClassifyConditionChanged() {
+	public void breakpoint_condition_changed() {
 		Breakpoint old = createBreakpoint();
 		Breakpoint bp = createBreakpoint();
 		old.setCondition("cond_old");
@@ -175,7 +175,7 @@ public class BreakpointChangeClassifierTest {
 	}
 
 	@Test
-	public void testClassifyConditionNoChanges() {
+	public void breakpoint_condition_no_changes() {
 		Breakpoint old = createBreakpoint();
 		Breakpoint bp = createBreakpoint();
 		old.setCondition("cond");
@@ -187,7 +187,7 @@ public class BreakpointChangeClassifierTest {
 	}
 
 	@Test
-	public void testClassifyTwoChanges() {
+	public void breakpoint_two_changes() {
 		Breakpoint old = createBreakpoint();
 		Breakpoint bp = createBreakpoint();
 		old.setEnabled(false);
@@ -202,7 +202,7 @@ public class BreakpointChangeClassifierTest {
 	}
 
 	@Test
-	public void testClassifyThreeChanges() {
+	public void breakpoint_three_changes() {
 		Breakpoint old = createBreakpoint();
 		Breakpoint bp = createBreakpoint();
 		old.setEnabled(true);
@@ -220,7 +220,7 @@ public class BreakpointChangeClassifierTest {
 	}
 
 	@Test
-	public void testClassifyThreeChangesWithCondition() {
+	public void breakpoint_three_changes_and_condition() {
 		Breakpoint old = createBreakpoint();
 		Breakpoint bp = createBreakpoint();
 		old.setEnabled(true);

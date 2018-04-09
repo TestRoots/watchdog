@@ -25,13 +25,23 @@ public class EventPersisterDuplicatesTest extends EventPersisterTestBase {
 	private EventBase event;
 
 	@BeforeClass
-	public static void setUpBeforeClass() {
+	public static void setup_before_class() {
 		databaseName = "DuplicateTest";
 		setUpSuperClass();
 	}
 
 	@Test
-	public void test1AddEvent() {
+	public void can_handle_duplicates() {
+		add_event();
+		database_persisted();
+		add_same_event_not_persisted_twice();
+		similar_event_different_timestamp();
+		similar_event_different_sessionseed();
+		same_event_not_persisted_twice_again();
+		database_cleared();
+	}
+
+	private void add_event() {
 		event = createEvent();
 		persister.save(event);
 
@@ -43,43 +53,37 @@ public class EventPersisterDuplicatesTest extends EventPersisterTestBase {
 		assertEquals(event.getTimestamp(), savedEvent.getTimestamp());
 	}
 
-	@Test
-	public void test2DatabasePersisted() {
+	private void database_persisted() {
 		assertEquals(1, persister.getSize());
 	}
 
-	@Test
-	public void test3AddSameEventTestNotPersisted() {
+	private void add_same_event_not_persisted_twice() {
 		event = createEvent();
 		persister.save(event);
 		assertEquals(1, persister.getSize());
 	}
 
-	@Test
-	public void test4AddSimilarEventDifferentTimestampTestPersisted() {
+	private void similar_event_different_timestamp() {
 		event = createEvent();
 		event.setTimestamp(new Date(2));
 		persister.save(event);
 		assertEquals(2, persister.getSize());
 	}
 
-	@Test
-	public void test5AddSimilarEventDifferentTypeTestPersisted() {
+	private void similar_event_different_sessionseed() {
 		event = new BreakpointRemoveEvent(1, BreakpointType.LINE, new Date(1));
 		event.setSessionSeed("444");
 		persister.save(event);
 		assertEquals(3, persister.getSize());
 	}
 
-	@Test
-	public void test6AddAlreadyPersistedEventAgainTestNotPersisted() {
+	private void same_event_not_persisted_twice_again() {
 		event = createEvent();
 		persister.save(event);
 		assertEquals(3, persister.getSize());
 	}
 
-	@Test
-	public void test7DatabaseCleared() {
+	private void database_cleared() {
 		persister.clearAndResetMap();
 		assertEquals(0, persister.getSize());
 	}

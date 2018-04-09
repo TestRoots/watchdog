@@ -15,7 +15,7 @@ import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 public class EventPersisterEmptyFileTest extends EventPersisterTestBase {
 
 	@BeforeClass
-	public static void setUpBeforeClass() {
+	public static void setup_before_class() {
 		databaseName = "EmptyTestDB";
 		setUpSuperClass();
 	}
@@ -25,7 +25,7 @@ public class EventPersisterEmptyFileTest extends EventPersisterTestBase {
 	 * ensure that the database is initialised correctly.
 	 */
 	@Before
-	public void setUpBeforeMethod() throws FileNotFoundException, UnsupportedEncodingException {
+	public void setup() throws FileNotFoundException, UnsupportedEncodingException {
 		PrintWriter writer = new PrintWriter(copiedDatabase, "UTF-8");
 		writer.println("");
 		writer.close();
@@ -34,12 +34,9 @@ public class EventPersisterEmptyFileTest extends EventPersisterTestBase {
 	}
 
 	@Test
-	public void test1DatabaseEmpty() {
+	public void can_insert_into_empty_file_db() {
 		assertEquals(0, persister.getSize());
-	}
 
-	@Test
-	public void test2CreateEvent() {
 		persister.save(EventPersisterTest.createRandomEvent());
 		assertEquals(1, persister.getSize());
 	}

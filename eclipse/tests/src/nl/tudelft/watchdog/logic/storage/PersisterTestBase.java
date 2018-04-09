@@ -9,7 +9,6 @@ import org.apache.commons.io.FileUtils;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
 
 /**
  * Base class for persistence tests. The convention for this IntervalPersister
@@ -18,7 +17,6 @@ import org.junit.runner.RunWith;
  * Subclasses should, instead of using the @BeforeClass annotation, call such
  * classes from within their constructor.
  */
-@RunWith(LexicographicalTestOrderRunner.class)
 public abstract class PersisterTestBase {
 
 	private static File databaseDirectory;
@@ -41,7 +39,7 @@ public abstract class PersisterTestBase {
 	}
 
 	@Test
-	public void test0IfDirectoryCopied() {
+	public void ensure_database_is_copied() {
 		assertTrue(databaseDirectory.exists());
 		assertTrue(copiedDatabase.exists());
 	}

@@ -19,6 +19,7 @@
         <tycho.version>0.22.0</tycho.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.version>3.7.0</maven.compiler.version>
         <maven.jar.version>3.0.2</maven.jar.version>
     </properties>
@@ -100,5 +101,34 @@
                 </executions>
             </plugin>
         </plugins>
+        
+        <pluginManagement>
+  <plugins>
+    <plugin>
+     <groupId>org.eclipse.m2e</groupId>
+     <artifactId>lifecycle-mapping</artifactId>
+     <version>1.0.0</version>
+     <configuration>
+       <lifecycleMappingMetadata>
+         <pluginExecutions>
+           <pluginExecution>
+             <pluginExecutionFilter>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-checkstyle-plugin</artifactId>
+               <versionRange>[3.0.0,)</versionRange>
+               <goals>
+                 <goal>check</goal>
+               </goals>
+             </pluginExecutionFilter>
+             <action>
+               <ignore/>
+             </action>
+           </pluginExecution>
+         </pluginExecutions>
+       </lifecycleMappingMetadata>
+     </configuration>
+    </plugin>
+  </plugins>
+</pluginManagement>
     </build>
 </project>
