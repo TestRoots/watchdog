@@ -21,8 +21,6 @@ import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.intellij.logic.InitializationManager;
 import nl.tudelft.watchdog.intellij.ui.new_wizards.RegistrationWorkflowWizard;
 import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
-import nl.tudelft.watchdog.intellij.ui.wizards.projectregistration.ProjectRegistrationWizard;
-import nl.tudelft.watchdog.intellij.ui.wizards.userregistration.UserProjectRegistrationWizard;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -123,13 +121,12 @@ public class WatchDogStartUp implements ProjectComponent {
     private void checkWhetherToDisplayUserProjectRegistrationWizard() {
         Preferences preferences = Preferences.getInstance();
         ProjectPreferenceSetting projectSetting = preferences.getOrCreateProjectSetting(project.getName());
-//        if (!WatchDogUtils.isEmpty(WatchDogGlobals.getPreferences().getUserId())
-//                || (projectSetting.startupQuestionAsked && !projectSetting.enableWatchdog)) {
-//            return;
-//        }
+        if (!WatchDogUtils.isEmpty(WatchDogGlobals.getPreferences().getUserId())
+                || (projectSetting.startupQuestionAsked && !projectSetting.enableWatchdog)) {
+            return;
+        }
 
         AbstractWizard wizard = new RegistrationWorkflowWizard("User and Project Registration", project);
-//        AbstractWizard wizard = new UserProjectRegistrationWizard("User and Project Registration", project);
         wizard.show();
         if (wizard.getExitCode() == DialogWrapper.CANCEL_EXIT_CODE) {
             if (Messages.YES == Messages.showYesNoDialog(WATCHDOG_UNREGISTERED_WARNING, "WatchDog is not registered!", Messages.getQuestionIcon())) {
@@ -195,7 +192,7 @@ public class WatchDogStartUp implements ProjectComponent {
         ProjectPreferenceSetting setting = WatchDogGlobals.getPreferences()
                 .getOrCreateProjectSetting(project.getName());
         if (setting.enableWatchdog && WatchDogUtils.isEmpty(setting.projectId)) {
-            ProjectRegistrationWizard wizard =  new ProjectRegistrationWizard("Project Registration", project);
+            AbstractWizard wizard =  new RegistrationWorkflowWizard("Project Registration", project);
             wizard.show();
             if (wizard.getExitCode() == DialogWrapper.CANCEL_EXIT_CODE) {
                 registerAnonymousProject(WatchDogGlobals.getPreferences().getUserId());

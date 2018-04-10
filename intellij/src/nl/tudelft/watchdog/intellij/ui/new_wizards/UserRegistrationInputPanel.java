@@ -5,8 +5,6 @@ import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
-import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
-import org.apache.commons.lang.WordUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,8 +17,9 @@ class UserRegistrationInputPanel extends JPanel {
 
     private static final String EMAIL_TEXTFIELD_TOOLTIP = "We will use this e-mail address for future communication (if any).";
     private static final String COMPANY_TEXTFIELD_TOOLTIP = "You can include the website or name of your organisation here.";
-    private static final String USER_CREATION_MESSAGE_SUCCESFUL = "Your WatchDog User has succesfully been created.";
+    private static final String USER_CREATION_MESSAGE_SUCCESSFUL = "Your WatchDog User has successfully been created.";
     private static final String USER_CREATION_MESSAGE_FAILURE = "Problem creating a new WatchDog user.";
+
     private final JTextField email;
     private final JTextField company;
     private final JComboBox<String> programmingExperience;
@@ -102,11 +101,11 @@ class UserRegistrationInputPanel extends JPanel {
         preferences.setProgrammingExperience(user.programmingExperience);
 
         buttonContainer.add(Box.createHorizontalStrut(DEFAULT_SPACING));
-        buttonContainer.add(new JLabel(USER_CREATION_MESSAGE_SUCCESFUL));
+        buttonContainer.add(new JLabel(USER_CREATION_MESSAGE_SUCCESSFUL));
 
         statusContainer.add(new JLabel("Your User ID is: "));
 
-        JTextField userIdField = new JTextField("USER-ID", ID_LENGTH);
+        JTextField userIdField = new JTextField(userId, ID_LENGTH);
         userIdField.setEditable(false);
         statusContainer.add(userIdField);
 

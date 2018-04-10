@@ -10,7 +10,7 @@ public class RegistrationWorkflowWizard extends AbstractWizard<WizardStep> {
 
         this.addStep(new UserWelcomeScreen());
         this.addStep(new UserRegistrationStep(this));
-        this.addStep(new ProjectRegistrationStep());
+        this.addStep(new ProjectRegistrationStep(this));
 
         this.init();
     }
