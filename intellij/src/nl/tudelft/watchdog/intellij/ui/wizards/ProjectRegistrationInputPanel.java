@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.intellij.ui.new_wizards;
+package nl.tudelft.watchdog.intellij.ui.wizards;
 
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
@@ -9,8 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.function.Consumer;
 
-import static nl.tudelft.watchdog.intellij.ui.new_wizards.UserRegistrationStep.ID_LENGTH;
-import static nl.tudelft.watchdog.intellij.ui.new_wizards.WizardStep.DEFAULT_SPACING;
+import static nl.tudelft.watchdog.intellij.ui.wizards.UserRegistrationStep.ID_LENGTH;
+import static nl.tudelft.watchdog.intellij.ui.wizards.WizardStep.DEFAULT_SPACING;
 
 class ProjectRegistrationInputPanel extends JPanel {
     private static final String PROJECT_NAME_TEXTFIELD_TOOLTIP = "The name of the project(s) you work on in this workspace.";

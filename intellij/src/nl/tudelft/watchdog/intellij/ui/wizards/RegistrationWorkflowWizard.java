@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.intellij.ui.new_wizards;
+package nl.tudelft.watchdog.intellij.ui.wizards;
 
 import com.intellij.ide.wizard.AbstractWizard;
 import com.intellij.openapi.project.Project;

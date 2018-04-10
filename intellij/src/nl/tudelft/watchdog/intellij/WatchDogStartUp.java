@@ -19,7 +19,7 @@ import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.intellij.logic.InitializationManager;
-import nl.tudelft.watchdog.intellij.ui.new_wizards.RegistrationWorkflowWizard;
+import nl.tudelft.watchdog.intellij.ui.wizards.RegistrationWorkflowWizard;
 import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 import org.jetbrains.annotations.NotNull;
@@ -121,6 +121,7 @@ public class WatchDogStartUp implements ProjectComponent {
     private void checkWhetherToDisplayUserProjectRegistrationWizard() {
         Preferences preferences = Preferences.getInstance();
         ProjectPreferenceSetting projectSetting = preferences.getOrCreateProjectSetting(project.getName());
+
         if (!WatchDogUtils.isEmpty(WatchDogGlobals.getPreferences().getUserId())
                 || (projectSetting.startupQuestionAsked && !projectSetting.enableWatchdog)) {
             return;

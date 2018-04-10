@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.intellij.ui.new_wizards;
+package nl.tudelft.watchdog.intellij.ui.wizards;
 
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
 
