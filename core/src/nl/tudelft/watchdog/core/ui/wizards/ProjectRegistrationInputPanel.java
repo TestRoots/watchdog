@@ -13,7 +13,9 @@ import static nl.tudelft.watchdog.core.ui.wizards.WizardUIElements.DEFAULT_SPACI
 import static nl.tudelft.watchdog.core.ui.wizards.WizardUIElements.ID_LENGTH;
 
 public class ProjectRegistrationInputPanel extends JPanel {
-    private static final String PROJECT_NAME_TEXTFIELD_TOOLTIP = "The name of the project(s) you work on in this workspace.";
+	private static final long serialVersionUID = -5301865270580430998L;
+
+	private static final String PROJECT_NAME_TEXTFIELD_TOOLTIP = "The name of the project(s) you work on in this workspace.";
     private static final String PROJECT_WEBSITE_TEXTFIELD_TOOLTIP = "If you have a website, we'd love to see it here.";
     private static final String CI_USAGE_LABEL_TEXT = "Does your project use any Continuous Integration tools (Travis, Jenkins, etc.)?";
     private static final String JUNIT_USAGE_LABEL_TEXT = "  ... unit testing framework (e.g. JUnit)?";

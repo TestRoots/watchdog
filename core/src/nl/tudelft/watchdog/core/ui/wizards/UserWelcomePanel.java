@@ -5,7 +5,9 @@ import java.awt.*;
 
 public abstract class UserWelcomePanel extends JPanel {
 
-    public UserWelcomePanel() {
+	private static final long serialVersionUID = 5723053960641208524L;
+
+	protected UserWelcomePanel() {
         super();
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 

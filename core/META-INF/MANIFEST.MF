@@ -17,6 +17,7 @@ Bundle-ClassPath: .,
  lib/jcommon-1.0.23.jar,
  lib/jfreechart-1.0.19.jar,
  lib/jfreechart-1.0.19-swt.jar
+Import-Package: javax.swing
 Export-Package: com.google.gson,
  com.google.gson.annotations,
  com.google.gson.internal,
@@ -46,5 +47,4 @@ Export-Package: com.google.gson,
  org.joda.time,
  org.joda.time.base,
  org.joda.time.format,
- org.mapdb,
- javax.swing
+ org.mapdb

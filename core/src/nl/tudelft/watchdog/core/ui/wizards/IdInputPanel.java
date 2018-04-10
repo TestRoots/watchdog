@@ -16,7 +16,8 @@ import static nl.tudelft.watchdog.core.ui.wizards.WizardUIElements.ID_LENGTH;
 
 public abstract class IdInputPanel extends JPanel {
 
-    private static final String VERIFICATION_BUTTON_TEXT = "Verify";
+	private static final long serialVersionUID = -6605470210561694539L;
+	private static final String VERIFICATION_BUTTON_TEXT = "Verify";
     private static final String VERIFICATION_SUCCESSFUL_MESSAGE = "ID verification successful!";
     private static final String VERIFICATION_MESSAGE_FAILURE = "ID verification failed.";
 

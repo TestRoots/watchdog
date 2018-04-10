@@ -21,7 +21,9 @@ public class ProjectRegistrationStep extends RegistrationStep {
     @Override
     protected Function<Consumer<Boolean>, JPanel> getIdInputPanel() {
         return callback -> new IdInputPanel(callback) {
-            @Override
+			private static final long serialVersionUID = -8263815608635485689L;
+
+			@Override
             protected String getIdLabelText() {
                 return "The WatchDog project ID: ";
             }

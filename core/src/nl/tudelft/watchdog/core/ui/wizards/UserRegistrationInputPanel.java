@@ -14,7 +14,9 @@ import static nl.tudelft.watchdog.core.ui.wizards.WizardUIElements.ID_LENGTH;
 
 public abstract class UserRegistrationInputPanel extends JPanel {
 
-    private static final String EMAIL_TEXTFIELD_TOOLTIP = "We will use this e-mail address for future communication (if any).";
+	private static final long serialVersionUID = 1551757501884162737L;
+
+	private static final String EMAIL_TEXTFIELD_TOOLTIP = "We will use this e-mail address for future communication (if any).";
     private static final String COMPANY_TEXTFIELD_TOOLTIP = "You can include the website or name of your organisation here.";
     private static final String USER_CREATION_MESSAGE_SUCCESSFUL = "Your WatchDog User has successfully been created.";
     private static final String USER_CREATION_MESSAGE_FAILURE = "Problem creating a new WatchDog user.";

@@ -21,7 +21,9 @@ public abstract class UserRegistrationStep extends RegistrationStep {
     @Override
     protected Function<Consumer<Boolean>, JPanel> getIdInputPanel() {
         return callback -> new IdInputPanel(callback) {
-            @Override
+			private static final long serialVersionUID = -4111382084549265952L;
+
+			@Override
             protected String getIdLabelText() {
                 return "Your WatchDog User-ID: ";
             }
