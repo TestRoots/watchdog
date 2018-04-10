@@ -4,9 +4,9 @@ import com.intellij.ide.wizard.AbstractWizard;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nullable;
 
-public class RegistrationWorkflowWizard extends AbstractWizard<WizardStep> {
-    public RegistrationWorkflowWizard(String title, @Nullable Project project) {
-        super(title, project);
+public class RegistrationWorkflowWizard extends AbstractWizard<WizardStep> implements RegistrationWizard {
+    public RegistrationWorkflowWizard(@Nullable Project project) {
+        super("User and Project Registration", project);
 
         this.addStep(new UserWelcomeScreen());
         this.addStep(new UserRegistrationStep(this));

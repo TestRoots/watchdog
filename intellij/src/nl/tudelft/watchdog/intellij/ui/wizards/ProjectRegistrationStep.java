@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 class ProjectRegistrationStep extends RegistrationStep {
-    ProjectRegistrationStep(RegistrationWorkflowWizard registrationWorkflowWizard) {
+    ProjectRegistrationStep(RegistrationWizard registrationWorkflowWizard) {
         super(registrationWorkflowWizard);
     }
 

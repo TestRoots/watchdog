@@ -7,14 +7,14 @@ import java.util.function.Function;
 
 abstract class RegistrationStep extends WizardStep {
 
-    private final RegistrationWorkflowWizard wizard;
+    private final RegistrationWizard wizard;
 
     private Container panel;
 
     private JPanel dynamicContent;
     private boolean hasValidUserId = false;
 
-    RegistrationStep(RegistrationWorkflowWizard wizard) {
+    RegistrationStep(RegistrationWizard wizard) {
         this.wizard = wizard;
     }
 

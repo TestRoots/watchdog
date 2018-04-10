@@ -1,15 +1,19 @@
 package nl.tudelft.watchdog.intellij.ui.preferences;
 
+import com.intellij.ide.wizard.AbstractWizard;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.DocumentAdapter;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
 import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 import nl.tudelft.watchdog.intellij.ui.util.UIUtils;
-import nl.tudelft.watchdog.intellij.ui.wizards.projectregistration.ProjectRegistrationWizard;
+import nl.tudelft.watchdog.intellij.ui.wizards.ProjectRegistrationWizard;
+import nl.tudelft.watchdog.intellij.ui.wizards.RegistrationWorkflowWizard;
+import nl.tudelft.watchdog.intellij.ui.wizards.WizardStep;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.jetbrains.annotations.Nls;
@@ -234,7 +238,7 @@ public class PreferencePage implements SearchableConfigurable, Configurable.NoSc
         }
         if (projectID.length() < ID_LENGTH) {
             if (enableWatchdogInput.isSelected() && WatchDogUtils.isEmptyOrHasOnlyWhitespaces(projectIDInput.getText()) && !WatchDogUtils.isEmptyOrHasOnlyWhitespaces(userIDInput.getText())) {
-                new ProjectRegistrationWizard("Project Registration", WatchDogUtils.getProject()).show();
+                new ProjectRegistrationWizard(WatchDogUtils.getProject());
                 return;
             }
             Messages.showErrorDialog("Project ID must have 40 characters!", "Invalid Input");
