@@ -1,19 +1,18 @@
-package nl.tudelft.watchdog.intellij.ui.wizards;
+package nl.tudelft.watchdog.core.ui.wizards;
 
-import com.intellij.openapi.ui.ComboBox;
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
-import nl.tudelft.watchdog.core.ui.wizards.User;
-import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
+import nl.tudelft.watchdog.core.ui.preferences.PreferencesBase;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Consumer;
 
-import static nl.tudelft.watchdog.intellij.ui.wizards.UserRegistrationStep.ID_LENGTH;
-import static nl.tudelft.watchdog.intellij.ui.wizards.WizardStep.DEFAULT_SPACING;
+import static nl.tudelft.watchdog.core.ui.wizards.WizardUIElements.DEFAULT_SPACING;
+import static nl.tudelft.watchdog.core.ui.wizards.WizardUIElements.ID_LENGTH;
 
-class UserRegistrationInputPanel extends JPanel {
+public abstract class UserRegistrationInputPanel extends JPanel {
 
     private static final String EMAIL_TEXTFIELD_TOOLTIP = "We will use this e-mail address for future communication (if any).";
     private static final String COMPANY_TEXTFIELD_TOOLTIP = "You can include the website or name of your organisation here.";
@@ -27,7 +26,7 @@ class UserRegistrationInputPanel extends JPanel {
     private final Container buttonContainer;
     private Container statusContainer;
 
-    UserRegistrationInputPanel(Consumer<Boolean> callback) {
+    public UserRegistrationInputPanel(Consumer<Boolean> callback) {
         super();
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -41,19 +40,19 @@ class UserRegistrationInputPanel extends JPanel {
         JPanel inputContainer = new JPanel(new GridLayout(0, 2));
         this.add(inputContainer);
 
-        this.email = WizardStep.createLinkedLabelTextField("Your e-mail: ", EMAIL_TEXTFIELD_TOOLTIP, 150, inputContainer);
-        this.company = WizardStep.createLinkedLabelTextField("Your Organisation/Company: ", COMPANY_TEXTFIELD_TOOLTIP, 150, inputContainer);
+        this.email = WizardUIElements.createLinkedLabelTextField("Your e-mail: ", EMAIL_TEXTFIELD_TOOLTIP, 150, inputContainer);
+        this.company = WizardUIElements.createLinkedLabelTextField("Your Organisation/Company: ", COMPANY_TEXTFIELD_TOOLTIP, 150, inputContainer);
 
         inputContainer.add(new JLabel("Your programming experience: "));
 
-        this.programmingExperience = new ComboBox<>();
+        this.programmingExperience = this.createComboBox();
         for (String years : new String[]{"N/A", "< 1 year", "1-2 years", "3-6 years", "7-10 years", "> 10 years"}) {
             programmingExperience.addItem(years);
         }
         programmingExperience.setSelectedIndex(0);
         inputContainer.add(programmingExperience);
 
-        this.operatingSystem = WizardStep.createLinkedLabelTextField("Your operating system: ", COMPANY_TEXTFIELD_TOOLTIP, 150, inputContainer);
+        this.operatingSystem = WizardUIElements.createLinkedLabelTextField("Your operating system: ", COMPANY_TEXTFIELD_TOOLTIP, 150, inputContainer);
         this.operatingSystem.setText(System.getProperty("os.name"));
         this.operatingSystem.setEditable(false);
 
@@ -76,6 +75,8 @@ class UserRegistrationInputPanel extends JPanel {
         });
     }
 
+    public abstract JComboBox<String> createComboBox();
+
     private boolean registerUser() {
         User user = new User();
         user.email = email.getText();
@@ -91,12 +92,12 @@ class UserRegistrationInputPanel extends JPanel {
             buttonContainer.add(Box.createHorizontalStrut(DEFAULT_SPACING));
             buttonContainer.add(new JLabel(USER_CREATION_MESSAGE_FAILURE));
 
-            statusContainer.add(WizardStep.createErrorMessageLabel(exception));
+            statusContainer.add(WizardUIElements.createErrorMessageLabel(exception));
 
             return false;
         }
 
-        Preferences preferences = Preferences.getInstance();
+        PreferencesBase preferences = WatchDogGlobals.getPreferences();
         preferences.setUserId(userId);
         preferences.setProgrammingExperience(user.programmingExperience);
 

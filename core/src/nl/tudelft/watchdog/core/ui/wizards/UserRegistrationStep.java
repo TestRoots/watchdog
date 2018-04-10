@@ -1,4 +1,4 @@
-package nl.tudelft.watchdog.intellij.ui.wizards;
+package nl.tudelft.watchdog.core.ui.wizards;
 
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
 
@@ -6,46 +6,36 @@ import javax.swing.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-class UserRegistrationStep extends RegistrationStep {
-
-    /**
-     * The length (in characters) of the WatchDog id.
-     */
-    static final int ID_LENGTH = 40;
-
-    UserRegistrationStep(RegistrationWorkflowWizard wizard) {
+public abstract class UserRegistrationStep extends RegistrationStep {
+    public UserRegistrationStep(RegistrationWizard wizard) {
         super(wizard);
     }
 
     @Override
-    String obtainHeaderText() {
+    protected String obtainHeaderText() {
         return "<html>" +
                 "<h1>User registration</h1>" +
                 "Before we start, we first have to have a WatchDog user registration<br>";
     }
 
     @Override
-    Function<Consumer<Boolean>, JPanel> getIdInputPanel() {
+    protected Function<Consumer<Boolean>, JPanel> getIdInputPanel() {
         return callback -> new IdInputPanel(callback) {
             @Override
-            String getIdLabelText() {
+            protected String getIdLabelText() {
                 return "Your WatchDog User-ID: ";
             }
 
             @Override
-            String getIdTooltipText() {
+            protected String getIdTooltipText() {
                 return "The User-ID we sent you upon your first WatchDog registration";
             }
 
             @Override
-            String createUrlForId(String id) {
+            protected String createUrlForId(String id) {
                 return NetworkUtils.buildExistingUserURL(id);
             }
-        };
-    }
 
-    @Override
-    Function<Consumer<Boolean>, JPanel> getRegistrationPanel() {
-        return UserRegistrationInputPanel::new;
+        };
     }
 }

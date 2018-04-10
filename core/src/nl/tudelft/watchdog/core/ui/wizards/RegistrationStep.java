@@ -1,11 +1,13 @@
-package nl.tudelft.watchdog.intellij.ui.wizards;
+package nl.tudelft.watchdog.core.ui.wizards;
+
+import nl.tudelft.watchdog.core.ui.wizards.RegistrationWizard;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-abstract class RegistrationStep extends WizardStep {
+public abstract class RegistrationStep {
 
     private final RegistrationWizard wizard;
 
@@ -14,20 +16,18 @@ abstract class RegistrationStep extends WizardStep {
     private JPanel dynamicContent;
     private boolean hasValidUserId = false;
 
-    RegistrationStep(RegistrationWizard wizard) {
+    public RegistrationStep(RegistrationWizard wizard) {
         this.wizard = wizard;
     }
 
-    @Override
-    void _initWithPanel(Container panel) {
+    public void _initWithPanel(Container panel) {
         this.panel = panel;
 
         panel.add(createUserRegistrationIntroduction());
         panel.add(createUserIsRegisteredQuestion());
     }
 
-    @Override
-    boolean isFinishedWithStep() {
+    public boolean isFinishedWithStep() {
         return hasValidUserId;
     }
 
@@ -39,7 +39,7 @@ abstract class RegistrationStep extends WizardStep {
         return container;
     }
 
-    abstract String obtainHeaderText();
+    protected abstract String obtainHeaderText();
 
     private Component createUserIsRegisteredQuestion() {
         Container container = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
@@ -64,9 +64,9 @@ abstract class RegistrationStep extends WizardStep {
         return container;
     }
 
-    abstract Function<Consumer<Boolean>, JPanel> getIdInputPanel();
+    protected abstract Function<Consumer<Boolean>, JPanel> getIdInputPanel();
 
-    abstract Function<Consumer<Boolean>,JPanel> getRegistrationPanel();
+    protected abstract Function<Consumer<Boolean>,JPanel> getRegistrationPanel();
 
     private void whenSelectedCreatePanelAndUpdateUI(JRadioButton button, Function<Consumer<Boolean>, JPanel> panelConstructor) {
         button.addItemListener(itemEvent -> {

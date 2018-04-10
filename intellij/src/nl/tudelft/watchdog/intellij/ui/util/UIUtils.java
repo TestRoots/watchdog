@@ -4,14 +4,12 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.openapi.ui.ComboBox;
 
+import nl.tudelft.watchdog.core.ui.wizards.JTextFieldLimit;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.PlainDocument;
 
 
 /**
@@ -180,23 +178,4 @@ public class UIUtils {
         return group;
     }
 
-    public static class JTextFieldLimit extends PlainDocument {
-        private int limit;
-
-        public JTextFieldLimit(int limit) {
-            super();
-            this.limit = limit;
-        }
-
-        @Override
-        public void insertString(int offset, String text, AttributeSet attributeSet) throws BadLocationException {
-            if (text == null) {
-                return;
-            }
-
-            if ((getLength() + text.length()) <= limit) {
-                super.insertString(offset, text, attributeSet);
-            }
-        }
-    }
 }

@@ -1,20 +1,20 @@
-package nl.tudelft.watchdog.intellij.ui.wizards;
+package nl.tudelft.watchdog.core.ui.wizards;
 
-import com.intellij.ui.DocumentAdapter;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
-import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
-import nl.tudelft.watchdog.intellij.ui.util.UIUtils;
+import nl.tudelft.watchdog.core.ui.preferences.PreferencesBase;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.util.function.Consumer;
 
-import static nl.tudelft.watchdog.intellij.ui.wizards.UserRegistrationStep.ID_LENGTH;
-import static nl.tudelft.watchdog.intellij.ui.wizards.WizardStep.DEFAULT_SPACING;
+import static nl.tudelft.watchdog.core.ui.wizards.WizardUIElements.DEFAULT_SPACING;
+import static nl.tudelft.watchdog.core.ui.wizards.WizardUIElements.ID_LENGTH;
 
-abstract class IdInputPanel extends JPanel {
+public abstract class IdInputPanel extends JPanel {
 
     private static final String VERIFICATION_BUTTON_TEXT = "Verify";
     private static final String VERIFICATION_SUCCESSFUL_MESSAGE = "ID verification successful!";
@@ -23,14 +23,14 @@ abstract class IdInputPanel extends JPanel {
     private final JTextField textfield;
     private final JPanel statusContainer;
 
-    IdInputPanel(Consumer<Boolean> callback) {
+    protected IdInputPanel(Consumer<Boolean> callback) {
         super(new FlowLayout(FlowLayout.LEFT, 0, 3));
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JPanel fieldContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
         this.add(fieldContainer);
 
-        this.textfield = WizardStep.createLinkedLabelTextField(this.getIdLabelText(), getIdTooltipText(), ID_LENGTH, fieldContainer);
+        this.textfield = WizardUIElements.createLinkedLabelTextField(this.getIdLabelText(), getIdTooltipText(), ID_LENGTH, fieldContainer);
 
         JButton verify = new JButton(VERIFICATION_BUTTON_TEXT);
         verify.setEnabled(false);
@@ -39,10 +39,23 @@ abstract class IdInputPanel extends JPanel {
         fieldContainer.add(Box.createHorizontalStrut(DEFAULT_SPACING));
         fieldContainer.add(verify);
 
-        textfield.setDocument(new UIUtils.JTextFieldLimit(ID_LENGTH));
-        textfield.getDocument().addDocumentListener(new DocumentAdapter() {
+        textfield.setDocument(new JTextFieldLimit(ID_LENGTH));
+        textfield.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            protected void textChanged(DocumentEvent e) {
+            public void insertUpdate(DocumentEvent documentEvent) {
+                textChanged(documentEvent);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent documentEvent) {
+                textChanged(documentEvent);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent documentEvent) {
+                textChanged(documentEvent);
+            }
+            private void textChanged(DocumentEvent e) {
                 verify.setEnabled(e.getDocument().getLength() == ID_LENGTH);
                 callback.accept(false);
             }
@@ -57,23 +70,23 @@ abstract class IdInputPanel extends JPanel {
         });
     }
 
-    abstract String getIdLabelText();
+    protected abstract String getIdLabelText();
 
-    abstract String getIdTooltipText();
+    protected abstract String getIdTooltipText();
 
-    abstract String createUrlForId(String id);
+    protected abstract String createUrlForId(String id);
 
     private boolean verifyUserIdRegistration() {
         try {
             NetworkUtils.getURLAndGetResponse(createUrlForId(this.textfield.getText()));
         } catch (ServerCommunicationException exception) {
             this.statusContainer.add(new JLabel(VERIFICATION_MESSAGE_FAILURE));
-            this.statusContainer.add(WizardStep.createErrorMessageLabel(exception));
+            this.statusContainer.add(WizardUIElements.createErrorMessageLabel(exception));
 
             return false;
         }
 
-        Preferences preferences = Preferences.getInstance();
+        PreferencesBase preferences = WatchDogGlobals.getPreferences();
         preferences.setUserId(this.textfield.getText());
 
         this.statusContainer.add(new JLabel(VERIFICATION_SUCCESSFUL_MESSAGE));

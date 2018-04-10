@@ -1,21 +1,20 @@
-package nl.tudelft.watchdog.intellij.ui.wizards;
+package nl.tudelft.watchdog.core.ui.wizards;
 
 import javax.swing.*;
 import java.awt.*;
 
-class UserWelcomeScreen extends WizardStep {
+public abstract class UserWelcomePanel extends JPanel {
 
-    @Override
-    void _initWithPanel(Container panel) {
-        panel.add(createTopHeader());
-        panel.add(createConsentMessage());
-        panel.add(createProjectLogos());
+    public UserWelcomePanel() {
+        super();
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        this.add(createTopHeader());
+        this.add(createConsentMessage());
+        this.add(createProjectLogos());
     }
 
-    @Override
-    boolean isFinishedWithStep() {
-        return true;
-    }
+    protected abstract Component createLogo(String iconLocation);
 
     private Component createTopHeader() {
         Container header = new JPanel(new GridLayout(0, 2));

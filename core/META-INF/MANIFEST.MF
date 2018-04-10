@@ -46,4 +46,5 @@ Export-Package: com.google.gson,
  org.joda.time,
  org.joda.time.base,
  org.joda.time.format,
- org.mapdb
+ org.mapdb,
+ javax.swing
