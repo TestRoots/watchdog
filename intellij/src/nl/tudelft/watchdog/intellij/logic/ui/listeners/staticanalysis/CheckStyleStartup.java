@@ -45,13 +45,7 @@ public class CheckStyleStartup implements ProjectComponent {
             } catch (Exception e) {
                 CheckstyleProjectService service = ServiceManager.getService(this.project, CheckstyleProjectService.class);
 
-                // This loader can load all checks as defined in CheckStyle
-                final ClassLoader checkStylePackageLoaderClassLoader = service.getCheckstyleInstance().getClass().getClassLoader();
-
-                // This loader is used to obtain the actual resources
-                final ClassLoader checkStylePluginClassLoader = getPluginCreatedClassLoaderFromService(service);
-
-                addCheckStyleMessagesToBundle(checkStylePackageLoaderClassLoader, checkStylePluginClassLoader);
+                addCheckStyleMessagesToBundle(getPluginCreatedClassLoaderFromService(service));
                 addMessagesForActiveConfiguration(service);
             }
 
@@ -64,10 +58,7 @@ public class CheckStyleStartup implements ProjectComponent {
     private void initComponentWithCheckstylePluginAPI() throws Exception {
         CheckstylePluginApi pluginApi = ServiceManager.getService(this.project, CheckstylePluginApi.class);
 
-        final ClassLoader checkstylePluginClassLoader = pluginApi.currentCheckstyleClassLoader();
-        final ClassLoader checkstylePackageLoaderClassLoader = ServiceManager.getService(this.project, CheckstyleProjectService.class).getCheckstyleInstance().getClass().getClassLoader();
-
-        addCheckStyleMessagesToBundle(checkstylePackageLoaderClassLoader, checkstylePluginClassLoader);
+        addCheckStyleMessagesToBundle(pluginApi.currentCheckstyleClassLoader());
         pluginApi.visitCurrentConfiguration(this::addMessagesForActiveConfiguration);
     }
 
