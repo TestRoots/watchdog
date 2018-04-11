@@ -46,7 +46,7 @@ public class CheckStyleChecksMessagesFetcher {
 
     public static void addCheckStyleMessagesToBundle(ClassLoader checkStylePluginClassLoader)
                     throws ClassNotFoundException, IllegalAccessException, NoSuchFieldException, IOException {
-        final Map<String, String> nameToModuleName = getModuleMapFromPackageObjectFactory(checkStylePluginClassLoader);
+        Map<String, String> nameToModuleName = getModuleMapFromPackageObjectFactory(checkStylePluginClassLoader);
 
         addMessagesToCheckStyleBundleForLoadedChecks(nameToModuleName, checkStylePluginClassLoader);
     }
@@ -55,10 +55,10 @@ public class CheckStyleChecksMessagesFetcher {
     private static Map<String, String> getModuleMapFromPackageObjectFactory(ClassLoader checkStylePackageLoaderClassLoader)
             throws ClassNotFoundException, IllegalAccessException, NoSuchFieldException {
 
-        final Class<?> packageObjectFactoryClass = checkStylePackageLoaderClassLoader
+        Class<?> packageObjectFactoryClass = checkStylePackageLoaderClassLoader
                 .loadClass("com.puppycrawl.tools.checkstyle.PackageObjectFactory");
 
-        final Field packageObjectFactoryMapField = packageObjectFactoryClass.getDeclaredField("NAME_TO_FULL_MODULE_NAME");
+        Field packageObjectFactoryMapField = packageObjectFactoryClass.getDeclaredField("NAME_TO_FULL_MODULE_NAME");
         packageObjectFactoryMapField.setAccessible(true);
 
         return (Map<String, String>) packageObjectFactoryMapField.get(null);
