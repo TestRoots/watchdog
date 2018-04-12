@@ -63,10 +63,10 @@ public class StartupUIThread implements Runnable {
 	private void checkWhetherToDisplayUserProjectRegistrationWizard() {
 		ProjectPreferenceSetting projectSetting = preferences
 				.getOrCreateProjectSetting(workspaceName);
-		if (!WatchDogUtils.isEmpty(preferences.getUserId())
-				|| (projectSetting.startupQuestionAsked
-						&& !projectSetting.enableWatchdog))
-			return;
+//		if (!WatchDogUtils.isEmpty(preferences.getUserId())
+//				|| (projectSetting.startupQuestionAsked
+//						&& !projectSetting.enableWatchdog))
+//			return;
 
 		UserRegistrationWizardDialogHandler newUserWizardHandler = new UserRegistrationWizardDialogHandler();
 		try {

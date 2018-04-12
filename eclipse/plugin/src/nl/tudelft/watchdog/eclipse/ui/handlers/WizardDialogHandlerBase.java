@@ -21,6 +21,7 @@ public abstract class WizardDialogHandlerBase extends AbstractHandler implements
 		WizardDialog wizardDialog = new NoCancelOnFinishablePageWizardDialog(
 				HandlerUtil.getActiveShell(event), wizard);
 		wizardDialog.setBlockOnOpen(true);
+		wizardDialog.setMinimumPageSize(1000, 400);
 		return wizardDialog.open();
 	}
 

@@ -16,6 +16,10 @@ public abstract class RegistrationStep {
     private JPanel dynamicContent;
     private boolean hasValidUserId = false;
 
+	protected JRadioButton yes;
+
+	protected JRadioButton no;
+
     public RegistrationStep(RegistrationWizard wizard) {
         this.wizard = wizard;
     }
@@ -48,12 +52,12 @@ public abstract class RegistrationStep {
 
         ButtonGroup buttons = new ButtonGroup();
 
-        JRadioButton yes = new JRadioButton("Yes");
+        this.yes = new JRadioButton("Yes");
         container.add(yes);
         buttons.add(yes);
         whenSelectedCreatePanelAndUpdateUI(yes, getIdInputPanel());
 
-        JRadioButton no = new JRadioButton("No");
+        this.no = new JRadioButton("No");
         container.add(no);
         buttons.add(no);
         whenSelectedCreatePanelAndUpdateUI(no, getRegistrationPanel());
@@ -88,8 +92,16 @@ public abstract class RegistrationStep {
 
                 this.panel.revalidate();
                 this.panel.repaint();
+                this.repaintCallback();
             }
         });
     }
+
+    /**
+     * Callback that can be used to receive repaint updates. This is required for Eclipse
+     */
+	protected void repaintCallback() {
+		// Callback is normally empty
+	}
 
 }

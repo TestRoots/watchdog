@@ -1,5 +1,13 @@
 package nl.tudelft.watchdog.eclipse.ui.util;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -18,6 +26,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.eclipse.Activator;
@@ -31,6 +40,23 @@ public class UIUtils {
 
 	/** The command to show the WatchDog info. */
 	public static final String COMMAND_SHOW_INFO = "nl.tudelft.watchdog.commands.showWatchDogInfo";
+	
+	/**
+	 * Logic copied from {@link AbstractUIPlugin#imageDescriptorFromPlugin(String, String)}, but 
+	 * return a normal URL instead of a {@link ImageDescriptor} which Swing can not use.
+	 * 
+	 * @param imageLocation The location to search for
+	 * @return The URL representation relative to this bundle. Could be null
+	 */
+	public static URL getUrlFromImageLocation(String imageLocation) {
+		IPath uriPath = new Path("/plugin").append(Activator.PLUGIN_ID).append("resources").append(imageLocation); //$NON-NLS-1$
+		try {
+			URI uri = new URI("platform", null, uriPath.toString(), null); //$NON-NLS-1$
+			return FileLocator.find(uri.toURL());
+		} catch (MalformedURLException | URISyntaxException e) {
+			return null;
+		}
+	}
 
 	/**
 	 * Creates and returns a label whose text is wrapped inside the supplied
