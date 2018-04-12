@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.eclipse.ui.handlers;
 
 import java.io.IOException;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -13,7 +14,9 @@ import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
 import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
+import nl.tudelft.watchdog.eclipse.ui.new_wizards.RegistrationWorkflowWizard;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
+import nl.tudelft.watchdog.eclipse.ui.wizards.userregistration.UserProjectRegistrationWizard;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /**
@@ -63,12 +66,17 @@ public class StartupUIThread implements Runnable {
 	private void checkWhetherToDisplayUserProjectRegistrationWizard() {
 		ProjectPreferenceSetting projectSetting = preferences
 				.getOrCreateProjectSetting(workspaceName);
-		if (!WatchDogUtils.isEmpty(preferences.getUserId())
-				|| (projectSetting.startupQuestionAsked
-						&& !projectSetting.enableWatchdog))
-			return;
+//		if (!WatchDogUtils.isEmpty(preferences.getUserId())
+//				|| (projectSetting.startupQuestionAsked
+//						&& !projectSetting.enableWatchdog))
+//			return;
 
-		UserRegistrationWizardDialogHandler newUserWizardHandler = new UserRegistrationWizardDialogHandler();
+		AbstractHandler newUserWizardHandler = new WizardDialogHandlerBase() {
+			@Override
+			public Object execute(ExecutionEvent event) throws ExecutionException {
+				return super.execute(new RegistrationWorkflowWizard(), event);
+			}
+		};
 		try {
 			int statusCode = (int) newUserWizardHandler
 					.execute(new ExecutionEvent());
