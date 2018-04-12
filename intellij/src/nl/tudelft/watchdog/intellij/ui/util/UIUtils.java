@@ -123,7 +123,7 @@ public class UIUtils {
     /**
      * Creates a clickable label with URL link and the given description text.
      */
-    private static void createHyperLinkLabel(JComponent parent, String description, final String url) {
+    public static void createHyperLinkLabel(Container parent, String description, final String url) {
         HyperlinkLabel label = new HyperlinkLabel(description);
 
         label.addHyperlinkListener(e -> BrowserUtil.open(url));

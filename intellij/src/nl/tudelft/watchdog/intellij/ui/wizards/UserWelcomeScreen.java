@@ -1,5 +1,7 @@
 package nl.tudelft.watchdog.intellij.ui.wizards;
 
+import nl.tudelft.watchdog.intellij.ui.util.UIUtils;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -39,12 +41,31 @@ class UserWelcomeScreen extends WizardStep {
 
     private Component createConsentMessage() {
         Container consentMessages = new JPanel();
+        consentMessages.setLayout(new BoxLayout(consentMessages, BoxLayout.Y_AXIS));
 
-        consentMessages.add(new JLabel("<html>" +
-                "<h2>WatchDog is a free, open-source plugin that tells how you code your software</h2>" +
-                "It measures how you write Java code and tests. We never do anything bad with <a href=\"http://www.testroots.org/testroots_watchdog.html#details\">your purely numerical data</a>.<br>" +
-                "You can inspect a <a href=\"http://www.testroots.org/reports/sample_watchdog_report.pdf\">detailed report</a> on your development behaviour.<br>" +
-                "By proceeding to use this plugin, you consent with us using your anonymous data to perform research and publish papers with.<br>"));
+        Container header = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        consentMessages.add(header);
+        header.add(new JLabel("<html>" +
+                "<h2>WatchDog is a free, open-source plugin that tells how you code your software</h2>"));
+
+        Container firstSentence = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        consentMessages.add(firstSentence);
+        firstSentence.add(new JLabel("It measures how you write Java code and tests. We never do anything bad with"));
+        UIUtils.createHyperLinkLabel(firstSentence, "your purely numerical data", "http://www.testroots.org/testroots_watchdog.html#details");
+
+        Container secondSentence = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        consentMessages.add(secondSentence);
+        secondSentence.add(new JLabel("Based on your development behavior, you can inspect"));
+        UIUtils.createHyperLinkLabel(secondSentence, "a detailed report", "http://www.testroots.org/reports/sample_watchdog_report.pdf");
+
+        Container thirdSentence = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        consentMessages.add(thirdSentence);
+        thirdSentence.add(new JLabel("By registering, you consent to us storing your data, perform scientific research, and publish it in a completely anonymized form."));
+
+        Container fourthSentence = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        consentMessages.add(fourthSentence);
+        fourthSentence.add(new JLabel("For more information, please read our"));
+        UIUtils.createHyperLinkLabel(fourthSentence, "privacy statement", "https://testroots.org/testroots_watchdog.html#privacy");
 
         return consentMessages;
     }
