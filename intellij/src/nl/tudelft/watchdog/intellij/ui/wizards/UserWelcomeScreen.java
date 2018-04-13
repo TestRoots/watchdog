@@ -60,7 +60,7 @@ class UserWelcomeScreen extends WizardStep {
 
         Container thirdSentence = new JPanel(new FlowLayout(FlowLayout.LEFT));
         consentMessages.add(thirdSentence);
-        thirdSentence.add(new JLabel("By registering, you consent to us storing your data, perform scientific research, and publish it in a completely anonymized form."));
+        thirdSentence.add(new JLabel("By registering, you consent to us storing, performing scientific research, and publishing your data in an anonymized form."));
 
         Container fourthSentence = new JPanel(new FlowLayout(FlowLayout.LEFT));
         consentMessages.add(fourthSentence);
