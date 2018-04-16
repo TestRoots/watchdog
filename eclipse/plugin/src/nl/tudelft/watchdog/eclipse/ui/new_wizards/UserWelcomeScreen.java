@@ -58,8 +58,7 @@ public class UserWelcomeScreen extends WizardPage {
 
     private void createConsentMessage(Composite parent) {
     	Composite consentMessages = new Composite(parent, SWT.NONE);
-    	consentMessages.setLayout(new GridLayout(1, false));
-		consentMessages.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+    	consentMessages.setLayout(new RowLayout(SWT.VERTICAL));
 		
 		Label headerText = new Label(consentMessages, SWT.NONE);
         headerText.setText("WatchDog is a free, open-source plugin that tells how you code your software");
@@ -72,7 +71,7 @@ public class UserWelcomeScreen extends WizardPage {
         Link secondLink = new Link(consentMessages, SWT.NONE);
         secondLink.setText("Based on your development behavior, you can inspect <a href=\"http://www.testroots.org/reports/sample_watchdog_report.pdf\">a detailed report</a>");
         secondLink.addSelectionListener(new BrowserOpenerSelection());
-        
+
         Label thirdSentence = new Label(consentMessages, SWT.NONE);
         thirdSentence.setText("By registering, you consent to us storing your data, perform scientific research, and publish it in a completely anonymized form.");
         
