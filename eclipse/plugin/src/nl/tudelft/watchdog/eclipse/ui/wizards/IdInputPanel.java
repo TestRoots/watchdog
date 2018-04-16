@@ -5,6 +5,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
@@ -39,6 +40,7 @@ abstract class IdInputPanel extends Composite {
 		
 		this.textfield = UIUtils.createLinkedFieldInput(this.getIdLabelText(), this.getIdTooltipText(), fieldContainer);
 		textfield.setTextLimit(ID_LENGTH);
+		textfield.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
 		
 		Button verify = new Button(this, SWT.FLAT);
 		verify.setText(VERIFICATION_BUTTON_TEXT);

@@ -19,16 +19,9 @@ import nl.tudelft.watchdog.core.ui.wizards.Project;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.ui.wizards.RegistrationStep.YesNoDontknowButtonGroup;
 
-public class ProjectRegistrationInputPanel extends Composite {
+import static nl.tudelft.watchdog.core.ui.wizards.Project.*;
 
-	private static final String PROJECT_NAME_TEXTFIELD_TOOLTIP = "The name of the project(s) you work on in this workspace.";
-    private static final String PROJECT_WEBSITE_TEXTFIELD_TOOLTIP = "If you have a website, we'd love to see it here.";
-    private static final String CI_USAGE_LABEL_TEXT = "Does your project use any Continuous Integration tools (Travis, Jenkins, etc.)?";
-    private static final String CODE_STYLE_USAGE_LABEL_TEXT = "  ... enforce a uniform code style (e.g. whitespace)?";
-    private static final String BUG_FINDING_USAGE_LABEL_TEXT = "  ... find functional bugs (e.g. NullPointerException)? ";
-    private static final String OTHER_AUTOMATION_USAGE_LABEL_TEXT = "  ... other automation forms (e.g. license headers)? ";
-    private static final String PROJECT_CREATION_MESSAGE_SUCCESSFUL = "Your WatchDog Project has successfully been created.";
-    private static final String PROJECT_CREATION_MESSAGE_FAILURE = "Problem creating a new WatchDog project.";
+public class ProjectRegistrationInputPanel extends Composite {
 
     private final Text projectName;
     private final Text projectWebsite;
@@ -36,6 +29,7 @@ public class ProjectRegistrationInputPanel extends Composite {
     private final YesNoDontknowButtonGroup codeStyleUsage;
     private final YesNoDontknowButtonGroup bugFindingUsage;
     private final YesNoDontknowButtonGroup automationUsage;
+    private final Text toolsUsed;
     private final Composite buttonContainer;
     private Composite statusContainer;
 
@@ -57,6 +51,8 @@ public class ProjectRegistrationInputPanel extends Composite {
         this.codeStyleUsage = RegistrationStep.createYesNoDontKnowQuestionWithLabel(CODE_STYLE_USAGE_LABEL_TEXT, inputContainer);
         this.bugFindingUsage = RegistrationStep.createYesNoDontKnowQuestionWithLabel(BUG_FINDING_USAGE_LABEL_TEXT, inputContainer);
         this.automationUsage = RegistrationStep.createYesNoDontKnowQuestionWithLabel(OTHER_AUTOMATION_USAGE_LABEL_TEXT, inputContainer);
+        
+        this.toolsUsed = RegistrationStep.createLinkedLabelTextField(TOOL_USAGE_LABEL_TEXT, TOOL_USAGE_TEXTFIELD_TOOLTIP, inputContainer);
 
         this.buttonContainer = new Composite(this, SWT.NONE);
         this.buttonContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
@@ -94,6 +90,7 @@ public class ProjectRegistrationInputPanel extends Composite {
         project.usesCodeStyleSA = this.codeStyleUsage.selected;
         project.usesBugFindingSA = this.bugFindingUsage.selected;
         project.usesOtherAutomationSA = this.automationUsage.selected;
+        project.usesToolsSA = this.toolsUsed.getText();
 
         String projectId;
 

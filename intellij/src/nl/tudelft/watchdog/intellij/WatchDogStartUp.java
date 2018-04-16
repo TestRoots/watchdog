@@ -123,10 +123,10 @@ public class WatchDogStartUp implements ProjectComponent {
         Preferences preferences = Preferences.getInstance();
         ProjectPreferenceSetting projectSetting = preferences.getOrCreateProjectSetting(project.getName());
 
-        if (!WatchDogUtils.isEmpty(WatchDogGlobals.getPreferences().getUserId())
-                || (projectSetting.startupQuestionAsked && !projectSetting.enableWatchdog)) {
-            return;
-        }
+//        if (!WatchDogUtils.isEmpty(WatchDogGlobals.getPreferences().getUserId())
+//                || (projectSetting.startupQuestionAsked && !projectSetting.enableWatchdog)) {
+//            return;
+//        }
 
         AbstractWizard wizard = new RegistrationWorkflowWizard(project);
         wizard.show();

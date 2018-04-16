@@ -21,12 +21,9 @@ import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 
-public class UserRegistrationInputPanel extends Composite {
+import static nl.tudelft.watchdog.core.ui.wizards.User.*;
 
-	private static final String EMAIL_TEXTFIELD_TOOLTIP = "We will use this e-mail address for future communication (if any).";
-    private static final String COMPANY_TEXTFIELD_TOOLTIP = "You can include the website or name of your organisation here.";
-    private static final String USER_CREATION_MESSAGE_SUCCESSFUL = "Your WatchDog User has successfully been created.";
-    private static final String USER_CREATION_MESSAGE_FAILURE = "Problem creating a new WatchDog user.";
+public class UserRegistrationInputPanel extends Composite {
 
     private final Text email;
     private final Text company;

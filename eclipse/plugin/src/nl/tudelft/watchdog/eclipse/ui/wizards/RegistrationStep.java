@@ -12,7 +12,6 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -44,7 +43,9 @@ public abstract class RegistrationStep extends WizardPage {
 	@Override
 	public void createControl(Composite parent) {
 		container = new Composite(parent, SWT.NONE);
-		container.setLayout(new RowLayout(SWT.VERTICAL));
+		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
+		rowLayout.fill = true;
+		container.setLayout(rowLayout);
 
 		this.createUserRegistrationIntroduction(container);
 		this.createUserIsRegisteredQuestion(container);
@@ -73,7 +74,9 @@ public abstract class RegistrationStep extends WizardPage {
 		whenSelectedCreatePanelAndUpdateUI(no, getRegistrationPanel());
 		
 		dynamicContent = new Composite(container, SWT.NONE);
-		dynamicContent.setLayout(new GridLayout(1, false));
+		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
+		rowLayout.fill = true;
+		dynamicContent.setLayout(rowLayout);
 	}
 
 	private void whenSelectedCreatePanelAndUpdateUI(Button button,
@@ -84,7 +87,9 @@ public abstract class RegistrationStep extends WizardPage {
 				if (button.getSelection()) {
 					dynamicContent.dispose();
 					dynamicContent = new Composite(container, SWT.NONE);
-					dynamicContent.setLayout(new RowLayout(SWT.VERTICAL));
+					RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
+					rowLayout.fill = true;
+					dynamicContent.setLayout(rowLayout);
 					
 					compositeConstructor.accept(dynamicContent, (hasValidId) -> {
 						isPageComplete = hasValidId;
@@ -116,10 +121,13 @@ public abstract class RegistrationStep extends WizardPage {
 	
 	static Text createLinkedLabelTextField(String labelText, String tooltip, Composite container) {
 		Label label = new Label(container, SWT.NONE);
-		label.setText(labelText);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
+		label.setToolTipText(tooltip);
+		label.setText(labelText);
+		
 		Text input = new Text(container, SWT.NONE);
 		input.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
+		input.setToolTipText(tooltip);
 		input.setTextLimit(150);
 		label.addMouseListener(new MouseAdapter() {
 			@Override
@@ -151,8 +159,8 @@ public abstract class RegistrationStep extends WizardPage {
 		YesNoDontknowButtonGroup buttons = new YesNoDontknowButtonGroup(container);
 		buttons.setLayout(new RowLayout(SWT.HORIZONTAL));
 		
-		buttons.addButton("yes", YesNoDontKnowChoice.Yes);
-		buttons.addButton("no", YesNoDontKnowChoice.No);
+		buttons.addButton("Yes", YesNoDontKnowChoice.Yes);
+		buttons.addButton("No", YesNoDontKnowChoice.No);
 		buttons.addButton("Don't know", YesNoDontKnowChoice.DontKnow);
 		
 		return buttons;
