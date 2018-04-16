@@ -36,6 +36,12 @@ public class Project extends WatchDogItem {
 
 	/** Do you use other testing strategies than Unit testing? */
 	public YesNoDontKnowChoice usesOtherTestingForms;
+	
+	public YesNoDontKnowChoice usesCodeStyleSA;
+
+	public YesNoDontKnowChoice usesBugFindingSA;
+
+	public YesNoDontKnowChoice usesOtherAutomationSA;
 
 	/** The percentage of how much production code is done (0% - 100%). */
 	public int productionPercentage;

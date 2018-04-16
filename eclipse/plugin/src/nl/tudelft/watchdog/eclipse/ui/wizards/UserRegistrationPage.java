@@ -1,13 +1,12 @@
-package nl.tudelft.watchdog.eclipse.ui.new_wizards;
+package nl.tudelft.watchdog.eclipse.ui.wizards;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
 
 public class UserRegistrationPage extends RegistrationStep {
@@ -17,8 +16,8 @@ public class UserRegistrationPage extends RegistrationStep {
      */
     static final int ID_LENGTH = 40;
 	
-	protected UserRegistrationPage() {
-		super("User registration");
+	protected UserRegistrationPage(WizardDialog dialog) {
+		super("User registration", dialog);
 	}
 
 	@Override
@@ -29,7 +28,7 @@ public class UserRegistrationPage extends RegistrationStep {
 	
 	@Override
 	BiConsumer<Composite, Consumer<Boolean>> getIdInputPanel() {
-		return (container, callback) ->	new IdInputPanel(container ,callback) {
+		return (container, callback) ->	new IdInputPanel(container, callback) {
 
 			@Override
 			String getIdTooltipText() {
@@ -51,10 +50,7 @@ public class UserRegistrationPage extends RegistrationStep {
 
 	@Override
 	BiConsumer<Composite, Consumer<Boolean>> getRegistrationPanel() {
-		return (container, callback) -> {
-			Text text = new Text(container, SWT.NONE);
-			text.setText("user input");
-		};
+		return UserRegistrationInputPanel::new;
 	}
 
 	

@@ -1,12 +1,12 @@
-package nl.tudelft.watchdog.eclipse.ui.new_wizards;
+package nl.tudelft.watchdog.eclipse.ui.wizards;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -18,7 +18,7 @@ import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
 
-import static nl.tudelft.watchdog.eclipse.ui.new_wizards.UserRegistrationPage.ID_LENGTH;
+import static nl.tudelft.watchdog.eclipse.ui.wizards.UserRegistrationPage.ID_LENGTH;
 
 import java.util.function.Consumer;
 
@@ -32,12 +32,10 @@ abstract class IdInputPanel extends Composite {
 
 	IdInputPanel(Composite parent, Consumer<Boolean> callback) {
 		super(parent, SWT.NONE);
-		this.setLayout(new GridLayout(1, false));
-        this.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		this.setLayout(new RowLayout(SWT.VERTICAL));
 		
 		Composite fieldContainer = new Composite(this, SWT.NONE);
-		fieldContainer.setLayout(new GridLayout(2, false));
-		fieldContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		fieldContainer.setLayout(new GridLayout(2, true));
 		
 		this.textfield = UIUtils.createLinkedFieldInput(this.getIdLabelText(), this.getIdTooltipText(), fieldContainer);
 		textfield.setTextLimit(ID_LENGTH);
@@ -54,8 +52,7 @@ abstract class IdInputPanel extends Composite {
 		});
 		
 		statusContainer = new Composite(this, SWT.NONE);
-		statusContainer.setLayout(new GridLayout(1, false));
-		statusContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		statusContainer.setLayout(new RowLayout(SWT.VERTICAL));
 		
 		verify.addSelectionListener(new SelectionAdapter() {
 			@Override

@@ -5,7 +5,6 @@ import java.util.Map;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -16,12 +15,12 @@ public abstract class WizardDialogHandlerBase extends AbstractHandler implements
 		IElementUpdater {
 
 	/** Opens the wizard page. */
-	protected Object execute(IWizard wizard, ExecutionEvent event)
+	protected Object execute(RegistrationWizard wizard, ExecutionEvent event)
 			throws ExecutionException {
-		WizardDialog wizardDialog = new NoCancelOnFinishablePageWizardDialog(
-				HandlerUtil.getActiveShell(event), wizard);
+		WizardDialog wizardDialog = new WizardDialog(HandlerUtil.getActiveShell(event), wizard);
+		wizard.setDialog(wizardDialog);
 		wizardDialog.setBlockOnOpen(true);
-		wizardDialog.setMinimumPageSize(0, 350);
+		wizardDialog.setMinimumPageSize(0, 500);
 		return wizardDialog.open();
 	}
 
