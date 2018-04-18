@@ -15,8 +15,6 @@ import nl.tudelft.watchdog.core.ui.preferences.ProjectPreferenceSetting;
 import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
-import nl.tudelft.watchdog.eclipse.ui.wizards.NewProjectWizard;
-import nl.tudelft.watchdog.eclipse.ui.wizards.RegistrationWorkflowWizard;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 /**
@@ -71,12 +69,7 @@ public class StartupUIThread implements Runnable {
 						&& !projectSetting.enableWatchdog))
 			return;
 
-		AbstractHandler newUserWizardHandler = new WizardDialogHandlerBase() {
-			@Override
-			public Object execute(ExecutionEvent event) throws ExecutionException {
-				return super.execute(new RegistrationWorkflowWizard(), event);
-			}
-		};
+		AbstractHandler newUserWizardHandler = new UserRegistrationWizardDialogHandler();
 		try {
 			int statusCode = (int) newUserWizardHandler
 					.execute(new ExecutionEvent());
@@ -173,12 +166,7 @@ public class StartupUIThread implements Runnable {
 	}
 
 	private void displayProjectWizard() {
-		AbstractHandler newUserWizardHandler = new WizardDialogHandlerBase() {
-			@Override
-			public Object execute(ExecutionEvent event) throws ExecutionException {
-				return super.execute(new NewProjectWizard(), event);
-			}
-		};
+		AbstractHandler newUserWizardHandler = new ProjectRegistrationWizardDialogHandler();
 		try {
 			int statusCode = (int) newUserWizardHandler.execute(new ExecutionEvent());
 			if (statusCode == Window.CANCEL) {
