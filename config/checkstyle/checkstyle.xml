@@ -26,7 +26,7 @@
 		</module>
         <module name="MethodName">
             <property name="id" value="MethodNameTest"/>
-            <property name="format" value="^[a-z1-9]+(_[a-z1-9]+)*$"/>
+            <property name="format" value="^[a-z1-9]+(_[a-z1-9]+)*(?&lt;!test)$"/>
             <property name="applyToPrivate" value="false"/>
             <property name="applyToPackage" value="false"/>
         </module>

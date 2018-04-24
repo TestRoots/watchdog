@@ -29,7 +29,7 @@ public class DocumentClassifierTest {
 	 * {@link DocumentType#TEST}.
 	 */
 	@Test
-	public void junit_test() {
+	public void junit() {
 		String contents = "import org.junit.assert;"
 				+ "public class TestClass{" + "	@Test"
 				+ "	public testSomething{" + "		//do something" + "	}" + "}";
@@ -43,7 +43,7 @@ public class DocumentClassifierTest {
 	 * {@link DocumentType#TEST}.
 	 */
 	@Test
-	public void junit_3_test() {
+	public void junit_3() {
 		String contents = "import junit.framework.TestCase;"
 				+ "public class TestClass extends TestCase {" + "	"
 				+ "	public testSomething{" + "		//do something" + "	}" + "}";
@@ -57,7 +57,7 @@ public class DocumentClassifierTest {
 	 * {@link DocumentType#FILENAME_TEST}.
 	 */
 	@Test
-	public void not_a_real_test_only_has_filename_test() {
+	public void not_a_real_test_only_has_filename() {
 		String contents = "import org.junit.assert;"
 				+ "public class TestClass{" + "	@NotATest"
 				+ "	public testSomething{" + "		//do something" + "	}" + "}";
@@ -85,7 +85,7 @@ public class DocumentClassifierTest {
 	 * {@link DocumentType#FILENAME_TEST}.
 	 */
 	@Test
-	public void not_a_real_test_in_test_package_with_filename_test() {
+	public void not_a_real_test_in_test_package_with_filename() {
 		String contents = "import org.junit.assert;"
 				+ "public class TestClass{" + "	@NotATest"
 				+ "	public testSomething{" + "		//do something" + "	}" + "}";
@@ -99,7 +99,7 @@ public class DocumentClassifierTest {
 	 * {@link DocumentType#TEST}.
 	 */
 	@Test
-	public void real_test_with_filename_test() {
+	public void real_test_with_filename() {
 		String contents = "import static org.junit.assert;"
 				+ "public class TestClass{" + "	@Test"
 				+ "	public testSomething{" + "		//do something" + "	}" + "}";
@@ -113,7 +113,7 @@ public class DocumentClassifierTest {
 	 * {@link DocumentType#TEST}.
 	 */
 	@Test
-	public void real_testng_test_with_filename_test() {
+	public void real_testng_test_with_filename() {
 		String contents = "import org.testng.assert;"
 				+ "public class TestClass{" + "	@Test"
 				+ "	public testSomething{" + "		//do something" + "	}" + "}";
@@ -156,7 +156,7 @@ public class DocumentClassifierTest {
 	 * considered {@link DocumentType#FILENAME_TEST}.
 	 */
 	@Test
-	public void no_junit_imports_filename_test() {
+	public void no_junit_imports_filename() {
 		String contents = "public class TestClass{" + "	@Test"
 				+ "	public testSomething{" + "		//do something" + "	}" + "}";
 		DocumentType type = DocumentClassifier.classifyDocument(
@@ -181,7 +181,7 @@ public class DocumentClassifierTest {
 	 * its filename is considered a test.
 	 */
 	@Test
-	public void no_java_class_with_filename_test() {
+	public void no_java_class_with_filename() {
 		String contents = "The quick brown fox... etc";
 		DocumentType type = DocumentClassifier.classifyDocument(
 				"someTestfile.java", "", contents);
@@ -193,7 +193,7 @@ public class DocumentClassifierTest {
 	 * its filename is not considered a test.
 	 */
 	@Test
-	public void no_java_class_with_no_filename_test() {
+	public void no_java_class_with_no_filename() {
 		String contents = "The quick brown fox... etc";
 		DocumentType type = DocumentClassifier.classifyDocument(
 				"someTestfile.txt", "", contents);
