@@ -94,7 +94,7 @@ public class WatchDogUtilsTest {
 	}
 
 	@Test
-	public void test_should_be_extracted_into_hash() {
+	public void name_of_test_class_should_be_extracted_into_hash() {
 		String expectedHash = "a6bb3545c5d1424e8bb6e95aceb1c734535e7ca3";
 		assertEquals(expectedHash, WatchDogUtils.createFileNameHash("AClass"));
 		assertEquals(expectedHash,

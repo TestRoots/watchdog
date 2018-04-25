@@ -127,7 +127,7 @@ public class DocumentClassifierTest {
 	 * {@link DocumentType#TEST}.
 	 */
 	@Test
-	public void test_framework() {
+	public void can_recognize_test_framework() {
 		String contents = "import org.mockito.verify;"
 				+ "public class TestClass{" + "	@Test"
 				+ "	public testSomething{" + "		//do something" + "	}" + "}";
