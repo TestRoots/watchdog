@@ -84,7 +84,7 @@ public class JsonTransferer {
 	/**
 	 * Register the new json string with the postURL and reads the response from
 	 * the server.
-	 * 
+	 *
 	 * @throws ServerCommunicationException
 	 */
 	public String registerNew(String postURL, String json) throws ServerCommunicationException {
@@ -98,7 +98,7 @@ public class JsonTransferer {
 
 	/**
 	 * Queries the URL via GET, reads and returns the response from the server.
-	 * 
+	 *
 	 * @throws ServerCommunicationException
 	 */
 	public String queryGetURL(String getURL) throws ServerCommunicationException {

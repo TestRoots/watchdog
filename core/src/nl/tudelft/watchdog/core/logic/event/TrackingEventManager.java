@@ -56,7 +56,7 @@ public class TrackingEventManager {
      *
      * @param events The collection of events you want to serialize efficiently
      */
-	public void addEvents(Stream<EventBase> events) {
+    public void addEvents(Stream<EventBase> events) {
 	    eventsToTransferPersister.startBatch();
 	    eventsStatisticsPersister.startBatch();
 	    events.forEach(event -> {
@@ -70,7 +70,7 @@ public class TrackingEventManager {
 	    eventsToTransferPersister.commitBatch();
 	    eventsStatisticsPersister.commitBatch();
     }
-	
+
 	/**
 	 * @return the events statistics persister
 	 */

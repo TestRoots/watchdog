@@ -8,7 +8,7 @@ import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 
 /** A listener on Pages. */
 public class PageListener implements IPageListener {
-	
+
 	private final TrackingEventManager trackingEventManager;
 
 	PageListener(TrackingEventManager trackingEventManager) {

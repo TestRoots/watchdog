@@ -21,14 +21,24 @@ import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 public class EventPersisterTest extends EventPersisterTestBase {
 
 	@BeforeClass
-	public static void setUpBeforeClass() {
+	public static void setup_before_class() {
 		databaseName = "BaseTest";
 		setUpSuperClass();
 	}
 
 	@Test
-	public void test1Interaction100() {
+	public void can_insert_into_regular_persister() {
 		testInteraction(100);
+		assertEquals(100, persister.getSize());
+
+		assertEquals(100, persister.getSize());
+		Iterator<WatchDogItem> readEvents = persister.readItems().iterator();
+		ArrayList<WatchDogItem> firstEvent = new ArrayList<WatchDogItem>(Arrays.asList(readEvents.next()));
+		persister.removeItems(firstEvent);
+		assertEquals(99, persister.getSize());
+
+		persister.clearAndResetMap();
+		assertEquals(0, persister.getSize());
 	}
 
 	private void testInteraction(int items) {
@@ -58,31 +68,11 @@ public class EventPersisterTest extends EventPersisterTestBase {
 		return events;
 	}
 
-	public static EventBase createRandomEvent() {
+	static EventBase createRandomEvent() {
 		EventBase event = new BreakpointAddEvent(new Random().nextInt(100000), BreakpointType.LINE, new Date());
 		event.setSessionSeed("444");
 		event.setTimestamp(new Date(event.getTimestamp().getTime() + (new Random()).nextInt(100000)));
 		return event;
-	}
-
-	@Test
-	public void test2DatabasePersisted() {
-		assertEquals(100, persister.getSize());
-	}
-
-	@Test
-	public void test3RemoveFirstEvent() {
-		assertEquals(100, persister.getSize());
-		Iterator<WatchDogItem> readEvents = persister.readItems().iterator();
-		ArrayList<WatchDogItem> firstEvent = new ArrayList<WatchDogItem>(Arrays.asList(readEvents.next()));
-		persister.removeItems(firstEvent);
-		assertEquals(99, persister.getSize());
-	}
-
-	@Test
-	public void test4DatabaseCleared() {
-		persister.clearAndResetMap();
-		assertEquals(0, persister.getSize());
 	}
 
 }

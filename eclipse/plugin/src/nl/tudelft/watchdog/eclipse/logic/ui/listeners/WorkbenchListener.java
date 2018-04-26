@@ -51,7 +51,7 @@ public class WorkbenchListener {
 
 		WatchDogEventType.START_IDE.process(workbench);
 	}
-	
+
 	public void attachListeners() {
 		this.windowListener = new WindowListener(this.trackingEventManager);
 		this.workbench.addWindowListener(windowListener);

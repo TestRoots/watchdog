@@ -1,14 +1,12 @@
 package nl.tudelft.watchdog.intellij.logic.document;
 
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.util.WatchDogLogger;
-import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
-
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.editor.Editor;
 
 /**
  * A factory for creating {@link nl.tudelft.watchdog.core.logic.document.Document}s from a supplied {@link Editor}.

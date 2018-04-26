@@ -67,13 +67,13 @@ public class WatchDogEventManagerTest {
 	}
 
 	@Test
-	public void testCreateReadInterval() {
+	public void create_read_interval() {
 		createMockEvent(WatchDogEventType.ACTIVE_FOCUS);
 		Mockito.verify(intervalManager).addInterval(Mockito.isA(ReadingInterval.class));
 	}
 
 	@Test
-	public void testCreateReadIntervalOnlyOnce() {
+	public void create_read_interval_only_once() {
 		createMockEvent(WatchDogEventType.ACTIVE_FOCUS);
 		Mockito.verify(intervalManager).addInterval(
 				Mockito.isA(ReadingInterval.class));
@@ -85,7 +85,7 @@ public class WatchDogEventManagerTest {
 	}
 
 	@Test
-	public void testCreateUserActivityIntervalOnlyOnce() {
+	public void create_user_interval_only_once() {
 		createMockEvent(WatchDogEventType.USER_ACTIVITY);
 		WatchDogUtils.sleep(50);
 		createMockEvent(WatchDogEventType.USER_ACTIVITY);
@@ -96,7 +96,7 @@ public class WatchDogEventManagerTest {
 	}
 
 	@Test
-	public void testReadIntervalIsClosed() {
+	public void read_interval_is_closed() {
 		createMockEvent(WatchDogEventType.ACTIVE_FOCUS);
 		Mockito.verify(intervalManager).addInterval(
 				Mockito.isA(ReadingInterval.class));
@@ -107,14 +107,14 @@ public class WatchDogEventManagerTest {
 	}
 
 	@Test
-	public void testCreateWriteInterval() {
+	public void create_write_interval() {
 		createMockEvent(WatchDogEventType.SUBSEQUENT_EDIT);
 		Mockito.verify(intervalManager).addInterval(
 				Mockito.isA(TypingInterval.class));
 	}
 
 	@Test
-	public void testCreateWriteIntervalAndNotAReadInterval() {
+	public void create_write_interval_and_not_read_interval() {
 		createMockEvent(WatchDogEventType.START_EDIT);
 		createMockEvent(WatchDogEventType.SUBSEQUENT_EDIT);
 		Mockito.verify(intervalManager, Mockito.atLeast(1)).addInterval(
@@ -131,7 +131,7 @@ public class WatchDogEventManagerTest {
 	}
 
 	@Test
-	public void testWritingIntervalsGetClosedOnHigherCancel() {
+	public void closing_ide_closes_write_interval() {
 		createMockEvent(WatchDogEventType.SUBSEQUENT_EDIT);
 		createMockEvent(WatchDogEventType.END_IDE);
 		Mockito.verify(intervalManager, Mockito.atLeastOnce()).closeInterval(
@@ -139,7 +139,7 @@ public class WatchDogEventManagerTest {
 	}
 
 	@Test
-	public void testTimeoutWorksForRegularIntervals() {
+	public void after_timeout_no_more_interval() {
 		createMockEvent(WatchDogEventType.ACTIVE_WINDOW);
 		createMockEvent(WatchDogEventType.USER_ACTIVITY);
 		Mockito.verify(intervalManager, Mockito.timeout(TIMEOUT_GRACE_PERIOD))
@@ -149,7 +149,7 @@ public class WatchDogEventManagerTest {
 	}
 
 	@Test
-	public void testTimeoutWorksForReadingIntervals() {
+	public void after_reading_timeout_no_more_interval() {
 		createMockEvent(WatchDogEventType.ACTIVE_FOCUS);
 		Mockito.verify(intervalManager,
 				Mockito.timeout(TIMEOUT_GRACE_PERIOD).atLeast(1))
@@ -159,7 +159,7 @@ public class WatchDogEventManagerTest {
 	}
 
 	@Test
-	public void testTimeoutWorksForWritingIntervals() {
+	public void after_writing_timeout_no_more_interval() {
 		createMockEvent(WatchDogEventType.SUBSEQUENT_EDIT);
 		// first close null interval
 		Mockito.verify(intervalManager,
@@ -174,7 +174,7 @@ public class WatchDogEventManagerTest {
 	}
 
 	@Test
-	public void testReadingTimeoutIsProlonged() {
+	public void after_prolonged_reading_timeout_no_more_interval() {
 		createMockEvent(WatchDogEventType.ACTIVE_FOCUS);
 		createMockEvent(WatchDogEventType.CARET_MOVED);
 		Mockito.verify(intervalManager,
@@ -185,7 +185,7 @@ public class WatchDogEventManagerTest {
 	}
 
 	@Test
-	public void testNoMoreAdditionalUserActivitiesShouldNotCloseReading() {
+	public void no_more_user_activities_should_close_interval() {
 		createMockEvent(WatchDogEventType.USER_ACTIVITY);
 		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT / 5);
 		createMockEvent(WatchDogEventType.ACTIVE_FOCUS);
@@ -217,8 +217,8 @@ public class WatchDogEventManagerTest {
 	 * This test should document that this is fixed.
 	 */
 	@Test
-	public void testEndTimeStampSetAccuratelyForWritingIntervals() {
-		testNoMoreAdditionalUserActivitiesShouldNotCloseReading();
+	public void has_correct_timestamp_for_write_interval() {
+		edit_event_creates_user_activity();
 		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT);
 		WatchDogUtils.sleep(USER_ACTIVITY_TIMEOUT);
 
@@ -231,8 +231,8 @@ public class WatchDogEventManagerTest {
 	 * be created independent of each other have indeed different timestamps.
 	 */
 	@Test
-	public void testStartTimeStampShouldDifferForDifferentlyStartedIntervals() {
-		testNoMoreAdditionalUserActivitiesShouldNotCloseReading();
+	public void start_timestamp_should_be_different_for_different_intervals() {
+		edit_event_creates_user_activity();
 
 		Assert.assertTrue(interval.getStart().before(editorInterval.getStart()));
 	}
@@ -243,7 +243,7 @@ public class WatchDogEventManagerTest {
 	 * {@link IntervalType#USER_ACTIVE}.
 	 */
 	@Test
-	public void testAUserActivityIntervalIsCreatedThroughAnEdit() {
+	public void edit_event_creates_user_activity() {
 		createMockEvent(WatchDogEventType.SUBSEQUENT_EDIT);
 		WatchDogUtils.sleep(TIMEOUT_GRACE_PERIOD / 5);
 		editorInterval = intervalManager.getEditorInterval();
@@ -258,14 +258,14 @@ public class WatchDogEventManagerTest {
 	 * This test should document that this is fixed.
 	 */
 	@Test
-	public void testStartTimeStampSetAccuratelyForWritingIntervals() {
-		testAUserActivityIntervalIsCreatedThroughAnEdit();
+	public void has_correct_start_timestamp_for_writing_intervals() {
+		edit_event_creates_user_activity();
 
 		Assert.assertEquals(editorInterval.getStart(), interval.getStart());
 	}
 
 	@Test
-	public void testCreateWatchDogViewInterval() {
+	public void create_watchdog_interval() {
 		createMockEvent(WatchDogEventType.START_WATCHDOGVIEW);
 		Mockito.verify(intervalManager).addInterval(
 				Mockito.isA(WatchDogViewInterval.class));
@@ -274,9 +274,9 @@ public class WatchDogEventManagerTest {
 				Mockito.isA(WatchDogViewInterval.class), Mockito.isA(Date.class));
 
 	}
-	
+
 	@Test
-	public void testCreateDebugInterval() {
+	public void create_debug_interval() {
 		createMockEvent(WatchDogEventType.START_DEBUG);
 		Mockito.verify(intervalManager).addInterval(Mockito.isA(DebugInterval.class));
 		createMockEvent(WatchDogEventType.END_DEBUG);

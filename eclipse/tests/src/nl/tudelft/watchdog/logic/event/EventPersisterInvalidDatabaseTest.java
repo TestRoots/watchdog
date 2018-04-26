@@ -15,7 +15,7 @@ import nl.tudelft.watchdog.core.logic.storage.PersisterBase;
 public class EventPersisterInvalidDatabaseTest extends EventPersisterTestBase {
 
 	@BeforeClass
-	public static void setUpBeforeClass() throws FileNotFoundException, UnsupportedEncodingException {
+	public static void setup_before_class() throws FileNotFoundException, UnsupportedEncodingException {
 		databaseName = "InvalidTestDB";
 		setUpSuperClass();
 
@@ -30,17 +30,14 @@ public class EventPersisterInvalidDatabaseTest extends EventPersisterTestBase {
 	 * must be re-read after its first opened in {@link #setUpSuperClass()}.
 	 */
 	@Before
-	public void setUpBeforeMethod() {
+	public void setup() {
 		persister = new PersisterBase(copiedDatabase);
 	}
 
 	@Test
-	public void test1DatabaseEmpty() {
+	public void can_insert_into_invalid_db() {
 		assertEquals(0, persister.getSize());
-	}
 
-	@Test
-	public void test2CreateEvent() {
 		persister.save(EventPersisterTest.createRandomEvent());
 		assertEquals(1, persister.getSize());
 	}

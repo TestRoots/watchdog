@@ -23,7 +23,7 @@ public class DocumentCreatorTest {
 	 * document classification returns the correct type.
 	 */
 	@Test
-	public void testCreateDocument() {
+	public void create_document() {
 		String contents = "public class A {}";
 
 		ITextEditor mockedEditor = mock(ITextEditor.class);

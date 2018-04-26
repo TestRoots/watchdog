@@ -17,7 +17,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
  * interested in parts that are ITextEditors.
  */
 public class PartListener implements IPartListener {
-	
+
 	private final TrackingEventManager trackingEventManager;
 
 	PartListener(TrackingEventManager trackingEventManager) {
@@ -29,7 +29,7 @@ public class PartListener implements IPartListener {
 		if (part instanceof ITextEditor) {
 			ITextEditor editor = (ITextEditor) part;
 			new EditorListener(editor);
-			
+
 			try {
 				ResourceAndResourceDeltaVisitor visitor = new ResourceAndResourceDeltaVisitor(trackingEventManager, new HashMap<>(), true);
 				WatchDogUtils.getFile(editor).accept(visitor);

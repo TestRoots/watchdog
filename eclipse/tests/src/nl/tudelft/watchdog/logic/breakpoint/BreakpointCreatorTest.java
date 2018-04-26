@@ -25,21 +25,21 @@ import nl.tudelft.watchdog.eclipse.logic.breakpoint.BreakpointCreator;
 public class BreakpointCreatorTest {
 
 	@Test
-	public void testCreateBreakpointHash() {
+	public void breakpoint_uses_hash() {
 		IBreakpoint bp = mock(IBreakpoint.class);
 		Breakpoint result = BreakpointCreator.createBreakpoint(bp);
 		assertEquals(bp.hashCode(), result.getHash());
 	}
 
 	@Test
-	public void testCreateBreakpointType() {
+	public void create_breakpoint_type() {
 		IBreakpoint bp = mock(IBreakpoint.class);
 		Breakpoint result = BreakpointCreator.createBreakpoint(bp);
 		assertEquals(BreakpointType.UNDEFINED, result.getBreakpointType());
 	}
 
 	@Test
-	public void testCreateBreakpointEnabled() throws CoreException {
+	public void enabled_breakpoint() throws CoreException {
 		IBreakpoint bp = mock(IBreakpoint.class);
 		when(bp.isEnabled()).thenReturn(true);
 		Breakpoint result = BreakpointCreator.createBreakpoint(bp);
@@ -47,7 +47,7 @@ public class BreakpointCreatorTest {
 	}
 
 	@Test
-	public void testCreateBreakpointDisabled() throws CoreException {
+	public void disabled_breakpoint() throws CoreException {
 		IBreakpoint bp = mock(IBreakpoint.class);
 		when(bp.isEnabled()).thenReturn(false);
 		Breakpoint result = BreakpointCreator.createBreakpoint(bp);
@@ -55,14 +55,14 @@ public class BreakpointCreatorTest {
 	}
 
 	@Test
-	public void testCreateBreakpointHitCount() {
+	public void hitcount_does_not_exist_on_breakpoint() {
 		IBreakpoint bp = mock(IBreakpoint.class);
 		Breakpoint result = BreakpointCreator.createBreakpoint(bp);
 		assertEquals(-1, result.getHitCount());
 	}
 
 	@Test
-	public void testCreateJavaBreakpointNoHitCount() throws CoreException {
+	public void no_hit_count_breakpoint() throws CoreException {
 		IJavaBreakpoint bp = mock(IJavaBreakpoint.class);
 		when(bp.getHitCount()).thenReturn(-1);
 		Breakpoint result = BreakpointCreator.createBreakpoint(bp);
@@ -70,7 +70,7 @@ public class BreakpointCreatorTest {
 	}
 
 	@Test
-	public void testCreateJavaBreakpointHitCount() throws CoreException {
+	public void hitcount_exists_on_breakpoint() throws CoreException {
 		IJavaBreakpoint bp = mock(IJavaBreakpoint.class);
 		when(bp.getHitCount()).thenReturn(2);
 		Breakpoint result = BreakpointCreator.createBreakpoint(bp);
@@ -78,7 +78,7 @@ public class BreakpointCreatorTest {
 	}
 
 	@Test
-	public void testCreateJavaBreakpointSuspendPolicy() throws CoreException {
+	public void suspendpolicy_exists_on_breakpoint() throws CoreException {
 		IJavaBreakpoint bp = mock(IJavaBreakpoint.class);
 		when(bp.getSuspendPolicy()).thenReturn(1);
 		Breakpoint result = BreakpointCreator.createBreakpoint(bp);
@@ -86,7 +86,7 @@ public class BreakpointCreatorTest {
 	}
 
 	@Test
-	public void testCreateJavaLineBreakpointConditionEnabled() throws CoreException {
+	public void condition_enabled_on_breakpoint() throws CoreException {
 		IJavaLineBreakpoint bp = mock(IJavaLineBreakpoint.class);
 		when(bp.isConditionEnabled()).thenReturn(true);
 		Breakpoint result = BreakpointCreator.createBreakpoint(bp);
@@ -94,7 +94,7 @@ public class BreakpointCreatorTest {
 	}
 
 	@Test
-	public void testCreateJavaLineBreakpointConditionDisabled() throws CoreException {
+	public void condition_disabled_on_breakpoint() throws CoreException {
 		IJavaLineBreakpoint bp = mock(IJavaLineBreakpoint.class);
 		when(bp.isConditionEnabled()).thenReturn(false);
 		Breakpoint result = BreakpointCreator.createBreakpoint(bp);
@@ -102,7 +102,7 @@ public class BreakpointCreatorTest {
 	}
 
 	@Test
-	public void testCreateJavaLineBreakpointNoCondition() throws CoreException {
+	public void condition_does_not_exist_on_breakpoint() throws CoreException {
 		IJavaLineBreakpoint bp = mock(IJavaLineBreakpoint.class);
 		when(bp.getCondition()).thenReturn(null);
 		Breakpoint result = BreakpointCreator.createBreakpoint(bp);
@@ -110,7 +110,7 @@ public class BreakpointCreatorTest {
 	}
 
 	@Test
-	public void testCreateJavaLineBreakpointCondition() throws CoreException {
+	public void condition_exists_on_breakpoint() throws CoreException {
 		IJavaLineBreakpoint bp = mock(IJavaLineBreakpoint.class);
 		when(bp.getCondition()).thenReturn("cond");
 		Breakpoint result = BreakpointCreator.createBreakpoint(bp);

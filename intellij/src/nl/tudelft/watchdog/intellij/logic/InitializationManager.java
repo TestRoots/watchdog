@@ -30,7 +30,7 @@ import java.util.HashMap;
  */
 public class InitializationManager {
 
-    private static final String PLUGIN_ID = "nl.tudelft.watchdog";
+	private static final String PLUGIN_ID = "nl.tudelft.watchdog";
     /**
      * The map containing the InitializationManager for each open IntelliJ project.
      */

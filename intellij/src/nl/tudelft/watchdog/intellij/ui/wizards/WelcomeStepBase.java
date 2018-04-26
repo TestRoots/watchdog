@@ -15,7 +15,7 @@ import javax.swing.event.DocumentEvent;
  */
 public abstract class WelcomeStepBase extends WizardStep {
 
-    /**
+	/**
      * The welcome title. To be changed by subclasses.
      */
     protected String welcomeDisplay;

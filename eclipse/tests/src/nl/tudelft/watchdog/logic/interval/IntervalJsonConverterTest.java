@@ -31,7 +31,7 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase {
 
 	/** Tests the format of the returned Json representation. */
 	@Test
-	public void testJsonReadingIntervalRepresentation() {
+	public void reading_interval() {
 		ReadingInterval interval = new ReadingInterval(null, new Date());
 		ArrayList<WatchDogItem> intervals = createSampleIntervals(interval);
 
@@ -46,7 +46,7 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase {
 	 * typing intervals does not have its ending document properly set.
 	 */
 	@Test
-	public void testJsonTypingIntervalMissingDocumentRepresentation() {
+	public void typing_interval_missing_document() {
 		ITextEditor editor = Mockito.mock(ITextEditor.class);
 		TypingInterval interval = new TypingInterval(new EditorWrapper(editor), new Date());
 		ArrayList<WatchDogItem> intervals = createSampleIntervals(interval);
@@ -59,7 +59,7 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase {
 
 	/** Tests the format of the returned Json representation. */
 	@Test
-	public void testJsonTypingIntervalTwoSameIntervalsRepresentation() {
+	public void typing_interval_two_different_intervals() {
 		ITextEditor editor = Mockito.mock(ITextEditor.class);
 		TypingInterval interval = new TypingInterval(new EditorWrapper(editor), new Date());
 		interval.setDocument(new Document("Project", "filepath", "Production.java", "blah-document"));
@@ -74,7 +74,7 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase {
 	}
 
 	@Test
-	public void testJsonTypingIntervalDiffsNoChanges() {
+	public void typing_intervals_twice_same_interval() {
 		ITextEditor editor = Mockito.mock(ITextEditor.class);
 		TypingInterval interval = new TypingInterval(new EditorWrapper(editor), new Date(1));
 		interval.setDocument(new Document("Project", "filepath", "Production.java", "blah-document"));
@@ -92,7 +92,7 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase {
 	}
 
 	@Test
-	public void testJsonTypingIntervalDiffsAddition() {
+	public void typing_interval_diff_addition() {
 		ITextEditor editor = Mockito.mock(ITextEditor.class);
 		TypingInterval interval = new TypingInterval(new EditorWrapper(editor), new Date(1));
 		interval.setDocument(new Document("Project", "filepath", "Production.java", "blah-document"));
@@ -110,7 +110,7 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase {
 	}
 
 	@Test
-	public void testJsonTypingIntervalDiffsRemoval() {
+	public void typing_interval_diff_removal() {
 		ITextEditor editor = Mockito.mock(ITextEditor.class);
 		TypingInterval interval = new TypingInterval(new EditorWrapper(editor), new Date(1));
 		interval.setDocument(new Document("Project", "filepath", "Production.java", "blah-document"));
@@ -128,7 +128,7 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase {
 	}
 
 	@Test
-	public void testJsonTypingIntervalDiffsModification() {
+	public void typing_interval_diff_modified() {
 		ITextEditor editor = Mockito.mock(ITextEditor.class);
 		TypingInterval interval = new TypingInterval(new EditorWrapper(editor), new Date(1));
 		interval.setDocument(new Document("Project", "filepath", "Production.java", "blah-document"));
@@ -147,7 +147,7 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase {
 
 	/** Tests the format of the returned Json representation. */
 	@Test
-	public void testJsonSessionIntervalRepresentation() {
+	public void session_interval() {
 		IntervalBase interval = new IDEOpenInterval(new Date());
 		ArrayList<WatchDogItem> intervals = createSampleIntervals(interval);
 
@@ -156,7 +156,7 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase {
 	}
 
 	@Test
-	public void testJsonDebugIntervalRepresentation() {
+	public void debug_interval() {
 		IntervalBase interval = new DebugInterval(new Date());
 		ArrayList<WatchDogItem> intervals = createSampleIntervals(interval);
 
@@ -169,7 +169,7 @@ public class IntervalJsonConverterTest extends JsonConverterTestBase {
 	 * IDE host.
 	 */
 	@Test
-	public void testContainsIDEHost() {
+	public void should_contain_ide_host() {
 		IntervalBase interval = new IDEOpenInterval(new Date());
 		ArrayList<WatchDogItem> intervals = createSampleIntervals(interval);
 

@@ -7,23 +7,23 @@ public enum BreakpointType {
 	/** A line breakpoint. */
 	@SerializedName("li")
 	LINE,
-	
+
 	/** An exception breakpoint. */
 	@SerializedName("ex")
 	EXCEPTION,
-	
+
 	/** A field breakpoint. */
 	@SerializedName("fi")
 	FIELD,
-	
+
 	/** A method breakpoint. */
 	@SerializedName("me")
 	METHOD,
-	
+
 	/** A class prepare breakpoint. */
 	@SerializedName("cp")
 	CLASS,
-	
+
 	/** An undefined breakpoint. */
 	@SerializedName("un")
 	UNDEFINED;

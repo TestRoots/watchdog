@@ -83,7 +83,7 @@ public class EventStatistics {
 		newTimestamp.add(Calendar.MILLISECOND, 500);
 		return newTimestamp.getTime();
 	}
-	
+
 	/**
      * Creates a dataset of all events that occurred during the selected debug
      * interval.

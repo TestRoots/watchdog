@@ -120,7 +120,7 @@ public abstract class WizardStep implements Step {
 
 	/**
 	 * Creates a simple question with according yes/no/don't know radio buttons.
-	 * 
+	 *
 	 * @return the panel where the buttons are put onto.
 	 */
 	protected JPanel createSimpleYesNoDontKnowQuestion(JPanel parent) {
@@ -135,7 +135,7 @@ public abstract class WizardStep implements Step {
 
 	/**
 	 * Creates a simple question with according yes/no radio buttons.
-	 * 
+	 *
 	 * @return the panel where the buttons are put onto.
 	 */
 	protected JPanel createSimpleYesNoQuestion(JPanel parent) {

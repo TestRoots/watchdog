@@ -1,18 +1,11 @@
 package nl.tudelft.watchdog.intellij.ui.util;
 
 import com.intellij.ide.BrowserUtil;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.HyperlinkLabel;
-import com.intellij.openapi.ui.ComboBox;
-
-import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.ImageObserver;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -20,6 +13,10 @@ import javax.swing.event.MouseInputAdapter;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
+import java.awt.*;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 
 /**

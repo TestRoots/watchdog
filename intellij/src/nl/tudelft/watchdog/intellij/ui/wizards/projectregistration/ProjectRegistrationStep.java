@@ -5,8 +5,6 @@ import nl.tudelft.watchdog.intellij.ui.wizards.FormValidationListener;
 import nl.tudelft.watchdog.intellij.ui.wizards.RegistrationWizardBase;
 import nl.tudelft.watchdog.intellij.ui.wizards.WizardStep;
 import nl.tudelft.watchdog.core.ui.wizards.YesNoDontKnowChoice;
-import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
-
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -18,7 +16,7 @@ import javax.swing.event.ChangeListener;
  */
 public class ProjectRegistrationStep extends WizardStep {
 
-    private static final String TITLE = "Register a new project";
+	private static final String TITLE = "Register a new project";
 
     private static final String DOES_YOUR_PROJECT = "Does your project use ...";
 

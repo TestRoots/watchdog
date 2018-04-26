@@ -30,7 +30,7 @@ public class NetworkUtilsTest {
 
 	@Test
 	@Ignore
-	public void testUserDoesNotExistTransfer() {
+	public void user_does_not_exist_for_transfer() {
 		String url = NetworkUtils.buildExistingUserURL("nonexistantSHA1");
 		assertEquals(Connection.UNSUCCESSFUL,
 				NetworkUtils.urlExistsAndReturnsStatus200(url));
@@ -38,7 +38,7 @@ public class NetworkUtilsTest {
 
 	@Test
 	@Ignore
-	public void testUserExistsTransfer() {
+	public void user_exists_for_transfer() {
 		String url = NetworkUtils.buildExistingUserURL(fooBarUser);
 		assertEquals(Connection.SUCCESSFUL,
 				NetworkUtils.urlExistsAndReturnsStatus200(url));
@@ -46,7 +46,7 @@ public class NetworkUtilsTest {
 
 	@Test
 	@Ignore
-	public void testIntervalTransfer() {
+	public void interval_transfer() {
 		JsonTransferer it = new JsonTransferer();
 		IntervalBase interval = new IDEOpenInterval(new Date());
 		ArrayList<WatchDogItem> intervals = createSampleIntervals(interval);

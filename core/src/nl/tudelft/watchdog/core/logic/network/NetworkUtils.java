@@ -28,15 +28,15 @@ import nl.tudelft.watchdog.core.util.WatchDogLogger;
  * Utility functions for accessing the network.
  */
 public class NetworkUtils {
-	
+
 	/**
 	 * Connection timeout to be used by the HttpClient.
-	 * Default timeout is 12 seconds. 
-	 */	
+	 * Default timeout is 12 seconds.
+	 */
 	public static final int DEFAULT_TIMEOUT = 12*1000;
 	private static int connectionTimeout = DEFAULT_TIMEOUT;
-	
-	/** A handle to the current Http client */ 
+
+	/** A handle to the current Http client */
 	private static CloseableHttpClient client = null;
 
 	/**
@@ -57,21 +57,21 @@ public class NetworkUtils {
 		 */
 		NETWORK_ERROR
 	};
-	
+
 	/**
 	 * Change the default value of the connection timeout to the specified one.
 	 */
 	public static void setConnectionTimeout(int timeout) {
 		connectionTimeout = timeout;
 	}
-	
+
 	/**
 	 * Cancels the current request after the specified duration
 	 */
 	public static void cancelTransferAfter(long milliseconds){
 		Timer timer = new Timer();
 		TimerTask task = new TimerTask() {
-			
+
 			@Override
 			public void run() {
 				closeHttpClientGracefully(client);
@@ -140,14 +140,14 @@ public class NetworkUtils {
 		return Connection.NETWORK_ERROR;
 	}
 
-	private static void closeHttpClientGracefully(CloseableHttpClient client) {		
+	private static void closeHttpClientGracefully(CloseableHttpClient client) {
 		if (client == null) return;
-		
+
 		try {
 			client.close();
 		} catch (IOException exception) {
 			// intentionally empty
-		}		
+		}
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class NetworkUtils {
 	public static String buildIntervalsPostURL(String userid, String projectid) {
 		return buildExistingUserURL(userid) + "/" + projectid + "/intervals";
 	}
-	
+
 	/**
 	 * @return the URL to post new events to the server to for this user.
 	 */

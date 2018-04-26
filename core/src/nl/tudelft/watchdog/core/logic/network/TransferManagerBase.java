@@ -51,7 +51,7 @@ public class TransferManagerBase extends RegularCheckerBase {
 
 	/**
 	 * Refreshes the InfoDialog in Eclipse to show updated transfer statistics.
-	 * 
+	 *
 	 * Note: To be implemented in IDE specific implementation
 	 */
 	protected static void refreshUI() {

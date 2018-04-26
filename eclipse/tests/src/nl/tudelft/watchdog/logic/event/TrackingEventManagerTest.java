@@ -32,7 +32,7 @@ public class TrackingEventManagerTest {
 
 	@Mock
 	Preferences mockedPreferences;
-	
+
 	String sessionSeed;
 
 	@Before
@@ -45,14 +45,14 @@ public class TrackingEventManagerTest {
 	}
 
 	@Test
-	public void testNoInteractionsWhenAddingNull() { 
+	public void no_interactions_when_adding_null() {
 	    trackingEventManager.addEvent(null);
 		Mockito.verifyZeroInteractions(eventsToTransferPersister);
 		Mockito.verifyZeroInteractions(eventsStatisticsPersister);
 	}
 
 	@Test
-	public void testAddBreakpointAddEvent() {
+	public void add_breakpoint() {
 		BreakpointAddEvent eventReal = new BreakpointAddEvent(1, BreakpointType.LINE, new Date());
 		BreakpointAddEvent event = Mockito.spy(eventReal);
 		trackingEventManager.addEvent(event);
@@ -62,7 +62,7 @@ public class TrackingEventManagerTest {
 	}
 
 	@Test
-	public void testAddBreakpointRemoveEvent() {
+	public void remove_breakpoint() {
 		BreakpointRemoveEvent eventReal = new BreakpointRemoveEvent(1, BreakpointType.LINE, new Date());
 		BreakpointRemoveEvent event = Mockito.spy(eventReal);
 		trackingEventManager.addEvent(event);
@@ -72,7 +72,7 @@ public class TrackingEventManagerTest {
 	}
 
 	@Test
-	public void testAddBreakpointChangeEvent() {
+	public void changed_breakpoint() {
 		BreakpointChangeEvent eventReal = new BreakpointChangeEvent(1, BreakpointType.LINE, null, new Date());
 		BreakpointChangeEvent event = Mockito.spy(eventReal);
 		trackingEventManager.addEvent(event);
@@ -80,9 +80,9 @@ public class TrackingEventManagerTest {
 		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(BreakpointChangeEvent.class));
 		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(BreakpointChangeEvent.class));
 	}
-	
+
 	@Test
-	public void testAddSuspendBreakpointEvent() {
+	public void suspend_breakpoint() {
 		DebugEventBase eventReal = new DebugEventBase(TrackingEventType.SUSPEND_BREAKPOINT, new Date());
 		DebugEventBase event = Mockito.spy(eventReal);
 		trackingEventManager.addEvent(event);
@@ -90,9 +90,9 @@ public class TrackingEventManagerTest {
 		Mockito.verify(eventsToTransferPersister).save(Mockito.isA(DebugEventBase.class));
 		Mockito.verify(eventsStatisticsPersister).save(Mockito.isA(DebugEventBase.class));
 	}
-	
+
 	@Test
-	public void testAddStepIntoEvent() {
+	public void step_into() {
 		DebugEventBase eventReal = new DebugEventBase(TrackingEventType.STEP_INTO, new Date());
 		DebugEventBase event = Mockito.spy(eventReal);
 		trackingEventManager.addEvent(event);

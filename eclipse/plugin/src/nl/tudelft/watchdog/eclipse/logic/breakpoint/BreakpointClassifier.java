@@ -17,7 +17,7 @@ public class BreakpointClassifier {
 	/**
 	 * Classifies the breakpoint type of the given breakpoint by analyzing its
 	 * class name.
-	 * 
+	 *
 	 * WARNING: Do not change the ordering of the if-statements if you don't
 	 * have to!
 	 */

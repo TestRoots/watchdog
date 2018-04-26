@@ -139,7 +139,7 @@ public class MarkupModelListenerTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void teardown() throws Exception {
         this.project.delete(true, true, null);
         this.saveWorkspaceAndWaitForBuild();
         this.workspace.removeResourceChangeListener(this.workbenchListener.getMarkupModelListener());
@@ -297,7 +297,7 @@ public class MarkupModelListenerTest {
 
     @Test
     public void correctly_classifies_warning_type_for_creating_a_new_marker() throws Exception {
-        List<StaticAnalysisWarningEvent> generatedEvents = processMarkerAndReturnGeneratedWarningList(() -> {
+        List<StaticAnalysisWarningEvent> generatedEvents = process_marker_and_return_generated_warning_list(() -> {
             try {
                 IMarker marker = this.testFile.createMarker(IMarker.PROBLEM);
                 marker.setAttribute(IMarker.MESSAGE, "Duplicate tag for parameter");
@@ -314,7 +314,7 @@ public class MarkupModelListenerTest {
 
     @Test
     public void correctly_classifies_checkstyle_warning_type() throws Exception {
-        List<StaticAnalysisWarningEvent> generatedEvents = processMarkerAndReturnGeneratedWarningList(() -> {
+        List<StaticAnalysisWarningEvent> generatedEvents = process_marker_and_return_generated_warning_list(() -> {
             try {
                 IMarker marker = this.testFile.createMarker(EclipseMarkupModelListener.CHECKSTYLE_MARKER_ID);
                 marker.setAttribute(IMarker.MESSAGE, "Using the '.*' form of import should be avoided - java.util.*.");
@@ -329,7 +329,7 @@ public class MarkupModelListenerTest {
 
     @Test
     public void non_existing_warning_should_not_match_any_type() throws Exception {
-        List<StaticAnalysisWarningEvent> generatedEvents = processMarkerAndReturnGeneratedWarningList(() -> {
+        List<StaticAnalysisWarningEvent> generatedEvents = process_marker_and_return_generated_warning_list(() -> {
             try {
                 IMarker marker = this.testFile.createMarker(IMarker.PROBLEM);
                 marker.setAttribute(IMarker.MESSAGE, "This warning does not exist");
@@ -344,7 +344,7 @@ public class MarkupModelListenerTest {
 
     @Test
     public void sets_line_number_for_generated_warning() throws Exception {
-        List<StaticAnalysisWarningEvent> generatedEvents = processMarkerAndReturnGeneratedWarningList(() -> {
+        List<StaticAnalysisWarningEvent> generatedEvents = process_marker_and_return_generated_warning_list(() -> {
             try {
                 IMarker marker = this.testFile.createMarker(IMarker.PROBLEM);
                 marker.setAttribute(IMarker.MESSAGE, "This warning does not exist");
@@ -360,7 +360,7 @@ public class MarkupModelListenerTest {
 
     @Test
     public void computes_warning_time_difference_for_removed_warning() throws Exception {
-        List<StaticAnalysisWarningEvent> generatedEvents = processMarkerAndReturnGeneratedWarningList(() -> {
+        List<StaticAnalysisWarningEvent> generatedEvents = process_marker_and_return_generated_warning_list(() -> {
             try {
                 IMarker marker = this.testFile.createMarker(IMarker.PROBLEM);
                 marker.setAttribute(IMarker.MESSAGE, "This warning does not exist");
@@ -438,35 +438,34 @@ public class MarkupModelListenerTest {
         });
     }
 
+	private List<StaticAnalysisWarningEvent> process_marker_and_return_generated_warning_list(Runnable runnable) throws Exception {
+		List<StaticAnalysisWarningEvent> list = new ArrayList<>();
+
+		Mockito.doAnswer(new Answer<Object>() {
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				Stream<StaticAnalysisWarningEvent> stream = (Stream<StaticAnalysisWarningEvent>) invocation.getArguments()[0];
+				list.addAll(stream.collect(Collectors.toList()));
+				return null;
+			}}).when(this.trackingEventManager).addEvents(Mockito.any());
+
+		runnable.run();
+
+		this.saveWorkspaceAndWaitForBuild();
+
+		return list;
+	}
 
     private List<StaticAnalysisWarningEvent> deleteMarkerAndReturnGeneratedWarningList(IMarker marker) throws Exception {
-        return processMarkerAndReturnGeneratedWarningList(() -> {
+        return process_marker_and_return_generated_warning_list(() -> {
             try {
                 marker.delete();
             } catch (CoreException e) {
                 e.printStackTrace();
             }
         });
-    }
-
-    private List<StaticAnalysisWarningEvent> processMarkerAndReturnGeneratedWarningList(Runnable runnable) throws Exception {
-        List<StaticAnalysisWarningEvent> list = new ArrayList<>();
-
-        Mockito.doAnswer(new Answer<Object>() {
-
-            @SuppressWarnings("unchecked")
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Stream<StaticAnalysisWarningEvent> stream = (Stream<StaticAnalysisWarningEvent>) invocation.getArguments()[0];
-                list.addAll(stream.collect(Collectors.toList()));
-                return null;
-            }}).when(this.trackingEventManager).addEvents(Mockito.any());
-
-        runnable.run();
-
-        this.saveWorkspaceAndWaitForBuild();
-
-        return list;
     }
 
 }
