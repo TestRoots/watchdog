@@ -19,11 +19,9 @@ public class IntervalPersisterSingleIntervalTest extends IntervalPersisterTestBa
 		setUpSuperClass();
 	}
 
-	private static IntervalBase interval;
-
 	@Test
 	public void can_compare_after_writes() {
-		interval = IntervalPersisterTest.createRandomInterval();
+		IntervalBase interval = IntervalPersisterTest.createRandomInterval();
 		interval.close();
 		persister.save(interval);
 
