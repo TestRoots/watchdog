@@ -16,14 +16,18 @@ import static nl.tudelft.watchdog.intellij.ui.wizards.WizardStep.DEFAULT_SPACING
 
 class UserRegistrationInputPanel extends JPanel {
 
-    private final JTextField email;
-    private final JTextField company;
-    private final JComboBox<String> programmingExperience;
-    private final JLabel operatingSystem;
     private final Container buttonContainer;
     private final JButton createWatchDogUserButton;
+    private JTextField email;
+    private JTextField company;
+    private JComboBox<String> programmingExperience;
+    private JLabel operatingSystem;
     private Container statusContainer;
 
+    /**
+     * A panel to ask the user questions to create their user profile.
+     * @param callback The callback invoked after the user clicked "Create WatchDog User".
+     */
     UserRegistrationInputPanel(Consumer<Boolean> callback) {
         super();
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -35,6 +39,28 @@ class UserRegistrationInputPanel extends JPanel {
                 "Please fill in the following data to create a WatchDog user account for you.<br>" +
                 "The input is optional, but greatly appreciated to improve the quality of our research data.<br>"));
 
+        this.createInputFields();
+
+        this.add(Box.createVerticalStrut(DEFAULT_SPACING));
+        this.buttonContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
+        this.add(buttonContainer);
+
+        this.statusContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
+        this.add(statusContainer);
+
+        this.createWatchDogUserButton = new JButton("Create new WatchDog user");
+        this.buttonContainer.add(createWatchDogUserButton);
+        createWatchDogUserButton.addActionListener(actionEvent -> {
+            this.statusContainer.removeAll();
+
+            this.buttonContainer.removeAll();
+            this.buttonContainer.add(createWatchDogUserButton);
+
+            callback.accept(registerUser());
+        });
+    }
+
+    private void createInputFields() {
         JPanel inputContainer = new JPanel(new GridLayout(0, 2));
         this.add(inputContainer);
 
@@ -57,24 +83,6 @@ class UserRegistrationInputPanel extends JPanel {
         this.operatingSystem = new JLabel(System.getProperty("os.name"));
         operatingSystem.setToolTipText(OPERATING_SYSTEM_TOOLTIP);
         inputContainer.add(operatingSystem);
-
-        this.add(Box.createVerticalStrut(DEFAULT_SPACING));
-        this.buttonContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
-        this.add(buttonContainer);
-
-        this.statusContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
-        this.add(statusContainer);
-
-        this.createWatchDogUserButton = new JButton("Create new WatchDog user");
-        this.buttonContainer.add(createWatchDogUserButton);
-        createWatchDogUserButton.addActionListener(actionEvent -> {
-            this.statusContainer.removeAll();
-
-            this.buttonContainer.removeAll();
-            this.buttonContainer.add(createWatchDogUserButton);
-
-            callback.accept(registerUser());
-        });
     }
 
     private boolean registerUser() {

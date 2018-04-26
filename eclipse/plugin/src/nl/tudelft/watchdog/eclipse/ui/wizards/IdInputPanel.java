@@ -23,14 +23,23 @@ import static nl.tudelft.watchdog.eclipse.ui.wizards.UserRegistrationPage.ID_LEN
 
 import java.util.function.Consumer;
 
+/**
+ * Input panel that has an input field for a WatchDog ID and can
+ * verify that the id exists after filling in.
+ */
 abstract class IdInputPanel extends Composite {
 
 	private static final String VERIFICATION_BUTTON_TEXT = "Verify";
-    private static final String VERIFICATION_SUCCESSFUL_MESSAGE = "ID verification successful!";
-    private static final String VERIFICATION_MESSAGE_FAILURE = "ID verification failed.";
+	private static final String VERIFICATION_SUCCESSFUL_MESSAGE = "ID verification successful!";
+	private static final String VERIFICATION_MESSAGE_FAILURE = "ID verification failed.";
 	private Text textfield;
 	private Composite statusContainer;
 
+	/**
+	 * Create the input panel.
+	 * @param parent The parent container.
+	 * @param callback The callback invoked after the user clicked "Verify".
+	 */
 	IdInputPanel(Composite parent, Consumer<Boolean> callback) {
 		super(parent, SWT.NONE);
 		this.setLayout(new RowLayout(SWT.VERTICAL));
@@ -82,19 +91,19 @@ abstract class IdInputPanel extends Composite {
 	abstract void storeIdInPreferences(Preferences preferences, String id);
 
 	private boolean verifyUserIdRegistration() {
-        try {
-            NetworkUtils.getURLAndGetResponse(createUrlForId(this.textfield.getText()));
-        } catch (ServerCommunicationException exception) {
-            new Label(statusContainer, SWT.NONE).setText(VERIFICATION_MESSAGE_FAILURE);
-            RegistrationStep.createErrorMessageLabel(statusContainer, exception);
+		try {
+			NetworkUtils.getURLAndGetResponse(createUrlForId(this.textfield.getText()));
+		} catch (ServerCommunicationException exception) {
+			new Label(statusContainer, SWT.NONE).setText(VERIFICATION_MESSAGE_FAILURE);
+			RegistrationStep.createErrorMessageLabel(statusContainer, exception);
 
-            return false;
-        }
+			return false;
+		}
 
-        this.storeIdInPreferences(Preferences.getInstance(), this.textfield.getText());
+		this.storeIdInPreferences(Preferences.getInstance(), this.textfield.getText());
 
-        new Label(statusContainer, SWT.NONE).setText(VERIFICATION_SUCCESSFUL_MESSAGE);
-        return true;
-    }
+		new Label(statusContainer, SWT.NONE).setText(VERIFICATION_SUCCESSFUL_MESSAGE);
+		return true;
+	}
 
 }

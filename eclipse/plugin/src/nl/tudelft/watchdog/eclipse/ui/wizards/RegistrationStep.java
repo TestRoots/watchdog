@@ -23,7 +23,12 @@ import nl.tudelft.watchdog.core.ui.wizards.YesNoDontKnowChoice;
 import nl.tudelft.watchdog.eclipse.Activator;
 import nl.tudelft.watchdog.eclipse.ui.util.BrowserOpenerSelection;
 
-public abstract class RegistrationStep extends WizardPage {
+/**
+ * A single registration step that has two options:
+ * 1. The user already has a registration, for which they have to enter their ID.
+ * 2. The user has to create a registration in the {@link #getRegistrationPanel()}.
+ */
+abstract class RegistrationStep extends WizardPage {
 
 	private Composite dynamicContent;
 	private Composite container;
@@ -121,6 +126,14 @@ public abstract class RegistrationStep extends WizardPage {
 		link.addSelectionListener(new BrowserOpenerSelection());
 	}
 
+	/**
+	 * Create a label that is linked to the text field. Clicking on the label
+	 * will select the text field.
+	 * @param labelText The text of the label.
+	 * @param tooltip The tooltip for both elements.
+	 * @param container The parent container.
+	 * @return The created text field.
+	 */
 	static Text createLinkedLabelTextField(String labelText, String tooltip, Composite container) {
 		Label label = new Label(container, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
@@ -155,7 +168,7 @@ public abstract class RegistrationStep extends WizardPage {
 		return watchdogLogo;
 	}
 
-	public static YesNoDontknowButtonGroup createYesNoDontKnowQuestionWithLabel(String labelText, Composite container) {
+	static YesNoDontknowButtonGroup createYesNoDontKnowQuestionWithLabel(String labelText, Composite container) {
 		new Label(container, SWT.NONE).setText(labelText);
 
 		YesNoDontknowButtonGroup buttons = new YesNoDontknowButtonGroup(container);

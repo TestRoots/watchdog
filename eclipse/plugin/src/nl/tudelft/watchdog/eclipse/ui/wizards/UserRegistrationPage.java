@@ -10,12 +10,12 @@ import org.eclipse.swt.widgets.Label;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 
-public class UserRegistrationPage extends RegistrationStep {
+class UserRegistrationPage extends RegistrationStep {
 
 	/**
-     * The length (in characters) of the WatchDog id.
-     */
-    static final int ID_LENGTH = 40;
+	 * The length (in characters) of the WatchDog id.
+	 */
+	static final int ID_LENGTH = 40;
 
 	protected UserRegistrationPage(WizardDialog dialog) {
 		super("User registration", dialog);
@@ -63,7 +63,5 @@ public class UserRegistrationPage extends RegistrationStep {
 	String getRegistrationType() {
 		return "user";
 	}
-
-
 
 }

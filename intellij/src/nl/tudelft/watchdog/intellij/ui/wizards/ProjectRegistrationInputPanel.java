@@ -15,16 +15,20 @@ import static nl.tudelft.watchdog.intellij.ui.wizards.WizardStep.DEFAULT_SPACING
 
 class ProjectRegistrationInputPanel extends JPanel {
 
-    private final JTextField projectName;
-    private final JTextField projectWebsite;
-    private final ButtonGroup ciUsage;
-    private final ButtonGroup codeStyleUsage;
-    private final ButtonGroup bugFindingUsage;
-    private final ButtonGroup automationUsage;
     private final Container buttonContainer;
-    private final JTextField toolsUsed;
+    private JTextField projectName;
+    private JTextField projectWebsite;
+    private ButtonGroup ciUsage;
+    private ButtonGroup codeStyleUsage;
+    private ButtonGroup bugFindingUsage;
+    private ButtonGroup automationUsage;
+    private JTextField toolsUsed;
     private Container statusContainer;
 
+    /**
+     * A panel to ask the user questions regarding their project.
+     * @param callback The callback invoked after the user clicked "Create WatchDog Project".
+     */
     ProjectRegistrationInputPanel(Consumer<Boolean> callback) {
         super();
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -36,21 +40,7 @@ class ProjectRegistrationInputPanel extends JPanel {
                 "Please fill in the following data to create a WatchDog project for you.<br>" +
                 "The input is optional, but greatly appreciated to improve the quality of our research data.<br>"));
 
-        JPanel inputContainer = new JPanel(new GridLayout(0, 2));
-        this.add(inputContainer);
-
-        this.projectName = WizardStep.createLinkedLabelTextField("Project name: ", PROJECT_NAME_TEXTFIELD_TOOLTIP, 150, inputContainer);
-        this.projectWebsite = WizardStep.createLinkedLabelTextField("Project website: ", PROJECT_WEBSITE_TEXTFIELD_TOOLTIP, 150, inputContainer);
-        this.ciUsage = WizardStep.createYesNoDontKnowQuestionWithLabel(CI_USAGE_LABEL_TEXT, inputContainer);
-
-        inputContainer.add(new JLabel("Does your project use static analysis tools to..."));
-        inputContainer.add(Box.createGlue());
-
-        this.codeStyleUsage = WizardStep.createYesNoDontKnowQuestionWithLabel(CODE_STYLE_USAGE_LABEL_TEXT, inputContainer);
-        this.bugFindingUsage = WizardStep.createYesNoDontKnowQuestionWithLabel(BUG_FINDING_USAGE_LABEL_TEXT, inputContainer);
-        this.automationUsage = WizardStep.createYesNoDontKnowQuestionWithLabel(OTHER_AUTOMATION_USAGE_LABEL_TEXT, inputContainer);
-
-        this.toolsUsed = WizardStep.createLinkedLabelTextField(TOOL_USAGE_LABEL_TEXT, TOOL_USAGE_TEXTFIELD_TOOLTIP, 150, inputContainer);
+        this.createInputFields();
 
         this.add(Box.createVerticalStrut(DEFAULT_SPACING));
         this.buttonContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
@@ -69,6 +59,24 @@ class ProjectRegistrationInputPanel extends JPanel {
 
             callback.accept(registerProject());
         });
+    }
+
+    private void createInputFields() {
+        JPanel inputContainer = new JPanel(new GridLayout(0, 2));
+        this.add(inputContainer);
+
+        this.projectName = WizardStep.createLinkedLabelTextField("Project name: ", PROJECT_NAME_TEXTFIELD_TOOLTIP, 150, inputContainer);
+        this.projectWebsite = WizardStep.createLinkedLabelTextField("Project website: ", PROJECT_WEBSITE_TEXTFIELD_TOOLTIP, 150, inputContainer);
+        this.ciUsage = WizardStep.createYesNoDontKnowQuestionWithLabel(CI_USAGE_LABEL_TEXT, inputContainer);
+
+        inputContainer.add(new JLabel("Does your project use static analysis tools to..."));
+        inputContainer.add(Box.createGlue());
+
+        this.codeStyleUsage = WizardStep.createYesNoDontKnowQuestionWithLabel(CODE_STYLE_USAGE_LABEL_TEXT, inputContainer);
+        this.bugFindingUsage = WizardStep.createYesNoDontKnowQuestionWithLabel(BUG_FINDING_USAGE_LABEL_TEXT, inputContainer);
+        this.automationUsage = WizardStep.createYesNoDontKnowQuestionWithLabel(OTHER_AUTOMATION_USAGE_LABEL_TEXT, inputContainer);
+
+        this.toolsUsed = WizardStep.createLinkedLabelTextField(TOOL_USAGE_LABEL_TEXT, TOOL_USAGE_TEXTFIELD_TOOLTIP, 150, inputContainer);
     }
 
     private boolean registerProject() {

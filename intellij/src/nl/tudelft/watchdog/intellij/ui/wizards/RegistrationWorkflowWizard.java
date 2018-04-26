@@ -5,6 +5,11 @@ import com.intellij.ide.wizard.AbstractWizard;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Introduction workflow the user has to go through when starting WatchDog for the first time.
+ * It welcomes the user and explains what data we gather, as well as having two pages
+ * to create a WatchDog user and project.
+ */
 public class RegistrationWorkflowWizard extends AbstractWizard<WizardStep> implements RegistrationWizard {
     public RegistrationWorkflowWizard(@Nullable Project project) {
         super("User and Project Registration", project);

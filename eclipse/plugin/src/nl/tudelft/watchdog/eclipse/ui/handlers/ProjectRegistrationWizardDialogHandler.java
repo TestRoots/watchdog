@@ -5,6 +5,9 @@ import org.eclipse.core.commands.ExecutionException;
 
 import nl.tudelft.watchdog.eclipse.ui.wizards.NewProjectWizard;
 
+/**
+ * Handler for displaying the project registration wizard.
+ */
 public class ProjectRegistrationWizardDialogHandler extends WizardDialogHandlerBase {
 
 	@Override

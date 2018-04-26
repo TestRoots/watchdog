@@ -14,6 +14,10 @@ import java.util.function.Consumer;
 import static nl.tudelft.watchdog.intellij.ui.wizards.UserRegistrationStep.ID_LENGTH;
 import static nl.tudelft.watchdog.intellij.ui.wizards.WizardStep.DEFAULT_SPACING;
 
+/**
+ * Input panel that has an input field for a WatchDog ID and can
+ * verify that the id exists after filling in.
+ */
 abstract class IdInputPanel extends JPanel {
 
     private static final String VERIFICATION_BUTTON_TEXT = "Verify";
@@ -23,6 +27,10 @@ abstract class IdInputPanel extends JPanel {
     private final JTextField textfield;
     private final JPanel statusContainer;
 
+    /**
+     * Create the input panel.
+     * @param callback The callback invoked after the user clicked "Verify".
+     */
     IdInputPanel(Consumer<Boolean> callback) {
         super(new FlowLayout(FlowLayout.LEFT, 0, 3));
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

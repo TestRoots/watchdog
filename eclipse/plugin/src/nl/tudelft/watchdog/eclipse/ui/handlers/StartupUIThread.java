@@ -64,17 +64,18 @@ public class StartupUIThread implements Runnable {
 	private void checkWhetherToDisplayUserProjectRegistrationWizard() {
 		ProjectPreferenceSetting projectSetting = preferences
 				.getOrCreateProjectSetting(workspaceName);
-//		if (!WatchDogUtils.isEmpty(preferences.getUserId())
-//				|| (projectSetting.startupQuestionAsked
-//						&& !projectSetting.enableWatchdog))
-//			return;
+		if (!WatchDogUtils.isEmpty(preferences.getUserId())
+				|| (projectSetting.startupQuestionAsked
+						&& !projectSetting.enableWatchdog))
+			return;
 
 		AbstractHandler newUserWizardHandler = new UserRegistrationWizardDialogHandler();
 		try {
 			int statusCode = (int) newUserWizardHandler
 					.execute(new ExecutionEvent());
 			savePreferenceStoreIfNeeded();
-			if (statusCode == Window.CANCEL && preferences.getUserId() == null) {
+			if (statusCode == Window.CANCEL && (preferences.getUserId() == null
+					|| preferences.getOrCreateProjectSetting(workspaceName).projectId == null)) {
 				boolean shouldRegisterAnonymously = MessageDialog.openQuestion(
 						null, "WatchDog not active!",
 						WATCHDOG_UNREGISTERED_WARNING);

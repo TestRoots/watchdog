@@ -5,6 +5,11 @@ import java.awt.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * A single registration step that has two options:
+ * 1. The user already has a registration, for which they have to enter their ID.
+ * 2. The user has to create a registration in the {@link #getRegistrationPanel()}.
+ */
 abstract class RegistrationStep extends WizardStep {
 
     private final RegistrationWizard wizard;

@@ -7,6 +7,9 @@ import nl.tudelft.watchdog.eclipse.Activator;
 import nl.tudelft.watchdog.eclipse.ui.handlers.RegistrationWizard;
 import nl.tudelft.watchdog.eclipse.ui.handlers.StartupHandler;
 
+/**
+ * Wizard that asks users for registering a newly imported project with WatchDog.
+ */
 public class NewProjectWizard extends Wizard implements RegistrationWizard {
 
 	private static final String IMAGE_LOCATION = "resources/images/project.png";

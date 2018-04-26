@@ -4,6 +4,9 @@ import com.intellij.ide.wizard.AbstractWizard;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Wizard that asks users for registering a newly imported project with WatchDog.
+ */
 public class ProjectRegistrationWizard extends AbstractWizard<WizardStep> implements RegistrationWizard {
     public ProjectRegistrationWizard(Project project) {
         super("Project Registration", project);

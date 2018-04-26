@@ -7,6 +7,11 @@ import nl.tudelft.watchdog.eclipse.Activator;
 import nl.tudelft.watchdog.eclipse.ui.handlers.RegistrationWizard;
 import nl.tudelft.watchdog.eclipse.ui.handlers.StartupHandler;
 
+/**
+ * Introduction workflow the user has to go through when starting WatchDog for the first time.
+ * It welcomes the user and explains what data we gather, as well as having two pages
+ * to create a WatchDog user and project.
+ */
 public class RegistrationWorkflowWizard extends Wizard implements RegistrationWizard {
 	
 	private static final String IMAGE_LOCATION = "resources/images/user.png";

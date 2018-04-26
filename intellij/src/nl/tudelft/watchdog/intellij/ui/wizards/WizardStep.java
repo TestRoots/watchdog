@@ -55,6 +55,15 @@ public abstract class WizardStep implements Step {
 
     abstract boolean isFinishedWithStep();
 
+    /**
+     * Create a label that is linked to the text field. Clicking on the label
+     * will select the text field.
+     * @param labelText The text of the label.
+     * @param tooltip The tooltip for both elements.
+     * @param textFieldLength The length of the text field.
+     * @param container The parent container.
+     * @return The created text field.
+     */
     static JTextField createLinkedLabelTextField(String labelText, String tooltip, int textFieldLength, Container container) {
         JLabel label = new JLabel(labelText);
         label.setToolTipText(tooltip);

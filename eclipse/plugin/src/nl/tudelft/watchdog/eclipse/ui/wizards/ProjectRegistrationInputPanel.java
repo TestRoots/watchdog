@@ -22,20 +22,25 @@ import nl.tudelft.watchdog.eclipse.ui.wizards.RegistrationStep.YesNoDontknowButt
 
 import static nl.tudelft.watchdog.core.ui.wizards.Project.*;
 
-public class ProjectRegistrationInputPanel extends Composite {
+class ProjectRegistrationInputPanel extends Composite {
 
-    private final Text projectName;
-    private final Text projectWebsite;
-    private final YesNoDontknowButtonGroup ciUsage;
-    private final YesNoDontknowButtonGroup codeStyleUsage;
-    private final YesNoDontknowButtonGroup bugFindingUsage;
-    private final YesNoDontknowButtonGroup automationUsage;
-    private final Text toolsUsed;
-    private final Composite buttonContainer;
-    private final Button createNewUserButton;
-    private Composite statusContainer;
+	private final Composite buttonContainer;
+	private final Button createNewUserButton;
+	private Text projectName;
+	private Text projectWebsite;
+	private YesNoDontknowButtonGroup ciUsage;
+	private YesNoDontknowButtonGroup codeStyleUsage;
+	private YesNoDontknowButtonGroup bugFindingUsage;
+	private YesNoDontknowButtonGroup automationUsage;
+	private Text toolsUsed;
+	private Composite statusContainer;
 
-    ProjectRegistrationInputPanel(Composite container, Consumer<Boolean> callback) {
+	/**
+	 * A panel to ask the user questions regarding their project.
+	 * @param container The parent container.
+	 * @param callback The callback invoked after the user clicked "Create WatchDog Project".
+	 */
+	ProjectRegistrationInputPanel(Composite container, Consumer<Boolean> callback) {
 		super(container, SWT.NONE);
 		this.setLayout(new RowLayout(SWT.VERTICAL));
 
@@ -46,33 +51,18 @@ public class ProjectRegistrationInputPanel extends Composite {
 		new Label(this, SWT.NONE).setText("Please fill in the following data to create a WatchDog project for you.");
 		new Label(this, SWT.NONE).setText("The input is optional, but greatly appreciated to improve the quality of our research data.");
 
-		Composite inputContainer = new Composite(this, SWT.NONE);
-		inputContainer.setLayout(new GridLayout(2, false));
+		this.createInputFields();
 
-        this.projectName = RegistrationStep.createLinkedLabelTextField("Project name: ", PROJECT_NAME_TEXTFIELD_TOOLTIP, inputContainer);
-        this.projectWebsite = RegistrationStep.createLinkedLabelTextField("Project website: ", PROJECT_WEBSITE_TEXTFIELD_TOOLTIP, inputContainer);
-        this.ciUsage = RegistrationStep.createYesNoDontKnowQuestionWithLabel(CI_USAGE_LABEL_TEXT, inputContainer);
+		this.buttonContainer = new Composite(this, SWT.NONE);
+		this.buttonContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
 
-        new Label(inputContainer, SWT.NONE).setText("Does your project use static analysis tools to...");
-        // Filler to complete this grid row
-        new Composite(inputContainer, SWT.NONE);
+		this.createNewUserButton = new Button(this.buttonContainer, SWT.NONE);
+		createNewUserButton.setText("Create new WatchDog project");
 
-        this.codeStyleUsage = RegistrationStep.createYesNoDontKnowQuestionWithLabel(CODE_STYLE_USAGE_LABEL_TEXT, inputContainer);
-        this.bugFindingUsage = RegistrationStep.createYesNoDontKnowQuestionWithLabel(BUG_FINDING_USAGE_LABEL_TEXT, inputContainer);
-        this.automationUsage = RegistrationStep.createYesNoDontKnowQuestionWithLabel(OTHER_AUTOMATION_USAGE_LABEL_TEXT, inputContainer);
+		this.statusContainer = new Composite(this, SWT.NONE);
+		this.statusContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
 
-        this.toolsUsed = RegistrationStep.createLinkedLabelTextField(TOOL_USAGE_LABEL_TEXT, TOOL_USAGE_TEXTFIELD_TOOLTIP, inputContainer);
-
-        this.buttonContainer = new Composite(this, SWT.NONE);
-        this.buttonContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
-
-        this.createNewUserButton = new Button(this.buttonContainer, SWT.NONE);
-        createNewUserButton.setText("Create new WatchDog project");
-
-        this.statusContainer = new Composite(this, SWT.NONE);
-        this.statusContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
-
-        createNewUserButton.addSelectionListener(new SelectionAdapter() {
+		createNewUserButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				for (Control child : statusContainer.getChildren()) {
@@ -88,44 +78,63 @@ public class ProjectRegistrationInputPanel extends Composite {
 				callback.accept(registerProject());
 			}
 		});
-    }
+	}
+	
+	private void createInputFields() {
+		Composite inputContainer = new Composite(this, SWT.NONE);
+		inputContainer.setLayout(new GridLayout(2, false));
 
-    private boolean registerProject() {
-        Project project = new Project(Preferences.getInstance().getUserId());
+		this.projectName = RegistrationStep.createLinkedLabelTextField("Project name: ", PROJECT_NAME_TEXTFIELD_TOOLTIP, inputContainer);
+		this.projectWebsite = RegistrationStep.createLinkedLabelTextField("Project website: ", PROJECT_WEBSITE_TEXTFIELD_TOOLTIP, inputContainer);
+		this.ciUsage = RegistrationStep.createYesNoDontKnowQuestionWithLabel(CI_USAGE_LABEL_TEXT, inputContainer);
 
-        project.name = projectName.getText();
-        project.website = projectWebsite.getText();
-        project.usesContinuousIntegration = this.ciUsage.selected;
-        project.usesCodeStyleSA = this.codeStyleUsage.selected;
-        project.usesBugFindingSA = this.bugFindingUsage.selected;
-        project.usesOtherAutomationSA = this.automationUsage.selected;
-        project.usesToolsSA = this.toolsUsed.getText();
+		new Label(inputContainer, SWT.NONE).setText("Does your project use static analysis tools to...");
+		// Filler to complete this grid row
+		new Composite(inputContainer, SWT.NONE);
 
-        String projectId;
+		this.codeStyleUsage = RegistrationStep.createYesNoDontKnowQuestionWithLabel(CODE_STYLE_USAGE_LABEL_TEXT, inputContainer);
+		this.bugFindingUsage = RegistrationStep.createYesNoDontKnowQuestionWithLabel(BUG_FINDING_USAGE_LABEL_TEXT, inputContainer);
+		this.automationUsage = RegistrationStep.createYesNoDontKnowQuestionWithLabel(OTHER_AUTOMATION_USAGE_LABEL_TEXT, inputContainer);
 
-        try {
-            projectId = new JsonTransferer().registerNewProject(project);
-        } catch (ServerCommunicationException exception) {
-        	new Label(this.buttonContainer, SWT.NONE).setText(PROJECT_CREATION_MESSAGE_FAILURE);
+		this.toolsUsed = RegistrationStep.createLinkedLabelTextField(TOOL_USAGE_LABEL_TEXT, TOOL_USAGE_TEXTFIELD_TOOLTIP, inputContainer);
+	}
 
-            RegistrationStep.createErrorMessageLabel(this.statusContainer, exception);
+	private boolean registerProject() {
+		Project project = new Project(Preferences.getInstance().getUserId());
 
-            return false;
-        }
+		project.name = projectName.getText();
+		project.website = projectWebsite.getText();
+		project.usesContinuousIntegration = this.ciUsage.selected;
+		project.usesCodeStyleSA = this.codeStyleUsage.selected;
+		project.usesBugFindingSA = this.bugFindingUsage.selected;
+		project.usesOtherAutomationSA = this.automationUsage.selected;
+		project.usesToolsSA = this.toolsUsed.getText();
 
-        Preferences preferences = Preferences.getInstance();
-        preferences.registerProjectId(project.name, projectId);
-        preferences.registerProjectUse(project.name, true);
+		String projectId;
 
-        new Label(this.buttonContainer, SWT.NONE).setText(PROJECT_CREATION_MESSAGE_SUCCESSFUL);
-        this.createNewUserButton.setEnabled(false);
+		try {
+			projectId = new JsonTransferer().registerNewProject(project);
+		} catch (ServerCommunicationException exception) {
+			new Label(this.buttonContainer, SWT.NONE).setText(PROJECT_CREATION_MESSAGE_FAILURE);
 
-        new Label(this.statusContainer, SWT.NONE).setText("Your Project ID is: ");
-        Text projectIdField = new Text(this.statusContainer, SWT.NONE);
-        projectIdField.setText(projectId);
-        projectIdField.setEditable(false);
+			RegistrationStep.createErrorMessageLabel(this.statusContainer, exception);
 
-        return true;
-    }
+			return false;
+		}
+
+		Preferences preferences = Preferences.getInstance();
+		preferences.registerProjectId(project.name, projectId);
+		preferences.registerProjectUse(project.name, true);
+
+		new Label(this.buttonContainer, SWT.NONE).setText(PROJECT_CREATION_MESSAGE_SUCCESSFUL);
+		this.createNewUserButton.setEnabled(false);
+
+		new Label(this.statusContainer, SWT.NONE).setText("Your Project ID is: ");
+		Text projectIdField = new Text(this.statusContainer, SWT.NONE);
+		projectIdField.setText(projectId);
+		projectIdField.setEditable(false);
+
+		return true;
+	}
 
 }

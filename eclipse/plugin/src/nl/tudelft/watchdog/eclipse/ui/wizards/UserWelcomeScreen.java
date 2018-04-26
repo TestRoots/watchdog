@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import nl.tudelft.watchdog.eclipse.ui.util.BrowserOpenerSelection;
 
-public class UserWelcomeScreen extends WizardPage {
+class UserWelcomeScreen extends WizardPage {
 
 	protected UserWelcomeScreen() {
 		super("Welcome to WatchDog!");
