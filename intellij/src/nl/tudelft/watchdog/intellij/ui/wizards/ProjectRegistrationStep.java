@@ -1,6 +1,8 @@
 package nl.tudelft.watchdog.intellij.ui.wizards;
 
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
+import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
+import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
 import javax.swing.*;
 import java.util.function.Consumer;
@@ -19,6 +21,11 @@ class ProjectRegistrationStep extends RegistrationStep {
     }
 
     @Override
+    String getRegistrationType() {
+        return "project";
+    }
+
+    @Override
     Function<Consumer<Boolean>, JPanel> getIdInputPanel() {
         return callback -> new IdInputPanel(callback) {
             @Override
@@ -34,6 +41,12 @@ class ProjectRegistrationStep extends RegistrationStep {
             @Override
             String createUrlForId(String id) {
                 return NetworkUtils.buildExistingProjectURL(id);
+            }
+
+            @Override
+            void storeIdInPreferences(Preferences preferences, String id) {
+                preferences.registerProjectId(WatchDogUtils.getProjectName(), id);
+                preferences.registerProjectUse(WatchDogUtils.getProjectName(), true);
             }
         };
     }

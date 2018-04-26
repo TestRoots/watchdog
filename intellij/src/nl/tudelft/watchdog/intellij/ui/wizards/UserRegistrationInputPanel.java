@@ -19,8 +19,9 @@ class UserRegistrationInputPanel extends JPanel {
     private final JTextField email;
     private final JTextField company;
     private final JComboBox<String> programmingExperience;
-    private final JTextField operatingSystem;
+    private final JLabel operatingSystem;
     private final Container buttonContainer;
+    private final JButton createWatchDogUserButton;
     private Container statusContainer;
 
     UserRegistrationInputPanel(Consumer<Boolean> callback) {
@@ -30,7 +31,7 @@ class UserRegistrationInputPanel extends JPanel {
         JPanel introductionContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
         this.add(introductionContainer);
         introductionContainer.add(new JLabel("<html>" +
-                "<h3>WatchDog user registration</h3>" +
+                "<h3>WatchDog user profile</h3>" +
                 "Please fill in the following data to create a WatchDog user account for you.<br>" +
                 "The input is optional, but greatly appreciated to improve the quality of our research data.<br>"));
 
@@ -49,9 +50,13 @@ class UserRegistrationInputPanel extends JPanel {
         programmingExperience.setSelectedIndex(0);
         inputContainer.add(programmingExperience);
 
-        this.operatingSystem = WizardStep.createLinkedLabelTextField("Your operating system: ", COMPANY_TEXTFIELD_TOOLTIP, 150, inputContainer);
-        this.operatingSystem.setText(System.getProperty("os.name"));
-        this.operatingSystem.setEditable(false);
+        JLabel operatingSystemLabel = new JLabel("Your operating system: ");
+        operatingSystemLabel.setToolTipText(OPERATING_SYSTEM_TOOLTIP);
+        inputContainer.add(operatingSystemLabel);
+
+        this.operatingSystem = new JLabel(System.getProperty("os.name"));
+        operatingSystem.setToolTipText(OPERATING_SYSTEM_TOOLTIP);
+        inputContainer.add(operatingSystem);
 
         this.add(Box.createVerticalStrut(DEFAULT_SPACING));
         this.buttonContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
@@ -60,13 +65,13 @@ class UserRegistrationInputPanel extends JPanel {
         this.statusContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
         this.add(statusContainer);
 
-        JButton button = new JButton("Create new WatchDog user");
-        this.buttonContainer.add(button);
-        button.addActionListener(actionEvent -> {
+        this.createWatchDogUserButton = new JButton("Create new WatchDog user");
+        this.buttonContainer.add(createWatchDogUserButton);
+        createWatchDogUserButton.addActionListener(actionEvent -> {
             this.statusContainer.removeAll();
 
             this.buttonContainer.removeAll();
-            this.buttonContainer.add(button);
+            this.buttonContainer.add(createWatchDogUserButton);
 
             callback.accept(registerUser());
         });
@@ -104,6 +109,8 @@ class UserRegistrationInputPanel extends JPanel {
         JTextField userIdField = new JTextField(userId, ID_LENGTH);
         userIdField.setEditable(false);
         statusContainer.add(userIdField);
+
+        this.createWatchDogUserButton.setEnabled(false);
 
         return true;
     }

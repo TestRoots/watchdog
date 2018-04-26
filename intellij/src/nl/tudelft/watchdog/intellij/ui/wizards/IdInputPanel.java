@@ -63,6 +63,8 @@ abstract class IdInputPanel extends JPanel {
 
     abstract String createUrlForId(String id);
 
+    abstract void storeIdInPreferences(Preferences preferences, String id);
+
     private boolean verifyUserIdRegistration() {
         try {
             NetworkUtils.getURLAndGetResponse(createUrlForId(this.textfield.getText()));
@@ -73,8 +75,7 @@ abstract class IdInputPanel extends JPanel {
             return false;
         }
 
-        Preferences preferences = Preferences.getInstance();
-        preferences.setUserId(this.textfield.getText());
+        this.storeIdInPreferences(Preferences.getInstance(), this.textfield.getText());
 
         this.statusContainer.add(new JLabel(VERIFICATION_SUCCESSFUL_MESSAGE));
         return true;

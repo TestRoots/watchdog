@@ -29,6 +29,13 @@ class ProjectRegistrationInputPanel extends JPanel {
         super();
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+        JPanel introductionContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
+        this.add(introductionContainer);
+        introductionContainer.add(new JLabel("<html>" +
+                "<h3>WatchDog project profile</h3>" +
+                "Please fill in the following data to create a WatchDog project for you.<br>" +
+                "The input is optional, but greatly appreciated to improve the quality of our research data.<br>"));
+
         JPanel inputContainer = new JPanel(new GridLayout(0, 2));
         this.add(inputContainer);
 

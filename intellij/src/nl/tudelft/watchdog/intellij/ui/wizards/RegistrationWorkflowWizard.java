@@ -1,5 +1,6 @@
 package nl.tudelft.watchdog.intellij.ui.wizards;
 
+import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.wizard.AbstractWizard;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nullable;
@@ -29,5 +30,10 @@ public class RegistrationWorkflowWizard extends AbstractWizard<WizardStep> imple
     @Override
     public void updateButtons() {
         super.updateButtons();
+    }
+
+    @Override
+    protected void doHelpAction() {
+        BrowserUtil.open("http://testroots.org/testroots_watchdog.html");
     }
 }

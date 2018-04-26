@@ -41,7 +41,7 @@ public class WatchDogStartUp implements ProjectComponent {
     /**
      * The warning displayed when WatchDog is not registered. Note: JLabel requires html tags for a new line (and other formatting).
      */
-    public static final String WATCHDOG_UNREGISTERED_WARNING = "<html>Warning: You can only use WatchDog when you register it.<br><br>Last chance: Register now, anonymously, without filling the survey?";
+    public static final String WATCHDOG_UNREGISTERED_WARNING = "<html>Warning: You can only use WatchDog when you register it.<br><br>Would you like to create a user without providing additional information?";
 
     /**
      * Whether the user has cancelled the user project registration wizard.
@@ -130,7 +130,7 @@ public class WatchDogStartUp implements ProjectComponent {
 
         AbstractWizard wizard = new RegistrationWorkflowWizard(project);
         wizard.show();
-        if (wizard.getExitCode() == DialogWrapper.CANCEL_EXIT_CODE) {
+        if (wizard.getExitCode() == DialogWrapper.CANCEL_EXIT_CODE && preferences.getUserId() == null) {
             if (Messages.YES == Messages.showYesNoDialog(WATCHDOG_UNREGISTERED_WARNING, "WatchDog is not registered!", Messages.getQuestionIcon())) {
                 makeSilentRegistration();
             } else {

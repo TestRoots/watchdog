@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.intellij.ui.wizards;
 
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
+import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
 
 import javax.swing.*;
 import java.util.function.Consumer;
@@ -25,6 +26,11 @@ class UserRegistrationStep extends RegistrationStep {
     }
 
     @Override
+    String getRegistrationType() {
+        return "user";
+    }
+
+    @Override
     Function<Consumer<Boolean>, JPanel> getIdInputPanel() {
         return callback -> new IdInputPanel(callback) {
             @Override
@@ -40,6 +46,11 @@ class UserRegistrationStep extends RegistrationStep {
             @Override
             String createUrlForId(String id) {
                 return NetworkUtils.buildExistingUserURL(id);
+            }
+
+            @Override
+            void storeIdInPreferences(Preferences preferences, String id) {
+                preferences.setUserId(id);
             }
         };
     }
