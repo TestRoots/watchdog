@@ -8,6 +8,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
+import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 
 public class UserRegistrationPage extends RegistrationStep {
 
@@ -15,7 +16,7 @@ public class UserRegistrationPage extends RegistrationStep {
      * The length (in characters) of the WatchDog id.
      */
     static final int ID_LENGTH = 40;
-	
+
 	protected UserRegistrationPage(WizardDialog dialog) {
 		super("User registration", dialog);
 	}
@@ -25,7 +26,7 @@ public class UserRegistrationPage extends RegistrationStep {
 		Label header = new Label(container, SWT.NONE);
 		header.setText("Before we start, we first have to have a WatchDog user registration");
 	}
-	
+
 	@Override
 	BiConsumer<Composite, Consumer<Boolean>> getIdInputPanel() {
 		return (container, callback) ->	new IdInputPanel(container, callback) {
@@ -44,7 +45,12 @@ public class UserRegistrationPage extends RegistrationStep {
 			String createUrlForId(String id) {
 				return NetworkUtils.buildExistingUserURL(id);
 			}
-			
+
+			@Override
+			void storeIdInPreferences(Preferences preferences, String id) {
+				preferences.setUserId(id);
+			}
+
 		};
 	}
 
@@ -53,6 +59,11 @@ public class UserRegistrationPage extends RegistrationStep {
 		return UserRegistrationInputPanel::new;
 	}
 
-	
+	@Override
+	String getRegistrationType() {
+		return "user";
+	}
+
+
 
 }

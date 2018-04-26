@@ -37,7 +37,7 @@ public class UserRegistrationInputPanel extends Composite {
 		this.setLayout(new RowLayout(SWT.VERTICAL));
 		
 		Label header = new Label(this, SWT.NONE);
-		header.setText("WatchDog user registration");
+		header.setText("WatchDog user profile");
 		header.setFont(JFaceResources.getFontRegistry().getBold(""));
 		
 		new Label(this, SWT.NONE).setText("Please fill in the following data to create a WatchDog user account for you.");

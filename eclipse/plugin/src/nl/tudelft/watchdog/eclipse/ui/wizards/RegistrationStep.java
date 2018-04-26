@@ -34,7 +34,7 @@ public abstract class RegistrationStep extends WizardPage {
 		super(pageName);
 		this.dialog = dialog;
 	}
-	
+
 	@Override
 	public boolean isPageComplete() {
 		return isPageComplete;
@@ -49,30 +49,32 @@ public abstract class RegistrationStep extends WizardPage {
 
 		this.createUserRegistrationIntroduction(container);
 		this.createUserIsRegisteredQuestion(container);
-		
+
 		this.setControl(container);
 	}
 
 	abstract void createUserRegistrationIntroduction(Composite container);
-	
+
+	abstract String getRegistrationType();
+
 	private void createUserIsRegisteredQuestion(Composite parent) {
 		Composite questionContainer = new Composite(parent, SWT.NONE);
 		questionContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
-		
+
 		Label question = new Label(questionContainer, SWT.NONE);
-		question.setText("Do you have a WatchDog registration?");
-		
+		question.setText("Do you have a " + this.getRegistrationType() + " WatchDog registration?");
+
 		Composite buttons = new Composite(questionContainer, SWT.NONE);
 		buttons.setLayout(new RowLayout(SWT.HORIZONTAL));
-		
+
 		Button yes = new Button(buttons, SWT.RADIO);
 		yes.setText("yes");
 		whenSelectedCreatePanelAndUpdateUI(yes, getIdInputPanel());
-		
+
 		Button no = new Button(buttons, SWT.RADIO);
 		no.setText("no");
 		whenSelectedCreatePanelAndUpdateUI(no, getRegistrationPanel());
-		
+
 		dynamicContent = new Composite(container, SWT.NONE);
 		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
 		rowLayout.fill = true;
@@ -90,7 +92,7 @@ public abstract class RegistrationStep extends WizardPage {
 					RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
 					rowLayout.fill = true;
 					dynamicContent.setLayout(rowLayout);
-					
+
 					compositeConstructor.accept(dynamicContent, (hasValidId) -> {
 						isPageComplete = hasValidId;
 						dialog.updateButtons();
@@ -98,7 +100,7 @@ public abstract class RegistrationStep extends WizardPage {
 						container.redraw();
 						container.update();
 					});
-					
+
 					container.layout(true, true);
 					container.redraw();
 					container.update();
@@ -106,7 +108,7 @@ public abstract class RegistrationStep extends WizardPage {
 			}
 		});
 	}
-	
+
 	abstract BiConsumer<Composite, Consumer<Boolean>> getIdInputPanel();
 
 	abstract BiConsumer<Composite, Consumer<Boolean>> getRegistrationPanel();
@@ -118,13 +120,13 @@ public abstract class RegistrationStep extends WizardPage {
 		link.setText("Please contact us via <a href=\"https://www.testroots.org\">our website</a>. We can help troubleshoot the issue!");
 		link.addSelectionListener(new BrowserOpenerSelection());
 	}
-	
+
 	static Text createLinkedLabelTextField(String labelText, String tooltip, Composite container) {
 		Label label = new Label(container, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
 		label.setToolTipText(tooltip);
 		label.setText(labelText);
-		
+
 		Text input = new Text(container, SWT.NONE);
 		input.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
 		input.setToolTipText(tooltip);
@@ -134,7 +136,7 @@ public abstract class RegistrationStep extends WizardPage {
 			public void mouseDown(MouseEvent e) {
 				input.forceFocus();
 			}
-			
+
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
 				input.forceFocus();
@@ -142,33 +144,33 @@ public abstract class RegistrationStep extends WizardPage {
 		});
 		return input;
 	}
-	
+
 	static Label createLogo(Composite logoContainer, String imageLocation) {
 		Label watchdogLogo = new Label(logoContainer, SWT.NONE);
-		
+
 		ImageDescriptor watchdogLogoImageDescriptor = Activator
 				.imageDescriptorFromPlugin(Activator.PLUGIN_ID, imageLocation);
 		watchdogLogo.setImage(watchdogLogoImageDescriptor.createImage());
-		
+
 		return watchdogLogo;
 	}
 
 	public static YesNoDontknowButtonGroup createYesNoDontKnowQuestionWithLabel(String labelText, Composite container) {
 		new Label(container, SWT.NONE).setText(labelText);
-		
+
 		YesNoDontknowButtonGroup buttons = new YesNoDontknowButtonGroup(container);
 		buttons.setLayout(new RowLayout(SWT.HORIZONTAL));
-		
+
 		buttons.addButton("Yes", YesNoDontKnowChoice.Yes);
 		buttons.addButton("No", YesNoDontKnowChoice.No);
 		buttons.addButton("Don't know", YesNoDontKnowChoice.DontKnow);
-		
+
 		return buttons;
 	}
-	
+
 	static class YesNoDontknowButtonGroup extends Composite {
 		YesNoDontKnowChoice selected = YesNoDontKnowChoice.DontKnow;
-		
+
 		YesNoDontknowButtonGroup(Composite parent) {
 			super(parent, SWT.NONE);
 		}

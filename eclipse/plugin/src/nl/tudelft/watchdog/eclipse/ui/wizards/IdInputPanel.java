@@ -24,7 +24,7 @@ import static nl.tudelft.watchdog.eclipse.ui.wizards.UserRegistrationPage.ID_LEN
 import java.util.function.Consumer;
 
 abstract class IdInputPanel extends Composite {
-	
+
 	private static final String VERIFICATION_BUTTON_TEXT = "Verify";
     private static final String VERIFICATION_SUCCESSFUL_MESSAGE = "ID verification successful!";
     private static final String VERIFICATION_MESSAGE_FAILURE = "ID verification failed.";
@@ -34,28 +34,28 @@ abstract class IdInputPanel extends Composite {
 	IdInputPanel(Composite parent, Consumer<Boolean> callback) {
 		super(parent, SWT.NONE);
 		this.setLayout(new RowLayout(SWT.VERTICAL));
-		
+
 		Composite fieldContainer = new Composite(this, SWT.NONE);
 		fieldContainer.setLayout(new GridLayout(2, true));
-		
+
 		this.textfield = UIUtils.createLinkedFieldInput(this.getIdLabelText(), this.getIdTooltipText(), fieldContainer);
 		textfield.setTextLimit(ID_LENGTH);
 		textfield.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
-		
+
 		Button verify = new Button(this, SWT.FLAT);
 		verify.setText(VERIFICATION_BUTTON_TEXT);
 		verify.setEnabled(false);
-		
+
 		textfield.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				verify.setEnabled(textfield.getText().length() == ID_LENGTH);
 			}
 		});
-		
+
 		statusContainer = new Composite(this, SWT.NONE);
 		statusContainer.setLayout(new RowLayout(SWT.VERTICAL));
-		
+
 		verify.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -63,10 +63,10 @@ abstract class IdInputPanel extends Composite {
 					control.dispose();
 				}
 				callback.accept(verifyUserIdRegistration());
-				
+
 				statusContainer.layout(true, true);
 				parent.layout(true, true);
-				
+
 				parent.redraw();
 				parent.update();
 			}
@@ -76,9 +76,11 @@ abstract class IdInputPanel extends Composite {
 	abstract String getIdTooltipText();
 
 	abstract String getIdLabelText();
-	
+
 	abstract String createUrlForId(String text);
-	
+
+	abstract void storeIdInPreferences(Preferences preferences, String id);
+
 	private boolean verifyUserIdRegistration() {
         try {
             NetworkUtils.getURLAndGetResponse(createUrlForId(this.textfield.getText()));
@@ -89,8 +91,7 @@ abstract class IdInputPanel extends Composite {
             return false;
         }
 
-        Preferences preferences = Preferences.getInstance();
-        preferences.setUserId(this.textfield.getText());
+        this.storeIdInPreferences(Preferences.getInstance(), this.textfield.getText());
 
         new Label(statusContainer, SWT.NONE).setText(VERIFICATION_SUCCESSFUL_MESSAGE);
         return true;

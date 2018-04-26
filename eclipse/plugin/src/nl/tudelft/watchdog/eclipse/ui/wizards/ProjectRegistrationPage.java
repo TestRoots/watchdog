@@ -9,6 +9,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
+import nl.tudelft.watchdog.core.util.WatchDogGlobals;
+import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
+import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 public class ProjectRegistrationPage extends RegistrationStep {
 
@@ -39,12 +42,23 @@ public class ProjectRegistrationPage extends RegistrationStep {
             String createUrlForId(String id) {
                 return NetworkUtils.buildExistingProjectURL(id);
             }
+
+			@Override
+			void storeIdInPreferences(Preferences preferences, String id) {
+				preferences.registerProjectId(WatchDogUtils.getWorkspaceName(), id);
+				preferences.registerProjectUse(WatchDogUtils.getWorkspaceName(), true);
+			}
         };
 	}
 
 	@Override
 	BiConsumer<Composite, Consumer<Boolean>> getRegistrationPanel() {
 		return ProjectRegistrationInputPanel::new;
+	}
+
+	@Override
+	String getRegistrationType() {
+		return "project";
 	}
 
 }

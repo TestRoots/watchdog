@@ -20,7 +20,7 @@ public abstract class WizardDialogHandlerBase extends AbstractHandler implements
 		WizardDialog wizardDialog = new WizardDialog(HandlerUtil.getActiveShell(event), wizard);
 		wizard.setDialog(wizardDialog);
 		wizardDialog.setBlockOnOpen(true);
-		wizardDialog.setMinimumPageSize(0, 500);
+		wizardDialog.setMinimumPageSize(0, 550);
 		return wizardDialog.open();
 	}
 

@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.eclipse.ui.wizards;
 
 import java.util.function.Consumer;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -31,12 +32,20 @@ public class ProjectRegistrationInputPanel extends Composite {
     private final YesNoDontknowButtonGroup automationUsage;
     private final Text toolsUsed;
     private final Composite buttonContainer;
+    private final Button createNewUserButton;
     private Composite statusContainer;
 
     ProjectRegistrationInputPanel(Composite container, Consumer<Boolean> callback) {
 		super(container, SWT.NONE);
 		this.setLayout(new RowLayout(SWT.VERTICAL));
-		
+
+		Label header = new Label(this, SWT.NONE);
+		header.setText("WatchDog project profile");
+		header.setFont(JFaceResources.getFontRegistry().getBold(""));
+
+		new Label(this, SWT.NONE).setText("Please fill in the following data to create a WatchDog project for you.");
+		new Label(this, SWT.NONE).setText("The input is optional, but greatly appreciated to improve the quality of our research data.");
+
 		Composite inputContainer = new Composite(this, SWT.NONE);
 		inputContainer.setLayout(new GridLayout(2, false));
 
@@ -51,31 +60,31 @@ public class ProjectRegistrationInputPanel extends Composite {
         this.codeStyleUsage = RegistrationStep.createYesNoDontKnowQuestionWithLabel(CODE_STYLE_USAGE_LABEL_TEXT, inputContainer);
         this.bugFindingUsage = RegistrationStep.createYesNoDontKnowQuestionWithLabel(BUG_FINDING_USAGE_LABEL_TEXT, inputContainer);
         this.automationUsage = RegistrationStep.createYesNoDontKnowQuestionWithLabel(OTHER_AUTOMATION_USAGE_LABEL_TEXT, inputContainer);
-        
+
         this.toolsUsed = RegistrationStep.createLinkedLabelTextField(TOOL_USAGE_LABEL_TEXT, TOOL_USAGE_TEXTFIELD_TOOLTIP, inputContainer);
 
         this.buttonContainer = new Composite(this, SWT.NONE);
         this.buttonContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
-        
-        Button createNewUserButton = new Button(this.buttonContainer, SWT.NONE);
+
+        this.createNewUserButton = new Button(this.buttonContainer, SWT.NONE);
         createNewUserButton.setText("Create new WatchDog project");
-        
+
         this.statusContainer = new Composite(this, SWT.NONE);
         this.statusContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
-        
+
         createNewUserButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				for (Control child : statusContainer.getChildren()) {
 					child.dispose();
 				}
-				
+
 				for (Control child : buttonContainer.getChildren()) {
 					if (child != createNewUserButton) {
 						child.dispose();
 					}
 				}
-				
+
 				callback.accept(registerProject());
 			}
 		});
@@ -100,16 +109,17 @@ public class ProjectRegistrationInputPanel extends Composite {
         	new Label(this.buttonContainer, SWT.NONE).setText(PROJECT_CREATION_MESSAGE_FAILURE);
 
             RegistrationStep.createErrorMessageLabel(this.statusContainer, exception);
-        	
+
             return false;
         }
 
         Preferences preferences = Preferences.getInstance();
         preferences.registerProjectId(project.name, projectId);
         preferences.registerProjectUse(project.name, true);
-        
+
         new Label(this.buttonContainer, SWT.NONE).setText(PROJECT_CREATION_MESSAGE_SUCCESSFUL);
-        
+        this.createNewUserButton.setEnabled(false);
+
         new Label(this.statusContainer, SWT.NONE).setText("Your Project ID is: ");
         Text projectIdField = new Text(this.statusContainer, SWT.NONE);
         projectIdField.setText(projectId);

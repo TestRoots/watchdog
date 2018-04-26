@@ -24,7 +24,7 @@ import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 public class StartupUIThread implements Runnable {
 
 	/** The warning displayed when WatchDog is not active. */
-	public static final String WATCHDOG_INACTIVE_WARNING = "Warning: You can only use WatchDog when you register it.\n\nLast chance: Register now, anonymously, without filling the survey?";
+	public static final String WATCHDOG_UNREGISTERED_WARNING = "Warning: You can only use WatchDog when you register it.\n\nWould you like to create a user without providing additional information?";
 
 	/** The preferences. */
 	private Preferences preferences;
@@ -64,20 +64,20 @@ public class StartupUIThread implements Runnable {
 	private void checkWhetherToDisplayUserProjectRegistrationWizard() {
 		ProjectPreferenceSetting projectSetting = preferences
 				.getOrCreateProjectSetting(workspaceName);
-		if (!WatchDogUtils.isEmpty(preferences.getUserId())
-				|| (projectSetting.startupQuestionAsked
-						&& !projectSetting.enableWatchdog))
-			return;
+//		if (!WatchDogUtils.isEmpty(preferences.getUserId())
+//				|| (projectSetting.startupQuestionAsked
+//						&& !projectSetting.enableWatchdog))
+//			return;
 
 		AbstractHandler newUserWizardHandler = new UserRegistrationWizardDialogHandler();
 		try {
 			int statusCode = (int) newUserWizardHandler
 					.execute(new ExecutionEvent());
 			savePreferenceStoreIfNeeded();
-			if (statusCode == Window.CANCEL) {
+			if (statusCode == Window.CANCEL && preferences.getUserId() == null) {
 				boolean shouldRegisterAnonymously = MessageDialog.openQuestion(
 						null, "WatchDog not active!",
-						WATCHDOG_INACTIVE_WARNING);
+						WATCHDOG_UNREGISTERED_WARNING);
 				if (shouldRegisterAnonymously) {
 					makeSilentRegistration();
 				} else {
