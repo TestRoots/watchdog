@@ -23,12 +23,6 @@ public class IntervalPersisterSingleIntervalTest extends IntervalPersisterTestBa
 
 	@Test
 	public void can_compare_after_writes() {
-		writeInterval();
-		compareIntervalAfterWrite();
-		compareIntervalAfterWriteDemonstratesCloseIsNotPersisted();
-	}
-
-	private void writeInterval() {
 		interval = IntervalPersisterTest.createRandomInterval();
 		interval.close();
 		persister.save(interval);
@@ -43,25 +37,11 @@ public class IntervalPersisterSingleIntervalTest extends IntervalPersisterTestBa
 		assertEquals(interval.getEnd(), savedInterval.getEnd());
 		assertEquals(interval.getDuration(), savedInterval.getDuration());
 		assertEquals(interval.isClosed(), savedInterval.isClosed());
-	}
 
-	private void compareIntervalAfterWrite() {
-		WatchDogItem savedItem = new ArrayList<>(persister.readItems())
-				.get(0);
-		assertTrue(savedItem instanceof IntervalBase);
+		assertEquals(savedInterval.getType(), savedInterval.getType());
+		assertEquals(savedInterval.getStart(), savedInterval.getStart());
+		assertEquals(savedInterval.getEnd(), savedInterval.getEnd());
 
-		IntervalBase savedInterval = (IntervalBase) savedItem;
-		assertEquals(interval.getType(), savedInterval.getType());
-		assertEquals(interval.getStart(), savedInterval.getStart());
-		assertEquals(interval.getEnd(), savedInterval.getEnd());
-	}
-
-	private void compareIntervalAfterWriteDemonstratesCloseIsNotPersisted() {
-		WatchDogItem savedItem = new ArrayList<>(persister.readItems())
-				.get(0);
-		assertTrue(savedItem instanceof IntervalBase);
-
-		IntervalBase savedInterval = (IntervalBase) savedItem;
 		assertEquals(interval.getDuration(), savedInterval.getDuration());
 		assertEquals(interval.isClosed(), savedInterval.isClosed());
 	}

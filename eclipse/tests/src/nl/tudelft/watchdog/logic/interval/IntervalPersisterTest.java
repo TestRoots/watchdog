@@ -26,7 +26,7 @@ public class IntervalPersisterTest extends IntervalPersisterTestBase {
 	}
 
 	@Test
-	public void hunderd_interactions() {
+	public void hundred_interactions() {
 		testInteraction(100);
 		assertEquals(100, persister.getSize());
 
