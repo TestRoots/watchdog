@@ -37,13 +37,6 @@ public class IntervalPersisterSingleIntervalTest extends IntervalPersisterTestBa
 		assertEquals(interval.getEnd(), savedInterval.getEnd());
 		assertEquals(interval.getDuration(), savedInterval.getDuration());
 		assertEquals(interval.isClosed(), savedInterval.isClosed());
-
-		assertEquals(savedInterval.getType(), savedInterval.getType());
-		assertEquals(savedInterval.getStart(), savedInterval.getStart());
-		assertEquals(savedInterval.getEnd(), savedInterval.getEnd());
-
-		assertEquals(interval.getDuration(), savedInterval.getDuration());
-		assertEquals(interval.isClosed(), savedInterval.isClosed());
 	}
 
 }
