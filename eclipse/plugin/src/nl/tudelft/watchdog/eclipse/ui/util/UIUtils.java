@@ -8,12 +8,14 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
@@ -31,6 +33,7 @@ public class UIUtils {
 
 	/** The command to show the WatchDog info. */
 	public static final String COMMAND_SHOW_INFO = "nl.tudelft.watchdog.commands.showWatchDogInfo";
+	public static final Font HEADER_FONT = generateHeaderFont();
 
 	/**
 	 * Creates and returns a label whose text is wrapped inside the supplied
@@ -44,6 +47,12 @@ public class UIUtils {
 		labelData.widthHint = parent.getParent().getClientArea().width - 30;
 		label.setLayoutData(labelData);
 		return label;
+	}
+
+	private static Font generateHeaderFont() {
+		FontData fontData = JFaceResources.getFontRegistry().getBold("").getFontData()[0];
+		fontData.setHeight(16);
+		return new Font(Display.getDefault(), fontData);
 	}
 
 	/** Creates and returns a bold text label. */

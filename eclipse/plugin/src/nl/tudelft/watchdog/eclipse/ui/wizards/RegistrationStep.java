@@ -23,6 +23,8 @@ import nl.tudelft.watchdog.core.ui.wizards.YesNoDontKnowChoice;
 import nl.tudelft.watchdog.eclipse.Activator;
 import nl.tudelft.watchdog.eclipse.ui.util.BrowserOpenerSelection;
 
+import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.*;
+
 /**
  * A single registration step that has two options:
  * 1. The user already has a registration, for which they have to enter their ID.
@@ -120,9 +122,9 @@ abstract class RegistrationStep extends WizardPage {
 
 	static void createErrorMessageLabel(Composite container, Exception exception) {
 		new Label(container, SWT.NONE).setText(exception.getMessage());
-		new Label(container, SWT.NONE).setText("Are you connected to the internet, and is port 80 open?");
+		new Label(container, SWT.NONE).setText(CONNECTED_TO_INTERNET);
 		Link link = new Link(container, SWT.NONE);
-		link.setText("Please contact us via <a href=\"https://www.testroots.org\">our website</a>. We can help troubleshoot the issue!");
+		link.setText(PLEASE_CONTACT_US + Links.OUR_WEBSITE.toHTMLURL() + ". " + HELP_TROUBLESHOOT);
 		link.addSelectionListener(new BrowserOpenerSelection());
 	}
 

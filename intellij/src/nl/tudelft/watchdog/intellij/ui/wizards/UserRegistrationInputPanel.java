@@ -11,6 +11,7 @@ import java.awt.*;
 import java.util.function.Consumer;
 
 import static nl.tudelft.watchdog.core.ui.wizards.User.*;
+import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.*;
 import static nl.tudelft.watchdog.intellij.ui.wizards.UserRegistrationStep.ID_LENGTH;
 import static nl.tudelft.watchdog.intellij.ui.wizards.WizardStep.DEFAULT_SPACING;
 
@@ -35,9 +36,9 @@ class UserRegistrationInputPanel extends JPanel {
         JPanel introductionContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
         this.add(introductionContainer);
         introductionContainer.add(new JLabel("<html>" +
-                "<h3>WatchDog user profile</h3>" +
-                "Please fill in the following data to create a WatchDog user account for you.<br>" +
-                "The input is optional, but greatly appreciated to improve the quality of our research data.<br>"));
+                "<h3>" + WATCHDOG_USER_PROFILE + "</h3>" +
+                USER_DATA_REQUEST + "<br>" +
+                INPUT_IS_OPTIONAL));
 
         this.createInputFields();
 
@@ -48,7 +49,7 @@ class UserRegistrationInputPanel extends JPanel {
         this.statusContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
         this.add(statusContainer);
 
-        this.createWatchDogUserButton = new JButton("Create new WatchDog user");
+        this.createWatchDogUserButton = new JButton(CREATE_USER_BUTTON_TEXT);
         this.buttonContainer.add(createWatchDogUserButton);
         createWatchDogUserButton.addActionListener(actionEvent -> {
             this.statusContainer.removeAll();
@@ -64,25 +65,20 @@ class UserRegistrationInputPanel extends JPanel {
         JPanel inputContainer = new JPanel(new GridLayout(0, 2));
         this.add(inputContainer);
 
-        this.email = WizardStep.createLinkedLabelTextField("Your e-mail: ", EMAIL_TEXTFIELD_TOOLTIP, 150, inputContainer);
-        this.company = WizardStep.createLinkedLabelTextField("Your Organisation/Company: ", COMPANY_TEXTFIELD_TOOLTIP, 150, inputContainer);
+        this.email = WizardStep.createLinkedLabelTextField(EMAIL_LABEL, EMAIL_TEXTFIELD_TOOLTIP, 150, inputContainer);
+        this.company = WizardStep.createLinkedLabelTextField(COMPANY_LABEL, COMPANY_TEXTFIELD_TOOLTIP, 150, inputContainer);
 
-        inputContainer.add(new JLabel("Your programming experience: "));
+        inputContainer.add(new JLabel(PROGRAMMING_EXPERIENCE_LABEL));
 
         this.programmingExperience = new ComboBox<>();
-        for (String years : new String[]{"N/A", "< 1 year", "1-2 years", "3-6 years", "7-10 years", "> 10 years"}) {
+        for (String years : PROGRAMMING_EXPERIENCE_YEARS) {
             programmingExperience.addItem(years);
         }
         programmingExperience.setSelectedIndex(0);
         inputContainer.add(programmingExperience);
 
-        JLabel operatingSystemLabel = new JLabel("Your operating system: ");
-        operatingSystemLabel.setToolTipText(OPERATING_SYSTEM_TOOLTIP);
-        inputContainer.add(operatingSystemLabel);
-
-        this.operatingSystem = new JLabel(System.getProperty("os.name"));
-        operatingSystem.setToolTipText(OPERATING_SYSTEM_TOOLTIP);
-        inputContainer.add(operatingSystem);
+        inputContainer.add(new JLabel(OPERATING_SYSTEM_LABEL));
+        inputContainer.add(new JLabel(System.getProperty("os.name")));
     }
 
     private boolean registerUser() {
@@ -112,7 +108,7 @@ class UserRegistrationInputPanel extends JPanel {
         buttonContainer.add(Box.createHorizontalStrut(DEFAULT_SPACING));
         buttonContainer.add(new JLabel(USER_CREATION_MESSAGE_SUCCESSFUL));
 
-        statusContainer.add(new JLabel("Your User ID is: "));
+        statusContainer.add(new JLabel(YOUR_USER_ID_LABEL));
 
         JTextField userIdField = new JTextField(userId, ID_LENGTH);
         userIdField.setEditable(false);

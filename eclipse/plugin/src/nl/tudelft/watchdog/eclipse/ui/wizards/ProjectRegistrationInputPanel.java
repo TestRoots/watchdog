@@ -2,7 +2,6 @@ package nl.tudelft.watchdog.eclipse.ui.wizards;
 
 import java.util.function.Consumer;
 
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -21,6 +20,8 @@ import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.ui.wizards.RegistrationStep.YesNoDontknowButtonGroup;
 
 import static nl.tudelft.watchdog.core.ui.wizards.Project.*;
+import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.*;
+import static nl.tudelft.watchdog.eclipse.ui.util.UIUtils.HEADER_FONT;
 
 class ProjectRegistrationInputPanel extends Composite {
 
@@ -45,11 +46,11 @@ class ProjectRegistrationInputPanel extends Composite {
 		this.setLayout(new RowLayout(SWT.VERTICAL));
 
 		Label header = new Label(this, SWT.NONE);
-		header.setText("WatchDog project profile");
-		header.setFont(JFaceResources.getFontRegistry().getBold(""));
+		header.setText(WATCHDOG_PROJECT_PROFILE);
+		header.setFont(HEADER_FONT);
 
-		new Label(this, SWT.NONE).setText("Please fill in the following data to create a WatchDog project for you.");
-		new Label(this, SWT.NONE).setText("The input is optional, but greatly appreciated to improve the quality of our research data.");
+		new Label(this, SWT.NONE).setText(PROJECT_DATA_REQUEST);
+		new Label(this, SWT.NONE).setText(INPUT_IS_OPTIONAL);
 
 		this.createInputFields();
 
@@ -57,7 +58,7 @@ class ProjectRegistrationInputPanel extends Composite {
 		this.buttonContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
 
 		this.createNewUserButton = new Button(this.buttonContainer, SWT.NONE);
-		createNewUserButton.setText("Create new WatchDog project");
+		createNewUserButton.setText(CREATE_PROJECT_BUTTON_TEXT);
 
 		this.statusContainer = new Composite(this, SWT.NONE);
 		this.statusContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
@@ -84,11 +85,11 @@ class ProjectRegistrationInputPanel extends Composite {
 		Composite inputContainer = new Composite(this, SWT.NONE);
 		inputContainer.setLayout(new GridLayout(2, false));
 
-		this.projectName = RegistrationStep.createLinkedLabelTextField("Project name: ", PROJECT_NAME_TEXTFIELD_TOOLTIP, inputContainer);
-		this.projectWebsite = RegistrationStep.createLinkedLabelTextField("Project website: ", PROJECT_WEBSITE_TEXTFIELD_TOOLTIP, inputContainer);
+		this.projectName = RegistrationStep.createLinkedLabelTextField(PROJECT_NAME_LABEL, PROJECT_NAME_TEXTFIELD_TOOLTIP, inputContainer);
+		this.projectWebsite = RegistrationStep.createLinkedLabelTextField(PROJECT_WEBSITE_LABEL, PROJECT_WEBSITE_TEXTFIELD_TOOLTIP, inputContainer);
 		this.ciUsage = RegistrationStep.createYesNoDontKnowQuestionWithLabel(CI_USAGE_LABEL_TEXT, inputContainer);
 
-		new Label(inputContainer, SWT.NONE).setText("Does your project use static analysis tools to...");
+		new Label(inputContainer, SWT.NONE).setText(DO_YOU_USE_STATIC_ANALYSIS);
 		// Filler to complete this grid row
 		new Composite(inputContainer, SWT.NONE);
 
@@ -129,7 +130,7 @@ class ProjectRegistrationInputPanel extends Composite {
 		new Label(this.buttonContainer, SWT.NONE).setText(PROJECT_CREATION_MESSAGE_SUCCESSFUL);
 		this.createNewUserButton.setEnabled(false);
 
-		new Label(this.statusContainer, SWT.NONE).setText("Your Project ID is: ");
+		new Label(this.statusContainer, SWT.NONE).setText(YOUR_PROJECT_ID_LABEL);
 		Text projectIdField = new Text(this.statusContainer, SWT.NONE);
 		projectIdField.setText(projectId);
 		projectIdField.setEditable(false);

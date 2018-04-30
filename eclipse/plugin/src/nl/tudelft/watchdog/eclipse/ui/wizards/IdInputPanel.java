@@ -19,6 +19,7 @@ import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.ui.util.UIUtils;
 
+import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.*;
 import static nl.tudelft.watchdog.eclipse.ui.wizards.UserRegistrationPage.ID_LENGTH;
 
 import java.util.function.Consumer;
@@ -29,9 +30,6 @@ import java.util.function.Consumer;
  */
 abstract class IdInputPanel extends Composite {
 
-	private static final String VERIFICATION_BUTTON_TEXT = "Verify";
-	private static final String VERIFICATION_SUCCESSFUL_MESSAGE = "ID verification successful!";
-	private static final String VERIFICATION_MESSAGE_FAILURE = "ID verification failed.";
 	private Text textfield;
 	private Composite statusContainer;
 

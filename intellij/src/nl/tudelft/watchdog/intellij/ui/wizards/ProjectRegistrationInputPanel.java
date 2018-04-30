@@ -10,6 +10,7 @@ import java.awt.*;
 import java.util.function.Consumer;
 
 import static nl.tudelft.watchdog.core.ui.wizards.Project.*;
+import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.*;
 import static nl.tudelft.watchdog.intellij.ui.wizards.UserRegistrationStep.ID_LENGTH;
 import static nl.tudelft.watchdog.intellij.ui.wizards.WizardStep.DEFAULT_SPACING;
 
@@ -36,9 +37,9 @@ class ProjectRegistrationInputPanel extends JPanel {
         JPanel introductionContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
         this.add(introductionContainer);
         introductionContainer.add(new JLabel("<html>" +
-                "<h3>WatchDog project profile</h3>" +
-                "Please fill in the following data to create a WatchDog project for you.<br>" +
-                "The input is optional, but greatly appreciated to improve the quality of our research data.<br>"));
+                "<h3>" + WATCHDOG_PROJECT_PROFILE + "</h3>" +
+                PROJECT_DATA_REQUEST + "<br>" +
+                INPUT_IS_OPTIONAL));
 
         this.createInputFields();
 
@@ -49,7 +50,7 @@ class ProjectRegistrationInputPanel extends JPanel {
         this.statusContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
         this.add(statusContainer);
 
-        JButton button = new JButton("Create new WatchDog project");
+        JButton button = new JButton(CREATE_PROJECT_BUTTON_TEXT);
         this.buttonContainer.add(button);
         button.addActionListener(actionEvent -> {
             this.statusContainer.removeAll();
@@ -65,11 +66,11 @@ class ProjectRegistrationInputPanel extends JPanel {
         JPanel inputContainer = new JPanel(new GridLayout(0, 2));
         this.add(inputContainer);
 
-        this.projectName = WizardStep.createLinkedLabelTextField("Project name: ", PROJECT_NAME_TEXTFIELD_TOOLTIP, 150, inputContainer);
-        this.projectWebsite = WizardStep.createLinkedLabelTextField("Project website: ", PROJECT_WEBSITE_TEXTFIELD_TOOLTIP, 150, inputContainer);
+        this.projectName = WizardStep.createLinkedLabelTextField(PROJECT_NAME_LABEL, PROJECT_NAME_TEXTFIELD_TOOLTIP, 150, inputContainer);
+        this.projectWebsite = WizardStep.createLinkedLabelTextField(PROJECT_WEBSITE_LABEL, PROJECT_WEBSITE_TEXTFIELD_TOOLTIP, 150, inputContainer);
         this.ciUsage = WizardStep.createYesNoDontKnowQuestionWithLabel(CI_USAGE_LABEL_TEXT, inputContainer);
 
-        inputContainer.add(new JLabel("Does your project use static analysis tools to..."));
+        inputContainer.add(new JLabel(DO_YOU_USE_STATIC_ANALYSIS));
         inputContainer.add(Box.createGlue());
 
         this.codeStyleUsage = WizardStep.createYesNoDontKnowQuestionWithLabel(CODE_STYLE_USAGE_LABEL_TEXT, inputContainer);
@@ -110,7 +111,7 @@ class ProjectRegistrationInputPanel extends JPanel {
         buttonContainer.add(Box.createHorizontalStrut(DEFAULT_SPACING));
         buttonContainer.add(new JLabel(PROJECT_CREATION_MESSAGE_SUCCESSFUL));
 
-        statusContainer.add(new JLabel("Your Project ID is: "));
+        statusContainer.add(new JLabel(YOUR_PROJECT_ID_LABEL));
 
         JTextField userIdField = new JTextField(projectId, ID_LENGTH);
         userIdField.setEditable(false);

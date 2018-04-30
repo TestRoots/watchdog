@@ -12,29 +12,31 @@ import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
+import static nl.tudelft.watchdog.core.ui.wizards.Project.*;
+
 class ProjectRegistrationPage extends RegistrationStep {
 
 	protected ProjectRegistrationPage(WizardDialog dialog) {
-		super("Project registration", dialog);
+		super(PROJECT_REGISTRATION_TITLE, dialog);
 	}
 
 	@Override
 	void createUserRegistrationIntroduction(Composite container) {
 		Label header = new Label(container, SWT.NONE);
-		header.setText("Now we have to create a new WatchDog project for this workspace");
+		header.setText(BEFORE_PROJECT_REGISTRATION);
 	}
 
 	@Override
 	BiConsumer<Composite, Consumer<Boolean>> getIdInputPanel() {
 		return (container, callback) -> new IdInputPanel(container, callback) {
             @Override
-            String getIdLabelText() {
-                return "The WatchDog project ID: ";
-            }
-
-            @Override
             String getIdTooltipText() {
-                return "The WatchDog project ID associated with this workspace";
+                return PROJECT_ID_TOOLTIP;
+            }
+            
+            @Override
+            String getIdLabelText() {
+                return PROJECT_ID_LABEL;
             }
 
             @Override
@@ -57,7 +59,7 @@ class ProjectRegistrationPage extends RegistrationStep {
 
 	@Override
 	String getRegistrationType() {
-		return "project";
+		return PROJECT;
 	}
 
 }

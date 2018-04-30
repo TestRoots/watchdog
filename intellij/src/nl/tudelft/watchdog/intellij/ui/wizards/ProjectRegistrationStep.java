@@ -8,6 +8,8 @@ import javax.swing.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import static nl.tudelft.watchdog.core.ui.wizards.Project.*;
+
 class ProjectRegistrationStep extends RegistrationStep {
     ProjectRegistrationStep(RegistrationWizard registrationWorkflowWizard) {
         super(registrationWorkflowWizard);
@@ -16,13 +18,13 @@ class ProjectRegistrationStep extends RegistrationStep {
     @Override
     String obtainHeaderText() {
         return "<html>" +
-                "<h1>Project registration</h1>" +
-                "Now we have to create a new WatchDog project for this workspace<br>";
+                "<h1>" + PROJECT_REGISTRATION_TITLE + "</h1>" +
+                BEFORE_PROJECT_REGISTRATION;
     }
 
     @Override
     String getRegistrationType() {
-        return "project";
+        return PROJECT;
     }
 
     @Override
@@ -30,12 +32,12 @@ class ProjectRegistrationStep extends RegistrationStep {
         return callback -> new IdInputPanel(callback) {
             @Override
             String getIdLabelText() {
-                return "The WatchDog project ID: ";
+                return PROJECT_ID_LABEL;
             }
 
             @Override
             String getIdTooltipText() {
-                return "The WatchDog project ID associated with this workspace";
+                return PROJECT_ID_TOOLTIP;
             }
 
             @Override

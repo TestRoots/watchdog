@@ -11,6 +11,7 @@ import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.util.function.Consumer;
 
+import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.*;
 import static nl.tudelft.watchdog.intellij.ui.wizards.UserRegistrationStep.ID_LENGTH;
 import static nl.tudelft.watchdog.intellij.ui.wizards.WizardStep.DEFAULT_SPACING;
 
@@ -19,10 +20,6 @@ import static nl.tudelft.watchdog.intellij.ui.wizards.WizardStep.DEFAULT_SPACING
  * verify that the id exists after filling in.
  */
 abstract class IdInputPanel extends JPanel {
-
-    private static final String VERIFICATION_BUTTON_TEXT = "Verify";
-    private static final String VERIFICATION_SUCCESSFUL_MESSAGE = "ID verification successful!";
-    private static final String VERIFICATION_MESSAGE_FAILURE = "ID verification failed.";
 
     private final JTextField textfield;
     private final JPanel statusContainer;

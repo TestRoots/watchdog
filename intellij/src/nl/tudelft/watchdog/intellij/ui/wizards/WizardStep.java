@@ -10,6 +10,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.*;
+
 public abstract class WizardStep implements Step {
 
     static final int DEFAULT_SPACING = 5;
@@ -90,8 +92,8 @@ public abstract class WizardStep implements Step {
     static Component createErrorMessageLabel(Exception exception) {
         return new JLabel("<html>" +
                 exception.getMessage() +
-                "<br>Are you connected to the internet, and is port 80 open?" +
-                "<br>Please contact us via <a href=\"https://www.testroots.org\">our website</a>. We can help troubleshoot the issue!");
+                "<br>" + CONNECTED_TO_INTERNET +
+                "<br>" + PLEASE_CONTACT_US + Links.OUR_WEBSITE.toHTMLURL() + ". " + HELP_TROUBLESHOOT);
     }
 
     static ButtonGroup createYesNoDontKnowQuestionWithLabel(String labelText, Container container) {

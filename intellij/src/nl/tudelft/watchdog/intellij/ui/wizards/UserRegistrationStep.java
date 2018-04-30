@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import static nl.tudelft.watchdog.core.ui.wizards.User.*;
+
 class UserRegistrationStep extends RegistrationStep {
 
     /**
@@ -21,13 +23,13 @@ class UserRegistrationStep extends RegistrationStep {
     @Override
     String obtainHeaderText() {
         return "<html>" +
-                "<h1>User registration</h1>" +
-                "Before we start, we first have to have a WatchDog user registration<br>";
+                "<h1>" + USER_REGISTRATION_TITLE + "</h1>" +
+                BEFORE_USER_REGISTRATION;
     }
 
     @Override
     String getRegistrationType() {
-        return "user";
+        return USER;
     }
 
     @Override
@@ -35,12 +37,12 @@ class UserRegistrationStep extends RegistrationStep {
         return callback -> new IdInputPanel(callback) {
             @Override
             String getIdLabelText() {
-                return "Your WatchDog User-ID: ";
+                return YOUR_USER_ID_LABEL;
             }
 
             @Override
             String getIdTooltipText() {
-                return "The User-ID we sent you upon your first WatchDog registration";
+                return USER_ID_TOOLTIP;
             }
 
             @Override

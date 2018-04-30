@@ -14,7 +14,7 @@ import nl.tudelft.watchdog.eclipse.ui.handlers.StartupHandler;
  */
 public class RegistrationWorkflowWizard extends Wizard implements RegistrationWizard {
 	
-	private static final String IMAGE_LOCATION = "resources/images/user.png";
+	private static final String IMAGE_LOCATION = "resources/images/tudelft_with_frame.png";
 	private WizardDialog dialog;
 
 	public RegistrationWorkflowWizard() {

@@ -7,6 +7,8 @@ import nl.tudelft.watchdog.eclipse.Activator;
 import nl.tudelft.watchdog.eclipse.ui.handlers.RegistrationWizard;
 import nl.tudelft.watchdog.eclipse.ui.handlers.StartupHandler;
 
+import static nl.tudelft.watchdog.core.ui.wizards.Project.*;
+
 /**
  * Wizard that asks users for registering a newly imported project with WatchDog.
  */
@@ -17,7 +19,7 @@ public class NewProjectWizard extends Wizard implements RegistrationWizard {
 
 	public NewProjectWizard() {
 		this.setHelpAvailable(false);
-		this.setWindowTitle("Project registration");
+		this.setWindowTitle(PROJECT_REGISTRATION_TITLE);
 		this.setDefaultPageImageDescriptor(Activator.imageDescriptorFromPlugin(Activator.PLUGIN_ID, IMAGE_LOCATION));
 	}
 

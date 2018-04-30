@@ -4,6 +4,7 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.openapi.ui.ComboBox;
 
+import nl.tudelft.watchdog.core.ui.wizards.WizardStrings;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
 import java.awt.*;
@@ -128,6 +129,13 @@ public class UIUtils {
 
         label.addHyperlinkListener(e -> BrowserUtil.open(url));
         parent.add(label);
+    }
+
+    /**
+     * Creates a clickable label with URL link and the given description text.
+     */
+    public static void createHyperLinkLabel(Container parent, WizardStrings.Links link) {
+        createHyperLinkLabel(parent, link.text  + ".", link.url);
     }
 
     /**

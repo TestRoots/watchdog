@@ -10,6 +10,8 @@ import org.eclipse.swt.widgets.Label;
 import nl.tudelft.watchdog.core.logic.network.NetworkUtils;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 
+import static nl.tudelft.watchdog.core.ui.wizards.User.*;
+
 class UserRegistrationPage extends RegistrationStep {
 
 	/**
@@ -18,13 +20,13 @@ class UserRegistrationPage extends RegistrationStep {
 	static final int ID_LENGTH = 40;
 
 	protected UserRegistrationPage(WizardDialog dialog) {
-		super("User registration", dialog);
+		super(USER_REGISTRATION_TITLE, dialog);
 	}
 
 	@Override
 	void createUserRegistrationIntroduction(Composite container) {
 		Label header = new Label(container, SWT.NONE);
-		header.setText("Before we start, we first have to have a WatchDog user registration");
+		header.setText(BEFORE_USER_REGISTRATION);
 	}
 
 	@Override
@@ -33,12 +35,12 @@ class UserRegistrationPage extends RegistrationStep {
 
 			@Override
 			String getIdTooltipText() {
-				return "The User-ID we sent you upon your first WatchDog registration";
+				return USER_ID_TOOLTIP;
 			}
 
 			@Override
 			String getIdLabelText() {
-				return "Your WatchDog User-ID: ";
+				return USER_ID_LABEL;
 			}
 
 			@Override
@@ -61,7 +63,7 @@ class UserRegistrationPage extends RegistrationStep {
 
 	@Override
 	String getRegistrationType() {
-		return "user";
+		return USER;
 	}
 
 }

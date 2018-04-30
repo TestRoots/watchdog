@@ -2,7 +2,6 @@ package nl.tudelft.watchdog.eclipse.ui.wizards;
 
 import java.util.function.Consumer;
 
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -22,6 +21,8 @@ import nl.tudelft.watchdog.core.ui.wizards.User;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 
 import static nl.tudelft.watchdog.core.ui.wizards.User.*;
+import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.*;
+import static nl.tudelft.watchdog.eclipse.ui.util.UIUtils.HEADER_FONT;
 
 class UserRegistrationInputPanel extends Composite {
 
@@ -42,11 +43,11 @@ class UserRegistrationInputPanel extends Composite {
 		this.setLayout(new RowLayout(SWT.VERTICAL));
 
 		Label header = new Label(this, SWT.NONE);
-		header.setText("WatchDog user profile");
-		header.setFont(JFaceResources.getFontRegistry().getBold(""));
+		header.setText(WATCHDOG_USER_PROFILE);
+		header.setFont(HEADER_FONT);
 
-		new Label(this, SWT.NONE).setText("Please fill in the following data to create a WatchDog user account for you.");
-		new Label(this, SWT.NONE).setText("The input is optional, but greatly appreciated to improve the quality of our research data.");
+		new Label(this, SWT.NONE).setText(USER_DATA_REQUEST);
+		new Label(this, SWT.NONE).setText(INPUT_IS_OPTIONAL);
 
 		this.createInputFields();
 
@@ -54,7 +55,7 @@ class UserRegistrationInputPanel extends Composite {
 		this.buttonContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
 
 		Button createNewUserButton = new Button(this.buttonContainer, SWT.NONE);
-		createNewUserButton.setText("Create new WatchDog user");
+		createNewUserButton.setText(CREATE_USER_BUTTON_TEXT);
 
 		this.statusContainer = new Composite(this, SWT.NONE);
 		this.statusContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
@@ -81,20 +82,18 @@ class UserRegistrationInputPanel extends Composite {
 		Composite inputContainer = new Composite(this, SWT.NONE);
 		inputContainer.setLayout(new GridLayout(2, true));
 
-		this.email = RegistrationStep.createLinkedLabelTextField("Your e-mail: ", EMAIL_TEXTFIELD_TOOLTIP, inputContainer);
-		this.company = RegistrationStep.createLinkedLabelTextField("Your Organisation/Company: ", COMPANY_TEXTFIELD_TOOLTIP, inputContainer);
+		this.email = RegistrationStep.createLinkedLabelTextField(EMAIL_LABEL, EMAIL_TEXTFIELD_TOOLTIP, inputContainer);
+		this.company = RegistrationStep.createLinkedLabelTextField(COMPANY_LABEL, COMPANY_TEXTFIELD_TOOLTIP, inputContainer);
 
-		new Label(inputContainer, SWT.NONE).setText("Your programming experience: ");
+		new Label(inputContainer, SWT.NONE).setText(PROGRAMMING_EXPERIENCE_LABEL);
 
 		this.programmingExperience = new Combo(inputContainer, SWT.NONE);
-		this.programmingExperience.setItems("N/A", "< 1 year", "1-2 years", "3-6 years", "7-10 years", "> 10 years");
+		this.programmingExperience.setItems(PROGRAMMING_EXPERIENCE_YEARS);
 		this.programmingExperience.select(0);
 		this.programmingExperience.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
-
-		this.operatingSystem = RegistrationStep.createLinkedLabelTextField("Your operating system: ", COMPANY_TEXTFIELD_TOOLTIP, inputContainer);
-		this.operatingSystem.setText(System.getProperty("os.name"));
-		this.operatingSystem.setEditable(false);
-		this.operatingSystem.setEnabled(false);
+		
+		new Label(inputContainer, SWT.NONE).setText(OPERATING_SYSTEM_LABEL);
+		new Label(inputContainer, SWT.NONE).setText(System.getProperty("os.name"));
 	}
 
 	private boolean registerUser() {
@@ -122,7 +121,7 @@ class UserRegistrationInputPanel extends Composite {
 
 		new Label(this.buttonContainer, SWT.NONE).setText(USER_CREATION_MESSAGE_SUCCESSFUL);
 
-		new Label(this.statusContainer, SWT.NONE).setText("Your User ID is: ");
+		new Label(this.statusContainer, SWT.NONE).setText(YOUR_USER_ID_LABEL);
 		Text userIdField = new Text(this.statusContainer, SWT.NONE);
 		userIdField.setText(userId);
 		userIdField.setEditable(false);
