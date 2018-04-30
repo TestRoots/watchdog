@@ -80,7 +80,7 @@ class ProjectRegistrationInputPanel extends Composite {
 			}
 		});
 	}
-	
+
 	private void createInputFields() {
 		Composite inputContainer = new Composite(this, SWT.NONE);
 		inputContainer.setLayout(new GridLayout(2, false));

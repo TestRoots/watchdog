@@ -27,7 +27,7 @@ public class Project extends WatchDogItem {
 	public static final String BEFORE_PROJECT_REGISTRATION = "Now we have to create a new WatchDog project for this workspace.";
 	public static final String PROJECT_ID_LABEL = "The WatchDog project ID: ";
 	public static final String PROJECT_ID_TOOLTIP = "The WatchDog project ID associated with this workspace.";
-	
+
 	public static final String PROJECT_DATA_REQUEST = "Please fill in the following data to create a WatchDog project for you.";
 	public static final String WATCHDOG_PROJECT_PROFILE = "WatchDog project profile";
 	public static final String DO_YOU_USE_STATIC_ANALYSIS = "Does your project use static analysis tools to...";

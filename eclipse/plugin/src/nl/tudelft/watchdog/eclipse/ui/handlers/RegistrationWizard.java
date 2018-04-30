@@ -10,5 +10,5 @@ import org.eclipse.jface.wizard.WizardDialog;
 public interface RegistrationWizard extends IWizard {
 
 	void setDialog(WizardDialog wizardDialog);
-	
+
 }

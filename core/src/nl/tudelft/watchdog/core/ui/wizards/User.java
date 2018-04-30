@@ -24,7 +24,7 @@ public class User extends WatchDogItem {
 	public static final String BEFORE_USER_REGISTRATION = "Before we start, we first have to have a WatchDog user registration.";
 	public static final String USER_ID_TOOLTIP = "The User-ID we sent you upon your first WatchDog registration.";
 	public static final String USER_ID_LABEL = "Your WatchDog User-ID: ";
-	
+
 	public static final String WATCHDOG_USER_PROFILE = "WatchDog user profile";
 	public static final String USER_DATA_REQUEST = "Please fill in the following data to create a WatchDog user account for you.";
 	public static final String CREATE_USER_BUTTON_TEXT = "Create new WatchDog user";

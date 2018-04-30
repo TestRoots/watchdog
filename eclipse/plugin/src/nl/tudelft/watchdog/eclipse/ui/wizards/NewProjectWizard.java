@@ -28,7 +28,7 @@ public class NewProjectWizard extends Wizard implements RegistrationWizard {
 		StartupHandler.startWatchDog();
 		return true;
 	}
-	
+
 	@Override
 	public void addPages() {
 		this.addPage(new ProjectRegistrationPage(this.dialog));

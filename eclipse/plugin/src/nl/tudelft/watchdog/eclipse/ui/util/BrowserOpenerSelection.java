@@ -11,10 +11,10 @@ import org.eclipse.ui.PlatformUI;
 
 /** Opens the system browser if selected. */
 public class BrowserOpenerSelection extends SelectionAdapter {
-	
+
 	private static final String DIALOG_TITLE = "Browser not supported";
 	private static final String DIALOG_MESSAGE = "WatchDog could not open this url in a browser. Please open the following url manually: ";
-	
+
 	@Override
 	public void widgetSelected(SelectionEvent event) {
 		try {

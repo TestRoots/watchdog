@@ -13,7 +13,7 @@ import nl.tudelft.watchdog.eclipse.ui.handlers.StartupHandler;
  * to create a WatchDog user and project.
  */
 public class RegistrationWorkflowWizard extends Wizard implements RegistrationWizard {
-	
+
 	private static final String IMAGE_LOCATION = "resources/images/tudelft_with_frame.png";
 	private WizardDialog dialog;
 
@@ -28,7 +28,7 @@ public class RegistrationWorkflowWizard extends Wizard implements RegistrationWi
 		StartupHandler.startWatchDog();
 		return true;
 	}
-	
+
 	@Override
 	public void addPages() {
 		this.addPage(new UserWelcomeScreen());

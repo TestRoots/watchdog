@@ -33,7 +33,7 @@ class ProjectRegistrationPage extends RegistrationStep {
             String getIdTooltipText() {
                 return PROJECT_ID_TOOLTIP;
             }
-            
+
             @Override
             String getIdLabelText() {
                 return PROJECT_ID_LABEL;

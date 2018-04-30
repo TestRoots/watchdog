@@ -77,7 +77,7 @@ class UserRegistrationInputPanel extends Composite {
 			}
 		});
 	}
-	
+
 	private void createInputFields() {
 		Composite inputContainer = new Composite(this, SWT.NONE);
 		inputContainer.setLayout(new GridLayout(2, true));
@@ -91,7 +91,7 @@ class UserRegistrationInputPanel extends Composite {
 		this.programmingExperience.setItems(PROGRAMMING_EXPERIENCE_YEARS);
 		this.programmingExperience.select(0);
 		this.programmingExperience.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
-		
+
 		new Label(inputContainer, SWT.NONE).setText(OPERATING_SYSTEM_LABEL);
 		new Label(inputContainer, SWT.NONE).setText(System.getProperty("os.name"));
 	}
