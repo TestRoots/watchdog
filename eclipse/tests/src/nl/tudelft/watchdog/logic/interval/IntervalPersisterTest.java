@@ -20,14 +20,25 @@ import nl.tudelft.watchdog.core.logic.storage.WatchDogItem;
 public class IntervalPersisterTest extends IntervalPersisterTestBase {
 
 	@BeforeClass
-	public static void setUpBeforeClass() {
+	public static void setup_before_class() {
 		databaseName = "BaseTest";
 		setUpSuperClass();
 	}
 
 	@Test
-	public void test1Interaction100() {
+	public void hundred_interactions() {
 		testInteraction(100);
+		assertEquals(100, persister.getSize());
+
+		Iterator<WatchDogItem> readIntervals = persister.readItems()
+				.iterator();
+		ArrayList<WatchDogItem> firstInterval = new ArrayList<WatchDogItem>(
+				Arrays.asList(readIntervals.next()));
+		persister.removeItems(firstInterval);
+		assertEquals(99, persister.getSize());
+
+		persister.clearAndResetMap();
+		assertEquals(0, persister.getSize());
 	}
 
 	private void testInteraction(int items) {
@@ -59,7 +70,7 @@ public class IntervalPersisterTest extends IntervalPersisterTestBase {
 		return intervals;
 	}
 
-	public static IntervalBase createRandomInterval() {
+	static IntervalBase createRandomInterval() {
 		IntervalBase interval = new IDEOpenInterval(new Date());
 		interval.setSessionSeed("444");
 		interval.setStartTime(new Date(interval.getStart().getTime()
@@ -68,27 +79,4 @@ public class IntervalPersisterTest extends IntervalPersisterTestBase {
 				+ (new Random()).nextInt(100000)));
 		return interval;
 	}
-
-	@Test
-	public void test2DatabasePersisted() {
-		assertEquals(100, persister.getSize());
-	}
-
-	@Test
-	public void test3RemoveFirstInterval() {
-		assertEquals(100, persister.getSize());
-		Iterator<WatchDogItem> readIntervals = persister.readItems()
-				.iterator();
-		ArrayList<WatchDogItem> firstInterval = new ArrayList<WatchDogItem>(
-				Arrays.asList(readIntervals.next()));
-		persister.removeItems(firstInterval);
-		assertEquals(99, persister.getSize());
-	}
-
-	@Test
-	public void test4DatabaseCleared() {
-		persister.clearAndResetMap();
-		assertEquals(0, persister.getSize());
-	}
-
 }

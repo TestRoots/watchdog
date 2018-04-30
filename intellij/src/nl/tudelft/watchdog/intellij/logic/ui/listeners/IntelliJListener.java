@@ -22,7 +22,7 @@ import nl.tudelft.watchdog.intellij.logic.event.listeners.DebugEventListener;
  * listeners. It cleans up all its child listeners in {@link #dispose()}.
  */
 public class IntelliJListener implements Disposable {
-    
+
     /** The editorObservable */
     private TrackingEventManager trackingEventManager;
 

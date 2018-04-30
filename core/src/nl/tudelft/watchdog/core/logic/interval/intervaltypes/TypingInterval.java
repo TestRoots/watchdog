@@ -15,8 +15,8 @@ import nl.tudelft.watchdog.core.logic.network.JsonifiedLong;
  * {@link IntervalType#TYPING} activity.
  */
 public class TypingInterval extends EditorIntervalBase {
-	
-	/** 
+
+	/**
 	 * The maximum product of the lengths of the starting and ending
 	 * document for which the Levenshtein distance will be calculated.
 	 */
@@ -41,15 +41,15 @@ public class TypingInterval extends EditorIntervalBase {
 					int startLength = startingContent.length();
 					int endLength = endingContent.length();
 					charLengthDiff = Math.abs(startLength - endLength);
-					
+
 					long lengthProduct = startLength*endLength;
 					if(startLength == 0) {
 						lengthProduct = endLength;
-					} 
+					}
 					else if (endLength == 0) {
 						lengthProduct = startLength;
 					}
-					
+
 					// Only calculate Levenshtein when its impact on the usability is acceptable
 					if(lengthProduct <= LENGTH_PRODUCT_THRESHOLD) {
 						editDistance = new JsonifiedLong(
@@ -76,14 +76,14 @@ public class TypingInterval extends EditorIntervalBase {
 	 */
 	@SerializedName("diff")
 	JsonifiedLong editDistance;
-	
+
 	/**
 	 * The number of characters that have been added, removed or modified during
 	 * this interval.
-	 */	
+	 */
 	@SerializedName("modCountDiff")
 	private int modCount;
-	
+
 	/**
 	 * The difference in the number of characters between the starting and ending
 	 * document.
@@ -106,7 +106,7 @@ public class TypingInterval extends EditorIntervalBase {
 	public void setEndingDocument(Document endingDocument) {
 		this.endingDocument = endingDocument;
 	}
-	
+
 	/** Increases the number of characters modified in this interval. */
 	public void increaseModCountWith(int modifiedChars) {
 		if(modifiedChars > 0) {

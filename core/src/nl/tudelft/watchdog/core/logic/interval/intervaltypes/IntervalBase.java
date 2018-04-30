@@ -127,7 +127,7 @@ abstract public class IntervalBase extends WatchDogItem implements Serializable,
 	 * produce the result of this method. This sequence of step is required to
 	 * ensure that intervals are not lost when two or more intervals have the
 	 * same end date.
-	 * 
+	 *
 	 * If the item to compare to isn't an instance of IntervalBase, the class
 	 * name is used to determine the result of the comparison.
 	 */

@@ -30,19 +30,19 @@ public class InactivityNotifierTest {
 	}
 
 	@Test
-	public void testTimerNotStartedWhenCreated() {
+	public void timer_not_wstarted_when_created() {
 		Mockito.verifyZeroInteractions(watchdogEventTypeMock);
 		Mockito.verifyNoMoreInteractions(watchdogEventTypeMock);
 	}
 
 	@Test
-	public void testTimerExecutedAfterOneTrigger() {
+	public void timer_executed_after_one_trigger() {
 		inactivityNotifier.trigger();
 		Mockito.verify(watchdogEventTypeMock, Mockito.timeout(TIMEOUT * 2)).process(Mockito.any());
 	}
 
 	@Test
-	public void testTimerExecutedTwice() {
+	public void timer_executed_twice() {
 		inactivityNotifier.trigger();
 		Mockito.verify(watchdogEventTypeMock, Mockito.timeout(TIMEOUT * 2)).process(Mockito.any());
 		inactivityNotifier.trigger();
@@ -51,7 +51,7 @@ public class InactivityNotifierTest {
 	}
 
 	@Test
-	public void testTimerNotExecutedTooEarly() {
+	public void timer_not_executed_too_early() {
 		inactivityNotifier.trigger();
 		inactivityNotifier.trigger();
 		Mockito.verify(watchdogEventTypeMock, Mockito.timeout(TIMEOUT * 2)).process(Mockito.any());
@@ -59,7 +59,7 @@ public class InactivityNotifierTest {
 	}
 
 	@Test
-	public void testTimerStoppedAfterCancel() {
+	public void timer_stopped_after_cancel() {
 		inactivityNotifier.trigger();
 		Date cancelDate = new Date();
 		inactivityNotifier.cancelTimer(cancelDate);
@@ -68,7 +68,7 @@ public class InactivityNotifierTest {
 	}
 
 	@Test
-	public void testTimerExecutedRegularly() {
+	public void timer_executed_in_regular_interval() {
 		for (int i = 0; i < 5; i++) {
 			inactivityNotifier.trigger();
 			WatchDogUtils.sleep(HALF_TIMEOUT);

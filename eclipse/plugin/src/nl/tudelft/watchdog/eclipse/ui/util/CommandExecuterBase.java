@@ -47,7 +47,7 @@ public abstract class CommandExecuterBase implements Runnable {
 		if (window == null) {
 			return null;
 		}
-		return (ICommandService) window.getService(ICommandService.class);
+		return window.getService(ICommandService.class);
 	}
 
 	/** Refreshes the given command. */

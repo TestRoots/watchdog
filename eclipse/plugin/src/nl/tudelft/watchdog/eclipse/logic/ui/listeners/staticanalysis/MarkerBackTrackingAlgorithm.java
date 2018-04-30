@@ -23,7 +23,7 @@ import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.Warning;
  */
 class MarkerBackTrackingAlgorithm {
 
-    private final List<MarkerHolder> oldMarkers;
+	private final List<MarkerHolder> oldMarkers;
     private final List<MarkerHolder> currentMarkers;
     private final int[][] memoization;
     private final int oldSize;

@@ -20,8 +20,8 @@ import nl.tudelft.watchdog.core.util.WatchDogLogger;
 @SuppressWarnings("restriction")
 public class EclipseMarkupModelListener extends CoreMarkupModelListener implements IResourceChangeListener {
 
-    static final String CHECKSTYLE_MARKER_ID = "net.sf.eclipsecs.core.CheckstyleMarker";
-    
+	static final String CHECKSTYLE_MARKER_ID = "net.sf.eclipsecs.core.CheckstyleMarker";
+
     static {
         HashtableOfInt hashTable = DefaultProblemFactory.loadMessageTemplates(Locale.getDefault());
 

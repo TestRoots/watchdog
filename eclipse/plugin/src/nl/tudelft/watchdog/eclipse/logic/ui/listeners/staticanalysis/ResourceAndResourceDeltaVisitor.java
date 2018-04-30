@@ -29,7 +29,7 @@ import nl.tudelft.watchdog.eclipse.logic.document.DocumentCreator;
  * and the new list state obtained from the resource.
  */
 public class ResourceAndResourceDeltaVisitor implements IResourceDeltaVisitor, IResourceVisitor {
-	
+
 	private final TrackingEventManager trackingEventManager;
 	private Map<IPath, List<MarkerHolder>> currentFileMarkers;
 	private final boolean shouldCreateSnapshot;
@@ -67,7 +67,7 @@ public class ResourceAndResourceDeltaVisitor implements IResourceDeltaVisitor, I
      * the diffing algorithm.
      */
     private boolean visit(IResource resource, boolean shouldComputeDiff) throws CoreException {
-        if (!resource.exists()) {
+    	if (!resource.exists()) {
             return false;
         }
 
@@ -84,19 +84,19 @@ public class ResourceAndResourceDeltaVisitor implements IResourceDeltaVisitor, I
             if (shouldComputeDiff && oldMarkers == null) {
                 oldMarkers = Collections.emptyList();
             }
-            
+
             Document document = DocumentCreator.createDocument(file.getName(), file).prepareDocument();
-            
+
             if (this.shouldCreateSnapshot) {
             	createWarningSnapshotForMarkers(currentMarkers, document);
             }
 
             if (oldMarkers != null) {
                 MarkerBackTrackingAlgorithm diffingAlgorithm = new MarkerBackTrackingAlgorithm(oldMarkers, currentMarkers);
-                
+
                 diffingAlgorithm.computeMemoizationTable()
                 				.traverseMemoizationTable();
-                
+
                 CoreMarkupModelListener.addCreatedWarnings(this.trackingEventManager, diffingAlgorithm.createdWarningTypes.stream().map(this::createWarning), document);
                 CoreMarkupModelListener.addRemovedWarnings(this.trackingEventManager, diffingAlgorithm.removedWarningTypes.stream().map(this::createWarning), document);
             }
@@ -106,7 +106,7 @@ public class ResourceAndResourceDeltaVisitor implements IResourceDeltaVisitor, I
 
         return true;
     }
-    
+
     private void createWarningSnapshotForMarkers(List<MarkerHolder> currentMarkers, Document document) {
         List<Warning<String>> warnings = currentMarkers.stream()
                 .map(holder -> new Warning<>(
@@ -118,7 +118,7 @@ public class ResourceAndResourceDeltaVisitor implements IResourceDeltaVisitor, I
 
         this.trackingEventManager.addEvent(new FileWarningSnapshotEvent(document, warnings));
     }
-    
+
     private Warning<String> createWarning(Warning<String> warning) {
         return new Warning<>(
                 StaticAnalysisMessageClassifier.classify(warning.type),

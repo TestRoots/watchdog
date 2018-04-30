@@ -175,7 +175,7 @@ public class UIUtils {
 
 	/**
 	 * Creates a pair of a linked Label and text input field.
-	 * 
+	 *
 	 * @param labelText
 	 *            The text of the label associated with the input.
 	 * @param toolTip

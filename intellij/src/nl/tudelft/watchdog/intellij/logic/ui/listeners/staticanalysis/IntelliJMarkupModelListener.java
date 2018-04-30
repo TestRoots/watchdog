@@ -211,7 +211,14 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
     }
 
     private int getLineNumberForHighlighter(RangeHighlighterEx warning) {
-        return intellijDocument.getLineNumber(warning.getAffectedAreaStartOffset());
+        try {
+            return intellijDocument.getLineNumber(warning.getAffectedAreaStartOffset());
+            // It could be that IntelliJ already synced the document before generating the
+            // "beforeRemoved" event. Therefore, catch these errors and set to -1 as we have
+            // no clue what the actual line number was.
+        } catch (IndexOutOfBoundsException ignored) {
+            return -1;
+        }
     }
 
     private static Warning<String> classifyWarning(Warning<RangeHighlighterEx> warning) {

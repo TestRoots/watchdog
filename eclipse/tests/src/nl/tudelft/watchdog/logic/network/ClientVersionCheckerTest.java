@@ -8,7 +8,7 @@ import org.junit.Test;
 public class ClientVersionCheckerTest {
 
 	@Test
-	public void test() {
+	public void check_version_format() {
 		String version1 = "1.0.0";
 		assertFalse(ClientVersionChecker.hasMajorOrMinorVersionGap(version1,
 				version1));
