@@ -50,9 +50,7 @@ public class UIUtils {
 	}
 
 	private static Font generateHeaderFont() {
-		FontData fontData = JFaceResources.getFontRegistry().getBold("").getFontData()[0];
-		fontData.setHeight(16);
-		return new Font(Display.getDefault(), fontData);
+		return new Font(Display.getDefault(), "WatchDog Title Font", 16, SWT.BOLD);
 	}
 
 	/** Creates and returns a bold text label. */

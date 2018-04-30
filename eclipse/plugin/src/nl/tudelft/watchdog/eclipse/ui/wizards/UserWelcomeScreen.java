@@ -27,7 +27,9 @@ class UserWelcomeScreen extends WizardPage {
 		container.setLayout(rowLayout);
 
 		this.createTopHeader(container);
+		new Label(container, SWT.NONE);
 		this.createConsentMessage(container);
+		new Label(container, SWT.NONE);
 		this.createProjectLogos(container);
 
 		this.setControl(container);
