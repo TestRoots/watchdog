@@ -30,7 +30,6 @@ class UserRegistrationInputPanel extends Composite {
 	private Text email;
 	private Text company;
 	private Combo programmingExperience;
-	private Text operatingSystem;
 	private Composite statusContainer;
 
 	/**
@@ -101,7 +100,7 @@ class UserRegistrationInputPanel extends Composite {
 		user.email = email.getText();
 		user.organization = company.getText();
 		user.programmingExperience = this.programmingExperience.getItem(this.programmingExperience.getSelectionIndex());
-		user.operatingSystem = this.operatingSystem.getText();
+		user.operatingSystem = System.getProperty("os.name");
 
 		String userId;
 
