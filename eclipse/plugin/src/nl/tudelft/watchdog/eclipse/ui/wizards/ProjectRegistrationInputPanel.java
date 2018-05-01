@@ -18,6 +18,7 @@ import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.core.ui.wizards.Project;
 import nl.tudelft.watchdog.eclipse.ui.preferences.Preferences;
 import nl.tudelft.watchdog.eclipse.ui.wizards.RegistrationStep.YesNoDontknowButtonGroup;
+import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 
 import static nl.tudelft.watchdog.core.ui.wizards.Project.*;
 import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.*;
@@ -124,8 +125,8 @@ class ProjectRegistrationInputPanel extends Composite {
 		}
 
 		Preferences preferences = Preferences.getInstance();
-		preferences.registerProjectId(project.name, projectId);
-		preferences.registerProjectUse(project.name, true);
+		preferences.registerProjectId(WatchDogUtils.getWorkspaceName(), projectId);
+		preferences.registerProjectUse(WatchDogUtils.getWorkspaceName(), true);
 
 		new Label(this.buttonContainer, SWT.NONE).setText(PROJECT_CREATION_MESSAGE_SUCCESSFUL);
 		this.createNewUserButton.setEnabled(false);
