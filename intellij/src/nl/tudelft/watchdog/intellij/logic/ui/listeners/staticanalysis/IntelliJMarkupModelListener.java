@@ -86,13 +86,13 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
         // Therefore, wait for smart mode and only then start listening, to make sure the codeAnalyzer actually did its thing.
         // For more information see https://www.jetbrains.org/intellij/sdk/docs/basics/indexing_and_psi_stubs.html
         DumbServiceImpl.getInstance(project).runWhenSmart(() -> {
-        	// In the case that the analyzer finished after a file was closed just after opening the IDE,
-			// do not try to attach any other listeners. These listeners would fail, as the editor no longer exists.
-        	if (Disposer.isDisposed(disposable)) {
-        		return;
-			}
+            // In the case that the analyzer finished after a file was closed just after opening the IDE,
+            // do not try to attach any other listeners. These listeners would fail, as the editor no longer exists.
+            if (Disposer.isDisposed(disposable)) {
+                return;
+            }
 
-			final DaemonCodeAnalyzerImpl analyzer = (DaemonCodeAnalyzerImpl) DaemonCodeAnalyzer.getInstance(project);
+            final DaemonCodeAnalyzerImpl analyzer = (DaemonCodeAnalyzerImpl) DaemonCodeAnalyzer.getInstance(project);
             final MessageBusConnection codeAnalyzerMessageBusConnection = project.getMessageBus().connect(disposable);
             final MessageBusConnection documentMessageBusConnection = project.getMessageBus().connect(disposable);
 
