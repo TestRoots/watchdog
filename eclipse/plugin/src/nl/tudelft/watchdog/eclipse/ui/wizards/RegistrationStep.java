@@ -99,6 +99,13 @@ abstract class RegistrationStep extends WizardPage {
 					RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
 					rowLayout.fill = true;
 					dynamicContent.setLayout(rowLayout);
+					// Make sure to update the shell height, as the new panels could potentially
+					// overflow. In this case, force the minimum height to make sure all elements
+					// are properly visible on the screen.
+					dialog.getShell().setMinimumSize(0, getShellLayoutHeight());
+					dialog.getShell().layout(true, true);
+					dialog.getShell().redraw();
+					dialog.getShell().update();
 
 					compositeConstructor.accept(dynamicContent, (hasValidId) -> {
 						isPageComplete = hasValidId;
@@ -119,6 +126,8 @@ abstract class RegistrationStep extends WizardPage {
 	abstract BiConsumer<Composite, Consumer<Boolean>> getIdInputPanel();
 
 	abstract BiConsumer<Composite, Consumer<Boolean>> getRegistrationPanel();
+
+	abstract int getShellLayoutHeight();
 
 	static void createErrorMessageLabel(Composite container, Exception exception) {
 		new Label(container, SWT.NONE).setText(exception.getMessage());

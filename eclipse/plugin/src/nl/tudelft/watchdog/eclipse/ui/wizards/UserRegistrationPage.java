@@ -66,4 +66,9 @@ class UserRegistrationPage extends RegistrationStep {
 		return USER;
 	}
 
+	@Override
+	int getShellLayoutHeight() {
+		return 500;
+	}
+
 }
