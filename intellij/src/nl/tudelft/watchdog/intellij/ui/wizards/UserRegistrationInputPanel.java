@@ -11,18 +11,14 @@ import java.awt.*;
 import java.util.function.Consumer;
 
 import static nl.tudelft.watchdog.core.ui.wizards.User.*;
-import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.*;
-import static nl.tudelft.watchdog.intellij.ui.wizards.UserRegistrationStep.ID_LENGTH;
+import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.INPUT_IS_OPTIONAL;
 import static nl.tudelft.watchdog.intellij.ui.wizards.WizardStep.DEFAULT_SPACING;
 
-class UserRegistrationInputPanel extends JPanel {
+class UserRegistrationInputPanel extends RegistrationInputPanel {
 
-    private final Container buttonContainer;
-    private final JButton createWatchDogUserButton;
     private JTextField email;
     private JTextField company;
     private JComboBox<String> programmingExperience;
-    private JLabel operatingSystem;
     private Container statusContainer;
 
     /**
@@ -30,7 +26,7 @@ class UserRegistrationInputPanel extends JPanel {
      * @param callback The callback invoked after the user clicked "Create WatchDog User".
      */
     UserRegistrationInputPanel(Consumer<Boolean> callback) {
-        super();
+        super(callback);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JPanel introductionContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
@@ -43,25 +39,10 @@ class UserRegistrationInputPanel extends JPanel {
         this.createInputFields();
 
         this.add(Box.createVerticalStrut(DEFAULT_SPACING));
-        this.buttonContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
-        this.add(buttonContainer);
-
-        this.statusContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
-        this.add(statusContainer);
-
-        this.createWatchDogUserButton = new JButton(CREATE_USER_BUTTON_TEXT);
-        this.buttonContainer.add(createWatchDogUserButton);
-        createWatchDogUserButton.addActionListener(actionEvent -> {
-            this.statusContainer.removeAll();
-
-            this.buttonContainer.removeAll();
-            this.buttonContainer.add(createWatchDogUserButton);
-
-            callback.accept(registerUser());
-        });
+        this.createButtonAndStatusContainer(CREATE_USER_BUTTON_TEXT);
     }
 
-    private void createInputFields() {
+	private void createInputFields() {
         JPanel inputContainer = new JPanel(new GridLayout(0, 2));
         this.add(inputContainer);
 
@@ -81,22 +62,20 @@ class UserRegistrationInputPanel extends JPanel {
         inputContainer.add(new JLabel(System.getProperty("os.name")));
     }
 
-    private boolean registerUser() {
-        User user = new User();
+    @Override
+    boolean registerAction() {
+		User user = new User();
         user.email = email.getText();
         user.organization = company.getText();
         user.programmingExperience = (String) this.programmingExperience.getSelectedItem();
-        user.operatingSystem = this.operatingSystem.getText();
+        user.operatingSystem = System.getProperty("os.name");
 
         String userId;
 
         try {
             userId = new JsonTransferer().registerNewUser(user);
         } catch (ServerCommunicationException exception) {
-            buttonContainer.add(Box.createHorizontalStrut(DEFAULT_SPACING));
-            buttonContainer.add(new JLabel(USER_CREATION_MESSAGE_FAILURE));
-
-            statusContainer.add(WizardStep.createErrorMessageLabel(exception));
+        	this.createFailureMessage(USER_CREATION_MESSAGE_FAILURE, exception);
 
             return false;
         }
@@ -105,16 +84,7 @@ class UserRegistrationInputPanel extends JPanel {
         preferences.setUserId(userId);
         preferences.setProgrammingExperience(user.programmingExperience);
 
-        buttonContainer.add(Box.createHorizontalStrut(DEFAULT_SPACING));
-        buttonContainer.add(new JLabel(USER_CREATION_MESSAGE_SUCCESSFUL));
-
-        statusContainer.add(new JLabel(YOUR_USER_ID_LABEL));
-
-        JTextField userIdField = new JTextField(userId, ID_LENGTH);
-        userIdField.setEditable(false);
-        statusContainer.add(userIdField);
-
-        this.createWatchDogUserButton.setEnabled(false);
+        this.createSuccessIdOutput(USER_CREATION_MESSAGE_SUCCESSFUL, YOUR_USER_ID_LABEL, userId);
 
         return true;
     }

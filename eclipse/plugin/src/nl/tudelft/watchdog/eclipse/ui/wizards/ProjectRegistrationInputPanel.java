@@ -3,13 +3,8 @@ package nl.tudelft.watchdog.eclipse.ui.wizards;
 import java.util.function.Consumer;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
@@ -24,10 +19,8 @@ import static nl.tudelft.watchdog.core.ui.wizards.Project.*;
 import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.*;
 import static nl.tudelft.watchdog.eclipse.ui.util.UIUtils.HEADER_FONT;
 
-class ProjectRegistrationInputPanel extends Composite {
+class ProjectRegistrationInputPanel extends RegistrationInputPanel {
 
-	private final Composite buttonContainer;
-	private final Button createNewUserButton;
 	private Text projectName;
 	private Text projectWebsite;
 	private YesNoDontknowButtonGroup ciUsage;
@@ -35,7 +28,6 @@ class ProjectRegistrationInputPanel extends Composite {
 	private YesNoDontknowButtonGroup bugFindingUsage;
 	private YesNoDontknowButtonGroup automationUsage;
 	private Text toolsUsed;
-	private Composite statusContainer;
 
 	/**
 	 * A panel to ask the user questions regarding their project.
@@ -43,8 +35,8 @@ class ProjectRegistrationInputPanel extends Composite {
 	 * @param callback The callback invoked after the user clicked "Create WatchDog Project".
 	 */
 	ProjectRegistrationInputPanel(Composite container, Consumer<Boolean> callback) {
-		super(container, SWT.NONE);
-		this.setLayout(new RowLayout(SWT.VERTICAL));
+		super(container, callback);
+		this.setLayout(RegistrationStep.createRowLayout(SWT.VERTICAL));
 
 		Label header = new Label(this, SWT.NONE);
 		header.setText(WATCHDOG_PROJECT_PROFILE);
@@ -55,31 +47,7 @@ class ProjectRegistrationInputPanel extends Composite {
 
 		this.createInputFields();
 
-		this.buttonContainer = new Composite(this, SWT.NONE);
-		this.buttonContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
-
-		this.createNewUserButton = new Button(this.buttonContainer, SWT.NONE);
-		createNewUserButton.setText(CREATE_PROJECT_BUTTON_TEXT);
-
-		this.statusContainer = new Composite(this, SWT.NONE);
-		this.statusContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
-
-		createNewUserButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				for (Control child : statusContainer.getChildren()) {
-					child.dispose();
-				}
-
-				for (Control child : buttonContainer.getChildren()) {
-					if (child != createNewUserButton) {
-						child.dispose();
-					}
-				}
-
-				callback.accept(registerProject());
-			}
-		});
+		this.createButtonAndStatusContainer(CREATE_PROJECT_BUTTON_TEXT);
 	}
 
 	private void createInputFields() {
@@ -101,7 +69,8 @@ class ProjectRegistrationInputPanel extends Composite {
 		this.toolsUsed = RegistrationStep.createLinkedLabelTextField(TOOL_USAGE_LABEL_TEXT, TOOL_USAGE_TEXTFIELD_TOOLTIP, inputContainer);
 	}
 
-	private boolean registerProject() {
+	@Override
+	boolean registerAction() {
 		Project project = new Project(Preferences.getInstance().getUserId());
 
 		project.name = projectName.getText();
@@ -117,9 +86,7 @@ class ProjectRegistrationInputPanel extends Composite {
 		try {
 			projectId = new JsonTransferer().registerNewProject(project);
 		} catch (ServerCommunicationException exception) {
-			new Label(this.buttonContainer, SWT.NONE).setText(PROJECT_CREATION_MESSAGE_FAILURE);
-
-			RegistrationStep.createErrorMessageLabel(this.statusContainer, exception);
+			this.createFailureMessage(PROJECT_CREATION_MESSAGE_FAILURE, exception);
 
 			return false;
 		}
@@ -128,13 +95,7 @@ class ProjectRegistrationInputPanel extends Composite {
 		preferences.registerProjectId(WatchDogUtils.getWorkspaceName(), projectId);
 		preferences.registerProjectUse(WatchDogUtils.getWorkspaceName(), true);
 
-		new Label(this.buttonContainer, SWT.NONE).setText(PROJECT_CREATION_MESSAGE_SUCCESSFUL);
-		this.createNewUserButton.setEnabled(false);
-
-		new Label(this.statusContainer, SWT.NONE).setText(YOUR_PROJECT_ID_LABEL);
-		Text projectIdField = new Text(this.statusContainer, SWT.NONE);
-		projectIdField.setText(projectId);
-		projectIdField.setEditable(false);
+		this.createSuccessIdOutput(PROJECT_CREATION_MESSAGE_SUCCESSFUL, YOUR_PROJECT_ID_LABEL, projectId);
 
 		return true;
 	}

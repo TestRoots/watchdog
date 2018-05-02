@@ -10,13 +10,11 @@ import java.awt.*;
 import java.util.function.Consumer;
 
 import static nl.tudelft.watchdog.core.ui.wizards.Project.*;
-import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.*;
-import static nl.tudelft.watchdog.intellij.ui.wizards.UserRegistrationStep.ID_LENGTH;
+import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.INPUT_IS_OPTIONAL;
 import static nl.tudelft.watchdog.intellij.ui.wizards.WizardStep.DEFAULT_SPACING;
 
-class ProjectRegistrationInputPanel extends JPanel {
+class ProjectRegistrationInputPanel extends RegistrationInputPanel {
 
-    private final Container buttonContainer;
     private JTextField projectName;
     private JTextField projectWebsite;
     private ButtonGroup ciUsage;
@@ -24,14 +22,13 @@ class ProjectRegistrationInputPanel extends JPanel {
     private ButtonGroup bugFindingUsage;
     private ButtonGroup automationUsage;
     private JTextField toolsUsed;
-    private Container statusContainer;
 
     /**
      * A panel to ask the user questions regarding their project.
      * @param callback The callback invoked after the user clicked "Create WatchDog Project".
      */
     ProjectRegistrationInputPanel(Consumer<Boolean> callback) {
-        super();
+        super(callback);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JPanel introductionContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
@@ -44,22 +41,8 @@ class ProjectRegistrationInputPanel extends JPanel {
         this.createInputFields();
 
         this.add(Box.createVerticalStrut(DEFAULT_SPACING));
-        this.buttonContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
-        this.add(buttonContainer);
 
-        this.statusContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
-        this.add(statusContainer);
-
-        JButton button = new JButton(CREATE_PROJECT_BUTTON_TEXT);
-        this.buttonContainer.add(button);
-        button.addActionListener(actionEvent -> {
-            this.statusContainer.removeAll();
-
-            this.buttonContainer.removeAll();
-            this.buttonContainer.add(button);
-
-            callback.accept(registerProject());
-        });
+        this.createButtonAndStatusContainer(CREATE_PROJECT_BUTTON_TEXT);
     }
 
     private void createInputFields() {
@@ -80,7 +63,8 @@ class ProjectRegistrationInputPanel extends JPanel {
         this.toolsUsed = WizardStep.createLinkedLabelTextField(TOOL_USAGE_LABEL_TEXT, TOOL_USAGE_TEXTFIELD_TOOLTIP, 150, inputContainer);
     }
 
-    private boolean registerProject() {
+    @Override
+    boolean registerAction() {
         Project project = new Project(Preferences.getInstance().getUserId());
 
         project.name = projectName.getText();
@@ -96,10 +80,7 @@ class ProjectRegistrationInputPanel extends JPanel {
         try {
             projectId = new JsonTransferer().registerNewProject(project);
         } catch (ServerCommunicationException exception) {
-            buttonContainer.add(Box.createHorizontalStrut(DEFAULT_SPACING));
-            buttonContainer.add(new JLabel(PROJECT_CREATION_MESSAGE_FAILURE));
-
-            statusContainer.add(WizardStep.createErrorMessageLabel(exception));
+        	this.createFailureMessage(PROJECT_CREATION_MESSAGE_FAILURE, exception);
 
             return false;
         }
@@ -108,14 +89,7 @@ class ProjectRegistrationInputPanel extends JPanel {
         preferences.registerProjectId(project.name, projectId);
         preferences.registerProjectUse(project.name, true);
 
-        buttonContainer.add(Box.createHorizontalStrut(DEFAULT_SPACING));
-        buttonContainer.add(new JLabel(PROJECT_CREATION_MESSAGE_SUCCESSFUL));
-
-        statusContainer.add(new JLabel(YOUR_PROJECT_ID_LABEL));
-
-        JTextField userIdField = new JTextField(projectId, ID_LENGTH);
-        userIdField.setEditable(false);
-        statusContainer.add(userIdField);
+        this.createSuccessIdOutput(PROJECT_CREATION_MESSAGE_SUCCESSFUL, YOUR_PROJECT_ID_LABEL, projectId);
 
         return true;
     }

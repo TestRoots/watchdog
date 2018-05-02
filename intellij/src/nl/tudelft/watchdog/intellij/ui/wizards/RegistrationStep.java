@@ -63,19 +63,19 @@ abstract class RegistrationStep extends WizardStep {
     private Component createUserIsRegisteredQuestion() {
         Container container = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
 
-        container.add(new JLabel("Do you have a " + this.getRegistrationType() + " WatchDog registration?"));
+        container.add(new JLabel("Do you want to create a new WatchDog " + this.getRegistrationType() + " registration?"));
 
         ButtonGroup buttons = new ButtonGroup();
 
         JRadioButton yes = new JRadioButton("Yes");
         container.add(yes);
         buttons.add(yes);
-        whenSelectedCreatePanelAndUpdateUI(yes, getIdInputPanel());
+        whenSelectedCreatePanelAndUpdateUI(yes, getRegistrationPanel());
 
         JRadioButton no = new JRadioButton("No");
         container.add(no);
         buttons.add(no);
-        whenSelectedCreatePanelAndUpdateUI(no, getRegistrationPanel());
+        whenSelectedCreatePanelAndUpdateUI(no, getIdInputPanel());
 
         return container;
     }

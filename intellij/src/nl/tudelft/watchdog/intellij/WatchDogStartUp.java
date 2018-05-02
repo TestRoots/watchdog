@@ -130,13 +130,16 @@ public class WatchDogStartUp implements ProjectComponent {
 
         AbstractWizard wizard = new RegistrationWorkflowWizard(project);
         wizard.show();
-        if (wizard.getExitCode() == DialogWrapper.CANCEL_EXIT_CODE && preferences.getUserId() == null) {
-            if (Messages.YES == Messages.showYesNoDialog(WATCHDOG_UNREGISTERED_WARNING, "WatchDog is not registered!", Messages.getQuestionIcon())) {
-                makeSilentRegistration();
-            } else {
-                userProjectRegistrationCancelled = true;
-                preferences.registerProjectUse(project.getName(), false);
-            }
+        if (wizard.getExitCode() == DialogWrapper.CANCEL_EXIT_CODE) {
+			userProjectRegistrationCancelled = true;
+
+			if (preferences.getUserId() == null || preferences.getOrCreateProjectSetting(project.getName()).projectId == null) {
+				if (Messages.YES == Messages.showYesNoDialog(WATCHDOG_UNREGISTERED_WARNING, "WatchDog is not registered!", Messages.getQuestionIcon())) {
+					makeSilentRegistration();
+				} else {
+					preferences.registerProjectUse(project.getName(), false);
+				}
+			}
         }
     }
 

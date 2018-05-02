@@ -4,7 +4,6 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
@@ -22,9 +21,7 @@ class UserWelcomeScreen extends WizardPage {
 	@Override
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NONE);
-		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
-		rowLayout.fill = true;
-		container.setLayout(rowLayout);
+		container.setLayout(RegistrationStep.createRowLayout(SWT.VERTICAL));
 
 		this.createTopHeader(container);
 		new Label(container, SWT.NONE);
@@ -49,7 +46,7 @@ class UserWelcomeScreen extends WizardPage {
 
 	private void createConsentMessage(Composite parent) {
 		Composite consentMessages = new Composite(parent, SWT.NONE);
-		consentMessages.setLayout(new RowLayout(SWT.VERTICAL));
+		consentMessages.setLayout(RegistrationStep.createRowLayout(SWT.VERTICAL));
 
 		Label headerText = new Label(consentMessages, SWT.NONE);
 		headerText.setText(OPENSOURCE_PLUGIN);

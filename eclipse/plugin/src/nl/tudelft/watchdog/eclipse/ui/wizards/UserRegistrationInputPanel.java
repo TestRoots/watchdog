@@ -3,15 +3,10 @@ package nl.tudelft.watchdog.eclipse.ui.wizards;
 import java.util.function.Consumer;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
@@ -24,13 +19,11 @@ import static nl.tudelft.watchdog.core.ui.wizards.User.*;
 import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.*;
 import static nl.tudelft.watchdog.eclipse.ui.util.UIUtils.HEADER_FONT;
 
-class UserRegistrationInputPanel extends Composite {
+class UserRegistrationInputPanel extends RegistrationInputPanel {
 
-	private final Composite buttonContainer;
 	private Text email;
 	private Text company;
 	private Combo programmingExperience;
-	private Composite statusContainer;
 
 	/**
 	 * A panel to ask the user questions to create their user profile.
@@ -38,8 +31,8 @@ class UserRegistrationInputPanel extends Composite {
 	 * @param callback The callback invoked after the user clicked "Create WatchDog User".
 	 */
 	UserRegistrationInputPanel(Composite parent, Consumer<Boolean> callback) {
-		super(parent, SWT.NONE);
-		this.setLayout(new RowLayout(SWT.VERTICAL));
+		super(parent, callback);
+		this.setLayout(RegistrationStep.createRowLayout(SWT.VERTICAL));
 
 		Label header = new Label(this, SWT.NONE);
 		header.setText(WATCHDOG_USER_PROFILE);
@@ -50,31 +43,7 @@ class UserRegistrationInputPanel extends Composite {
 
 		this.createInputFields();
 
-		this.buttonContainer = new Composite(this, SWT.NONE);
-		this.buttonContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
-
-		Button createNewUserButton = new Button(this.buttonContainer, SWT.NONE);
-		createNewUserButton.setText(CREATE_USER_BUTTON_TEXT);
-
-		this.statusContainer = new Composite(this, SWT.NONE);
-		this.statusContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
-
-		createNewUserButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				for (Control child : statusContainer.getChildren()) {
-					child.dispose();
-				}
-
-				for (Control child : buttonContainer.getChildren()) {
-					if (child != createNewUserButton) {
-						child.dispose();
-					}
-				}
-
-				callback.accept(registerUser());
-			}
-		});
+		this.createButtonAndStatusContainer(CREATE_USER_BUTTON_TEXT);
 	}
 
 	private void createInputFields() {
@@ -95,7 +64,8 @@ class UserRegistrationInputPanel extends Composite {
 		new Label(inputContainer, SWT.NONE).setText(System.getProperty("os.name"));
 	}
 
-	private boolean registerUser() {
+	@Override
+	boolean registerAction() {
 		User user = new User();
 		user.email = email.getText();
 		user.organization = company.getText();
@@ -107,9 +77,7 @@ class UserRegistrationInputPanel extends Composite {
 		try {
 			userId = new JsonTransferer().registerNewUser(user);
 		} catch (ServerCommunicationException exception) {
-			new Label(this.buttonContainer, SWT.NONE).setText(USER_CREATION_MESSAGE_FAILURE);
-
-			RegistrationStep.createErrorMessageLabel(this.statusContainer, exception);
+			this.createFailureMessage(USER_CREATION_MESSAGE_FAILURE, exception);
 
 			return false;
 		}
@@ -118,12 +86,7 @@ class UserRegistrationInputPanel extends Composite {
 		preferences.setUserId(userId);
 		preferences.setProgrammingExperience(user.programmingExperience);
 
-		new Label(this.buttonContainer, SWT.NONE).setText(USER_CREATION_MESSAGE_SUCCESSFUL);
-
-		new Label(this.statusContainer, SWT.NONE).setText(YOUR_USER_ID_LABEL);
-		Text userIdField = new Text(this.statusContainer, SWT.NONE);
-		userIdField.setText(userId);
-		userIdField.setEditable(false);
+		this.createSuccessIdOutput(USER_CREATION_MESSAGE_SUCCESSFUL, YOUR_USER_ID_LABEL, userId);
 
 		return true;
 	}

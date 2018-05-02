@@ -50,9 +50,7 @@ abstract class RegistrationStep extends WizardPage {
 	@Override
 	public void createControl(Composite parent) {
 		container = new Composite(parent, SWT.NONE);
-		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
-		rowLayout.fill = true;
-		container.setLayout(rowLayout);
+		container.setLayout(createRowLayout(SWT.VERTICAL));
 
 		this.createUserRegistrationIntroduction(container);
 		this.createUserIsRegisteredQuestion(container);
@@ -66,26 +64,24 @@ abstract class RegistrationStep extends WizardPage {
 
 	private void createUserIsRegisteredQuestion(Composite parent) {
 		Composite questionContainer = new Composite(parent, SWT.NONE);
-		questionContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
+		questionContainer.setLayout(createRowLayout(SWT.HORIZONTAL));
 
 		Label question = new Label(questionContainer, SWT.NONE);
-		question.setText("Do you have a " + this.getRegistrationType() + " WatchDog registration?");
+		question.setText("Do you want to create a new WatchDog " + this.getRegistrationType() + " registration?");
 
 		Composite buttons = new Composite(questionContainer, SWT.NONE);
-		buttons.setLayout(new RowLayout(SWT.HORIZONTAL));
+		buttons.setLayout(createRowLayout(SWT.HORIZONTAL));
 
 		Button yes = new Button(buttons, SWT.RADIO);
 		yes.setText("yes");
-		whenSelectedCreatePanelAndUpdateUI(yes, getIdInputPanel());
+		whenSelectedCreatePanelAndUpdateUI(yes, getRegistrationPanel());
 
 		Button no = new Button(buttons, SWT.RADIO);
 		no.setText("no");
-		whenSelectedCreatePanelAndUpdateUI(no, getRegistrationPanel());
+		whenSelectedCreatePanelAndUpdateUI(no, getIdInputPanel());
 
 		dynamicContent = new Composite(container, SWT.NONE);
-		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
-		rowLayout.fill = true;
-		dynamicContent.setLayout(rowLayout);
+		dynamicContent.setLayout(createRowLayout(SWT.VERTICAL));
 	}
 
 	private void whenSelectedCreatePanelAndUpdateUI(Button button,
@@ -96,38 +92,54 @@ abstract class RegistrationStep extends WizardPage {
 				if (button.getSelection()) {
 					dynamicContent.dispose();
 					dynamicContent = new Composite(container, SWT.NONE);
-					RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
-					rowLayout.fill = true;
-					dynamicContent.setLayout(rowLayout);
-					// Make sure to update the shell height, as the new panels could potentially
-					// overflow. In this case, force the minimum height to make sure all elements
-					// are properly visible on the screen.
-					dialog.getShell().setMinimumSize(0, getShellLayoutHeight());
-					dialog.getShell().layout(true, true);
-					dialog.getShell().redraw();
-					dialog.getShell().update();
+					dynamicContent.setLayout(createRowLayout(SWT.VERTICAL));
 
 					compositeConstructor.accept(dynamicContent, (hasValidId) -> {
 						isPageComplete = hasValidId;
 						dialog.updateButtons();
-						container.layout(true, true);
-						container.redraw();
-						container.update();
+
+						forceLayoutRecalc();
 					});
 
-					container.layout(true, true);
-					container.redraw();
-					container.update();
+					forceLayoutRecalc();
 				}
 			}
 		});
+	}
+
+	private void forceLayoutRecalc() {
+		container.layout(true, true);
+		container.redraw();
+		container.update();
+
+		// Make sure to update the shell height, as the new panels could potentially
+		// overflow. In this case, force the minimum height to make sure all elements
+		// are properly visible on the screen.
+		dialog.getShell().pack();
+		dialog.getShell().layout(true, true);
+		dialog.getShell().redraw();
+		dialog.getShell().update();
 	}
 
 	abstract BiConsumer<Composite, Consumer<Boolean>> getIdInputPanel();
 
 	abstract BiConsumer<Composite, Consumer<Boolean>> getRegistrationPanel();
 
-	abstract int getShellLayoutHeight();
+	/**
+	 * The default margin of a RowLayout is 3, per {@link RowLayout#marginLeft}.
+	 * Explicitly disable it for our use-cases to prevent a vertical alignment
+	 * mismatch.
+	 *
+	 * @return A rowLayout without any margin.
+	 */
+	static RowLayout createRowLayout(int alignment) {
+		RowLayout rowLayout = new RowLayout(alignment);
+
+		rowLayout.fill = true;
+		rowLayout.marginLeft = 0;
+
+		return rowLayout;
+	}
 
 	static void createErrorMessageLabel(Composite container, Exception exception) {
 		new Label(container, SWT.NONE).setText(exception.getMessage());
@@ -183,7 +195,7 @@ abstract class RegistrationStep extends WizardPage {
 		new Label(container, SWT.NONE).setText(labelText);
 
 		YesNoDontknowButtonGroup buttons = new YesNoDontknowButtonGroup(container);
-		buttons.setLayout(new RowLayout(SWT.HORIZONTAL));
+		buttons.setLayout(createRowLayout(SWT.HORIZONTAL));
 
 		buttons.addButton("Yes", YesNoDontKnowChoice.Yes);
 		buttons.addButton("No", YesNoDontKnowChoice.No);

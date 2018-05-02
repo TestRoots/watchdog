@@ -62,9 +62,4 @@ class ProjectRegistrationPage extends RegistrationStep {
 		return PROJECT;
 	}
 
-	@Override
-	int getShellLayoutHeight() {
-		return 650;
-	}
-
 }

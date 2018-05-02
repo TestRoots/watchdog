@@ -7,7 +7,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -40,7 +39,7 @@ abstract class IdInputPanel extends Composite {
 	 */
 	IdInputPanel(Composite parent, Consumer<Boolean> callback) {
 		super(parent, SWT.NONE);
-		this.setLayout(new RowLayout(SWT.VERTICAL));
+		this.setLayout(RegistrationStep.createRowLayout(SWT.VERTICAL));
 
 		Composite fieldContainer = new Composite(this, SWT.NONE);
 		fieldContainer.setLayout(new GridLayout(2, true));
@@ -61,7 +60,7 @@ abstract class IdInputPanel extends Composite {
 		});
 
 		statusContainer = new Composite(this, SWT.NONE);
-		statusContainer.setLayout(new RowLayout(SWT.VERTICAL));
+		statusContainer.setLayout(RegistrationStep.createRowLayout(SWT.VERTICAL));
 
 		verify.addSelectionListener(new SelectionAdapter() {
 			@Override

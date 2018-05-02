@@ -74,17 +74,20 @@ public class StartupUIThread implements Runnable {
 			int statusCode = (int) newUserWizardHandler
 					.execute(new ExecutionEvent());
 			savePreferenceStoreIfNeeded();
-			if (statusCode == Window.CANCEL && (preferences.getUserId() == null
-					|| preferences.getOrCreateProjectSetting(workspaceName).projectId == null)) {
-				boolean shouldRegisterAnonymously = MessageDialog.openQuestion(
-						null, "WatchDog not active!",
-						WATCHDOG_UNREGISTERED_WARNING);
-				if (shouldRegisterAnonymously) {
-					makeSilentRegistration();
-				} else {
-					userProjectRegistrationCancelled = true;
-					preferences.registerProjectUse(
-							WatchDogUtils.getWorkspaceName(), false);
+			if (statusCode == Window.CANCEL) {
+				userProjectRegistrationCancelled = true;
+
+				if (preferences.getUserId() == null
+						|| preferences.getOrCreateProjectSetting(workspaceName).projectId == null) {
+					boolean shouldRegisterAnonymously = MessageDialog.openQuestion(
+							null, "WatchDog not active!",
+							WATCHDOG_UNREGISTERED_WARNING);
+					if (shouldRegisterAnonymously) {
+						makeSilentRegistration();
+					} else {
+						preferences.registerProjectUse(
+								WatchDogUtils.getWorkspaceName(), false);
+					}
 				}
 			}
 		} catch (ExecutionException exception) {
