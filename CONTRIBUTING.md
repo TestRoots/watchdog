@@ -20,7 +20,7 @@ In this section, we describe how WatchDog needs to be setup. It is important to 
 ## Eclipse
 1. Download Eclipse.
 1. Install the PDE plugin (https://marketplace.eclipse.org/content/eclipse-pde-plug-development-environment)
-1. Import `Maven -> Existing Maven project` and select the watchdog root folder. Import all subprojects except IntelliJ.
+1. Import `Maven -> Existing Maven project` and select the watchdog root folder. Import all subprojects except the IntelliJ folder (or remove it later if you have imported it, it will give build errors).
 1. Optional: For Maven IDE support, you need [m2e](https://www.eclipse.org/m2e/download/) for IDE-supported POM.xml-file editing. As we are also using [Tycho](https://eclipse.org/tycho/), you need the tycho configuration connector in m2e's marketplace.
 1. Optional: If your run configuration complains about unrecognized options, make sure to remove all inclusions of `--add-modules=ALL-SYSTEM` in your VM arguments. These are added incorrectly by PDE and won't work on a JDK 1.8 or lower.
 1. Select the correct target platform:
@@ -33,6 +33,8 @@ After your are done, you will see a relatively complicated structure of projects
 - `watchdog.eclipse.plugin` contains the Eclipse-specific code for the WatchDog Eclipse plugin. It includes customizations for Eclipse and depends on
 - `watchdog.core`, which contains mutually shared code for the Eclipse and the IntelliJ plugins.
 - `watchdog` ...
+- ...
+- `watchdog.server` is the Ruby server project. We managed it via Maven to have included in the CI build, but ideally, you modify its relatively short code in a Ruby IDE.
 
 ## IntelliJ
 1. Download the free IC edition
