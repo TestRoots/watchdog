@@ -30,7 +30,7 @@ In this section, we describe how WatchDog needs to be setup. It is important to 
 
 After your are done, you will see a relatively complicated structure of projects. In the following, we explain each of them:
 
-- `watchdog.eclipse.plugin` contains the Eclipse-specific code for the WatchDog Eclipse plugin. It includes customizations for Eclipse and depends on
+- `watchdog.eclipse.plugin` contains the Eclipse-specific code for the WatchDog Eclipse plugin. If you want to start a runtime workbench your latest code changes included, you need to right-click on this project, select, `Run > Run As Eclipse Application`. The project includes customizations for Eclipse and depends on
 - `watchdog.core`, which contains mutually shared code for the Eclipse and the IntelliJ plugins.
 - `watchdog` ...
 - ...
