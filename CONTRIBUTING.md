@@ -17,6 +17,56 @@ WatchDog is an Eclipse and IntelliJ plugin. It is built and written for Java 1.8
 
 In this section, we describe how WatchDog needs to be setup. It is important to have both plugins and development environments set-up to catch potential induced problems even if you only intend to modify one.
 
+## Subprojects
+
+Using either IDE, you will import multiple subprojects.
+This section explains the structure of this project with its subprojects and their corresponding purpose.
+
+- `core`
+
+  Core contains all code that is shared between all custom IDE implementations.
+  It mostly focuses on the data format, its storage method and the network protocols.
+
+- `eclipse`
+
+  Project that contains several other subprojects all related to the Eclipse plugin.
+  Most of these projects are necessary to generate a correct OSGi bundle that can be consumed by Eclipse.
+
+  - `plugin`
+
+    The plugin contains the actual implementation of the plugin.
+    It augments `core` by all custom logic to wire into the Eclipse editor.
+    You can start the plugin by running `nl.tudelft.watchdog.eclipse.Activator` with `Run As Eclipse Application`.
+
+  - `tests`
+
+    An Eclipse plugin test project that runs an editor and instruments the Eclipse plugin either directly or indirectly.
+
+  - `platform`
+
+    To correctly build both the plugin and its tests, the plugin requires a target platform which specify its dependencies.
+    For more information, read [this documentation page](http://www.vogella.com/tutorials/EclipseTargetPlatform/article.html).
+
+  - `features`
+
+    Based on the plugin and the target platform, both the `core` and `eclipse.plugin` need to build a feature that can be consumed by Eclipse OSGi.
+    The features do not contain any code implementation, rather they contain a `feature.xml` and `build.properties` to configure the Eclipse OSGi dependencies.
+
+  - `p2updatesite`
+
+    Both features are then grouped into one artifact called a repository.
+    This repository is the final output that will be uploaded to the Eclipse updatesite such that users can install the plugin.
+
+- `intellij`
+
+  The plugin implementation that augments `core` into the IntelliJ Idea editor.
+  You can start the plugin by using the run configuration as explained in the IntelliJ section down below.
+
+- `server`
+
+  A Ruby server that processes user/project creation as well as any other data we require and inserts it into a Mongo database.
+  This server therefore requires Mongo to be running locally on your machine.
+
 ## Eclipse
 1. Download Eclipse.
 1. Install the PDE plugin (https://marketplace.eclipse.org/content/eclipse-pde-plug-development-environment)
@@ -27,14 +77,6 @@ In this section, we describe how WatchDog needs to be setup. It is important to 
   1. `Window -> Preferences -> Plug-in Development -> Target Platform`
   1. Select the target platform from `/watchdog/eclipse/platform/watchdog.eclipse.platform.target`
 1. Works.
-
-After your are done, you will see a relatively complicated structure of projects. In the following, we explain each of them:
-
-- `watchdog.eclipse.plugin` contains the Eclipse-specific code for the WatchDog Eclipse plugin. If you want to start a runtime workbench your latest code changes included, you need to right-click on this project, select, `Run > Run As Eclipse Application`. The project includes customizations for Eclipse and depends on
-- `watchdog.core`, which contains mutually shared code for the Eclipse and the IntelliJ plugins.
-- `watchdog` ...
-- ...
-- `watchdog.server` is the Ruby server project. We managed it via Maven to have included in the CI build, but ideally, you modify its relatively short code in a Ruby IDE.
 
 ## IntelliJ
 1. Download the free IC edition
