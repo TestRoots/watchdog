@@ -28,6 +28,12 @@ In this section, we describe how WatchDog needs to be setup. It is important to 
   1. Select the target platform from `/watchdog/eclipse/platform/watchdog.eclipse.platform.target`
 1. Works.
 
+After your are done, you will see a relatively complicated structure of projects. In the following, we explain each of them:
+
+- `watchdog.eclipse.plugin` contains the Eclipse-specific code for the WatchDog Eclipse plugin. It includes customizations for Eclipse and depends on
+- `watchdog.core`, which contains mutually shared code for the Eclipse and the IntelliJ plugins.
+- `watchdog` ...
+
 ## IntelliJ
 1. Download the free IC edition
 1. Install the "Intellij plugin development with Maven"-plugin from https://plugins.jetbrains.com/plugin/7127-intellij-plugin-development-with-maven
