@@ -45,15 +45,16 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
 		new Label(this, SWT.NONE).setText(PROJECT_DATA_REQUEST);
 		new Label(this, SWT.NONE).setText(INPUT_IS_OPTIONAL);
 
+		this.inputContainer = new Composite(this, SWT.NONE);
+		GridLayout gridLayout = new GridLayout(2, true);
+		this.inputContainer.setLayout(gridLayout);
+
 		this.createInputFields();
 
 		this.createButtonAndStatusContainer(CREATE_PROJECT_BUTTON_TEXT);
 	}
 
 	private void createInputFields() {
-		Composite inputContainer = new Composite(this, SWT.NONE);
-		inputContainer.setLayout(new GridLayout(2, false));
-
 		this.projectName = RegistrationStep.createLinkedLabelTextField(PROJECT_NAME_LABEL, PROJECT_NAME_TEXTFIELD_TOOLTIP, inputContainer);
 		this.projectWebsite = RegistrationStep.createLinkedLabelTextField(PROJECT_WEBSITE_LABEL, PROJECT_WEBSITE_TEXTFIELD_TOOLTIP, inputContainer);
 		this.ciUsage = RegistrationStep.createYesNoDontKnowQuestionWithLabel(CI_USAGE_LABEL_TEXT, inputContainer);

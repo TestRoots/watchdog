@@ -19,7 +19,6 @@ class UserRegistrationInputPanel extends RegistrationInputPanel {
     private JTextField email;
     private JTextField company;
     private JComboBox<String> programmingExperience;
-    private Container statusContainer;
 
     /**
      * A panel to ask the user questions to create their user profile.
@@ -36,6 +35,9 @@ class UserRegistrationInputPanel extends RegistrationInputPanel {
                 USER_DATA_REQUEST + "<br>" +
                 INPUT_IS_OPTIONAL));
 
+		this.inputContainer = new JPanel(new GridLayout(0, 2));
+		this.add(inputContainer);
+
         this.createInputFields();
 
         this.add(Box.createVerticalStrut(DEFAULT_SPACING));
@@ -43,9 +45,6 @@ class UserRegistrationInputPanel extends RegistrationInputPanel {
     }
 
 	private void createInputFields() {
-        JPanel inputContainer = new JPanel(new GridLayout(0, 2));
-        this.add(inputContainer);
-
         this.email = WizardStep.createLinkedLabelTextField(EMAIL_LABEL, EMAIL_TEXTFIELD_TOOLTIP, 150, inputContainer);
         this.company = WizardStep.createLinkedLabelTextField(COMPANY_LABEL, COMPANY_TEXTFIELD_TOOLTIP, 150, inputContainer);
 

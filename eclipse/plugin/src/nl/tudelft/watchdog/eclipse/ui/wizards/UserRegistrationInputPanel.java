@@ -41,15 +41,15 @@ class UserRegistrationInputPanel extends RegistrationInputPanel {
 		new Label(this, SWT.NONE).setText(USER_DATA_REQUEST);
 		new Label(this, SWT.NONE).setText(INPUT_IS_OPTIONAL);
 
+		this.inputContainer = new Composite(this, SWT.NONE);
+		this.inputContainer.setLayout(new GridLayout(2, true));
+
 		this.createInputFields();
 
 		this.createButtonAndStatusContainer(CREATE_USER_BUTTON_TEXT);
 	}
 
 	private void createInputFields() {
-		Composite inputContainer = new Composite(this, SWT.NONE);
-		inputContainer.setLayout(new GridLayout(2, true));
-
 		this.email = RegistrationStep.createLinkedLabelTextField(EMAIL_LABEL, EMAIL_TEXTFIELD_TOOLTIP, inputContainer);
 		this.company = RegistrationStep.createLinkedLabelTextField(COMPANY_LABEL, COMPANY_TEXTFIELD_TOOLTIP, inputContainer);
 

@@ -1,7 +1,6 @@
 package nl.tudelft.watchdog.intellij.ui.wizards;
 
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
-import nl.tudelft.watchdog.core.logic.network.ServerCommunicationException;
 import nl.tudelft.watchdog.core.ui.wizards.Project;
 import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
 
@@ -38,6 +37,9 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
                 PROJECT_DATA_REQUEST + "<br>" +
                 INPUT_IS_OPTIONAL));
 
+		this.inputContainer = new JPanel(new GridLayout(0, 2));
+		this.add(inputContainer);
+
         this.createInputFields();
 
         this.add(Box.createVerticalStrut(DEFAULT_SPACING));
@@ -46,9 +48,6 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
     }
 
     private void createInputFields() {
-        JPanel inputContainer = new JPanel(new GridLayout(0, 2));
-        this.add(inputContainer);
-
         this.projectName = WizardStep.createLinkedLabelTextField(PROJECT_NAME_LABEL, PROJECT_NAME_TEXTFIELD_TOOLTIP, 150, inputContainer);
         this.projectWebsite = WizardStep.createLinkedLabelTextField(PROJECT_WEBSITE_LABEL, PROJECT_WEBSITE_TEXTFIELD_TOOLTIP, 150, inputContainer);
         this.ciUsage = WizardStep.createYesNoDontKnowQuestionWithLabel(CI_USAGE_LABEL_TEXT, inputContainer);
@@ -79,7 +78,7 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
 
         try {
             projectId = new JsonTransferer().registerNewProject(project);
-        } catch (ServerCommunicationException exception) {
+        } catch (Exception exception) {
         	this.createFailureMessage(PROJECT_CREATION_MESSAGE_FAILURE, exception);
 
             return false;

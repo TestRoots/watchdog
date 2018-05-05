@@ -185,10 +185,12 @@ public class UIUtils {
 			Composite composite) {
 		Label label = UIUtils.createLabel(labelText, composite);
 		label.setToolTipText(toolTip);
+
 		Text input = UIUtils.createTextInput(composite);
 		input.setLayoutData(UIUtils.createFullGridUsageData());
 		input.setToolTipText(toolTip);
 		UIUtils.attachListenerOnLabelClickFocusTextElement(label, input);
+
 		return input;
 	}
 

@@ -89,11 +89,11 @@ public abstract class WizardStep implements Step {
         return textfield;
     }
 
-    static Component createErrorMessageLabel(Exception exception) {
+    static JComponent createErrorMessageLabel(Exception exception) {
         return new JLabel("<html>" +
-                exception.getMessage() +
+                exception.getMessage().substring(0, 100) +
                 "<br>" + CONNECTED_TO_INTERNET +
-                "<br>" + PLEASE_CONTACT_US + Links.OUR_WEBSITE.toHTMLURL() + ". " + HELP_TROUBLESHOOT);
+                "<br>" + PLEASE_CONTACT_US + Links.OUR_WEBSITE.toHTMLURL() + ". " + HELP_TROUBLESHOOT, JLabel.LEFT);
     }
 
     static ButtonGroup createYesNoDontKnowQuestionWithLabel(String labelText, Container container) {

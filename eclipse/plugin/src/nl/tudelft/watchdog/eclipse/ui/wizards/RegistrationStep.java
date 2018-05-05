@@ -142,9 +142,11 @@ abstract class RegistrationStep extends WizardPage {
 	}
 
 	static void createErrorMessageLabel(Composite container, Exception exception) {
-		new Label(container, SWT.NONE).setText(exception.getMessage());
+		Label exceptionText = new Label(container, SWT.WRAP);
+		exceptionText.setText(exception.getMessage().substring(0, 100));
+
 		new Label(container, SWT.NONE).setText(CONNECTED_TO_INTERNET);
-		Link link = new Link(container, SWT.NONE);
+		Link link = new Link(container, SWT.WRAP);
 		link.setText(PLEASE_CONTACT_US + Links.OUR_WEBSITE.toHTMLURL() + ". " + HELP_TROUBLESHOOT);
 		link.addSelectionListener(new BrowserOpenerSelection());
 	}

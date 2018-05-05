@@ -42,11 +42,12 @@ abstract class IdInputPanel extends Composite {
 		this.setLayout(RegistrationStep.createRowLayout(SWT.VERTICAL));
 
 		Composite fieldContainer = new Composite(this, SWT.NONE);
-		fieldContainer.setLayout(new GridLayout(2, true));
+		fieldContainer.setLayout(new GridLayout(2, false));
 
 		this.textfield = UIUtils.createLinkedFieldInput(this.getIdLabelText(), this.getIdTooltipText(), fieldContainer);
+		textfield.setSize(250, SWT.DEFAULT);
 		textfield.setTextLimit(ID_LENGTH);
-		textfield.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
+		textfield.setLayoutData(new GridData(350, SWT.DEFAULT));
 
 		Button verify = new Button(this, SWT.FLAT);
 		verify.setText(VERIFICATION_BUTTON_TEXT);
