@@ -46,7 +46,7 @@ In this section, we describe how WatchDog needs to be setup. It is important to 
     1. Unzip the CheckStyle zip in `build_cache/`
     1. Add the CheckStyle plugin to the IntelliJ SDK you downloaded per the instructions of https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_dependencies.html You need to select the CheckStyle jar from `build_cache/Checkstyle-IDEA/lib/checkstyle-idea-****.jar`
 1. Open `WatchDogStartup.java` and click on the run configuration. A runtime workbench of IntelliJ should pop up with a local version of WatchDog running.
-1. Install the Checkstyle Plugin via Settings > Plugins > Browse repositories ... and searching for "CheckStyle-IDEA". The plugin comes from https://infernus.org/ and https://github.com/jshiell/checkstyle-idea
+1. (Optional, but recommended to test Checkstyle warnings) In the runtime workbench, install the Checkstyle Plugin via Settings > Plugins > Browse repositories ... and searching for "CheckStyle-IDEA". The plugin comes from https://infernus.org/ and https://github.com/jshiell/checkstyle-idea
 
 ## Subprojects
 
