@@ -19,7 +19,7 @@ public class Project extends WatchDogItem {
 	public static final String CI_USAGE_LABEL_TEXT = "Does your project use any Continuous Integration tools (Travis, Jenkins, etc.)?";
 	public static final String CODE_STYLE_USAGE_LABEL_TEXT = "  ... enforce a uniform code style (e.g. whitespace)?";
 	public static final String BUG_FINDING_USAGE_LABEL_TEXT = "  ... find functional bugs (e.g. NullPointerException)? ";
-	public static final String OTHER_AUTOMATION_USAGE_LABEL_TEXT = "  ... other automation forms (e.g. license headers)? ";
+	public static final String OTHER_AUTOMATION_USAGE_LABEL_TEXT = "  ... perform other automated tasks (e.g. enforcing license headers)? ";
 	public static final String PROJECT_CREATION_MESSAGE_SUCCESSFUL = "Your WatchDog Project has successfully been created.";
 	public static final String PROJECT_CREATION_MESSAGE_FAILURE = "Problem creating a new WatchDog project.";
 	public static final String TOOL_USAGE_LABEL_TEXT = "Please provide the names of the static analysis tools you use in the project: ";
