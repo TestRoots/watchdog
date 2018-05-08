@@ -14,28 +14,32 @@ import java.util.Date;
  */
 public class Warning<T> implements Serializable {
 
-    private static final long serialVersionUID = -573132089990619360L;
+	private static final long serialVersionUID = -573132089990619360L;
 
-    @SerializedName("type")
-    public final T type;
+	@SerializedName("docline")
+	public final int docLineNumber;
 
-    @SerializedName("line")
-    public final int lineNumber;
+	@SerializedName("type")
+	public final T type;
 
-    @SerializedName("time")
-    public final Date warningCreationTime;
+	@SerializedName("line")
+	public final int lineNumber;
 
-    @SerializedName("diff")
-    public final int secondsBetween;
+	@SerializedName("time")
+	public final Date warningCreationTime;
 
-    public Warning(T type, int lineNumber, Date warningCreationTime) {
-        this(type, lineNumber, warningCreationTime, -1);
-    }
+	@SerializedName("diff")
+	public final int secondsBetween;
 
-    public Warning(T type, int lineNumber, Date warningCreationTime, int secondsBetween) {
-        this.type = type;
-        this.warningCreationTime = warningCreationTime;
-        this.secondsBetween = secondsBetween;
-        this.lineNumber = lineNumber;
-    }
+	public Warning(int docLineNumber, T type, int lineNumber, Date warningCreationTime) {
+		this(docLineNumber, type, lineNumber, warningCreationTime, -1);
+	}
+
+	public Warning(int docLineNumber, T type, int lineNumber, Date warningCreationTime, int secondsBetween) {
+		this.docLineNumber = docLineNumber;
+		this.type = type;
+		this.warningCreationTime = warningCreationTime;
+		this.secondsBetween = secondsBetween;
+		this.lineNumber = lineNumber;
+	}
 }

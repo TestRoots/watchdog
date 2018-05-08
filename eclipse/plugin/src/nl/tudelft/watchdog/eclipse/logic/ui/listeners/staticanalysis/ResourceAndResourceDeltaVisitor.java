@@ -34,97 +34,99 @@ public class ResourceAndResourceDeltaVisitor implements IResourceDeltaVisitor, I
 	private Map<IPath, List<MarkerHolder>> currentFileMarkers;
 	private final boolean shouldCreateSnapshot;
 
-    public ResourceAndResourceDeltaVisitor(TrackingEventManager trackingEventManager,
-    		Map<IPath, List<MarkerHolder>> currentFileMarkers, boolean shouldCreateSnapshot) {
+	public ResourceAndResourceDeltaVisitor(TrackingEventManager trackingEventManager,
+			Map<IPath, List<MarkerHolder>> currentFileMarkers, boolean shouldCreateSnapshot) {
 		this.trackingEventManager = trackingEventManager;
 		this.currentFileMarkers = currentFileMarkers;
 		this.shouldCreateSnapshot = shouldCreateSnapshot;
-    }
+	}
 
-    /**
-     * The delta can contain new, deleted or changed resources. In any case, even if we do not have
-     * previous state in {@link EclipseMarkupModelListener#oldFileMarkers} we need to compute
-     * a diff.
-     */
-    @Override
-    public boolean visit(IResourceDelta delta) throws CoreException {
-        return this.visit(delta.getResource(), true);
-    }
+	/**
+	 * The delta can contain new, deleted or changed resources. In any case, even if we do not have
+	 * previous state in {@link EclipseMarkupModelListener#oldFileMarkers} we need to compute
+	 * a diff.
+	 */
+	@Override
+	public boolean visit(IResourceDelta delta) throws CoreException {
+		return this.visit(delta.getResource(), true);
+	}
 
-    /**
-     * Invoked on initial project open to setup our initial state for {@link EclipseMarkupModelListener#oldFileMarkers}.
-     */
-    @Override
-    public boolean visit(IResource resource) throws CoreException {
-        return this.visit(resource, false);
-    }
+	/**
+	 * Invoked on initial project open to setup our initial state for {@link EclipseMarkupModelListener#oldFileMarkers}.
+	 */
+	@Override
+	public boolean visit(IResource resource) throws CoreException {
+		return this.visit(resource, false);
+	}
 
-    /**
-     * The Eclipse API trashes and recreates all markers after a build.
-     * This means that we have to handle two lists of markers and compute
-     * the difference between them. Delegate this implementation to
-     * {@link MarkerBackTrackingAlgorithm}, which is an abstraction around
-     * the diffing algorithm.
-     */
-    private boolean visit(IResource resource, boolean shouldComputeDiff) throws CoreException {
-    	if (!resource.exists()) {
-            return false;
-        }
+	/**
+	 * The Eclipse API trashes and recreates all markers after a build.
+	 * This means that we have to handle two lists of markers and compute
+	 * the difference between them. Delegate this implementation to
+	 * {@link MarkerBackTrackingAlgorithm}, which is an abstraction around
+	 * the diffing algorithm.
+	 */
+	private boolean visit(IResource resource, boolean shouldComputeDiff) throws CoreException {
+		if (!resource.exists()) {
+			return false;
+		}
 
-        if (resource instanceof IFile) {
-            IFile file = (IFile) resource;
-            IPath filePath = file.getFullPath();
-            List<MarkerHolder> oldMarkers = currentFileMarkers.get(filePath);
-            List<MarkerHolder> currentMarkers =
-                    Arrays.stream(file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO))
-                          .map(MarkerHolder::fromIMarker)
-                          .sorted()
-                          .collect(Collectors.toList());
+		if (resource instanceof IFile) {
+			IFile file = (IFile) resource;
+			IPath filePath = file.getFullPath();
+			List<MarkerHolder> oldMarkers = currentFileMarkers.get(filePath);
+			List<MarkerHolder> currentMarkers =
+					Arrays.stream(file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO))
+						  .map(MarkerHolder::fromIMarker)
+						  .sorted()
+						  .collect(Collectors.toList());
 
-            if (shouldComputeDiff && oldMarkers == null) {
-                oldMarkers = Collections.emptyList();
-            }
+			if (shouldComputeDiff && oldMarkers == null) {
+				oldMarkers = Collections.emptyList();
+			}
 
-            Document document = DocumentCreator.createDocument(file.getName(), file).prepareDocument();
+			Document document = DocumentCreator.createDocument(file.getName(), file).prepareDocument();
 
-            if (this.shouldCreateSnapshot) {
-            	createWarningSnapshotForMarkers(currentMarkers, document);
-            }
+			if (this.shouldCreateSnapshot) {
+				createWarningSnapshotForMarkers(currentMarkers, document);
+			}
 
-            if (oldMarkers != null) {
-                MarkerBackTrackingAlgorithm diffingAlgorithm = new MarkerBackTrackingAlgorithm(oldMarkers, currentMarkers);
+			if (oldMarkers != null) {
+				MarkerBackTrackingAlgorithm diffingAlgorithm = new MarkerBackTrackingAlgorithm(oldMarkers, currentMarkers);
 
-                diffingAlgorithm.computeMemoizationTable()
-                				.traverseMemoizationTable();
+				diffingAlgorithm.computeMemoizationTable()
+								.traverseMemoizationTable();
 
-                CoreMarkupModelListener.addCreatedWarnings(this.trackingEventManager, diffingAlgorithm.createdWarningTypes.stream().map(this::createWarning), document);
-                CoreMarkupModelListener.addRemovedWarnings(this.trackingEventManager, diffingAlgorithm.removedWarningTypes.stream().map(this::createWarning), document);
-            }
+				CoreMarkupModelListener.addCreatedWarnings(this.trackingEventManager, diffingAlgorithm.createdWarningTypes.stream().map(this::createWarning), document);
+				CoreMarkupModelListener.addRemovedWarnings(this.trackingEventManager, diffingAlgorithm.removedWarningTypes.stream().map(this::createWarning), document);
+			}
 
-            currentFileMarkers.put(filePath, currentMarkers);
-        }
+			currentFileMarkers.put(filePath, currentMarkers);
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    private void createWarningSnapshotForMarkers(List<MarkerHolder> currentMarkers, Document document) {
-        List<Warning<String>> warnings = currentMarkers.stream()
-                .map(holder -> new Warning<>(
-                        StaticAnalysisMessageClassifier.classify(holder.message),
-                        holder.lineNumber,
-                        DateTime.now().toDate()
-                    ))
-                .collect(Collectors.toList());
+	private void createWarningSnapshotForMarkers(List<MarkerHolder> currentMarkers, Document document) {
+		List<Warning<String>> warnings = currentMarkers.stream()
+				.map(holder -> new Warning<>(
+						-1,
+						StaticAnalysisMessageClassifier.classify(holder.message),
+						holder.lineNumber,
+						DateTime.now().toDate()
+					))
+				.collect(Collectors.toList());
 
-        this.trackingEventManager.addEvent(new FileWarningSnapshotEvent(document, warnings));
-    }
+		this.trackingEventManager.addEvent(new FileWarningSnapshotEvent(document, warnings));
+	}
 
-    private Warning<String> createWarning(Warning<String> warning) {
-        return new Warning<>(
-                StaticAnalysisMessageClassifier.classify(warning.type),
-                warning.lineNumber,
-                warning.warningCreationTime,
-                warning.secondsBetween
-        );
-    }
+	private Warning<String> createWarning(Warning<String> warning) {
+		return new Warning<>(
+				warning.docLineNumber,
+				StaticAnalysisMessageClassifier.classify(warning.type),
+				warning.lineNumber,
+				warning.warningCreationTime,
+				warning.secondsBetween
+		);
+	}
 }
