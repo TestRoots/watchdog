@@ -2,6 +2,7 @@ package nl.tudelft.watchdog.eclipse.ui.handlers;
 
 import java.io.IOException;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -23,7 +24,7 @@ import nl.tudelft.watchdog.eclipse.util.WatchDogUtils;
 public class StartupUIThread implements Runnable {
 
 	/** The warning displayed when WatchDog is not active. */
-	public static final String WATCHDOG_INACTIVE_WARNING = "Warning: You can only use WatchDog when you register it.\n\nLast chance: Register now, anonymously, without filling the survey?";
+	public static final String WATCHDOG_UNREGISTERED_WARNING = "Warning: You can only use WatchDog when you register it.\n\nWould you like to create a user without providing additional information?";
 
 	/** The preferences. */
 	private Preferences preferences;
@@ -68,21 +69,25 @@ public class StartupUIThread implements Runnable {
 						&& !projectSetting.enableWatchdog))
 			return;
 
-		UserRegistrationWizardDialogHandler newUserWizardHandler = new UserRegistrationWizardDialogHandler();
+		AbstractHandler newUserWizardHandler = new UserRegistrationWizardDialogHandler();
 		try {
 			int statusCode = (int) newUserWizardHandler
 					.execute(new ExecutionEvent());
 			savePreferenceStoreIfNeeded();
 			if (statusCode == Window.CANCEL) {
-				boolean shouldRegisterAnonymously = MessageDialog.openQuestion(
-						null, "WatchDog not active!",
-						WATCHDOG_INACTIVE_WARNING);
-				if (shouldRegisterAnonymously) {
-					makeSilentRegistration();
-				} else {
-					userProjectRegistrationCancelled = true;
-					preferences.registerProjectUse(
-							WatchDogUtils.getWorkspaceName(), false);
+				userProjectRegistrationCancelled = true;
+
+				if (preferences.getUserId() == null
+						|| preferences.getOrCreateProjectSetting(workspaceName).projectId == null) {
+					boolean shouldRegisterAnonymously = MessageDialog.openQuestion(
+							null, "WatchDog not active!",
+							WATCHDOG_UNREGISTERED_WARNING);
+					if (shouldRegisterAnonymously) {
+						makeSilentRegistration();
+					} else {
+						preferences.registerProjectUse(
+								WatchDogUtils.getWorkspaceName(), false);
+					}
 				}
 			}
 		} catch (ExecutionException exception) {
@@ -165,10 +170,9 @@ public class StartupUIThread implements Runnable {
 	}
 
 	private void displayProjectWizard() {
-		ProjectRegistrationWizardDialogHandler newProjectWizardHandler = new ProjectRegistrationWizardDialogHandler();
+		AbstractHandler newUserWizardHandler = new ProjectRegistrationWizardDialogHandler();
 		try {
-			int statusCode = (int) newProjectWizardHandler
-					.execute(new ExecutionEvent());
+			int statusCode = (int) newUserWizardHandler.execute(new ExecutionEvent());
 			if (statusCode == Window.CANCEL) {
 				registerAnonymousProject(preferences.getUserId());
 			}

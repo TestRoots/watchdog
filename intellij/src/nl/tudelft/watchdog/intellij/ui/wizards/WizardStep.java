@@ -1,237 +1,33 @@
 package nl.tudelft.watchdog.intellij.ui.wizards;
 
-import com.intellij.ide.wizard.CommitStepException;
 import com.intellij.ide.wizard.Step;
+import com.intellij.openapi.util.IconLoader;
 import nl.tudelft.watchdog.core.ui.wizards.YesNoDontKnowChoice;
-import nl.tudelft.watchdog.intellij.ui.util.UIUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-/**
- * A Wizard {@link Step} that can determine for itself via the
- * {@link #canFinish()} method, whether the wizard should be completeable via
- * the finish button.
- */
+import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.*;
+
 public abstract class WizardStep implements Step {
 
-    protected enum CommitType {
-        Prev, Next, Finish
-    }
+    static final int DEFAULT_SPACING = 5;
 
-    /** Main panel of the step. */
-    protected JPanel topPanel;
-
-	/** ID of the current step. */
-	protected final int stepID;
-
-    protected Icon myIcon;
-
-    private boolean isComplete = true;
-
-    protected String myTitle;
-
-    protected String descriptionText;
-
-    private final RegistrationWizardBase myWizard;
-
-    /** Constructor. */
-	protected WizardStep(String stepName, int stepID, RegistrationWizardBase wizard) {
-        this.myTitle = stepName;
-        this.stepID = stepID;
-        this.myWizard = wizard;
-	}
-
-    /** Getting the current wizard.  */
-    public final RegistrationWizardBase getWizard() {
-        return myWizard;
-    }
-
-    /** Getting title of this step.*/
-    public String getTitle() {
-        return myTitle;
-    }
-
-    /** Setting title of this step.*/
-    public void setTitle(String title) {
-        this.myTitle = title;
-    }
-
-    /** Called on hitting Previous button. */
-    public final void _commitPrev() throws CommitStepException {
-        commit(CommitType.Prev);
-    }
-
-    /** Determines whether the pressed button was "Next" or "Finish". */
-    public final void _commit(boolean finishChosen) throws CommitStepException {
-        commit(finishChosen ? CommitType.Finish : CommitType.Next);
-    }
-
-    /** Each step should implement this to "commit" its internal data */
-    protected abstract void commit(CommitType commitType);
-
-    @Override
-    public JComponent getComponent() {
-        return topPanel;
-    }
-
-	/** @return whether this step can currently be finished. */
-	public abstract boolean canFinish();
-
-    /**
-     * @return Whether a step is complete or not.
-     */
-    public boolean isComplete() {
-        return isComplete;
-    }
-
-    /**
-     * Sets whether a step is complete.
-     */
-    public void setComplete(boolean isComplete) {
-        this.isComplete = isComplete;
-    }
-
-    public int getStepId() {
-        return stepID;
-    }
-
-    /**
-	 * Calls {@link #setErrorMessage(String)} with the supplied errorMessage,
-	 * and {@link #setComplete(boolean)} true if the message is empty, and
-	 * false otherwise.
-	 */
-	protected void setErrorMessageAndStepComplete(String errorMessage) {
-		setErrorMessage(errorMessage);
-		setComplete(errorMessage == null);
-	}
-
-    protected void setErrorMessage(String errorMessage) {
-        getWizard().updateButtons();
-    }
-
-	/**
-	 * Validates the form inputs, and sets the error message for the wizard if
-	 * there is any. Empty default implementation can be overridden by
-	 * subclasses.
-	 */
-	public void validateFormInputs() {
-	}
-
-	/**
-	 * Creates a simple question with according yes/no/don't know radio buttons.
-	 *
-	 * @return the panel where the buttons are put onto.
-	 */
-	protected JPanel createSimpleYesNoDontKnowQuestion(JPanel parent) {
-        JPanel buttons = createSimpleYesNoQuestion(parent);
-        ButtonGroup group = new ButtonGroup();
-		JRadioButton button = UIUtils.createRadioButton(buttons, "Don't know");
-        group.add((JRadioButton) buttons.getComponent(0));
-        group.add((JRadioButton) buttons.getComponent(1));
-        group.add(button);
-		return buttons;
-	}
-
-	/**
-	 * Creates a simple question with according yes/no radio buttons.
-	 *
-	 * @return the panel where the buttons are put onto.
-	 */
-	protected JPanel createSimpleYesNoQuestion(JPanel parent) {
-		JPanel panel = UIUtils.createFlowJPanelLeft(parent);
-        ButtonGroup group = new ButtonGroup();
-		JRadioButton button = UIUtils.createRadioButton(panel, "Yes");
-		group.add(button);
-        button = UIUtils.createRadioButton(panel, "No");
-        group.add(button);
-		return panel;
-	}
-
-	/** Use on panels which consist of radio buttons only. */
-	protected void addValidationListenerToAllChildren(JPanel panel,
-			FormValidationListener listener) {
-		for (Component component : panel.getComponents()) {
-            JRadioButton button = (JRadioButton) component;
-			button.addItemListener(listener);
-		}
-	}
-
-	/**
-	 * Checks for the given panel if of all its children, which are assumed
-	 * to be radio buttons, at least one has been selected. Use on panels which
-	 * consist of radio buttons only.
-	 */
-	protected boolean hasOneSelection(JPanel panel) {
-		boolean oneSelected = false;
-		for (Component component : panel.getComponents()) {
-            JRadioButton button = (JRadioButton) component;
-			oneSelected = oneSelected ^ button.isSelected();
-		}
-		return oneSelected;
-	}
-
-    /** Creates a new JPanel with the TestRoots and WatchDog logo. */
-	protected void createLogoRow(JPanel parent) {
-		JPanel logoContainer = UIUtils.createGridedJPanel(parent, 2);
-        JPanel leftLogo = UIUtils.createFlowJPanelCenter(logoContainer);
-		UIUtils.createWatchDogLogo(leftLogo);
-        JPanel rightLogo = UIUtils.createFlowJPanelCenter(logoContainer);
-		UIUtils.createLogo(rightLogo,"/images/testroots_small.png");
-	}
-
-	/**
-	 * Given a panel consisting of three buttons Yes/No/Don't Know, returns
-	 * which of the buttons was clicked.
-	 */
-	public YesNoDontKnowChoice evaluateWhichSelection(JPanel yesNoDontKnowJPanel) {
-		if (((JRadioButton) yesNoDontKnowJPanel.getComponents()[0]).isSelected()) {
-			return YesNoDontKnowChoice.Yes;
-		} else if (((JRadioButton) yesNoDontKnowJPanel.getComponents()[1]).isSelected()) {
-			return YesNoDontKnowChoice.No;
-		}
-		return YesNoDontKnowChoice.DontKnow;
-	}
-
-	/** Creates message on failure. */
-	public static void createFailureMessage(JPanel parent, String title,
-			String message) {
-		UIUtils.createBoldLabel(parent, title);
-        JPanel innerParent = UIUtils.createFlowJPanelLeft(parent);
-		UIUtils.createLogo(innerParent, "/images/errormark.png");
-		UIUtils.createLabel(innerParent, message);
-	}
-
-	/** Creates message on success. */
-	public static void createSuccessMessage(JPanel parent, String title,
-			String message, String id) {
-		UIUtils.createBoldLabel(parent, title);
-		JPanel innerParent = UIUtils.createFlowJPanelLeft(parent);
-		UIUtils.createLogo(innerParent, "/images/checkmark.png");
-		JPanel displayInformation = UIUtils.createFlowJPanelLeft(innerParent);
-		UIUtils.createLabel(displayInformation, message);
-		UIUtils.createTextField(displayInformation, id);
-	}
-
-    protected void createHeader(JComponent parent) {
-        JPanel headerPanel = UIUtils.createGridedJPanel(parent, 2);
-        JPanel leftPanel = UIUtils.createGridedJPanel(headerPanel, 1);
-        UIUtils.createBoldLabel(leftPanel, getTitle());
-        UIUtils.createLabel(leftPanel, descriptionText);
-
-        JPanel rightPanel = UIUtils.createFlowJPanelRight(headerPanel);
-        UIUtils.createTUDLogo(rightPanel);
-    }
-
-    /** Refreshes the UI and updates the buttons.  */
-    protected void updateStep() {
-        topPanel.updateUI();
-        getWizard().updateButtons();
-    }
+    private JComponent panel;
 
     @Override
     public void _init() {
-        topPanel = new JPanel();
+        panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        this._initWithPanel(panel);
+    }
+
+    @Override
+    public void _commit(boolean b) {
+
     }
 
     @Override
@@ -240,7 +36,100 @@ public abstract class WizardStep implements Step {
     }
 
     @Override
+    public JComponent getComponent() {
+        return panel;
+    }
+
+    @Override
     public JComponent getPreferredFocusedComponent() {
         return null;
+    }
+
+    @NotNull
+    JLabel createLogo(String iconPath) {
+        JLabel tudelftLogo = new JLabel();
+        tudelftLogo.setIcon(IconLoader.getIcon(iconPath));
+        tudelftLogo.setHorizontalAlignment(JLabel.CENTER);
+        return tudelftLogo;
+    }
+
+    abstract void _initWithPanel(Container panel);
+
+    abstract boolean isFinishedWithStep();
+
+    /**
+     * Create a label that is linked to the text field. Clicking on the label
+     * will select the text field.
+     * @param labelText The text of the label.
+     * @param tooltip The tooltip for both elements.
+     * @param textFieldLength The length of the text field.
+     * @param container The parent container.
+     * @return The created text field.
+     */
+    static JTextField createLinkedLabelTextField(String labelText, String tooltip, int textFieldLength, Container container) {
+        JLabel label = new JLabel(labelText);
+        label.setToolTipText(tooltip);
+        container.add(label);
+
+        JTextField textfield = new JTextField(textFieldLength);
+        textfield.setToolTipText(tooltip);
+        container.add(textfield);
+
+        label.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                textfield.grabFocus();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                textfield.grabFocus();
+            }
+        });
+        return textfield;
+    }
+
+    static JComponent createErrorMessageLabel(Exception exception) {
+        return new JLabel("<html>" +
+                exception.getMessage().substring(0, 100) +
+                "<br>" + CONNECTED_TO_INTERNET +
+                "<br>" + PLEASE_CONTACT_US + Links.OUR_WEBSITE.toHTMLURL() + ". " + HELP_TROUBLESHOOT, JLabel.LEFT);
+    }
+
+    static ButtonGroup createYesNoDontKnowQuestionWithLabel(String labelText, Container container) {
+        JLabel label = new JLabel(labelText);
+        container.add(label);
+
+        Container buttonContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 3));
+        container.add(buttonContainer);
+
+        ButtonGroup buttons = new ButtonGroup();
+
+        JRadioButton yes = new JRadioButton("Yes");
+        yes.setActionCommand(YesNoDontKnowChoice.Yes.name());
+        buttonContainer.add(yes);
+        buttons.add(yes);
+
+        JRadioButton no = new JRadioButton("No");
+        no.setActionCommand(YesNoDontKnowChoice.No.name());
+        buttonContainer.add(no);
+        buttons.add(no);
+
+        JRadioButton dontKnow = new JRadioButton("Don't know");
+        dontKnow.setActionCommand(YesNoDontKnowChoice.DontKnow.name());
+        buttonContainer.add(dontKnow);
+        buttons.add(dontKnow);
+
+        return buttons;
+    }
+
+    static YesNoDontKnowChoice getChoiceFromButtonGroup(ButtonGroup buttons) {
+        final ButtonModel selection = buttons.getSelection();
+
+        if (selection == null) {
+            return YesNoDontKnowChoice.DontKnow;
+        }
+
+        return YesNoDontKnowChoice.valueOf(selection.getActionCommand());
     }
 }
