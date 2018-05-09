@@ -13,7 +13,7 @@ Privacy Statement / Informed Consent
 WatchDog has been approved by the Human Research Ethics Committee of
 TU Delft, see https://www.testroots.org/assets/papers/ethics_approval.pdf
 
-By registering an installing WatchDog, you agree to our data retention
+By registering and installing WatchDog, you agree to our data retention
 and privacy policy:
 - By registering and installing WatchDog, you agree that we store your
 WatchDog data in a data center of TU Delft, The Netherlands, infinitely
