@@ -15,7 +15,7 @@
 # Description:       WatchDog Server is the mongo-backed WatchDog data collection backend 
 #
 ### END INIT INFO
-wdserver="/mnt/data/watchdog/git-repo-server/WatchDogServer"
+wdserver="/mnt/data/watchdog/git-repo-server/server"
 
 # Some things that run always
 touch /var/lock/watchdog
