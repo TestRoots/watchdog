@@ -40,10 +40,7 @@ abstract class RegistrationInputPanel extends Composite {
 	void createButtonAndStatusContainer(String buttonText) {
 		this.createNewUserButton = new Button(inputContainer, SWT.NONE);
 		this.createNewUserButton.setText(buttonText);
-		this.createNewUserButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-
-		// Fill up the second column in the grid, next to the button
-		new Label(inputContainer, SWT.NONE);
+		this.createNewUserButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 
 		this.createNewUserButton.addSelectionListener(new SelectionAdapter() {
 			@Override

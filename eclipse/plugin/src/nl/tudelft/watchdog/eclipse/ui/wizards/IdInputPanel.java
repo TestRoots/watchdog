@@ -49,9 +49,10 @@ abstract class IdInputPanel extends Composite {
 		textfield.setTextLimit(ID_LENGTH);
 		textfield.setLayoutData(new GridData(350, SWT.DEFAULT));
 
-		Button verify = new Button(this, SWT.FLAT);
+		Button verify = new Button(fieldContainer, SWT.FLAT);
 		verify.setText(VERIFICATION_BUTTON_TEXT);
 		verify.setEnabled(false);
+		verify.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 
 		textfield.addModifyListener(new ModifyListener() {
 			@Override

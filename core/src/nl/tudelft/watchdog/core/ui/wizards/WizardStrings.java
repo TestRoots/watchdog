@@ -8,7 +8,8 @@ public class WizardStrings {
 	public static final String GATHER_NUMERICAL_DATA = "It measures how you write Java code and tests. We never do anything bad with ";
 	public static final String DEVELOPMENT_BEHAVIOR = "Based on your development behavior, you can inspect ";
 	public static final String REGISTRATION_CONSENT = "By registering, you consent to us storing your data, perform scientific research, and publish it in a completely anonymized form.";
-	public static final String FOR_MORE_INFORMATION = "For more information, please read our ";
+	public static final String FOR_MORE_INFORMATION = "The data is stored with no expiration limit. For more information, please read our ";
+	public static final String CONTACT_US ="If you want to revoke your data or contact us for any other manner, please send us an e-mail to \"info AT testroots.org\"";
 
 	public static final String VERIFICATION_BUTTON_TEXT = "Verify";
 	public static final String VERIFICATION_SUCCESSFUL_MESSAGE = "ID verification successful!";

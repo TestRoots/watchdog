@@ -69,6 +69,10 @@ class UserWelcomeScreen extends WizardStep {
         fourthSentence.add(new JLabel(FOR_MORE_INFORMATION));
         UIUtils.createHyperLinkLabel(fourthSentence, Links.PRIVACY_STATEMENT);
 
+		Container contactUs = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		consentMessages.add(contactUs);
+		contactUs.add(new JLabel(CONTACT_US));
+
         return consentMessages;
     }
 

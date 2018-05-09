@@ -66,6 +66,9 @@ class UserWelcomeScreen extends WizardPage {
 		Link fourthLink = new Link(consentMessages, SWT.NONE);
 		fourthLink.setText(FOR_MORE_INFORMATION + Links.PRIVACY_STATEMENT.toHTMLURL() + ".");
 		fourthLink.addSelectionListener(new BrowserOpenerSelection());
+
+		Label contactUsEmail = new Label(consentMessages, SWT.NONE);
+		contactUsEmail.setText(CONTACT_US);
 	}
 
 	private void createProjectLogos(Composite parent) {
