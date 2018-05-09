@@ -230,7 +230,7 @@ public class IntelliJMarkupModelListener extends CoreMarkupModelListener impleme
 	}
 
 	private static Warning<String> classifyWarning(Warning<RangeHighlighterEx> warning) {
-		return new Warning<>(warning.docLineNumber, classifyWarningTypeFromHighlighter(warning.type), warning.lineNumber, warning.warningCreationTime, warning.secondsBetween);
+		return new Warning<>(warning.docTotalLines, classifyWarningTypeFromHighlighter(warning.type), warning.lineNumber, warning.warningCreationTime, warning.secondsBetween);
 	}
 
 	@NotNull
