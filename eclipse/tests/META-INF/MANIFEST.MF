@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: WatchDogUnitTests
 Bundle-SymbolicName: watchdog.eclipse.tests
 Bundle-Version: 3.0.0
-Fragment-Host: nl.tudelft.WatchDog;bundle-version="[0.0.0,3.0.0)"
+Fragment-Host: nl.tudelft.WatchDog;bundle-version="[0.0.0,4.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: watchdog.core;bundle-version="3.0.0",
  org.junit,
