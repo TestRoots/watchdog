@@ -10,26 +10,56 @@
     </description>
 
     <copyright url="http://www.testroots.org">
-        Copyright 2012-2015 Software Engineering Research Group, TU Delft
+        Copyright 2012-2018 Software Engineering Research Group, TU Delft
         http://swerl.tudelft.nl/bin/view/Main/WebHome
 
-        Copyright 2014-2015 Moritz Beller, Georgios Gousios, Igor Levaja, Andy Zaidman
-        http://www.testroots.org
+        Copyright 2014-2018 The TestRoots Team, http://www.testroots.org
 
         Copyright 2013 Wouter Willems
         http://wouterwillems.com/
     </copyright>
 
     <license url="http://www.testroots.org">
-        Copyright 2012-2015 Software Engineering Research Group, TU Delft
+        Copyright 2012-2018 Software Engineering Research Group, TU Delft
         http://swerl.tudelft.nl/bin/view/Main/WebHome
 
-        Copyright 2014-2015 Moritz Beller, Georgios Gousios, Igor Levaja, Andy Zaidman
-        http://www.testroots.org
+        Copyright 2014-2018 Moritz Beller, Tim van der Lippe, Niels Spruit, Igor Levaja, Georgios Gousios, Andy Zaidman
+        https://www.testroots.org
 
         Copyright 2013 Wouter Willems
         http://wouterwillems.com/
 
+	Privacy Statement / Informed Consent
+	WatchDog has been approved by the Human Research Ethics Committee of
+	TU Delft, see https://www.testroots.org/assets/papers/ethics_approval.pdf
+	
+	By registering an installing WatchDog, you agree to our data retention
+	and privacy policy:
+	- By registering and installing WatchDog, you agree that we store your
+	WatchDog data in a data center of TU Delft, The Netherlands, infinitely
+	until further notice. The data contains information about how you use
+	certain parts of your IDE, mainly in respect to testing, debugging, and
+	static analysis. It is timestamped and contains your IP address.
+	- You can, but are not obliged to, share personal details such as the
+	organization you work for (given permission by your employer) and your
+	email address to receive personalized reports. We may report this
+	information in a non-traceable way, as long as it does not identify an
+	individual (for example, we had users from the Eclipse Foundation).
+	- WatchDog follows the principles of least information gathering, early
+	anonymization and hashing. We never transfer any plain content of either
+	your files or even project or file names.
+	- Only the WatchDog team has access to your raw data.
+	- You grant us the right to perform scientific research on your data,
+	leading to written research papers that might include aggregated user
+	data and graphs, and to release fully anonymized (that is, with no
+	personally linked identifier such as user id, email, or IP address)
+	versions of the submitted WatchDog data.
+	- By default, you grant us the right to store your data infinitely until
+	revocation.
+	- To have your data removed, please simply contact us at
+	info@testroots.org, supplying your user id.
+
+	License Statement
         Permission is hereby granted, free of charge, to any person obtaining
         a copy of this software and associated documentation files (the
         &quot;Software&quot;), to deal in the Software without restriction, including
