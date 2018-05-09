@@ -2,7 +2,7 @@ Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Manifest-Version: 1.0
 Bundle-Activator: nl.tudelft.watchdog.eclipse.Activator
-Bundle-Version: 2.0.0
+Bundle-Version: 3.0.0
 Bundle-SymbolicName: nl.tudelft.WatchDog;singleton:=true
 Import-Package: com.puppycrawl.tools.checkstyle;resolution:=optional,
  junit.runner,
@@ -82,6 +82,6 @@ Bundle-ClassPath: .,
  lib/httpcore-4.3.2.jar,
  lib/httpmime-4.3.3.jar,
  lib/jfreechart-1.0.19-swt.jar
-Require-Bundle: watchdog.core;bundle-version="2.0.0",
+Require-Bundle: watchdog.core;bundle-version="3.0.0",
  net.sf.eclipsecs.core;resolution:=optional,
  net.sf.eclipsecs.checkstyle;resolution:=optional

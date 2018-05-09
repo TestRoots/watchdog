@@ -23,6 +23,6 @@ public class ClientVersionCheckerTest {
 		assertTrue(ClientVersionChecker.hasMajorOrMinorVersionGap(version1,
 				"1.2"));
 		assertTrue(ClientVersionChecker.hasMajorOrMinorVersionGap(version1,
-				"2.0.0"));
+				"3.0.0"));
 	}
 }
