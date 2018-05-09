@@ -1,7 +1,7 @@
 Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Manifest-Version: 1.0
-Bundle-Version: 2.0.0
+Bundle-Version: 3.0.0
 Bundle-SymbolicName: watchdog.core;singleton:=true
 Bundle-Name: WatchDog
 Bundle-ClassPath: .,
