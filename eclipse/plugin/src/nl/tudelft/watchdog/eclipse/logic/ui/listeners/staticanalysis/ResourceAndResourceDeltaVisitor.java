@@ -122,7 +122,7 @@ public class ResourceAndResourceDeltaVisitor implements IResourceDeltaVisitor, I
 
 	private Warning<String> createWarning(Warning<String> warning) {
 		return new Warning<>(
-				warning.docLineNumber,
+				warning.docTotalLines,
 				StaticAnalysisMessageClassifier.classify(warning.type),
 				warning.lineNumber,
 				warning.warningCreationTime,
