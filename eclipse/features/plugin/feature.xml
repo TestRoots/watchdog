@@ -23,12 +23,14 @@
         Copyright 2012-2018 Software Engineering Research Group, TU Delft
         http://swerl.tudelft.nl/bin/view/Main/WebHome
 
-        Copyright 2014-2018 Moritz Beller, Tim van der Lippe, Niels Spruit, Igor Levaja, Georgios Gousios, Andy Zaidman
+        Copyright 2014-2018 Moritz Beller, Tim van der Lippe, Niels Spruit,
+	Igor Levaja, Georgios Gousios, Andy Zaidman
         https://www.testroots.org
 
         Copyright 2013 Wouter Willems
         http://wouterwillems.com/
 
+	
 	Privacy Statement / Informed Consent
 	WatchDog has been approved by the Human Research Ethics Committee of
 	TU Delft, see https://www.testroots.org/assets/papers/ethics_approval.pdf
@@ -59,6 +61,7 @@
 	- To have your data removed, please simply contact us at
 	info@testroots.org, supplying your user id.
 
+	
 	License Statement
         Permission is hereby granted, free of charge, to any person obtaining
         a copy of this software and associated documentation files (the
