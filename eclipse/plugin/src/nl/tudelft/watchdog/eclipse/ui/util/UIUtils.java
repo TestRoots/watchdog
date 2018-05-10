@@ -328,14 +328,4 @@ public class UIUtils {
 		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
 				"Open Report.", projectReport);
 	}
-
-	/**
-	 * Creates a linked label that opens the debug survey in the browser with
-	 * the correct User ID.
-	 */
-	public static void createStartDebugSurveyLink(Composite container) {
-		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
-				"Share your thoughts on debugging and win an additional Amazon voucher!\n",
-				WatchDogUtils.getDebugSurveyLink());
-	}
 }
