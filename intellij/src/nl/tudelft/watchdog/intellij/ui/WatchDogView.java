@@ -187,7 +187,6 @@ public class WatchDogView extends SimpleToolWindowPanel {
         // Controls.
         createShowingStatisticsLines();
         createTimeSpanSelectionList();
-        UIUtils.createStartDebugSurveyLink(oneColumn);
     }
 
     private void createDebugStatisticsLabels(JPanel container) {

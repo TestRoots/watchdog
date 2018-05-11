@@ -173,13 +173,6 @@ public class UIUtils {
         UIUtils.createHyperLinkLabel(parent, "Open Report.", projectReport);
     }
 
-    /**
-     * Creates a linked label that opens the debug survey in the browser with
-     * the correct User ID.
-     */
-    public static void createStartDebugSurveyLink(JComponent parent) {
-        UIUtils.createHyperLinkLabel(parent, "Share your thoughts on debugging and win an additional Amazon voucher!", WatchDogUtils.getDebugSurveyLink());
-    }
 
     /**
      * Creates and returns a JPanel Group with an enclosed Grid layout with
