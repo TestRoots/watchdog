@@ -26,5 +26,6 @@ out/
 # data-analysis specific
 node_modules/
 data-analysis/*.json
+!data-analysis/eclipse-messages.json
 data-analysis/*.bson
 .ipynb_checkpoints/
