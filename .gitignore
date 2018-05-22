@@ -28,4 +28,5 @@ node_modules/
 data-analysis/*.json
 !data-analysis/eclipse-messages.json
 data-analysis/*.bson
+data-analysis/img/
 .ipynb_checkpoints/
