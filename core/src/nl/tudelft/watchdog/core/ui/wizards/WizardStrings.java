@@ -15,6 +15,8 @@ public class WizardStrings {
 	public static final String VERIFICATION_SUCCESSFUL_MESSAGE = "ID verification successful!";
 	public static final String VERIFICATION_MESSAGE_FAILURE = "ID verification failed.";
 	public static final String INPUT_IS_OPTIONAL = "The input is optional, but greatly appreciated to improve the quality of our research data.";
+	public static final String INPUT_IS_REQUIRED = "Moving the slider between test and production time is reuqired. All other input is optional.";
+
 
 	public static final String CONNECTED_TO_INTERNET = "Are you connected to the internet, and is port 80 open?";
 	public static final String PLEASE_CONTACT_US = "Please contact us via ";
