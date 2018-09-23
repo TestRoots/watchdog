@@ -40,7 +40,7 @@ Import-Package: com.puppycrawl.tools.checkstyle;resolution:=optional,
  org.eclipse.swt.layout,
  org.eclipse.swt.widgets,
  org.eclipse.ui,
- org.eclipse.ui.browser,
+ org.eclipse.ui.browser;resolution:=optional,
  org.eclipse.ui.commands,
  org.eclipse.ui.console,
  org.eclipse.ui.dialogs,
@@ -54,6 +54,8 @@ Import-Package: com.puppycrawl.tools.checkstyle;resolution:=optional,
  org.eclipse.ui.preferences,
  org.eclipse.ui.services,
  org.eclipse.ui.texteditor,
+ org.osgi.framework,
+ org.w3c.dom,
  org.jfree,
  org.jfree.chart,
  org.jfree.chart.axis,
@@ -64,11 +66,9 @@ Import-Package: com.puppycrawl.tools.checkstyle;resolution:=optional,
  org.jfree.chart.title,
  org.jfree.chart.util,
  org.jfree.data.category,
- org.jfree.data.gantt,
  org.jfree.data.general,
- org.jfree.util,
- org.osgi.framework,
- org.w3c.dom
+ org.jfree.data.gantt,
+ org.jfree.util
 Bundle-ActivationPolicy: lazy
 Bundle-Name: WatchDog
 Bundle-ClassPath: .,
@@ -84,5 +84,4 @@ Bundle-ClassPath: .,
  lib/jfreechart-1.0.19-swt.jar
 Require-Bundle: watchdog.core;bundle-version="3.0.0",
  net.sf.eclipsecs.core;resolution:=optional,
- net.sf.eclipsecs.checkstyle;resolution:=optional,
- org.eclipse.ui.workbench
+ net.sf.eclipsecs.checkstyle;resolution:=optional
