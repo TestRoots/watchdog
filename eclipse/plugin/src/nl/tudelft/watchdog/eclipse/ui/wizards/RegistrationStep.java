@@ -158,7 +158,7 @@ abstract class RegistrationStep extends WizardPage {
 	/**
 	 * Create a label that is linked to the text field. Clicking on the label will
 	 * select the text field.
-	 * 
+	 *
 	 * @param labelText
 	 *            The text of the label.
 	 * @param tooltip
