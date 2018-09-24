@@ -54,7 +54,7 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
 
 	/**
 	 * A panel to ask the user questions regarding their project.
-	 * 
+	 *
 	 * @param container
 	 *            The parent container.
 	 * @param callback
@@ -156,10 +156,10 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
 	@Override
 	boolean registerAction() {
 		if (!sliderTouched) {
-			MessageDialog.openWarning(getShell(), "Warning", "You have to enter how you divide your time between production and test time, by at least touching the slider.");
+			MessageDialog.openWarning(getShell(), "Warning", "To proceed, you have to enter how you divide your time between production and test time, by at least touching the slider.");
 			return false;
 		}
-		
+
 		Project project = new Project(Preferences.getInstance().getUserId());
 
 		project.name = projectName.getText();
