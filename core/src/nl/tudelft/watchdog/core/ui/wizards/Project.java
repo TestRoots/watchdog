@@ -72,6 +72,9 @@ public class Project extends WatchDogItem {
 	/** The percentage of how much production code is done (0% - 100%). */
 	public int productionPercentage;
 
+	/** The starting value of productionPercentage, a random value between 0 and 100. */
+	public int productionPercentageStart;
+
 	/** Is Junit used only for pure true-to-the-sense unit testing? */
 	public YesNoDontKnowChoice useJunitOnlyForUnitTesting;
 

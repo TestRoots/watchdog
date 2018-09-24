@@ -20,12 +20,15 @@ import static nl.tudelft.watchdog.core.ui.wizards.Project.YOUR_PROJECT_ID_LABEL;
 import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.INPUT_IS_REQUIRED;
 import static nl.tudelft.watchdog.eclipse.ui.util.UIUtils.HEADER_FONT;
 
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -50,7 +53,12 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
 	private YesNoDontknowButtonGroup automationUsage;
 	private Text toolsUsed;
 	protected Scale percentageProductionSlider;
+	private int productionPercentageStart;
+
 	private boolean sliderTouched = false;
+
+	private Composite sliderComposite;
+	private Composite sliderRow;
 
 	/**
 	 * A panel to ask the user questions regarding their project.
@@ -77,9 +85,9 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
 		inputFieldContainer.setLayout(gridLayout);
 		this.createInputFields(inputFieldContainer);
 
-		Composite sliderContainer = new Composite(this, SWT.NONE);
-		sliderContainer.setLayout(new GridLayout(1, true));
-		createSlider(sliderContainer);
+		sliderComposite = new Composite(this, SWT.NONE);
+		sliderComposite.setLayout(new GridLayout(1, true));
+		createSlider(sliderComposite);
 
 		this.inputContainer = new Composite(this, SWT.NONE);
 		this.inputContainer.setLayout(gridLayout);
@@ -109,32 +117,38 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
 	}
 
 	private void createSlider(Composite composite) {
-		UIUtils.createLabel("",	composite);
+		UIUtils.createLabel("", composite);
 		UIUtils.createLabel(
-				"Estimate how you divide your time into the two activities testing and production. Just have a wild guess!\n",
+				"Estimate how you divide your time into the two activities testing and production. Just have a wild guess!",
 				composite);
 
-		Composite row = UIUtils.createFullGridedComposite(composite, 3);
-		Label testingLabel = UIUtils.createLabel("100% Testing  ", row);
+		this.productionPercentageStart = ThreadLocalRandom.current().nextInt(0, 100 + 1);
+		this.sliderRow = UIUtils.createFullGridedComposite(composite, 3);
+
+		Label testingLabel = UIUtils.createLabel("100% Testing  ", sliderRow);
 		testingLabel.setToolTipText(
 				"To the testing activity, everything you do with Junit tests counts. Examples: writing, modifying, debugging, and executing Junit tests");
-		percentageProductionSlider = new Scale(row, SWT.HORIZONTAL);
-		percentageProductionSlider.setLayoutData(UIUtils.createFullGridUsageData());
-		percentageProductionSlider.setSelection(50);
-		percentageProductionSlider.setIncrement(5);
-		percentageProductionSlider.setPageIncrement(5);
-		percentageProductionSlider.setMaximum(100);
-		percentageProductionSlider.setMinimum(0);
-		Label productionLabel = UIUtils.createLabel("  100% Production", row);
+		this.percentageProductionSlider = new Scale(sliderRow, SWT.HORIZONTAL);
+		this.percentageProductionSlider.setLayoutData(UIUtils.createFullGridUsageData());
+		this.percentageProductionSlider.setSelection(this.productionPercentageStart);
+		this.percentageProductionSlider.setIncrement(5);
+		this.percentageProductionSlider.setPageIncrement(5);
+		this.percentageProductionSlider.setMaximum(100);
+		this.percentageProductionSlider.setMinimum(0);
+		Label productionLabel = UIUtils.createLabel("  100% Production", sliderRow);
 		productionLabel.setToolTipText(
 				"To the production activity, every activity that has to do with regular, non-test production code counts.");
-		UIUtils.createLabel("", row);
-		final Label sliderValueText = UIUtils.createItalicLabel("50% Testing, 50% Production", row);
+		UIUtils.createLabel("", sliderRow);
+		final Label sliderValueText = UIUtils.createItalicLabel("", sliderRow);
 		sliderValueText.setLayoutData(UIUtils.createFullGridUsageData());
 		sliderValueText.setAlignment(SWT.CENTER);
-		percentageProductionSlider.addSelectionListener(new SelectionListener() {
+
+		SelectionListener sliderMovedListener = new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				Color backgroundColor = sliderComposite.getParent().getBackground();
+				sliderComposite.setBackground(backgroundColor);
+				sliderRow.setBackground(backgroundColor);
 				int developmentTimeValue = percentageProductionSlider.getSelection();
 				int testingTimeValue = 100 - developmentTimeValue;
 				sliderValueText.setText(testingTimeValue + "% Testing, " + developmentTimeValue + "% Production");
@@ -145,18 +159,24 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
-		});
+		};
+		this.percentageProductionSlider.addSelectionListener(sliderMovedListener);
+		sliderMovedListener.widgetSelected(null);
+		this.sliderTouched = false;
 
 		UIUtils.createLabel(
 				"Testing is every activity related to testing (reading, writing, modifying, refactoring and executing JUnit tests).\nProduction is every activity related to regular code (reading, writing, modifying, and refactoring Java classes).\n",
 				composite);
-
 	}
 
 	@Override
 	boolean registerAction() {
 		if (!sliderTouched) {
-			MessageDialog.openWarning(getShell(), "Warning", "To proceed, you have to enter how you divide your time between production and test time, by at least touching the slider.");
+			MessageDialog.openWarning(getShell(), "Warning",
+					"To proceed, you have to enter how you divide your time between production and test time, by at least touching the slider.");
+			Color warningColor = new Color(getDisplay(), new RGB(255, 192, 178));
+			this.sliderComposite.setBackground(warningColor);
+			this.sliderRow.setBackground(warningColor);
 			return false;
 		}
 
@@ -169,6 +189,8 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
 		project.usesBugFindingSA = this.bugFindingUsage.selected;
 		project.usesOtherAutomationSA = this.automationUsage.selected;
 		project.usesToolsSA = this.toolsUsed.getText();
+		project.productionPercentage = this.percentageProductionSlider.getSelection();
+		project.productionPercentageStart = this.productionPercentageStart;
 
 		String projectId;
 
