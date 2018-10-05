@@ -3,6 +3,7 @@ package nl.tudelft.watchdog.intellij.ui.wizards;
 import nl.tudelft.watchdog.core.logic.network.JsonTransferer;
 import nl.tudelft.watchdog.core.ui.wizards.Project;
 import nl.tudelft.watchdog.intellij.ui.preferences.Preferences;
+import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -85,8 +86,8 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
         }
 
         Preferences preferences = Preferences.getInstance();
-        preferences.registerProjectId(project.name, projectId);
-        preferences.registerProjectUse(project.name, true);
+        preferences.registerProjectId(WatchDogUtils.getProjectName(), projectId);
+        preferences.registerProjectUse(WatchDogUtils.getProjectName(), true);
 
         this.createSuccessIdOutput(PROJECT_CREATION_MESSAGE_SUCCESSFUL, YOUR_PROJECT_ID_LABEL, projectId);
 
