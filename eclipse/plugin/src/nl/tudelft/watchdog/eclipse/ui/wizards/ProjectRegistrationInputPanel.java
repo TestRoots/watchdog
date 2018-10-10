@@ -118,16 +118,13 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
 
 	private void createSlider(Composite composite) {
 		UIUtils.createLabel("", composite);
-		UIUtils.createLabel(
-				"Estimate how you divide your time into the two activities testing and production. Just have a wild guess!",
-				composite);
+		UIUtils.createLabel(Project.SLIDER_QUESTION, composite);
 
 		this.productionPercentageStart = ThreadLocalRandom.current().nextInt(0, 100 + 1);
 		this.sliderRow = UIUtils.createFullGridedComposite(composite, 3);
 
 		Label testingLabel = UIUtils.createLabel("100% Testing  ", sliderRow);
-		testingLabel.setToolTipText(
-				"To the testing activity, everything you do with Junit tests counts. Examples: writing, modifying, debugging, and executing Junit tests");
+		testingLabel.setToolTipText(Project.SLIDER_TOOLTIP_TESTING);
 		this.percentageProductionSlider = new Scale(sliderRow, SWT.HORIZONTAL);
 		this.percentageProductionSlider.setLayoutData(UIUtils.createFullGridUsageData());
 		this.percentageProductionSlider.setSelection(this.productionPercentageStart);
@@ -136,8 +133,7 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
 		this.percentageProductionSlider.setMaximum(100);
 		this.percentageProductionSlider.setMinimum(0);
 		Label productionLabel = UIUtils.createLabel("  100% Production", sliderRow);
-		productionLabel.setToolTipText(
-				"To the production activity, every activity that has to do with regular, non-test production code counts.");
+		productionLabel.setToolTipText(Project.SLIDER_TOOLTIP_PRODUCTION);
 		UIUtils.createLabel("", sliderRow);
 		final Label sliderValueText = UIUtils.createItalicLabel("", sliderRow);
 		sliderValueText.setLayoutData(UIUtils.createFullGridUsageData());
@@ -164,19 +160,18 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
 		sliderMovedListener.widgetSelected(null);
 		this.sliderTouched = false;
 
-		UIUtils.createLabel(
-				"Testing is every activity related to testing (reading, writing, modifying, refactoring and executing JUnit tests).\nProduction is every activity related to regular code (reading, writing, modifying, and refactoring Java classes).\n",
-				composite);
+		UIUtils.createLabel(Project.SLIDER_TESTING_DEFINITION, composite);
 	}
 
 	@Override
 	boolean registerAction() {
 		if (!sliderTouched) {
-			MessageDialog.openWarning(getShell(), "Warning",
-					"To proceed, you have to enter how you divide your time between production and test time, by at least touching the slider.");
+			// Show warning and add background color to slider to make it stand out
+			MessageDialog.openWarning(getShell(), "Warning", Project.SLIDER_WARNING);
 			Color warningColor = new Color(getDisplay(), new RGB(255, 192, 178));
 			this.sliderComposite.setBackground(warningColor);
 			this.sliderRow.setBackground(warningColor);
+
 			return false;
 		}
 
