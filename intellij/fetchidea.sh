@@ -44,7 +44,7 @@ mvn install:install-file -Dmaven.exec.skip -Dfile=$build_dir/$idea_directory.zip
 
 cd $build_dir
 
-checkstyle_version="5.18.5"
+checkstyle_version="5.23.0"
 checkstyle_directory_name="CheckStyle-"
 checkstyle_zip="$checkstyle_directory_name$checkstyle_version.zip"
 checkstyle_idea_URL="https://plugins.jetbrains.com/plugin/download?pluginId=CheckStyle-IDEA&version=$checkstyle_version"

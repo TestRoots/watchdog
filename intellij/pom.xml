@@ -45,7 +45,7 @@
             <artifactId>checkstyle</artifactId>
             <version>5.18.5</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/checkstyle-idea-5.18.5.jar</systemPath>
+            <systemPath>${project.basedir}/lib/checkstyle-idea-5.23.0.jar</systemPath>
         </dependency>
 
         <dependency>
