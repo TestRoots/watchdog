@@ -14,10 +14,16 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 
 import static nl.tudelft.watchdog.core.ui.wizards.Project.*;
-import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.INPUT_IS_OPTIONAL;
+import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.INPUT_IS_REQUIRED;
 
 class ProjectRegistrationInputPanel extends RegistrationInputPanel {
 
+    private final JPanel slider;
+    /**
+     * The slider. Its value denotes in full percentage how much production code
+     * the user estimates to write.
+     */
+    protected JSlider percentageProductionSlider;
     private JTextField projectName;
     private JTextField projectWebsite;
     private ButtonGroup ciUsage;
@@ -25,16 +31,7 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
     private ButtonGroup bugFindingUsage;
     private ButtonGroup automationUsage;
     private JTextField toolsUsed;
-
-    private final JPanel slider;
-
     private Boolean sliderTouched = false;
-
-    /**
-     * The slider. Its value denotes in full percentage how much production code
-     * the user estimates to write.
-     */
-    protected JSlider percentageProductionSlider;
     private int productionPercentageStart;
 
     /**
@@ -51,7 +48,7 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
         introductionContainer.add(new JLabel("<html>" +
             "<h3>" + WATCHDOG_PROJECT_PROFILE + "</h3>" +
             PROJECT_DATA_REQUEST + "<br>" +
-            INPUT_IS_OPTIONAL));
+            INPUT_IS_REQUIRED));
 
         JPanel questionContainer = new JPanel(new GridLayout(0, 2));
         this.add(questionContainer);
@@ -89,7 +86,7 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
         JPanel questionPanel = UIUtils.createFlowJPanelLeft(parent);
 
         UIUtils.createLabel(questionPanel,
-            "Estimate how you divide your time into the two activities testing and production. Just have a wild guess!");
+            SLIDER_QUESTION);
 
         this.productionPercentageStart = ThreadLocalRandom.current().nextInt(0, 100 + 1);
 
@@ -98,7 +95,7 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
 
         JLabel testingLabel = UIUtils.createLabel(row, "100% Testing  ");
         testingLabel
-            .setToolTipText("To the testing activity, everything you do with Junit tests counts. Examples: writing, modifying, debugging, and executing Junit tests");
+            .setToolTipText(SLIDER_TOOLTIP_TESTING);
 
         percentageProductionSlider = new JSlider(JSlider.HORIZONTAL);
         percentageProductionSlider.setValue(this.productionPercentageStart);
@@ -111,7 +108,7 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
 
         JLabel productionLabel = UIUtils.createLabel(row, "  100% Production");
         productionLabel
-            .setToolTipText("To the production activity, every activity that has to do with regular, non-test production code counts.");
+            .setToolTipText(SLIDER_TOOLTIP_PRODUCTION);
 
         JPanel sliderValuePanel = UIUtils.createFlowJPanelCenter(parent);
         JLabel sliderValueText = UIUtils.createItalicLabel(
@@ -140,10 +137,10 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
 
         UIUtils.createLabel(
             parent,
-            "Testing is every activity related to testing (reading, writing, modifying, refactoring and executing JUnit tests).");
+            SLIDER_TESTING_DEFINITION);
         UIUtils.createLabel(
             parent,
-            "Production is every activity related to regular code (reading, writing, modifying, and refactoring Java classes).");
+            SLIDER_PRODUCTION_DEFINITION);
     }
 
     void colorAllDescendants(JComponent panel, Color color) {
@@ -158,7 +155,8 @@ class ProjectRegistrationInputPanel extends RegistrationInputPanel {
     @Override
     boolean registerAction() {
         if (!sliderTouched) {
-            JOptionPane.showMessageDialog(new JFrame(), "To proceed, you have to enter how you divide your time between production and test time, by at least touching the slider.", "Warning",
+            // Show warning and add background color to slider to make it stand out
+            JOptionPane.showMessageDialog(new JFrame(), SLIDER_WARNING, "Warning",
                 JOptionPane.WARNING_MESSAGE);
             Color warningColor = new Color(255, 192, 178);
             colorAllDescendants(slider, warningColor);

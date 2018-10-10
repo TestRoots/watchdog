@@ -34,6 +34,13 @@ public class Project extends WatchDogItem {
 	public static final String CREATE_PROJECT_BUTTON_TEXT = "Create new WatchDog project";
 	public static final String YOUR_PROJECT_ID_LABEL = "Your Project ID is: ";
 
+	public static final String SLIDER_QUESTION = "Estimate how you divide your time into the two activities testing and production. Just have a wild guess!";
+	public static final String SLIDER_TOOLTIP_PRODUCTION = "To the production activity, every activity that has to do with regular, non-test production code counts.";
+	public static final String SLIDER_TOOLTIP_TESTING = "To the testing activity, everything you do with Junit tests counts. Examples: writing, modifying, debugging, and executing Junit tests";
+	public static final String SLIDER_TESTING_DEFINITION = "Testing is every activity related to testing (reading, writing, modifying, refactoring and executing JUnit tests).";
+	public static final String SLIDER_PRODUCTION_DEFINITION = "Production is every activity related to regular code (reading, writing, modifying, and refactoring Java classes).";
+	public static final String SLIDER_WARNING = "To proceed, you have to enter how you divide your time between production and test time, by at least touching the slider.";
+
 	/** Constructor. */
 	public Project(String userId) {
 		localRegistrationDate = new Date();
