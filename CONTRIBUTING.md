@@ -40,8 +40,9 @@ In this section, we describe how WatchDog needs to be setup. It is important to 
     1. Classpath should point to `watchdog.intellij`
     1. JRE should be the local version of IntelliJ that exists in `intellij/build_cache/`
 1. Double check that in `Project Structure -> Modules -> watchdog -> intellij -> Plugin Deployment`, the Path to `META-INF/plugin.xml` is `watchdog/intellij/resources/`. You can safely delete the `intellij/META-INF/` folder now.
-1. Install the Checkstyle Plugin via Settings > Plugins > Browse repositories ... and searching for "CheckStyle-IDEA". The plugin comes from https://infernus.org/ and https://github.com/jshiell/checkstyle-idea.
 1. Open `WatchDogStartup.java` and click on the run configuration. A runtime workbench of IntelliJ should pop up with a local version of WatchDog running.
+1. (Optional) Install the Checkstyle Plugin via Settings > Plugins > Browse repositories ... and searching for "CheckStyle-IDEA". The plugin comes from https://infernus.org/ and https://github.com/jshiell/checkstyle-idea.
+
 
 ## Subprojects
 
