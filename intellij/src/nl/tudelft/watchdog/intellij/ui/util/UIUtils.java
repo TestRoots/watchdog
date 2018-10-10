@@ -1,14 +1,11 @@
 package nl.tudelft.watchdog.intellij.ui.util;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.ui.HyperlinkLabel;
 import com.intellij.openapi.ui.ComboBox;
-
+import com.intellij.ui.HyperlinkLabel;
 import nl.tudelft.watchdog.core.ui.wizards.WizardStrings;
 import nl.tudelft.watchdog.intellij.util.WatchDogUtils;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -30,6 +27,16 @@ public class UIUtils {
         JLabel label = createLabel(parent, text);
         Font font = label.getFont();
         label.setFont(new Font(font.getName(), Font.BOLD, font.getSize()));
+    }
+
+    /**
+     * Creates and returns an italic text label.
+     */
+    public static JLabel createItalicLabel(JComponent parent, String text) {
+        JLabel label = createLabel(parent, text);
+        Font font = label.getFont();
+        label.setFont(new Font(font.getName(), Font.ITALIC, font.getSize()));
+        return label;
     }
 
     /**
@@ -114,11 +121,18 @@ public class UIUtils {
     }
 
     /**
+     * @return A {@link FlowLayout}ed JPanel aligned to the center.
+     */
+    public static JPanel createFlowJPanelCenter(JComponent parent) {
+        return createFlowJPanelLeft(parent, FlowLayout.CENTER);
+    }
+
+    /**
      * @return A vertical {@link BoxLayout}ed JPanel.
      */
     public static JPanel createVerticalBoxJPanel(JComponent parent) {
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         parent.add(panel);
         return panel;
     }
@@ -138,7 +152,7 @@ public class UIUtils {
      * Creates a clickable label with URL link and the given description text.
      */
     public static void createHyperLinkLabel(Container parent, WizardStrings.Links link) {
-        createHyperLinkLabel(parent, link.text  + ".", link.url);
+        createHyperLinkLabel(parent, link.text + ".", link.url);
     }
 
     /**
@@ -156,7 +170,7 @@ public class UIUtils {
      * Creates a Combo Box of String items.
      */
     public static ComboBox<String> createComboBox(JComponent parent,
-                                          ItemListener listener, String[] items, int defaultSelection) {
+                                                  ItemListener listener, String[] items, int defaultSelection) {
         ComboBox<String> comboBox = new ComboBox<>(items);
         comboBox.setSelectedIndex(defaultSelection);
         comboBox.addItemListener(listener);
@@ -169,7 +183,7 @@ public class UIUtils {
      */
     public static void createOpenReportLink(JComponent parent) {
         String projectReport = "http://www.testroots.org/reports/project/"
-                + WatchDogUtils.getProjectSetting().projectId + ".html";
+            + WatchDogUtils.getProjectSetting().projectId + ".html";
         UIUtils.createHyperLinkLabel(parent, "Open Report.", projectReport);
     }
 

@@ -26,9 +26,9 @@ import nl.tudelft.watchdog.eclipse.ui.util.BrowserOpenerSelection;
 import static nl.tudelft.watchdog.core.ui.wizards.WizardStrings.*;
 
 /**
- * A single registration step that has two options:
- * 1. The user already has a registration, for which they have to enter their ID.
- * 2. The user has to create a registration in the {@link #getRegistrationPanel()}.
+ * A single registration step that has two options: 1. The user already has a
+ * registration, for which they have to enter their ID. 2. The user has to
+ * create a registration in the {@link #getRegistrationPanel()}.
  */
 abstract class RegistrationStep extends WizardPage {
 
@@ -142,8 +142,12 @@ abstract class RegistrationStep extends WizardPage {
 	}
 
 	static void createErrorMessageLabel(Composite container, Exception exception) {
-		Label exceptionText = new Label(container, SWT.WRAP);
-		exceptionText.setText(exception.getMessage().substring(0, 100));
+		String exceptionMessage = exception.getMessage();
+		if (exceptionMessage != null) {
+			Label exceptionText = new Label(container, SWT.WRAP);
+			int truncateThreshold = Integer.min(exceptionMessage.length(), 100);
+			exceptionText.setText(exception.getMessage().substring(0, truncateThreshold));
+		}
 
 		new Label(container, SWT.NONE).setText(CONNECTED_TO_INTERNET);
 		Link link = new Link(container, SWT.WRAP);
@@ -152,11 +156,15 @@ abstract class RegistrationStep extends WizardPage {
 	}
 
 	/**
-	 * Create a label that is linked to the text field. Clicking on the label
-	 * will select the text field.
-	 * @param labelText The text of the label.
-	 * @param tooltip The tooltip for both elements.
-	 * @param container The parent container.
+	 * Create a label that is linked to the text field. Clicking on the label will
+	 * select the text field.
+	 *
+	 * @param labelText
+	 *            The text of the label.
+	 * @param tooltip
+	 *            The tooltip for both elements.
+	 * @param container
+	 *            The parent container.
 	 * @return The created text field.
 	 */
 	static Text createLinkedLabelTextField(String labelText, String tooltip, Composite container) {
@@ -186,8 +194,8 @@ abstract class RegistrationStep extends WizardPage {
 	static Label createLogo(Composite logoContainer, String imageLocation) {
 		Label watchdogLogo = new Label(logoContainer, SWT.NONE);
 
-		ImageDescriptor watchdogLogoImageDescriptor = Activator
-				.imageDescriptorFromPlugin(Activator.PLUGIN_ID, imageLocation);
+		ImageDescriptor watchdogLogoImageDescriptor = Activator.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
+				imageLocation);
 		watchdogLogo.setImage(watchdogLogoImageDescriptor.createImage());
 
 		return watchdogLogo;

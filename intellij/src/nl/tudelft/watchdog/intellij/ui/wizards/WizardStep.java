@@ -90,8 +90,17 @@ public abstract class WizardStep implements Step {
     }
 
     static JComponent createErrorMessageLabel(Exception exception) {
-        return new JLabel("<html>" +
-                exception.getMessage().substring(0, 100) +
+		String exceptionMessage = exception.getMessage();
+		if (exceptionMessage != null) {
+			int truncateThreshold = Integer.min(exceptionMessage.length(), 100);
+			exceptionMessage = exceptionMessage.substring(0, truncateThreshold);
+		}
+		else {
+			exceptionMessage = "No error message transferred.";
+		}
+
+		return new JLabel("<html>" +
+                 exceptionMessage +
                 "<br>" + CONNECTED_TO_INTERNET +
                 "<br>" + PLEASE_CONTACT_US + Links.OUR_WEBSITE.toHTMLURL() + ". " + HELP_TROUBLESHOOT, JLabel.LEFT);
     }
