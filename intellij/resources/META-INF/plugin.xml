@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>nl.tudelft.watchdog</id>
     <name>WatchDog</name>
-    <version>3.0.0</version>
+    <version>3.1.0</version>
     <vendor email="igor.levaja@testroots.org" url="http://www.testroots.org">TestRoots, TU Delft</vendor>
 
     <description><![CDATA[
