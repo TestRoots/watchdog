@@ -27,7 +27,7 @@ public class WatchDogGlobals {
 	public static boolean lastTransactionFailed = false;
 
 	/** The client's version, as set in pom.xml. */
-	public final static String CLIENT_VERSION = "2.0.0";
+	public final static String CLIENT_VERSION = "3.1.0";
 
 	/** The host ide this plugin is running on. */
 	public static IDE hostIDE;

@@ -1,7 +1,7 @@
 Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Manifest-Version: 1.0
-Bundle-Version: 2.0.0
+Bundle-Version: 3.1.0
 Bundle-SymbolicName: watchdog.core;singleton:=true
 Bundle-Name: WatchDog
 Bundle-ClassPath: .,
@@ -15,8 +15,7 @@ Bundle-ClassPath: .,
  lib/joda-time-2.8.1.jar,
  lib/mapdb-1.0.5.jar,
  lib/jcommon-1.0.23.jar,
- lib/jfreechart-1.0.19.jar,
- lib/jfreechart-1.0.19-swt.jar
+ lib/jfreechart-1.0.19.jar
 Export-Package: com.google.gson,
  com.google.gson.annotations,
  com.google.gson.internal,
@@ -43,6 +42,18 @@ Export-Package: com.google.gson,
  org.apache.commons.codec,
  org.apache.commons.lang,
  org.jfree,
+ org.jfree.chart,
+ org.jfree.chart.axis,
+ org.jfree.chart.entity,
+ org.jfree.chart.event,
+ org.jfree.chart.plot,
+ org.jfree.chart.renderer.category,
+ org.jfree.chart.title,
+ org.jfree.chart.util,
+ org.jfree.data.category,
+ org.jfree.data.general,
+ org.jfree.data.gantt,
+ org.jfree.util,
  org.joda.time,
  org.joda.time.base,
  org.joda.time.format,

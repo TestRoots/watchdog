@@ -1,11 +1,11 @@
-<idea-plugin version="2">
+<idea-plugin>
     <id>nl.tudelft.watchdog</id>
     <name>WatchDog</name>
-    <version>2.0.0</version>
+    <version>3.1.0</version>
     <vendor email="igor.levaja@testroots.org" url="http://www.testroots.org">TestRoots, TU Delft</vendor>
 
     <description><![CDATA[
-    Do you as a Java developer know, how much time you spent on testing and debugging your application? Do you know how much time you actually write new code, and how long you browse through existing code? Do you know what activities you actually perform during a debugging session? Do you want to win amazing prizes?
+    Do you as a Java developer know, how much time you spent on testing and debugging your application? Do you know how much time you actually write new code, and how long you browse through existing code? Do you know what activities you actually perform during a debugging session?
     <br>
     Then install TestRoots WatchDog!<br>
     WatchDog assess your development behavior, which tests you write (Junit, Mockito, Powermock and others) and gives you answers to the above questions. WatchDog comes with the "WatchDog Statistics" view that displays the answers in easy-to-understand diagrams and immediate statistics on your development habits.<br>
@@ -14,6 +14,11 @@
     ]]></description>
 
     <change-notes><![CDATA[
+
+      3.0.0<br>
+      Feature release:<br>
+      - Adds support for tracking static analysis warning behavior;<br>
+      - Update internal architecture and streamline registration process;<br><br>
 
       2.0.0<br>
       Feature release:<br>

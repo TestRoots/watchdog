@@ -14,6 +14,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
@@ -31,6 +32,7 @@ public class UIUtils {
 
 	/** The command to show the WatchDog info. */
 	public static final String COMMAND_SHOW_INFO = "nl.tudelft.watchdog.commands.showWatchDogInfo";
+	public static final Font HEADER_FONT = generateHeaderFont();
 
 	/**
 	 * Creates and returns a label whose text is wrapped inside the supplied
@@ -44,6 +46,10 @@ public class UIUtils {
 		labelData.widthHint = parent.getParent().getClientArea().width - 30;
 		label.setLayoutData(labelData);
 		return label;
+	}
+
+	private static Font generateHeaderFont() {
+		return new Font(Display.getDefault(), "WatchDog Title Font", 16, SWT.BOLD);
 	}
 
 	/** Creates and returns a bold text label. */
@@ -179,10 +185,12 @@ public class UIUtils {
 			Composite composite) {
 		Label label = UIUtils.createLabel(labelText, composite);
 		label.setToolTipText(toolTip);
+
 		Text input = UIUtils.createTextInput(composite);
 		input.setLayoutData(UIUtils.createFullGridUsageData());
 		input.setToolTipText(toolTip);
 		UIUtils.attachListenerOnLabelClickFocusTextElement(label, input);
+
 		return input;
 	}
 
@@ -319,15 +327,5 @@ public class UIUtils {
 				+ WatchDogUtils.getProjectSetting().projectId + ".html";
 		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
 				"Open Report.", projectReport);
-	}
-
-	/**
-	 * Creates a linked label that opens the debug survey in the browser with
-	 * the correct User ID.
-	 */
-	public static void createStartDebugSurveyLink(Composite container) {
-		UIUtils.createLinkedLabel(container, new BrowserOpenerSelection(),
-				"Share your thoughts on debugging and win an additional Amazon voucher!\n",
-				WatchDogUtils.getDebugSurveyLink());
 	}
 }

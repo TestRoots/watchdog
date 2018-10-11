@@ -8,7 +8,7 @@
     <parent>
         <groupId>nl.tudelft</groupId>
         <artifactId>watchdog</artifactId>
-        <version>2.0.0</version>
+        <version>3.1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -18,7 +18,6 @@
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>org.jetbrains.intellij-ce</artifactId>
@@ -28,17 +27,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.infernus.idea</groupId>
-            <artifactId>checkstyle</artifactId>
-            <version>5.18.5</version>
-            <type>zip</type>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>nl.tudelft</groupId>
             <artifactId>watchdog.core</artifactId>
-            <version>2.0.0</version>
+            <version>3.1.0</version>
         </dependency>
 
         <dependency>
@@ -49,6 +40,13 @@
             <systemPath>${project.basedir}/lib/commons-validator-1.4.1.jar</systemPath>
         </dependency>
 
+        <dependency>
+            <groupId>org.infernus.idea</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>5.18.5</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/checkstyle-idea-5.23.0.jar</systemPath>
+        </dependency>
 
         <dependency>
             <groupId>org.jfree</groupId>

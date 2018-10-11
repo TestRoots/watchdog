@@ -76,7 +76,7 @@ class MarkerBackTrackingAlgorithm {
         } else if (column > 0 && (row == 0 || memoization[row][column - 1] >= memoization[row - 1][column])) {
             MarkerHolder warning = currentMarkers.get(column - 1);
 
-            this.createdWarningTypes.add(new Warning<>(warning.message, warning.lineNumber, DateTime.now().toDate()));
+            this.createdWarningTypes.add(new Warning<>(-1, warning.message, warning.lineNumber, DateTime.now().toDate()));
 
             traverseMemoizationTable(row, column - 1);
         // In this case, the row length is lower, which means that the oldMarkers was longer at this point
@@ -85,7 +85,7 @@ class MarkerBackTrackingAlgorithm {
             MarkerHolder warning = oldMarkers.get(row - 1);
             DateTime now = DateTime.now();
 
-            this.removedWarningTypes.add(new Warning<>(warning.message, warning.lineNumber, now.toDate(), Seconds.secondsBetween(warning.warningCreationTime, now).getSeconds()));
+            this.removedWarningTypes.add(new Warning<>(-1, warning.message, warning.lineNumber, now.toDate(), Seconds.secondsBetween(warning.warningCreationTime, now).getSeconds()));
 
             traverseMemoizationTable(row - 1, column);
         }
