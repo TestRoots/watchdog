@@ -31,7 +31,6 @@
             <artifactId>checkstyle</artifactId>
             <version>5.23.0</version>
             <scope>provided</scope>
-            <optional>true</optional>
             <type>zip</type>
         </dependency>
 
