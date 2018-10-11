@@ -31,18 +31,22 @@ In this section, we describe how WatchDog needs to be setup. It is important to 
 1. Download the free IC edition
 1. Install the "Intellij plugin development with Maven"-plugin from https://plugins.jetbrains.com/plugin/7127-intellij-plugin-development-with-maven
 1. Start by Importing a project and selecting `pom.xml` in the root folder of the repository. When importing, you can step through with the defaults. The process of fetching dependencies by IntelliJ can take a while.
-1. Add a local version of the IntelliJ SDK to your IntelliJ running per instructions of https://www.jetbrains.com/help/idea/configuring-intellij-platform-plugin-sdk.html
+1. Install the IntelliJ SDK:
+    1. Run `intellij/fetchIdea.sh`
+    1. Add the local version of the IntelliJ SDK to your IntelliJ running per instructions of https://www.jetbrains.com/help/idea/configuring-intellij-platform-plugin-sdk.html
     1. In Project Structure, go to Modules -> watchdog -> intellij.
     1. On the tab "dependencies", click new module SDK
     1. Select the IntelliJ SDK from the local version available in `intellij/build_cache/idea-IU-***`
-1. Create a new Run Configuration.
+1. Create a new Run Configuration:
     1. Run -> Edit Configurations -> New -> Plugin.
     1. Classpath should point to `watchdog.intellij`
     1. JRE should be the local version of IntelliJ that exists in `intellij/build_cache/`
 1. Double check that in `Project Structure -> Modules -> watchdog -> intellij -> Plugin Deployment`, the Path to `META-INF/plugin.xml` is `watchdog/intellij/resources/`. You can safely delete the `intellij/META-INF/` folder now.
+1. Install the downloaded CheckStyle plugin from the `build_cache`:
+    1. Unzip the CheckStyle zip in `build_cache/`
+    1. Add the CheckStyle plugin to the IntelliJ SDK you downloaded per the instructions of https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_dependencies.html You need to select the CheckStyle jar from `build_cache/Checkstyle-IDEA/lib/checkstyle-idea-****.jar`
 1. Open `WatchDogStartup.java` and click on the run configuration. A runtime workbench of IntelliJ should pop up with a local version of WatchDog running.
-1. (Optional) Install the Checkstyle Plugin via Settings > Plugins > Browse repositories ... and searching for "CheckStyle-IDEA". The plugin comes from https://infernus.org/ and https://github.com/jshiell/checkstyle-idea.
-
+1. (Optional, but recommended to test Checkstyle warnings) In the runtime workbench, install the Checkstyle Plugin via Settings > Plugins > Browse repositories ... and searching for "CheckStyle-IDEA". The plugin comes from https://infernus.org/ and https://github.com/jshiell/checkstyle-idea
 
 ## Subprojects
 
