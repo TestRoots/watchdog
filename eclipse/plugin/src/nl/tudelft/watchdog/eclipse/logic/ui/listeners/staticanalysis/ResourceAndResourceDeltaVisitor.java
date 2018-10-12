@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.joda.time.DateTime;
+
 import nl.tudelft.watchdog.core.logic.document.Document;
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.event.eventtypes.staticanalysis.FileWarningSnapshotEvent;
@@ -104,7 +105,7 @@ public class ResourceAndResourceDeltaVisitor implements IResourceDeltaVisitor, I
 			currentFileMarkers.put(filePath, currentMarkers);
 		}
 
-		return true;
+		return false;
 	}
 
 	private void createWarningSnapshotForMarkers(List<MarkerHolder> currentMarkers, Document document) {

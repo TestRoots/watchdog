@@ -1,10 +1,13 @@
 package nl.tudelft.watchdog.eclipse.util;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
@@ -89,20 +92,36 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 	 * trying to access the file from the disk.
 	 */
 	public static String getContentForFileFromDisk(IFile file) {
-		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					file.getContents(), "UTF-8"));
-			StringBuilder sb = new StringBuilder();
-			String line;
-			while ((line = reader.readLine()) != null) {
-				sb.append(line);
-			}
-			reader.close();
-			return sb.toString();
-		} catch (Exception e) {
-			throw new IllegalArgumentException("can't read resource file");
+		return getContentForFileFromDisk(file, 0);
+	}
+
+	private static String getContentForFileFromDisk(IFile file, int count) {
+		if (count > 5) {
+			return "";
 		}
 
+		try {
+			return readContentForFileFromDisk(file);
+		} catch (Exception e) {
+			try {
+				file.refreshLocal(IFile.DEPTH_ZERO, null);
+			} catch (CoreException ex) {
+				count = 5;
+			}
+			return getContentForFileFromDisk(file, count + 1);
+		}
+	}
+
+	private static String readContentForFileFromDisk(IFile file)
+			throws UnsupportedEncodingException, CoreException, IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(file.getContents(), "UTF-8"));
+		StringBuilder sb = new StringBuilder();
+		String line;
+		while ((line = reader.readLine()) != null) {
+			sb.append(line);
+		}
+		reader.close();
+		return sb.toString();
 	}
 
 	/**
