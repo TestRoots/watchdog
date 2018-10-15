@@ -296,6 +296,7 @@ public class UIUtils {
 					.getActiveWorkbenchWindow().getActivePage()
 					.findViewReference(WatchDogView.ID).getView(false);
 		} catch (NullPointerException npe) {
+			// The NPE is normal behavior if the WatchDogView isn't already open.
 			WatchDogLogger.getInstance().logSevere(npe);
 			return null;
 		}
