@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.internal.compiler.util.HashtableOfInt;
+
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.CheckStyleChecksMessagesFetcher;
 import nl.tudelft.watchdog.core.logic.ui.listeners.staticanalysis.CoreMarkupModelListener;
@@ -39,6 +40,9 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
 
             StaticAnalysisMessageClassifier.CHECKSTYLE_BUNDLE.sortList();
         } catch (Exception ignored) {
+            // CheckStyle apparently was not loaded, bail out
+        }
+        catch(Error error) {
             // CheckStyle apparently was not loaded, bail out
         }
     }
