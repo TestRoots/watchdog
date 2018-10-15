@@ -9,6 +9,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+
 import nl.tudelft.watchdog.core.logic.event.TrackingEventManager;
 import nl.tudelft.watchdog.core.logic.ui.events.WatchDogEventType;
 import nl.tudelft.watchdog.eclipse.logic.InitializationManager;
@@ -59,8 +60,10 @@ public class WorkbenchListener {
 		new JUnitListener();
 		new GeneralActivityListener(workbench.getDisplay());
 		addDebuggerListeners();
-		addStaticAnalysisListeners();
 		addShutdownListeners();
+
+		// addStaticAnalysisListeners interferes with Eclipse's classloader. It should thus be last in line.
+		addStaticAnalysisListeners();
 	}
 
 	/** Initializes the listeners for debug intervals and events. */
