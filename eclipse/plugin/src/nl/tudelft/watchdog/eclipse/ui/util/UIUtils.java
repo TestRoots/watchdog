@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
-import nl.tudelft.watchdog.core.util.WatchDogLogger;
 import nl.tudelft.watchdog.eclipse.Activator;
 import nl.tudelft.watchdog.eclipse.ui.WatchDogView;
 import nl.tudelft.watchdog.eclipse.ui.util.CommandExecuterBase.CommandExecuter;
@@ -297,7 +296,6 @@ public class UIUtils {
 					.findViewReference(WatchDogView.ID).getView(false);
 		} catch (NullPointerException npe) {
 			// The NPE is normal behavior if the WatchDogView isn't already open.
-			WatchDogLogger.getInstance().logSevere(npe);
 			return null;
 		}
 	}
