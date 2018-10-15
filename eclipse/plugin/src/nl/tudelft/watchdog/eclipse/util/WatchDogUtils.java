@@ -97,6 +97,7 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 
 	private static String getContentForFileFromDisk(IFile file, int count) {
 		if (count > 5) {
+			WatchDogLogger.getInstance().logSevere("Couldn't get contents for file 5 times. Aborting.");
 			return "";
 		}
 
