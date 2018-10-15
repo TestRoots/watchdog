@@ -72,7 +72,13 @@ public class ResourceAndResourceDeltaVisitor implements IResourceDeltaVisitor, I
 			return false;
 		}
 
+
 		if (resource instanceof IFile) {
+			if(resource.getFileExtension() == null || !resource.getFileExtension().equals("java")) {
+				// We are only interested in java files
+				return false;
+			}
+
 			IFile file = (IFile) resource;
 			IPath filePath = file.getFullPath();
 			List<MarkerHolder> oldMarkers = currentFileMarkers.get(filePath);
@@ -103,9 +109,10 @@ public class ResourceAndResourceDeltaVisitor implements IResourceDeltaVisitor, I
 			}
 
 			currentFileMarkers.put(filePath, currentMarkers);
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 	private void createWarningSnapshotForMarkers(List<MarkerHolder> currentMarkers, Document document) {
