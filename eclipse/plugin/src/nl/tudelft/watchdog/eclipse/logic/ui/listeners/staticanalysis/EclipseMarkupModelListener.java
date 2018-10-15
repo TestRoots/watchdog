@@ -39,10 +39,7 @@ public class EclipseMarkupModelListener extends CoreMarkupModelListener implemen
             CheckStyleChecksMessagesFetcher.addCheckStyleMessagesToBundle(EclipseMarkupModelListener.class.getClassLoader());
 
             StaticAnalysisMessageClassifier.CHECKSTYLE_BUNDLE.sortList();
-        } catch (Exception ignored) {
-            // CheckStyle apparently was not loaded, bail out
-        }
-        catch(Error error) {
+        } catch (Throwable ignored) {
             // CheckStyle apparently was not loaded, bail out
         }
     }
