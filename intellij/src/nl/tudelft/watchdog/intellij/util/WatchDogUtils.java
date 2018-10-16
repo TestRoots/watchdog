@@ -37,6 +37,10 @@ public class WatchDogUtils extends WatchDogUtilsBase {
      */
     public static String getContentForEditorFromDisk(VirtualFile virtualFile) {
         final String contents;
+        if(virtualFile.getLength() > WatchDogUtilsBase.MAX_FILE_SIZE) {
+        	return "";
+        }
+
         try {
             BufferedReader br = new BufferedReader(new FileReader(virtualFile.getPath()));
             String currentLine;
