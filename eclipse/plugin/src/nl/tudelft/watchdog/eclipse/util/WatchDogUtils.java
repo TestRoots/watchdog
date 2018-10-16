@@ -1,6 +1,7 @@
 package nl.tudelft.watchdog.eclipse.util;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -30,10 +31,10 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 	 *            the editor you want the contents of
 	 * @return The content of the editor
 	 * @throws ContentReaderException
-	 *             Can throw this exception when a file is moved. When moving a
-	 *             file within the workspace, the document provider pointer is
-	 *             set to null to make room for a new document provider later in
-	 *             the moving phase
+	 *             Can throw this exception when a file is moved. When moving a file
+	 *             within the workspace, the document provider pointer is set to
+	 *             null to make room for a new document provider later in the moving
+	 *             phase
 	 * @throws IllegalArgumentException
 	 *             Unexpected eclipse API behavior when Editor is null or the
 	 *             document in the document provider is null
@@ -48,20 +49,17 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 		return document.get();
 	}
 
-	private static IDocument extractDocument(final ITextEditor editor)
-			throws ContentReaderException {
+	private static IDocument extractDocument(final ITextEditor editor) throws ContentReaderException {
 		if (editor == null) {
 			throw new IllegalArgumentException("Editor is null");
 		}
 
 		IDocumentProvider documentProvider = editor.getDocumentProvider();
 		if (documentProvider == null) {
-			throw new ContentReaderException(
-					"Editor closed: Document provider is null");
+			throw new ContentReaderException("Editor closed: Document provider is null");
 		}
 
-		IDocument document = documentProvider
-				.getDocument(editor.getEditorInput());
+		IDocument document = documentProvider.getDocument(editor.getEditorInput());
 		return document;
 	}
 
@@ -69,8 +67,7 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 	 * Determines whether the both given {@link ITextEditor}s have the same
 	 * underlying document (<code>true</code>) or not (<code>false</code>).
 	 */
-	public static boolean hasSameUnderlyingDocument(ITextEditor editor1,
-			ITextEditor editor2) {
+	public static boolean hasSameUnderlyingDocument(ITextEditor editor1, ITextEditor editor2) {
 		try {
 			return extractDocument(editor1) == extractDocument(editor2);
 		} catch (ContentReaderException exception) {
@@ -80,16 +77,16 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 	}
 
 	/**
-	 * Reads and returns the contents of a file from the supplied editor, by
-	 * trying to access the file from the disk.
+	 * Reads and returns the contents of a file from the supplied editor, by trying
+	 * to access the file from the disk.
 	 */
 	public static String getContentForEditorFromDisk(ITextEditor editor) {
 		return getContentForFileFromDisk(getFile(editor));
 	}
 
 	/**
-	 * Reads and returns the contents of a file, by
-	 * trying to access the file from the disk.
+	 * Reads and returns the contents of a file, by trying to access the file from
+	 * the disk. Can return the empty string if it cannot read the file's content.
 	 */
 	public static String getContentForFileFromDisk(IFile file) {
 		return getContentForFileFromDisk(file, 0);
@@ -113,8 +110,20 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 		}
 	}
 
+	/**
+	 * A performance-optimized method for reading files from disk. Does not read
+	 * source code files bigger than {@link WatchDogUtilsBase#MAX_FILE_SIZE} and
+	 * instead returns the empty string for performance optimization reasons.
+	 */
 	private static String readContentForFileFromDisk(IFile file)
 			throws UnsupportedEncodingException, CoreException, IOException {
+		File realfile = file.getRawLocation().makeAbsolute().toFile();
+		System.out.println(realfile.length());
+		if (realfile.length() > WatchDogUtilsBase.MAX_FILE_SIZE) {
+			WatchDogLogger.getInstance().logSevere("File too big to be read!");
+			return "";
+		}
+
 		BufferedReader reader = new BufferedReader(new InputStreamReader(file.getContents(), "UTF-8"));
 		StringBuilder sb = new StringBuilder();
 		String line;
@@ -128,11 +137,9 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 	/**
 	 * @return The underlying file of the given editor.
 	 */
-	public static IFile getFile(ITextEditor editor)
-			throws IllegalArgumentException {
+	public static IFile getFile(ITextEditor editor) throws IllegalArgumentException {
 		if (editor.getEditorInput() instanceof FileEditorInput) {
-			IFileEditorInput fileEditorInput = (IFileEditorInput) editor
-					.getEditorInput();
+			IFileEditorInput fileEditorInput = (IFileEditorInput) editor.getEditorInput();
 			return fileEditorInput.getFile();
 		} else {
 			throw new IllegalArgumentException("can't read resource file");
@@ -150,8 +157,7 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 
 	/** Returns the workspace name. */
 	public static String getWorkspaceName() {
-		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile()
-				.toString();
+		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile().toString();
 	}
 
 	/**
@@ -159,8 +165,7 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 	 * workspace.
 	 */
 	public static ProjectPreferenceSetting getProjectSetting() {
-		return Preferences.getInstance()
-				.getOrCreateProjectSetting(getWorkspaceName());
+		return Preferences.getInstance().getOrCreateProjectSetting(getWorkspaceName());
 	}
 
 }
