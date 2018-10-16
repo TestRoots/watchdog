@@ -118,7 +118,6 @@ public class WatchDogUtils extends WatchDogUtilsBase {
 	private static String readContentForFileFromDisk(IFile file)
 			throws UnsupportedEncodingException, CoreException, IOException {
 		File realfile = file.getRawLocation().makeAbsolute().toFile();
-		System.out.println(realfile.length());
 		if (realfile.length() > WatchDogUtilsBase.MAX_FILE_SIZE) {
 			WatchDogLogger.getInstance().logSevere("File too big to be read!");
 			return "";
