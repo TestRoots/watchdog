@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>nl.tudelft.watchdog</id>
     <name>WatchDog</name>
-    <version>3.1.0</version>
+    <version>3.2.0</version>
     <vendor email="igor.levaja@testroots.org" url="http://www.testroots.org">TestRoots, TU Delft</vendor>
 
     <description><![CDATA[
@@ -14,7 +14,16 @@
     ]]></description>
 
     <change-notes><![CDATA[
+      3.2.0<br>
+      Maintenance release:<br>
+      - Fix startup problem of Eclipse;<br>
+      - Solve possible freezes;<br>
+      - Make WatchDog more performant;<br><br>
 
+      3.1.0<br>
+      Feature release:<br>
+      - Include new slider experiment;<br><br>
+    
       3.0.0<br>
       Feature release:<br>
       - Adds support for tracking static analysis warning behavior;<br>
