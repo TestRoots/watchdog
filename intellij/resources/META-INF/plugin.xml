@@ -2,7 +2,7 @@
     <id>nl.tudelft.watchdog</id>
     <name>WatchDog</name>
     <version>3.2.0</version>
-    <vendor email="igor.levaja@testroots.org" url="http://www.testroots.org">TestRoots, TU Delft</vendor>
+    <vendor email="info@testroots.org" url="http://www.testroots.org">TestRoots, TU Delft</vendor>
 
     <description><![CDATA[
     Do you as a Java developer know, how much time you spent on testing and debugging your application? Do you know how much time you actually write new code, and how long you browse through existing code? Do you know what activities you actually perform during a debugging session?
