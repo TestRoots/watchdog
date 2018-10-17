@@ -15,6 +15,9 @@ import nl.tudelft.watchdog.core.ui.preferences.PreferencesBase;
  * Base class for WatchDog Utilities.
  */
 public abstract class WatchDogUtilsBase {
+	/** The maximum permissible file size (in Bytes). */
+	public static int MAX_FILE_SIZE = 200*1024;
+
 	/**
 	 * @return A hash code for the given String, so that it is completely
 	 *         anonymous.
